@@ -71,6 +71,10 @@ function main {
 	#docker push ${docker_image_tag}-latest
 	#docker push ${docker_image_tag}-${timestamp}
 
+	// TODO Automatically push to Docker Hub
+	// TODO Support for DXP licenses
+	// TODO Support for nightly
+
 	rm -fr ${timestamp}
 }
 
