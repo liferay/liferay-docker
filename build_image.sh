@@ -73,23 +73,50 @@ function main {
 		exit
 	fi
 
-	local docker_image_tag=${release_file_url%/*}
+	local release_version=${release_file_url%/*}
 
-	docker_image_tag=liferay/${docker_image_name}:${docker_image_tag##*/}
+	release_version=${release_version##*/}
+
+	local label_version=${release_version}
+
+	if [[ ${release_file_url%} == */nightly-* ]]
+	then
+		local release_branch=${release_file_url%/*}
+
+		release_branch=${release_branch%/*}
+		release_branch=${release_branch##*-}
+
+		local release_hash=${release_file_name%\.*}
+
+		release_hash=${release_hash##*-}
+
+		label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
+	fi
+
+	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}
+	local secondary_docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
+
+	if [[ ${release_file_url%} == */nightly-* ]]
+	then
+		primary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot
+		secondary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot-${release_version}-${release_hash}
+	fi
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=`date -d "${current_date}" +'%Y-%m-%dT%H:%M:%SZ'` \
 		--build-arg LABEL_NAME="${label_name}" \
-		--tag ${docker_image_tag}-latest \
-		--tag ${docker_image_tag}-${timestamp} \
+		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
+		--build-arg LABEL_VERSION="${label_version}" \
+		--tag ${primary_docker_image_tag} \
+		--tag ${secondary_docker_image_tag} \
 		${timestamp}
 
 	#
 	# Push Docker image.
 	#
 
-	#docker push ${docker_image_tag}-latest
-	#docker push ${docker_image_tag}-${timestamp}
+	#docker push ${primary_docker_image_tag}
+	#docker push ${secondary_docker_image_tag}
 
 	#
 	# Clean up temporary directory.
@@ -98,7 +125,6 @@ function main {
 	rm -fr ${timestamp}
 
 	# TODO Automatically push to Docker Hub
-	# TODO Support for nightly images
 	# TODO Support for trial DXP licenses
 }
 

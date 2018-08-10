@@ -8,6 +8,8 @@ function main {
 		#files.liferay.com/private/ee/portal/6.2.10.21/liferay-portal-tomcat-6.2-ee-sp20-20170717160924965.zip
 		files.liferay.com/private/ee/portal/7.0.10.8/liferay-dxp-digital-enterprise-tomcat-7.0-sp8-20180717152749345.zip
 		#files.liferay.com/private/ee/portal/7.1.10/liferay-dxp-tomcat-7.1.10-ga1-20180703090613030.zip
+
+		#releases.liferay.com/portal/nightly-master/20180312011850065/liferay-ce-portal-tomcat-7.0-nightly-63becb8353e57714bf179233e4b54ad73d6919b1.zip
 	)
 
 	for release_file_url in ${release_file_urls[@]}
