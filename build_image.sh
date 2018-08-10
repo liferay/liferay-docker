@@ -79,9 +79,9 @@ function start_tomcat {
 
 	./${timestamp}/liferay/tomcat/bin/catalina.sh start
 
-	until $(curl --output /dev/null --silent --head --fail http://localhost:8080)
+	until $(curl --head --fail --output /dev/null --silent http://localhost:8080)
 	do
-		sleep 2
+		sleep 3
 	done
 
 	./${timestamp}/liferay/tomcat/bin/catalina.sh stop
