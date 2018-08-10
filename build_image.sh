@@ -1,8 +1,10 @@
 #!/bin/bash
 
 function main {
-	local release_file_name=${1##*/}
-	local release_file_url=http://mirrors.lax.liferay.com/${1}
+
+	#
+	# Make temporary directory.
+	#
 
 	local current_date=$(date)
 
@@ -12,6 +14,39 @@ function main {
 
 	cp -r template/* ${timestamp}
 	cp -r template/.bashrc ${timestamp}
+
+	#
+	# Download and prepare release.
+	#
+
+	local release_file_name=${1##*/}
+	local release_file_url=http://mirrors.lax.liferay.com/${1}
+
+	if [ ! -e releases/${release_file_name} ]
+	then
+		echo ""
+		echo "Downloading ${release_file_url}."
+		echo ""
+
+		curl -o releases/${release_file_name} ${release_file_url}
+	fi
+
+	unzip -q releases/${release_file_name} -d ${timestamp}
+
+	mv ${timestamp}/liferay-* ${timestamp}/liferay
+
+	mv ${timestamp}/liferay/tomcat-* ${timestamp}/liferay/tomcat
+
+	#
+	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
+	# the Hypersonic files can take over 20 seconds.
+	#
+
+	warm_up_tomcat ${timestamp}
+
+	#
+	# Build Docker image.
+	#
 
 	local docker_image_name
 	local label_name
@@ -38,23 +73,6 @@ function main {
 		exit
 	fi
 
-	if [ ! -e releases/${release_file_name} ]
-	then
-		echo ""
-		echo "Downloading ${release_file_url}."
-		echo ""
-
-		curl -o releases/${release_file_name} ${release_file_url}
-	fi
-
-	unzip -q releases/${release_file_name} -d ${timestamp}
-
-	mv ${timestamp}/liferay-* ${timestamp}/liferay
-
-	mv ${timestamp}/liferay/tomcat-* ${timestamp}/liferay/tomcat
-
-	warm_up_tomcat ${timestamp}
-
 	local docker_image_tag=${release_file_url%/*}
 
 	docker_image_tag=liferay/${docker_image_name}:${docker_image_tag##*/}
@@ -66,14 +84,22 @@ function main {
 		--tag ${docker_image_tag}-${timestamp} \
 		${timestamp}
 
+	#
+	# Push Docker image.
+	#
+
 	#docker push ${docker_image_tag}-latest
 	#docker push ${docker_image_tag}-${timestamp}
 
-	# TODO Automatically push to Docker Hub
-	# TODO Support for DXP licenses
-	# TODO Support for nightly
+	#
+	# Clean up temporary directory.
+	#
 
 	rm -fr ${timestamp}
+
+	# TODO Automatically push to Docker Hub
+	# TODO Support for nightly images
+	# TODO Support for trial DXP licenses
 }
 
 function start_tomcat {
