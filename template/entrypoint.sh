@@ -22,7 +22,7 @@ function main {
 
 		cp -r /liferay/docker/home /liferay/home
 	else
-		echo "[LIFERAY] The directory /liferay/docker/home does not exist. Files in /liferay/docker/home will be automatically copied to /liferay/home before [$PRODUCT_NAME$] starts."
+		echo "[LIFERAY] The directory /liferay/docker/home does not exist. Files in /liferay/docker/home will be automatically copied to /liferay/home before ${LIFERAY_PRODUCT_NAME} starts."
 	fi
 
 	echo ""
@@ -42,11 +42,11 @@ function main {
 			${SCRIPT_NAME}
 		done
 	else
-		echo "[LIFERAY] The directory /liferay/docker/scripts does not exist. Files in /liferay/docker/scripts will be automatically executed, in alphabetical order, before [$PRODUCT_NAME$] starts."
+		echo "[LIFERAY] The directory /liferay/docker/scripts does not exist. Files in /liferay/docker/scripts will be automatically executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
 	fi
 
 	echo ""
-	echo "[LIFERAY] Starting [$PRODUCT_NAME$]. To stop the container with CTRL-C, run this container with the option \"-it\"."
+	echo "[LIFERAY] Starting ${LIFERAY_PRODUCT_NAME}. To stop the container with CTRL-C, run this container with the option \"-it\"."
 	echo ""
 
 	/liferay/home/tomcat/bin/catalina.sh run

@@ -14,31 +14,29 @@ function main {
 	cp -r template/.bashrc ${timestamp}
 
 	local docker_image_name
-	local product_name
+	local label_name
 
 	if [[ ${release_file_name} == *-commerce-* ]]
 	then
 		docker_image_name="commerce"
-		product_name="Liferay Commerce"
+		label_name="Liferay Commerce"
 	elif [[ ${release_file_name} == *-dxp-* ]]
 	then
 		docker_image_name="dxp"
-		product_name="Liferay DXP"
+		label_name="Liferay DXP"
 	elif [[ ${release_file_name} == *-emporio-* ]]
 	then
 		docker_image_name="emporio"
-		product_name="Liferay Emporio"
+		label_name="Liferay Emporio"
 	elif [[ ${release_file_name} == *-portal-* ]]
 	then
 		docker_image_name="portal"
-		product_name="Liferay Portal"
+		label_name="Liferay Portal"
 	else
 		echo "${release_file_name} is an unsupported release file name."
 
 		exit
 	fi
-
-	sed -i "s/\[\$PRODUCT_NAME\$\]/${product_name}/" ${timestamp}/entrypoint.sh
 
 	if [ ! -e releases/${release_file_name} ]
 	then
@@ -63,7 +61,7 @@ function main {
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=`date -d "${current_date}" +'%Y-%m-%dT%H:%M:%SZ'` \
-		--build-arg LABEL_NAME="${product_name}" \
+		--build-arg LABEL_NAME="${label_name}" \
 		--tag ${docker_image_tag}-latest \
 		--tag ${docker_image_tag}-${timestamp} \
 		${timestamp}

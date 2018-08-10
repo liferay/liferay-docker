@@ -9,6 +9,8 @@ COPY entrypoint.sh /liferay
 
 ENTRYPOINT /liferay/entrypoint.sh
 
+ENV LIFERAY_PRODUCT_NAME="${LABEL_NAME}"
+
 EXPOSE 8080 11311
 
 HEALTHCHECK \
