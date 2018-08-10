@@ -93,13 +93,13 @@ function main {
 		label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
 	fi
 
-	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}
-	local secondary_docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
+	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
+	local secondary_docker_image_tag=liferay/${docker_image_name}:${release_version}
 
 	if [[ ${release_file_url%} == */nightly-* ]]
 	then
-		primary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot
-		secondary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot-${release_version}-${release_hash}
+		primary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot-${release_version}-${release_hash}
+		secondary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot
 	fi
 
 	docker build \
