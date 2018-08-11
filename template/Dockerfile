@@ -5,12 +5,11 @@ ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VERSION
 
-COPY .bashrc /opt/liferay/
-COPY .bashrc /root/
-COPY entrypoint.sh /opt/liferay/
-COPY liferay /opt/liferay/home
+COPY .bashrc /etc/liferay/
+COPY entrypoint.sh /etc/liferay/
+COPY liferay /opt/liferay
 
-ENTRYPOINT /opt/liferay/entrypoint.sh
+ENTRYPOINT /etc/liferay/entrypoint.sh
 
 ENV LIFERAY_PRODUCT_NAME="${LABEL_NAME}"
 
@@ -30,7 +29,7 @@ LABEL org.label-schema.vcs-url="https://github.com/liferay/liferay-docker"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
 
-RUN adduser -D -h /opt/liferay liferay && addgroup liferay liferay && chown -R liferay:liferay /opt/liferay
+RUN adduser -D -h /etc/liferay liferay && addgroup liferay liferay && chown -R liferay:liferay /opt/liferay
 RUN apk add bash tree
 
 USER liferay:liferay

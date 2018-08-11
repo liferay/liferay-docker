@@ -4,34 +4,34 @@ function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."
 	echo ""
 
-	if [ ! -d /opt/liferay/docker ]
+	if [ ! -d /etc/liferay/mount ]
 	then
-		echo "[LIFERAY] Run this container with the option \"-v \${pwd}/xyz123:/opt/liferay/docker\" to mount \${pwd}/xyz123 in the host operating system to /opt/liferay/docker on the container."
+		echo "[LIFERAY] Run this container with the option \"-v \${pwd}/xyz123:/etc/liferay/mount\" to bridge \${pwd}/xyz123 in the host operating system to /etc/liferay/mount on the container."
 		echo ""
 	fi
 
-	if [ -d /opt/liferay/docker/home ]
+	if [ -d /etc/liferay/mount/files ]
 	then
-		echo "[LIFERAY] Copying files from /opt/liferay/docker/home:"
+		echo "[LIFERAY] Copying files from /etc/liferay/mount/files:"
 		echo ""
 
-		tree --noreport /opt/liferay/docker/home
+		tree --noreport /etc/liferay/mount/files
 
 		echo ""
-		echo "[LIFERAY] ... into /opt/liferay/home."
+		echo "[LIFERAY] ... into /opt/liferay."
 
-		cp -r /opt/liferay/docker/home /opt/liferay/home
+		cp -r /etc/liferay/mount/files /opt/liferay
 	else
-		echo "[LIFERAY] The directory /opt/liferay/docker/home does not exist. Files in /opt/liferay/docker/home will be automatically copied to /opt/liferay/home before ${LIFERAY_PRODUCT_NAME} starts."
+		echo "[LIFERAY] The directory /etc/liferay/mount/files does not exist. Files in /etc/liferay/mount/files will be automatically copied to /opt/liferay before ${LIFERAY_PRODUCT_NAME} starts."
 	fi
 
 	echo ""
 
-	if [ -d /opt/liferay/docker/scripts ]
+	if [ -d /etc/liferay/mount/scripts ]
 	then
-		echo "[LIFERAY] Executing scripts in /opt/liferay/docker/scripts:"
+		echo "[LIFERAY] Executing scripts in /etc/liferay/mount/scripts:"
 
-		for SCRIPT_NAME in /opt/liferay/docker/scripts/*
+		for SCRIPT_NAME in /etc/liferay/mount/scripts/*
 		do
 			echo ""
 			echo "[LIFERAY] Executing ${SCRIPT_NAME}."
@@ -42,14 +42,14 @@ function main {
 			${SCRIPT_NAME}
 		done
 	else
-		echo "[LIFERAY] The directory /opt/liferay/docker/scripts does not exist. Files in /opt/liferay/docker/scripts will be automatically executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
+		echo "[LIFERAY] The directory /etc/liferay/mount/scripts does not exist. Files in /etc/liferay/mount/scripts will be automatically executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
 	fi
 
 	echo ""
 	echo "[LIFERAY] Starting ${LIFERAY_PRODUCT_NAME}. To stop the container with CTRL-C, run this container with the option \"-it\"."
 	echo ""
 
-	/opt/liferay/home/tomcat/bin/catalina.sh run
+	/opt/liferay/tomcat/bin/catalina.sh run
 }
 
 main
