@@ -6,10 +6,10 @@ ARG LABEL_VCS_REF
 ARG LABEL_VERSION
 
 COPY .bashrc /root
-COPY liferay /liferay/home
-COPY entrypoint.sh /liferay
+COPY liferay /opt/liferay/home
+COPY entrypoint.sh /opt/liferay
 
-ENTRYPOINT /liferay/entrypoint.sh
+ENTRYPOINT /opt/liferay/entrypoint.sh
 
 ENV LIFERAY_PRODUCT_NAME="${LABEL_NAME}"
 
@@ -31,4 +31,4 @@ LABEL org.label-schema.version="${LABEL_VERSION}"
 
 RUN apk add bash tree
 
-WORKDIR /liferay
+WORKDIR /opt/liferay
