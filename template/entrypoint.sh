@@ -18,11 +18,11 @@ function main {
 		tree --noreport /etc/liferay/mount/files
 
 		echo ""
-		echo "[LIFERAY] ... into /opt/liferay."
+		echo "[LIFERAY] ... into ${LIFERAY_HOME}."
 
-		cp -r /etc/liferay/mount/files /opt/liferay
+		cp -r /etc/liferay/mount/files ${LIFERAY_HOME}
 	else
-		echo "[LIFERAY] The directory /etc/liferay/mount/files does not exist. Files in /etc/liferay/mount/files will be automatically copied to /opt/liferay before ${LIFERAY_PRODUCT_NAME} starts."
+		echo "[LIFERAY] The directory /etc/liferay/mount/files does not exist. Files in /etc/liferay/mount/files will be automatically copied to ${LIFERAY_HOME} before ${LIFERAY_PRODUCT_NAME} starts."
 	fi
 
 	echo ""
@@ -49,7 +49,7 @@ function main {
 	echo "[LIFERAY] Starting ${LIFERAY_PRODUCT_NAME}. To stop the container with CTRL-C, run this container with the option \"-it\"."
 	echo ""
 
-	/opt/liferay/tomcat/bin/catalina.sh run
+	${LIFERAY_HOME}/tomcat/bin/catalina.sh run
 }
 
 main

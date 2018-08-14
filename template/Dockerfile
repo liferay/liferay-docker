@@ -11,6 +11,7 @@ COPY liferay /opt/liferay
 
 ENTRYPOINT /etc/liferay/entrypoint.sh
 
+ENV LIFERAY_HOME=/opt/liferay
 ENV LIFERAY_PRODUCT_NAME="${LABEL_NAME}"
 
 EXPOSE 8080 11311
