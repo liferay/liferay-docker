@@ -19,19 +19,27 @@ function main {
 	# Download and prepare release.
 	#
 
+	local release_dir=${1%/*}
+
+	release_dir=${release_dir#*/}
+	release_dir=${release_dir#*private/ee/}
+	release_dir=releases/${release_dir}
+
 	local release_file_name=${1##*/}
 	local release_file_url=http://mirrors.lax.liferay.com/${1}
 
-	if [ ! -e releases/${release_file_name} ]
+	if [ ! -e ${release_dir}/${release_file_name} ]
 	then
 		echo ""
 		echo "Downloading ${release_file_url}."
 		echo ""
 
-		curl -o releases/${release_file_name} ${release_file_url}
+		mkdir -p ${release_dir}
+
+		curl -o ${release_dir}/${release_file_name} ${release_file_url}
 	fi
 
-	unzip -q releases/${release_file_name} -d ${timestamp}
+	unzip -q ${release_dir}/${release_file_name} -d ${timestamp}
 
 	mv ${timestamp}/liferay-* ${timestamp}/liferay
 
@@ -42,7 +50,7 @@ function main {
 	# the Hypersonic files can take over 20 seconds.
 	#
 
-	warm_up_tomcat ${timestamp}
+	#warm_up_tomcat ${timestamp}
 
 	#
 	# Build Docker image.
@@ -79,24 +87,22 @@ function main {
 
 	local label_version=${release_version}
 
-	if [[ ${release_file_url%} == */nightly-* ]]
+	if [[ ${release_file_url%} == */snapshot-* ]]
 	then
 		local release_branch=${release_file_url%/*}
 
 		release_branch=${release_branch%/*}
 		release_branch=${release_branch##*-}
 
-		local release_hash=${release_file_name%\.*}
-
-		release_hash=${release_hash##*-}
+		local release_hash=$(curl --silent ${release_file_url%/*}/git-commit)
 
 		label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
 	fi
 
-	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
-	local secondary_docker_image_tag=liferay/${docker_image_name}:${release_version}
+	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}-release-${timestamp}
+	local secondary_docker_image_tag=liferay/${docker_image_name}:${release_version}-release
 
-	if [[ ${release_file_url%} == */nightly-* ]]
+	if [[ ${release_file_url%} == */snapshot-* ]]
 	then
 		primary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot-${release_version}-${release_hash}
 		secondary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot
