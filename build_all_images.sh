@@ -10,12 +10,14 @@ function main {
 		files.liferay.com/private/ee/portal/7.0.10.8/liferay-dxp-digital-enterprise-tomcat-7.0-sp8-20180717152749345.zip
 		files.liferay.com/private/ee/portal/7.1.10/liferay-dxp-tomcat-7.1.10-ga1-20180703090613030.zip
 		files.liferay.com/private/ee/portal/snapshot-ee-6.2.x/201808160944/liferay-portal-tomcat-ee-6.2.x.zip
+		files.liferay.com/private/ee/portal/snapshot-7.1.x/201808161926/liferay-portal-tomcat-7.1.x.zip
+		files.liferay.com/private/ee/portal/snapshot-7.1.x-private/201808162051/liferay-portal-tomcat-7.1.x-private.zip
 	)
 
 	for release_file_url in ${release_file_urls[@]}
 	do
 		echo ""
-		echo "Building Docker image for ${release_file_urls}."
+		echo "Building Docker image for ${release_file_url}."
 		echo ""
 
 		./build_image.sh ${release_file_url}

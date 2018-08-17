@@ -8,7 +8,7 @@ function main {
 
 	local current_date=$(date)
 
-	local timestamp=`date -d "${current_date}" "+%Y%m%d%H%M"`
+	local timestamp=$(date -d "${current_date}" "+%Y%m%d%H%M")
 
 	mkdir -p ${timestamp}
 
@@ -46,6 +46,25 @@ function main {
 	mv ${timestamp}/liferay/tomcat-* ${timestamp}/liferay/tomcat
 
 	#
+	# Download trial DXP license.
+	#
+
+	if [[ ${release_file_name} == *-dxp-* ]]
+	then
+		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
+		then
+			echo "Please set the environment variable LIFERAY_DOCKER_LICENSE_CMD to generate a trial DXP license."
+
+			exit
+		else
+			mkdir ${timestamp}/liferay/licenses
+
+			echo "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date -d "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/licenses/license-$(date -d "${current_date}" +%Y%m%d).xml"
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date -d "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/licenses/license-$(date -d "${current_date}" +%Y%m%d).xml"
+		fi
+	fi
+
+	#
 	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
 	# the Hypersonic files can take over 20 seconds.
 	#
@@ -63,7 +82,7 @@ function main {
 	then
 		docker_image_name="commerce"
 		label_name="Liferay Commerce"
-	elif [[ ${release_file_name} == *-dxp-* ]]
+	elif [[ ${release_file_name} == *-dxp-* ]] || [[ ${release_file_name} == *-private* ]]
 	then
 		docker_image_name="dxp"
 		label_name="Liferay DXP"
@@ -92,6 +111,7 @@ function main {
 		local release_branch=${release_file_url%/*}
 
 		release_branch=${release_branch%/*}
+		release_branch=${release_branch%-private*}
 		release_branch=${release_branch##*-}
 
 		local release_hash=$(curl --silent ${release_file_url%/*}/git-commit)
@@ -109,7 +129,7 @@ function main {
 	fi
 
 	docker build \
-		--build-arg LABEL_BUILD_DATE=`date -d "${current_date}" +'%Y-%m-%dT%H:%M:%SZ'` \
+		--build-arg LABEL_BUILD_DATE=$(date -d "${current_date}" +'%Y-%m-%dT%H:%M:%SZ') \
 		--build-arg LABEL_NAME="${label_name}" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VERSION="${label_version}" \
@@ -131,7 +151,6 @@ function main {
 	rm -fr ${timestamp}
 
 	# TODO Automatically push to Docker Hub
-	# TODO Support for trial DXP licenses
 }
 
 function start_tomcat {
