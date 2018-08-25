@@ -119,13 +119,11 @@ function main {
 		label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
 	fi
 
-	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}-release-${timestamp}
-	local secondary_docker_image_tag=liferay/${docker_image_name}:${release_version}-release
+	local docker_image_tag=liferay/${docker_image_name}:${release_version}-release-${timestamp}
 
 	if [[ ${release_file_url%} == */snapshot-* ]]
 	then
-		primary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot-${release_version}-${release_hash}
-		secondary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot
+		docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot-${release_version}-${release_hash}
 	fi
 
 	docker build \
@@ -133,16 +131,14 @@ function main {
 		--build-arg LABEL_NAME="${label_name}" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VERSION="${label_version}" \
-		--tag ${primary_docker_image_tag} \
-		--tag ${secondary_docker_image_tag} \
+		--tag ${docker_image_tag} \
 		${timestamp}
 
 	#
 	# Push Docker image.
 	#
 
-	#docker push ${primary_docker_image_tag}
-	#docker push ${secondary_docker_image_tag}
+	#docker push ${docker_image_tag}
 
 	#
 	# Clean up temporary directory.
