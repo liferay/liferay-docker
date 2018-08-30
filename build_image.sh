@@ -100,6 +100,11 @@ function main {
 		exit
 	fi
 
+	if [[ ${release_file_url%} == */snapshot-* ]]
+	then
+		docker_image_name=${docker_image_name}-snapshot
+	fi
+
 	local release_version=${release_file_url%/*}
 
 	release_version=${release_version##*/}
@@ -114,16 +119,16 @@ function main {
 		release_branch=${release_branch%-private*}
 		release_branch=${release_branch##*-}
 
-		local release_hash=$(curl --silent ${release_file_url%/*}/git-commit)
+		local release_hash=$(cat ${timestamp}/liferay/.githash)
 
 		label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
 	fi
 
-	local docker_image_tag=liferay/${docker_image_name}:${release_version}-release-${timestamp}
+	local docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
 
 	if [[ ${release_file_url%} == */snapshot-* ]]
 	then
-		docker_image_tag=liferay/${docker_image_name}:${release_branch}-snapshot-${release_version}-${release_hash}
+		docker_image_tag=liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}
 	fi
 
 	docker build \
