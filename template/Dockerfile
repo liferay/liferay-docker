@@ -31,7 +31,7 @@ LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
 
 RUN useradd -d /etc/liferay liferay && chown -R liferay:liferay /opt/liferay
-RUN apt-get update && apt-get install -y tree
+RUN apt-get update && apt-get install -y tree && rm -rf /var/lib/apt/lists/*
 
 USER liferay:liferay
 
