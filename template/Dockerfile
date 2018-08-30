@@ -5,7 +5,6 @@ ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VERSION
 
-COPY .bashrc /etc/liferay/
 COPY entrypoint.sh /etc/liferay/
 COPY liferay /opt/liferay
 

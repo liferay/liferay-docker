@@ -13,7 +13,6 @@ function main {
 	mkdir -p ${timestamp}
 
 	cp -r template/* ${timestamp}
-	cp -r template/.bashrc ${timestamp}
 
 	#
 	# Download and prepare release.
