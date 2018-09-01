@@ -74,7 +74,7 @@ function main {
 	# the Hypersonic files can take over 20 seconds.
 	#
 
-	#warm_up_tomcat ${timestamp}
+	warm_up_tomcat ${timestamp}
 
 	#
 	# Build Docker image.
@@ -183,17 +183,21 @@ function warm_up_tomcat {
 
 	if [ -d ${timestamp}/liferay/data/hsql ]
 	then
-		if [ ! -d ${timestamp}/liferay/data/hsql/lportal.tmp ]
+		if [ $(stat --printf="%s" ${timestamp}/liferay/data/hsql/lportal.script) -lt 1024000 ]
 		then
 			start_tomcat ${timestamp}
+		else
+			echo Tomcat is already warmed up.
 		fi
 	fi
 
 	if [ -d ${timestamp}/liferay/data/hypersonic ]
 	then
-		if [ ! -d ${timestamp}/liferay/data/hypersonic/lportal.tmp ]
+		if [ $(stat --printf="%s" ${timestamp}/liferay/data/hypersonic/lportal.script) -lt 1024000 ]
 		then
 			start_tomcat ${timestamp}
+		else
+			echo Tomcat is already warmed up.
 		fi
 	fi
 }
