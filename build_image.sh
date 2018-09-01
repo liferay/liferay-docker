@@ -39,7 +39,12 @@ function main {
 		curl -o ${release_dir}/${release_file_name} ${release_file_url}
 	fi
 
-	unzip -q ${release_dir}/${release_file_name} -d ${timestamp}
+	if [[ ${release_file_name} == *.7z ]]
+	then
+		7z x -O${timestamp} ${release_dir}/${release_file_name}
+	else
+		unzip -q ${release_dir}/${release_file_name} -d ${timestamp}
+	fi
 
 	mv ${timestamp}/liferay-* ${timestamp}/liferay
 
