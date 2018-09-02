@@ -7,7 +7,10 @@ ARG LABEL_VERSION
 
 COPY .bashrc /etc/liferay/
 COPY entrypoint.sh /etc/liferay/
-COPY liferay /opt/liferay
+
+RUN adduser -D -h /etc/liferay liferay && addgroup liferay liferay
+
+COPY --chown=liferay:liferay liferay /opt/liferay
 
 ENTRYPOINT /etc/liferay/entrypoint.sh
 
@@ -30,7 +33,6 @@ LABEL org.label-schema.vcs-url="https://github.com/liferay/liferay-docker"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
 
-RUN adduser -D -h /etc/liferay liferay && addgroup liferay liferay && chown -R liferay:liferay /opt/liferay
 RUN apk add bash tree
 
 USER liferay:liferay
