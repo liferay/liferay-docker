@@ -33,7 +33,7 @@ LABEL org.label-schema.vcs-url="https://github.com/liferay/liferay-docker"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
 
-RUN apk add bash tree
+RUN apk add bash curl tree
 
 USER liferay:liferay
 
