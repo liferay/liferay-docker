@@ -62,10 +62,7 @@ function main {
 
 			exit
 		else
-			mkdir ${timestamp}/liferay/licenses
-
-			echo "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date -d "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/licenses/license-$(date -d "${current_date}" +%Y%m%d).xml"
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date -d "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/licenses/license-$(date -d "${current_date}" +%Y%m%d).xml"
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date -d "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/deploy/license-$(date -d "${current_date}" +%Y%m%d).xml"
 		fi
 	fi
 
