@@ -51,6 +51,13 @@ function main {
 	mv ${timestamp}/liferay/tomcat-* ${timestamp}/liferay/tomcat
 
 	#
+	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
+	# the Hypersonic files can take over 20 seconds.
+	#
+
+	warm_up_tomcat ${timestamp}
+
+	#
 	# Download trial DXP license.
 	#
 
@@ -67,13 +74,6 @@ function main {
 			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date -d "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/deploy/license-$(date -d "${current_date}" +%Y%m%d).xml"
 		fi
 	fi
-
-	#
-	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
-	# the Hypersonic files can take over 20 seconds.
-	#
-
-	warm_up_tomcat ${timestamp}
 
 	#
 	# Build Docker image.
