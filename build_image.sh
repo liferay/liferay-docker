@@ -71,7 +71,15 @@ function main {
 		else
 			mkdir -p ${timestamp}/liferay/deploy
 
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date -d "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/deploy/license-$(date -d "${current_date}" +%Y%m%d).xml"
+			license_file_name=license-$(date -d "${current_date}" +%Y%m%d).xml
+
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date -d "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/deploy/${license_file_name}"
+
+			sed -i "s/\\\n//g" ${timestamp}/liferay/deploy/${license_file_name}
+			sed -i "s/\\\t//g" ${timestamp}/liferay/deploy/${license_file_name}
+			sed -i "s/\"<?xml/<?xml/" ${timestamp}/liferay/deploy/${license_file_name}
+			sed -i "s/license>\"/license>/" ${timestamp}/liferay/deploy/${license_file_name}
+			sed -i 's/\\"/\"/g' ${timestamp}/liferay/deploy/${license_file_name}
 		fi
 	fi
 
