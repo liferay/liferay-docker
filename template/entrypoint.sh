@@ -22,7 +22,7 @@ function main {
 
 		cp -r /etc/liferay/mount/files ${LIFERAY_HOME}
 	else
-		echo "[LIFERAY] The directory /etc/liferay/mount/files does not exist. Files in /etc/liferay/mount/files will be automatically copied to ${LIFERAY_HOME} before ${LIFERAY_PRODUCT_NAME} starts."
+		echo "[LIFERAY] The directory /etc/liferay/mount/files does not exist. Files in /etc/liferay/mount/files will be copied to ${LIFERAY_HOME} before ${LIFERAY_PRODUCT_NAME} starts."
 	fi
 
 	echo ""
@@ -42,7 +42,7 @@ function main {
 			${SCRIPT_NAME}
 		done
 	else
-		echo "[LIFERAY] The directory /etc/liferay/mount/scripts does not exist. Files in /etc/liferay/mount/scripts will be automatically executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
+		echo "[LIFERAY] The directory /etc/liferay/mount/scripts does not exist. Files in /etc/liferay/mount/scripts will be executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
 	fi
 
 	echo ""
