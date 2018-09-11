@@ -48,7 +48,10 @@ function main {
 
 	mv ${timestamp}/liferay-* ${timestamp}/liferay
 
-	mv ${timestamp}/liferay/tomcat-* ${timestamp}/liferay/tomcat
+	if [ -e ${timestamp}/liferay/tomcat-* ]
+	then
+		mv ${timestamp}/liferay/tomcat-* ${timestamp}/liferay/tomcat
+	fi
 
 	#
 	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
