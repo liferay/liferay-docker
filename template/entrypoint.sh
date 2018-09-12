@@ -33,8 +33,8 @@ function main {
 
 		for SCRIPT_NAME in /etc/liferay/mount/scripts/*
 		do
-			echo "[LIFERAY] Executing ${SCRIPT_NAME}."
 			echo ""
+			echo "[LIFERAY] Executing ${SCRIPT_NAME}."
 
 			chmod a+x ${SCRIPT_NAME}
 
