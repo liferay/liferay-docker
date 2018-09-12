@@ -139,7 +139,8 @@ function main {
 		label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
 	fi
 
-	local docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
+	local docker_image_release_tag=liferay/${docker_image_name}:${release_version}
+	local docker_image_tag=${docker_image_release_tag}-${timestamp}
 
 	if [[ ${release_file_url%} == */snapshot-* ]]
 	then
@@ -159,6 +160,16 @@ function main {
 	#
 
 	#docker push ${docker_image_tag}
+
+	if [[ ${release_file_url%} != */snapshot-* ]]
+	then
+		#
+		# Tag release Docker image.
+		#
+		docker tag ${docker_image_tag} ${docker_image_release_tag}
+
+		#docker push ${docker_image_release_tag}
+	fi
 
 	#
 	# Clean up temporary directory.
