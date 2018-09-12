@@ -48,13 +48,16 @@ function main {
 
 	if [ -d /etc/liferay/mount/deploy ]
 	then
-		cp /opt/liferay/deploy/* /etc/liferay/mount/deploy
+		if [ $(ls -A /opt/liferay/deploy) ]
+		then
+			cp /opt/liferay/deploy/* /etc/liferay/mount/deploy
+		fi
 
 		rm -fr /opt/liferay/deploy
 
 		ln -s /etc/liferay/mount/deploy /opt/liferay/deploy
 
-		echo "The directory /etc/liferay/mount/deploy is ready. Copy files to \${pwd}/xyz123/deploy on the host operating system, which is bridged to /etc/liferay/mount/deploy on the container, to deploy new modules to ${LIFERAY_PRODUCT_NAME} at runtime."
+		echo "[LIFERAY] The directory /etc/liferay/mount/deploy is ready. Copy files to \${pwd}/xyz123/deploy on the host operating system to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
 	else
 		echo "[LIFERAY] The directory /etc/liferay/mount/deploy does not exist. Create the directory \${pwd}/xyz123/deploy on the host operating system to create the directory /etc/liferay/mount/deploy on the container. Copy files to \${pwd}/xyz123/deploy to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
 	fi
