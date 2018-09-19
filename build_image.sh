@@ -21,12 +21,19 @@ function main {
 
 	local release_dir=${1%/*}
 
-	release_dir=${release_dir#*/}
+	release_dir=${release_dir#*com/}
+	release_dir=${release_dir#*com/}
 	release_dir=${release_dir#*private/ee/}
 	release_dir=releases/${release_dir}
 
 	local release_file_name=${1##*/}
-	local release_file_url=http://mirrors.lax.liferay.com/${1}
+
+	local release_file_url=${1}
+
+	if [[ ${release_file_url} != http://mirrors.lax.liferay.com* ]]
+	then
+		release_file_url=http://mirrors.lax.liferay.com/${release_file_url}
+	fi
 
 	if [ ! -e ${release_dir}/${release_file_name} ]
 	then
