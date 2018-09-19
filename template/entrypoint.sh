@@ -20,7 +20,7 @@ function main {
 		echo ""
 		echo "[LIFERAY] ... into ${LIFERAY_HOME}."
 
-		cp -r /etc/liferay/mount/files ${LIFERAY_HOME}
+		cp -r /etc/liferay/mount/files/* ${LIFERAY_HOME}
 	else
 		echo "[LIFERAY] The directory /etc/liferay/mount/files does not exist. Create the directory \${pwd}/xyz123/files on the host operating system to create the directory /etc/liferay/mount/files on the container. Files in /etc/liferay/mount/files will be copied to ${LIFERAY_HOME} before ${LIFERAY_PRODUCT_NAME} starts."
 	fi
