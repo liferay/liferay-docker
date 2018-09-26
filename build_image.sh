@@ -143,6 +143,8 @@ function main {
 
 		local release_hash=$(cat ${timestamp}/liferay/.githash)
 
+		release_hash=${release_hash:0:7}
+
 		label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
 	fi
 
