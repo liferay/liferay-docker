@@ -4,6 +4,7 @@ ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VERSION
+ARG LIFERAY_TOMCAT_VERSION
 
 COPY .bashrc /etc/liferay/
 COPY entrypoint.sh /etc/liferay/
@@ -39,6 +40,10 @@ LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
 
 RUN apk add bash curl tomcat-native tree
+
+RUN \
+	ln -s tomcat-${LIFERAY_TOMCAT_VERSION} /opt/liferay/tomcat && \
+	chown liferay:liferay /opt/liferay/tomcat
 
 USER liferay:liferay
 

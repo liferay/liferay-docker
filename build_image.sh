@@ -57,7 +57,20 @@ function main {
 
 	if [ -e ${timestamp}/liferay/tomcat-* ]
 	then
-		mv ${timestamp}/liferay/tomcat-* ${timestamp}/liferay/tomcat
+		for liferay_file_name in `ls ${timestamp}/liferay`
+		do
+			if [[ ${liferay_file_name} == tomcat-* ]]
+			then
+				local liferay_tomcat_version=${liferay_file_name#*-}
+			fi
+		done
+	fi
+
+	if [ -z ${liferay_tomcat_version+x} ]
+	then
+		echo "Unable to determine Tomcat version."
+
+		exit
 	fi
 
 	#
@@ -162,6 +175,7 @@ function main {
 		--build-arg LABEL_NAME="${label_name}" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VERSION="${label_version}" \
+		--build-arg LIFERAY_TOMCAT_VERSION=${liferay_tomcat_version} \
 		--tag ${primary_docker_image_tag} \
 		--tag ${secondary_docker_image_tag} \
 		${timestamp}
@@ -184,20 +198,20 @@ function main {
 function start_tomcat {
 	local timestamp=${1}
 
-	./${timestamp}/liferay/tomcat/bin/catalina.sh start
+	./${timestamp}/liferay/tomcat-*/bin/catalina.sh start
 
 	until $(curl --head --fail --output /dev/null --silent http://localhost:8080)
 	do
 		sleep 3
 	done
 
-	./${timestamp}/liferay/tomcat/bin/catalina.sh stop
+	./${timestamp}/liferay/tomcat-*/bin/catalina.sh stop
 
 	sleep 10
 
 	rm -fr ${timestamp}/liferay/data/osgi/state
 	rm -fr ${timestamp}/liferay/osgi/state
-	rm -fr ${timestamp}/liferay/tomcat/logs/*
+	rm -fr ${timestamp}/liferay/tomcat-*/logs/*
 }
 
 function warm_up_tomcat {
