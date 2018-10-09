@@ -184,7 +184,8 @@ function main {
 	# Push Docker image.
 	#
 
-	#docker push ${primary_docker_image_tag}
+	docker push ${primary_docker_image_tag}
+	docker push ${secondary_docker_image_tag}
 
 	#
 	# Clean up temporary directory.
