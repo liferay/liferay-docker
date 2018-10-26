@@ -103,6 +103,13 @@ function main {
 			sed -i "s/\"<?xml/<?xml/" ${timestamp}/liferay/deploy/${license_file_name}
 			sed -i "s/license>\"/license>/" ${timestamp}/liferay/deploy/${license_file_name}
 			sed -i 's/\\"/\"/g' ${timestamp}/liferay/deploy/${license_file_name}
+
+			if [ ! -e ${timestamp}/liferay/deploy/${license_file_name} ]
+			then
+				echo "Trial DXP license does not exist at ${timestamp}/liferay/deploy/${license_file_name}."
+
+				exit
+			fi
 		fi
 	fi
 
