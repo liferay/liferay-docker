@@ -199,8 +199,6 @@ function main {
 	#
 
 	rm -fr ${timestamp}
-
-	# TODO Automatically push to Docker Hub
 }
 
 function start_tomcat {
