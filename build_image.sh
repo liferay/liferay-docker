@@ -70,7 +70,7 @@ function main {
 	then
 		echo "Unable to determine Tomcat version."
 
-		exit
+		exit 1
 	fi
 
 	#
@@ -90,7 +90,7 @@ function main {
 		then
 			echo "Please set the environment variable LIFERAY_DOCKER_LICENSE_CMD to generate a trial DXP license."
 
-			exit
+			exit 1
 		else
 			mkdir -p ${timestamp}/liferay/deploy
 
@@ -108,7 +108,9 @@ function main {
 			then
 				echo "Trial DXP license does not exist at ${timestamp}/liferay/deploy/${license_file_name}."
 
-				exit
+				exit 1
+			else
+				echo "Trial DXP license exists at ${timestamp}/liferay/deploy/${license_file_name}."
 			fi
 		fi
 	fi
@@ -139,7 +141,7 @@ function main {
 	else
 		echo "${release_file_name} is an unsupported release file name."
 
-		exit
+		exit 1
 	fi
 
 	if [[ ${release_file_url%} == */snapshot-* ]]
@@ -168,13 +170,13 @@ function main {
 		label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
 	fi
 
-	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}
-	local secondary_docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
+	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
+	local secondary_docker_image_tag=liferay/${docker_image_name}:${release_version}
 
 	if [[ ${release_file_url%} == */snapshot-* ]]
 	then
-		primary_docker_image_tag=liferay/${docker_image_name}:${release_branch}
-		secondary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}
+		primary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}
+		secondary_docker_image_tag=liferay/${docker_image_name}:${release_branch}
 	fi
 
 	docker build \
