@@ -2,6 +2,7 @@
 
 function main {
 	local release_file_urls=(
+		releases.liferay.com/commerce/1.0.1/liferay-commerce-1.0.1-201811022359.7z
 		releases.liferay.com/portal/6.2.5-ga6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip
 		files.liferay.com/private/ee/portal/6.2.10.21/liferay-portal-tomcat-6.2-ee-sp20-20170717160924965.zip
 		releases.liferay.com/portal/7.0.6-ga7/liferay-ce-portal-tomcat-7.0-ga7-20180507111753223.zip

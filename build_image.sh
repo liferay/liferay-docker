@@ -130,10 +130,6 @@ function main {
 	then
 		docker_image_name="dxp"
 		label_name="Liferay DXP"
-	elif [[ ${release_file_name} == *-emporio-* ]]
-	then
-		docker_image_name="emporio"
-		label_name="Liferay Emporio"
 	elif [[ ${release_file_name} == *-portal-* ]]
 	then
 		docker_image_name="portal"
