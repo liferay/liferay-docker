@@ -220,6 +220,18 @@ function os_date() {
 	exit 0
 }
 
+function os_stat() {
+	local path=${1}
+
+	if [ "$(uname)" == "Darwin" ]; then
+		echo $(stat -f "%z" ${path})
+	elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+		echo $(stat --printf="%s" ${path})
+	fi
+
+	exit 0
+}
+
 function start_tomcat {
 	local timestamp=${1}
 
@@ -244,7 +256,9 @@ function warm_up_tomcat {
 
 	if [ -d ${timestamp}/liferay/data/hsql ]
 	then
-		if [ $(stat --printf="%s" ${timestamp}/liferay/data/hsql/lportal.script) -lt 1024000 ]
+		local size=$(os_stat ${timestamp}/liferay/data/hsql/lportal.script)
+
+		if [ ${size} -lt 1024000 ]
 		then
 			start_tomcat ${timestamp}
 		else
@@ -254,7 +268,9 @@ function warm_up_tomcat {
 
 	if [ -d ${timestamp}/liferay/data/hypersonic ]
 	then
-		if [ $(stat --printf="%s" ${timestamp}/liferay/data/hypersonic/lportal.script) -lt 1024000 ]
+		local size=$(os_stat ${timestamp}/liferay/data/hypersonic/lportal.script)
+
+		if [ ${size} -lt 1024000 ]
 		then
 			start_tomcat ${timestamp}
 		else
