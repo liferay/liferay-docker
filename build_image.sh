@@ -8,11 +8,7 @@ function main {
 
 	local current_date=$(date)
 
-	if [ "$(uname)" == "Darwin" ]; then
-		local timestamp=$(date -v +0d "+%Y%m%d%H%M")
-	elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-		local timestamp=$(date -d "${current_date}" "+%Y%m%d%H%M")
-	fi
+	local timestamp=$(os_date "+%Y%m%d%H%M")
 
 	mkdir -p ${timestamp}
 
@@ -98,13 +94,8 @@ function main {
 		else
 			mkdir -p ${timestamp}/liferay/deploy
 
-			if [ "$(uname)" == "Darwin" ]; then
-				local license_date=$(date -v +0d "+%Y%m%d")
-				local start_date=$(date -v +0d "+%Y-%m-%d")
-			elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-				local license_date=$(date -d "${current_date}" "+%Y%m%d")
-				local start_date=$(date -d "${current_date}" "+%Y-%m-%d")
-			fi
+			local license_date=$(os_date "+%Y%m%d")
+			local start_date=$(os_date "+%Y-%m-%d")
 
 			license_file_name=license-${license_date}.xml
 
@@ -215,6 +206,18 @@ function main {
 	#
 
 	rm -fr ${timestamp}
+}
+
+function os_date() {
+	local format=${1}
+
+	if [ "$(uname)" == "Darwin" ]; then
+		echo $(date -v +0d "${format}")
+	elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+		echo $(date -d "${current_date}" "${format}")
+	fi
+
+	exit 0
 }
 
 function start_tomcat {
