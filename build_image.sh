@@ -237,12 +237,23 @@ function start_tomcat {
 	rm -fr ${timestamp}/liferay/tomcat-*/logs/*
 }
 
+function stat() {
+	if [ "$(uname)" == "Darwin" ]
+	then
+		echo $(/usr/bin/stat -f "%z" "${1}")
+	else
+		echo $(/usr/bin/stat --printf="%s" "${1}")
+	fi
+}
+
 function warm_up_tomcat {
 	local timestamp=${1}
 
 	if [ -d ${timestamp}/liferay/data/hsql ]
 	then
-		if [ $(stat --printf="%s" ${timestamp}/liferay/data/hsql/lportal.script) -lt 1024000 ]
+		local size=$(stat ${timestamp}/liferay/data/hsql/lportal.script)
+
+		if [ ${size} -lt 1024000 ]
 		then
 			start_tomcat ${timestamp}
 		else
@@ -252,7 +263,9 @@ function warm_up_tomcat {
 
 	if [ -d ${timestamp}/liferay/data/hypersonic ]
 	then
-		if [ $(stat --printf="%s" ${timestamp}/liferay/data/hypersonic/lportal.script) -lt 1024000 ]
+		local size=$(stat ${timestamp}/liferay/data/hypersonic/lportal.script)
+
+		if [ ${size} -lt 1024000 ]
 		then
 			start_tomcat ${timestamp}
 		else
