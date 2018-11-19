@@ -8,7 +8,11 @@ function main {
 
 	local current_date=$(date)
 
-	local timestamp=$(date -d "${current_date}" "+%Y%m%d%H%M")
+	if [ "$(uname)" == "Darwin" ]; then
+		local timestamp=$(date -v +0d "+%Y%m%d%H%M")
+	elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+		local timestamp=$(date -d "${current_date}" "+%Y%m%d%H%M")
+	fi
 
 	mkdir -p ${timestamp}
 
@@ -94,9 +98,17 @@ function main {
 		else
 			mkdir -p ${timestamp}/liferay/deploy
 
-			license_file_name=license-$(date -d "${current_date}" +%Y%m%d).xml
+			if [ "$(uname)" == "Darwin" ]; then
+				local license_date=$(date -v +0d "+%Y%m%d")
+				local start_date=$(date -v +0d "+%Y-%m-%d")
+			elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+				local license_date=$(date -d "${current_date}" "+%Y%m%d")
+				local start_date=$(date -d "${current_date}" "+%Y-%m-%d")
+			fi
 
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date -d "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/deploy/${license_file_name}"
+			license_file_name=license-${license_date}.xml
+
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=${start_date}&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/deploy/${license_file_name}"
 
 			sed -i "s/\\\n//g" ${timestamp}/liferay/deploy/${license_file_name}
 			sed -i "s/\\\t//g" ${timestamp}/liferay/deploy/${license_file_name}
@@ -175,8 +187,14 @@ function main {
 		secondary_docker_image_tag=liferay/${docker_image_name}:${release_branch}
 	fi
 
+	if [ "$(uname)" == "Darwin" ]; then
+		local build_date=$(date -v +0d +'%Y-%m-%dT%H:%M:%SZ')
+	elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+		local build_date=$(date -d "${current_date}" +'%Y-%m-%dT%H:%M:%SZ')
+	fi
+
 	docker build \
-		--build-arg LABEL_BUILD_DATE=$(date -d "${current_date}" +'%Y-%m-%dT%H:%M:%SZ') \
+		--build-arg LABEL_BUILD_DATE=${build_date} \
 		--build-arg LABEL_NAME="${label_name}" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VERSION="${label_version}" \
