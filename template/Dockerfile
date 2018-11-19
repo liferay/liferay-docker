@@ -10,8 +10,8 @@ COPY entrypoint.sh /etc/liferay/
 
 RUN adduser -D -h /etc/liferay liferay && addgroup liferay liferay
 
-COPY --chown=liferay:liferay liferay /opt/liferay
 COPY --chown=liferay:liferay .bashrc /etc/liferay/
+COPY --chown=liferay:liferay liferay /opt/liferay
 
 ENTRYPOINT /etc/liferay/entrypoint.sh
 
