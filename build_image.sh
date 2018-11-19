@@ -1,5 +1,19 @@
 #!/bin/bash
 
+function date {
+	if [ -z ${1+x} ] || [ -z ${2+x} ]
+	then
+		echo $(/usr/bin/date)
+	else
+		if [ "$(uname)" == "Darwin" ]
+		then
+			echo $(/usr/bin/date -jf "%a %b %e %H:%M:%S %Z %Y" "${1}" "${2}")
+		else
+			echo $(/usr/bin/date -d "${1}" "${2}")
+		fi
+	fi
+}
+
 function main {
 
 	#
@@ -8,7 +22,7 @@ function main {
 
 	local current_date=$(date)
 
-	local timestamp=$(date -d "${current_date}" "+%Y%m%d%H%M")
+	local timestamp=$(date "${current_date}" "+%Y%m%d%H%M")
 
 	mkdir -p ${timestamp}
 
@@ -94,9 +108,9 @@ function main {
 		else
 			mkdir -p ${timestamp}/liferay/deploy
 
-			license_file_name=license-$(date -d "${current_date}" +%Y%m%d).xml
+			license_file_name=license-$(date "${current_date}" +%Y%m%d).xml
 
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date -d "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/deploy/${license_file_name}"
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/deploy/${license_file_name}"
 
 			sed -i "s/\\\n//g" ${timestamp}/liferay/deploy/${license_file_name}
 			sed -i "s/\\\t//g" ${timestamp}/liferay/deploy/${license_file_name}
@@ -176,7 +190,7 @@ function main {
 	fi
 
 	docker build \
-		--build-arg LABEL_BUILD_DATE=$(date -d "${current_date}" +'%Y-%m-%dT%H:%M:%SZ') \
+		--build-arg LABEL_BUILD_DATE=$(date "${current_date}" +'%Y-%m-%dT%H:%M:%SZ') \
 		--build-arg LABEL_NAME="${label_name}" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VERSION="${label_version}" \
