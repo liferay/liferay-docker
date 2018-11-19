@@ -6,12 +6,12 @@ ARG LABEL_VCS_REF
 ARG LABEL_VERSION
 ARG LIFERAY_TOMCAT_VERSION
 
-COPY .bashrc /etc/liferay/
 COPY entrypoint.sh /etc/liferay/
 
 RUN adduser -D -h /etc/liferay liferay && addgroup liferay liferay
 
 COPY --chown=liferay:liferay liferay /opt/liferay
+COPY --chown=liferay:liferay .bashrc /etc/liferay/
 
 ENTRYPOINT /etc/liferay/entrypoint.sh
 
