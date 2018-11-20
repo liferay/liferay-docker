@@ -6,7 +6,7 @@ function check_tool() {
 }
 
 function check_tools() {
-	local tools=(docker)
+	local tools=(curl docker)
 
 	if [[ ${release_file_name} == *.7z ]]
 	then
