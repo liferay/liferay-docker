@@ -1,5 +1,26 @@
 #!/bin/bash
 
+function check_tool() {
+	# See https://stackoverflow.com/a/677212
+	command -v ${1} >/dev/null 2>&1 || { echo >&2 "This build tool requires ${1} but it's not installed. Aborting."; exit 1; }
+}
+
+function check_tools() {
+	local tools=(docker)
+
+	if [[ ${release_file_name} == *.7z ]]
+	then
+		tools+=('7z')
+	else
+		tools+=('unzip')
+	fi
+
+	for tool in "${tools[@]}"
+	do
+		check_tool ${tool}
+	done
+}
+
 function date {
 	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
@@ -46,6 +67,8 @@ function main {
 	release_dir=releases/${release_dir}
 
 	local release_file_name=${1##*/}
+
+	check_tools "$release_file_name"
 
 	local release_file_url=${1}
 
