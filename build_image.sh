@@ -3,7 +3,12 @@
 function date {
 	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
-		echo $(/usr/bin/date)
+		if [ "$(uname)" == "Darwin" ]
+		then
+			echo $(/bin/date)
+		else
+			echo $(/usr/bin/date)
+		fi
 	else
 		if [ "$(uname)" == "Darwin" ]
 		then
