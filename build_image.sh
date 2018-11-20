@@ -1,23 +1,14 @@
 #!/bin/bash
 
-function check_tool() {
-	# See https://stackoverflow.com/a/677212
-	command -v ${1} >/dev/null 2>&1 || { echo >&2 "This build tool requires ${1} but it's not installed. Aborting."; exit 1; }
-}
+function check_utils {
 
-function check_tools() {
-	local tools=(curl docker java)
+	#
+	# https://stackoverflow.com/a/677212
+	#
 
-	if [[ ${release_file_name} == *.7z ]]
-	then
-		tools+=('7z')
-	else
-		tools+=('unzip')
-	fi
-
-	for tool in "${tools[@]}"
+	for util in "${@}"
 	do
-		check_tool ${tool}
+		command -v ${util} >/dev/null 2>&1 || { echo >&2 "The utility ${util} is not installed."; exit 1; }
 	done
 }
 
@@ -41,6 +32,7 @@ function date {
 }
 
 function main {
+	check_utils 7z curl docker java unzip
 
 	#
 	# Make temporary directory.
@@ -67,8 +59,6 @@ function main {
 	release_dir=releases/${release_dir}
 
 	local release_file_name=${1##*/}
-
-	check_tools "$release_file_name"
 
 	local release_file_url=${1}
 
