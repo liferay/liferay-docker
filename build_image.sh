@@ -7,7 +7,7 @@ function date {
 	else
 		if [ "$(uname)" == "Darwin" ]
 		then
-			echo $(/usr/bin/date -jf "%a %b %e %H:%M:%S %Z %Y" "${1}" "${2}")
+			echo $(/bin/date -jf "%a %b %e %H:%M:%S %Z %Y" "${1}" "${2}")
 		else
 			echo $(/usr/bin/date -d "${1}" "${2}")
 		fi
