@@ -66,7 +66,12 @@ function main {
 	echo "[LIFERAY] Starting ${LIFERAY_PRODUCT_NAME}. To stop the container with CTRL-C, run this container with the option \"-it\"."
 	echo ""
 
-	${LIFERAY_HOME}/tomcat/bin/catalina.sh run
+	if [ -n ${ENABLE_DEBUG} ] && [ "${ENABLE_DEBUG}" == "true" ]
+	then
+		${LIFERAY_HOME}/tomcat/bin/catalina.sh jpda run
+	else
+		${LIFERAY_HOME}/tomcat/bin/catalina.sh run
+	fi
 }
 
 main
