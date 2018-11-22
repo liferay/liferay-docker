@@ -42,10 +42,8 @@ LABEL org.label-schema.version="${LABEL_VERSION}"
 
 RUN apk add bash curl tomcat-native tree
 
-RUN \
-	ln -s tomcat-${LIFERAY_TOMCAT_VERSION} /opt/liferay/tomcat && \
-	chown liferay:liferay /opt/liferay/tomcat
-
 USER liferay:liferay
+
+RUN ln -s tomcat-${LIFERAY_TOMCAT_VERSION} /opt/liferay/tomcat
 
 WORKDIR /opt/liferay
