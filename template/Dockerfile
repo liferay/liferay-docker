@@ -16,6 +16,7 @@ COPY --chown=liferay:liferay liferay /opt/liferay
 ENTRYPOINT /etc/liferay/entrypoint.sh
 
 ENV LIFERAY_HOME=/opt/liferay
+ENV LIFERAY_JPDA_ENABLED=false
 ENV LIFERAY_PRODUCT_NAME="${LABEL_NAME}"
 
 ENV LIFERAY_SETUP_PERIOD_WIZARD_PERIOD_ADD_PERIOD_SAMPLE_PERIOD_DATA=false
