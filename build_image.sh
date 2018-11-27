@@ -13,15 +13,7 @@ function check_utils {
 }
 
 function configure_tomcat {
-	local timestamp=${1}
-	local liferay_tomcat_version=${2}
-
-	#
-	# Allow tuning the JVM, like Xmx, GC-specific values, etc.
-	#
-	local setenvFile="${timestamp}/liferay/tomcat-${liferay_tomcat_version}/bin/setenv.sh"
-
-	cat << \EOF >> ${setenvFile}
+	cat << \EOF >> ${1}/liferay/tomcat-${2}/bin/setenv.sh
 
 CATALINA_OPTS="${CATALINA_OPTS} ${LIFERAY_JVM_OPTS}"
 EOF
