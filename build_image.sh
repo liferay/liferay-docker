@@ -109,7 +109,7 @@ function main {
 	# Configure tomcat
 	#
 
-	setup_tomcat ${timestamp} ${liferay_tomcat_version}
+	configure_tomcat ${timestamp} ${liferay_tomcat_version}
 
 	#
 	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
@@ -237,7 +237,7 @@ function main {
 	rm -fr ${timestamp}
 }
 
-function setup_tomcat {
+function configure_tomcat {
 	local timestamp=${1}
 	local liferay_tomcat_version=${2}
 
