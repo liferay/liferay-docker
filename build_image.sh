@@ -13,10 +13,7 @@ function check_utils {
 }
 
 function configure_tomcat {
-	cat << \EOF >> ${1}/liferay/tomcat-${2}/bin/setenv.sh
-
-CATALINA_OPTS="${CATALINA_OPTS} ${LIFERAY_JVM_OPTS}"
-EOF
+	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> ${1}/liferay/tomcat-${2}/bin/setenv.sh
 }
 
 function date {
