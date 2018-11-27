@@ -106,7 +106,7 @@ function main {
 	fi
 
 	#
-	# Configure tomcat
+	# Configure Tomcat.
 	#
 
 	configure_tomcat ${timestamp} ${liferay_tomcat_version}
