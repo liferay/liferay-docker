@@ -35,6 +35,28 @@ function date {
 	fi
 }
 
+function get_tomcat_version {
+	if [ -e ${1}/tomcat-* ]
+	then
+		for temp_file_name in `ls ${1}`
+		do
+			if [[ ${temp_file_name} == tomcat-* ]]
+			then
+				local liferay_tomcat_version=${temp_file_name#*-}
+			fi
+		done
+	fi
+
+	if [ -z ${liferay_tomcat_version+x} ]
+	then
+		echo "Unable to determine Tomcat version."
+
+		exit 1
+	fi
+
+	echo ${liferay_tomcat_version}
+}
+
 function main {
 	check_utils 7z curl docker java unzip
 
@@ -91,27 +113,11 @@ function main {
 
 	mv ${timestamp}/liferay-* ${timestamp}/liferay
 
-	if [ -e ${timestamp}/liferay/tomcat-* ]
-	then
-		for liferay_file_name in `ls ${timestamp}/liferay`
-		do
-			if [[ ${liferay_file_name} == tomcat-* ]]
-			then
-				local liferay_tomcat_version=${liferay_file_name#*-}
-			fi
-		done
-	fi
-
-	if [ -z ${liferay_tomcat_version+x} ]
-	then
-		echo "Unable to determine Tomcat version."
-
-		exit 1
-	fi
-
 	#
 	# Configure Tomcat.
 	#
+
+	local liferay_tomcat_version=$(get_tomcat_version ${timestamp}/liferay)
 
 	configure_tomcat ${timestamp} ${liferay_tomcat_version}
 
@@ -205,7 +211,12 @@ function main {
 
 		release_hash=${release_hash:0:7}
 
-		label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
+		if [[ ${release_branch} == master ]]
+		then
+			label_version="Master Snapshot on ${label_version} at ${release_hash}"
+		else
+			label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
+		fi
 	fi
 
 	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
