@@ -222,6 +222,8 @@ function main {
 		fi
 	fi
 
+	local docker_images=()
+
 	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
 	local secondary_docker_image_tag=liferay/${docker_image_name}:${release_version}
 
@@ -229,7 +231,21 @@ function main {
 	then
 		primary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}
 		secondary_docker_image_tag=liferay/${docker_image_name}:${release_branch}
+
+		local date_tag=$(date "${current_date}" +'%Y%m%d')
+		local date_docker_image_tag=liferay/${docker_image_name}:${release_branch}-${date_tag}
+
+		docker_images+=(${date_docker_image_tag})
 	fi
+
+	docker_images+=(${primary_docker_image_tag})
+	docker_images+=(${secondary_docker_image_tag})
+
+	local argument_tags=""
+	for docker_image in "${docker_images[@]}"
+	do
+		argument_tags="${argument_tags} --tag ${docker_image}"
+	done
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${current_date}" +'%Y-%m-%dT%H:%M:%SZ') \
@@ -237,16 +253,17 @@ function main {
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VERSION="${label_version}" \
 		--build-arg LIFERAY_TOMCAT_VERSION=${liferay_tomcat_version} \
-		--tag ${primary_docker_image_tag} \
-		--tag ${secondary_docker_image_tag} \
+		$(echo ${argument_tags}) \
 		${timestamp}
 
 	#
 	# Push Docker image.
 	#
 
-	docker push ${primary_docker_image_tag}
-	docker push ${secondary_docker_image_tag}
+	for docker_image in "${docker_images[@]}"
+	do
+		docker push ${docker_image}
+	done
 
 	#
 	# Clean up temporary directory.
