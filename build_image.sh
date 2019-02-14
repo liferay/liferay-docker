@@ -222,14 +222,24 @@ function main {
 		fi
 	fi
 
-	local primary_docker_image_tag=liferay/${docker_image_name}:${release_version}-${timestamp}
-	local secondary_docker_image_tag=liferay/${docker_image_name}:${release_version}
+	local docker_image_tags=()
 
 	if [[ ${release_file_url%} == */snapshot-* ]]
 	then
-		primary_docker_image_tag=liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}
-		secondary_docker_image_tag=liferay/${docker_image_name}:${release_branch}
+		docker_image_tags+=("liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}")
+		docker_image_tags+=("liferay/${docker_image_name}:${release_branch}-$(date "${current_date}" "+%Y%m%d")")
+		docker_image_tags+=("liferay/${docker_image_name}:${release_branch}")
+	else
+		docker_image_tags+=("liferay/${docker_image_name}:${release_version}-${timestamp}")
+		docker_image_tags+=("liferay/${docker_image_name}:${release_version}")
 	fi
+
+	local docker_image_tags_args=""
+
+	for docker_image_tag in "${docker_image_tags[@]}"
+	do
+		docker_image_tags_args="${docker_image_tags_args} --tag ${docker_image_tag}"
+	done
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${current_date}" "+%Y-%m-%dT%H:%M:%SZ") \
@@ -237,16 +247,17 @@ function main {
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VERSION="${label_version}" \
 		--build-arg LIFERAY_TOMCAT_VERSION=${liferay_tomcat_version} \
-		--tag ${primary_docker_image_tag} \
-		--tag ${secondary_docker_image_tag} \
+		$(echo ${docker_image_tags_args}) \
 		${timestamp}
 
 	#
 	# Push Docker image.
 	#
 
-	docker push ${primary_docker_image_tag}
-	docker push ${secondary_docker_image_tag}
+	for docker_image_tag in "${docker_image_tags[@]}"
+	do
+		docker push ${docker_image_tag}
+	done
 
 	#
 	# Clean up temporary directory.
