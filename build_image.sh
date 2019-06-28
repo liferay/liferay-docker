@@ -150,7 +150,7 @@ function main {
 
 			license_file_name=license-$(date "${current_date}" "+%Y%m%d").xml
 
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${current_date}" "+%Y-%m-%d")&owner=ci%40wedeploy.com\" > ${timestamp}/liferay/deploy/${license_file_name}"
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${current_date}" "+%Y-%m-%d")&owner=hello%40liferay.com\" > ${timestamp}/liferay/deploy/${license_file_name}"
 
 			sed -i "s/\\\n//g" ${timestamp}/liferay/deploy/${license_file_name}
 			sed -i "s/\\\t//g" ${timestamp}/liferay/deploy/${license_file_name}
