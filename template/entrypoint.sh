@@ -20,7 +20,12 @@ function main {
 		echo ""
 		echo "[LIFERAY] ... into ${LIFERAY_HOME}."
 
-		cp -r /etc/liferay/mount/files/* ${LIFERAY_HOME}
+		# using 'install' instead of 'cp' to be able to copy into tomcat/ symlink
+		pushd /etc/liferay/mount/files > /dev/null
+		find . -type f | while read rel_path; do
+			install -D "${rel_path}" "${LIFERAY_HOME}/${rel_path}"
+		done
+		popd > /dev/null
 	else
 		echo "[LIFERAY] The directory /etc/liferay/mount/files does not exist. Create the directory \$(pwd)/xyz123/files on the host operating system to create the directory /etc/liferay/mount/files on the container. Files in /etc/liferay/mount/files will be copied to ${LIFERAY_HOME} before ${LIFERAY_PRODUCT_NAME} starts."
 	fi
