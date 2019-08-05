@@ -212,6 +212,12 @@ function main {
 
 	release_version=${release_version##*/}
 
+	if [[ ${release_file_url} == http://release* ]]
+	then
+		release_version=${release_file_url#*tomcat-}
+		release_version=${release_version%.*}
+	fi
+
 	local label_version=${release_version}
 
 	if [[ ${release_file_url%} == */snapshot-* ]]
