@@ -87,8 +87,8 @@ function main {
 
 	release_dir=${release_dir#*com/}
 	release_dir=${release_dir#*com/}
-	release_dir=${release_dir#*private/ee/}
 	release_dir=${release_dir#*liferay-release-tool/}
+	release_dir=${release_dir#*private/ee/}
 	release_dir=releases/${release_dir}
 
 	local release_file_name=${1##*/}
