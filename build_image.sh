@@ -203,6 +203,11 @@ function main {
 		docker_image_name=${docker_image_name}-snapshot
 	fi
 
+	if [[ ${release_file_url} == http://release* ]]
+	then
+		docker_image_name=${docker_image_name}-pre-release
+	fi
+
 	local release_version=${release_file_url%/*}
 
 	release_version=${release_version##*/}
