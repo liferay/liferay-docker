@@ -108,14 +108,14 @@ function main {
 
 		mkdir -p ${release_dir}
 
-		curl -f -o ${release_dir}/${release_file_name} ${release_file_url}
+		curl -f -o ${release_dir}/${release_file_name} ${release_file_url} || exit 2
 	fi
 
 	if [[ ${release_file_name} == *.7z ]]
 	then
-		7z x -O${timestamp} ${release_dir}/${release_file_name}
+		7z x -O${timestamp} ${release_dir}/${release_file_name} || exit 3
 	else
-		unzip -q ${release_dir}/${release_file_name} -d ${timestamp}
+		unzip -q ${release_dir}/${release_file_name} -d ${timestamp}  || exit 3
 	fi
 
 	mv ${timestamp}/liferay-* ${timestamp}/liferay
