@@ -107,7 +107,7 @@ function main {
 
 		mkdir -p ${release_dir}
 
-		curl -o ${release_dir}/${release_file_name} ${release_file_url}
+		curl -f -o ${release_dir}/${release_file_name} ${release_file_url}
 	fi
 
 	if [[ ${release_file_name} == *.7z ]]
