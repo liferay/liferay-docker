@@ -94,7 +94,7 @@ function main {
 
 	local release_file_url=${1}
 
-	if [[ ${release_file_url} != http://mirrors.lax.liferay.com* ]]
+	if [[ ${release_file_url} != http://mirrors.*.liferay.com* ]]
 	then
 		release_file_url=http://mirrors.lax.liferay.com/${release_file_url}
 	fi
