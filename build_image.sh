@@ -16,6 +16,10 @@ function configure_tomcat {
 	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> ${1}/liferay/tomcat-${2}/bin/setenv.sh
 }
 
+function configure_portal {
+	printf "module.framework.properties.osgi.console=0.0.0.0:111311" >> ${1}/liferay/portal-ext.properties
+}
+
 function date {
 	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
@@ -127,6 +131,8 @@ function main {
 	local liferay_tomcat_version=$(get_tomcat_version ${timestamp}/liferay)
 
 	configure_tomcat ${timestamp} ${liferay_tomcat_version}
+
+	configure_portal ${timestamp}
 
 	#
 	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
