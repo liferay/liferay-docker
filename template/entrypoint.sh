@@ -12,39 +12,47 @@ function main {
 
 	if [ -d /etc/liferay/mount/files ]
 	then
-		echo "[LIFERAY] Copying files from /etc/liferay/mount/files:"
-		echo ""
+		if [ $(ls -A /etc/liferay/mount/files) ]
+		then
+			echo "[LIFERAY] Copying files from /etc/liferay/mount/files:"
+			echo ""
 
-		tree --noreport /etc/liferay/mount/files
+			tree --noreport /etc/liferay/mount/files
 
-		echo ""
-		echo "[LIFERAY] ... into ${LIFERAY_HOME}."
+			echo ""
+			echo "[LIFERAY] ... into ${LIFERAY_HOME}."
 
-		cp -r /etc/liferay/mount/files/* ${LIFERAY_HOME}
+			cp -r /etc/liferay/mount/files/* ${LIFERAY_HOME}
+
+			echo ""
+		fi
 	else
 		echo "[LIFERAY] The directory /etc/liferay/mount/files does not exist. Create the directory \$(pwd)/xyz123/files on the host operating system to create the directory /etc/liferay/mount/files on the container. Files in /etc/liferay/mount/files will be copied to ${LIFERAY_HOME} before ${LIFERAY_PRODUCT_NAME} starts."
+		echo ""
 	fi
-
-	echo ""
 
 	if [ -d /etc/liferay/mount/scripts ]
 	then
-		echo "[LIFERAY] Executing scripts in /etc/liferay/mount/scripts:"
+		if [ $(ls -A /etc/liferay/mount/scripts) ]
+		then
+			echo "[LIFERAY] Executing scripts in /etc/liferay/mount/scripts:"
 
-		for SCRIPT_NAME in /etc/liferay/mount/scripts/*
-		do
+			for SCRIPT_NAME in /etc/liferay/mount/scripts/*
+			do
+				echo ""
+				echo "[LIFERAY] Executing ${SCRIPT_NAME}."
+
+				chmod a+x ${SCRIPT_NAME}
+
+				${SCRIPT_NAME}
+			done
+
 			echo ""
-			echo "[LIFERAY] Executing ${SCRIPT_NAME}."
-
-			chmod a+x ${SCRIPT_NAME}
-
-			${SCRIPT_NAME}
-		done
+		fi
 	else
 		echo "[LIFERAY] The directory /etc/liferay/mount/scripts does not exist. Create the directory \$(pwd)/xyz123/scripts on the host operating system to create the directory /etc/liferay/mount/scripts on the container. Files in /etc/liferay/mount/scripts will be executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
+		echo ""
 	fi
-
-	echo ""
 
 	if [ -d /etc/liferay/mount/deploy ]
 	then
