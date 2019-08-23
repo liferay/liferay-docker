@@ -79,7 +79,6 @@ function main {
 	mkdir -p ${temp_dir}
 
 	cp -r template/* ${temp_dir}
-	cp -r template/.bashrc ${temp_dir}
 
 	#
 	# Download and prepare release.
