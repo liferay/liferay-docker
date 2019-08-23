@@ -6,14 +6,14 @@ ARG LABEL_VCS_REF
 ARG LABEL_VERSION
 ARG LIFERAY_TOMCAT_VERSION
 
-COPY scripts/* /etc/liferay/
+COPY scripts/* /usr/local/bin
 
 RUN adduser -D -h /etc/liferay liferay && addgroup liferay liferay
 
 COPY --chown=liferay:liferay home/.bashrc /etc/liferay/
 COPY --chown=liferay:liferay liferay /opt/liferay
 
-ENTRYPOINT /etc/liferay/entrypoint.sh
+ENTRYPOINT /usr/local/bin/liferay-entrypoint.sh
 
 ENV LIFERAY_HOME=/opt/liferay
 ENV LIFERAY_JPDA_ENABLED=false
