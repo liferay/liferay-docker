@@ -13,7 +13,7 @@ function check_utils {
 }
 
 function configure_tomcat {
-	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> ${1}/liferay/tomcat-${2}/bin/setenv.sh
+	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> ${1}/liferay/tomcat/bin/setenv.sh
 }
 
 function date {
@@ -127,7 +127,10 @@ function main {
 
 	local liferay_tomcat_version=$(get_tomcat_version ${temp_dir}/liferay)
 
-	configure_tomcat ${temp_dir} ${liferay_tomcat_version}
+	mv ${temp_dir}/liferay/tomcat-${liferay_tomcat_version} ${temp_dir}/liferay/tomcat
+	ln -s tomcat ${temp_dir}/liferay/tomcat-${liferay_tomcat_version}
+
+	configure_tomcat ${temp_dir}
 
 	#
 	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
@@ -265,7 +268,6 @@ function main {
 		--build-arg LABEL_NAME="${label_name}" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VERSION="${label_version}" \
-		--build-arg LIFERAY_TOMCAT_VERSION=${liferay_tomcat_version} \
 		$(echo ${docker_image_tags_args}) \
 		${temp_dir}
 
@@ -288,20 +290,20 @@ function main {
 function start_tomcat {
 	local temp_dir=${1}
 
-	./${temp_dir}/liferay/tomcat-*/bin/catalina.sh start
+	./${temp_dir}/liferay/tomcat/bin/catalina.sh start
 
 	until $(curl --head --fail --output /dev/null --silent http://localhost:8080)
 	do
 		sleep 3
 	done
 
-	./${temp_dir}/liferay/tomcat-*/bin/catalina.sh stop
+	./${temp_dir}/liferay/tomcat/bin/catalina.sh stop
 
 	sleep 10
 
 	rm -fr ${temp_dir}/liferay/data/osgi/state
 	rm -fr ${temp_dir}/liferay/osgi/state
-	rm -fr ${temp_dir}/liferay/tomcat-*/logs/*
+	rm -fr ${temp_dir}/liferay/tomcat/logs/*
 }
 
 function stat {

@@ -4,7 +4,6 @@ ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VERSION
-ARG LIFERAY_TOMCAT_VERSION
 
 COPY scripts/* /usr/local/bin
 
@@ -44,7 +43,5 @@ LABEL org.label-schema.version="${LABEL_VERSION}"
 RUN apk add bash curl nss tomcat-native tree ttf-dejavu
 
 USER liferay:liferay
-
-RUN ln -s tomcat-${LIFERAY_TOMCAT_VERSION} /opt/liferay/tomcat
 
 WORKDIR /opt/liferay
