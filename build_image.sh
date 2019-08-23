@@ -73,11 +73,12 @@ function main {
 	local current_date=$(date)
 
 	local timestamp=$(date "${current_date}" "+%Y%m%d%H%M")
+	local temp_dir=temp-${timestamp}
 
-	mkdir -p ${timestamp}
+	mkdir -p ${temp_dir}
 
-	cp -r template/* ${timestamp}
-	cp -r template/.bashrc ${timestamp}
+	cp -r template/* ${temp_dir}
+	cp -r template/.bashrc ${temp_dir}
 
 	#
 	# Download and prepare release.
@@ -113,27 +114,27 @@ function main {
 
 	if [[ ${release_file_name} == *.7z ]]
 	then
-		7z x -O${timestamp} ${release_dir}/${release_file_name} || exit 3
+		7z x -O${temp_dir} ${release_dir}/${release_file_name} || exit 3
 	else
-		unzip -q ${release_dir}/${release_file_name} -d ${timestamp}  || exit 3
+		unzip -q ${release_dir}/${release_file_name} -d ${temp_dir}  || exit 3
 	fi
 
-	mv ${timestamp}/liferay-* ${timestamp}/liferay
+	mv ${temp_dir}/liferay-* ${temp_dir}/liferay
 
 	#
 	# Configure Tomcat.
 	#
 
-	local liferay_tomcat_version=$(get_tomcat_version ${timestamp}/liferay)
+	local liferay_tomcat_version=$(get_tomcat_version ${temp_dir}/liferay)
 
-	configure_tomcat ${timestamp} ${liferay_tomcat_version}
+	configure_tomcat ${temp_dir} ${liferay_tomcat_version}
 
 	#
 	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
 	# the Hypersonic files can take over 20 seconds.
 	#
 
-	warm_up_tomcat ${timestamp}
+	warm_up_tomcat ${temp_dir}
 
 	#
 	# Download trial DXP license.
@@ -147,26 +148,26 @@ function main {
 
 			exit 1
 		else
-			mkdir -p ${timestamp}/liferay/deploy
+			mkdir -p ${temp_dir}/liferay/deploy
 
 			license_file_name=license-$(date "${current_date}" "+%Y%m%d").xml
 
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${current_date}" "+%Y-%m-%d")&owner=hello%40liferay.com\" > ${timestamp}/liferay/deploy/${license_file_name}"
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${current_date}" "+%Y-%m-%d")&owner=hello%40liferay.com\" > ${temp_dir}/liferay/deploy/${license_file_name}"
 
-			sed -i "s/\\\n//g" ${timestamp}/liferay/deploy/${license_file_name}
-			sed -i "s/\\\t//g" ${timestamp}/liferay/deploy/${license_file_name}
-			sed -i "s/\"<?xml/<?xml/" ${timestamp}/liferay/deploy/${license_file_name}
-			sed -i "s/license>\"/license>/" ${timestamp}/liferay/deploy/${license_file_name}
-			sed -i 's/\\"/\"/g' ${timestamp}/liferay/deploy/${license_file_name}
-			sed -i 's/\\\//\//g' ${timestamp}/liferay/deploy/${license_file_name}
+			sed -i "s/\\\n//g" ${temp_dir}/liferay/deploy/${license_file_name}
+			sed -i "s/\\\t//g" ${temp_dir}/liferay/deploy/${license_file_name}
+			sed -i "s/\"<?xml/<?xml/" ${temp_dir}/liferay/deploy/${license_file_name}
+			sed -i "s/license>\"/license>/" ${temp_dir}/liferay/deploy/${license_file_name}
+			sed -i 's/\\"/\"/g' ${temp_dir}/liferay/deploy/${license_file_name}
+			sed -i 's/\\\//\//g' ${temp_dir}/liferay/deploy/${license_file_name}
 
-			if [ ! -e ${timestamp}/liferay/deploy/${license_file_name} ]
+			if [ ! -e ${temp_dir}/liferay/deploy/${license_file_name} ]
 			then
-				echo "Trial DXP license does not exist at ${timestamp}/liferay/deploy/${license_file_name}."
+				echo "Trial DXP license does not exist at ${temp_dir}/liferay/deploy/${license_file_name}."
 
 				exit 1
 			else
-				echo "Trial DXP license exists at ${timestamp}/liferay/deploy/${license_file_name}."
+				echo "Trial DXP license exists at ${temp_dir}/liferay/deploy/${license_file_name}."
 
 				#exit 1
 			fi
@@ -228,7 +229,7 @@ function main {
 		release_branch=${release_branch%-private*}
 		release_branch=${release_branch##*-}
 
-		local release_hash=$(cat ${timestamp}/liferay/.githash)
+		local release_hash=$(cat ${temp_dir}/liferay/.githash)
 
 		release_hash=${release_hash:0:7}
 
@@ -266,7 +267,7 @@ function main {
 		--build-arg LABEL_VERSION="${label_version}" \
 		--build-arg LIFERAY_TOMCAT_VERSION=${liferay_tomcat_version} \
 		$(echo ${docker_image_tags_args}) \
-		${timestamp}
+		${temp_dir}
 
 	#
 	# Push Docker image.
@@ -281,26 +282,26 @@ function main {
 	# Clean up temporary directory.
 	#
 
-	rm -fr ${timestamp}
+	rm -fr ${temp_dir}
 }
 
 function start_tomcat {
-	local timestamp=${1}
+	local temp_dir=${1}
 
-	./${timestamp}/liferay/tomcat-*/bin/catalina.sh start
+	./${temp_dir}/liferay/tomcat-*/bin/catalina.sh start
 
 	until $(curl --head --fail --output /dev/null --silent http://localhost:8080)
 	do
 		sleep 3
 	done
 
-	./${timestamp}/liferay/tomcat-*/bin/catalina.sh stop
+	./${temp_dir}/liferay/tomcat-*/bin/catalina.sh stop
 
 	sleep 10
 
-	rm -fr ${timestamp}/liferay/data/osgi/state
-	rm -fr ${timestamp}/liferay/osgi/state
-	rm -fr ${timestamp}/liferay/tomcat-*/logs/*
+	rm -fr ${temp_dir}/liferay/data/osgi/state
+	rm -fr ${temp_dir}/liferay/osgi/state
+	rm -fr ${temp_dir}/liferay/tomcat-*/logs/*
 }
 
 function stat {
@@ -313,23 +314,23 @@ function stat {
 }
 
 function warm_up_tomcat {
-	local timestamp=${1}
+	local temp_dir=${1}
 
-	if [ -d ${timestamp}/liferay/data/hsql ]
+	if [ -d ${temp_dir}/liferay/data/hsql ]
 	then
-		if [ $(stat ${timestamp}/liferay/data/hsql/lportal.script) -lt 1024000 ]
+		if [ $(stat ${temp_dir}/liferay/data/hsql/lportal.script) -lt 1024000 ]
 		then
-			start_tomcat ${timestamp}
+			start_tomcat ${temp_dir}
 		else
 			echo Tomcat is already warmed up.
 		fi
 	fi
 
-	if [ -d ${timestamp}/liferay/data/hypersonic ]
+	if [ -d ${temp_dir}/liferay/data/hypersonic ]
 	then
-		if [ $(stat ${timestamp}/liferay/data/hypersonic/lportal.script) -lt 1024000 ]
+		if [ $(stat ${temp_dir}/liferay/data/hypersonic/lportal.script) -lt 1024000 ]
 		then
-			start_tomcat ${timestamp}
+			start_tomcat ${temp_dir}
 		else
 			echo Tomcat is already warmed up.
 		fi
