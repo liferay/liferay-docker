@@ -8,9 +8,9 @@ ARG LIFERAY_TOMCAT_VERSION
 
 COPY scripts/* /usr/local/bin
 
-RUN adduser -D -h /etc/liferay liferay && addgroup liferay liferay
+RUN adduser -D -h /home/liferay liferay && addgroup liferay liferay
 
-COPY --chown=liferay:liferay home/.bashrc /etc/liferay/
+COPY --chown=liferay:liferay home/.bashrc /home/liferay/
 COPY --chown=liferay:liferay liferay /opt/liferay
 
 ENTRYPOINT /usr/local/bin/liferay-entrypoint.sh
