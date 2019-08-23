@@ -65,6 +65,14 @@ function main {
 	else
 		echo "[LIFERAY] The directory /mnt/liferay/deploy does not exist. Create the directory \$(pwd)/xyz123/deploy on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/deploy on the container. Copy files to \$(pwd)/xyz123/deploy to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
 	fi
+
+
+	export LIFERAY_PATCHING_DIR=${LIFERAY_MOUNT_DIR}/patching
+
+	if [ -e ${LIFERAY_PATCHING_DIR} ]
+	then
+		patch_liferay.sh
+	fi
 }
 
 main
