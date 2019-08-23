@@ -5,7 +5,7 @@ ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VERSION
 
-COPY scripts/* /usr/local/bin
+COPY scripts/* /usr/local/bin/
 
 RUN adduser -D -h /home/liferay liferay && addgroup liferay liferay
 
