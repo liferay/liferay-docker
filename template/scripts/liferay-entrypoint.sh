@@ -4,40 +4,46 @@ function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."
 	echo ""
 
-	if [ ! -d /etc/liferay/mount ]
+	if [ -d /etc/liferay/mount ]; then
+		LIFERAY_MOUNT_DIR=/etc/liferay/mount
+	else
+		LIFERAY_MOUNT_DIR=/mnt/liferay
+	fi
+
+	if [ ! -d ${LIFERAY_MOUNT_DIR} ]
 	then
-		echo "[LIFERAY] Run this container with the option \"-v \$(pwd)/xyz123:/etc/liferay/mount\" to bridge \$(pwd)/xyz123 in the host operating system to /etc/liferay/mount on the container."
+		echo "[LIFERAY] Run this container with the option \"-v \$(pwd)/xyz123:/mnt/liferay\" to bridge \$(pwd)/xyz123 in the host operating system to ${LIFERAY_MOUNT_DIR} on the container."
 		echo ""
 	fi
 
-	if [ -d /etc/liferay/mount/files ]
+	if [ -d ${LIFERAY_MOUNT_DIR}/files ]
 	then
-		if [ $(ls -A /etc/liferay/mount/files) ]
+		if [ $(ls -A ${LIFERAY_MOUNT_DIR}/files) ]
 		then
-			echo "[LIFERAY] Copying files from /etc/liferay/mount/files:"
+			echo "[LIFERAY] Copying files from ${LIFERAY_MOUNT_DIR}/files:"
 			echo ""
 
-			tree --noreport /etc/liferay/mount/files
+			tree --noreport ${LIFERAY_MOUNT_DIR}/files
 
 			echo ""
 			echo "[LIFERAY] ... into ${LIFERAY_HOME}."
 
-			cp -r /etc/liferay/mount/files/* ${LIFERAY_HOME}
+			cp -r ${LIFERAY_MOUNT_DIR}/files/* ${LIFERAY_HOME}
 
 			echo ""
 		fi
 	else
-		echo "[LIFERAY] The directory /etc/liferay/mount/files does not exist. Create the directory \$(pwd)/xyz123/files on the host operating system to create the directory /etc/liferay/mount/files on the container. Files in /etc/liferay/mount/files will be copied to ${LIFERAY_HOME} before ${LIFERAY_PRODUCT_NAME} starts."
+		echo "[LIFERAY] The directory /mnt/liferay/files does not exist. Create the directory \$(pwd)/xyz123/files on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/files on the container. Files in ${LIFERAY_MOUNT_DIR}/files will be copied to ${LIFERAY_HOME} before ${LIFERAY_PRODUCT_NAME} starts."
 		echo ""
 	fi
 
-	if [ -d /etc/liferay/mount/scripts ]
+	if [ -d ${LIFERAY_MOUNT_DIR}/scripts ]
 	then
-		if [ $(ls -A /etc/liferay/mount/scripts) ]
+		if [ $(ls -A ${LIFERAY_MOUNT_DIR}/scripts) ]
 		then
-			echo "[LIFERAY] Executing scripts in /etc/liferay/mount/scripts:"
+			echo "[LIFERAY] Executing scripts in ${LIFERAY_MOUNT_DIR}/scripts:"
 
-			for SCRIPT_NAME in /etc/liferay/mount/scripts/*
+			for SCRIPT_NAME in ${LIFERAY_MOUNT_DIR}/scripts/*
 			do
 				echo ""
 				echo "[LIFERAY] Executing ${SCRIPT_NAME}."
@@ -50,24 +56,24 @@ function main {
 			echo ""
 		fi
 	else
-		echo "[LIFERAY] The directory /etc/liferay/mount/scripts does not exist. Create the directory \$(pwd)/xyz123/scripts on the host operating system to create the directory /etc/liferay/mount/scripts on the container. Files in /etc/liferay/mount/scripts will be executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
+		echo "[LIFERAY] The directory /mnt/liferay/scripts does not exist. Create the directory \$(pwd)/xyz123/scripts on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/scripts on the container. Files in ${LIFERAY_MOUNT_DIR}/scripts will be executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
 		echo ""
 	fi
 
-	if [ -d /etc/liferay/mount/deploy ]
+	if [ -d ${LIFERAY_MOUNT_DIR}/deploy ]
 	then
 		if [ $(ls -A /opt/liferay/deploy) ]
 		then
-			cp /opt/liferay/deploy/* /etc/liferay/mount/deploy
+			cp /opt/liferay/deploy/* ${LIFERAY_MOUNT_DIR}/deploy
 		fi
 
 		rm -fr /opt/liferay/deploy
 
-		ln -s /etc/liferay/mount/deploy /opt/liferay/deploy
+		ln -s ${LIFERAY_MOUNT_DIR}/deploy /opt/liferay/deploy
 
-		echo "[LIFERAY] The directory /etc/liferay/mount/deploy is ready. Copy files to \$(pwd)/xyz123/deploy on the host operating system to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
+		echo "[LIFERAY] The directory /mnt/liferay/deploy is ready. Copy files to \$(pwd)/xyz123/deploy on the host operating system to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
 	else
-		echo "[LIFERAY] The directory /etc/liferay/mount/deploy does not exist. Create the directory \$(pwd)/xyz123/deploy on the host operating system to create the directory /etc/liferay/mount/deploy on the container. Copy files to \$(pwd)/xyz123/deploy to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
+		echo "[LIFERAY] The directory /mnt/liferay/deploy does not exist. Create the directory \$(pwd)/xyz123/deploy on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/deploy on the container. Copy files to \$(pwd)/xyz123/deploy to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
 	fi
 
 	echo ""
