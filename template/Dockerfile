@@ -12,7 +12,7 @@ RUN adduser -D -h /home/liferay liferay && addgroup liferay liferay
 COPY --chown=liferay:liferay home/.bashrc /home/liferay/
 COPY --chown=liferay:liferay liferay /opt/liferay
 
-ENTRYPOINT /usr/local/bin/liferay-entrypoint.sh
+ENTRYPOINT /usr/local/bin/liferay_entrypoint.sh
 
 ENV LIFERAY_HOME=/opt/liferay
 ENV LIFERAY_JPDA_ENABLED=false
