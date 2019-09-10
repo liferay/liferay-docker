@@ -276,10 +276,13 @@ function main {
 	# Push Docker image.
 	#
 
-	for docker_image_tag in "${docker_image_tags[@]}"
-	do
-		docker push ${docker_image_tag}
-	done
+	if [ "${2}" == "push" ]
+	then
+		for docker_image_tag in "${docker_image_tags[@]}"
+		do
+			docker push ${docker_image_tag}
+		done
+	fi
 
 	#
 	# Clean up temporary directory.
