@@ -210,7 +210,7 @@ function main {
 
 	if [[ ${release_file_url} == http://release* ]]
 	then
-		docker_image_name=${docker_image_name}-preview
+		docker_image_name=${docker_image_name}-snapshot
 	fi
 
 	local release_version=${release_file_url%/*}
