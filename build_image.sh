@@ -73,6 +73,7 @@ function main {
 	local current_date=$(date)
 
 	local timestamp=$(date "${current_date}" "+%Y%m%d%H%M")
+
 	local temp_dir=temp-${timestamp}
 
 	mkdir -p ${temp_dir}
