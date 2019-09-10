@@ -14,6 +14,42 @@ function main {
 		rm -rf /opt/liferay/patching-tool/patches
 		mv /opt/liferay/patching-tool-upgrade-patches /opt/liferay/patching-tool/patches
 	fi
+
+	if [ -e ${LIFERAY_PATCHING_DIR}/liferay-*.zip ]
+	then
+		local run_install=false
+		local install_success=false
+
+		if [ `ls ${LIFERAY_PATCHING_DIR}/liferay-*.zip | wc -l` == 1 ]
+		then
+			if ( /opt/liferay/patching-tool/patching-tool.sh apply ${LIFERAY_PATCHING_DIR}/liferay-*.zip )
+			then
+				install_success=true
+			else
+				run_install=true
+			fi
+		else
+			run_install=true
+		fi
+
+		if ( ${run_install} )
+		then
+			cp ${LIFERAY_PATCHING_DIR}/liferay-*.zip /opt/liferay/patching-tool/patches
+
+			if ( /opt/liferay/patching-tool/patching-tool.sh install )
+			then
+				install_success=true
+			fi
+		fi
+
+		if ( ${install_success} )
+		then
+			echo ""
+			echo "[LIFERAY] Patch installation was successful."
+		else
+			exit 1
+		fi
+	fi
 }
 
 main
