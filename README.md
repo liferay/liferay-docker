@@ -1,5 +1,10 @@
 # liferay-docker repository
 
+## Building docker images
+The `build_image.sh` is used to build the docker images. It takes one mandatory parameter, the URL of the Liferay Portal / DXP image (using Liferay's server URLs). For direct push to Docker Hub, the `push` command line argument should be added after the URL.
+
+For Liferay DXP images, the `LIFERAY_DOCKER_LICENSE_CMD` needs to be set to generate the trial license. For testing purposes, it can be set to any URL and the image will be built without a license.
+
 ## Images
 Images built with scripts in this repository will start Liferay DXP or Portal. The 8080 (tomcat http) and 11311 (Gogo shell telnet) ports are exposed.
 
