@@ -49,7 +49,7 @@ function main {
 		if ( ${install_success} )
 		then
 			echo ""
-			echo "[LIFERAY] Patch installation was successful."
+			echo "[LIFERAY] Patching Tool was succesfully installed."
 		else
 			exit 1
 		fi
