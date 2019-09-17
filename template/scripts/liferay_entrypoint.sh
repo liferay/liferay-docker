@@ -13,7 +13,7 @@ function main {
 
 	export LIFERAY_MOUNT_DIR
 
-	setup_liferay_dirs.sh
+	configure_liferay.sh
 
 	start_liferay.sh
 }
