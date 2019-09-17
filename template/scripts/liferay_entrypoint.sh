@@ -4,7 +4,8 @@ function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."
 	echo ""
 
-	if [ -d /etc/liferay/mount ]; then
+	if [ -d /etc/liferay/mount ]
+	then
 		LIFERAY_MOUNT_DIR=/etc/liferay/mount
 	else
 		LIFERAY_MOUNT_DIR=/mnt/liferay
