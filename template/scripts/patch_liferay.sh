@@ -1,5 +1,14 @@
 #!/bin/bash
 
+function install_patch {
+	cp ${LIFERAY_PATCHING_DIR}/liferay-*.zip /opt/liferay/patching-tool/patches
+
+	if ( /opt/liferay/patching-tool/patching-tool.sh install )
+	then
+		log_patch_installed
+	fi
+}
+
 function log_patch_installed {
 	echo ""
 	echo "[LIFERAY] Patch applied successfully."
@@ -40,15 +49,6 @@ function main {
 		else
 			install_patch
 		fi
-	fi
-}
-
-function install_patch {
-	cp ${LIFERAY_PATCHING_DIR}/liferay-*.zip /opt/liferay/patching-tool/patches
-
-	if ( /opt/liferay/patching-tool/patching-tool.sh install )
-	then
-		log_patch_installed
 	fi
 }
 
