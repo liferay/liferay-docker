@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function install_success {
+function log_patching_tool_installed {
 	echo ""
 	echo "[LIFERAY] Patching Tool was succesfully installed."
 }
@@ -30,22 +30,22 @@ function main {
 		then
 			if ( /opt/liferay/patching-tool/patching-tool.sh apply ${LIFERAY_PATCHING_DIR}/liferay-*.zip )
 			then
-				install_success
+				log_patching_tool_installed
 			else
-				run_install
+				install_patching_tool
 			fi
 		else
-			run_install
+			install_patching_tool
 		fi
 	fi
 }
 
-function run_install {
+function install_patching_tool {
 	cp ${LIFERAY_PATCHING_DIR}/liferay-*.zip /opt/liferay/patching-tool/patches
 
 	if ( /opt/liferay/patching-tool/patching-tool.sh install )
 	then
-		install_success
+		log_patching_tool_installed
 	fi
 }
 
