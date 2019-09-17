@@ -21,8 +21,8 @@ function main {
 
 	if [ -e ${LIFERAY_PATCHING_DIR}/liferay-*.zip ]
 	then
-		local run_install=false
 		local install_success=false
+		local run_install=false
 
 		if [ `ls ${LIFERAY_PATCHING_DIR}/liferay-*.zip | wc -l` == 1 ]
 		then
