@@ -24,7 +24,7 @@ function main {
 		mv /opt/liferay/patching-tool-upgrade-patches /opt/liferay/patching-tool/patches
 
 		echo ""
-		echo "[LIFERAY] Patching Tool update completed."
+		echo "[LIFERAY] Patching Tool updated successfully."
 	fi
 
 	if [ -e ${LIFERAY_PATCHING_DIR}/liferay-*.zip ]
