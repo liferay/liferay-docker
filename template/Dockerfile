@@ -5,6 +5,8 @@ ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VERSION
 
+RUN apk add bash curl nss tomcat-native tree ttf-dejavu
+
 COPY scripts/* /usr/local/bin/
 
 RUN adduser -D -h /home/liferay liferay && addgroup liferay liferay
@@ -39,8 +41,6 @@ LABEL org.label-schema.vcs-ref="${LABEL_VCS_REF}"
 LABEL org.label-schema.vcs-url="https://github.com/liferay/liferay-docker"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
-
-RUN apk add bash curl nss tomcat-native tree ttf-dejavu
 
 USER liferay:liferay
 
