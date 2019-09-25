@@ -44,7 +44,7 @@ function main {
 
 	mv ${temp_dir}/liferay/tomcat-${liferay_tomcat_version} ${temp_dir}/liferay/tomcat
 
-	#ln -s tomcat ${temp_dir}/liferay/tomcat-${liferay_tomcat_version}
+	ln -s tomcat ${temp_dir}/liferay/tomcat-${liferay_tomcat_version}
 
 	configure_tomcat ${temp_dir}
 
