@@ -343,4 +343,4 @@ function warm_up_tomcat {
 	fi
 }
 
-main ${1} ${2}
+main ${1}
