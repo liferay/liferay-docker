@@ -3,6 +3,15 @@
 . ./build_common.sh
 
 function main {
+	if [ ! -n "${3}" ]
+	then
+		echo "Usage: ${0} path-to-bundle image-name version"
+		echo ""
+		echo "Example: ${0} ../bundles portal-snapshot demo-cbe09fb0414"
+
+		exit 1
+	fi
+
 	check_utils curl docker java
 
 	#
