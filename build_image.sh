@@ -82,11 +82,6 @@ function main {
 
 	configure_tomcat ${temp_dir}
 
-	#
-	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
-	# the Hypersonic files can take over 20 seconds.
-	#
-
 	warm_up_tomcat ${temp_dir}
 
 	#
