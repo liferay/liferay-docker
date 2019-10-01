@@ -43,27 +43,21 @@ function check_usage {
 }
 
 function main {
-	check_usage ${1}
+	check_usage ${@}
 
 	make_temp_directory
 
-	#
-	# Download and prepare release.
-	#
-
-	local local_build_dir=${1}
-
-	cp -a ${local_build_dir} ${TEMP_DIR}/liferay
-
-	#
-	# Prepare Tomcat.
-	#
+	prepare_temp_directory ${@}
 
 	prepare_tomcat
 
-	build_docker_image
+	build_docker_image ${@}
 
 	clean_up_temp_directory
 }
 
-main ${1} ${2} ${3}
+function prepare_temp_directory {
+	cp -a ${1} ${TEMP_DIR}/liferay
+}
+
+main ${@}
