@@ -16,6 +16,44 @@ function check_usage {
 	check_utils 7z curl docker java unzip
 }
 
+function download_trial_dxp_license {
+	local release_file_name=${1}
+
+	if [[ ${release_file_name} == *-dxp-* ]]
+	then
+		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
+		then
+			echo "Please set the environment variable LIFERAY_DOCKER_LICENSE_CMD to generate a trial DXP license."
+
+			exit 1
+		else
+			mkdir -p ${TEMP_DIR}/liferay/deploy
+
+			license_file_name=license-$(date "${CURRENT_DATE}" "+%Y%m%d").xml
+
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%Y-%m-%d")&owner=hello%40liferay.com\" > ${TEMP_DIR}/liferay/deploy/${license_file_name}"
+
+			sed -i "s/\\\n//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i "s/\\\t//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i "s/\"<?xml/<?xml/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i "s/license>\"/license>/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i 's/\\"/\"/g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i 's/\\\//\//g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
+
+			if [ ! -e ${TEMP_DIR}/liferay/deploy/${license_file_name} ]
+			then
+				echo "Trial DXP license does not exist at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
+
+				exit 1
+			else
+				echo "Trial DXP license exists at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
+
+				#exit 1
+			fi
+		fi
+	fi
+}
+
 function main {
 	check_usage ${1}
 
@@ -74,39 +112,7 @@ function main {
 	# Download trial DXP license.
 	#
 
-	if [[ ${release_file_name} == *-dxp-* ]]
-	then
-		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
-		then
-			echo "Please set the environment variable LIFERAY_DOCKER_LICENSE_CMD to generate a trial DXP license."
-
-			exit 1
-		else
-			mkdir -p ${TEMP_DIR}/liferay/deploy
-
-			license_file_name=license-$(date "${CURRENT_DATE}" "+%Y%m%d").xml
-
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%Y-%m-%d")&owner=hello%40liferay.com\" > ${TEMP_DIR}/liferay/deploy/${license_file_name}"
-
-			sed -i "s/\\\n//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i "s/\\\t//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i "s/\"<?xml/<?xml/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i "s/license>\"/license>/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i 's/\\"/\"/g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i 's/\\\//\//g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
-
-			if [ ! -e ${TEMP_DIR}/liferay/deploy/${license_file_name} ]
-			then
-				echo "Trial DXP license does not exist at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
-
-				exit 1
-			else
-				echo "Trial DXP license exists at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
-
-				#exit 1
-			fi
-		fi
-	fi
+	download_trial_dxp_license ${release_file_name}
 
 	#
 	# Build Docker image.
