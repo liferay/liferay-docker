@@ -5,6 +5,7 @@ source ./_common.sh
 function build_docker_image {
 	local docker_image_name=${2}
 	local release_version=${3}
+
 	local label_name=${docker_image_name}-${release_version}
 	local label_version=${release_version}
 
