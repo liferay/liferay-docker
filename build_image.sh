@@ -2,7 +2,7 @@
 
 source ./_common.sh
 
-function main {
+function check_usage {
 	if [ ! -n "${1}" ]
 	then
 		echo "Usage: ${0} release-url <push>"
@@ -14,6 +14,10 @@ function main {
 	fi
 
 	check_utils 7z curl docker java unzip
+}
+
+function main {
+	check_usage ${1}
 
 	set_variables
 

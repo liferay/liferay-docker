@@ -2,7 +2,7 @@
 
 source ./_common.sh
 
-function main {
+function check_usage {
 	if [ ! -n "${3}" ]
 	then
 		echo "Usage: ${0} path-to-bundle image-name version"
@@ -13,6 +13,10 @@ function main {
 	fi
 
 	check_utils curl docker java
+}
+
+function main {
+	check_usage ${1}
 
 	set_variables
 
