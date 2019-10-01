@@ -12,6 +12,10 @@ function check_utils {
 	done
 }
 
+function clean_up_temp_directory {
+	rm -fr ${temp_dir}
+}
+
 function configure_tomcat {
 	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> ${1}/liferay/tomcat/bin/setenv.sh
 }

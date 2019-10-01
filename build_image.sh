@@ -220,11 +220,7 @@ function main {
 		done
 	fi
 
-	#
-	# Clean up temporary directory.
-	#
-
-	rm -fr ${temp_dir}
+	clean_up_temp_directory
 }
 
 main ${1} ${2}
