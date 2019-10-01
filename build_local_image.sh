@@ -21,7 +21,7 @@ function check_usage {
 	then
 		echo "Usage: ${0} path-to-bundle image-name version"
 		echo ""
-		echo "Example: ${0} ../bundles portal-snapshot demo-cbe09fb0414"
+		echo "Example: ${0} ../bundles/master portal-snapshot demo-cbe09fb0"
 
 		exit 1
 	fi

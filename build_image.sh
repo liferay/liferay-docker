@@ -100,7 +100,8 @@ function check_usage {
 		echo "Usage: ${0} release-url <push>"
 		echo ""
 		echo "Example: ${0} files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z"
-		echo "By setting \"push\" as the second parameter, the script automatically pushes the image to Docker Hub."
+		echo ""
+		echo "Set \"push\" as the second parameter to automatically push the image to Docker Hub."
 
 		exit 1
 	fi
