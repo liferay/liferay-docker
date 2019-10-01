@@ -17,7 +17,7 @@ function clean_up_temp_directory {
 }
 
 function configure_tomcat {
-	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> ${1}/liferay/tomcat/bin/setenv.sh
+	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> ${TEMP_DIR}/liferay/tomcat/bin/setenv.sh
 }
 
 function date {
@@ -74,14 +74,20 @@ function prepare_tomcat {
 
 	ln -s tomcat ${TEMP_DIR}/liferay/tomcat-${liferay_tomcat_version}
 
-	configure_tomcat ${TEMP_DIR}
+	configure_tomcat
 
-	warm_up_tomcat ${TEMP_DIR}
+	warm_up_tomcat
+}
+
+function set_variables {
+	CURRENT_DATE=$(date)
+
+	TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M")
+
+	TEMP_DIR=temp-${TIMESTAMP}
 }
 
 function start_tomcat {
-	local TEMP_DIR=${1}
-
 	./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh start
 
 	until $(curl --head --fail --output /dev/null --silent http://localhost:8080)
@@ -114,13 +120,11 @@ function warm_up_tomcat {
 	# the Hypersonic files can take over 20 seconds.
 	#
 
-	local TEMP_DIR=${1}
-
 	if [ -d ${TEMP_DIR}/liferay/data/hsql ]
 	then
 		if [ $(stat ${TEMP_DIR}/liferay/data/hsql/lportal.script) -lt 1024000 ]
 		then
-			start_tomcat ${TEMP_DIR}
+			start_tomcat
 		else
 			echo Tomcat is already warmed up.
 		fi
@@ -130,7 +134,7 @@ function warm_up_tomcat {
 	then
 		if [ $(stat ${TEMP_DIR}/liferay/data/hypersonic/lportal.script) -lt 1024000 ]
 		then
-			start_tomcat ${TEMP_DIR}
+			start_tomcat
 		else
 			echo Tomcat is already warmed up.
 		fi

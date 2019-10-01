@@ -14,15 +14,11 @@ function main {
 
 	check_utils curl docker java
 
+	set_variables
+
 	#
 	# Make temporary directory.
 	#
-
-	local CURRENT_DATE=$(date)
-
-	local TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M")
-
-	local TEMP_DIR=temp-${TIMESTAMP}
 
 	mkdir -p ${TEMP_DIR}
 
@@ -40,7 +36,7 @@ function main {
 	# Prepare Tomcat.
 	#
 
-	prepare_tomcat ${TEMP_DIR}
+	prepare_tomcat
 
 	#
 	# Build Docker image.

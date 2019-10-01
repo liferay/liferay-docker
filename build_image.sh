@@ -15,15 +15,11 @@ function main {
 
 	check_utils 7z curl docker java unzip
 
+	set_variables
+
 	#
 	# Make temporary directory.
 	#
-
-	local CURRENT_DATE=$(date)
-
-	local TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M")
-
-	local TEMP_DIR=temp-${TIMESTAMP}
 
 	mkdir -p ${TEMP_DIR}
 
@@ -74,7 +70,7 @@ function main {
 	# Prepare Tomcat.
 	#
 
-	prepare_tomcat ${TEMP_DIR}
+	prepare_tomcat
 
 	#
 	# Download trial DXP license.
