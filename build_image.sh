@@ -109,8 +109,6 @@ function check_usage {
 }
 
 function download_trial_dxp_license {
-	local release_file_name=${1}
-
 	if [[ ${release_file_name} == *-dxp-* ]]
 	then
 		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
@@ -198,7 +196,7 @@ function main {
 
 	prepare_tomcat
 
-	download_trial_dxp_license ${release_file_name}
+	download_trial_dxp_license
 
 	build_docker_image
 
