@@ -63,6 +63,18 @@ function get_tomcat_version {
 	echo ${liferay_tomcat_version}
 }
 
+function prepare_tomcat {
+	local liferay_tomcat_version=$(get_tomcat_version ${temp_dir}/liferay)
+
+	mv ${temp_dir}/liferay/tomcat-${liferay_tomcat_version} ${temp_dir}/liferay/tomcat
+
+	ln -s tomcat ${temp_dir}/liferay/tomcat-${liferay_tomcat_version}
+
+	configure_tomcat ${temp_dir}
+
+	warm_up_tomcat ${temp_dir}
+}
+
 function start_tomcat {
 	local temp_dir=${1}
 

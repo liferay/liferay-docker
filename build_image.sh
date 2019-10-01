@@ -71,18 +71,10 @@ function main {
 	mv ${temp_dir}/liferay-* ${temp_dir}/liferay
 
 	#
-	# Configure Tomcat.
+	# Prepare Tomcat.
 	#
 
-	local liferay_tomcat_version=$(get_tomcat_version ${temp_dir}/liferay)
-
-	mv ${temp_dir}/liferay/tomcat-${liferay_tomcat_version} ${temp_dir}/liferay/tomcat
-
-	ln -s tomcat ${temp_dir}/liferay/tomcat-${liferay_tomcat_version}
-
-	configure_tomcat ${temp_dir}
-
-	warm_up_tomcat ${temp_dir}
+	prepare_tomcat ${temp_dir}
 
 	#
 	# Download trial DXP license.
