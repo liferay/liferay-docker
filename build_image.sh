@@ -240,5 +240,4 @@ function main {
 	rm -fr ${temp_dir}
 }
 
-
 main ${1} ${2}
