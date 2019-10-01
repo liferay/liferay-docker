@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./build_common.sh
+source ./_common.sh
 
 function main {
 	if [ ! -n "${1}" ]
