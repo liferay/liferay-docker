@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ./build_common.sh
+source ./build_common.sh
 
 function main {
 	if [ ! -n "${3}" ]
