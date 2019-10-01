@@ -2,122 +2,7 @@
 
 source ./_common.sh
 
-function check_usage {
-	if [ ! -n "${1}" ]
-	then
-		echo "Usage: ${0} release-url <push>"
-		echo ""
-		echo "Example: ${0} files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z"
-		echo "By setting \"push\" as the second parameter, the script automatically pushes the image to Docker Hub."
-
-		exit 1
-	fi
-
-	check_utils 7z curl docker java unzip
-}
-
-function download_trial_dxp_license {
-	local release_file_name=${1}
-
-	if [[ ${release_file_name} == *-dxp-* ]]
-	then
-		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
-		then
-			echo "Please set the environment variable LIFERAY_DOCKER_LICENSE_CMD to generate a trial DXP license."
-
-			exit 1
-		else
-			mkdir -p ${TEMP_DIR}/liferay/deploy
-
-			license_file_name=license-$(date "${CURRENT_DATE}" "+%Y%m%d").xml
-
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%Y-%m-%d")&owner=hello%40liferay.com\" > ${TEMP_DIR}/liferay/deploy/${license_file_name}"
-
-			sed -i "s/\\\n//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i "s/\\\t//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i "s/\"<?xml/<?xml/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i "s/license>\"/license>/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i 's/\\"/\"/g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i 's/\\\//\//g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
-
-			if [ ! -e ${TEMP_DIR}/liferay/deploy/${license_file_name} ]
-			then
-				echo "Trial DXP license does not exist at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
-
-				exit 1
-			else
-				echo "Trial DXP license exists at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
-
-				#exit 1
-			fi
-		fi
-	fi
-}
-
-function main {
-	check_usage ${1}
-
-	set_variables
-
-	make_temp_directory
-
-	#
-	# Download and prepare release.
-	#
-
-	local release_dir=${1%/*}
-
-	release_dir=${release_dir#*com/}
-	release_dir=${release_dir#*com/}
-	release_dir=${release_dir#*liferay-release-tool/}
-	release_dir=${release_dir#*private/ee/}
-	release_dir=releases/${release_dir}
-
-	local release_file_name=${1##*/}
-
-	local release_file_url=${1}
-
-	if [[ ${release_file_url} != http://mirrors.*.liferay.com* ]] && [[ ${release_file_url} != http://release* ]]
-	then
-		release_file_url=http://mirrors.lax.liferay.com/${release_file_url}
-	fi
-
-	if [ ! -e ${release_dir}/${release_file_name} ]
-	then
-		echo ""
-		echo "Downloading ${release_file_url}."
-		echo ""
-
-		mkdir -p ${release_dir}
-
-		curl -f -o ${release_dir}/${release_file_name} ${release_file_url} || exit 2
-	fi
-
-	if [[ ${release_file_name} == *.7z ]]
-	then
-		7z x -O${TEMP_DIR} ${release_dir}/${release_file_name} || exit 3
-	else
-		unzip -q ${release_dir}/${release_file_name} -d ${TEMP_DIR}  || exit 3
-	fi
-
-	mv ${TEMP_DIR}/liferay-* ${TEMP_DIR}/liferay
-
-	#
-	# Prepare Tomcat.
-	#
-
-	prepare_tomcat
-
-	#
-	# Download trial DXP license.
-	#
-
-	download_trial_dxp_license ${release_file_name}
-
-	#
-	# Build Docker image.
-	#
-
+function build_docker_image {
 	local docker_image_name
 	local label_name
 
@@ -181,21 +66,21 @@ function main {
 		fi
 	fi
 
-	local docker_image_tags=()
+	DOCKER_IMAGE_TAGS=()
 
 	if [[ ${release_file_url%} == */snapshot-* ]]
 	then
-		docker_image_tags+=("liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}")
-		docker_image_tags+=("liferay/${docker_image_name}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
-		docker_image_tags+=("liferay/${docker_image_name}:${release_branch}")
+		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}")
+		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
+		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}")
 	else
-		docker_image_tags+=("liferay/${docker_image_name}:${release_version}-${TIMESTAMP}")
-		docker_image_tags+=("liferay/${docker_image_name}:${release_version}")
+		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version}-${TIMESTAMP}")
+		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version}")
 	fi
 
 	local docker_image_tags_args=""
 
-	for docker_image_tag in "${docker_image_tags[@]}"
+	for docker_image_tag in "${DOCKER_IMAGE_TAGS[@]}"
 	do
 		docker_image_tags_args="${docker_image_tags_args} --tag ${docker_image_tag}"
 	done
@@ -207,20 +92,132 @@ function main {
 		--build-arg LABEL_VERSION="${label_version}" \
 		$(echo ${docker_image_tags_args}) \
 		${TEMP_DIR}
+}
 
-	#
-	# Push Docker image.
-	#
-
-	if [ "${2}" == "push" ]
+function check_usage {
+	if [ ! -n "${1}" ]
 	then
-		for docker_image_tag in "${docker_image_tags[@]}"
-		do
-			docker push ${docker_image_tag}
-		done
+		echo "Usage: ${0} release-url <push>"
+		echo ""
+		echo "Example: ${0} files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z"
+		echo "By setting \"push\" as the second parameter, the script automatically pushes the image to Docker Hub."
+
+		exit 1
 	fi
+
+	check_utils 7z curl docker java unzip
+}
+
+function download_trial_dxp_license {
+	local release_file_name=${1}
+
+	if [[ ${release_file_name} == *-dxp-* ]]
+	then
+		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
+		then
+			echo "Please set the environment variable LIFERAY_DOCKER_LICENSE_CMD to generate a trial DXP license."
+
+			exit 1
+		else
+			mkdir -p ${TEMP_DIR}/liferay/deploy
+
+			license_file_name=license-$(date "${CURRENT_DATE}" "+%Y%m%d").xml
+
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%Y-%m-%d")&owner=hello%40liferay.com\" > ${TEMP_DIR}/liferay/deploy/${license_file_name}"
+
+			sed -i "s/\\\n//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i "s/\\\t//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i "s/\"<?xml/<?xml/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i "s/license>\"/license>/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i 's/\\"/\"/g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i 's/\\\//\//g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
+
+			if [ ! -e ${TEMP_DIR}/liferay/deploy/${license_file_name} ]
+			then
+				echo "Trial DXP license does not exist at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
+
+				exit 1
+			else
+				echo "Trial DXP license exists at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
+
+				#exit 1
+			fi
+		fi
+	fi
+}
+
+function main {
+
+	check_usage ${1}
+
+	set_variables
+
+	make_temp_directory
+
+	#
+	# Download and prepare release.
+	#
+
+	local release_dir=${1%/*}
+
+	release_dir=${release_dir#*com/}
+	release_dir=${release_dir#*com/}
+	release_dir=${release_dir#*liferay-release-tool/}
+	release_dir=${release_dir#*private/ee/}
+	release_dir=releases/${release_dir}
+
+	local release_file_name=${1##*/}
+
+	local release_file_url=${1}
+
+	if [[ ${release_file_url} != http://mirrors.*.liferay.com* ]] && [[ ${release_file_url} != http://release* ]]
+	then
+		release_file_url=http://mirrors.lax.liferay.com/${release_file_url}
+	fi
+
+	if [ ! -e ${release_dir}/${release_file_name} ]
+	then
+		echo ""
+		echo "Downloading ${release_file_url}."
+		echo ""
+
+		mkdir -p ${release_dir}
+
+		curl -f -o ${release_dir}/${release_file_name} ${release_file_url} || exit 2
+	fi
+
+	if [[ ${release_file_name} == *.7z ]]
+	then
+		7z x -O${TEMP_DIR} ${release_dir}/${release_file_name} || exit 3
+	else
+		unzip -q ${release_dir}/${release_file_name} -d ${TEMP_DIR}  || exit 3
+	fi
+
+	mv ${TEMP_DIR}/liferay-* ${TEMP_DIR}/liferay
+
+	#
+	#
+	#
+
+	prepare_tomcat
+
+	download_trial_dxp_license ${release_file_name}
+
+	build_docker_image
+
+	push_docker_images ${@}
 
 	clean_up_temp_directory
 }
 
-main ${1} ${2}
+function push_docker_images {
+	if [ "${2}" == "push" ]
+	then
+		for docker_image_tag in "${DOCKER_IMAGE_TAGS[@]}"
+		do
+			docker push ${docker_image_tag}
+		done
+	fi
+}
+
+main ${@}
