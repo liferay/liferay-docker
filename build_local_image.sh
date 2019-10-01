@@ -6,14 +6,11 @@ function build_docker_image {
 	local docker_image_name=${2}
 	local release_version=${3}
 
-	local label_name=${docker_image_name}-${release_version}
-	local label_version=${release_version}
-
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-		--build-arg LABEL_NAME="${label_name}" \
+		--build-arg LABEL_NAME="${docker_image_name}-${release_version}" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
-		--build-arg LABEL_VERSION="${label_version}" \
+		--build-arg LABEL_VERSION="${release_version}" \
 		--tag liferay/${docker_image_name}:${release_version}-${TIMESTAMP} \
 		--tag liferay/${docker_image_name}:${release_version} \
 		${TEMP_DIR}
