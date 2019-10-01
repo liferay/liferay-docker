@@ -6,49 +6,49 @@ function build_docker_image {
 	local docker_image_name
 	local label_name
 
-	if [[ ${release_file_name} == *-commerce-* ]]
+	if [[ ${RELEASE_FILE_NAME} == *-commerce-* ]]
 	then
 		docker_image_name="commerce"
 		label_name="Liferay Commerce"
-	elif [[ ${release_file_name} == *-dxp-* ]] || [[ ${release_file_name} == *-private* ]]
+	elif [[ ${RELEASE_FILE_NAME} == *-dxp-* ]] || [[ ${RELEASE_FILE_NAME} == *-private* ]]
 	then
 		docker_image_name="dxp"
 		label_name="Liferay DXP"
-	elif [[ ${release_file_name} == *-portal-* ]]
+	elif [[ ${RELEASE_FILE_NAME} == *-portal-* ]]
 	then
 		docker_image_name="portal"
 		label_name="Liferay Portal"
 	else
-		echo "${release_file_name} is an unsupported release file name."
+		echo "${RELEASE_FILE_NAME} is an unsupported release file name."
 
 		exit 1
 	fi
 
-	if [[ ${release_file_url%} == */snapshot-* ]]
+	if [[ ${RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
 		docker_image_name=${docker_image_name}-snapshot
 	fi
 
-	if [[ ${release_file_url} == http://release* ]]
+	if [[ ${RELEASE_FILE_URL} == http://release* ]]
 	then
 		docker_image_name=${docker_image_name}-snapshot
 	fi
 
-	local release_version=${release_file_url%/*}
+	local release_version=${RELEASE_FILE_URL%/*}
 
 	release_version=${release_version##*/}
 
-	if [[ ${release_file_url} == http://release* ]]
+	if [[ ${RELEASE_FILE_URL} == http://release* ]]
 	then
-		release_version=${release_file_url#*tomcat-}
+		release_version=${RELEASE_FILE_URL#*tomcat-}
 		release_version=${release_version%.*}
 	fi
 
 	local label_version=${release_version}
 
-	if [[ ${release_file_url%} == */snapshot-* ]]
+	if [[ ${RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
-		local release_branch=${release_file_url%/*}
+		local release_branch=${RELEASE_FILE_URL%/*}
 
 		release_branch=${release_branch%/*}
 		release_branch=${release_branch%-private*}
@@ -68,7 +68,7 @@ function build_docker_image {
 
 	DOCKER_IMAGE_TAGS=()
 
-	if [[ ${release_file_url%} == */snapshot-* ]]
+	if [[ ${RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
 		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}")
 		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
@@ -109,7 +109,7 @@ function check_usage {
 }
 
 function download_trial_dxp_license {
-	if [[ ${release_file_name} == *-dxp-* ]]
+	if [[ ${RELEASE_FILE_NAME} == *-dxp-* ]]
 	then
 		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
 		then
@@ -145,54 +145,11 @@ function download_trial_dxp_license {
 }
 
 function main {
-	check_usage ${1}
+	check_usage ${@}
 
 	make_temp_directory
 
-	#
-	# Download and prepare release.
-	#
-
-	local release_dir=${1%/*}
-
-	release_dir=${release_dir#*com/}
-	release_dir=${release_dir#*com/}
-	release_dir=${release_dir#*liferay-release-tool/}
-	release_dir=${release_dir#*private/ee/}
-	release_dir=releases/${release_dir}
-
-	local release_file_name=${1##*/}
-
-	local release_file_url=${1}
-
-	if [[ ${release_file_url} != http://mirrors.*.liferay.com* ]] && [[ ${release_file_url} != http://release* ]]
-	then
-		release_file_url=http://mirrors.lax.liferay.com/${release_file_url}
-	fi
-
-	if [ ! -e ${release_dir}/${release_file_name} ]
-	then
-		echo ""
-		echo "Downloading ${release_file_url}."
-		echo ""
-
-		mkdir -p ${release_dir}
-
-		curl -f -o ${release_dir}/${release_file_name} ${release_file_url} || exit 2
-	fi
-
-	if [[ ${release_file_name} == *.7z ]]
-	then
-		7z x -O${TEMP_DIR} ${release_dir}/${release_file_name} || exit 3
-	else
-		unzip -q ${release_dir}/${release_file_name} -d ${TEMP_DIR}  || exit 3
-	fi
-
-	mv ${TEMP_DIR}/liferay-* ${TEMP_DIR}/liferay
-
-	#
-	#
-	#
+	prepare_temp_directory ${@}
 
 	prepare_tomcat
 
@@ -203,6 +160,45 @@ function main {
 	push_docker_images ${@}
 
 	clean_up_temp_directory
+}
+
+function prepare_temp_directory {
+	RELEASE_FILE_NAME=${1##*/}
+
+	RELEASE_FILE_URL=${1}
+
+	if [[ ${RELEASE_FILE_URL} != http://mirrors.*.liferay.com* ]] && [[ ${RELEASE_FILE_URL} != http://release* ]]
+	then
+		RELEASE_FILE_URL=http://mirrors.lax.liferay.com/${RELEASE_FILE_URL}
+	fi
+
+	local release_dir=${1%/*}
+
+	release_dir=${release_dir#*com/}
+	release_dir=${release_dir#*com/}
+	release_dir=${release_dir#*liferay-release-tool/}
+	release_dir=${release_dir#*private/ee/}
+	release_dir=releases/${release_dir}
+
+	if [ ! -e ${release_dir}/${RELEASE_FILE_NAME} ]
+	then
+		echo ""
+		echo "Downloading ${RELEASE_FILE_URL}."
+		echo ""
+
+		mkdir -p ${release_dir}
+
+		curl -f -o ${release_dir}/${RELEASE_FILE_NAME} ${RELEASE_FILE_URL} || exit 2
+	fi
+
+	if [[ ${RELEASE_FILE_NAME} == *.7z ]]
+	then
+		7z x -O${TEMP_DIR} ${release_dir}/${RELEASE_FILE_NAME} || exit 3
+	else
+		unzip -q ${release_dir}/${RELEASE_FILE_NAME} -d ${TEMP_DIR}  || exit 3
+	fi
+
+	mv ${TEMP_DIR}/liferay-* ${TEMP_DIR}/liferay
 }
 
 function push_docker_images {
