@@ -147,10 +147,7 @@ function download_trial_dxp_license {
 }
 
 function main {
-
 	check_usage ${1}
-
-	set_variables
 
 	make_temp_directory
 

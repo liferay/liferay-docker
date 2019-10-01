@@ -45,8 +45,6 @@ function check_usage {
 function main {
 	check_usage ${1}
 
-	set_variables
-
 	make_temp_directory
 
 	#

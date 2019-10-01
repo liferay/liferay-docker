@@ -68,6 +68,12 @@ function get_tomcat_version {
 }
 
 function make_temp_directory {
+	CURRENT_DATE=$(date)
+
+	TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M")
+
+	TEMP_DIR=temp-${TIMESTAMP}
+
 	mkdir -p ${TEMP_DIR}
 
 	cp -r template/* ${TEMP_DIR}
@@ -83,14 +89,6 @@ function prepare_tomcat {
 	configure_tomcat
 
 	warm_up_tomcat
-}
-
-function set_variables {
-	CURRENT_DATE=$(date)
-
-	TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M")
-
-	TEMP_DIR=temp-${TIMESTAMP}
 }
 
 function start_tomcat {
