@@ -13,7 +13,7 @@ function check_utils {
 }
 
 function clean_up_temp_directory {
-	rm -fr ${temp_dir}
+	rm -fr ${TEMP_DIR}
 }
 
 function configure_tomcat {
@@ -68,34 +68,34 @@ function get_tomcat_version {
 }
 
 function prepare_tomcat {
-	local liferay_tomcat_version=$(get_tomcat_version ${temp_dir}/liferay)
+	local liferay_tomcat_version=$(get_tomcat_version ${TEMP_DIR}/liferay)
 
-	mv ${temp_dir}/liferay/tomcat-${liferay_tomcat_version} ${temp_dir}/liferay/tomcat
+	mv ${TEMP_DIR}/liferay/tomcat-${liferay_tomcat_version} ${TEMP_DIR}/liferay/tomcat
 
-	ln -s tomcat ${temp_dir}/liferay/tomcat-${liferay_tomcat_version}
+	ln -s tomcat ${TEMP_DIR}/liferay/tomcat-${liferay_tomcat_version}
 
-	configure_tomcat ${temp_dir}
+	configure_tomcat ${TEMP_DIR}
 
-	warm_up_tomcat ${temp_dir}
+	warm_up_tomcat ${TEMP_DIR}
 }
 
 function start_tomcat {
-	local temp_dir=${1}
+	local TEMP_DIR=${1}
 
-	./${temp_dir}/liferay/tomcat/bin/catalina.sh start
+	./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh start
 
 	until $(curl --head --fail --output /dev/null --silent http://localhost:8080)
 	do
 		sleep 3
 	done
 
-	./${temp_dir}/liferay/tomcat/bin/catalina.sh stop
+	./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh stop
 
 	sleep 10
 
-	rm -fr ${temp_dir}/liferay/data/osgi/state
-	rm -fr ${temp_dir}/liferay/osgi/state
-	rm -fr ${temp_dir}/liferay/tomcat/logs/*
+	rm -fr ${TEMP_DIR}/liferay/data/osgi/state
+	rm -fr ${TEMP_DIR}/liferay/osgi/state
+	rm -fr ${TEMP_DIR}/liferay/tomcat/logs/*
 }
 
 function stat {
@@ -114,23 +114,23 @@ function warm_up_tomcat {
 	# the Hypersonic files can take over 20 seconds.
 	#
 
-	local temp_dir=${1}
+	local TEMP_DIR=${1}
 
-	if [ -d ${temp_dir}/liferay/data/hsql ]
+	if [ -d ${TEMP_DIR}/liferay/data/hsql ]
 	then
-		if [ $(stat ${temp_dir}/liferay/data/hsql/lportal.script) -lt 1024000 ]
+		if [ $(stat ${TEMP_DIR}/liferay/data/hsql/lportal.script) -lt 1024000 ]
 		then
-			start_tomcat ${temp_dir}
+			start_tomcat ${TEMP_DIR}
 		else
 			echo Tomcat is already warmed up.
 		fi
 	fi
 
-	if [ -d ${temp_dir}/liferay/data/hypersonic ]
+	if [ -d ${TEMP_DIR}/liferay/data/hypersonic ]
 	then
-		if [ $(stat ${temp_dir}/liferay/data/hypersonic/lportal.script) -lt 1024000 ]
+		if [ $(stat ${TEMP_DIR}/liferay/data/hypersonic/lportal.script) -lt 1024000 ]
 		then
-			start_tomcat ${temp_dir}
+			start_tomcat ${TEMP_DIR}
 		else
 			echo Tomcat is already warmed up.
 		fi

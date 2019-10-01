@@ -18,15 +18,15 @@ function main {
 	# Make temporary directory.
 	#
 
-	local current_date=$(date)
+	local CURRENT_DATE=$(date)
 
-	local timestamp=$(date "${current_date}" "+%Y%m%d%H%M")
+	local TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M")
 
-	local temp_dir=temp-${timestamp}
+	local TEMP_DIR=temp-${TIMESTAMP}
 
-	mkdir -p ${temp_dir}
+	mkdir -p ${TEMP_DIR}
 
-	cp -r template/* ${temp_dir}
+	cp -r template/* ${TEMP_DIR}
 
 	#
 	# Download and prepare release.
@@ -34,13 +34,13 @@ function main {
 
 	local local_build_dir=${1}
 
-	cp -a ${local_build_dir} ${temp_dir}/liferay
+	cp -a ${local_build_dir} ${TEMP_DIR}/liferay
 
 	#
 	# Prepare Tomcat.
 	#
 
-	prepare_tomcat ${temp_dir}
+	prepare_tomcat ${TEMP_DIR}
 
 	#
 	# Build Docker image.
@@ -53,7 +53,7 @@ function main {
 
 	local docker_image_tags=()
 
-	docker_image_tags+=("liferay/${docker_image_name}:${release_version}-${timestamp}")
+	docker_image_tags+=("liferay/${docker_image_name}:${release_version}-${TIMESTAMP}")
 	docker_image_tags+=("liferay/${docker_image_name}:${release_version}")
 
 	local docker_image_tags_args=""
@@ -64,12 +64,12 @@ function main {
 	done
 
 	docker build \
-		--build-arg LABEL_BUILD_DATE=$(date "${current_date}" "+%Y-%m-%dT%H:%M:%SZ") \
+		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
 		--build-arg LABEL_NAME="${label_name}" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VERSION="${label_version}" \
 		$(echo ${docker_image_tags_args}) \
-		${temp_dir}
+		${TEMP_DIR}
 
 	#
 	#

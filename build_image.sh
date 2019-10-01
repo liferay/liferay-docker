@@ -19,15 +19,15 @@ function main {
 	# Make temporary directory.
 	#
 
-	local current_date=$(date)
+	local CURRENT_DATE=$(date)
 
-	local timestamp=$(date "${current_date}" "+%Y%m%d%H%M")
+	local TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M")
 
-	local temp_dir=temp-${timestamp}
+	local TEMP_DIR=temp-${TIMESTAMP}
 
-	mkdir -p ${temp_dir}
+	mkdir -p ${TEMP_DIR}
 
-	cp -r template/* ${temp_dir}
+	cp -r template/* ${TEMP_DIR}
 
 	#
 	# Download and prepare release.
@@ -63,18 +63,18 @@ function main {
 
 	if [[ ${release_file_name} == *.7z ]]
 	then
-		7z x -O${temp_dir} ${release_dir}/${release_file_name} || exit 3
+		7z x -O${TEMP_DIR} ${release_dir}/${release_file_name} || exit 3
 	else
-		unzip -q ${release_dir}/${release_file_name} -d ${temp_dir}  || exit 3
+		unzip -q ${release_dir}/${release_file_name} -d ${TEMP_DIR}  || exit 3
 	fi
 
-	mv ${temp_dir}/liferay-* ${temp_dir}/liferay
+	mv ${TEMP_DIR}/liferay-* ${TEMP_DIR}/liferay
 
 	#
 	# Prepare Tomcat.
 	#
 
-	prepare_tomcat ${temp_dir}
+	prepare_tomcat ${TEMP_DIR}
 
 	#
 	# Download trial DXP license.
@@ -88,26 +88,26 @@ function main {
 
 			exit 1
 		else
-			mkdir -p ${temp_dir}/liferay/deploy
+			mkdir -p ${TEMP_DIR}/liferay/deploy
 
-			license_file_name=license-$(date "${current_date}" "+%Y%m%d").xml
+			license_file_name=license-$(date "${CURRENT_DATE}" "+%Y%m%d").xml
 
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${current_date}" "+%Y-%m-%d")&owner=hello%40liferay.com\" > ${temp_dir}/liferay/deploy/${license_file_name}"
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%Y-%m-%d")&owner=hello%40liferay.com\" > ${TEMP_DIR}/liferay/deploy/${license_file_name}"
 
-			sed -i "s/\\\n//g" ${temp_dir}/liferay/deploy/${license_file_name}
-			sed -i "s/\\\t//g" ${temp_dir}/liferay/deploy/${license_file_name}
-			sed -i "s/\"<?xml/<?xml/" ${temp_dir}/liferay/deploy/${license_file_name}
-			sed -i "s/license>\"/license>/" ${temp_dir}/liferay/deploy/${license_file_name}
-			sed -i 's/\\"/\"/g' ${temp_dir}/liferay/deploy/${license_file_name}
-			sed -i 's/\\\//\//g' ${temp_dir}/liferay/deploy/${license_file_name}
+			sed -i "s/\\\n//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i "s/\\\t//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i "s/\"<?xml/<?xml/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i "s/license>\"/license>/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i 's/\\"/\"/g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
+			sed -i 's/\\\//\//g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
 
-			if [ ! -e ${temp_dir}/liferay/deploy/${license_file_name} ]
+			if [ ! -e ${TEMP_DIR}/liferay/deploy/${license_file_name} ]
 			then
-				echo "Trial DXP license does not exist at ${temp_dir}/liferay/deploy/${license_file_name}."
+				echo "Trial DXP license does not exist at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
 
 				exit 1
 			else
-				echo "Trial DXP license exists at ${temp_dir}/liferay/deploy/${license_file_name}."
+				echo "Trial DXP license exists at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
 
 				#exit 1
 			fi
@@ -169,7 +169,7 @@ function main {
 		release_branch=${release_branch%-private*}
 		release_branch=${release_branch##*-}
 
-		local release_hash=$(cat ${temp_dir}/liferay/.githash)
+		local release_hash=$(cat ${TEMP_DIR}/liferay/.githash)
 
 		release_hash=${release_hash:0:7}
 
@@ -186,10 +186,10 @@ function main {
 	if [[ ${release_file_url%} == */snapshot-* ]]
 	then
 		docker_image_tags+=("liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}")
-		docker_image_tags+=("liferay/${docker_image_name}:${release_branch}-$(date "${current_date}" "+%Y%m%d")")
+		docker_image_tags+=("liferay/${docker_image_name}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
 		docker_image_tags+=("liferay/${docker_image_name}:${release_branch}")
 	else
-		docker_image_tags+=("liferay/${docker_image_name}:${release_version}-${timestamp}")
+		docker_image_tags+=("liferay/${docker_image_name}:${release_version}-${TIMESTAMP}")
 		docker_image_tags+=("liferay/${docker_image_name}:${release_version}")
 	fi
 
@@ -201,12 +201,12 @@ function main {
 	done
 
 	docker build \
-		--build-arg LABEL_BUILD_DATE=$(date "${current_date}" "+%Y-%m-%dT%H:%M:%SZ") \
+		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
 		--build-arg LABEL_NAME="${label_name}" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VERSION="${label_version}" \
 		$(echo ${docker_image_tags_args}) \
-		${temp_dir}
+		${TEMP_DIR}
 
 	#
 	# Push Docker image.
