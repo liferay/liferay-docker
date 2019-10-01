@@ -17,13 +17,7 @@ function main {
 
 	set_variables
 
-	#
-	# Make temporary directory.
-	#
-
-	mkdir -p ${TEMP_DIR}
-
-	cp -r template/* ${TEMP_DIR}
+	make_temp_directory
 
 	#
 	# Download and prepare release.

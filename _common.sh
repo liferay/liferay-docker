@@ -67,6 +67,12 @@ function get_tomcat_version {
 	echo ${liferay_tomcat_version}
 }
 
+function make_temp_directory {
+	mkdir -p ${TEMP_DIR}
+
+	cp -r template/* ${TEMP_DIR}
+}
+
 function prepare_tomcat {
 	local liferay_tomcat_version=$(get_tomcat_version ${TEMP_DIR}/liferay)
 
