@@ -6,7 +6,11 @@ function build_docker_image {
 	local docker_image_name
 	local label_name
 
-	if [[ ${RELEASE_FILE_NAME} == *-commerce-* ]]
+	if [[ ${RELEASE_FILE_NAME} == *-commerce-enterprise-* ]]
+	then
+		docker_image_name="commerce-enterprise"
+		label_name="Liferay Commerce Enterprise"
+	elif [[ ${RELEASE_FILE_NAME} == *-commerce-* ]]
 	then
 		docker_image_name="commerce"
 		label_name="Liferay Commerce"
@@ -110,7 +114,7 @@ function check_usage {
 }
 
 function download_trial_dxp_license {
-	if [[ ${RELEASE_FILE_NAME} == *-dxp-* ]]
+	if [[ ${RELEASE_FILE_NAME} == *-commerce-enterprise-* ]] || [[ ${RELEASE_FILE_NAME} == *-dxp-* ]]
 	then
 		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
 		then
@@ -142,6 +146,13 @@ function download_trial_dxp_license {
 				#exit 1
 			fi
 		fi
+	fi
+
+	if [[ ${RELEASE_FILE_NAME} == *-commerce-enterprise-* ]]
+	then
+		mkdir -p ${TEMP_DIR}/liferay/data/license
+
+		cp LiferayCommerce_enterprise.li ${TEMP_DIR}/liferay/data/license
 	fi
 }
 
