@@ -9,7 +9,7 @@ function main {
 
 	if [ -d ${LIFERAY_MOUNT_DIR}/files ]
 	then
-		if [ $(ls -A ${LIFERAY_MOUNT_DIR}/files) ]
+		if [[ $(ls -A ${LIFERAY_MOUNT_DIR}/files) ]]
 		then
 			echo "[LIFERAY] Copying files from ${LIFERAY_MOUNT_DIR}/files:"
 			echo ""
@@ -30,7 +30,7 @@ function main {
 
 	if [ -d ${LIFERAY_MOUNT_DIR}/scripts ]
 	then
-		if [ $(ls -A ${LIFERAY_MOUNT_DIR}/scripts) ]
+		if [[ $(ls -A ${LIFERAY_MOUNT_DIR}/scripts) ]]
 		then
 			echo "[LIFERAY] Executing scripts in ${LIFERAY_MOUNT_DIR}/scripts:"
 
@@ -53,7 +53,7 @@ function main {
 
 	if [ -d ${LIFERAY_MOUNT_DIR}/deploy ]
 	then
-		if [ $(ls -A /opt/liferay/deploy) ]
+		if [[ $(ls -A /opt/liferay/deploy) ]]
 		then
 			cp /opt/liferay/deploy/* ${LIFERAY_MOUNT_DIR}/deploy
 		fi
