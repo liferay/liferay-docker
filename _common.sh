@@ -21,9 +21,6 @@ function configure_tomcat {
 }
 
 function date {
-
-	export LC_ALL=en_US.UTF-8
-	
 	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
 		if [ "$(uname)" == "Darwin" ]
@@ -68,6 +65,10 @@ function get_tomcat_version {
 	fi
 
 	echo ${liferay_tomcat_version}
+}
+
+function init {
+	LC_ALL=en_US.UTF-8
 }
 
 function make_temp_directory {
@@ -147,3 +148,5 @@ function warm_up_tomcat {
 		fi
 	fi
 }
+
+init
