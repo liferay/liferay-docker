@@ -12,8 +12,8 @@ function build_docker_image {
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL=$(git config --get remote.origin.url) \
 		--build-arg LABEL_VERSION="${release_version}" \
-		--tag liferay/${docker_image_name}:${release_version}-${TIMESTAMP} \
-		--tag liferay/${docker_image_name}:${release_version} \
+		--tag ${docker_image_name}:${release_version}-${TIMESTAMP} \
+		--tag ${docker_image_name}:${release_version} \
 		${TEMP_DIR}
 }
 
