@@ -21,14 +21,8 @@ function configure_tomcat {
 }
 
 function date {
-<<<<<<< HEAD
 	LC_ALL=en_US.UTF-8
 
-=======
-
-	export LC_ALL=en_US.UTF-8
-	
->>>>>>> Fixed Failed conversion date: illegal time format.
 	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
 		if [ "$(uname)" == "Darwin" ]
