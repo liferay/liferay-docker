@@ -21,8 +21,14 @@ function configure_tomcat {
 }
 
 function date {
+<<<<<<< HEAD
 	LC_ALL=en_US.UTF-8
 
+=======
+
+	export LC_ALL=en_US.UTF-8
+	
+>>>>>>> 1dd1f2061b853fd6c12e4a3bc5daf7f131356080
 	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
 		if [ "$(uname)" == "Darwin" ]
