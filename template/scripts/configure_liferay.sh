@@ -7,6 +7,34 @@ function main {
 		echo ""
 	fi
 
+	if [ -d ${LIFERAY_MOUNT_DIR}/configs ]
+	then
+		if [[ $(ls -A ${LIFERAY_MOUNT_DIR}/configs/portal-*.properties) ]]
+		then
+			echo "[LIFERAY] Copying configuration files from ${LIFERAY_MOUNT_DIR}/configs into ${LIFERAY_HOME}:"
+			echo ""
+
+			ls ${LIFERAY_MOUNT_DIR}/configs/portal-*.properties
+			cp ${LIFERAY_MOUNT_DIR}/configs/portal-*.properties ${LIFERAY_HOME}
+
+			echo ""
+		fi
+
+		if [[ $(ls -A ${LIFERAY_MOUNT_DIR}/configs/*.c*f*g) ]]
+		then
+			echo "[LIFERAY] Copying configuration files from ${LIFERAY_MOUNT_DIR}/configs into ${LIFERAY_HOME}/osgi/configs:"
+			echo ""
+
+			ls ${LIFERAY_MOUNT_DIR}/configs/*.c*f*g
+			cp ${LIFERAY_MOUNT_DIR}/configs/*.c*f*g ${LIFERAY_HOME}/osgi/configs
+
+			echo ""
+		fi
+	else
+		echo "[LIFERAY] The directory /mnt/liferay/configs does not exist. Create the directory \$(pwd)/xyz123/configs on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/configs on the container. Files in ${LIFERAY_MOUNT_DIR}/configs will be copied to ${LIFERAY_HOME} of ${LIFERAY_HOME}/osgi/configs (based on their type) before ${LIFERAY_PRODUCT_NAME} starts."
+		echo ""
+	fi
+
 	if [ -d ${LIFERAY_MOUNT_DIR}/files ]
 	then
 		if [[ $(ls -A ${LIFERAY_MOUNT_DIR}/files) ]]
