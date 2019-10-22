@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /usr/local/bin/_liferay_common.sh
+
 function main {
 	if [ ! -d ${LIFERAY_MOUNT_DIR} ]
 	then
@@ -30,22 +32,7 @@ function main {
 
 	if [ -d ${LIFERAY_MOUNT_DIR}/scripts ]
 	then
-		if [[ $(ls -A ${LIFERAY_MOUNT_DIR}/scripts) ]]
-		then
-			echo "[LIFERAY] Executing scripts in ${LIFERAY_MOUNT_DIR}/scripts:"
-
-			for SCRIPT_NAME in ${LIFERAY_MOUNT_DIR}/scripts/*
-			do
-				echo ""
-				echo "[LIFERAY] Executing ${SCRIPT_NAME}."
-
-				chmod a+x ${SCRIPT_NAME}
-
-				${SCRIPT_NAME}
-			done
-
-			echo ""
-		fi
+		execute_scripts_folder ${LIFERAY_MOUNT_DIR}/scripts
 	else
 		echo "[LIFERAY] The directory /mnt/liferay/scripts does not exist. Create the directory \$(pwd)/xyz123/scripts on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/scripts on the container. Files in ${LIFERAY_MOUNT_DIR}/scripts will be executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
 		echo ""

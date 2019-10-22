@@ -1,13 +1,12 @@
 #!/bin/bash
 
+source /usr/local/bin/_liferay_common.sh
+
 function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."
 	echo ""
 
-	if [ -e /usr/local/bin/pre_configure.sh ]
-	then
-		/usr/local/bin/pre_configure.sh
-	fi
+	execute_scripts_folder /usr/local/liferay/scripts/pre-configure
 
 	if [ -d /etc/liferay/mount ]
 	then
@@ -20,17 +19,11 @@ function main {
 
 	configure_liferay.sh
 
-	if [ -e /usr/local/bin/pre_startup.sh ]
-	then
-		/usr/local/bin/pre_startup.sh
-	fi
+	execute_scripts_folder /usr/local/liferay/scripts/pre-startup
 
 	start_liferay.sh
 
-	if [ -e /usr/local/bin/post_shutdown.sh ]
-	then
-		/usr/local/bin/post_shutdown.sh
-	fi
+	execute_scripts_folder /usr/local/liferay/scripts/post-shutdown
 }
 
 main
