@@ -15,7 +15,6 @@ function main {
 			echo ""
 
 			ls ${LIFERAY_MOUNT_DIR}/configs/portal-*.properties
-
 			cp ${LIFERAY_MOUNT_DIR}/configs/portal-*.properties ${LIFERAY_HOME}
 
 			echo ""
@@ -27,7 +26,6 @@ function main {
 			echo ""
 
 			ls ${LIFERAY_MOUNT_DIR}/configs/*.c*f*g
-
 			cp ${LIFERAY_MOUNT_DIR}/configs/*.c*f*g ${LIFERAY_HOME}/osgi/configs
 
 			echo ""
