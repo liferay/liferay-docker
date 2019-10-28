@@ -6,8 +6,6 @@ function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."
 	echo ""
 
-	execute_scripts_folder /usr/local/liferay/scripts/pre-configure
-
 	if [ -d /etc/liferay/mount ]
 	then
 		LIFERAY_MOUNT_DIR=/etc/liferay/mount
@@ -16,6 +14,8 @@ function main {
 	fi
 
 	export LIFERAY_MOUNT_DIR
+
+	execute_scripts_folder /usr/local/liferay/scripts/pre-configure
 
 	configure_liferay.sh
 
