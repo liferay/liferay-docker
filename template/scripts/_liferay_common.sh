@@ -5,17 +5,17 @@ function execute_scripts_folder {
 	then
 		echo "[LIFERAY] Executing scripts in ${1}:"
 
-		for SCRIPT_NAME in ${1}/*
+		for SCRIPT_NAME in $(ls -1 ${1} | sort)
 		do
 			echo ""
 			echo "[LIFERAY] Executing ${SCRIPT_NAME}."
 
-			if [ ! -x ${SCRIPT_NAME} ]
+			if [ ! -x ${1}/${SCRIPT_NAME} ]
 			then
-				chmod a+x ${SCRIPT_NAME}
+				chmod a+x ${1}/${SCRIPT_NAME}
 			fi
 
-			${SCRIPT_NAME}
+			${1}/${SCRIPT_NAME}
 		done
 
 		echo ""
