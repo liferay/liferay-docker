@@ -15,15 +15,15 @@ function main {
 
 	export LIFERAY_MOUNT_DIR
 
-	execute_scripts_folder /usr/local/liferay/scripts/pre-configure
+	execute_scripts /usr/local/liferay/scripts/pre-configure
 
 	configure_liferay.sh
 
-	execute_scripts_folder /usr/local/liferay/scripts/pre-startup
+	execute_scripts /usr/local/liferay/scripts/pre-startup
 
 	start_liferay.sh
 
-	execute_scripts_folder /usr/local/liferay/scripts/post-shutdown
+	execute_scripts /usr/local/liferay/scripts/post-shutdown
 }
 
 main
