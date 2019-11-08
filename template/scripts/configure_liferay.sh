@@ -32,7 +32,7 @@ function main {
 
 	if [ -d ${LIFERAY_MOUNT_DIR}/scripts ]
 	then
-		execute_scripts ${LIFERAY_MOUNT_DIR}/scripts
+		execute_scripts_folder ${LIFERAY_MOUNT_DIR}/scripts
 	else
 		echo "[LIFERAY] The directory /mnt/liferay/scripts does not exist. Create the directory \$(pwd)/xyz123/scripts on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/scripts on the container. Files in ${LIFERAY_MOUNT_DIR}/scripts will be executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
 		echo ""

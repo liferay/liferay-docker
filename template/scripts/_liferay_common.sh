@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function execute_scripts {
+function execute_scripts_folder {
 	if [ -e ${1} ] && [[ $(ls -A ${1}) ]]
 	then
 		echo "[LIFERAY] Executing scripts in ${1}:"
