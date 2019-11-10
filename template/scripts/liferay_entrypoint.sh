@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /usr/local/bin/_liferay_common.sh
+
 function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."
 	echo ""
@@ -13,9 +15,15 @@ function main {
 
 	export LIFERAY_MOUNT_DIR
 
+	execute_scripts /usr/local/liferay/scripts/pre-configure
+
 	configure_liferay.sh
 
+	execute_scripts /usr/local/liferay/scripts/pre-startup
+
 	start_liferay.sh
+
+	execute_scripts /usr/local/liferay/scripts/post-shutdown
 }
 
 main

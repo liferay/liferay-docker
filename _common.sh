@@ -91,6 +91,8 @@ function prepare_tomcat {
 	configure_tomcat
 
 	warm_up_tomcat
+
+	rm -fr ${TEMP_DIR}/liferay/tomcat/logs/*
 }
 
 function start_tomcat {
@@ -107,7 +109,6 @@ function start_tomcat {
 
 	rm -fr ${TEMP_DIR}/liferay/data/osgi/state
 	rm -fr ${TEMP_DIR}/liferay/osgi/state
-	rm -fr ${TEMP_DIR}/liferay/tomcat/logs/*
 }
 
 function stat {
