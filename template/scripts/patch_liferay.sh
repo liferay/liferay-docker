@@ -51,8 +51,6 @@ function main {
 
 function patch_installed {
 	rm -rf /opt/liferay/osgi/state/*
-	rm -rf /opt/liferay/tomcat/temp/*
-	rm -rf /opt/liferay/tomcat/work/*
 
 	echo ""
 	echo "[LIFERAY] Patch applied successfully."
