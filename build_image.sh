@@ -170,7 +170,7 @@ function main {
 
 	build_docker_image
 
-	push_docker_images ${@}
+	push_docker_images ${2}
 
 	clean_up_temp_directory
 }
@@ -212,16 +212,6 @@ function prepare_temp_directory {
 	fi
 
 	mv ${TEMP_DIR}/liferay-* ${TEMP_DIR}/liferay
-}
-
-function push_docker_images {
-	if [ "${2}" == "push" ]
-	then
-		for docker_image_tag in "${DOCKER_IMAGE_TAGS[@]}"
-		do
-			docker push ${docker_image_tag}
-		done
-	fi
 }
 
 main ${@}

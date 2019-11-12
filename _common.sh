@@ -95,6 +95,16 @@ function prepare_tomcat {
 	rm -fr ${TEMP_DIR}/liferay/tomcat/logs/*
 }
 
+function push_docker_images {
+	if [ "${1}" == "push" ]
+	then
+		for docker_image_tag in "${DOCKER_IMAGE_TAGS[@]}"
+		do
+			docker push ${docker_image_tag}
+		done
+	fi
+}
+
 function start_tomcat {
 	./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh start
 

@@ -52,19 +52,9 @@ function main {
 
 	build_docker_image ${@}
 
-	push_docker_images ${@}
+	push_docker_images ${4}
 
 	clean_up_temp_directory
-}
-
-function push_docker_images {
-	if [ "${4}" == "push" ]
-	then
-		for docker_image_tag in "${DOCKER_IMAGE_TAGS[@]}"
-		do
-			docker push ${docker_image_tag}
-		done
-	fi
 }
 
 function prepare_temp_directory {
