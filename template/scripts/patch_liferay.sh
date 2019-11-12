@@ -50,7 +50,7 @@ function main {
 }
 
 function patch_installed {
-	rm -rf /opt/liferay/osgi/state/*
+	rm -fr /opt/liferay/osgi/state/*
 
 	echo ""
 	echo "[LIFERAY] Patch applied successfully."
