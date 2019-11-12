@@ -5,13 +5,8 @@ function install_patch {
 
 	if ( /opt/liferay/patching-tool/patching-tool.sh install )
 	then
-		log_patch_installed
+		patch_installed
 	fi
-}
-
-function log_patch_installed {
-	echo ""
-	echo "[LIFERAY] Patch applied successfully."
 }
 
 function main {
@@ -42,7 +37,7 @@ function main {
 		then
 			if ( /opt/liferay/patching-tool/patching-tool.sh apply ${LIFERAY_PATCHING_DIR}/liferay-*.zip )
 			then
-				log_patch_installed
+				patch_installed
 			else
 				install_patch
 			fi
@@ -50,6 +45,15 @@ function main {
 			install_patch
 		fi
 	fi
+}
+
+function patch_installed {
+	rm -rf /opt/liferay/osgi/state/*
+	rm -rf /opt/liferay/tomcat/temp/*
+	rm -rf /opt/liferay/tomcat/work/*
+
+	echo ""
+	echo "[LIFERAY] Patch applied successfully."
 }
 
 main
