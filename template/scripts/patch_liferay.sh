@@ -1,13 +1,13 @@
 #!/bin/bash
 
-function install_patch {
+function install_patch_step_1 {
 	cp ${LIFERAY_PATCHING_DIR}/liferay-*.zip /opt/liferay/patching-tool/patches
 
 	/opt/liferay/patching-tool/patching-tool.sh setup
 
 	if ( /opt/liferay/patching-tool/patching-tool.sh install )
 	then
-		patch_installed
+		install_patch_step_2
 	fi
 }
 
@@ -39,17 +39,17 @@ function main {
 		then
 			if ( /opt/liferay/patching-tool/patching-tool.sh apply ${LIFERAY_PATCHING_DIR}/liferay-*.zip )
 			then
-				patch_installed
+				install_patch_step_2
 			else
-				install_patch
+				install_patch_step_1
 			fi
 		else
-			install_patch
+			install_patch_step_1
 		fi
 	fi
 }
 
-function patch_installed {
+function install_patch_step_2 {
 	rm -fr /opt/liferay/osgi/state/*
 
 	echo ""
