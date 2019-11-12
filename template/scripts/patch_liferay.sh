@@ -36,7 +36,7 @@ function main {
 		echo "[LIFERAY] Patching Tool updated successfully."
 	fi
 
-	if [ -e ${LIFERAY_PATCHING_DIR}/liferay-*.zip ]
+	if [ `ls ${LIFERAY_PATCHING_DIR}/liferay-*.zip | wc -l` > 0 ]
 	then
 		if [ `ls ${LIFERAY_PATCHING_DIR}/liferay-*.zip | wc -l` == 1 ]
 		then
