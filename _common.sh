@@ -47,6 +47,17 @@ function date {
 	fi
 }
 
+function get_docker_image_tags_args {
+	local docker_image_tags_args=""
+
+	for docker_image_tag in "${@}"
+	do
+		docker_image_tags_args="${docker_image_tags_args} --tag ${docker_image_tag}"
+	done
+
+	echo ${docker_image_tags_args}
+}
+
 function get_tomcat_version {
 	if [ -e ${1}/tomcat-* ]
 	then
