@@ -6,12 +6,12 @@ function build_docker_image {
 	local docker_image_name=${2}
 	local release_version=${3}
 
-	local docker_image_tags_args=""
-
 	DOCKER_IMAGE_TAGS=()
 
 	DOCKER_IMAGE_TAGS+=(${docker_image_name}:${release_version}-${TIMESTAMP})
 	DOCKER_IMAGE_TAGS+=(${docker_image_name}:${release_version})
+
+	local docker_image_tags_args=""
 
 	for docker_image_tag in "${DOCKER_IMAGE_TAGS[@]}"
 	do
