@@ -11,6 +11,13 @@ function install_patch_step_1 {
 	fi
 }
 
+function install_patch_step_2 {
+	rm -fr /opt/liferay/osgi/state/*
+
+	echo ""
+	echo "[LIFERAY] Patch applied successfully."
+}
+
 function main {
 	if [[ $(ls -A ${LIFERAY_PATCHING_DIR}/patching-tool-*.zip 2>/dev/null) ]]
 	then
@@ -47,13 +54,6 @@ function main {
 			install_patch_step_1
 		fi
 	fi
-}
-
-function install_patch_step_2 {
-	rm -fr /opt/liferay/osgi/state/*
-
-	echo ""
-	echo "[LIFERAY] Patch applied successfully."
 }
 
 main
