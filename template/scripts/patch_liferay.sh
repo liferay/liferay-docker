@@ -12,7 +12,7 @@ function install_patch {
 }
 
 function main {
-	if [ -e ${LIFERAY_PATCHING_DIR}/patching-tool-* ]
+	if [[ $(ls -A ${LIFERAY_PATCHING_DIR}/patching-tool-*.zip 2>/dev/null) ]]
 	then
 		echo ""
 		echo "[LIFERAY] Updating Patching Tool."
@@ -33,7 +33,7 @@ function main {
 		echo "[LIFERAY] Patching Tool updated successfully."
 	fi
 
-	if [ -e ${LIFERAY_PATCHING_DIR}/liferay-*.zip ]
+	if [[ $(ls -A ${LIFERAY_PATCHING_DIR}/liferay-*.zip 2>/dev/null) ]]
 	then
 		if [ `ls ${LIFERAY_PATCHING_DIR}/liferay-*.zip | wc -l` == 1 ]
 		then
