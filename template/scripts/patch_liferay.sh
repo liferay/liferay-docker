@@ -3,6 +3,8 @@
 function install_patch {
 	cp ${LIFERAY_PATCHING_DIR}/liferay-*.zip /opt/liferay/patching-tool/patches
 
+	/opt/liferay/patching-tool/patching-tool.sh setup
+
 	if ( /opt/liferay/patching-tool/patching-tool.sh install )
 	then
 		patch_installed
