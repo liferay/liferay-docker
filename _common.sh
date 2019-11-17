@@ -117,6 +117,8 @@ function push_docker_images {
 }
 
 function start_tomcat {
+	LIFERAY_JVM_OPTS="-Xmx3G"
+
 	./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh start
 
 	until $(curl --head --fail --output /dev/null --silent http://localhost:8080)
