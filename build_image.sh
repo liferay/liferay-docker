@@ -150,6 +150,30 @@ function download_trial_dxp_license {
 	fi
 }
 
+function install_fix_pack {
+	if [ -n "${3}" ]
+	then
+		local fix_pack_url=${3}
+
+		FIX_PACK_NAME=${fix_pack_url##*/}
+
+		if [ ! -e releases/fix-packs/${FIX_PACK_NAME} ]
+		then
+			echo ""
+			echo "Downloading ${fix_pack_url}."
+			echo ""
+
+			mkdir -p releases/fix-packs/
+
+			curl -f -o releases/fix-packs/${FIX_PACK_NAME} ${fix_pack_url} || exit 2
+		fi
+
+		cp releases/fix-packs/${FIX_PACK_NAME} ${TEMP_DIR}/liferay/patching-tool/patches/
+
+		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh install
+	fi
+}
+
 function main {
 	check_usage ${@}
 
@@ -160,6 +184,8 @@ function main {
 	prepare_tomcat
 
 	download_trial_dxp_license
+
+	install_fix_pack ${@}
 
 	build_docker_image
 
