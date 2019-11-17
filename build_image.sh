@@ -181,11 +181,11 @@ function main {
 
 	prepare_temp_directory ${@}
 
+	install_fix_pack ${@}
+
 	prepare_tomcat
 
 	download_trial_dxp_license
-
-	install_fix_pack ${@}
 
 	build_docker_image
 
