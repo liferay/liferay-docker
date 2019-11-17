@@ -173,9 +173,14 @@ function prepare_temp_directory {
 
 	RELEASE_FILE_URL=${1}
 
-	if [[ ${RELEASE_FILE_URL} != http://mirrors.*.liferay.com* ]] && [[ ${RELEASE_FILE_URL} != http://release* ]]
+	if [[ ${RELEASE_FILE_URL} != http*://* ]]
 	then
-		RELEASE_FILE_URL=http://mirrors.lax.liferay.com/${RELEASE_FILE_URL}
+		RELEASE_FILE_URL=http://${RELEASE_FILE_URL}
+	fi
+
+	if [[ ${RELEASE_FILE_URL} != http://mirrors.*.liferay.com* ]] && [[ ${RELEASE_FILE_URL} != http://release-1* ]]
+	then
+		RELEASE_FILE_URL=http://mirrors.lax.liferay.com/${RELEASE_FILE_URL##*//}
 	fi
 
 	local release_dir=${1%/*}
