@@ -48,6 +48,17 @@ function build_docker_image {
 		release_version=${release_version%.*}
 	fi
 
+	if [[ ${RELEASE_FILE_URL} == *files.liferay.com/* ]]
+	then
+		release_version=${RELEASE_FILE_URL#*tomcat-}
+		release_version=${release_version%.*}
+		release_version=${release_version%-*}
+
+		local sp_name=${release_version##*-}
+
+		release_version=${release_version:0:3}
+	fi
+
 	if [ -n "${FIX_PACK_NAME}" ]
 	then
 		local fix_pack=${FIX_PACK_NAME%.zip}
@@ -55,6 +66,9 @@ function build_docker_image {
 		fix_pack=${fix_pack::5}
 
 		release_version=${release_version}-${fix_pack}
+	elif [ -n "${sp_name}" ]
+	then
+		release_version=${release_version}-${sp_name}
 	fi
 
 	local label_version=${release_version}
