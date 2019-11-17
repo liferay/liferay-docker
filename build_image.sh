@@ -33,7 +33,7 @@ function build_docker_image {
 		docker_image_name=${docker_image_name}-snapshot
 	fi
 
-	if [[ ${RELEASE_FILE_URL} == http://release* ]]
+	if [[ ${RELEASE_FILE_URL} == http://release-* ]] || [[ ${RELEASE_FILE_URL} == http://release.liferay.com* ]]
 	then
 		docker_image_name=${docker_image_name}-snapshot
 	fi
@@ -42,7 +42,7 @@ function build_docker_image {
 
 	release_version=${release_version##*/}
 
-	if [[ ${RELEASE_FILE_URL} == http://release* ]]
+	if [[ ${RELEASE_FILE_URL} == http://release-* ]] || [[ ${RELEASE_FILE_URL} == http://release.liferay.com* ]]
 	then
 		release_version=${RELEASE_FILE_URL#*tomcat-}
 		release_version=${release_version%.*}
