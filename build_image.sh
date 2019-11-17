@@ -48,7 +48,7 @@ function build_docker_image {
 		release_version=${release_version%.*}
 	fi
 
-	if [[ ${RELEASE_FILE_URL} == *files.liferay.com/* ]]
+	if [[ ${RELEASE_FILE_URL} == *files.liferay.com/* ]] && [[ ${RELEASE_FILE_URL%} != */snapshot-* ]]
 	then
 		release_version=${RELEASE_FILE_URL#*tomcat-}
 		release_version=${release_version%.*}
