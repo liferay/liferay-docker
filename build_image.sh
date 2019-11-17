@@ -48,6 +48,15 @@ function build_docker_image {
 		release_version=${release_version%.*}
 	fi
 
+	if [ -n "${FIX_PACK_NAME}" ]
+	then
+		local fix_pack=${FIX_PACK_NAME%.zip}
+		fix_pack=${fix_pack##*fix-pack-}
+		fix_pack=${fix_pack::5}
+
+		release_version=${release_version}-${fix_pack}
+	fi
+
 	local label_version=${release_version}
 
 	if [[ ${RELEASE_FILE_URL%} == */snapshot-* ]]
