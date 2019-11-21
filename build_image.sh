@@ -186,12 +186,12 @@ function install_fix_pack {
 			echo "Downloading ${fix_pack_url}."
 			echo ""
 
-			mkdir -p releases/fix-packs/
+			mkdir -p releases/fix-packs
 
 			curl -f -o releases/fix-packs/${FIX_PACK_NAME} ${fix_pack_url} || exit 2
 		fi
 
-		cp releases/fix-packs/${FIX_PACK_NAME} ${TEMP_DIR}/liferay/patching-tool/patches/
+		cp releases/fix-packs/${FIX_PACK_NAME} ${TEMP_DIR}/liferay/patching-tool/patches
 
 		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh install
 
