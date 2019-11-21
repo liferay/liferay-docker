@@ -117,6 +117,13 @@ function push_docker_images {
 }
 
 function start_tomcat {
+
+	#
+	# Increase the available memory for warming up Tomcat. This is needed
+	# because LPKG hash and OSGi state processing for 7.0.x is expensive. Set
+	# this for all scenarios since it is limited to warming up Tomcat.
+	#
+
 	LIFERAY_JVM_OPTS="-Xmx3G"
 
 	./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh start
