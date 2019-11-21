@@ -62,6 +62,7 @@ function build_docker_image {
 	if [ -n "${FIX_PACK_NAME}" ]
 	then
 		local fix_pack=${FIX_PACK_NAME%.zip}
+
 		fix_pack=${fix_pack##*fix-pack-}
 		fix_pack=${fix_pack::5}
 
