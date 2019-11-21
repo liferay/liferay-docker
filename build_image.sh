@@ -54,22 +54,22 @@ function build_docker_image {
 		release_version=${release_version%.*}
 		release_version=${release_version%-*}
 
-		local sp_name=${release_version##*-}
+		local service_pack_name=${release_version##*-}
 
 		release_version=${release_version:0:3}
 	fi
 
-	if [ -n "${FIX_PACK_NAME}" ]
+	if [ -n "${FIX_PACK_FILE_NAME}" ]
 	then
-		local fix_pack=${FIX_PACK_NAME%.zip}
+		local fix_pack_name=${FIX_PACK_FILE_NAME%.zip}
 
-		fix_pack=${fix_pack##*fix-pack-}
-		fix_pack=${fix_pack::5}
+		fix_pack_name=${fix_pack_name##*fix-pack-}
+		fix_pack_name=${fix_pack_name::5}
 
-		release_version=${release_version}-${fix_pack}
-	elif [ -n "${sp_name}" ]
+		release_version=${release_version}-${fix_pack_name}
+	elif [ -n "${service_pack_name}" ]
 	then
-		release_version=${release_version}-${sp_name}
+		release_version=${release_version}-${service_pack_name}
 	fi
 
 	local label_version=${release_version}
@@ -179,9 +179,9 @@ function install_fix_pack {
 	then
 		local fix_pack_url=${3}
 
-		FIX_PACK_NAME=${fix_pack_url##*/}
+		FIX_PACK_FILE_NAME=${fix_pack_url##*/}
 
-		if [ ! -e releases/fix-packs/${FIX_PACK_NAME} ]
+		if [ ! -e releases/fix-packs/${FIX_PACK_FILE_NAME} ]
 		then
 			echo ""
 			echo "Downloading ${fix_pack_url}."
@@ -189,10 +189,10 @@ function install_fix_pack {
 
 			mkdir -p releases/fix-packs
 
-			curl -f -o releases/fix-packs/${FIX_PACK_NAME} ${fix_pack_url} || exit 2
+			curl -f -o releases/fix-packs/${FIX_PACK_FILE_NAME} ${fix_pack_url} || exit 2
 		fi
 
-		cp releases/fix-packs/${FIX_PACK_NAME} ${TEMP_DIR}/liferay/patching-tool/patches
+		cp releases/fix-packs/${FIX_PACK_FILE_NAME} ${TEMP_DIR}/liferay/patching-tool/patches
 
 		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh install
 
