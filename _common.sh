@@ -134,11 +134,12 @@ function start_tomcat {
 	done
 
 	local pid=`lsof -i 4tcp:8080 -sTCP:LISTEN -Fp | head -n 1`
+
 	pid=${pid##p}
 
 	./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh stop
 
-	sleep 10
+	sleep 30
 
 	kill -9 ${pid} 2>/dev/null
 
