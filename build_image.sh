@@ -117,11 +117,16 @@ function build_docker_image {
 }
 
 function check_usage {
-	if [ ! -n "${1}" ]
+	if [ ! -n "${LIFERAY_DOCKER_RELEASE_FILE_URL}" ]
 	then
-		echo "Usage: ${0} release-url <push>"
+		echo "Usage: ${0} <push>"
 		echo ""
-		echo "Example: ${0} files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z"
+		echo "The script reads the following environment variables:"
+		echo " - LIFERAY_DOCKER_RELEASE_FILE_URL (required): the Liferay bundle URL"
+		echo " - LIFERAY_DOCKER_LICENSE_CMD (required for DXP only): URL to generate the trial license"
+		echo " - LIFERAY_DOCKER_FIX_PACK_URL (optional): URL to the fix pack to be installed"
+		echo ""
+		echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0}"
 		echo ""
 		echo "Set \"push\" as the second parameter to automatically push the image to Docker Hub."
 
@@ -175,9 +180,9 @@ function download_trial_dxp_license {
 }
 
 function install_fix_pack {
-	if [ -n "${3}" ]
+	if [ -n "${LIFERAY_DOCKER_FIX_PACK_URL}" ]
 	then
-		local fix_pack_url=${3}
+		local fix_pack_url=${LIFERAY_DOCKER_FIX_PACK_URL}
 
 		FIX_PACK_FILE_NAME=${fix_pack_url##*/}
 
@@ -215,15 +220,15 @@ function main {
 
 	build_docker_image
 
-	push_docker_images ${2}
+	push_docker_images ${1}
 
 	clean_up_temp_directory
 }
 
 function prepare_temp_directory {
-	RELEASE_FILE_NAME=${1##*/}
+	RELEASE_FILE_URL=${LIFERAY_DOCKER_RELEASE_FILE_URL}
 
-	RELEASE_FILE_URL=${1}
+	RELEASE_FILE_NAME=${RELEASE_FILE_URL##*/}
 
 	if [[ ${RELEASE_FILE_URL} != http*://* ]]
 	then
@@ -235,7 +240,7 @@ function prepare_temp_directory {
 		RELEASE_FILE_URL=http://mirrors.lax.liferay.com/${RELEASE_FILE_URL##*//}
 	fi
 
-	local release_dir=${1%/*}
+	local release_dir=${RELEASE_FILE_URL%/*}
 
 	release_dir=${release_dir#*com/}
 	release_dir=${release_dir#*com/}

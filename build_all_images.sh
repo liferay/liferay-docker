@@ -26,7 +26,7 @@ function main {
 		echo "Building Docker image for ${release_file_url}."
 		echo ""
 
-		./build_image.sh ${release_file_url} push
+		LIFERAY_DOCKER_RELEASE_FILE_URL=${release_file_url} ./build_image.sh push
 	done
 }
 
