@@ -28,29 +28,29 @@ function build_docker_image {
 		exit 1
 	fi
 
-	if [[ ${RELEASE_FILE_URL%} == */snapshot-* ]]
+	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
 		docker_image_name=${docker_image_name}-snapshot
 	fi
 
-	if [[ ${RELEASE_FILE_URL} == http://release-* ]] || [[ ${RELEASE_FILE_URL} == http://release.liferay.com* ]]
+	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == http://release-* ]] || [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == http://release.liferay.com* ]]
 	then
 		docker_image_name=${docker_image_name}-snapshot
 	fi
 
-	local release_version=${RELEASE_FILE_URL%/*}
+	local release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
 
 	release_version=${release_version##*/}
 
-	if [[ ${RELEASE_FILE_URL} == http://release-* ]] || [[ ${RELEASE_FILE_URL} == http://release.liferay.com* ]]
+	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == http://release-* ]] || [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == http://release.liferay.com* ]]
 	then
-		release_version=${RELEASE_FILE_URL#*tomcat-}
+		release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL#*tomcat-}
 		release_version=${release_version%.*}
 	fi
 
-	if [[ ${RELEASE_FILE_URL} == *files.liferay.com/* ]] && [[ ${RELEASE_FILE_URL%} != */snapshot-* ]]
+	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == *files.liferay.com/* ]] && [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} != */snapshot-* ]]
 	then
-		release_version=${RELEASE_FILE_URL#*tomcat-}
+		release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL#*tomcat-}
 		release_version=${release_version%.*}
 		release_version=${release_version%-*}
 
@@ -74,9 +74,9 @@ function build_docker_image {
 
 	local label_version=${release_version}
 
-	if [[ ${RELEASE_FILE_URL%} == */snapshot-* ]]
+	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
-		local release_branch=${RELEASE_FILE_URL%/*}
+		local release_branch=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
 
 		release_branch=${release_branch%/*}
 		release_branch=${release_branch%-private*}
@@ -96,7 +96,7 @@ function build_docker_image {
 
 	DOCKER_IMAGE_TAGS=()
 
-	if [[ ${RELEASE_FILE_URL%} == */snapshot-* ]]
+	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
 		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}")
 		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
@@ -226,21 +226,19 @@ function main {
 }
 
 function prepare_temp_directory {
-	RELEASE_FILE_URL=${LIFERAY_DOCKER_RELEASE_FILE_URL}
+	RELEASE_FILE_NAME=${LIFERAY_DOCKER_RELEASE_FILE_URL##*/}
 
-	RELEASE_FILE_NAME=${RELEASE_FILE_URL##*/}
-
-	if [[ ${RELEASE_FILE_URL} != http*://* ]]
+	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} != http*://* ]]
 	then
-		RELEASE_FILE_URL=http://${RELEASE_FILE_URL}
+		LIFERAY_DOCKER_RELEASE_FILE_URL=http://${LIFERAY_DOCKER_RELEASE_FILE_URL}
 	fi
 
-	if [[ ${RELEASE_FILE_URL} != http://mirrors.*.liferay.com* ]] && [[ ${RELEASE_FILE_URL} != http://release-1* ]]
+	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} != http://mirrors.*.liferay.com* ]] && [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} != http://release-1* ]]
 	then
-		RELEASE_FILE_URL=http://mirrors.lax.liferay.com/${RELEASE_FILE_URL##*//}
+		LIFERAY_DOCKER_RELEASE_FILE_URL=http://mirrors.lax.liferay.com/${LIFERAY_DOCKER_RELEASE_FILE_URL##*//}
 	fi
 
-	local release_dir=${RELEASE_FILE_URL%/*}
+	local release_dir=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
 
 	release_dir=${release_dir#*com/}
 	release_dir=${release_dir#*com/}
@@ -251,12 +249,12 @@ function prepare_temp_directory {
 	if [ ! -e ${release_dir}/${RELEASE_FILE_NAME} ]
 	then
 		echo ""
-		echo "Downloading ${RELEASE_FILE_URL}."
+		echo "Downloading ${LIFERAY_DOCKER_RELEASE_FILE_URL}."
 		echo ""
 
 		mkdir -p ${release_dir}
 
-		curl -f -o ${release_dir}/${RELEASE_FILE_NAME} ${RELEASE_FILE_URL} || exit 2
+		curl -f -o ${release_dir}/${RELEASE_FILE_NAME} ${LIFERAY_DOCKER_RELEASE_FILE_URL} || exit 2
 	fi
 
 	if [[ ${RELEASE_FILE_NAME} == *.7z ]]
