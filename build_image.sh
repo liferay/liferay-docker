@@ -122,13 +122,14 @@ function check_usage {
 		echo "Usage: ${0} <push>"
 		echo ""
 		echo "The script reads the following environment variables:"
-		echo " - LIFERAY_DOCKER_FIX_PACK_URL (optional): URL to the fix pack to be installed"
-		echo " - LIFERAY_DOCKER_LICENSE_CMD (required for DXP only): URL to generate the trial license"
-		echo " - LIFERAY_DOCKER_RELEASE_FILE_URL (required): the Liferay bundle URL"
 		echo ""
-		echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0}"
+		echo "    LIFERAY_DOCKER_FIX_PACK_URL (optional): URL to a fix pack"
+		echo "    LIFERAY_DOCKER_LICENSE_CMD (required for DXP): Command to generate the trial license"
+		echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
 		echo ""
-		echo "Set \"push\" as the second parameter to automatically push the image to Docker Hub."
+		echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0} push"
+		echo ""
+		echo "Set \"push\" as a parameter to automatically push the image to Docker Hub."
 
 		exit 1
 	fi
@@ -141,7 +142,7 @@ function download_trial_dxp_license {
 	then
 		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
 		then
-			echo "Please set the environment variable LIFERAY_DOCKER_LICENSE_CMD to generate a trial DXP license."
+			echo "Set the environment variable LIFERAY_DOCKER_LICENSE_CMD to generate a trial DXP license."
 
 			exit 1
 		else
