@@ -89,7 +89,7 @@ function make_temp_directory {
 
 	mkdir -p ${TEMP_DIR}
 
-	cp -r template/* ${TEMP_DIR}
+	cp -r template${1}/* ${TEMP_DIR}
 }
 
 function prepare_tomcat {
