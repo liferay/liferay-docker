@@ -21,6 +21,8 @@ function main {
 
 	test_verify_healthy_status
 
+	test_files_docker_test_jsp
+
 	stop_container
 
 	clean_up_temp_directory
@@ -31,7 +33,12 @@ function main {
 function start_container {
 	echo "Starting up the container from the ${LIFERAY_DOCKER_IMAGE_ID} image."
 
-	CONTAINER_ID=`docker run -d ${LIFERAY_DOCKER_IMAGE_ID}`
+	local mount_full_path=`pwd`/${TEMP_DIR}
+
+	CONTAINER_ID=`docker run -d -p 8080 -v ${mount_full_path}:/mnt/liferay ${LIFERAY_DOCKER_IMAGE_ID}`
+	CONTAINER_PORT_HTTP=`docker port ${CONTAINER_ID} 8080/tcp`
+
+	CONTAINER_PORT_HTTP=${CONTAINER_PORT_HTTP##*:}
 }
 
 function stop_container {
@@ -39,6 +46,21 @@ function stop_container {
 
 	docker kill ${CONTAINER_ID} > /dev/null
 	docker rm ${CONTAINER_ID} > /dev/null
+}
+
+function test_files_docker_test_jsp {
+	local jsp_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/docker_test.jsp`
+
+	if [ ${jsp_response} == "TEST" ]
+	then
+		log_test_result 0 "The JSP content was returned correctly."
+
+		return 0
+	else
+		log_test_result 1 "Incorrect response from http://localhost:${CONTAINER_PORT_HTTP}/docker_test.jsp"
+
+		return 1
+	fi
 }
 
 function test_verify_healthy_status {
