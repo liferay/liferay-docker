@@ -23,6 +23,8 @@ function main {
 
 	test_files_docker_test_jsp
 
+	test_scripts_execution
+
 	stop_container
 
 	clean_up_temp_directory
@@ -49,15 +51,30 @@ function stop_container {
 }
 
 function test_files_docker_test_jsp {
-	local jsp_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/docker_test.jsp`
+	local http_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/docker_test.jsp`
 
-	if [ ${jsp_response} == "TEST" ]
+	if [ "${http_response}" == "TEST" ]
 	then
 		log_test_result 0 "The JSP content was returned correctly."
 
 		return 0
 	else
 		log_test_result 1 "Incorrect response from http://localhost:${CONTAINER_PORT_HTTP}/docker_test.jsp"
+
+		return 1
+	fi
+}
+
+function test_scripts_execution {
+	local http_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/docker_generated_test.jsp`
+
+	if [ "${http_response}" == "TEST2" ]
+	then
+		log_test_result 0 "The content produced by the test scripts was correct."
+
+		return 0
+	else
+		log_test_result 1 "Incorrect response after checking the scripts output."
 
 		return 1
 	fi
