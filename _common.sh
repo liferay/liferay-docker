@@ -156,6 +156,18 @@ function stat {
 	fi
 }
 
+function test_image {
+	export LIFERAY_DOCKER_IMAGE_ID
+
+	./test_image.sh
+
+	if [ $? -gt 0 ]
+	then
+		echo "Testing failed, exiting."
+		exit 2
+	fi
+}
+
 function warm_up_tomcat {
 
 	#

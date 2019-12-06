@@ -111,10 +111,14 @@ function build_docker_image {
 
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
+		LIFERAY_DOCKER_IMAGE_ID="liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}"
+
 		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}")
 		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
 		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}")
 	else
+		LIFERAY_DOCKER_IMAGE_ID="liferay/${docker_image_name}:${release_version}-${TIMESTAMP}"
+
 		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version}-${TIMESTAMP}")
 		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version}")
 	fi
@@ -233,6 +237,8 @@ function main {
 	download_trial_dxp_license
 
 	build_docker_image
+
+	test_image
 
 	push_docker_images ${1}
 
