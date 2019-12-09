@@ -7,7 +7,7 @@ function check_usage {
 	then
 		echo "Usage: ${0}"
 		echo ""
-		echo "The script reads the following environment variable:"
+		echo "The script requires the following environment variable to be set:"
 		echo ""
 		echo "    LIFERAY_DOCKER_IMAGE_ID: The ID of the image to test"
 		echo ""
