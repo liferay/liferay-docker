@@ -2,6 +2,23 @@
 
 source ./_common.sh
 
+function check_usage {
+	if [ ! -n "${LIFERAY_DOCKER_IMAGE_ID}" ]
+	then
+		echo "Usage: ${0}"
+		echo ""
+		echo "The script reads the following environment variable:"
+		echo ""
+		echo "    LIFERAY_DOCKER_IMAGE_ID: The ID of the image to test"
+		echo ""
+		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2-ga1-201912061522 ${0}"
+
+		exit 1
+	fi
+
+	check_utils curl docker
+}
+
 function log_test_result {
 	local result=SUCCESS
 
@@ -15,6 +32,8 @@ function log_test_result {
 }
 
 function main {
+	check_usage
+
 	make_temp_directory -test
 
 	start_container
