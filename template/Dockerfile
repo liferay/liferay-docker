@@ -17,6 +17,8 @@ COPY --chown=liferay:liferay liferay /opt/liferay
 
 ENTRYPOINT /usr/local/bin/liferay_entrypoint.sh
 
+ENV JPDA_ADDRESS=8000
+
 ENV LIFERAY_HOME=/opt/liferay
 ENV LIFERAY_JPDA_ENABLED=false
 ENV LIFERAY_JVM_OPTS=
