@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:8u212
+FROM azul/zulu-openjdk-alpine:8u232
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
