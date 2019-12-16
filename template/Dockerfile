@@ -6,7 +6,7 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-RUN apk add bash curl nss tomcat-native tree ttf-dejavu
+RUN apk --no-cache add bash curl nss tomcat-native tree ttf-dejavu
 
 COPY scripts/* /usr/local/bin/
 
