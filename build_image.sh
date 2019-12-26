@@ -72,6 +72,15 @@ function build_docker_image {
 		release_version=${release_version}-${service_pack_name}
 	fi
 
+	if [[ ${RELEASE_FILE_NAME} == *-commerce-* ]]
+	then
+		local commerce_portal_variant=${LIFERAY_DOCKER_RELEASE_FILE_URL%-*}
+
+		commerce_portal_variant=${commerce_portal_variant: -5}
+
+		release_version=${release_version}-${commerce_portal_variant}
+	fi
+
 	local label_version=${release_version}
 
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
