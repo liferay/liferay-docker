@@ -50,13 +50,17 @@ function build_docker_image {
 
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == *files.liferay.com/* ]] && [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} != */snapshot-* ]]
 	then
-		release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL#*tomcat-}
-		release_version=${release_version%.*}
-		release_version=${release_version%-*}
+		local file_name_release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL#*tomcat-}
 
-		local service_pack_name=${release_version##*-}
+		file_name_release_version=${file_name_release_version%.*}
+		file_name_release_version=${file_name_release_version%-*}
 
-		release_version=${release_version:0:3}
+		if [[ ${file_name_release_version} == *-slim ]]
+		then
+			file_name_release_version=${file_name_release_version::-5}
+		fi
+
+		local service_pack_name=${file_name_release_version##*-}
 	fi
 
 	if [ -n "${FIX_PACK_FILE_NAME}" ]
