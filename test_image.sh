@@ -11,7 +11,7 @@ function check_usage {
 		echo ""
 		echo "    LIFERAY_DOCKER_IMAGE_ID: ID of Docker image"
 		echo ""
-		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2-ga1-201912061522 ${0}"
+		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2.10.1-sp1-202001171544 ${0}"
 
 		exit 1
 	fi
