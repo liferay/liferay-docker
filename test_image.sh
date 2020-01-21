@@ -81,7 +81,7 @@ function test_docker_image_files {
 }
 
 function test_docker_image_scripts {
-	local http_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp`
+	local http_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts.jsp`
 
 	if [ "${http_response}" == "TEST2" ]
 	then
