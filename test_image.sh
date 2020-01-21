@@ -109,7 +109,8 @@ function test_verify_healthy_status {
 
 		local status=`docker inspect --format='{{json .State.Health.Status}}' ${CONTAINER_ID}`
 
-		if [ "${status}" == "\"healthy\"" ]; then
+		if [ "${status}" == "\"healthy\"" ]
+		then
 			echo ""
 
 			log_test_result 0 "Container reported healthy result."
