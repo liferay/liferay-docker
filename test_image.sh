@@ -30,6 +30,8 @@ function log_test_result {
 	fi
 
 	echo "Test: [${FUNCNAME[1]}] ${test_result}"
+
+	return ${1}
 }
 
 function main {
@@ -71,12 +73,8 @@ function test_docker_image_files {
 	if [ "${content}" == "TEST" ]
 	then
 		log_test_result 0
-
-		return 0
 	else
 		log_test_result 1
-
-		return 1
 	fi
 }
 
@@ -86,12 +84,8 @@ function test_docker_image_scripts_1 {
 	if [ "${content}" == "TEST1" ]
 	then
 		log_test_result 0
-
-		return 0
 	else
 		log_test_result 1
-
-		return 1
 	fi
 }
 
@@ -101,12 +95,8 @@ function test_docker_image_scripts_2 {
 	if [ "${content}" == "TEST2" ]
 	then
 		log_test_result 0
-
-		return 0
 	else
 		log_test_result 1
-
-		return 1
 	fi
 }
 
@@ -125,7 +115,7 @@ function test_health_status {
 
 			log_test_result 0
 
-			return 0
+			return
 		fi
 
 		sleep 3
@@ -134,8 +124,6 @@ function test_health_status {
 	echo ""
 
 	log_test_result 1
-
-	return 1
 }
 
 main ${@}
