@@ -38,7 +38,7 @@ function main {
 
 	start_container
 
-	test_verify_healthy_status
+	test_health_status
 
 	test_docker_image_files
 
@@ -100,20 +100,20 @@ function test_docker_image_scripts {
 	fi
 }
 
-function test_verify_healthy_status {
-	echo -en "Waiting for healthy status report"
+function test_health_status {
+	echo -en "Waiting for health status"
 
 	for counter in {1..30}
 	do
 		echo -en "."
 
-		local status=`docker inspect --format='{{json .State.Health.Status}}' ${CONTAINER_ID}`
+		local status=`docker inspect --format="{{json .State.Health.Status}}" ${CONTAINER_ID}`
 
 		if [ "${status}" == "\"healthy\"" ]
 		then
 			echo ""
 
-			log_test_result 0 "Container reported healthy result."
+			log_test_result 0 "Container is healthy."
 
 			return 0
 		fi
@@ -123,7 +123,7 @@ function test_verify_healthy_status {
 
 	echo ""
 
-	log_test_result 1 "Container failed to report healthy result before timeout reached. Last status: ${status}."
+	log_test_result 1 "Container is not healthy with status: ${status}."
 
 	return 1
 }
