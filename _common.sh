@@ -164,6 +164,7 @@ function test_image {
 	if [ $? -gt 0 ]
 	then
 		echo "Testing failed, exiting."
+
 		exit 2
 	fi
 }
