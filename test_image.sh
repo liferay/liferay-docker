@@ -66,9 +66,9 @@ function stop_container {
 }
 
 function test_docker_image_files {
-	local http_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp`
+	local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp`
 
-	if [ "${http_response}" == "TEST" ]
+	if [ "${content}" == "TEST" ]
 	then
 		log_test_result 0 "The JSP content was returned correctly."
 
@@ -81,9 +81,9 @@ function test_docker_image_files {
 }
 
 function test_docker_image_scripts {
-	local http_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts.jsp`
+	local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts.jsp`
 
-	if [ "${http_response}" == "TEST2" ]
+	if [ "${content}" == "TEST2" ]
 	then
 		log_test_result 0 "The content produced by the test scripts was correct."
 
