@@ -52,18 +52,19 @@ function main {
 }
 
 function start_container {
-	echo "Starting up the container from the ${LIFERAY_DOCKER_IMAGE_ID} image."
+	echo "Starting container from image ${LIFERAY_DOCKER_IMAGE_ID}."
 
 	local mount_full_path=`pwd`/${TEMP_DIR}
 
 	CONTAINER_ID=`docker run -d -p 8080 -v ${mount_full_path}:/mnt/liferay ${LIFERAY_DOCKER_IMAGE_ID}`
+
 	CONTAINER_PORT_HTTP=`docker port ${CONTAINER_ID} 8080/tcp`
 
 	CONTAINER_PORT_HTTP=${CONTAINER_PORT_HTTP##*:}
 }
 
 function stop_container {
-	echo "Stopping the container."
+	echo "Stopping container."
 
 	docker kill ${CONTAINER_ID} > /dev/null
 	docker rm ${CONTAINER_ID} > /dev/null
