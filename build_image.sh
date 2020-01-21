@@ -234,7 +234,7 @@ function main {
 
 	build_docker_image
 
-	test_image
+	test_docker_image
 
 	push_docker_images ${1}
 
