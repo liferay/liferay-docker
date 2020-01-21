@@ -107,7 +107,7 @@ function test_verify_healthy_status {
 	do
 		echo -en "."
 
-		local status=`docker inspect --format='{{json .State.Health.Status}}' $CONTAINER_ID`
+		local status=`docker inspect --format='{{json .State.Health.Status}}' ${CONTAINER_ID}`
 
 		if [ "${status}" == "\"healthy\"" ]; then
 			echo ""
