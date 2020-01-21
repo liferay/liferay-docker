@@ -40,9 +40,9 @@ function main {
 
 	test_verify_healthy_status
 
-	test_files_docker_test_jsp
+	test_docker_image_files
 
-	test_scripts_execution
+	test_docker_image_scripts
 
 	stop_container
 
@@ -70,8 +70,8 @@ function stop_container {
 	docker rm ${CONTAINER_ID} > /dev/null
 }
 
-function test_files_docker_test_jsp {
-	local http_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/docker_test.jsp`
+function test_docker_image_files {
+	local http_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp`
 
 	if [ "${http_response}" == "TEST" ]
 	then
@@ -79,14 +79,14 @@ function test_files_docker_test_jsp {
 
 		return 0
 	else
-		log_test_result 1 "Incorrect response from http://localhost:${CONTAINER_PORT_HTTP}/docker_test.jsp"
+		log_test_result 1 "Incorrect response from http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp"
 
 		return 1
 	fi
 }
 
-function test_scripts_execution {
-	local http_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/docker_generated_test.jsp`
+function test_docker_image_scripts {
+	local http_response=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp`
 
 	if [ "${http_response}" == "TEST2" ]
 	then
