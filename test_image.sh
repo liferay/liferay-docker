@@ -20,15 +20,16 @@ function check_usage {
 }
 
 function log_test_result {
-	local result=SUCCESS
+	local test_result=SUCCESS
 
 	if [ ${1} -gt 0 ]
 	then
 		TEST_RESULT=1
-		result=FAILED
+
+		test_result=FAILED
 	fi
 
-	echo "Test result: [${FUNCNAME[1]}] ${result}: ${2}"
+	echo "Test result: [${FUNCNAME[1]}] ${test_result}: ${2}"
 }
 
 function main {
