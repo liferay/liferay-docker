@@ -29,7 +29,7 @@ function log_test_result {
 		test_result=FAILED
 	fi
 
-	echo "Test: [${FUNCNAME[1]}] ${test_result}"
+	echo "[${FUNCNAME[1]}] ${test_result}"
 
 	return ${1}
 }
