@@ -35,8 +35,6 @@ function log_test_result {
 function main {
 	check_usage
 
-	make_temp_directory -test
-
 	start_container
 
 	test_health_status
@@ -47,17 +45,13 @@ function main {
 
 	stop_container
 
-	clean_up_temp_directory
-
 	exit ${TEST_RESULT}
 }
 
 function start_container {
 	echo "Starting container from image ${LIFERAY_DOCKER_IMAGE_ID}."
 
-	local mount_full_path=`pwd`/${TEMP_DIR}
-
-	CONTAINER_ID=`docker run -d -p 8080 -v ${mount_full_path}:/mnt/liferay ${LIFERAY_DOCKER_IMAGE_ID}`
+	CONTAINER_ID=`docker run -d -p 8080 -v "${PWD}/test":/mnt/liferay ${LIFERAY_DOCKER_IMAGE_ID}`
 
 	CONTAINER_PORT_HTTP=`docker port ${CONTAINER_ID} 8080/tcp`
 
