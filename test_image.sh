@@ -9,7 +9,7 @@ function check_usage {
 		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
-		echo "    LIFERAY_DOCKER_IMAGE_ID: The ID of the image to test"
+		echo "    LIFERAY_DOCKER_IMAGE_ID: ID of Docker image"
 		echo ""
 		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2-ga1-201912061522 ${0}"
 
