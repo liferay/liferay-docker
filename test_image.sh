@@ -40,8 +40,8 @@ function main {
 	test_health_status
 
 	test_docker_image_files
-
-	test_docker_image_scripts
+	test_docker_image_scripts_1
+	test_docker_image_scripts_2
 
 	stop_container
 
@@ -80,8 +80,23 @@ function test_docker_image_files {
 	fi
 }
 
-function test_docker_image_scripts {
-	local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts.jsp`
+function test_docker_image_scripts_1 {
+	local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_1.jsp`
+
+	if [ "${content}" == "TEST1" ]
+	then
+		log_test_result 0 "The content produced by the test scripts was correct."
+
+		return 0
+	else
+		log_test_result 1 "Incorrect response after checking the scripts output."
+
+		return 1
+	fi
+}
+
+function test_docker_image_scripts_2 {
+	local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_2.jsp`
 
 	if [ "${content}" == "TEST2" ]
 	then
