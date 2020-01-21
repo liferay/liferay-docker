@@ -29,7 +29,7 @@ function log_test_result {
 		test_result=FAILED
 	fi
 
-	echo "Test result: [${FUNCNAME[1]}] ${test_result}: ${2}"
+	echo "Test: [${FUNCNAME[1]}] ${test_result}"
 }
 
 function main {
@@ -70,11 +70,11 @@ function test_docker_image_files {
 
 	if [ "${content}" == "TEST" ]
 	then
-		log_test_result 0 "The JSP content was returned correctly."
+		log_test_result 0
 
 		return 0
 	else
-		log_test_result 1 "Incorrect response from http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp"
+		log_test_result 1
 
 		return 1
 	fi
@@ -85,11 +85,11 @@ function test_docker_image_scripts_1 {
 
 	if [ "${content}" == "TEST1" ]
 	then
-		log_test_result 0 "The content produced by the test scripts was correct."
+		log_test_result 0
 
 		return 0
 	else
-		log_test_result 1 "Incorrect response after checking the scripts output."
+		log_test_result 1
 
 		return 1
 	fi
@@ -100,11 +100,11 @@ function test_docker_image_scripts_2 {
 
 	if [ "${content}" == "TEST2" ]
 	then
-		log_test_result 0 "The content produced by the test scripts was correct."
+		log_test_result 0
 
 		return 0
 	else
-		log_test_result 1 "Incorrect response after checking the scripts output."
+		log_test_result 1
 
 		return 1
 	fi
@@ -123,7 +123,7 @@ function test_health_status {
 		then
 			echo ""
 
-			log_test_result 0 "Container is healthy."
+			log_test_result 0
 
 			return 0
 		fi
@@ -133,7 +133,7 @@ function test_health_status {
 
 	echo ""
 
-	log_test_result 1 "Container is not healthy with status: ${status}."
+	log_test_result 1
 
 	return 1
 }
