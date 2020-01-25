@@ -6,7 +6,7 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-RUN apk --no-cache add bash curl nss tomcat-native tree ttf-dejavu
+RUN apk --no-cache add bash curl nss tomcat-native tree ttf-dejavu zulu11-jdk=11.0.5-r3
 
 COPY scripts/* /usr/local/bin/
 
@@ -17,6 +17,7 @@ COPY --chown=liferay:liferay liferay /opt/liferay
 
 ENTRYPOINT /usr/local/bin/liferay_entrypoint.sh
 
+ENV JAVA_VERSION=zulu8
 ENV JPDA_ADDRESS=8000
 
 ENV LIFERAY_HOME=/opt/liferay
