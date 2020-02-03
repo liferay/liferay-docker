@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function main {
-	if [ -n "$JAVA_VERSION" ]
+	if [ -n "${JAVA_VERSION}" ]
 	then
 		if [ -e "/usr/lib/jvm/${JAVA_VERSION}" ]
 		then
