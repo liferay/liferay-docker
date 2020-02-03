@@ -8,10 +8,10 @@ function main {
 			JAVA_HOME=/usr/lib/jvm/${JAVA_VERSION}
 			PATH=/usr/lib/jvm/${JAVA_VERSION}/bin/:${PATH}
 
-			echo "[LIFERAY] Setting ${JAVA_VERSION} JDK the default one. You can choose another JDK version by setting the JAVA_VERSION varible."
+			echo "[LIFERAY] Using ${JAVA_VERSION} JDK. You can use another JDK by setting the \"JAVA_VERSION\" environment varible."
 			echo ""
 		else
-			echo "[LIFERAY] Java version \"${JAVA_VERSION}\" is not available in this Docker image."
+			echo "[LIFERAY] \"${JAVA_VERSION}\" JDK is not available in this Docker image."
 			echo ""
 
 			exit 1
