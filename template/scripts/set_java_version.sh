@@ -1,17 +1,17 @@
 #!/bin/bash
 
 function main {
-	if [ -n "$LIFERAY_JAVA_VERSION" ]
+	if [ -n "$JAVA_VERSION" ]
 	then
-		if [ -e "/usr/lib/jvm/${LIFERAY_JAVA_VERSION}" ]
+		if [ -e "/usr/lib/jvm/${JAVA_VERSION}" ]
 		then
-			JAVA_HOME=/usr/lib/jvm/${LIFERAY_JAVA_VERSION}
-			PATH=/usr/lib/jvm/${LIFERAY_JAVA_VERSION}/bin/:${PATH}
+			JAVA_HOME=/usr/lib/jvm/${JAVA_VERSION}
+			PATH=/usr/lib/jvm/${JAVA_VERSION}/bin/:${PATH}
 
-			echo "[LIFERAY] Making ${LIFERAY_JAVA_VERSION} the default."
+			echo "[LIFERAY] Setting ${JAVA_VERSION} JDK the default one. You can choose another JDK version by setting the JAVA_VERSION varible."
 			echo ""
 		else
-			echo "[LIFERAY] Java version \"${LIFERAY_JAVA_VERSION}\" is not available in this Docker image."
+			echo "[LIFERAY] Java version \"${JAVA_VERSION}\" is not available in this Docker image."
 			echo ""
 
 			exit 1
