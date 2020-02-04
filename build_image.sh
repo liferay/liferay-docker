@@ -57,7 +57,7 @@ function build_docker_image {
 
 		if [[ ${file_name_release_version} == *-slim ]]
 		then
-			file_name_release_version=${file_name_release_version::-5}
+			file_name_release_version=${file_name_release_version%-slim}
 		fi
 
 		local service_pack_name=${file_name_release_version##*-}
@@ -71,7 +71,7 @@ function build_docker_image {
 		fix_pack_name=${fix_pack_name::5}
 
 		release_version=${release_version}-${fix_pack_name}
-	elif [ -n "${service_pack_name}" ]
+	elif [[ ${service_pack_name} == ga* ]] || [[ ${service_pack_name} == sp* ]]
 	then
 		release_version=${release_version}-${service_pack_name}
 	fi
