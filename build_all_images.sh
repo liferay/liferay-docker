@@ -4,14 +4,14 @@ function build_image {
 	echo "Building Docker image for ${LIFERAY_DOCKER_RELEASE_FILE_URL}."
 	echo ""
 
-	export LIFERAY_DOCKER_RELEASE_FILE_URL
+	export LIFERAY_DOCKER_FIX_PACK_URL LIFERAY_DOCKER_RELEASE_FILE_URL LIFERAY_DOCKER_RELEASE_VERSION
 	./build_image.sh push
 }
 
 function build_image_filtered {
 	if [ -n "${LIFERAY_DOCKER_BUILD_FILTER}" ]
 	then
-		local image_info="RELEASE_FILE_URL=${LIFERAY_DOCKER_RELEASE_FILE_URL}"
+		local image_info="RELEASE_FILE_URL=${LIFERAY_DOCKER_RELEASE_FILE_URL} FIX_PACK_URL=${LIFERAY_DOCKER_FIX_PACK_URL} RELEASE_VERSION=${LIFERAY_DOCKER_RELEASE_VERSION}"
 
 		if [[ $(echo "${image_info}" | grep "${LIFERAY_DOCKER_BUILD_FILTER}" 2>/dev/null) ]]
 		then
@@ -39,21 +39,50 @@ function build_images_default_config {
 		#releases.liferay.com/portal/snapshot-master/201902131509/liferay-portal-tomcat-master.7z
 		files.liferay.com/private/ee/portal/7.0.10.11/liferay-dxp-digital-enterprise-tomcat-7.0.10.11-sp11-20190506123513875.zip
 		files.liferay.com/private/ee/portal/7.1.10.2/liferay-dxp-tomcat-7.1.10.2-sp2-20190422172027516.zip
-		files.liferay.com/private/ee/portal/7.2.10.1/liferay-dxp-tomcat-7.2.10.1-sp1-slim-20191009103614075.7z
 		#files.liferay.com/private/ee/portal/snapshot-ee-6.2.x/201808160944/liferay-portal-tomcat-ee-6.2.x.zip
 		#files.liferay.com/private/ee/portal/snapshot-7.1.x-private/201808162051/liferay-portal-tomcat-7.1.x-private.zip
 	)
 
+	LIFERAY_DOCKER_FIX_PACK_URL=
+	LIFERAY_DOCKER_RELEASE_VERSION=
+
 	for release_file_url in ${release_file_urls[@]}
 	do
 		LIFERAY_DOCKER_RELEASE_FILE_URL=${release_file_url}
-
 		build_image_filtered
 	done
 }
 
+function build_images_dxp_72 {
+	LIFERAY_DOCKER_RELEASE_VERSION=7.2.10-ga1
+	LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z
+	LIFERAY_DOCKER_FIX_PACK_URL=
+	build_image_filtered
+
+	LIFERAY_DOCKER_RELEASE_VERSION=7.2.10-dxp-1
+	LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z
+	LIFERAY_DOCKER_FIX_PACK_URL=files.liferay.com/private/ee/fix-packs/7.2.10/dxp/liferay-fix-pack-dxp-1-7210.zip
+	build_image_filtered
+
+	LIFERAY_DOCKER_RELEASE_VERSION=7.2.10-dxp-2
+	LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z
+	LIFERAY_DOCKER_FIX_PACK_URL=files.liferay.com/private/ee/fix-packs/7.2.10/dxp/liferay-fix-pack-dxp-2-7210.zip
+	build_image_filtered
+
+	LIFERAY_DOCKER_RELEASE_VERSION=7.2.10-sp1
+	LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10.1/liferay-dxp-tomcat-7.2.10.1-sp1-slim-20191009103614075.7z
+	LIFERAY_DOCKER_FIX_PACK_URL=
+	build_image_filtered
+
+	LIFERAY_DOCKER_RELEASE_VERSION=7.2.10-dxp-4
+	LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10-dxp-4/liferay-dxp-tomcat-7.2.10-dxp-4-slim-20200121112425051.7z
+	LIFERAY_DOCKER_FIX_PACK_URL=
+	build_image_filtered
+}
+
 function main {
 	build_images_default_config
+	build_images_dxp_72
 }
 
 main

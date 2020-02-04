@@ -63,15 +63,7 @@ function build_docker_image {
 		local service_pack_name=${file_name_release_version##*-}
 	fi
 
-	if [ -n "${FIX_PACK_FILE_NAME}" ]
-	then
-		local fix_pack_name=${FIX_PACK_FILE_NAME%.zip}
-
-		fix_pack_name=${fix_pack_name##*fix-pack-}
-		fix_pack_name=${fix_pack_name::5}
-
-		release_version=${release_version}-${fix_pack_name}
-	elif [[ ${service_pack_name} == ga* ]] || [[ ${service_pack_name} == sp* ]]
+	if [[ ${service_pack_name} == ga* ]] || [[ ${service_pack_name} == sp* ]]
 	then
 		release_version=${release_version}-${service_pack_name}
 	fi
@@ -105,6 +97,11 @@ function build_docker_image {
 		else
 			label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
 		fi
+	fi
+
+	if [ -n "${LIFERAY_DOCKER_RELEASE_VERSION}" ]
+	then
+		release_version=${LIFERAY_DOCKER_RELEASE_VERSION}
 	fi
 
 	DOCKER_IMAGE_TAGS=()
