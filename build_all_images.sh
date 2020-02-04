@@ -1,4 +1,26 @@
 #!/bin/bash
+function build_image {
+	echo ""
+	echo "Building Docker image for ${LIFERAY_DOCKER_RELEASE_FILE_URL}."
+	echo ""
+
+	export LIFERAY_DOCKER_RELEASE_FILE_URL
+	./build_image.sh push
+}
+
+function build_image_filtered {
+	if [ -n "${LIFERAY_DOCKER_BUILD_FILTER}" ]
+	then
+		local image_info="RELEASE_FILE_URL=${LIFERAY_DOCKER_RELEASE_FILE_URL}"
+
+		if [[ $(echo "${image_info}" | grep "${LIFERAY_DOCKER_BUILD_FILTER}" 2>/dev/null) ]]
+		then
+			build_image
+		fi
+	else
+		build_image
+	fi
+}
 
 function main {
 	local release_file_urls=(
@@ -24,11 +46,9 @@ function main {
 
 	for release_file_url in ${release_file_urls[@]}
 	do
-		echo ""
-		echo "Building Docker image for ${release_file_url}."
-		echo ""
+		LIFERAY_DOCKER_RELEASE_FILE_URL=${release_file_url}
 
-		LIFERAY_DOCKER_RELEASE_FILE_URL=${release_file_url} ./build_image.sh push
+		build_image_filtered
 	done
 }
 
