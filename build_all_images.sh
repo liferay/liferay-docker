@@ -22,7 +22,7 @@ function build_image_filtered {
 	fi
 }
 
-function main {
+function build_images_default_config {
 	local release_file_urls=(
 		releases.liferay.com/commerce/2.0.7/liferay-commerce-2.0.7-7.2.x-201912261227.7z
 		releases.liferay.com/commerce-enterprise/2.0.7/liferay-commerce-enterprise-2.0.7-7.1.x-201912261231.7z
@@ -50,6 +50,10 @@ function main {
 
 		build_image_filtered
 	done
+}
+
+function main {
+	build_images_default_config
 }
 
 main
