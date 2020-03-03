@@ -71,13 +71,13 @@ function main {
 		#files.liferay.com/private/ee/portal/snapshot-7.1.x-private/201808162051/liferay-portal-tomcat-7.1.x-private.zip
 	)
 
-	LIFERAY_DOCKER_FIX_PACK_URL=
-	LIFERAY_DOCKER_RELEASE_VERSION=
-
 	for release_file_url in ${release_file_urls[@]}
 	do
-		LIFERAY_DOCKER_RELEASE_FILE_URL=${release_file_url}
-		build_image_filtered
+		echo ""
+		echo "Building Docker image for ${release_file_url}."
+		echo ""
+
+		LIFERAY_DOCKER_RELEASE_FILE_URL=${release_file_url} ./build_image.sh push
 	done
 
 	build_images_dxp_72
