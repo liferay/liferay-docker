@@ -11,7 +11,7 @@ function build_image {
 function build_images_dxp_71 {
 	build_image \
 		7.1.10-ga1 \
-		files.liferay.com/private/ee/portal/7.1.10/liferay-dxp-tomcat-7.1.10-ga1-20180703090613030.zip
+		files.liferay.com/private/ee/portal/7.1.10/liferay-dxp-tomcat-7.1.10-ga1-20180703090613030.zip \
 		""
 
 	for fix_pack_id in {1..4}
