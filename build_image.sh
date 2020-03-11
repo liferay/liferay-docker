@@ -205,7 +205,7 @@ function install_fix_pack {
 
 			mkdir -p releases/fix-packs
 
-			curl -f -o releases/fix-packs/${FIX_PACK_FILE_NAME} ${fix_pack_url} || exit 2
+			curl -f -o releases/fix-packs/${FIX_PACK_FILE_NAME} http://mirrors.lax.liferay.com/${fix_pack_url} || exit 2
 		fi
 
 		cp releases/fix-packs/${FIX_PACK_FILE_NAME} ${TEMP_DIR}/liferay/patching-tool/patches
