@@ -3,8 +3,13 @@
 BUILD_ALL_IMAGES_PUSH=${1}
 
 function build_image {
+	if [ -n "${LIFERAY_DOCKER_IMAGE_FILTER}" ] && [[ ! $(echo ${1} ${2} ${3} | grep ${LIFERAY_DOCKER_IMAGE_FILTER}) ]]
+	then
+		return
+	fi
+
 	echo ""
-	echo "Building Docker image for ${2}."
+	echo "Building Docker image ${1} based on ${2}."
 	echo ""
 
 	LIFERAY_DOCKER_FIX_PACK_URL=${3} LIFERAY_DOCKER_RELEASE_VERSION=${1} LIFERAY_DOCKER_RELEASE_FILE_URL=${2} ./build_image.sh ${BUILD_ALL_IMAGES_PUSH}
