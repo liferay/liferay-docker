@@ -212,8 +212,8 @@ function install_fix_pack {
 
 		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh install
 
-		rm -f ${TEMP_DIR}/liferay/patching-tool/patches/*
 		rm -fr ${TEMP_DIR}/liferay/osgi/state/*
+		rm -f ${TEMP_DIR}/liferay/patching-tool/patches/*
 	fi
 }
 
