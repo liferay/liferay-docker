@@ -3,6 +3,13 @@
 BUILD_ALL_IMAGES_PUSH=${1}
 
 function build_image {
+
+	#
+	# LIFERAY_DOCKER_IMAGE_FILTER="7.2.10-dxp-1 "  ./build_all_images.sh
+	# LIFERAY_DOCKER_IMAGE_FILTER=7.2.10 ./build_all_images.sh
+	# LIFERAY_DOCKER_IMAGE_FILTER=commerce ./build_all_images.sh
+	#
+
 	if [ -n "${LIFERAY_DOCKER_IMAGE_FILTER}" ] && [[ ! $(echo ${1} ${2} ${3} | grep ${LIFERAY_DOCKER_IMAGE_FILTER}) ]]
 	then
 		return
