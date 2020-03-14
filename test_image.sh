@@ -103,7 +103,7 @@ function test_docker_image_scripts_2 {
 function test_health_status {
 	echo -en "Waiting for health status"
 
-	for counter in {1..50}
+	for counter in {1..60}
 	do
 		echo -en "."
 
