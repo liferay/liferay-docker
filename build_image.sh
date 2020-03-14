@@ -224,6 +224,8 @@ function main {
 
 	prepare_temp_directory ${@}
 
+	update_patching_tool
+
 	install_fix_pack ${@}
 
 	prepare_tomcat
@@ -279,6 +281,36 @@ function prepare_temp_directory {
 	fi
 
 	mv ${TEMP_DIR}/liferay-* ${TEMP_DIR}/liferay
+}
+
+function update_patching_tool {
+	if [ -e ${TEMP_DIR}/liferay/patching-tool ]
+	then
+		mv ${TEMP_DIR}/liferay/patching-tool/patches ${TEMP_DIR}/liferay/patching-tool-upgrade-patches
+
+		rm -fr ${TEMP_DIR}/liferay/patching-tool
+
+		local latest_patching_tool_version=`curl -s http://mirrors.lax.liferay.com/files.liferay.com/private/ee/fix-packs/patching-tool/LATEST-2.0.txt`
+
+		echo ""
+		echo "Updating Patching Tool to version ${latest_patching_tool_version}."
+		echo ""
+
+		if [ ! -e releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip ]
+		then
+			mkdir -p releases/patching-tool
+
+			curl -f -o releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip http://mirrors.lax.liferay.com/files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${latest_patching_tool_version}.zip
+		fi
+
+		unzip -d ${TEMP_DIR}/liferay -q releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip
+
+		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh auto-discovery
+
+		rm -fr ${TEMP_DIR}/liferay/patching-tool/patches
+
+		mv ${TEMP_DIR}/liferay/patching-tool-upgrade-patches ${TEMP_DIR}/liferay/patching-tool/patches
+	fi
 }
 
 main ${@}
