@@ -9,6 +9,7 @@ function check_usage {
 		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
+		echo "    LIFERAY_DOCKER_FIX_PACK_ID: ID of the fix pack which should be installed (e.g. dxp-1-7210)"
 		echo "    LIFERAY_DOCKER_IMAGE_ID: ID of Docker image"
 		echo ""
 		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2.10.1-sp1-202001171544 ${0}"
@@ -42,6 +43,7 @@ function main {
 	test_health_status
 
 	test_docker_image_files
+	test_docker_image_fix_pack_installed
 	test_docker_image_scripts_1
 	test_docker_image_scripts_2
 
@@ -75,6 +77,23 @@ function test_docker_image_files {
 		log_test_result 0
 	else
 		log_test_result 1
+	fi
+}
+
+function test_docker_image_fix_pack_installed {
+	if [ -n "${LIFERAY_DOCKER_FIX_PACK_ID}" ]
+	then
+		local output=`docker exec -it ${CONTAINER_ID} /opt/liferay/patching-tool/patching-tool.sh info | grep "Currently installed patches:"`
+		local installed_fix_pack=`echo ${output##*: } | tr -d [:space:]`
+		local correct_fix_pack=`echo ${LIFERAY_DOCKER_FIX_PACK_ID} | tr -d [:space:]`
+		if [ "${installed_fix_pack}" == "${correct_fix_pack}" ]
+		then
+			log_test_result 0
+		else
+			log_test_result 1
+		fi
+	else
+		log_test_result 0
 	fi
 }
 
