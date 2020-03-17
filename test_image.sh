@@ -84,8 +84,9 @@ function test_docker_image_fix_pack_installed {
 	if [ -n "${LIFERAY_DOCKER_FIX_PACK_ID}" ]
 	then
 		local correct_fix_pack=$(echo ${LIFERAY_DOCKER_FIX_PACK_ID} | tr -d [:space:])
-		local installed_fix_pack=$(echo ${output##*: } | tr -d [:space:])
+
 		local output=$(docker exec -it ${CONTAINER_ID} /opt/liferay/patching-tool/patching-tool.sh info | grep "Currently installed patches:")
+		local installed_fix_pack=$(echo ${output##*: } | tr -d [:space:])
 
 		if [ "${correct_fix_pack}" == "${installed_fix_pack}" ]
 		then
