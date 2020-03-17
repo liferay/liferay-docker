@@ -135,11 +135,7 @@ function build_images_dxp_72 {
 }
 
 function main {
-	CURRENT_DATE=$(date)
-
-	TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M")
-
-	LOGS_DIR=logs-${TIMESTAMP}
+	LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
 
 	mkdir -p ${LOGS_DIR}
 
