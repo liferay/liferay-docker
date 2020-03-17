@@ -33,9 +33,9 @@ function build_image {
 
 		if [ $? -gt 0 ]
 		then
-			echo "FAILED: $build_id" >> ${LOGS_DIR}/results
+			echo "FAILED: ${build_id}" >> ${LOGS_DIR}/results
 		else
-			echo "SUCCESS: $build_id" >> ${LOGS_DIR}/results
+			echo "SUCCESS: ${build_id}" >> ${LOGS_DIR}/results
 		fi
 	} | tee ${LOGS_DIR}/${build_id}".log"
 }
