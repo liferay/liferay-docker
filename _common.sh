@@ -103,9 +103,8 @@ function prepare_tomcat {
 
 	warm_up_tomcat
 
-	rm -fr ${TEMP_DIR}/liferay/tomcat/logs/*
-
 	rm -fr ${TEMP_DIR}/liferay/logs/*
+	rm -fr ${TEMP_DIR}/liferay/tomcat/logs/*
 }
 
 function push_docker_images {
