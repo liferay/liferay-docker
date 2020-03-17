@@ -98,15 +98,15 @@ function build_images_dxp_72 {
 		dxp-1-7210
 
 	build_image \
-		7.2.10-dxp-2 \
-		files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z \
-		files.liferay.com/private/ee/fix-packs/7.2.10/dxp/liferay-fix-pack-dxp-2-7210.zip \
-		dxp-2-7210
-
-	build_image \
 		7.2.10-sp1 \
 		files.liferay.com/private/ee/portal/7.2.10.1/liferay-dxp-tomcat-7.2.10.1-sp1-slim-20191009103614075.7z \
 		"" \
+		dxp-2-7210
+
+	build_image \
+		7.2.10-dxp-3 \
+		files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z \
+		files.liferay.com/private/ee/fix-packs/7.2.10/dxp/liferay-fix-pack-dxp-3-7210.zip \
 		dxp-3-7210
 
 	build_image \
