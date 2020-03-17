@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ./_common.sh
+
 BUILD_ALL_IMAGES_PUSH=${1}
 
 function build_image {
@@ -15,11 +17,27 @@ function build_image {
 		return
 	fi
 
+	if [ ! -n "${1}" ]
+	then
+		local build_id=${2##*/}
+	else
+		local build_id=${1}
+	fi
+
 	echo ""
-	echo "Building Docker image ${1} based on ${2}."
+	echo "Building Docker image ${build_id} based on ${2}."
 	echo ""
 
-	LIFERAY_DOCKER_FIX_PACK_ID=${4} LIFERAY_DOCKER_FIX_PACK_URL=${3} LIFERAY_DOCKER_RELEASE_FILE_URL=${2} LIFERAY_DOCKER_RELEASE_VERSION=${1} ./build_image.sh ${BUILD_ALL_IMAGES_PUSH}
+	{
+		LIFERAY_DOCKER_FIX_PACK_ID=${4} LIFERAY_DOCKER_FIX_PACK_URL=${3} LIFERAY_DOCKER_RELEASE_FILE_URL=${2} LIFERAY_DOCKER_RELEASE_VERSION=${1} time ./build_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
+
+		if [ $? -gt 0 ]
+		then
+			echo "FAILED: $build_id" >> ${LOGS_DIR}/results
+		else
+			echo "SUCCESS: $build_id" >> ${LOGS_DIR}/results
+		fi
+	} | tee ${LOGS_DIR}/${build_id}".log"
 }
 
 function build_images_dxp_71 {
@@ -117,6 +135,14 @@ function build_images_dxp_72 {
 }
 
 function main {
+	CURRENT_DATE=$(date)
+
+	TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M")
+
+	LOGS_DIR=logs-${TIMESTAMP}
+
+	mkdir -p ${LOGS_DIR}
+
 	local release_file_urls=(
 		releases.liferay.com/commerce/2.0.7/liferay-commerce-2.0.7-7.2.x-201912261227.7z
 		files.liferay.com/private/ee/commerce/2.0.7/7.1/liferay-commerce-enterprise-2.0.7-7.1.x-202003021149.7z
@@ -143,6 +169,12 @@ function main {
 
 	build_images_dxp_71
 	build_images_dxp_72
+
+	echo ""
+	echo "Results: "
+	echo ""
+
+	cat ${LOGS_DIR}/results
 }
 
 main
