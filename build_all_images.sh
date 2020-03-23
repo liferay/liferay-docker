@@ -96,7 +96,7 @@ function build_images_dxp_71 {
 	do
 		build_image \
 			7.1.10-dxp-${fix_pack_id} \
-			files.liferay.com/private/ee/portal/7.1.10.3/liferay-dxp-tomcat-7.1.10.3-sp3-slim-20191118185746787.7z \
+			files.liferay.com/private/ee/portal/7.1.10.3/liferay-dxp-tomcat-7.1.10.3-sp3-20191118185746787.7z \
 			files.liferay.com/private/ee/fix-packs/7.1.10/dxp/liferay-fix-pack-dxp-${fix_pack_id}-7110.zip \
 			dxp-${fix_pack_id}-7110
 	done
