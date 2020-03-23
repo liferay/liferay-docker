@@ -44,8 +44,21 @@ function main {
 	then
 		if [ `ls ${LIFERAY_PATCHING_DIR}/liferay-*.zip | wc -l` == 1 ]
 		then
-			if ( /opt/liferay/patching-tool/patching-tool.sh apply ${LIFERAY_PATCHING_DIR}/liferay-*.zip )
+			local patch_file_name=$(basename ${LIFERAY_PATCHING_DIR}/liferay-*.zip)
+
+			if [ -e "/opt/liferay/patching-tool/patch-applied" ]
 			then
+				local installed_patch=$(cat /opt/liferay/patching-tool/patch-applied)
+
+				if [ ! ${patch_file_name} == ${installed_patch} ]
+				then
+					echo ""
+					echo "[LIFERAY] ${patch_file_name} cannot be applied on this container as ${installed_patch} is already installed. Please remove ${patch_file_name} from the patching directory to disable this warning message."
+				fi
+			elif ( /opt/liferay/patching-tool/patching-tool.sh apply ${LIFERAY_PATCHING_DIR}/liferay-*.zip )
+			then
+				echo ${patch_file_name} > /opt/liferay/patching-tool/patch-applied
+
 				install_patch_step_2
 			else
 				install_patch_step_1
