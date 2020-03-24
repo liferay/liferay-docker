@@ -197,16 +197,7 @@ function install_fix_pack {
 
 		FIX_PACK_FILE_NAME=${fix_pack_url##*/}
 
-		if [ ! -e releases/fix-packs/${FIX_PACK_FILE_NAME} ]
-		then
-			echo ""
-			echo "Downloading ${fix_pack_url}."
-			echo ""
-
-			mkdir -p releases/fix-packs
-
-			curl -f -o releases/fix-packs/${FIX_PACK_FILE_NAME} http://mirrors.lax.liferay.com/${fix_pack_url} || exit 2
-		fi
+		download_file releases/fix-packs/${FIX_PACK_FILE_NAME} ${fix_pack_url}
 
 		cp releases/fix-packs/${FIX_PACK_FILE_NAME} ${TEMP_DIR}/liferay/patching-tool/patches
 
@@ -245,16 +236,6 @@ function main {
 function prepare_temp_directory {
 	RELEASE_FILE_NAME=${LIFERAY_DOCKER_RELEASE_FILE_URL##*/}
 
-	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} != http*://* ]]
-	then
-		LIFERAY_DOCKER_RELEASE_FILE_URL=http://${LIFERAY_DOCKER_RELEASE_FILE_URL}
-	fi
-
-	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} != http://mirrors.*.liferay.com* ]] && [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} != http://release-1* ]]
-	then
-		LIFERAY_DOCKER_RELEASE_FILE_URL=http://mirrors.lax.liferay.com/${LIFERAY_DOCKER_RELEASE_FILE_URL##*//}
-	fi
-
 	local release_dir=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
 
 	release_dir=${release_dir#*com/}
@@ -263,16 +244,8 @@ function prepare_temp_directory {
 	release_dir=${release_dir#*private/ee/}
 	release_dir=releases/${release_dir}
 
-	if [ ! -e ${release_dir}/${RELEASE_FILE_NAME} ]
-	then
-		echo ""
-		echo "Downloading ${LIFERAY_DOCKER_RELEASE_FILE_URL}."
-		echo ""
 
-		mkdir -p ${release_dir}
-
-		curl -f -o ${release_dir}/${RELEASE_FILE_NAME} ${LIFERAY_DOCKER_RELEASE_FILE_URL} || exit 2
-	fi
+	download_file ${release_dir}/${RELEASE_FILE_NAME} ${LIFERAY_DOCKER_RELEASE_FILE_URL}
 
 	if [[ ${RELEASE_FILE_NAME} == *.7z ]]
 	then
@@ -297,12 +270,7 @@ function update_patching_tool {
 		echo "Updating Patching Tool to version ${latest_patching_tool_version}."
 		echo ""
 
-		if [ ! -e releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip ]
-		then
-			mkdir -p releases/patching-tool
-
-			curl -f -o releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip http://mirrors.lax.liferay.com/files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${latest_patching_tool_version}.zip
-		fi
+		download_file releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${latest_patching_tool_version}.zip
 
 		unzip -d ${TEMP_DIR}/liferay -q releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip
 

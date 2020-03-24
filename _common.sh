@@ -47,6 +47,37 @@ function date {
 	fi
 }
 
+function download_file {
+	local local_file=${1}
+	local url=${2}
+
+	if [ -e ${local_file} ]
+	then
+		return
+	fi
+
+	if [[ ${url} != http*://* ]]
+	then
+		url=http://${url}
+	fi
+
+	if [[ ${url} != http://mirrors.*.liferay.com* ]] && [[ ${url} != http://release-1* ]]
+	then
+		url=http://mirrors.lax.liferay.com/${url##*//}
+	fi
+
+	echo ""
+	echo "Downloading ${url}."
+	echo ""
+
+	local dir=$(dirname ${local_file})
+
+	mkdir -p ${dir}
+
+	curl -f -o ${local_file} ${url} || exit 2
+
+}
+
 function get_docker_image_tags_args {
 	local docker_image_tags_args=""
 
