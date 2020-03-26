@@ -11,6 +11,7 @@ function check_usage {
 		echo ""
 		echo "    LIFERAY_DOCKER_FIX_PACK_ID: ID of the fix pack which should be installed (e.g. dxp-1-7210)"
 		echo "    LIFERAY_DOCKER_IMAGE_ID: ID of Docker image"
+		echo "    LIFERAY_DOCKER_TEST_HOTFIX_URL: URL of the test hotfix to be installed"
 		echo ""
 		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2.10.1-sp1-202001171544 ${0}"
 
@@ -38,12 +39,15 @@ function log_test_result {
 function main {
 	check_usage
 
+	prepare_mount
+
 	start_container
 
 	test_health_status
 
 	test_docker_image_files
 	test_docker_image_fix_pack_installed
+	test_docker_image_hotfix_installed
 	test_docker_image_scripts_1
 	test_docker_image_scripts_2
 
@@ -52,10 +56,24 @@ function main {
 	exit ${TEST_RESULT}
 }
 
+function prepare_mount {
+	TEST_DIR=temp-test-$(date "$(date)" "+%Y%m%d%H%M")
+
+	mkdir -p ${TEST_DIR}
+
+	cp -r test-template/* ${TEST_DIR}
+	mkdir -p ${TEST_DIR}/patching
+
+	local hotfix_file_name=${LIFERAY_DOCKER_TEST_HOTFIX_URL##*/}
+
+	download_file releases/hotfix/${hotfix_file_name} ${LIFERAY_DOCKER_TEST_HOTFIX_URL}
+	cp releases/hotfix/${hotfix_file_name} ${TEST_DIR}/patching/
+}
+
 function start_container {
 	echo "Starting container from image ${LIFERAY_DOCKER_IMAGE_ID}."
 
-	CONTAINER_ID=`docker run -d -p 8080 -v "${PWD}/test":/mnt/liferay ${LIFERAY_DOCKER_IMAGE_ID}`
+	CONTAINER_ID=`docker run -d -p 8080 -v "${PWD}/${TEST_DIR}":/mnt/liferay ${LIFERAY_DOCKER_IMAGE_ID}`
 
 	CONTAINER_PORT_HTTP=`docker port ${CONTAINER_ID} 8080/tcp`
 
@@ -96,6 +114,18 @@ function test_docker_image_fix_pack_installed {
 		fi
 	else
 		log_test_result 0
+	fi
+}
+
+function test_docker_image_hotfix_installed {
+	local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/`
+
+	if [[ "${content}" == *"Hotfix installation on the docker image was successful."* ]]
+	then
+		log_test_result 0
+	else
+		log_test_result 1
+		exit
 	fi
 }
 

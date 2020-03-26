@@ -29,7 +29,7 @@ function build_image {
 	echo ""
 
 	{
-		LIFERAY_DOCKER_FIX_PACK_ID=${4} LIFERAY_DOCKER_FIX_PACK_URL=${3} LIFERAY_DOCKER_RELEASE_FILE_URL=${2} LIFERAY_DOCKER_RELEASE_VERSION=${1} time ./build_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
+		LIFERAY_DOCKER_FIX_PACK_ID=${4} LIFERAY_DOCKER_FIX_PACK_URL=${3} LIFERAY_DOCKER_RELEASE_FILE_URL=${2} LIFERAY_DOCKER_RELEASE_VERSION=${1} LIFERAY_DOCKER_TEST_HOTFIX_URL=${5} time ./build_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
 
 		if [ $? -gt 0 ]
 		then
@@ -131,7 +131,8 @@ function build_images_dxp_72 {
 		7.2.10-dxp-4 \
 		files.liferay.com/private/ee/portal/7.2.10-dxp-4/liferay-dxp-tomcat-7.2.10-dxp-4-slim-20200121112425051.7z \
 		"" \
-		dxp-4-7210
+		dxp-4-7210,hotfix-1072-7210 \
+		files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-1072-7210.zip
 }
 
 function main {
