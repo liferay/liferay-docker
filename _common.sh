@@ -122,6 +122,12 @@ function make_temp_directory {
 	cp -r template/* ${TEMP_DIR}
 }
 
+function pid_8080 {
+	local pid=`lsof -i 4tcp:8080 -sTCP:LISTEN -Fp | head -n 1`
+
+	echo ${pid##p}
+}
+
 function prepare_tomcat {
 	local liferay_tomcat_version=$(get_tomcat_version ${TEMP_DIR}/liferay)
 
@@ -157,6 +163,17 @@ function start_tomcat {
 
 	LIFERAY_JVM_OPTS="-Xmx3G"
 
+	local pid=$(pid_8080)
+
+	if [ -n "${pid}" ]
+	then
+		echo ""
+		echo "Killing process ${pid} as it had tcp/8080 open."
+		echo ""
+
+		kill -9 ${pid} 2>/dev/null
+	fi
+
 	./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh start
 
 	until $(curl --head --fail --output /dev/null --silent http://localhost:8080)
@@ -164,9 +181,7 @@ function start_tomcat {
 		sleep 3
 	done
 
-	local pid=`lsof -i 4tcp:8080 -sTCP:LISTEN -Fp | head -n 1`
-
-	pid=${pid##p}
+	pid=$(pid_8080)
 
 	./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh stop
 
