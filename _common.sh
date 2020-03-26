@@ -189,7 +189,6 @@ function stat {
 }
 
 function test_docker_image {
-	export LIFERAY_DOCKER_FIX_PACK_ID
 	export LIFERAY_DOCKER_IMAGE_ID="${DOCKER_IMAGE_TAGS[0]}"
 
 	./test_image.sh
