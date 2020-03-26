@@ -197,7 +197,7 @@ function install_fix_pack {
 
 		FIX_PACK_FILE_NAME=${fix_pack_url##*/}
 
-		download_file releases/fix-packs/${FIX_PACK_FILE_NAME} ${fix_pack_url}
+		download releases/fix-packs/${FIX_PACK_FILE_NAME} ${fix_pack_url}
 
 		cp releases/fix-packs/${FIX_PACK_FILE_NAME} ${TEMP_DIR}/liferay/patching-tool/patches
 
@@ -244,7 +244,7 @@ function prepare_temp_directory {
 	release_dir=${release_dir#*private/ee/}
 	release_dir=releases/${release_dir}
 
-	download_file ${release_dir}/${RELEASE_FILE_NAME} ${LIFERAY_DOCKER_RELEASE_FILE_URL}
+	download ${release_dir}/${RELEASE_FILE_NAME} ${LIFERAY_DOCKER_RELEASE_FILE_URL}
 
 	if [[ ${RELEASE_FILE_NAME} == *.7z ]]
 	then
@@ -269,7 +269,7 @@ function update_patching_tool {
 		echo "Updating Patching Tool to version ${latest_patching_tool_version}."
 		echo ""
 
-		download_file releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${latest_patching_tool_version}.zip
+		download releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${latest_patching_tool_version}.zip
 
 		unzip -d ${TEMP_DIR}/liferay -q releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip
 

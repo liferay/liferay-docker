@@ -47,7 +47,7 @@ function date {
 	fi
 }
 
-function download_file {
+function download {
 	local local_file=${1}
 	local url=${2}
 
