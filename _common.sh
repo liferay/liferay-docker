@@ -49,19 +49,21 @@ function date {
 
 function download {
 	local file_name=${1}
-	local file_url=${2}
 
 	if [ -e ${file_name} ]
 	then
 		return
 	fi
 
+	local file_url=${2}
+
 	if [[ ${file_url} != http*://* ]]
 	then
 		file_url=http://${file_url}
 	fi
 
-	if [[ ${file_url} != http://mirrors.*.liferay.com* ]] && [[ ${file_url} != http://release-1* ]]
+	if [[ ${file_url} != http://mirrors.*.liferay.com* ]] &&
+	   [[ ${file_url} != http://release-1* ]]
 	then
 		file_url=http://mirrors.lax.liferay.com/${file_url##*//}
 	fi
@@ -70,9 +72,7 @@ function download {
 	echo "Downloading ${file_url}."
 	echo ""
 
-	local dir=$(dirname ${file_name})
-
-	mkdir -p ${dir}
+	mkdir -p $(dirname ${file_name})
 
 	curl -f -o ${file_name} ${file_url} || exit 2
 
