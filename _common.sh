@@ -75,7 +75,6 @@ function download {
 	mkdir -p $(dirname ${file_name})
 
 	curl -f -o ${file_name} ${file_url} || exit 2
-
 }
 
 function get_docker_image_tags_args {
