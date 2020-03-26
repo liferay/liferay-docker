@@ -168,7 +168,7 @@ function start_tomcat {
 	if [ -n "${pid}" ]
 	then
 		echo ""
-		echo "Killing process ${pid} as it had tcp/8080 open."
+		echo "Killing process ${pid} that is listening on port 8080."
 		echo ""
 
 		kill -9 ${pid} 2>/dev/null
