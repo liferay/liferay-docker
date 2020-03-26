@@ -125,7 +125,6 @@ function test_docker_image_hotfix_installed {
 		log_test_result 0
 	else
 		log_test_result 1
-		exit
 	fi
 }
 
