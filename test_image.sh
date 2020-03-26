@@ -62,12 +62,14 @@ function prepare_mount {
 	mkdir -p ${TEST_DIR}
 
 	cp -r test-template/* ${TEST_DIR}
+
 	mkdir -p ${TEST_DIR}/patching
 
 	local hotfix_file_name=${LIFERAY_DOCKER_TEST_HOTFIX_URL##*/}
 
 	download releases/hotfix/${hotfix_file_name} ${LIFERAY_DOCKER_TEST_HOTFIX_URL}
-	cp releases/hotfix/${hotfix_file_name} ${TEST_DIR}/patching/
+
+	cp releases/hotfix/${hotfix_file_name} ${TEST_DIR}/patching
 }
 
 function start_container {
