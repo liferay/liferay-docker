@@ -63,13 +63,16 @@ function prepare_mount {
 
 	cp -r test-template/* ${TEST_DIR}
 
-	mkdir -p ${TEST_DIR}/patching
+	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
+	then
+		mkdir -p ${TEST_DIR}/patching
 
-	local hotfix_file_name=${LIFERAY_DOCKER_TEST_HOTFIX_URL##*/}
+		local hotfix_file_name=${LIFERAY_DOCKER_TEST_HOTFIX_URL##*/}
 
-	download releases/hotfix/${hotfix_file_name} ${LIFERAY_DOCKER_TEST_HOTFIX_URL}
+		download releases/hotfix/${hotfix_file_name} ${LIFERAY_DOCKER_TEST_HOTFIX_URL}
 
-	cp releases/hotfix/${hotfix_file_name} ${TEST_DIR}/patching
+		cp releases/hotfix/${hotfix_file_name} ${TEST_DIR}/patching
+	fi
 }
 
 function start_container {
@@ -120,13 +123,16 @@ function test_docker_image_fix_pack_installed {
 }
 
 function test_docker_image_hotfix_installed {
-	local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/`
-
-	if [[ "${content}" == *"Hotfix installation on the docker image was successful."* ]]
+	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
 	then
-		log_test_result 0
-	else
-		log_test_result 1
+		local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/`
+
+		if [[ "${content}" == *"Hotfix installation on the docker image was successful."* ]]
+		then
+			log_test_result 0
+		else
+			log_test_result 1
+		fi
 	fi
 }
 
