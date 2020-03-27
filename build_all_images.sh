@@ -40,6 +40,29 @@ function build_image {
 	} | tee ${LOGS_DIR}/${build_id}".log"
 }
 
+function build_images_dxp_70 {
+	build_image \
+		7.0.10-ga1 \
+		files.liferay.com/private/ee/portal/7.0.10/liferay-dxp-digital-enterprise-tomcat-7.0-ga1-20160617092557801.zip \
+		"" \
+		""
+
+	for fix_pack_id in {88..89}
+	do
+		build_image \
+			7.0.10-de-${fix_pack_id} \
+			files.liferay.com/private/ee/portal/7.0.10.12/liferay-dxp-digital-enterprise-tomcat-7.0.10.12-sp12-20191014182832691.7z \
+			files.liferay.com/private/ee/fix-packs/7.0.10/de/liferay-fix-pack-de-${fix_pack_id}-7010.zip \
+			de-${fix_pack_id}-7010
+	done
+
+	build_image \
+		7.0.10-sp13 \
+		files.liferay.com/private/ee/portal/7.0.10.13/liferay-dxp-digital-enterprise-tomcat-7.0.10.13-sp13-slim-20200310164407389.7z \
+		"" \
+		de-90-7010
+}
+
 function build_images_dxp_71 {
 	build_image \
 		7.1.10-ga1 \
@@ -154,7 +177,6 @@ function main {
 		releases.liferay.com/portal/7.3.0-ga1/liferay-ce-portal-tomcat-7.3.0-ga1-20200127150653953.7z
 		#releases.liferay.com/portal/snapshot-7.1.x/201902130905/liferay-portal-tomcat-7.1.x.7z
 		#releases.liferay.com/portal/snapshot-master/201902131509/liferay-portal-tomcat-master.7z
-		files.liferay.com/private/ee/portal/7.0.10.11/liferay-dxp-digital-enterprise-tomcat-7.0.10.11-sp11-20190506123513875.zip
 		#files.liferay.com/private/ee/portal/snapshot-ee-6.2.x/201808160944/liferay-portal-tomcat-ee-6.2.x.zip
 		#files.liferay.com/private/ee/portal/snapshot-7.1.x-private/201808162051/liferay-portal-tomcat-7.1.x-private.zip
 	)
@@ -164,6 +186,7 @@ function main {
 		build_image "" ${release_file_url} "" ""
 	done
 
+	build_images_dxp_70
 	build_images_dxp_71
 	build_images_dxp_72
 
