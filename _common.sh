@@ -66,7 +66,12 @@ function download {
 	   [[ ${file_url} != http://release-1* ]] &&
 	   [[ ${file_url} != https://release.liferay.com* ]]
 	then
-		file_url=http://mirrors.lax.liferay.com/${file_url##*//}
+		if [ ! -n "${LIFERAY_DOCKER_MIRROR}" ]
+		then
+			LIFERAY_DOCKER_MIRROR=lax
+		fi
+
+		file_url=http://mirrors.${LIFERAY_DOCKER_MIRROR}.liferay.com/${file_url##*//}
 	fi
 
 	echo ""
