@@ -63,7 +63,8 @@ function download {
 	fi
 
 	if [[ ${file_url} != http://mirrors.*.liferay.com* ]] &&
-	   [[ ${file_url} != http://release-1* ]]
+	   [[ ${file_url} != http://release-1* ]] &&
+	   [[ ${file_url} != https://release.liferay.com* ]]
 	then
 		file_url=http://mirrors.lax.liferay.com/${file_url##*//}
 	fi
