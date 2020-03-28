@@ -127,7 +127,7 @@ function test_docker_image_hotfix_installed {
 	then
 		local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/`
 
-		if [[ "${content}" == *"Hotfix installation on the docker image was successful."* ]]
+		if [[ "${content}" == *"Hotfix installation on the Docker image was successful."* ]]
 		then
 			log_test_result 0
 		else

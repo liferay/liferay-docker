@@ -154,8 +154,8 @@ function build_images_dxp_72 {
 		7.2.10-dxp-4 \
 		files.liferay.com/private/ee/portal/7.2.10-dxp-4/liferay-dxp-tomcat-7.2.10-dxp-4-slim-20200121112425051.7z \
 		"" \
-		dxp-4-7210,hotfix-1072-7210 \
-		files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-1072-7210.zip
+		dxp-4-7210,hotfix-1167-7210 \
+		files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-1167-7210.zip
 }
 
 function main {
