@@ -21,6 +21,13 @@ function check_usage {
 	check_utils curl docker
 }
 
+function clean_up_test_directory {
+	if [ ${TEST_RESULT} -eq 0 ]
+	then
+		rm -fr ${TEST_DIR}
+	fi
+}
+
 function log_test_result {
 	local test_result=SUCCESS
 
@@ -52,6 +59,8 @@ function main {
 	test_docker_image_scripts_2
 
 	stop_container
+
+	clean_up_test_directory
 
 	exit ${TEST_RESULT}
 }
