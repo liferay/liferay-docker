@@ -22,7 +22,7 @@ function check_usage {
 }
 
 function clean_up_test_directory {
-	if [ ${TEST_RESULT} -eq 0 ]
+	if [ "${TEST_RESULT}" -eq 0 ]
 	then
 		rm -fr ${TEST_DIR}
 	fi
@@ -92,6 +92,8 @@ function start_container {
 	CONTAINER_PORT_HTTP=`docker port ${CONTAINER_ID} 8080/tcp`
 
 	CONTAINER_PORT_HTTP=${CONTAINER_PORT_HTTP##*:}
+
+	TEST_RESULT=0
 }
 
 function stop_container {
