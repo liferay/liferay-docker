@@ -263,7 +263,9 @@ function update_patching_tool {
 
 		rm -fr ${TEMP_DIR}/liferay/patching-tool
 
-		local latest_patching_tool_version=`curl -s http://mirrors.lax.liferay.com/files.liferay.com/private/ee/fix-packs/patching-tool/LATEST-2.0.txt`
+		download ${TEMP_DIR}/LATEST-2.0.txt files.liferay.com/private/ee/fix-packs/patching-tool/LATEST-2.0.txt
+
+		local latest_patching_tool_version=$(cat ${TEMP_DIR}/LATEST-2.0.txt)
 
 		echo ""
 		echo "Updating Patching Tool to version ${latest_patching_tool_version}."
