@@ -169,7 +169,6 @@ function build_images_dxp_72 {
 		"" \
 		dxp-5-7210,hotfix-1467-7210 \
 		files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-1467-7210.zip
-
 }
 
 function main {
