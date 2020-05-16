@@ -176,17 +176,35 @@ function download_trial_dxp_license {
 				exit 1
 			else
 				echo "Trial DXP license exists at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
-
-				#exit 1
 			fi
 		fi
 	fi
 
 	if [[ ${RELEASE_FILE_NAME} == *-commerce-enterprise-* ]]
 	then
-		mkdir -p ${TEMP_DIR}/liferay/data/license
+		if [ -z "${LIFERAY_DOCKER_COMMERCE_LICENSE_CMD}" ]
+		then
+			echo "Set the environment variable LIFERAY_DOCKER_COMMERCE_LICENSE_CMD to generate a trial Commerce license."
 
-		cp LiferayCommerce_enterprise.li ${TEMP_DIR}/liferay/data/license
+			exit 1
+		else
+			mkdir -p ${TEMP_DIR}/liferay/data/license
+
+			commerce_license_file_name=LiferayCommerce_enterprise-$(date "${CURRENT_DATE}" "+%Y%m%d").li
+
+			eval "curl --silent --header \"${LIFERAY_DOCKER_COMMERCE_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%s%3N")&owner=hello%40liferay.com\" > ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}"
+
+			sed -i 's/["]//g' ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}
+
+			if [ ! -e ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name} ]
+			then
+				echo "Trial Commerce license does not exist at ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}."
+
+				exit 1
+			else
+				echo "Trial Commerce license exists at ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}."
+			fi
+		fi
 	fi
 }
 
