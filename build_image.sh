@@ -160,7 +160,7 @@ function download_trial_dxp_license {
 
 			license_file_name=license-$(date "${CURRENT_DATE}" "+%Y%m%d").xml
 
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%Y-%m-%d")&owner=hello%40liferay.com\" > ${TEMP_DIR}/liferay/deploy/${license_file_name}"
+			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%Y-%m-%d")&owner=docker%40liferay.com\" > ${TEMP_DIR}/liferay/deploy/${license_file_name}"
 
 			sed -i "s/\\\n//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
 			sed -i "s/\\\t//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
@@ -192,7 +192,7 @@ function download_trial_dxp_license {
 
 			commerce_license_file_name=LiferayCommerce_enterprise-$(date "${CURRENT_DATE}" "+%Y%m%d").li
 
-			eval "curl --silent --header \"${LIFERAY_DOCKER_COMMERCE_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%s%3N")&owner=hello%40liferay.com\" > ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}"
+			eval "curl --silent --header \"${LIFERAY_DOCKER_COMMERCE_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%s%3N")&owner=docker%40liferay.com\" > ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}"
 
 			sed -i 's/["]//g' ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}
 
