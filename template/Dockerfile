@@ -10,9 +10,10 @@ RUN apk --no-cache add bash curl nss tomcat-native tree ttf-dejavu zulu11-jdk=11
 
 COPY scripts/* /usr/local/bin/
 
-RUN adduser -D -h /home/liferay liferay && addgroup liferay liferay
+RUN adduser -D -h /opt/liferay liferay && \
+	addgroup liferay liferay
 
-COPY --chown=liferay:liferay home/.bashrc /home/liferay/
+COPY --chown=liferay:liferay home/.bashrc /opt/liferay/
 COPY --chown=liferay:liferay liferay /opt/liferay
 
 ENTRYPOINT /usr/local/bin/liferay_entrypoint.sh
