@@ -61,6 +61,20 @@ function build_images_dxp_70 {
 		files.liferay.com/private/ee/portal/7.0.10.13/liferay-dxp-digital-enterprise-tomcat-7.0.10.13-sp13-slim-20200310164407389.7z \
 		"" \
 		de-90-7010
+
+	build_image \
+		7.0.10-de-91 \
+		files.liferay.com/private/ee/portal/7.0.10-de-91/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-91-slim-20200420163527702.7z \
+		"" \
+		de-91-7010,hotfix-6871-7010 \
+		files.liferay.com/private/ee/fix-packs/7.0.10/hotfix/liferay-hotfix-6871-7010.zip
+
+	build_image \
+		7.0.10-de-92 \
+		files.liferay.com/private/ee/portal/7.0.10-de-92/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-92-slim-20200519134012683.7z \
+		"" \
+		de-92-7010,hotfix-6854-7010 \
+		files.liferay.com/private/ee/fix-packs/7.0.10/hotfix/liferay-hotfix-6854-7010.zip
 }
 
 function build_images_dxp_71 {
