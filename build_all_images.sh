@@ -179,7 +179,7 @@ function build_images_dxp_72 {
 
 	build_image \
 		7.2.10-sp2 \
-		https://files.liferay.com/private/ee/portal/7.2.10.2/liferay-dxp-tomcat-7.2.10.2-sp2-slim-20200511121558464.7z \
+		files.liferay.com/private/ee/portal/7.2.10.2/liferay-dxp-tomcat-7.2.10.2-sp2-slim-20200511121558464.7z \
 		"" \
 		dxp-5-7210,hotfix-1467-7210 \
 		files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-1467-7210.zip
