@@ -70,11 +70,19 @@ function build_images_dxp_70 {
 		files.liferay.com/private/ee/fix-packs/7.0.10/hotfix/liferay-hotfix-6871-7010.zip
 
 	build_image \
+		7.0.10-security-de-91-202003-1 \
+		files.liferay.com/private/ee/portal/7.0.10-de-91/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-91-20200420163527702.7z \
+		files.liferay.com/private/ee/fix-packs/7.0.10/security-de/liferay-security-de-91-202003-1-7010.zip \
+		de-91-7010,security-de-91-202003-1-7010
+
+	build_image \
 		7.0.10-de-92 \
 		files.liferay.com/private/ee/portal/7.0.10-de-92/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-92-slim-20200519134012683.7z \
 		"" \
 		de-92-7010,hotfix-6854-7010 \
 		files.liferay.com/private/ee/fix-packs/7.0.10/hotfix/liferay-hotfix-6854-7010.zip
+
+
 }
 
 function build_images_dxp_71 {
@@ -143,6 +151,12 @@ function build_images_dxp_71 {
 		files.liferay.com/private/ee/portal/7.1.10.4/liferay-dxp-tomcat-7.1.10.4-sp4-slim-20200331093526761.7z \
 		"" \
 		dxp-17-7110
+
+	build_image \
+		7.1.10-security-dxp-17-202003-3 \
+		files.liferay.com/private/ee/portal/7.1.10.4/liferay-dxp-tomcat-7.1.10.4-sp4-20200331093526761.7z \
+		files.liferay.com/private/ee/fix-packs/7.1.10/security-dxp/liferay-security-dxp-17-202003-3-7110.zip \
+		dxp-17-7110,security-dxp-17-202003-3-7110
 }
 
 function build_images_dxp_72 {
@@ -178,11 +192,23 @@ function build_images_dxp_72 {
 		files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-1167-7210.zip
 
 	build_image \
+		7.2.10-security-dxp-4-202003-4 \
+		files.liferay.com/private/ee/portal/7.2.10-dxp-4/liferay-dxp-tomcat-7.2.10-dxp-4-20200121112425051.7z \
+		files.liferay.com/private/ee/fix-packs/7.2.10/security-dxp/liferay-security-dxp-4-202003-4-7210.zip \
+		dxp-4-7210,security-dxp-4-202003-4-7210
+
+	build_image \
 		7.2.10-sp2 \
 		files.liferay.com/private/ee/portal/7.2.10.2/liferay-dxp-tomcat-7.2.10.2-sp2-slim-20200511121558464.7z \
 		"" \
 		dxp-5-7210,hotfix-1467-7210 \
 		files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-1467-7210.zip
+
+	build_image \
+		7.2.10-security-dxp-5-202003-1 \
+		files.liferay.com/private/ee/portal/7.2.10.2/liferay-dxp-tomcat-7.2.10.2-sp2-20200511121558464.7z \
+		files.liferay.com/private/ee/fix-packs/7.2.10/security-dxp/liferay-security-dxp-5-202003-1-7210.zip \
+		dxp-5-7210,security-dxp-5-202003-1-7210
 }
 
 function main {
