@@ -81,8 +81,6 @@ function build_images_dxp_70 {
 		"" \
 		de-92-7010,hotfix-6854-7010 \
 		files.liferay.com/private/ee/fix-packs/7.0.10/hotfix/liferay-hotfix-6854-7010.zip
-
-
 }
 
 function build_images_dxp_71 {
