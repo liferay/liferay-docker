@@ -107,6 +107,7 @@ function build_docker_image {
 	DOCKER_IMAGE_TAGS=()
 
 	local default_ifs=${IFS}
+
 	IFS=","
 
 	for release_version_single in ${release_version}
