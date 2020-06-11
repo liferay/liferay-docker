@@ -106,15 +106,23 @@ function build_docker_image {
 
 	DOCKER_IMAGE_TAGS=()
 
-	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
-	then
-		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-${release_version}-${release_hash}")
-		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
-		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}")
-	else
-		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version}-${TIMESTAMP}")
-		DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version}")
-	fi
+	local default_ifs=${IFS}
+	IFS=","
+
+	for release_version_single in ${release_version}
+	do
+		if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
+		then
+			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-${release_version_single}-${release_hash}")
+			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
+			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}")
+		else
+			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}-${TIMESTAMP}")
+			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}")
+		fi
+	done
+
+	IFS=${default_ifs}
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
