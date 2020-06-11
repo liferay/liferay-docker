@@ -57,7 +57,7 @@ function build_images_dxp_70 {
 	done
 
 	build_image \
-		7.0.10-sp13,7.0.10-de-90 \
+		7.0.10-de-90,7.0.10-sp13 \
 		files.liferay.com/private/ee/portal/7.0.10.13/liferay-dxp-digital-enterprise-tomcat-7.0.10.13-sp13-slim-20200310164407389.7z \
 		"" \
 		de-90-7010
@@ -100,7 +100,7 @@ function build_images_dxp_71 {
 	done
 
 	build_image \
-		7.1.10-sp1,7.1.10-dxp-5 \
+		7.1.10-dxp-5,7.1.10-sp1 \
 		files.liferay.com/private/ee/portal/7.1.10.1/liferay-dxp-tomcat-7.1.10.1-sp1-20190110085705206.zip \
 		"" \
 		dxp-5-7110
@@ -115,7 +115,7 @@ function build_images_dxp_71 {
 	done
 
 	build_image \
-		7.1.10-sp2,7.1.10-dxp-10 \
+		7.1.10-dxp-10,7.1.10-sp2 \
 		files.liferay.com/private/ee/portal/7.1.10.2/liferay-dxp-tomcat-7.1.10.2-sp2-20190422172027516.zip \
 		"" \
 		dxp-10-7110
@@ -130,7 +130,7 @@ function build_images_dxp_71 {
 	done
 
 	build_image \
-		7.1.10-sp3,7.1.10-dxp-15 \
+		7.1.10-dxp-15,7.1.10-sp3 \
 		files.liferay.com/private/ee/portal/7.1.10.3/liferay-dxp-tomcat-7.1.10.3-sp3-slim-20191118185746787.7z \
 		"" \
 		dxp-15-7110
@@ -145,7 +145,7 @@ function build_images_dxp_71 {
 	done
 
 	build_image \
-		7.1.10-sp4,7.1.10-dxp-17 \
+		7.1.10-dxp-17,7.1.10-sp4 \
 		files.liferay.com/private/ee/portal/7.1.10.4/liferay-dxp-tomcat-7.1.10.4-sp4-slim-20200331093526761.7z \
 		"" \
 		dxp-17-7110
@@ -171,7 +171,7 @@ function build_images_dxp_72 {
 		dxp-1-7210
 
 	build_image \
-		7.2.10-sp1,7.2.10-dxp-2 \
+		7.2.10-dxp-2,7.2.10-sp1 \
 		files.liferay.com/private/ee/portal/7.2.10.1/liferay-dxp-tomcat-7.2.10.1-sp1-slim-20191009103614075.7z \
 		"" \
 		dxp-2-7210
@@ -196,7 +196,7 @@ function build_images_dxp_72 {
 		dxp-4-7210,security-dxp-4-202003-4-7210
 
 	build_image \
-		7.2.10-sp2,7.2.10-dxp-5 \
+		7.2.10-dxp-5,7.2.10-sp2 \
 		files.liferay.com/private/ee/portal/7.2.10.2/liferay-dxp-tomcat-7.2.10.2-sp2-slim-20200511121558464.7z \
 		"" \
 		dxp-5-7210,hotfix-1467-7210 \
