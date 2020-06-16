@@ -15,6 +15,8 @@ RUN adduser -D -h /home/liferay liferay && addgroup liferay liferay
 COPY --chown=liferay:liferay home/.bashrc /home/liferay/
 COPY --chown=liferay:liferay liferay /opt/liferay
 
+RUN ln -fs /opt/liferay/* /home/liferay
+
 ENTRYPOINT /usr/local/bin/liferay_entrypoint.sh
 
 ENV JAVA_VERSION=zulu8
