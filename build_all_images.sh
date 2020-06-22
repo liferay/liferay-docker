@@ -209,9 +209,9 @@ function build_images_dxp_72 {
 		dxp-5-7210,security-dxp-5-202003-1-7210
 
 	build_image \
-  		7.2.10-dxp-6 \
-		https://files.liferay.com/private/ee/portal/7.2.10-dxp-6/liferay-dxp-tomcat-7.2.10-dxp-6-slim-20200611120504742.7z \
-  		"" \
+		7.2.10-dxp-6 \
+		files.liferay.com/private/ee/portal/7.2.10-dxp-6/liferay-dxp-tomcat-7.2.10-dxp-6-slim-20200611120504742.7z \
+		"" \
 		dxp-6-7210,hotfix-1992-7210 \
 		files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-1992-7210.zip
 }
