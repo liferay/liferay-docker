@@ -167,7 +167,7 @@ function download_trial_dxp_license {
 		else
 			mkdir -p ${TEMP_DIR}/liferay/deploy
 
-			license_file_name=license-$(date "${CURRENT_DATE}" "+%Y%m%d").xml
+			license_file_name=trial-license-$(date "${CURRENT_DATE}" "+%Y%m%d").xml
 
 			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 30)&startDate=$(date "${CURRENT_DATE}" "+%Y-%m-%d")&owner=docker%40liferay.com\" > ${TEMP_DIR}/liferay/deploy/${license_file_name}"
 
