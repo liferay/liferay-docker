@@ -3,6 +3,11 @@
 source /usr/local/bin/_liferay_common.sh
 
 function main {
+	if [ "${LIFERAY_DISABLE_TRIAL_LICENSE}" == "true" ]
+	then
+		rm -f /opt/liferay/deploy/trial-license-*.xml
+	fi
+
 	if [ ! -d ${LIFERAY_MOUNT_DIR} ]
 	then
 		echo "[LIFERAY] Run this container with the option \"-v \$(pwd)/xyz123:/mnt/liferay\" to bridge \$(pwd)/xyz123 in the host operating system to ${LIFERAY_MOUNT_DIR} on the container."
