@@ -3,6 +3,20 @@
 source ./_common.sh
 
 function check_usage {
+	if [ ! -n "${1}" ]
+	then
+		echo "Usage: ${0} <command>"
+		echo ""
+		echo "This script requires the first parameter to be set to one of these options:"
+		echo ""
+		echo "    commit: Writes and commits the necessary version change with the changelog"
+		echo "    fail-on-change: The script will return an error code if there was a version number changing commit since the last release notes change"
+		echo "    get-version: Returns the current version number"
+		echo "    anything else: Display the required version number change"
+
+		exit 1
+	fi
+
 	check_utils git sed sort tr
 }
 
@@ -26,18 +40,18 @@ function generate_release_notes {
 
 		echo "Version bump from ${LATEST_VERSION} to ${NEW_VERSION}"
 
-		(
-			echo ""
-			echo "#"
-			echo "# Liferay Docker Image Version ${NEW_VERSION}"
-			echo "#"
-			echo ""
-			echo "docker.image.change.log-${NEW_VERSION}=${CHANGELOG}"
-			echo "docker.image.git.id-${NEW_VERSION}=${CURRENT_SHA}"
-		) >> .releng/docker-image.changelog
-
 		if [ "${1}" == "commit" ]
 		then
+			(
+				echo ""
+				echo "#"
+				echo "# Liferay Docker Image Version ${NEW_VERSION}"
+				echo "#"
+				echo ""
+				echo "docker.image.change.log-${NEW_VERSION}=${CHANGELOG}"
+				echo "docker.image.git.id-${NEW_VERSION}=${CURRENT_SHA}"
+			) >> .releng/docker-image.changelog
+
 			git add .releng/docker-image.changelog
 			git commit -m "${NEW_VERSION} changelog"
 		fi
@@ -67,12 +81,18 @@ function get_latest_version {
 	VERSION_MINOR=${LATEST_VERSION#*.}
 	VERSION_MINOR=${VERSION_MINOR%.*}
 	VERSION_MICRO=${LATEST_VERSION##*.}
+
+	if [ "${1}" == "get-version" ]
+	then
+		echo ${LATEST_VERSION}
+		exit
+	fi
 }
 
 function main {
 	check_usage ${@}
 
-	get_latest_version
+	get_latest_version ${@}
 
 	get_changelog ${@}
 
