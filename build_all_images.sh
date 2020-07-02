@@ -268,6 +268,11 @@ function build_images_dxp_72 {
 }
 
 function main {
+	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && ! ./release_notes.sh fail-on-change
+	then
+		exit 1
+	fi
+
 	LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
 
 	mkdir -p ${LOGS_DIR}
