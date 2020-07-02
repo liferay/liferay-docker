@@ -66,6 +66,7 @@ function get_changelog {
 	then
 		echo "There was a change in the repository which requires regenerating the release notes."
 		echo "Run \"./release_notes.sh commit\" to commit the updated changelog."
+
 		exit 1
 	fi
 }
@@ -85,6 +86,7 @@ function get_latest_version {
 	if [ "${1}" == "get-version" ]
 	then
 		echo ${LATEST_VERSION}
+
 		exit
 	fi
 }
