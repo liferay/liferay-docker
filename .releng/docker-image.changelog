@@ -1,0 +1,20 @@
+#
+# Liferay Docker Image Version 0.0.1
+#
+
+docker.image.change.log-0.0.1=LPS-110522 LPS-114768 LPS-110722 LPS-112716 LPS-112893 LPS-112892 LPS-110737 LPS-110963 LPS-110737 LPS-110732 LPS-110696 LPS-86891
+docker.image.git.id-0.0.1=fe95dd75543877d9bd78cb8238b07c5b2207ea5b
+
+#
+# Liferay Docker Image Version 0.0.2
+#
+
+docker.image.change.log-0.0.2=LPS-110722
+docker.image.git.id-0.0.2=21767d3dad1be3aae2a9cae8757ac83037f3f433
+
+#
+# Liferay Docker Image Version 0.0.3
+#
+
+docker.image.change.log-0.0.3=LPS-116335
+docker.image.git.id-0.0.3=39a75cc32629940cdd0b656f1ab3d765bead7b00
