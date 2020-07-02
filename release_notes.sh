@@ -9,12 +9,12 @@ function check_usage {
 function generate_release_notes {
 	if [ -n "${CHANGELOG}" ]
 	then
-		if ( git log --pretty=%s --grep "#majorchange" ${LATEST_SHA}..${CURRENT_SHA} >/dev/null )
+		if ( git log --pretty=%s ${LATEST_SHA}..${CURRENT_SHA} | grep "#majorchange" > /dev/null )
 		then
 			VERSION_MAJOR=$(($VERSION_MAJOR+1))
 			VERSION_MINOR=0
 			VERSION_MICRO=0
-		elif ( git log --pretty=%s --grep "#minorchange" ${LATEST_SHA}..${CURRENT_SHA} >/dev/null )
+		elif ( git log --pretty=%s ${LATEST_SHA}..${CURRENT_SHA} | grep "#minorchange" > /dev/null )
 		then
 			VERSION_MINOR=$(($VERSION_MINOR+1))
 			VERSION_MICRO=0
