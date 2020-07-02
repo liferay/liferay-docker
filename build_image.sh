@@ -104,6 +104,8 @@ function build_docker_image {
 		release_version=${LIFERAY_DOCKER_RELEASE_VERSION}
 	fi
 
+	local docker_image_version=$(./release_notes.sh get-version)
+
 	DOCKER_IMAGE_TAGS=()
 
 	local default_ifs=${IFS}
@@ -118,7 +120,9 @@ function build_docker_image {
 			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
 			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}")
 		else
+			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}-d${docker_image_version}-${TIMESTAMP}")
 			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}-${TIMESTAMP}")
+			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}-d${docker_image_version}")
 			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}")
 		fi
 	done
