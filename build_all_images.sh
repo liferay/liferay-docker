@@ -260,8 +260,8 @@ function main {
 
 	local release_file_urls=(
 		#releases.liferay.com/commerce/2.0.7/liferay-commerce-2.0.7-7.2.x-201912261227.7z
-		files.liferay.com/private/ee/commerce/2.1.1/liferay-commerce-enterprise-2.1.1-7.1.x-202006040810.7z
-		files.liferay.com/private/ee/commerce/2.1.1/liferay-commerce-enterprise-2.1.1-7.2.x-202006040818.7z
+		files.liferay.com/private/ee/commerce/2.1.2/liferay-commerce-enterprise-2.1.2-7.1.x-202007312031.7z
+		files.liferay.com/private/ee/commerce/2.1.2/liferay-commerce-enterprise-2.1.2-7.2.x-202007312039.7z
 		releases.liferay.com/portal/6.1.2-ga3/liferay-portal-tomcat-6.1.2-ce-ga3-20130816114619181.zip
 		files.liferay.com/private/ee/portal/6.1.30.5/liferay-portal-tomcat-6.1-ee-ga3-sp5-20160201142343123.zip
 		releases.liferay.com/portal/6.2.5-ga6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip
