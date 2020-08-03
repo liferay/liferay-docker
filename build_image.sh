@@ -224,9 +224,9 @@ function install_fix_pack {
 
 		FIX_PACK_FILE_NAME=${fix_pack_url##*/}
 
-		download releases/fix-packs/${FIX_PACK_FILE_NAME} ${fix_pack_url}
+		download downloads/fix-packs/${FIX_PACK_FILE_NAME} ${fix_pack_url}
 
-		cp releases/fix-packs/${FIX_PACK_FILE_NAME} ${TEMP_DIR}/liferay/patching-tool/patches
+		cp downloads/fix-packs/${FIX_PACK_FILE_NAME} ${TEMP_DIR}/liferay/patching-tool/patches
 
 		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh install
 		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh separate temp
@@ -263,21 +263,21 @@ function main {
 function prepare_temp_directory {
 	RELEASE_FILE_NAME=${LIFERAY_DOCKER_RELEASE_FILE_URL##*/}
 
-	local release_dir=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
+	local download_dir=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
 
-	release_dir=${release_dir#*com/}
-	release_dir=${release_dir#*com/}
-	release_dir=${release_dir#*liferay-release-tool/}
-	release_dir=${release_dir#*private/ee/}
-	release_dir=releases/${release_dir}
+	download_dir=${download_dir#*com/}
+	download_dir=${download_dir#*com/}
+	download_dir=${download_dir#*liferay-release-tool/}
+	download_dir=${download_dir#*private/ee/}
+	download_dir=downloads/${download_dir}
 
-	download ${release_dir}/${RELEASE_FILE_NAME} ${LIFERAY_DOCKER_RELEASE_FILE_URL}
+	download ${download_dir}/${RELEASE_FILE_NAME} ${LIFERAY_DOCKER_RELEASE_FILE_URL}
 
 	if [[ ${RELEASE_FILE_NAME} == *.7z ]]
 	then
-		7z x -O${TEMP_DIR} ${release_dir}/${RELEASE_FILE_NAME} || exit 3
+		7z x -O${TEMP_DIR} ${download_dir}/${RELEASE_FILE_NAME} || exit 3
 	else
-		unzip -q ${release_dir}/${RELEASE_FILE_NAME} -d ${TEMP_DIR}  || exit 3
+		unzip -q ${download_dir}/${RELEASE_FILE_NAME} -d ${TEMP_DIR}  || exit 3
 	fi
 
 	mv ${TEMP_DIR}/liferay-* ${TEMP_DIR}/liferay
@@ -298,9 +298,9 @@ function update_patching_tool {
 		echo "Updating Patching Tool to version ${latest_patching_tool_version}."
 		echo ""
 
-		download releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${latest_patching_tool_version}.zip
+		download downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${latest_patching_tool_version}.zip
 
-		unzip -d ${TEMP_DIR}/liferay -q releases/patching-tool/patching-tool-${latest_patching_tool_version}.zip
+		unzip -d ${TEMP_DIR}/liferay -q downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip
 
 		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh auto-discovery
 

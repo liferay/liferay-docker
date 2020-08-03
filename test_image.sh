@@ -78,9 +78,9 @@ function prepare_mount {
 
 		local hotfix_file_name=${LIFERAY_DOCKER_TEST_HOTFIX_URL##*/}
 
-		download releases/hotfix/${hotfix_file_name} ${LIFERAY_DOCKER_TEST_HOTFIX_URL}
+		download downloads/hotfix/${hotfix_file_name} ${LIFERAY_DOCKER_TEST_HOTFIX_URL}
 
-		cp releases/hotfix/${hotfix_file_name} ${TEST_DIR}/patching
+		cp downloads/hotfix/${hotfix_file_name} ${TEST_DIR}/patching
 	fi
 }
 
