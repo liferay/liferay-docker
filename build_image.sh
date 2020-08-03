@@ -157,64 +157,9 @@ function check_usage {
 }
 
 function download_trial_dxp_license {
-	if [[ ${RELEASE_FILE_NAME} == *-commerce-enterprise-* ]] || [[ ${RELEASE_FILE_NAME} == *-dxp-* ]]
-	then
-		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
-		then
-			echo "Set the environment variable LIFERAY_DOCKER_LICENSE_CMD to generate a trial DXP license."
+	rm -fr ${TEMP_DIR}/liferay/data/license
 
-			exit 1
-		else
-			mkdir -p ${TEMP_DIR}/liferay/deploy
-
-			license_file_name=trial-license-$(date "${CURRENT_DATE}" "+%Y%m%d").xml
-
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 90)&startDate=$(date "${CURRENT_DATE}" "+%Y-%m-%d")&owner=docker%40liferay.com\" > ${TEMP_DIR}/liferay/deploy/${license_file_name}"
-
-			sed -i "s/\\\n//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i "s/\\\t//g" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i "s/\"<?xml/<?xml/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i "s/license>\"/license>/" ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i 's/\\"/\"/g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
-			sed -i 's/\\\//\//g' ${TEMP_DIR}/liferay/deploy/${license_file_name}
-
-			if [ ! -e ${TEMP_DIR}/liferay/deploy/${license_file_name} ]
-			then
-				echo "Trial DXP license does not exist at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
-
-				exit 1
-			else
-				echo "Trial DXP license exists at ${TEMP_DIR}/liferay/deploy/${license_file_name}."
-			fi
-		fi
-	fi
-
-	if [[ ${RELEASE_FILE_NAME} == *-commerce-enterprise-* ]]
-	then
-		if [ -z "${LIFERAY_DOCKER_COMMERCE_LICENSE_CMD}" ]
-		then
-			echo "Set the environment variable LIFERAY_DOCKER_COMMERCE_LICENSE_CMD to generate a trial Commerce license."
-
-			exit 1
-		else
-			mkdir -p ${TEMP_DIR}/liferay/data/license
-
-			commerce_license_file_name=LiferayCommerce_enterprise-$(date "${CURRENT_DATE}" "+%Y%m%d").li
-
-			eval "curl --silent --header \"${LIFERAY_DOCKER_COMMERCE_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 90)&startDate=$(date "${CURRENT_DATE}" "+%s%3N")&owner=docker%40liferay.com\" > ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}"
-
-			sed -i 's/["]//g' ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}
-
-			if [ ! -e ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name} ]
-			then
-				echo "Trial Commerce license does not exist at ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}."
-
-				exit 1
-			else
-				echo "Trial Commerce license exists at ${TEMP_DIR}/liferay/data/license/${commerce_license_file_name}."
-			fi
-		fi
-	fi
+	./download_trial_dxp_license.sh ${TEMP_DIR}/liferay $(date "${CURRENT_DATE}" "+%s%3N") ${RELEASE_FILE_NAME}
 }
 
 function install_fix_pack {
