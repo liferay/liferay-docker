@@ -269,8 +269,7 @@ function main {
 		releases.liferay.com/portal/7.0.6-ga7/liferay-ce-portal-tomcat-7.0-ga7-20180507111753223.zip
 		releases.liferay.com/portal/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.7z
 		releases.liferay.com/portal/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.7z
-		releases.liferay.com/portal/7.3.2-ga3/liferay-ce-portal-tomcat-7.3.2-ga3-20200519164024819.7z
-		releases.liferay.com/portal/7.3.3-ga4/liferay-ce-portal-tomcat-7.3.3-ga4-20200701015330959.7z
+		releases.liferay.com/portal/7.3.4-ga5/liferay-ce-portal-tomcat-7.3.4-ga5-20200811154319029.7z
 		files.liferay.com/private/ee/portal/7.3.10-ep3/liferay-dxp-tomcat-7.3.10-ep3-20200522044030318.7z
 		files.liferay.com/private/ee/portal/7.3.10-ep4/liferay-dxp-tomcat-7.3.10-ep4-20200701064016640.7z
 		#releases.liferay.com/portal/snapshot-7.1.x/201902130905/liferay-portal-tomcat-7.1.x.7z
