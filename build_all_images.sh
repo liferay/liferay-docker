@@ -251,6 +251,13 @@ function build_images_dxp_72 {
 		files.liferay.com/private/ee/portal/7.2.10-dxp-6/liferay-dxp-tomcat-7.2.10-dxp-6-20200611120504742.7z \
 		files.liferay.com/private/ee/fix-packs/7.2.10/security-dxp/liferay-security-dxp-6-202004-4-7210.zip \
 		dxp-6-7210,security-dxp-6-202004-4-7210
+
+        build_image \
+                7.2.10-dxp-7 \
+                files.liferay.com/private/ee/portal/7.2.10-dxp-7/liferay-dxp-tomcat-7.2.10-dxp-7-slim-20200727205713822.7z \
+                "" \
+                dxp-7-7210,hotfix-2457-7210 \
+                files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-2457-7210.zip
 }
 
 function main {
