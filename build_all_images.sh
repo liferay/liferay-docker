@@ -277,8 +277,6 @@ function main {
 		releases.liferay.com/portal/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.7z
 		releases.liferay.com/portal/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.7z
 		releases.liferay.com/portal/7.3.4-ga5/liferay-ce-portal-tomcat-7.3.4-ga5-20200811154319029.7z
-		files.liferay.com/private/ee/portal/7.3.10-ep3/liferay-dxp-tomcat-7.3.10-ep3-20200522044030318.7z
-		files.liferay.com/private/ee/portal/7.3.10-ep4/liferay-dxp-tomcat-7.3.10-ep4-20200701064016640.7z
 		files.liferay.com/private/ee/portal/7.3.10-ep5/liferay-dxp-tomcat-7.3.10-ep5-20200812101832977.7z
 		#releases.liferay.com/portal/snapshot-7.1.x/201902130905/liferay-portal-tomcat-7.1.x.7z
 		#releases.liferay.com/portal/snapshot-master/201902131509/liferay-portal-tomcat-master.7z
