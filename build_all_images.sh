@@ -99,6 +99,13 @@ function build_images_dxp_70 {
 		files.liferay.com/private/ee/portal/7.0.10.14/liferay-dxp-digital-enterprise-tomcat-7.0.10.14-sp14-slim-20200708121519436.7z \
 		"" \
 		de-93-7010
+
+	build_image \
+		7.0.10-de-94 \
+		files.liferay.com/private/ee/portal/7.0.10-de-94/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-94-slim-20200824095125278.7z \
+		"" \
+		de-94-7010,hotfix-7623-7010 \
+		files.liferay.com/private/ee/fix-packs/7.0.10/hotfix/liferay-hotfix-7623-7010.zip
 }
 
 function build_images_dxp_71 {
