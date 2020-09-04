@@ -5,8 +5,8 @@ source /usr/local/bin/_liferay_common.sh
 function main {
 	if [ "${LIFERAY_DISABLE_TRIAL_LICENSE}" == "true" ]
 	then
-		rm -f /opt/liferay/deploy/trial-dxp-license-*.xml
 		rm -f /opt/liferay/data/license/trial-commerce-enterprise-license-*.li
+		rm -f /opt/liferay/deploy/trial-dxp-license-*.xml
 	fi
 
 	if [ ! -d ${LIFERAY_MOUNT_DIR} ]
