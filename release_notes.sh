@@ -53,6 +53,7 @@ function generate_release_notes {
 			) >> .releng/docker-image.changelog
 
 			git add .releng/docker-image.changelog
+
 			git commit -m "${NEW_VERSION} change log"
 		fi
 	fi
@@ -60,6 +61,7 @@ function generate_release_notes {
 
 function get_change_log {
 	CURRENT_SHA=$(git log -1 --pretty=%H)
+
 	CHANGE_LOG=$(git log --pretty=%s --grep "^LPS-" ${LATEST_SHA}..${CURRENT_SHA} | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
 
 	if [ "${1}" == "fail-on-change" ] && [ -n "${CHANGE_LOG}" ]
@@ -76,12 +78,15 @@ function get_latest_version {
 	local git_line=$(cat .releng/docker-image.changelog | grep docker.image.git.id | tail -n1)
 
 	LATEST_SHA=${git_line#*=}
+
 	LATEST_VERSION=${git_line#*-}
 	LATEST_VERSION=${LATEST_VERSION%=*}
 
 	VERSION_MAJOR=${LATEST_VERSION%%.*}
+
 	VERSION_MINOR=${LATEST_VERSION#*.}
 	VERSION_MINOR=${VERSION_MINOR%.*}
+
 	VERSION_MICRO=${LATEST_VERSION##*.}
 
 	if [ "${1}" == "get-version" ]
