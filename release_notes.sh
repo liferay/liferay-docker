@@ -38,7 +38,7 @@ function generate_release_notes {
 
 		NEW_VERSION=${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_MICRO}
 
-		echo "Version bump from ${LATEST_VERSION} to ${NEW_VERSION}"
+		echo "Bump version from ${LATEST_VERSION} to ${NEW_VERSION}."
 
 		if [ "${1}" == "commit" ]
 		then
@@ -65,6 +65,7 @@ function get_change_log {
 	if [ "${1}" == "fail-on-change" ] && [ -n "${CHANGE_LOG}" ]
 	then
 		echo "There was a change in the repository which requires regenerating the release notes."
+		echo ""
 		echo "Run \"./release_notes.sh commit\" to commit the updated change log."
 
 		exit 1
