@@ -30,22 +30,22 @@ function generate_release_notes {
 		return
 	fi
 
-	if ( git log --pretty=%s ${LATEST_SHA}..${CURRENT_SHA} | grep "#majorchange" > /dev/null )
+	if ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${CURRENT_SHA} | grep "#majorchange" > /dev/null )
 	then
-		VERSION_MAJOR=$(($VERSION_MAJOR+1))
-		VERSION_MINOR=0
-		VERSION_MICRO=0
-	elif ( git log --pretty=%s ${LATEST_SHA}..${CURRENT_SHA} | grep "#minorchange" > /dev/null )
+		RELEASE_NOTES_VERSION_MAJOR=$(($RELEASE_NOTES_VERSION_MAJOR+1))
+		RELEASE_NOTES_VERSION_MINOR=0
+		RELEASE_NOTES_VERSION_MICRO=0
+	elif ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${CURRENT_SHA} | grep "#minorchange" > /dev/null )
 	then
-		VERSION_MINOR=$(($VERSION_MINOR+1))
-		VERSION_MICRO=0
+		RELEASE_NOTES_VERSION_MINOR=$(($RELEASE_NOTES_VERSION_MINOR+1))
+		RELEASE_NOTES_VERSION_MICRO=0
 	else
-		VERSION_MICRO=$(($VERSION_MICRO+1))
+		RELEASE_NOTES_VERSION_MICRO=$(($RELEASE_NOTES_VERSION_MICRO+1))
 	fi
 
-	local new_version=${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_MICRO}
+	local new_version=${RELEASE_NOTES_VERSION_MAJOR}.${RELEASE_NOTES_VERSION_MINOR}.${RELEASE_NOTES_VERSION_MICRO}
 
-	echo "Bump version from ${LATEST_VERSION} to ${new_version}."
+	echo "Bump version from ${RELEASE_NOTES_LATEST_VERSION} to ${new_version}."
 
 	if [ "${1}" == "commit" ]
 	then
@@ -68,7 +68,7 @@ function generate_release_notes {
 function get_change_log {
 	CURRENT_SHA=$(git log -1 --pretty=%H)
 
-	CHANGE_LOG=$(git log --pretty=%s --grep "^LPS-" ${LATEST_SHA}..${CURRENT_SHA} | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
+	CHANGE_LOG=$(git log --pretty=%s --grep "^LPS-" ${RELEASE_NOTES_LATEST_SHA}..${CURRENT_SHA} | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
 
 	if [ "${1}" == "fail-on-change" ] && [ -n "${CHANGE_LOG}" ]
 	then
@@ -83,21 +83,21 @@ function get_change_log {
 function get_latest_version {
 	local git_line=$(cat .releng/docker-image.changelog | grep docker.image.git.id | tail -n1)
 
-	LATEST_SHA=${git_line#*=}
+	RELEASE_NOTES_LATEST_SHA=${git_line#*=}
 
-	LATEST_VERSION=${git_line#*-}
-	LATEST_VERSION=${LATEST_VERSION%=*}
+	RELEASE_NOTES_LATEST_VERSION=${git_line#*-}
+	RELEASE_NOTES_LATEST_VERSION=${RELEASE_NOTES_LATEST_VERSION%=*}
 
-	VERSION_MAJOR=${LATEST_VERSION%%.*}
+	RELEASE_NOTES_VERSION_MAJOR=${RELEASE_NOTES_LATEST_VERSION%%.*}
 
-	VERSION_MINOR=${LATEST_VERSION#*.}
-	VERSION_MINOR=${VERSION_MINOR%.*}
+	RELEASE_NOTES_VERSION_MINOR=${RELEASE_NOTES_LATEST_VERSION#*.}
+	RELEASE_NOTES_VERSION_MINOR=${RELEASE_NOTES_VERSION_MINOR%.*}
 
-	VERSION_MICRO=${LATEST_VERSION##*.}
+	RELEASE_NOTES_VERSION_MICRO=${RELEASE_NOTES_LATEST_VERSION##*.}
 
 	if [ "${1}" == "get-version" ]
 	then
-		echo ${LATEST_VERSION}
+		echo ${RELEASE_NOTES_LATEST_VERSION}
 
 		exit
 	fi
