@@ -3,16 +3,20 @@
 source ./_common.sh
 
 function check_usage {
-	if [ ! -n "${1}" ]
+	if [ ! -n "${1}" ] ||
+	   [[ ("${1}" != "commit") &&
+		  ("${1}" != "display") &&
+		  ("${1}" != "fail-on-change") &&
+		  ("${1}" != "get-version") ]]
 	then
 		echo "Usage: ${0} <command>"
 		echo ""
 		echo "This script requires the first parameter to be set to one of these options:"
 		echo ""
 		echo "    commit: Writes and commits the necessary version change with the change log"
+		echo "    display: Display the required version number change"
 		echo "    fail-on-change: The script will return an error code if there was a version number changing commit since the last release notes change"
 		echo "    get-version: Returns the current version number"
-		echo "    anything else: Display the required version number change"
 
 		exit 1
 	fi
