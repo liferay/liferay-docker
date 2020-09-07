@@ -21,41 +21,43 @@ function check_usage {
 }
 
 function generate_release_notes {
-	if [ -n "${CHANGE_LOG}" ]
+	if [ ! -n "${CHANGE_LOG}" ]
 	then
-		if ( git log --pretty=%s ${LATEST_SHA}..${CURRENT_SHA} | grep "#majorchange" > /dev/null )
-		then
-			VERSION_MAJOR=$(($VERSION_MAJOR+1))
-			VERSION_MINOR=0
-			VERSION_MICRO=0
-		elif ( git log --pretty=%s ${LATEST_SHA}..${CURRENT_SHA} | grep "#minorchange" > /dev/null )
-		then
-			VERSION_MINOR=$(($VERSION_MINOR+1))
-			VERSION_MICRO=0
-		else
-			VERSION_MICRO=$(($VERSION_MICRO+1))
-		fi
+		return
+	fi
 
-		NEW_VERSION=${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_MICRO}
+	if ( git log --pretty=%s ${LATEST_SHA}..${CURRENT_SHA} | grep "#majorchange" > /dev/null )
+	then
+		VERSION_MAJOR=$(($VERSION_MAJOR+1))
+		VERSION_MINOR=0
+		VERSION_MICRO=0
+	elif ( git log --pretty=%s ${LATEST_SHA}..${CURRENT_SHA} | grep "#minorchange" > /dev/null )
+	then
+		VERSION_MINOR=$(($VERSION_MINOR+1))
+		VERSION_MICRO=0
+	else
+		VERSION_MICRO=$(($VERSION_MICRO+1))
+	fi
 
-		echo "Bump version from ${LATEST_VERSION} to ${NEW_VERSION}."
+	NEW_VERSION=${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_MICRO}
 
-		if [ "${1}" == "commit" ]
-		then
-			(
-				echo ""
-				echo "#"
-				echo "# Liferay Docker Image Version ${NEW_VERSION}"
-				echo "#"
-				echo ""
-				echo "docker.image.change.log-${NEW_VERSION}=${CHANGE_LOG}"
-				echo "docker.image.git.id-${NEW_VERSION}=${CURRENT_SHA}"
-			) >> .releng/docker-image.changelog
+	echo "Bump version from ${LATEST_VERSION} to ${NEW_VERSION}."
 
-			git add .releng/docker-image.changelog
+	if [ "${1}" == "commit" ]
+	then
+		(
+			echo ""
+			echo "#"
+			echo "# Liferay Docker Image Version ${NEW_VERSION}"
+			echo "#"
+			echo ""
+			echo "docker.image.change.log-${NEW_VERSION}=${CHANGE_LOG}"
+			echo "docker.image.git.id-${NEW_VERSION}=${CURRENT_SHA}"
+		) >> .releng/docker-image.changelog
 
-			git commit -m "${NEW_VERSION} change log"
-		fi
+		git add .releng/docker-image.changelog
+
+		git commit -m "${NEW_VERSION} change log"
 	fi
 }
 
