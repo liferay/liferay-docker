@@ -121,8 +121,6 @@ function build_docker_image {
 			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}")
 		else
 			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}-d${docker_image_version}-${TIMESTAMP}")
-			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}-${TIMESTAMP}")
-			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}-d${docker_image_version}")
 			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}")
 		fi
 	done
