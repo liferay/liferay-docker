@@ -1,7 +1,31 @@
 #!/bin/bash
 
+function apply_patch {
+	local patch_file_name=${1}
+
+	if [ -e "/opt/liferay/patching-tool/patch-applied" ]
+	then
+		local installed_patch=$(cat /opt/liferay/patching-tool/patch-applied)
+
+		if [ ! ${patch_file_name} == ${installed_patch} ]
+		then
+			echo ""
+			echo "[LIFERAY] ${patch_file_name} cannot be applied on this container because ${installed_patch} is already installed. Remove ${patch_file_name} from the patching directory to disable this warning message."
+		fi
+	elif ( /opt/liferay/patching-tool/patching-tool.sh apply ${LIFERAY_PATCHING_DIR}/${patch_file_name} )
+	then
+		echo ${patch_file_name} > /opt/liferay/patching-tool/patch-applied
+
+		install_patch_step_2
+	else
+		install_patch_step_1 ${patch_file_name}
+	fi
+}
+
 function install_patch_step_1 {
-	cp ${LIFERAY_PATCHING_DIR}/liferay-*.zip /opt/liferay/patching-tool/patches
+	local patch_file_name=${1}
+
+	cp ${LIFERAY_PATCHING_DIR}/${patch_file_name} /opt/liferay/patching-tool/patches
 
 	/opt/liferay/patching-tool/patching-tool.sh setup
 
@@ -46,25 +70,14 @@ function main {
 		then
 			local patch_file_name=$(basename ${LIFERAY_PATCHING_DIR}/liferay-*.zip)
 
-			if [ -e "/opt/liferay/patching-tool/patch-applied" ]
-			then
-				local installed_patch=$(cat /opt/liferay/patching-tool/patch-applied)
-
-				if [ ! ${patch_file_name} == ${installed_patch} ]
-				then
-					echo ""
-					echo "[LIFERAY] ${patch_file_name} cannot be applied on this container because ${installed_patch} is already installed. Remove ${patch_file_name} from the patching directory to disable this warning message."
-				fi
-			elif ( /opt/liferay/patching-tool/patching-tool.sh apply ${LIFERAY_PATCHING_DIR}/liferay-*.zip )
-			then
-				echo ${patch_file_name} > /opt/liferay/patching-tool/patch-applied
-
-				install_patch_step_2
-			else
-				install_patch_step_1
-			fi
+			apply_patch ${patch_file_name}
 		else
-			install_patch_step_1
+			local patch_file_name=$(basename $(ls -A ${LIFERAY_PATCHING_DIR}/liferay-*.zip 2>/dev/null | sort | tail -n 1))
+
+			echo ""
+			echo "[LIFERAY] There were multiple hotfixes in the patching folder. As only one can be installed, applying the latest one: ${patch_file_name}"
+
+			apply_patch ${patch_file_name}
 		fi
 	fi
 }
