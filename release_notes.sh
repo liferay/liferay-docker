@@ -9,7 +9,7 @@ function check_usage {
 		echo ""
 		echo "This script requires the first parameter to be set to one of these options:"
 		echo ""
-		echo "    commit: Writes and commits the necessary version change with the changelog"
+		echo "    commit: Writes and commits the necessary version change with the change log"
 		echo "    fail-on-change: The script will return an error code if there was a version number changing commit since the last release notes change"
 		echo "    get-version: Returns the current version number"
 		echo "    anything else: Display the required version number change"
@@ -21,7 +21,7 @@ function check_usage {
 }
 
 function generate_release_notes {
-	if [ -n "${CHANGELOG}" ]
+	if [ -n "${CHANGE_LOG}" ]
 	then
 		if ( git log --pretty=%s ${LATEST_SHA}..${CURRENT_SHA} | grep "#majorchange" > /dev/null )
 		then
@@ -48,24 +48,24 @@ function generate_release_notes {
 				echo "# Liferay Docker Image Version ${NEW_VERSION}"
 				echo "#"
 				echo ""
-				echo "docker.image.change.log-${NEW_VERSION}=${CHANGELOG}"
+				echo "docker.image.change.log-${NEW_VERSION}=${CHANGE_LOG}"
 				echo "docker.image.git.id-${NEW_VERSION}=${CURRENT_SHA}"
 			) >> .releng/docker-image.changelog
 
 			git add .releng/docker-image.changelog
-			git commit -m "${NEW_VERSION} changelog"
+			git commit -m "${NEW_VERSION} change log"
 		fi
 	fi
 }
 
-function get_changelog {
+function get_change_log {
 	CURRENT_SHA=$(git log -1 --pretty=%H)
-	CHANGELOG=$(git log --pretty=%s --grep "^LPS-" ${LATEST_SHA}..${CURRENT_SHA} | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
+	CHANGE_LOG=$(git log --pretty=%s --grep "^LPS-" ${LATEST_SHA}..${CURRENT_SHA} | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
 
-	if [ "${1}" == "fail-on-change" ] && [ -n "${CHANGELOG}" ]
+	if [ "${1}" == "fail-on-change" ] && [ -n "${CHANGE_LOG}" ]
 	then
 		echo "There was a change in the repository which requires regenerating the release notes."
-		echo "Run \"./release_notes.sh commit\" to commit the updated changelog."
+		echo "Run \"./release_notes.sh commit\" to commit the updated change log."
 
 		exit 1
 	fi
@@ -96,7 +96,7 @@ function main {
 
 	get_latest_version ${@}
 
-	get_changelog ${@}
+	get_change_log ${@}
 
 	generate_release_notes ${@}
 }
