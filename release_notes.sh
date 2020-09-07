@@ -43,25 +43,25 @@ function generate_release_notes {
 		VERSION_MICRO=$(($VERSION_MICRO+1))
 	fi
 
-	NEW_VERSION=${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_MICRO}
+	local new_version=${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_MICRO}
 
-	echo "Bump version from ${LATEST_VERSION} to ${NEW_VERSION}."
+	echo "Bump version from ${LATEST_VERSION} to ${new_version}."
 
 	if [ "${1}" == "commit" ]
 	then
 		(
 			echo ""
 			echo "#"
-			echo "# Liferay Docker Image Version ${NEW_VERSION}"
+			echo "# Liferay Docker Image Version ${new_version}"
 			echo "#"
 			echo ""
-			echo "docker.image.change.log-${NEW_VERSION}=${CHANGE_LOG}"
-			echo "docker.image.git.id-${NEW_VERSION}=${CURRENT_SHA}"
+			echo "docker.image.change.log-${new_version}=${CHANGE_LOG}"
+			echo "docker.image.git.id-${new_version}=${CURRENT_SHA}"
 		) >> .releng/docker-image.changelog
 
 		git add .releng/docker-image.changelog
 
-		git commit -m "${NEW_VERSION} change log"
+		git commit -m "${new_version} change log"
 	fi
 }
 
