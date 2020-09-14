@@ -75,7 +75,7 @@ function main {
 			local patch_file_name=$(basename $(ls -A ${LIFERAY_PATCHING_DIR}/liferay-*.zip 2>/dev/null | sort | tail -n 1))
 
 			echo ""
-			echo "[LIFERAY] There were multiple hotfixes in the patching folder. As only one can be installed, applying the latest one: ${patch_file_name}"
+			echo "[LIFERAY] There were multiple hotfixes in the patching folder. As only one can be installed, applying the latest one: ${patch_file_name}."
 
 			apply_patch ${patch_file_name}
 		fi
