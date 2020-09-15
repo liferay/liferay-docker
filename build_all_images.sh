@@ -4,6 +4,25 @@ source ./_common.sh
 
 BUILD_ALL_IMAGES_PUSH=${1}
 
+function build_env-os-jvm_image {
+	echo ""
+	echo "Building the env-os-jvm image."
+	echo ""
+
+	{
+		time ./build_env-os-jvm_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
+
+		if [ $? -gt 0 ]
+		then
+			echo "FAILED: env-os-jvm" >> ${LOGS_DIR}/results
+
+			exit 1
+		else
+			echo "SUCCESS: env-os-jvm" >> ${LOGS_DIR}/results
+		fi
+	} | tee ${LOGS_DIR}"/env-os-jvm.log"
+}
+
 function build_image {
 
 	#
@@ -316,6 +335,8 @@ function main {
 		#files.liferay.com/private/ee/portal/snapshot-ee-6.2.x/201808160944/liferay-portal-tomcat-ee-6.2.x.zip
 		#files.liferay.com/private/ee/portal/snapshot-7.1.x-private/201808162051/liferay-portal-tomcat-7.1.x-private.zip
 	)
+
+	build_env-os-jvm_image
 
 	for release_file_url in ${release_file_urls[@]}
 	do

@@ -119,13 +119,13 @@ function get_tomcat_version {
 function make_temp_directory {
 	CURRENT_DATE=$(date)
 
-	TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M")
+	TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M%S")
 
 	TEMP_DIR=temp-${TIMESTAMP}
 
 	mkdir -p ${TEMP_DIR}
 
-	cp -r template/* ${TEMP_DIR}
+	cp -r ${1}template/* ${TEMP_DIR}
 }
 
 function pid_8080 {
