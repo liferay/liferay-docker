@@ -274,6 +274,14 @@ function build_images_dxp_72 {
 		files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-2457-7210.zip
 }
 
+function build_images_dxp_73 {
+	build_image \
+		7.3.10-ep6 \
+		files.liferay.com/private/ee/portal/7.3.10-ep6/liferay-dxp-tomcat-7.3.10-ga1-20200914085138595.7z \
+		"" \
+		""
+}
+
 function main {
 	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && ! ./release_notes.sh fail-on-change
 	then
@@ -296,7 +304,6 @@ function main {
 		releases.liferay.com/portal/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.7z
 		releases.liferay.com/portal/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.7z
 		releases.liferay.com/portal/7.3.4-ga5/liferay-ce-portal-tomcat-7.3.4-ga5-20200811154319029.7z
-		files.liferay.com/private/ee/portal/7.3.10-ep5/liferay-dxp-tomcat-7.3.10-ep5-20200812101832977.7z
 		#releases.liferay.com/portal/snapshot-7.1.x/201902130905/liferay-portal-tomcat-7.1.x.7z
 		#releases.liferay.com/portal/snapshot-master/201902131509/liferay-portal-tomcat-master.7z
 		#files.liferay.com/private/ee/portal/snapshot-ee-6.2.x/201808160944/liferay-portal-tomcat-ee-6.2.x.zip
@@ -311,6 +318,7 @@ function main {
 	build_images_dxp_70
 	build_images_dxp_71
 	build_images_dxp_72
+	build_images_dxp_73
 
 	echo ""
 	echo "Results: "
