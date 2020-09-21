@@ -291,7 +291,7 @@ function build_bundle_images_dxp_73 {
 
 function build_env_os_jvm_image {
 	echo ""
-	echo "Building the env-os-jvm image."
+	echo "Building Docker image env-os-jvm."
 	echo ""
 
 	{
