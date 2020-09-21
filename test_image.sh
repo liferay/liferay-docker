@@ -70,7 +70,7 @@ function prepare_mount {
 
 	mkdir -p ${TEST_DIR}
 
-	cp -r test-template/* ${TEST_DIR}
+	cp -r templates/test/* ${TEST_DIR}
 
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
 	then
