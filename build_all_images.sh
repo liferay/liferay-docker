@@ -318,6 +318,8 @@ function main {
 
 	mkdir -p ${LOGS_DIR}
 
+	build_env_os_jvm_image
+
 	local release_file_urls=(
 		#releases.liferay.com/commerce/2.0.7/liferay-commerce-2.0.7-7.2.x-201912261227.7z
 		files.liferay.com/private/ee/commerce/2.1.2/liferay-commerce-enterprise-2.1.2-7.1.x-202007312031.7z
@@ -335,8 +337,6 @@ function main {
 		#files.liferay.com/private/ee/portal/snapshot-ee-6.2.x/201808160944/liferay-portal-tomcat-ee-6.2.x.zip
 		#files.liferay.com/private/ee/portal/snapshot-7.1.x-private/201808162051/liferay-portal-tomcat-7.1.x-private.zip
 	)
-
-	build_env_os_jvm_image
 
 	for release_file_url in ${release_file_urls[@]}
 	do
