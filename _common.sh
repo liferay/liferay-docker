@@ -125,7 +125,7 @@ function make_temp_directory {
 
 	mkdir -p ${TEMP_DIR}
 
-	cp -r ${1}-template/* ${TEMP_DIR}
+	cp -r ${1}/* ${TEMP_DIR}
 }
 
 function pid_8080 {

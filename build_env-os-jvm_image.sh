@@ -21,7 +21,7 @@ function build_docker_image {
 }
 
 function main {
-	make_temp_directory env-os-jvm
+	make_temp_directory env-os-jvm-template
 
 	build_docker_image
 

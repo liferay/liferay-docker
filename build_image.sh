@@ -184,7 +184,7 @@ function install_fix_pack {
 function main {
 	check_usage ${@}
 
-	make_temp_directory image
+	make_temp_directory image-template
 
 	prepare_temp_directory ${@}
 

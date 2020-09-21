@@ -37,7 +37,7 @@ function check_usage {
 function main {
 	check_usage ${@}
 
-	make_temp_directory image
+	make_temp_directory image-template
 
 	prepare_temp_directory ${@}
 
