@@ -289,13 +289,13 @@ function build_bundle_images_dxp_73 {
 		""
 }
 
-function build_env-os-jvm_image {
+function build_env_os_jvm_image {
 	echo ""
 	echo "Building the env-os-jvm image."
 	echo ""
 
 	{
-		time ./build_env-os-jvm_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
+		time ./build_env_os_jvm_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
 
 		if [ $? -gt 0 ]
 		then
@@ -336,7 +336,7 @@ function main {
 		#files.liferay.com/private/ee/portal/snapshot-7.1.x-private/201808162051/liferay-portal-tomcat-7.1.x-private.zip
 	)
 
-	build_env-os-jvm_image
+	build_env_os_jvm_image
 
 	for release_file_url in ${release_file_urls[@]}
 	do
