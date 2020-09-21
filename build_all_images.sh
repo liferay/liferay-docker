@@ -4,25 +4,6 @@ source ./_common.sh
 
 BUILD_ALL_IMAGES_PUSH=${1}
 
-function build_env-os-jvm_image {
-	echo ""
-	echo "Building the env-os-jvm image."
-	echo ""
-
-	{
-		time ./build_env-os-jvm_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
-
-		if [ $? -gt 0 ]
-		then
-			echo "FAILED: env-os-jvm" >> ${LOGS_DIR}/results
-
-			exit 1
-		else
-			echo "SUCCESS: env-os-jvm" >> ${LOGS_DIR}/results
-		fi
-	} | tee ${LOGS_DIR}"/env-os-jvm.log"
-}
-
 function build_bundle_image {
 
 	#
@@ -306,6 +287,25 @@ function build_bundle_images_dxp_73 {
 		files.liferay.com/private/ee/portal/7.3.10/liferay-dxp-tomcat-7.3.10-ga1-20200924180033074.7z \
 		"" \
 		""
+}
+
+function build_env-os-jvm_image {
+	echo ""
+	echo "Building the env-os-jvm image."
+	echo ""
+
+	{
+		time ./build_env-os-jvm_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
+
+		if [ $? -gt 0 ]
+		then
+			echo "FAILED: env-os-jvm" >> ${LOGS_DIR}/results
+
+			exit 1
+		else
+			echo "SUCCESS: env-os-jvm" >> ${LOGS_DIR}/results
+		fi
+	} | tee ${LOGS_DIR}"/env-os-jvm.log"
 }
 
 function main {
