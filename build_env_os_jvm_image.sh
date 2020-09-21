@@ -6,7 +6,7 @@ function build_docker_image {
 	local image_version=$(./release_notes.sh get-version)
 
 	DOCKER_IMAGE_TAGS=()
-	DOCKER_IMAGE_TAGS+=("liferay/env-os-jvm:d${image_version}-${TIMESTAMP}")
+	DOCKER_IMAGE_TAGS+=("liferay/env-os-jvm:${image_version}-${TIMESTAMP}")
 	DOCKER_IMAGE_TAGS+=("liferay/env-os-jvm")
 
 	docker build \
