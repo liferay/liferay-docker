@@ -9,7 +9,6 @@ function build_docker_image {
 	DOCKER_IMAGE_TAGS+=("liferay/env-os-jvm:d${image_version}-${TIMESTAMP}")
 	DOCKER_IMAGE_TAGS+=("liferay/env-os-jvm")
 
-
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
 		--build-arg LABEL_NAME="Running environment for Liferay bundles - OS, JVM and tools" \
