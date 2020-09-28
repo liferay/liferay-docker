@@ -289,23 +289,23 @@ function build_bundle_images_dxp_73 {
 		""
 }
 
-function build_env_os_jvm_image {
+function build_base_image {
 	echo ""
-	echo "Building Docker image env-os-jvm."
+	echo "Building Docker image base."
 	echo ""
 
 	{
-		time ./build_env_os_jvm_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
+		time ./build_base_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
 
 		if [ $? -gt 0 ]
 		then
-			echo "FAILED: env-os-jvm" >> ${LOGS_DIR}/results
+			echo "FAILED: base" >> ${LOGS_DIR}/results
 
 			exit 1
 		else
-			echo "SUCCESS: env-os-jvm" >> ${LOGS_DIR}/results
+			echo "SUCCESS: base" >> ${LOGS_DIR}/results
 		fi
-	} | tee ${LOGS_DIR}"/env-os-jvm.log"
+	} | tee ${LOGS_DIR}"/base.log"
 }
 
 function main {
@@ -318,7 +318,7 @@ function main {
 
 	mkdir -p ${LOGS_DIR}
 
-	build_env_os_jvm_image
+	build_base_image
 
 	local release_file_urls=(
 		#releases.liferay.com/commerce/2.0.7/liferay-commerce-2.0.7-7.2.x-201912261227.7z

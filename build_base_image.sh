@@ -6,8 +6,8 @@ function build_docker_image {
 	local image_version=$(./release_notes.sh get-version)
 
 	DOCKER_IMAGE_TAGS=()
-	DOCKER_IMAGE_TAGS+=("liferay/env-os-jvm:${image_version}-${TIMESTAMP}")
-	DOCKER_IMAGE_TAGS+=("liferay/env-os-jvm")
+	DOCKER_IMAGE_TAGS+=("liferay/base:${image_version}-${TIMESTAMP}")
+	DOCKER_IMAGE_TAGS+=("liferay/base")
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
@@ -20,7 +20,7 @@ function build_docker_image {
 }
 
 function main {
-	make_temp_directory templates/env-os-jvm
+	make_temp_directory templates/base
 
 	build_docker_image
 
