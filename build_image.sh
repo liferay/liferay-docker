@@ -231,14 +231,14 @@ function prepare_temp_directory {
 function update_patching_tool {
 	if [ -e ${TEMP_DIR}/liferay/patching-tool ]
 	then
-		mv ${TEMP_DIR}/liferay/patching-tool/patches ${TEMP_DIR}/liferay/patching-tool-upgrade-patches
-
-		rm -fr ${TEMP_DIR}/liferay/patching-tool
-
 		local patching_tool_minor_version=$(${TEMP_DIR}/liferay/patching-tool/patching-tool.sh info | grep "patching-tool version")
 
 		patching_tool_minor_version=${patching_tool_minor_version##*patching-tool version: }
 		patching_tool_minor_version=${patching_tool_minor_version%.*}
+
+		mv ${TEMP_DIR}/liferay/patching-tool/patches ${TEMP_DIR}/liferay/patching-tool-upgrade-patches
+
+		rm -fr ${TEMP_DIR}/liferay/patching-tool
 
 		download ${TEMP_DIR}/LATEST-${patching_tool_minor_version}.txt files.liferay.com/private/ee/fix-packs/patching-tool/LATEST-${patching_tool_minor_version}.txt
 
