@@ -4,6 +4,25 @@ source ./_common.sh
 
 BUILD_ALL_IMAGES_PUSH=${1}
 
+function build_base_image {
+	echo ""
+	echo "Building Docker image base."
+	echo ""
+
+	{
+		time ./build_base_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
+
+		if [ $? -gt 0 ]
+		then
+			echo "FAILED: base" >> ${LOGS_DIR}/results
+
+			exit 1
+		else
+			echo "SUCCESS: base" >> ${LOGS_DIR}/results
+		fi
+	} | tee ${LOGS_DIR}"/base.log"
+}
+
 function build_bundle_image {
 
 	#
@@ -287,25 +306,6 @@ function build_bundle_images_dxp_73 {
 		files.liferay.com/private/ee/portal/7.3.10/liferay-dxp-tomcat-7.3.10-ga1-20200924180033074.7z \
 		"" \
 		""
-}
-
-function build_base_image {
-	echo ""
-	echo "Building Docker image base."
-	echo ""
-
-	{
-		time ./build_base_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
-
-		if [ $? -gt 0 ]
-		then
-			echo "FAILED: base" >> ${LOGS_DIR}/results
-
-			exit 1
-		else
-			echo "SUCCESS: base" >> ${LOGS_DIR}/results
-		fi
-	} | tee ${LOGS_DIR}"/base.log"
 }
 
 function main {
