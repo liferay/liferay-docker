@@ -309,8 +309,8 @@ function build_bundle_images_dxp_72 {
 
 function build_bundle_images_dxp_73 {
 	build_bundle_image \
-		7.3.10-rc2 \
-		files.liferay.com/private/ee/portal/7.3.10/liferay-dxp-tomcat-7.3.10-ga1-20200924180033074.7z \
+		7.3.10-rc3 \
+		files.liferay.com/private/ee/portal/7.3.10/liferay-dxp-tomcat-7.3.10-ga1-20200930160533946.7z \
 		"" \
 		""
 }
