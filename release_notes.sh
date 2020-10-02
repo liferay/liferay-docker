@@ -126,9 +126,9 @@ function print_version {
 		else
 			echo ${RELEASE_NOTES_LATEST_VERSION}
 		fi
-	fi
 
-	exit
+		exit
+	fi
 }
 
 main ${@}
