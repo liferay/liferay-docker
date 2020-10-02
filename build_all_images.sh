@@ -5,6 +5,22 @@ source ./_common.sh
 BUILD_ALL_IMAGES_PUSH=${1}
 
 function build_base_image {
+	local base_image_version=$(docker image inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' liferay/base:latest)
+	local current_version=$(./release_notes.sh get-version)
+
+	if [[ ${base_image_version} == ${current_version} ]]
+	then
+		return
+	fi
+
+	docker pull liferay/base:latest
+	base_image_version=$(docker image inspect --format '{{ index .Config.Labels "org.label-schema.version"}}' liferay/base:latest)
+
+	if [[ ${base_image_version} == ${current_version} ]]
+	then
+		return
+	fi
+
 	echo ""
 	echo "Building Docker image base."
 	echo ""

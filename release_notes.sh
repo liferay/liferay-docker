@@ -30,38 +30,23 @@ function generate_release_notes {
 		return
 	fi
 
-	if ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${CURRENT_SHA} | grep "#majorchange" > /dev/null )
-	then
-		RELEASE_NOTES_VERSION_MAJOR=$(($RELEASE_NOTES_VERSION_MAJOR+1))
-		RELEASE_NOTES_VERSION_MINOR=0
-		RELEASE_NOTES_VERSION_MICRO=0
-	elif ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${CURRENT_SHA} | grep "#minorchange" > /dev/null )
-	then
-		RELEASE_NOTES_VERSION_MINOR=$(($RELEASE_NOTES_VERSION_MINOR+1))
-		RELEASE_NOTES_VERSION_MICRO=0
-	else
-		RELEASE_NOTES_VERSION_MICRO=$(($RELEASE_NOTES_VERSION_MICRO+1))
-	fi
-
-	local new_version=${RELEASE_NOTES_VERSION_MAJOR}.${RELEASE_NOTES_VERSION_MINOR}.${RELEASE_NOTES_VERSION_MICRO}
-
-	echo "Bump version from ${RELEASE_NOTES_LATEST_VERSION} to ${new_version}."
+	echo "Bump version from ${RELEASE_NOTES_LATEST_VERSION} to ${RELEASE_NOTES_NEW_VERSION}."
 
 	if [ "${1}" == "commit" ]
 	then
 		(
 			echo ""
 			echo "#"
-			echo "# Liferay Docker Image Version ${new_version}"
+			echo "# Liferay Docker Image Version ${RELEASE_NOTES_NEW_VERSION}"
 			echo "#"
 			echo ""
-			echo "docker.image.change.log-${new_version}=${CHANGE_LOG}"
-			echo "docker.image.git.id-${new_version}=${CURRENT_SHA}"
+			echo "docker.image.change.log-${RELEASE_NOTES_NEW_VERSION}=${CHANGE_LOG}"
+			echo "docker.image.git.id-${RELEASE_NOTES_NEW_VERSION}=${CURRENT_SHA}"
 		) >> .releng/docker-image.changelog
 
 		git add .releng/docker-image.changelog
 
-		git commit -m "${new_version} change log"
+		git commit -m "${RELEASE_NOTES_NEW_VERSION} change log"
 	fi
 }
 
@@ -94,13 +79,28 @@ function get_latest_version {
 	RELEASE_NOTES_VERSION_MINOR=${RELEASE_NOTES_VERSION_MINOR%.*}
 
 	RELEASE_NOTES_VERSION_MICRO=${RELEASE_NOTES_LATEST_VERSION##*.}
+}
 
-	if [ "${1}" == "get-version" ]
+function get_new_version {
+	if [ ! -n "${CHANGE_LOG}" ]
 	then
-		echo ${RELEASE_NOTES_LATEST_VERSION}
-
-		exit
+		return
 	fi
+
+	if ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${CURRENT_SHA} | grep "#majorchange" > /dev/null )
+	then
+		RELEASE_NOTES_VERSION_MAJOR=$(($RELEASE_NOTES_VERSION_MAJOR+1))
+		RELEASE_NOTES_VERSION_MINOR=0
+		RELEASE_NOTES_VERSION_MICRO=0
+	elif ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${CURRENT_SHA} | grep "#minorchange" > /dev/null )
+	then
+		RELEASE_NOTES_VERSION_MINOR=$(($RELEASE_NOTES_VERSION_MINOR+1))
+		RELEASE_NOTES_VERSION_MICRO=0
+	else
+		RELEASE_NOTES_VERSION_MICRO=$(($RELEASE_NOTES_VERSION_MICRO+1))
+	fi
+
+	RELEASE_NOTES_NEW_VERSION=${RELEASE_NOTES_VERSION_MAJOR}.${RELEASE_NOTES_VERSION_MINOR}.${RELEASE_NOTES_VERSION_MICRO}
 }
 
 function main {
@@ -110,7 +110,25 @@ function main {
 
 	get_change_log ${@}
 
+	get_new_version ${@}
+
+	print_version ${@}
+
 	generate_release_notes ${@}
+}
+
+function print_version {
+	if [ "${1}" == "get-version" ]
+	then
+		if [ -n "${CHANGE_LOG}" ]
+		then
+			echo ${RELEASE_NOTES_NEW_VERSION}-snapshot
+		else
+			echo ${RELEASE_NOTES_LATEST_VERSION}
+		fi
+	fi
+
+	exit
 }
 
 main ${@}
