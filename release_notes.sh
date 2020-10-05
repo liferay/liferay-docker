@@ -25,7 +25,7 @@ function check_usage {
 }
 
 function generate_release_notes {
-	if [ ! -n "${CHANGE_LOG}" ]
+	if [ ! -n "${RELEASE_NOTES_CHANGE_LOG}" ]
 	then
 		return
 	fi
@@ -40,8 +40,8 @@ function generate_release_notes {
 			echo "# Liferay Docker Image Version ${RELEASE_NOTES_NEW_VERSION}"
 			echo "#"
 			echo ""
-			echo "docker.image.change.log-${RELEASE_NOTES_NEW_VERSION}=${CHANGE_LOG}"
-			echo "docker.image.git.id-${RELEASE_NOTES_NEW_VERSION}=${CURRENT_SHA}"
+			echo "docker.image.change.log-${RELEASE_NOTES_NEW_VERSION}=${RELEASE_NOTES_CHANGE_LOG}"
+			echo "docker.image.git.id-${RELEASE_NOTES_NEW_VERSION}=${RELEASE_NOTES_CURRENT_SHA}"
 		) >> .releng/docker-image.changelog
 
 		git add .releng/docker-image.changelog
@@ -51,11 +51,11 @@ function generate_release_notes {
 }
 
 function get_change_log {
-	CURRENT_SHA=$(git log -1 --pretty=%H)
+	RELEASE_NOTES_CURRENT_SHA=$(git log -1 --pretty=%H)
 
-	CHANGE_LOG=$(git log --pretty=%s --grep "^LPS-" ${RELEASE_NOTES_LATEST_SHA}..${CURRENT_SHA} | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
+	RELEASE_NOTES_CHANGE_LOG=$(git log --pretty=%s --grep "^LPS-" ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
 
-	if [ "${1}" == "fail-on-change" ] && [ -n "${CHANGE_LOG}" ]
+	if [ "${1}" == "fail-on-change" ] && [ -n "${RELEASE_NOTES_CHANGE_LOG}" ]
 	then
 		echo "There was a change in the repository which requires regenerating the release notes."
 		echo ""
@@ -82,17 +82,17 @@ function get_latest_version {
 }
 
 function get_new_version {
-	if [ ! -n "${CHANGE_LOG}" ]
+	if [ ! -n "${RELEASE_NOTES_CHANGE_LOG}" ]
 	then
 		return
 	fi
 
-	if ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${CURRENT_SHA} | grep "#majorchange" > /dev/null )
+	if ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | grep "#majorchange" > /dev/null )
 	then
 		RELEASE_NOTES_VERSION_MAJOR=$(($RELEASE_NOTES_VERSION_MAJOR+1))
 		RELEASE_NOTES_VERSION_MINOR=0
 		RELEASE_NOTES_VERSION_MICRO=0
-	elif ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${CURRENT_SHA} | grep "#minorchange" > /dev/null )
+	elif ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | grep "#minorchange" > /dev/null )
 	then
 		RELEASE_NOTES_VERSION_MINOR=$(($RELEASE_NOTES_VERSION_MINOR+1))
 		RELEASE_NOTES_VERSION_MICRO=0
@@ -120,7 +120,7 @@ function main {
 function print_version {
 	if [ "${1}" == "get-version" ]
 	then
-		if [ -n "${CHANGE_LOG}" ]
+		if [ -n "${RELEASE_NOTES_CHANGE_LOG}" ]
 		then
 			echo ${RELEASE_NOTES_NEW_VERSION}-snapshot
 		else
