@@ -1,0 +1,7 @@
+Steps to get liferay portal docker image:
+1. Install liferay-portal-7.0-ga6 from internet.
+2. Extract it and keep it in particular directory.
+3. Create dockerfile (as mentioned above).
+4. Open CMD and go to this particular directory location and write command "docker build -t liferayimage:latest ." , this will build your liferay docker image.
+5. Now run the container from built image by writing this command in CMD "dokcer run -it -p 8080:8080 liferayimage:latest". This will take few time.
+6. Now you can access it by writing "http://localhot:8080" in your browser
