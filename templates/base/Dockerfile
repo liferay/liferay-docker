@@ -5,12 +5,13 @@ ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
+ARG LIFERAY_UID
 
 RUN apk --no-cache add bash curl nss tomcat-native tree ttf-dejavu zulu11-jdk=11.0.5-r3
 
 COPY scripts/* /usr/local/bin/
 
-RUN adduser -D -h /home/liferay liferay && addgroup liferay liferay
+RUN adduser -D -h /home/liferay liferay -u ${LIFERAY_UID:-100} && addgroup liferay liferay
 
 COPY --chown=liferay:liferay home/.bashrc /home/liferay/
 
