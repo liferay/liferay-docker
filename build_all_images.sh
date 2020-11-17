@@ -148,6 +148,13 @@ function build_bundle_images_dxp_70 {
 		"" \
 		de-95-7010,hotfix-7683-7010 \
 		files.liferay.com/private/ee/fix-packs/7.0.10/hotfix/liferay-hotfix-7683-7010.zip
+
+	build_bundle_image \
+		7.0.10-de-96,7.0.10-sp15 \
+		files.liferay.com/private/ee/portal/7.0.10.15/liferay-dxp-digital-enterprise-tomcat-7.0.10.15-sp15-slim-20201027133245711.7z \
+		"" \
+		de-96-7010,hotfix-7777-7010 \
+		files.liferay.com/private/ee/fix-packs/7.0.10/hotfix/liferay-hotfix-7777-7010.zip
 }
 
 function build_bundle_images_dxp_71 {
