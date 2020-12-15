@@ -6,7 +6,7 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-RUN apk --no-cache add bash curl nss tomcat-native tree ttf-dejavu zulu11-jdk=11.0.5-r3
+RUN apk --no-cache add bash curl ghostscript imagemagick nss tomcat-native tree ttf-dejavu zulu11-jdk=11.0.5-r3
 
 COPY scripts/* /usr/local/bin/
 
