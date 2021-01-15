@@ -342,8 +342,8 @@ function build_bundle_images_dxp_73 {
 		7.3.10-ga1 \
 		files.liferay.com/private/ee/portal/7.3.10/liferay-dxp-tomcat-7.3.10-ga1-20200930160533946.7z \
 		"" \
-		hotfix-178-7310 \
-		files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-178-7310.zip
+		hotfix-234-7310 \
+		files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-234-7310.zip
 }
 
 function main {
