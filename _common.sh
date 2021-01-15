@@ -22,6 +22,7 @@ function configure_tomcat {
 
 function date {
 	export LC_ALL=en_US.UTF-8
+	export TZ=America/Los_Angeles
 
 	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
