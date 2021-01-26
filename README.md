@@ -8,5 +8,5 @@ The documentation for the Liferay Docker images is available on the Docker Hub p
  - [liferay/portal](https://hub.docker.com/r/liferay/portal)
 
 # Issue tracking
-	
+
 If you have issues with the Docker Image scripts, please report an [LPS ticket](https://issues.liferay.com/browse/LPS) in Liferay's issue management system with the component `Docker Images`.
