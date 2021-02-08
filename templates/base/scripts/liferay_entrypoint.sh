@@ -23,9 +23,43 @@ function main {
 
 	execute_scripts /usr/local/liferay/scripts/pre-startup
 
-	start_liferay.sh
+	set +e
+
+	trap 'handle_termination' TERM INT
+
+	start_liferay.sh &
+
+	wait_termination
+
+	exit_code=$?
 
 	execute_scripts /usr/local/liferay/scripts/post-shutdown
+
+	exit $exit_code
+}
+
+function handle_termination {
+	if [ $liferay_pid ]
+	then
+		kill -TERM $liferay_pid
+	else
+		term_kill_needed="yes"
+	fi
+}
+
+function wait_termination {
+	liferay_pid=$!
+
+	if [ $term_kill_needed ]
+	then
+		kill -TERM $liferay_pid
+	fi
+
+	wait $liferay_pid
+
+	trap - TERM INT
+
+	wait $liferay_pid
 }
 
 main
