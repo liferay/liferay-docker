@@ -2,6 +2,10 @@
 
 source /usr/local/bin/_liferay_common.sh
 
+function handle_TERM {
+	kill -TERM ${START_LIFERAY_PID}
+}
+
 function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."
 	echo ""
@@ -23,41 +27,22 @@ function main {
 
 	execute_scripts /usr/local/liferay/scripts/pre-startup
 
-	trap 'handle_termination' TERM INT
-
-	start_liferay.sh &
-
-	wait_termination
-
-	exit_code=$?
+	start_liferay
 
 	execute_scripts /usr/local/liferay/scripts/post-shutdown
 
-	exit $exit_code
 }
 
-function handle_termination {
-	if [ $liferay_pid ]
-	then
-		kill -TERM $liferay_pid
-	else
-		term_kill_needed="yes"
-	fi
-}
+function start_liferay {
+	trap 'handle_TERM' TERM INT
 
-function wait_termination {
-	liferay_pid=$!
+	start_liferay.sh &
 
-	if [ $term_kill_needed ]
-	then
-		kill -TERM $liferay_pid
-	fi
+	START_LIFERAY_PID=$!
 
-	wait $liferay_pid
+	wait ${START_LIFERAY_PID}
 
 	trap - TERM INT
-
-	wait $liferay_pid
 }
 
 main
