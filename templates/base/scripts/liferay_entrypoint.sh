@@ -23,8 +23,6 @@ function main {
 
 	execute_scripts /usr/local/liferay/scripts/pre-startup
 
-	set +e
-
 	trap 'handle_termination' TERM INT
 
 	start_liferay.sh &
