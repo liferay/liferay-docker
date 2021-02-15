@@ -55,7 +55,7 @@ function main {
 
 		unzip -d /opt/liferay -q ${LIFERAY_PATCHING_DIR}/patching-tool-*
 
-		/opt/liferay/patching-tool/patching-tool.sh auto-discovery
+		/opt/liferay/patching-tool/patching-tool.sh auto-discovery ../tomcat/
 
 		rm -fr /opt/liferay/patching-tool/patches
 
