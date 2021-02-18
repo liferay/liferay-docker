@@ -34,6 +34,8 @@ function main {
 }
 
 function start_liferay {
+	set +e
+
 	trap 'handle_TERM' TERM INT
 
 	start_liferay.sh &
