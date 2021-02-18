@@ -45,6 +45,8 @@ function start_liferay {
 	wait ${START_LIFERAY_PID}
 
 	trap - TERM INT
+
+	wait ${START_LIFERAY_PID}
 }
 
 main
