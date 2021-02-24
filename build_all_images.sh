@@ -373,6 +373,12 @@ function build_bundle_images_dxp_73 {
 		""
 }
 
+function build_bundle_images_dxp_74 {
+	build_bundle_image \
+		7.4.10-ep1-nightly \
+		files.liferay.com/private/ee/portal/nightly/liferay-portal-tomcat-7.4.10.7z
+}
+
 function main {
 	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && ! ./release_notes.sh fail-on-change
 	then
