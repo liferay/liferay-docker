@@ -418,6 +418,7 @@ function main {
 	build_bundle_images_dxp_71
 	build_bundle_images_dxp_72
 	build_bundle_images_dxp_73
+	build_bundle_images_dxp_74
 
 	echo ""
 	echo "Results: "
