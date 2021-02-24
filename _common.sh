@@ -51,7 +51,7 @@ function date {
 function download {
 	local file_name=${1}
 
-	if [ -e ${file_name} ]
+	if [ -e ${file_name} ] && [[ ${file_url} != */nightly/* ]]
 	then
 		return
 	fi
