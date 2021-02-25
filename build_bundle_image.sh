@@ -159,7 +159,7 @@ function check_usage {
 function download_trial_dxp_license {
 	rm -fr ${TEMP_DIR}/liferay/data/license
 
-	./download_trial_dxp_license.sh ${TEMP_DIR}/liferay $(date "${CURRENT_DATE}" "+%s%3N") ${RELEASE_FILE_NAME}
+	./download_trial_dxp_license.sh ${TEMP_DIR}/liferay $(date "${CURRENT_DATE}" "+%s000") ${RELEASE_FILE_NAME}
 }
 
 function install_fix_pack {

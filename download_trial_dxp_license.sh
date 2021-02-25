@@ -19,12 +19,13 @@ function main {
 
 			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$(expr 1000 \* 60 \* 60 \* 24 \* 90)&startDate=${license_start_date}&owner=docker%40liferay.com\" > ${license_dir}/deploy/${license_file_name}"
 
-			sed -i "s/\\\n//g" ${license_dir}/deploy/${license_file_name}
-			sed -i "s/\\\t//g" ${license_dir}/deploy/${license_file_name}
-			sed -i "s/\"<?xml/<?xml/" ${license_dir}/deploy/${license_file_name}
-			sed -i "s/license>\"/license>/" ${license_dir}/deploy/${license_file_name}
-			sed -i 's/\\"/\"/g' ${license_dir}/deploy/${license_file_name}
-			sed -i 's/\\\//\//g' ${license_dir}/deploy/${license_file_name}
+			cat ${license_dir}/deploy/${license_file_name} |
+				sed "s/\\\n//g" |
+				sed "s/\\\t//g" |
+				sed "s/\"<?xml/<?xml/" |
+				sed "s/license>\"/license>/" |
+				sed 's/\\"/\"/g' |
+				sed 's/\\\//\//g' > ${license_dir}/deploy/${license_file_name}
 
 			if [ ! -e ${license_dir}/deploy/${license_file_name} ]
 			then
