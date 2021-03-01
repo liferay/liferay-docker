@@ -64,9 +64,9 @@ function main {
 				echo "Trial Commerce license does not exist at ${license_dir}/data/license/${commerce_license_file_name}."
 
 				exit 1
-			elif ! grep -q "docker@liferay.com" ${license_dir}/deploy/${commerce_license_file_name}
+			elif ! grep -q "docker@liferay.com" ${license_dir}/data/license/${commerce_license_file_name}
 			then
-				echo "Invalid trial DXP license exists at ${license_dir}/deploy/${commerce_license_file_name}."
+				echo "Invalid trial DXP license exists at ${license_dir}/data/license/${commerce_license_file_name}."
 
 				exit 1
 			else
