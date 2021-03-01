@@ -66,13 +66,27 @@ function build_bundle_image {
 	{
 		LIFERAY_DOCKER_FIX_PACK_URL=${3} LIFERAY_DOCKER_RELEASE_FILE_URL=${2} LIFERAY_DOCKER_RELEASE_VERSION=${1} LIFERAY_DOCKER_TEST_HOTFIX_URL=${5} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${4} time ./build_bundle_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
 
-		if [ $? -gt 0 ]
+		local build_bundle_image_exit_code=$?
+
+		if [ ${build_bundle_image_exit_code} -gt 0 ]
 		then
 			echo "FAILED: ${build_id}" >> ${LOGS_DIR}/results
+
+			if [ ${build_bundle_image_exit_code} -eq 4 ]
+			then
+				echo "License failure while building image ${build_id}." > ${LOGS_DIR}/license-failure
+			fi
 		else
 			echo "SUCCESS: ${build_id}" >> ${LOGS_DIR}/results
 		fi
 	} | tee ${LOGS_DIR}/${build_id}".log"
+
+	if [ -e ${LOGS_DIR}/license-failure ]
+	then
+		echo "Existing as there was a license failure."
+
+		exit 4
+	fi
 }
 
 function build_bundle_images_dxp_70 {
