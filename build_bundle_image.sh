@@ -239,6 +239,13 @@ function update_patching_tool {
 		patching_tool_minor_version=${patching_tool_minor_version##*patching-tool version: }
 		patching_tool_minor_version=${patching_tool_minor_version%.*}
 
+		if ( ! echo ${patching_tool_minor_version} | grep -e '[0-9]*[.][0-9]*' >/dev/null )
+		then
+			echo "Patching Tool update is skipped as it's not a 2.0+ version or the bundle did not include a properly configured Patching Tool."
+
+			return
+		fi
+
 		mv ${TEMP_DIR}/liferay/patching-tool/patches ${TEMP_DIR}/liferay/patching-tool-upgrade-patches
 
 		rm -fr ${TEMP_DIR}/liferay/patching-tool
