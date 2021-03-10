@@ -380,7 +380,7 @@ function build_bundle_images_dxp_72 {
 
 	build_bundle_image \
 		7.2.10-dxp-11,7.2.10-sp4 \
-		files.liferay.com/private/ee/portal/7.2.10-dxp-11/liferay-dxp-tomcat-7.2.10-dxp-11-slim-20210302164507253.7z \
+		files.liferay.com/private/ee/portal/7.2.10.4/liferay-dxp-tomcat-7.2.10.4-sp4-slim-20210302130725158.7z \
 		"" \
 		dxp-11-7210,hotfix-4327-7210 \
 		files.liferay.com/private/ee/fix-packs/7.2.10/hotfix/liferay-hotfix-4327-7210.zip
