@@ -30,7 +30,7 @@ function install_patch_step_1 {
 
 	/opt/liferay/patching-tool/patching-tool.sh setup
 
-	if ( /opt/liferay/patching-tool/patching-tool.sh install )
+	if ( /opt/liferay/patching-tool/patching-tool.sh install -force )
 	then
 		install_patch_step_2
 	fi
