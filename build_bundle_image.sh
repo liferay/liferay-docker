@@ -159,7 +159,7 @@ function check_usage {
 function download_trial_dxp_license {
 	rm -fr ${TEMP_DIR}/liferay/data/license
 
-	if ( ! ./download_trial_dxp_license.sh ${TEMP_DIR}/liferay $(date "${CURRENT_DATE}" "+%s000") ${RELEASE_FILE_NAME} )
+	if (! ./download_trial_dxp_license.sh ${TEMP_DIR}/liferay $(date "${CURRENT_DATE}" "+%s000") ${RELEASE_FILE_NAME})
 	then
 		exit 4
 	fi

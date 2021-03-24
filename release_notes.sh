@@ -87,12 +87,12 @@ function get_new_version {
 		return
 	fi
 
-	if ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | grep "#majorchange" > /dev/null )
+	if (git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | grep "#majorchange" > /dev/null)
 	then
 		RELEASE_NOTES_VERSION_MAJOR=$(($RELEASE_NOTES_VERSION_MAJOR+1))
 		RELEASE_NOTES_VERSION_MINOR=0
 		RELEASE_NOTES_VERSION_MICRO=0
-	elif ( git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | grep "#minorchange" > /dev/null )
+	elif (git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | grep "#minorchange" > /dev/null)
 	then
 		RELEASE_NOTES_VERSION_MINOR=$(($RELEASE_NOTES_VERSION_MINOR+1))
 		RELEASE_NOTES_VERSION_MICRO=0
