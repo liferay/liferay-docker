@@ -250,9 +250,8 @@ function update_patching_tool {
 
 		rm -fr ${TEMP_DIR}/liferay/patching-tool
 
-		download ${TEMP_DIR}/LATEST-${patching_tool_minor_version}.txt files.liferay.com/private/ee/fix-packs/patching-tool/LATEST-${patching_tool_minor_version}.txt
 
-		local latest_patching_tool_version=$(cat ${TEMP_DIR}/LATEST-${patching_tool_minor_version}.txt)
+		local latest_patching_tool_version=$(./patching_tool_version.sh ${patching_tool_minor_version})
 
 		echo ""
 		echo "Updating Patching Tool to version ${latest_patching_tool_version}."
