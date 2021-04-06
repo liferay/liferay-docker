@@ -5,9 +5,9 @@ source ./_common.sh
 function check_usage {
 	if [ ! -n "${1}" ]
 	then
-		echo "Usage: ${0} <patching-tool major.minor version>"
+		echo "Usage: ${0} <version>"
 		echo ""
-		echo "This script requires the first parameter to be set to the major.minor version of Patching Tool (e.g. 2.0)"
+		echo "This script requires the first parameter to be set to the major and minor version of the Patching Tool (e.g. 2.0)."
 
 		exit 1
 	fi
