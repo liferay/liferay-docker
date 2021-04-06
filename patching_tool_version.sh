@@ -13,12 +13,6 @@ function check_usage {
 	fi
 }
 
-function main {
-	check_usage ${@}
-
-	get_full_version ${@}
-}
-
 function get_full_version {
 	if [ "${1}" == "2.0" ]
 	then
@@ -31,6 +25,12 @@ function get_full_version {
 
 		exit 2
 	fi
+}
+
+function main {
+	check_usage ${@}
+
+	get_full_version ${@}
 }
 
 main ${@}
