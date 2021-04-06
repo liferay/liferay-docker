@@ -16,10 +16,10 @@ function check_usage {
 function main {
 	check_usage ${@}
 
-	print_version ${@}
+	get_full_version ${@}
 }
 
-function print_version {
+function get_full_version {
 	if [ "${1}" == "2.0" ]
 	then
 		echo "2.0.15"
@@ -27,7 +27,7 @@ function print_version {
 	then
 		echo "3.0.20"
 	else
-		echo "Unknown major version."
+		echo "Unable to get full version for ${1}."
 
 		exit 2
 	fi
