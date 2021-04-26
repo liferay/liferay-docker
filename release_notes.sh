@@ -53,7 +53,7 @@ function generate_release_notes {
 function get_change_log {
 	RELEASE_NOTES_CURRENT_SHA=$(git log -1 --pretty=%H)
 
-	RELEASE_NOTES_CHANGE_LOG=$(git log --pretty=%s --grep "^LPS-" ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
+	RELEASE_NOTES_CHANGE_LOG=$(git log --pretty=%s --grep "^DOCKER-" ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
 
 	if [ "${1}" == "fail-on-change" ] && [ -n "${RELEASE_NOTES_CHANGE_LOG}" ]
 	then
