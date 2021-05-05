@@ -9,4 +9,4 @@ The documentation for the Liferay Docker images is available on the Docker Hub p
 
 # Issue tracking
 
-If you have issues with the Docker Image scripts, please report an [LPS ticket](https://issues.liferay.com/browse/LPS) in Liferay's issue management system with the component `Docker Images`.
+If you have issues with the Docker Image scripts, please report an [DOCKER ticket](https://issues.liferay.com/browse/DOCKER) in Liferay's issue management system.
