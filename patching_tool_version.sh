@@ -19,7 +19,7 @@ function get_full_version {
 		echo "2.0.15"
 	elif [ "${1}" == "3.0" ]
 	then
-		echo "3.0.20"
+		echo "3.0.22"
 	else
 		echo "Unable to get full version for ${1}."
 
