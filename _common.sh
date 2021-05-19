@@ -52,6 +52,11 @@ function download {
 	local file_name=${1}
 	local file_url=${2}
 
+	if [ -e ${file_name} ] && [[ ${file_url} != */latest/* ]]
+	then
+		return
+	fi
+
 	if [ -e ${file_name} ] && [[ ${file_url} != */nightly/* ]]
 	then
 		return
