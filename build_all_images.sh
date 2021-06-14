@@ -460,11 +460,11 @@ function build_bundle_images_dxp_73 {
 
 function build_bundle_images_dxp_74 {
 	build_bundle_image \
-		7.4.10-ep2 \
+		7.4.11-ep2 \
 		files.liferay.com/private/ee/portal/7.4.11-ep2/liferay-dxp-tomcat-7.4.11-ep2-20210609203546147.7z
 
 	build_bundle_image \
-		7.4.10-ep3-nightly \
+		7.4.12-ep3-nightly \
 		files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.10.7z
 }
 
