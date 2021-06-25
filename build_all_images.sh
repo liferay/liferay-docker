@@ -456,6 +456,13 @@ function build_bundle_images_dxp_73 {
 		"" \
 		dxp-1-7310,hotfix-699-7310 \
 		files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-699-7310.zip
+
+	build_bundle_image \
+		7.3.10-dxp-2 \
+		files.liferay.com/private/ee/portal/7.3.10-dxp-2/liferay-dxp-tomcat-7.3.10-dxp-2-slim-20210623003016661.7z \
+		"" \
+		dxp-2-7310,hotfix-1736-7310 \
+		files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-1736-7310.zip
 }
 
 function build_bundle_images_dxp_74 {
