@@ -5,6 +5,7 @@ source ./_common.sh
 function build_docker_image {
 	local docker_image_name
 	local label_name
+	local tomcat_version=$(get_tomcat_version ${TEMP_DIR}/liferay)
 
 	if [[ ${RELEASE_FILE_NAME} == *-commerce-enterprise-* ]]
 	then
@@ -131,6 +132,7 @@ function build_docker_image {
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 		--build-arg LABEL_VERSION="${label_version}" \
+		--build-arg TOMCAT_VERSION="${tomcat_version}" \
 		$(get_docker_image_tags_args ${DOCKER_IMAGE_TAGS[@]}) \
 		${TEMP_DIR}
 }

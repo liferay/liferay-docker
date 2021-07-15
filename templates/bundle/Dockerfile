@@ -5,6 +5,8 @@ ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
+ARG TOMCAT_VERSION
+
 
 COPY --chown=liferay:liferay liferay /opt/liferay
 
@@ -41,6 +43,7 @@ LABEL org.label-schema.vcs-ref="${LABEL_VCS_REF}"
 LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
+LABEL org.label-schema.tomcat.version="${TOMCAT_VERSION}"
 
 USER liferay:liferay
 
