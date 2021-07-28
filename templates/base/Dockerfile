@@ -11,7 +11,7 @@ RUN apk --no-cache upgrade
 
 COPY scripts/* /usr/local/bin/
 
-RUN adduser -D -h /home/liferay liferay && addgroup liferay liferay
+RUN adduser -D -g 1000 -h /home/liferay -u 1000 liferay && addgroup liferay liferay
 
 COPY --chown=liferay:liferay home/.bashrc /home/liferay/
 
