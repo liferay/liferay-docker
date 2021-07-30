@@ -31,9 +31,9 @@ EXPOSE 8000 8009 8080 11311
 
 HEALTHCHECK \
 	--interval=1m \
-	--start-period=2m \
+	--start-period=1m \
 	--timeout=1m \
-	CMD /usr/local/bin/thread_dump_probe.sh -d "http://localhost" -f "/c/portal/layout" -p 8080 -t 20
+	CMD curl -fsS "http://localhost:8080/c/portal/layout" || exit 1
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
