@@ -62,6 +62,7 @@ function main {
 	if [ ${ret} -gt 1 ]
 	then
 		echo -e "${curl_output}"
+
 		kill -3 $(ps -ef | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{ print $1 }')
 	fi
 
@@ -69,17 +70,17 @@ function main {
 }
 
 function print_help {
-	echo "Usage: ${0} -d <domain> -f <path> -c <content> -t <timeout> -p <port>"
+	echo "Usage: ${0} -d <domain> -c <content> -f <path> -p <port> -t <timeout> "
 	echo ""
 	echo "The script can be configured by using these parameters:"
 	echo ""
 	echo "	-d (required): the domain the site is responding to with valid content."
+    echo "  -c (optional, default: skipping to check): checks if the site response contains this string."
 	echo "	-f (optional, default: /): the path to check on the domain."
-	echo "	-c (optional, default: skipping to check): checks if the site response contains this string."
+	echo "  -p (optional, default: 8080): the http port to check."
 	echo "	-t (optional, default: 20): timeout in seconds."
-	echo "	-p (optional, default: 8080): the http port to check."
 	echo ""
-	echo "Example: ${0} -d \"http://localhost\" -t 20 -p 8080 -f \"/c/portal/layout\""
+	echo "Example: ${0} -d \"http://localhost\" -f \"/c/portal/layout\"" -p 8080 -t 20
 
 	exit 2
 }

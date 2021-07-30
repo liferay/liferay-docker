@@ -33,7 +33,7 @@ HEALTHCHECK \
 	--interval=1m \
 	--start-period=2m \
 	--timeout=1m \
-	CMD /usr/local/bin/thread_dump_probe.sh -d "http://localhost" -t 20 -p 8080 -f "/c/portal/layout"
+	CMD /usr/local/bin/thread_dump_probe.sh -d "http://localhost" -f "/c/portal/layout" -p 8080 -t 20
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
