@@ -248,7 +248,7 @@ function update_patching_tool {
 
 		if (! echo ${patching_tool_minor_version} | grep -e '[0-9]*[.][0-9]*' >/dev/null)
 		then
-			echo "Patching Tool update is skipped as it's not a 2.0+ version or the bundle did not include a properly configured Patching Tool."
+			echo "Patching Tool update is skipped as it's not a 1.0+ version or the bundle did not include a properly configured Patching Tool."
 
 			return
 		fi
@@ -258,7 +258,15 @@ function update_patching_tool {
 		rm -fr ${TEMP_DIR}/liferay/patching-tool
 
 
-		local latest_patching_tool_version=$(./patching_tool_version.sh ${patching_tool_minor_version})
+		local latest_patching_tool_version
+		latest_patching_tool_version=$(./patching_tool_version.sh ${patching_tool_minor_version})
+		local latest_patching_tool_ret=$?
+
+		if [ ${latest_patching_tool_ret} -gt 0 ]
+		then
+			echo "${latest_patching_tool_version}"
+			exit $latest_patching_tool_ret
+		fi
 
 		echo ""
 		echo "Updating Patching Tool to version ${latest_patching_tool_version}."
