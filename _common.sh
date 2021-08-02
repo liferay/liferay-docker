@@ -154,6 +154,7 @@ function push_docker_images {
 	then
 		for docker_image_tag in "${DOCKER_IMAGE_TAGS[@]}"
 		do
+			docker sign trust ${docker_image_tag}
 			docker push ${docker_image_tag}
 		done
 	fi
