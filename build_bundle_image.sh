@@ -264,7 +264,8 @@ function update_patching_tool {
 
 		if [ ${latest_patching_tool_ret} -gt 0 ]
 		then
-			echo "${latest_patching_tool_version}"
+			echo "./patching_tool_version.sh returned with an error: ${latest_patching_tool_version}"
+
 			exit $latest_patching_tool_ret
 		fi
 
