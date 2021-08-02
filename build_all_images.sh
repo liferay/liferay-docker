@@ -25,18 +25,16 @@ function build_base_image {
 	echo "Building Docker image base."
 	echo ""
 
-	{
-		time ./build_base_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
+	time ./build_base_image.sh ${BUILD_ALL_IMAGES_PUSH} | tee -a "${LOGS_DIR}"/base.log
 
-		if [ $? -gt 0 ]
-		then
-			echo "FAILED: base" >> ${LOGS_DIR}/results
+	if [ ${PIPESTATUS[0]} -gt 0 ]
+	then
+		echo "FAILED: base" >> ${LOGS_DIR}/results
 
-			exit 1
-		else
-			echo "SUCCESS: base" >> ${LOGS_DIR}/results
-		fi
-	} | tee ${LOGS_DIR}"/base.log"
+		exit 1
+	else
+		echo "SUCCESS: base" >> ${LOGS_DIR}/results
+	fi
 }
 
 function build_bundle_image {
@@ -63,30 +61,26 @@ function build_bundle_image {
 	echo "Building Docker image ${build_id} based on ${2}."
 	echo ""
 
-	{
-		LIFERAY_DOCKER_FIX_PACK_URL=${3} LIFERAY_DOCKER_RELEASE_FILE_URL=${2} LIFERAY_DOCKER_RELEASE_VERSION=${1} LIFERAY_DOCKER_TEST_HOTFIX_URL=${5} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${4} time ./build_bundle_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1
+	LIFERAY_DOCKER_FIX_PACK_URL=${3} LIFERAY_DOCKER_RELEASE_FILE_URL=${2} LIFERAY_DOCKER_RELEASE_VERSION=${1} LIFERAY_DOCKER_TEST_HOTFIX_URL=${5} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${4} time ./build_bundle_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1 | tee ${LOGS_DIR}/${build_id}".log"
 
-		local build_bundle_image_exit_code=$?
+	local build_bundle_image_exit_code=${PIPESTATUS[0]}
 
-		if [ ${build_bundle_image_exit_code} -gt 0 ]
-		then
-			echo "FAILED: ${build_id}" >> ${LOGS_DIR}/results
-
-			if [ ${build_bundle_image_exit_code} -eq 4 ]
-			then
-				echo "Detected a license failure while building image ${build_id}." > ${LOGS_DIR}/license-failure
-			fi
-		else
-			echo "SUCCESS: ${build_id}" >> ${LOGS_DIR}/results
-		fi
-	} | tee ${LOGS_DIR}/${build_id}".log"
-
-	if [ -e ${LOGS_DIR}/license-failure ]
+	if [ ${build_bundle_image_exit_code} -gt 0 ]
 	then
-		echo "There is an existing license failure."
+		echo "FAILED: ${build_id}" >> ${LOGS_DIR}/results
 
-		exit 4
+		if [ ${build_bundle_image_exit_code} -eq 4 ]
+		then
+			echo "Detected a license failure while building image ${build_id}." > ${LOGS_DIR}/license-failure
+			echo "There is an existing license failure."
+
+			exit 4
+		fi
+	else
+		echo "SUCCESS: ${build_id}" >> ${LOGS_DIR}/results
 	fi
+
+	exit 1
 }
 
 function build_bundle_images_dxp_70 {
