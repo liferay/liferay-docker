@@ -259,15 +259,21 @@ function update_patching_tool {
 
 
 		local latest_patching_tool_version
+
+		#
+		# Set the latest patching tool version in a separate line to get the
+		# proper exit code.
+		#
+
 		latest_patching_tool_version=$(./patching_tool_version.sh ${patching_tool_minor_version})
 
-		local exit_status=$?
+		local exit_code=$?
 
-		if [ ${exit_status} -gt 0 ]
+		if [ ${exit_code} -gt 0 ]
 		then
 			echo "./patching_tool_version.sh returned with an error: ${latest_patching_tool_version}"
 
-			exit ${exit_status}
+			exit ${exit_code}
 		fi
 
 		echo ""
