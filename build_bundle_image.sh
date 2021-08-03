@@ -258,7 +258,8 @@ function update_patching_tool {
 		rm -fr ${TEMP_DIR}/liferay/patching-tool
 
 
-		local latest_patching_tool_version=$(./patching_tool_version.sh ${patching_tool_minor_version})
+		local latest_patching_tool_version
+		latest_patching_tool_version=$(./patching_tool_version.sh ${patching_tool_minor_version})
 
 		local exit_status=$?
 
