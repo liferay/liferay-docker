@@ -7,40 +7,53 @@ function check_usage {
 
 	while [ "${1}" != "" ]
 	do
-		case $1 in
-			-d)
-				shift
-				DOMAIN=${1}
-				;;
-			-f)
-				shift
-				FILE_PATH=${1}
-				;;
-			-p)
-				shift
-				PORT=${1}
-				;;
-			-t)
-				shift
-				TIMEOUT=${1}
-				;;
+		case ${1} in
 			-c)
 				shift
+
 				CONTENT=${1}
+
+				;;
+			-d)
+				shift
+
+				DOMAIN=${1}
+
 				;;
 			-h)
 				print_help
+
+				;;
+			-f)
+				shift
+
+				FILE_PATH=${1}
+
+				;;
+			-p)
+				shift
+
+				PORT=${1}
+
+				;;
+			-t)
+				shift
+
+				TIMEOUT=${1}
+
 				;;
 			*)
 				print_help
+
 				;;
 		esac
+
 		shift
 	done
 
 	if [ ! -n "${DOMAIN}" ]
 	then
-		echo "Please set the domain parameter."
+		echo "The domain argument is required."
 
 		exit 1
 	fi
@@ -49,36 +62,39 @@ function check_usage {
 function main {
 	check_usage "${@}"
 
-	local curl_output
-	curl_output=$(curl --show-error -s --url ${DOMAIN}:${PORT} -m ${TIMEOUT} ${DOMAIN}:${PORT}${FILE_PATH})
-	local ret=$?
+	local curl_content
+
+	curl_content=$(curl -m ${TIMEOUT} -s --show-error --url ${DOMAIN}:${PORT} ${DOMAIN}:${PORT}${FILE_PATH})
+
+	local exit_code=$?
 
 	if [ -n "${CONTENT}" ]
 	then
-		curl_output=$(echo "${curl_output}" | grep ${CONTENT})
-		ret=$?
+		curl_content=$(echo "${curl_content}" | grep ${CONTENT})
+
+		exit_code=$?
 	fi
 
-	if [ ${ret} -gt 1 ]
+	if [ ${exit_code} -gt 1 ]
 	then
-		echo -e "${curl_output}"
+		echo -e "${curl_content}"
 
-		kill -3 $(ps -ef | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{ print $1 }')
+		kill -3 $(ps -ef | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{print $1}')
 	fi
 
-	exit ${ret}
+	exit ${exit_code}
 }
 
 function print_help {
-	echo "Usage: ${0} -d <domain> -c <content> -f <path> -p <port> -t <timeout> "
+	echo "Usage: ${0} -c <content> -d <domain> -f <path> -p <port> -t <timeout>"
 	echo ""
-	echo "The script can be configured by using these parameters:"
+	echo "The script can be configured with the following arguments:"
 	echo ""
-	echo "	-d (required): the domain the site is responding to with valid content."
-    echo "  -c (optional, default: skipping to check): checks if the site response contains this string."
-	echo "	-f (optional, default: /): the path to check on the domain."
-	echo "  -p (optional, default: 8080): the http port to check."
-	echo "	-t (optional, default: 20): timeout in seconds."
+    echo "  -c (optional): Content that the response must contain"
+	echo "	-d (required): Domain of the URL to check"
+	echo "	-f (optional): Path of the URL to check"
+	echo "  -p (optional): HTTP port of the URL to check"
+	echo "	-t (optional): Timeout in seconds"
 	echo ""
 	echo "Example: ${0} -d \"http://localhost\" -f \"/c/portal/layout\"" -p 8080 -t 20
 
