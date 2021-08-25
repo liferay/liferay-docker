@@ -31,9 +31,9 @@ function get_full_version {
 }
 
 function main {
-	check_usage ${@}
+	check_usage "${@}"
 
-	get_full_version ${@}
+	get_full_version "${@}"
 }
 
-main ${@}
+main "${@}"

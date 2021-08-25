@@ -1,0 +1,33 @@
+# These rules are disabled due to either their collision with our rules or by being misleading/outright breaking the code.
+
+# Use -z instead of ! -n.
+# https://github.com/koalaman/shellcheck/wiki/SC2236
+disable=SC2236
+
+# Not following source files
+# https://github.com/koalaman/shellcheck/wiki/SC1091
+disable=SC1091
+
+# Declare and assign separately to avoid masking return values.
+# https://github.com/koalaman/shellcheck/wiki/SC2155
+disable=SC2155
+
+# Check exit code directly with e.g. 'if mycmd;', not indirectly with $?.
+# https://github.com/koalaman/shellcheck/wiki/SC2181
+disable=SC2181
+
+# Quote this to prevent word splitting.
+# https://github.com/koalaman/shellcheck/wiki/SC2046
+disable=SC2046
+
+# ShellCheck can't follow non-constant source. Use a directive to specify location.
+# https://github.com/koalaman/shellcheck/wiki/SC1090
+disable=SC1090
+
+# Verify use (or export if used externally).
+# https://github.com/koalaman/shellcheck/wiki/SC2034
+disable=SC2034
+
+# Use grep -q instead of comparing.
+# https://github.com/koalaman/shellcheck/wiki/SC2143
+disable=SC2143

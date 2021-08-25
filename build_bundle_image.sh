@@ -87,7 +87,7 @@ function build_docker_image {
 		release_branch=${release_branch%-private*}
 		release_branch=${release_branch##*-}
 
-		local release_hash=$(cat ${TEMP_DIR}/liferay/.githash)
+		local release_hash=$(cat "${TEMP_DIR}/liferay/.githash")
 
 		release_hash=${release_hash:0:7}
 
@@ -128,12 +128,12 @@ function build_docker_image {
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
 		--build-arg LABEL_NAME="${label_name}" \
-		--build-arg LABEL_TOMCAT_VERSION=$(get_tomcat_version ${TEMP_DIR}/liferay) \
+		--build-arg LABEL_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 		--build-arg LABEL_VERSION="${label_version}" \
-		$(get_docker_image_tags_args ${DOCKER_IMAGE_TAGS[@]}) \
-		${TEMP_DIR}
+		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
+		"${TEMP_DIR}"
 }
 
 function check_usage {
@@ -158,9 +158,9 @@ function check_usage {
 }
 
 function download_trial_dxp_license {
-	rm -fr ${TEMP_DIR}/liferay/data/license
+	rm -fr "${TEMP_DIR}/liferay/data/license"
 
-	if (! ./download_trial_dxp_license.sh ${TEMP_DIR}/liferay $(date "${CURRENT_DATE}" "+%s000") ${RELEASE_FILE_NAME})
+	if (! ./download_trial_dxp_license.sh "${TEMP_DIR}/liferay" $(date "${CURRENT_DATE}" "+%s000") "${RELEASE_FILE_NAME}")
 	then
 		exit 4
 	fi
@@ -173,28 +173,28 @@ function install_fix_pack {
 
 		FIX_PACK_FILE_NAME=${fix_pack_url##*/}
 
-		download downloads/fix-packs/${FIX_PACK_FILE_NAME} ${fix_pack_url}
+		download downloads/fix-packs/"${FIX_PACK_FILE_NAME}" "${fix_pack_url}"
 
-		cp downloads/fix-packs/${FIX_PACK_FILE_NAME} ${TEMP_DIR}/liferay/patching-tool/patches
+		cp "downloads/fix-packs/${FIX_PACK_FILE_NAME}" "${TEMP_DIR}/liferay/patching-tool/patches"
 
-		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh install
-		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh separate temp
+		"${TEMP_DIR}/liferay/patching-tool/patching-tool.sh" install
+		"${TEMP_DIR}/liferay/patching-tool/patching-tool.sh" separate temp
 
-		rm -fr ${TEMP_DIR}/liferay/osgi/state/*
-		rm -f ${TEMP_DIR}/liferay/patching-tool/patches/*
+		rm -fr "${TEMP_DIR}/liferay/osgi/state/"*
+		rm -f "${TEMP_DIR}/liferay/patching-tool/patches/"*
 	fi
 }
 
 function main {
-	check_usage ${@}
+	check_usage "${@}"
 
 	make_temp_directory templates/bundle
 
-	prepare_temp_directory ${@}
+	prepare_temp_directory "${@}"
 
 	update_patching_tool
 
-	install_fix_pack ${@}
+	install_fix_pack "${@}"
 
 	prepare_tomcat
 
@@ -204,7 +204,7 @@ function main {
 
 	test_docker_image
 
-	push_docker_images ${1}
+	push_docker_images "${1}"
 
 	clean_up_temp_directory
 }
@@ -220,22 +220,22 @@ function prepare_temp_directory {
 	download_dir=${download_dir#*private/ee/}
 	download_dir=downloads/${download_dir}
 
-	download ${download_dir}/${RELEASE_FILE_NAME} ${LIFERAY_DOCKER_RELEASE_FILE_URL}
+	download "${download_dir}/${RELEASE_FILE_NAME}" "${LIFERAY_DOCKER_RELEASE_FILE_URL}"
 
 	if [[ ${RELEASE_FILE_NAME} == *.7z ]]
 	then
-		7z x -O${TEMP_DIR} ${download_dir}/${RELEASE_FILE_NAME} || exit 3
+		7z x -O"${TEMP_DIR}" "${download_dir}/${RELEASE_FILE_NAME}" || exit 3
 	else
-		unzip -q ${download_dir}/${RELEASE_FILE_NAME} -d ${TEMP_DIR}  || exit 3
+		unzip -d "${TEMP_DIR}" -q "${download_dir}/${RELEASE_FILE_NAME}"  || exit 3
 	fi
 
-	mv ${TEMP_DIR}/liferay-* ${TEMP_DIR}/liferay
+	mv "${TEMP_DIR}/liferay-"* "${TEMP_DIR}/liferay"
 }
 
 function update_patching_tool {
-	if [ -e ${TEMP_DIR}/liferay/patching-tool ]
+	if [ -e "${TEMP_DIR}/liferay/patching-tool" ]
 	then
-		local patching_tool_minor_version=$(${TEMP_DIR}/liferay/patching-tool/patching-tool.sh info | grep "patching-tool version")
+		local patching_tool_minor_version=$("${TEMP_DIR}/liferay/patching-tool/patching-tool.sh info" | grep "patching-tool version")
 
 		if [ ! -n "${patching_tool_minor_version}" ]
 		then
@@ -253,9 +253,9 @@ function update_patching_tool {
 			return
 		fi
 
-		mv ${TEMP_DIR}/liferay/patching-tool/patches ${TEMP_DIR}/liferay/patching-tool-upgrade-patches
+		mv "${TEMP_DIR}/liferay/patching-tool/patches" "${TEMP_DIR}/liferay/patching-tool-upgrade-patches"
 
-		rm -fr ${TEMP_DIR}/liferay/patching-tool
+		rm -fr "${TEMP_DIR}/liferay/patching-tool"
 
 
 		local latest_patching_tool_version
@@ -280,16 +280,16 @@ function update_patching_tool {
 		echo "Updating Patching Tool to version ${latest_patching_tool_version}."
 		echo ""
 
-		download downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${latest_patching_tool_version}.zip
+		download "downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip" "files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${latest_patching_tool_version}.zip"
 
-		unzip -d ${TEMP_DIR}/liferay -q downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip
+		unzip -d "${TEMP_DIR}/liferay" -q "downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip"
 
-		${TEMP_DIR}/liferay/patching-tool/patching-tool.sh auto-discovery
+		"${TEMP_DIR}/liferay/patching-tool/patching-tool.sh" auto-discovery
 
-		rm -fr ${TEMP_DIR}/liferay/patching-tool/patches
+		rm -fr "${TEMP_DIR}/liferay/patching-tool/patches"
 
-		mv ${TEMP_DIR}/liferay/patching-tool-upgrade-patches ${TEMP_DIR}/liferay/patching-tool/patches
+		mv "${TEMP_DIR}/liferay/patching-tool-upgrade-patches" "${TEMP_DIR}/liferay/patching-tool/patches"
 	fi
 }
 
-main ${@}
+main "${@}"

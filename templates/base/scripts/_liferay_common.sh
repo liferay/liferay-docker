@@ -1,18 +1,19 @@
 #!/bin/bash
 
 function execute_scripts {
-	if [ -e ${1} ] && [[ $(ls -A ${1}) ]]
+	if [ -e "${1}" ] && [[ $(ls -A "${1}") ]]
 	then
 		echo "[LIFERAY] Executing scripts in ${1}:"
 
-		for SCRIPT_NAME in $(ls -1 ${1} | sort)
+		for SCRIPT_PATH in $(find "${1}" -maxdepth 1 -type f | sort)
 		do
 			echo ""
-			echo "[LIFERAY] Executing ${SCRIPT_NAME}."
+			echo "[LIFERAY] Executing ${SCRIPT_PATH}."
 
-			source ${1}/${SCRIPT_NAME}
+			source "${SCRIPT_PATH}"
 		done
 
 		echo ""
 	fi
 }
+

@@ -64,13 +64,13 @@ function main {
 
 	local curl_content
 
-	curl_content=$(curl -m ${TIMEOUT} -s --show-error --url ${DOMAIN}:${PORT} ${DOMAIN}:${PORT}${FILE_PATH})
+	curl_content=$(curl -m "${TIMEOUT}" -s --show-error --url "${DOMAIN}:${PORT}" "${DOMAIN}:${PORT}${FILE_PATH}")
 
 	local exit_code=$?
 
 	if [ -n "${CONTENT}" ]
 	then
-		curl_content=$(echo "${curl_content}" | grep ${CONTENT})
+		curl_content=$(echo "${curl_content}" | grep" ${CONTENT}")
 
 		exit_code=$?
 	fi
@@ -79,7 +79,7 @@ function main {
 	then
 		echo -e "${curl_content}"
 
-		kill -3 $(ps -ef | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{print $1}')
+		kill -3 $(pgrep -f "org.apache.catalina.startup.Bootstrap")
 	fi
 
 	exit ${exit_code}
@@ -90,7 +90,7 @@ function print_help {
 	echo ""
 	echo "The script can be configured with the following arguments:"
 	echo ""
-    echo "  -c (optional): Content that the response must contain"
+	echo "  -c (optional): Content that the response must contain"
 	echo "	-d (required): Domain of the URL to check"
 	echo "	-f (optional): Path of the URL to check"
 	echo "  -p (optional): HTTP port of the URL to check"

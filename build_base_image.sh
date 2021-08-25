@@ -15,8 +15,8 @@ function build_docker_image {
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 		--build-arg LABEL_VERSION="${image_version}" \
-		$(get_docker_image_tags_args ${DOCKER_IMAGE_TAGS[@]}) \
-		${TEMP_DIR} || exit 1
+		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
+		"${TEMP_DIR}" || exit 1
 }
 
 function main {
@@ -24,9 +24,9 @@ function main {
 
 	build_docker_image
 
-	push_docker_images ${1}
+	push_docker_images "${1}"
 
 	clean_up_temp_directory
 }
 
-main ${@}
+main "${@}"

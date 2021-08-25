@@ -7,9 +7,9 @@ function main {
 
 	if [ "${LIFERAY_JPDA_ENABLED}" == "true" ]
 	then
-		exec ${LIFERAY_HOME}/tomcat/bin/catalina.sh jpda run
+		exec "${LIFERAY_HOME}/tomcat/bin/catalina.sh" jpda run
 	else
-		exec ${LIFERAY_HOME}/tomcat/bin/catalina.sh run
+		exec "${LIFERAY_HOME}/tomcat/bin/catalina.sh" run
 	fi
 }
 

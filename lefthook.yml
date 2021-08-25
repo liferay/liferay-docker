@@ -1,0 +1,9 @@
+# On `git push` lefthook will run spelling and links check for all of the changed files
+pre-commit:
+  commands:
+    "shellchecker":
+      glob: "*.sh" # glob filter
+      run: validation/shellcheck {staged_files}
+    "beautysh":
+      glob: "*.sh" # glob filter
+      run: validation/beautysh.py --argument-order --check --english --force-function-style fnonly --function-order --indent-size 2 --tab {staged_files}

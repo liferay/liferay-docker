@@ -24,14 +24,14 @@ function check_usage {
 function clean_up_test_directory {
 	if [ "${TEST_RESULT}" -eq 0 ]
 	then
-		rm -fr ${TEST_DIR}
+		rm -fr "${TEST_DIR}"
 	fi
 }
 
 function log_test_result {
 	local test_result=SUCCESS
 
-	if [ ${1} -gt 0 ]
+	if [ "${1}" -gt 0 ]
 	then
 		TEST_RESULT=1
 
@@ -40,7 +40,7 @@ function log_test_result {
 
 	echo "[${FUNCNAME[1]}] ${test_result}"
 
-	return ${1}
+	return "${1}"
 }
 
 function main {
@@ -62,34 +62,34 @@ function main {
 
 	clean_up_test_directory
 
-	exit ${TEST_RESULT}
+	exit "${TEST_RESULT}"
 }
 
 function prepare_mount {
 	TEST_DIR=temp-test-$(date "$(date)" "+%Y%m%d%H%M")
 
-	mkdir -p ${TEST_DIR}
+	mkdir -p "${TEST_DIR}"
 
-	cp -r templates/test/* ${TEST_DIR}
+	cp -r templates/test/* "${TEST_DIR}"
 
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
 	then
-		mkdir -p ${TEST_DIR}/patching
+		mkdir -p "${TEST_DIR}/patching"
 
 		local hotfix_file_name=${LIFERAY_DOCKER_TEST_HOTFIX_URL##*/}
 
-		download downloads/hotfix/${hotfix_file_name} ${LIFERAY_DOCKER_TEST_HOTFIX_URL}
+		download "downloads/hotfix/${hotfix_file_name}" "${LIFERAY_DOCKER_TEST_HOTFIX_URL}"
 
-		cp downloads/hotfix/${hotfix_file_name} ${TEST_DIR}/patching
+		cp "downloads/hotfix/${hotfix_file_name}" "${TEST_DIR}/patching"
 	fi
 }
 
 function start_container {
 	echo "Starting container from image ${LIFERAY_DOCKER_IMAGE_ID}."
 
-	CONTAINER_ID=`docker run -d -p 8080 -v "${PWD}/${TEST_DIR}":/mnt/liferay ${LIFERAY_DOCKER_IMAGE_ID}`
+	CONTAINER_ID=$(docker run -d -p 8080 -v "${PWD}/${TEST_DIR}":/mnt/liferay "${LIFERAY_DOCKER_IMAGE_ID}")
 
-	CONTAINER_PORT_HTTP=`docker port ${CONTAINER_ID} 8080/tcp`
+	CONTAINER_PORT_HTTP=$(docker port "${CONTAINER_ID}" 8080/tcp)
 
 	CONTAINER_PORT_HTTP=${CONTAINER_PORT_HTTP##*:}
 
@@ -99,12 +99,12 @@ function start_container {
 function stop_container {
 	echo "Stopping container."
 
-	docker kill ${CONTAINER_ID} > /dev/null
-	docker rm ${CONTAINER_ID} > /dev/null
+	docker kill "${CONTAINER_ID}" > /dev/null
+	docker rm "${CONTAINER_ID}" > /dev/null
 }
 
 function test_docker_image_files {
-	local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp`
+	local content=$(curl --fail --silent "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp")
 
 	if [ "${content}" == "TEST" ]
 	then
@@ -117,10 +117,10 @@ function test_docker_image_files {
 function test_docker_image_fix_pack_installed {
 	if [ -n "${LIFERAY_DOCKER_TEST_INSTALLED_PATCHES}" ]
 	then
-		local correct_fix_pack=$(echo ${LIFERAY_DOCKER_TEST_INSTALLED_PATCHES} | tr -d [:space:])
-		local output=$(docker exec -it ${CONTAINER_ID} /opt/liferay/patching-tool/patching-tool.sh info | grep "Currently installed patches:")
+		local correct_fix_pack=$(echo "${LIFERAY_DOCKER_TEST_INSTALLED_PATCHES}" | tr -d '[:space:]')
+		local output=$(docker exec -it "${CONTAINER_ID}" /opt/liferay/patching-tool/patching-tool.sh info | grep "Currently installed patches:")
 
-		local installed_fix_pack=$(echo ${output##*: } | tr -d [:space:])
+		local installed_fix_pack=$(echo "${output##*: }" | tr -d '[:space:]')
 
 		if [ "${correct_fix_pack}" == "${installed_fix_pack}" ]
 		then
@@ -136,7 +136,7 @@ function test_docker_image_fix_pack_installed {
 function test_docker_image_hotfix_installed {
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
 	then
-		local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/`
+		local content=$(curl --fail --silent "http://localhost:${CONTAINER_PORT_HTTP}/")
 
 		if [[ "${content}" == *"Hotfix installation on the Docker image was successful."* ]]
 		then
@@ -148,7 +148,7 @@ function test_docker_image_hotfix_installed {
 }
 
 function test_docker_image_scripts_1 {
-	local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_1.jsp`
+	local content=$(curl --fail --silent "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_1.jsp")
 
 	if [ "${content}" == "TEST1" ]
 	then
@@ -159,7 +159,7 @@ function test_docker_image_scripts_1 {
 }
 
 function test_docker_image_scripts_2 {
-	local content=`curl --fail --silent http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_2.jsp`
+	local content=$(curl --fail --silent "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_2.jsp")
 
 	if [ "${content}" == "TEST2" ]
 	then
@@ -176,7 +176,7 @@ function test_health_status {
 	do
 		echo -en "."
 
-		local status=`docker inspect --format="{{json .State.Health.Status}}" ${CONTAINER_ID}`
+		local status=$(docker inspect --format="{{json .State.Health.Status}}" "${CONTAINER_ID}")
 
 		if [ "${status}" == "\"healthy\"" ]
 		then
@@ -195,4 +195,4 @@ function test_health_status {
 	log_test_result 1
 }
 
-main ${@}
+main "${@}"

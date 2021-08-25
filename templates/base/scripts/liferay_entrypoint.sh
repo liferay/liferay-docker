@@ -3,7 +3,7 @@
 source /usr/local/bin/_liferay_common.sh
 
 function handle_kill_TERM {
-	kill -TERM ${START_LIFERAY_PID}
+	kill -TERM "${START_LIFERAY_PID}"
 }
 
 function main {
