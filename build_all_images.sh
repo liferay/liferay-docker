@@ -72,6 +72,7 @@ function build_bundle_image {
 		if [ ${build_bundle_image_exit_code} -eq 4 ]
 		then
 			echo "Detected a license failure while building image ${build_id}." > ${LOGS_DIR}/license-failure
+
 			echo "There is an existing license failure."
 
 			exit 4
