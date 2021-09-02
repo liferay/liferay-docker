@@ -28,19 +28,24 @@ function clean_up_test_directory {
 	fi
 }
 
-function log_test_result {
-	local test_result=SUCCESS
+function log_failed_test_result {
+	TEST_RESULT=1
 
-	if [ "${1}" -gt 0 ]
+	if [ -n "$1" ]
 	then
-		TEST_RESULT=1
-
-		test_result=FAILED
+		echo "[$1] FAILED"
+	else
+		echo "[${FUNCNAME[1]}] FAILED"
 	fi
+}
 
-	echo "[${FUNCNAME[1]}] ${test_result}"
-
-	return "${1}"
+function log_success_test_result {
+	if [ -n "$1" ]
+	then
+		echo "[$1] SUCCESS"
+	else
+		echo "[${FUNCNAME[1]}] SUCCESS"
+	fi
 }
 
 function main {
@@ -104,14 +109,7 @@ function stop_container {
 }
 
 function test_docker_image_files {
-	local content=$(curl --fail --silent "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp")
-
-	if [ "${content}" == "TEST" ]
-	then
-		log_test_result 0
-	else
-		log_test_result 1
-	fi
+	test_page "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp" "TEST"
 }
 
 function test_docker_image_fix_pack_installed {
@@ -124,49 +122,29 @@ function test_docker_image_fix_pack_installed {
 
 		if [ "${correct_fix_pack}" == "${installed_fix_pack}" ]
 		then
-			log_test_result 0
+			log_success_test_result
 		else
-			log_test_result 1
+			log_failed_test_result
+			echo "The installed patch (${correct_fix_pack}) does not match the patch version retrived from the patching-tool in the container (${installed_fix_pack})"
 		fi
 	else
-		log_test_result 0
+		log_success_test_result
 	fi
 }
 
 function test_docker_image_hotfix_installed {
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
 	then
-		local content=$(curl --fail --silent "http://localhost:${CONTAINER_PORT_HTTP}/")
-
-		if [[ "${content}" == *"Hotfix installation on the Docker image was successful."* ]]
-		then
-			log_test_result 0
-		else
-			log_test_result 1
-		fi
+		test_page "http://localhost:${CONTAINER_PORT_HTTP}/" "Hotfix installation on the Docker image was successful."
 	fi
 }
 
 function test_docker_image_scripts_1 {
-	local content=$(curl --fail --silent "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_1.jsp")
-
-	if [ "${content}" == "TEST1" ]
-	then
-		log_test_result 0
-	else
-		log_test_result 1
-	fi
+	test_page "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_1.jsp" "TEST1"
 }
 
 function test_docker_image_scripts_2 {
-	local content=$(curl --fail --silent "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_2.jsp")
-
-	if [ "${content}" == "TEST2" ]
-	then
-		log_test_result 0
-	else
-		log_test_result 1
-	fi
+	test_page "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_2.jsp" "TEST2"
 }
 
 function test_health_status {
@@ -182,7 +160,7 @@ function test_health_status {
 		then
 			echo ""
 
-			log_test_result 0
+			log_success_test_result
 
 			return
 		fi
@@ -192,7 +170,29 @@ function test_health_status {
 
 	echo ""
 
-	log_test_result 1
+	log_failed_test_result
+	echo "Container health status is: ${status}"
+}
+
+function test_page {
+	local content
+	content=$(curl --fail -s --show-error "${1}")
+	local exit_code=$?
+
+	if [ $exit_code -gt 0 ]
+	then
+		log_failed_test_result "${FUNCNAME[1]}"
+		echo "curl exited with code: ${exit_code}."
+		echo "${content}"
+	else
+		if [[ "${content}" =~ .*"${2}".* ]]
+		then
+			log_success_test_result "${FUNCNAME[1]}"
+		else
+			log_failed_test_result "${FUNCNAME[1]}"
+			echo "The \"${2}\" string is not present in the page source."
+		fi
+	fi
 }
 
 main "${@}"
