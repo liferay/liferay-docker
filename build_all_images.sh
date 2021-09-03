@@ -25,15 +25,15 @@ function build_base_image {
 	echo "Building Docker image base."
 	echo ""
 
-	time ./build_base_image.sh ${BUILD_ALL_IMAGES_PUSH} | tee -a "${LOGS_DIR}"/base.log
+	time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/base.log
 
-	if [ ${PIPESTATUS[0]} -gt 0 ]
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: base" >> ${LOGS_DIR}/results
+		echo "FAILED: base" >> "${LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: base" >> ${LOGS_DIR}/results
+		echo "SUCCESS: base" >> "${LOGS_DIR}/results"
 	fi
 }
 
@@ -45,7 +45,7 @@ function build_bundle_image {
 	# LIFERAY_DOCKER_IMAGE_FILTER=commerce ./build_all_images.sh
 	#
 
-	if [ -n "${LIFERAY_DOCKER_IMAGE_FILTER}" ] && [[ ! $(echo ${1} ${2} ${3} ${4} | grep ${LIFERAY_DOCKER_IMAGE_FILTER}) ]]
+	if [ -n "${LIFERAY_DOCKER_IMAGE_FILTER}" ] && [[ ! $(echo "${1} ${2} ${3} ${4}" | grep "${LIFERAY_DOCKER_IMAGE_FILTER}") ]]
 	then
 		return
 	fi
@@ -61,24 +61,24 @@ function build_bundle_image {
 	echo "Building Docker image ${build_id} based on ${2}."
 	echo ""
 
-	LIFERAY_DOCKER_FIX_PACK_URL=${3} LIFERAY_DOCKER_RELEASE_FILE_URL=${2} LIFERAY_DOCKER_RELEASE_VERSION=${1} LIFERAY_DOCKER_TEST_HOTFIX_URL=${5} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${4} time ./build_bundle_image.sh ${BUILD_ALL_IMAGES_PUSH} 2>&1 | tee ${LOGS_DIR}/${build_id}".log"
+	LIFERAY_DOCKER_FIX_PACK_URL=${3} LIFERAY_DOCKER_RELEASE_FILE_URL=${2} LIFERAY_DOCKER_RELEASE_VERSION=${1} LIFERAY_DOCKER_TEST_HOTFIX_URL=${5} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${4} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LOGS_DIR}/${build_id}.log"
 
 	local build_bundle_image_exit_code=${PIPESTATUS[0]}
 
-	if [ ${build_bundle_image_exit_code} -gt 0 ]
+	if [ "${build_bundle_image_exit_code}" -gt 0 ]
 	then
-		echo "FAILED: ${build_id}" >> ${LOGS_DIR}/results
+		echo "FAILED: ${build_id}" >> "${LOGS_DIR}/results"
 
-		if [ ${build_bundle_image_exit_code} -eq 4 ]
+		if [ "${build_bundle_image_exit_code}" -eq 4 ]
 		then
-			echo "Detected a license failure while building image ${build_id}." > ${LOGS_DIR}/license-failure
+			echo "Detected a license failure while building image ${build_id}." > "${LOGS_DIR}/license-failure"
 
 			echo "There is an existing license failure."
 
 			exit 4
 		fi
 	else
-		echo "SUCCESS: ${build_id}" >> ${LOGS_DIR}/results
+		echo "SUCCESS: ${build_id}" >> "${LOGS_DIR}/results"
 	fi
 
 	exit 1
@@ -100,10 +100,10 @@ function build_bundle_images_dxp_70 {
 	for fix_pack_id in {88..89}
 	do
 		build_bundle_image \
-			7.0.10-de-${fix_pack_id} \
+			"7.0.10-de-${fix_pack_id}" \
 			files.liferay.com/private/ee/portal/7.0.10.12/liferay-dxp-digital-enterprise-tomcat-7.0.10.12-sp12-20191014182832691.7z \
-			files.liferay.com/private/ee/fix-packs/7.0.10/de/liferay-fix-pack-de-${fix_pack_id}-7010.zip \
-			de-${fix_pack_id}-7010
+			"files.liferay.com/private/ee/fix-packs/7.0.10/de/liferay-fix-pack-de-${fix_pack_id}-7010.zip" \
+			"de-${fix_pack_id}-7010"
 	done
 
 	build_bundle_image \
@@ -211,10 +211,10 @@ function build_bundle_images_dxp_71 {
 	for fix_pack_id in {1..4}
 	do
 		build_bundle_image \
-			7.1.10-dxp-${fix_pack_id} \
+			"7.1.10-dxp-${fix_pack_id}" \
 			files.liferay.com/private/ee/portal/7.1.10/liferay-dxp-tomcat-7.1.10-ga1-20180703090613030.zip \
-			files.liferay.com/private/ee/fix-packs/7.1.10/dxp/liferay-fix-pack-dxp-${fix_pack_id}-7110.zip \
-			dxp-${fix_pack_id}-7110
+			"files.liferay.com/private/ee/fix-packs/7.1.10/dxp/liferay-fix-pack-dxp-${fix_pack_id}-7110.zip" \
+			"dxp-${fix_pack_id}-7110"
 	done
 
 	build_bundle_image \
@@ -226,10 +226,10 @@ function build_bundle_images_dxp_71 {
 	for fix_pack_id in {6..9}
 	do
 		build_bundle_image \
-			7.1.10-dxp-${fix_pack_id} \
+			"7.1.10-dxp-${fix_pack_id}" \
 			files.liferay.com/private/ee/portal/7.1.10.1/liferay-dxp-tomcat-7.1.10.1-sp1-20190110085705206.zip \
-			files.liferay.com/private/ee/fix-packs/7.1.10/dxp/liferay-fix-pack-dxp-${fix_pack_id}-7110.zip \
-			dxp-${fix_pack_id}-7110
+			"files.liferay.com/private/ee/fix-packs/7.1.10/dxp/liferay-fix-pack-dxp-${fix_pack_id}-7110.zip" \
+			"dxp-${fix_pack_id}-7110"
 	done
 
 	build_bundle_image \
@@ -241,10 +241,10 @@ function build_bundle_images_dxp_71 {
 	for fix_pack_id in {11..14}
 	do
 		build_bundle_image \
-			7.1.10-dxp-${fix_pack_id} \
+			"7.1.10-dxp-${fix_pack_id}" \
 			files.liferay.com/private/ee/portal/7.1.10.2/liferay-dxp-tomcat-7.1.10.2-sp2-20190422172027516.zip \
-			files.liferay.com/private/ee/fix-packs/7.1.10/dxp/liferay-fix-pack-dxp-${fix_pack_id}-7110.zip \
-			dxp-${fix_pack_id}-7110
+			"files.liferay.com/private/ee/fix-packs/7.1.10/dxp/liferay-fix-pack-dxp-${fix_pack_id}-7110.zip" \
+			"dxp-${fix_pack_id}-7110"
 	done
 
 	build_bundle_image \
@@ -256,10 +256,10 @@ function build_bundle_images_dxp_71 {
 	for fix_pack_id in {16..16}
 	do
 		build_bundle_image \
-			7.1.10-dxp-${fix_pack_id} \
+			"7.1.10-dxp-${fix_pack_id}" \
 			files.liferay.com/private/ee/portal/7.1.10.3/liferay-dxp-tomcat-7.1.10.3-sp3-20191118185746787.7z \
-			files.liferay.com/private/ee/fix-packs/7.1.10/dxp/liferay-fix-pack-dxp-${fix_pack_id}-7110.zip \
-			dxp-${fix_pack_id}-7110
+			"files.liferay.com/private/ee/fix-packs/7.1.10/dxp/liferay-fix-pack-dxp-${fix_pack_id}-7110.zip" \
+			"dxp-${fix_pack_id}-7110"
 	done
 
 	build_bundle_image \
@@ -492,7 +492,7 @@ function main {
 
 	LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
 
-	mkdir -p ${LOGS_DIR}
+	mkdir -p "${LOGS_DIR}"
 
 	build_base_image
 
@@ -515,9 +515,9 @@ function main {
 		#files.liferay.com/private/ee/portal/snapshot-7.1.x-private/201808162051/liferay-portal-tomcat-7.1.x-private.zip
 	)
 
-	for release_file_url in ${release_file_urls[@]}
+	for release_file_url in "${release_file_urls[@]}"
 	do
-		build_bundle_image "" ${release_file_url} "" ""
+		build_bundle_image "" "${release_file_url}" "" ""
 	done
 
 	build_bundle_images_dxp_70
@@ -530,7 +530,7 @@ function main {
 	echo "Results: "
 	echo ""
 
-	cat ${LOGS_DIR}/results
+	cat "${LOGS_DIR}/results"
 }
 
 main

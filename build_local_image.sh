@@ -8,8 +8,8 @@ function build_docker_image {
 
 	DOCKER_IMAGE_TAGS=()
 
-	DOCKER_IMAGE_TAGS+=(${docker_image_name}:${release_version}-${TIMESTAMP})
-	DOCKER_IMAGE_TAGS+=(${docker_image_name}:${release_version})
+	DOCKER_IMAGE_TAGS+=("${docker_image_name}:${release_version}-${TIMESTAMP}")
+	DOCKER_IMAGE_TAGS+=("${docker_image_name}:${release_version}")
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
@@ -17,8 +17,8 @@ function build_docker_image {
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL=$(git config --get remote.origin.url) \
 		--build-arg LABEL_VERSION="${release_version}" \
-		$(get_docker_image_tags_args ${DOCKER_IMAGE_TAGS[@]}) \
-		${TEMP_DIR}
+		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
+		"${TEMP_DIR}"
 }
 
 function check_usage {
@@ -35,25 +35,25 @@ function check_usage {
 }
 
 function main {
-	check_usage ${@}
+	check_usage "${@}"
 
 	make_temp_directory templates/bundle
 
-	prepare_temp_directory ${@}
+	prepare_temp_directory "${@}"
 
 	prepare_tomcat
 
-	build_docker_image ${@}
+	build_docker_image "${@}"
 
 	test_docker_image
 
-	push_docker_images ${4}
+	push_docker_images "${4}"
 
 	clean_up_temp_directory
 }
 
 function prepare_temp_directory {
-	cp -a ${1} ${TEMP_DIR}/liferay
+	cp -a "${1}" "${TEMP_DIR}/liferay"
 }
 
-main ${@}
+main "${@}"

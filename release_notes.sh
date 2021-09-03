@@ -3,20 +3,16 @@
 source ./_common.sh
 
 function check_usage {
-	if [ ! -n "${1}" ] ||
-	   [[ ("${1}" != "commit") &&
-		  ("${1}" != "display") &&
-		  ("${1}" != "fail-on-change") &&
-		  ("${1}" != "get-version") ]]
+	if [ ! -n "${1}" ] || [[ ("${1}" != "commit") && ("${1}" != "display") && ("${1}" != "fail-on-change") && ("${1}" != "get-version") ]]
 	then
 		echo "Usage: ${0} <command>"
 		echo ""
 		echo "This script requires the first parameter to be set to one of these options:"
 		echo ""
-		echo "    commit: Writes and commits the necessary version change with the change log"
-		echo "    display: Display the required version number change"
-		echo "    fail-on-change: The script will return an error code if there was a version number changing commit since the last release notes change"
-		echo "    get-version: Returns the current version number"
+		echo "commit: Writes and commits the necessary version change with the change log"
+		echo "display: Display the required version number change"
+		echo "fail-on-change: The script will return an error code if there was a version number changing commit since the last release notes change"
+		echo "get-version: Returns the current version number"
 
 		exit 1
 	fi
@@ -53,7 +49,7 @@ function generate_release_notes {
 function get_change_log {
 	RELEASE_NOTES_CURRENT_SHA=$(git log -1 --pretty=%H)
 
-	RELEASE_NOTES_CHANGE_LOG=$(git log --pretty=%s --grep "^DOCKER-" ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
+	RELEASE_NOTES_CHANGE_LOG=$(git log --grep "^DOCKER-" --pretty=%s "${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA}" | sed -e "s/\ .*/ /" | uniq | tr -d "\n" | tr -d "\r" | sed -e "s/ $//")
 
 	if [ "${1}" == "fail-on-change" ] && [ -n "${RELEASE_NOTES_CHANGE_LOG}" ]
 	then
@@ -66,7 +62,7 @@ function get_change_log {
 }
 
 function get_latest_version {
-	local git_line=$(cat .releng/docker-image.changelog | grep docker.image.git.id | tail -n1)
+	local git_line=$(grep 'docker.image.git.id' .releng/docker-image.changelog | tail -n1)
 
 	RELEASE_NOTES_LATEST_SHA=${git_line#*=}
 
@@ -87,34 +83,34 @@ function get_new_version {
 		return
 	fi
 
-	if (git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | grep "#majorchange" > /dev/null)
+	if (git log --pretty=%s "${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA}" | grep "#majorchange" > /dev/null)
 	then
-		RELEASE_NOTES_VERSION_MAJOR=$(($RELEASE_NOTES_VERSION_MAJOR+1))
+		RELEASE_NOTES_VERSION_MAJOR=$((RELEASE_NOTES_VERSION_MAJOR+1))
 		RELEASE_NOTES_VERSION_MINOR=0
 		RELEASE_NOTES_VERSION_MICRO=0
-	elif (git log --pretty=%s ${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA} | grep "#minorchange" > /dev/null)
+	elif (git log --pretty=%s "${RELEASE_NOTES_LATEST_SHA}..${RELEASE_NOTES_CURRENT_SHA}" | grep "#minorchange" > /dev/null)
 	then
-		RELEASE_NOTES_VERSION_MINOR=$(($RELEASE_NOTES_VERSION_MINOR+1))
+		RELEASE_NOTES_VERSION_MINOR=$((RELEASE_NOTES_VERSION_MINOR+1))
 		RELEASE_NOTES_VERSION_MICRO=0
 	else
-		RELEASE_NOTES_VERSION_MICRO=$(($RELEASE_NOTES_VERSION_MICRO+1))
+		RELEASE_NOTES_VERSION_MICRO=$((RELEASE_NOTES_VERSION_MICRO+1))
 	fi
 
-	RELEASE_NOTES_NEW_VERSION=${RELEASE_NOTES_VERSION_MAJOR}.${RELEASE_NOTES_VERSION_MINOR}.${RELEASE_NOTES_VERSION_MICRO}
+	RELEASE_NOTES_NEW_VERSION="${RELEASE_NOTES_VERSION_MAJOR}.${RELEASE_NOTES_VERSION_MINOR}.${RELEASE_NOTES_VERSION_MICRO}"
 }
 
 function main {
-	check_usage ${@}
+	check_usage "${@}"
 
-	get_latest_version ${@}
+	get_latest_version "${@}"
 
-	get_change_log ${@}
+	get_change_log "${@}"
 
-	get_new_version ${@}
+	get_new_version "${@}"
 
-	print_version ${@}
+	print_version "${@}"
 
-	generate_release_notes ${@}
+	generate_release_notes "${@}"
 }
 
 function print_version {
@@ -122,13 +118,13 @@ function print_version {
 	then
 		if [ -n "${RELEASE_NOTES_CHANGE_LOG}" ]
 		then
-			echo ${RELEASE_NOTES_NEW_VERSION}-snapshot
+			echo "${RELEASE_NOTES_NEW_VERSION}-snapshot"
 		else
-			echo ${RELEASE_NOTES_LATEST_VERSION}
+			echo "${RELEASE_NOTES_LATEST_VERSION}"
 		fi
 
 		exit
 	fi
 }
 
-main ${@}
+main "${@}"
