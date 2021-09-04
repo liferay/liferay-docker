@@ -31,14 +31,14 @@ function date {
 			echo $(/bin/date)
 		elif [ -e /bin/date ]
 		then
-			echo $(/bin/date)
+			echo $(/bin/date --iso-8601=seconds)
 		else
-			echo $(/usr/bin/date)
+			echo $(/usr/bin/date --iso-8601=seconds)
 		fi
 	else
 		if [ "$(uname)" == "Darwin" ]
 		then
-			echo $(/bin/date -jf "%a %b %e %H:%M:%S %Z %Y" "${1}" "${2}")
+			echo $(/bin/date -juf "%a %b %e %T %Z %Y" "${1}" "${2}")
 		elif [ -e /bin/date ]
 		then
 			echo $(/bin/date -d "${1}" "${2}")
