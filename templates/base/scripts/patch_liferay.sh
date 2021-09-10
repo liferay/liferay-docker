@@ -12,8 +12,8 @@ function apply_patch {
 			echo ""
 			echo "[LIFERAY] ${patch_file_name} cannot be applied on this container because ${installed_patch} is already installed. Remove ${patch_file_name} from the patching directory to disable this warning message."
 		fi
-	elif (! (echo "${patch_file_name}" | grep -q "7310.zip") && 
-						/opt/liferay/patching-tool/patching-tool.sh apply "${LIFERAY_PATCHING_DIR}/${patch_file_name}"
+	elif (!(echo "${patch_file_name}" | grep -q "7310.zip") &&
+		  /opt/liferay/patching-tool/patching-tool.sh apply "${LIFERAY_PATCHING_DIR}/${patch_file_name}")
 	then
 		echo" ${patch_file_name}" > /opt/liferay/patching-tool/patch-applied
 
