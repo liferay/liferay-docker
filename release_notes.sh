@@ -3,7 +3,11 @@
 source ./_common.sh
 
 function check_usage {
-	if [ ! -n "${1}" ] || [[ ("${1}" != "commit") && ("${1}" != "display") && ("${1}" != "fail-on-change") && ("${1}" != "get-version") ]]
+	if [ ! -n "${1}" ] ||
+		  [[ ("${1}" != "commit") &&
+		     ("${1}" != "display") &&
+		     ("${1}" != "fail-on-change") &&
+		     ("${1}" != "get-version") ]]
 	then
 		echo "Usage: ${0} <command>"
 		echo ""
