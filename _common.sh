@@ -48,8 +48,6 @@ function date {
 	fi
 }
 
-# Sadly we need to disable rule SC2086 for this functionb as the LIFERAY_DOCKER_CURL_OPTIONS breaks if passed between "".
-# shellcheck disable=SC2086
 function download {
 	local file_name="${1}"
 	local file_url="${2}"
