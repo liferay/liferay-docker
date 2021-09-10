@@ -38,7 +38,7 @@ function date {
 	else
 		if [ "$(uname)" == "Darwin" ]
 		then
-			/bin/date -juf "%a %b %e %T %Z %Y" "${1}" "${2}"
+			/bin/date -jf "%a %b %e %H:%M:%S %Z %Y" "${1}" "${2}"
 		elif [ -e /bin/date ]
 		then
 			/bin/date -d "${1}" "${2}"
