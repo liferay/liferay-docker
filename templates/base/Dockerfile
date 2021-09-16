@@ -14,8 +14,8 @@ RUN apt update && \
 COPY scripts/* /usr/local/bin/
 
 RUN adduser --disabled-password --home /home/liferay liferay --uid 1000 && \
-  addgroup liferay liferay && \
-  usermod -g 1000 liferay
+	addgroup liferay liferay && \
+	usermod -g 1000 liferay
 
 COPY --chown=liferay:liferay home/.bashrc /home/liferay/
 
