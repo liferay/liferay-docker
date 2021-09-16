@@ -80,8 +80,6 @@ function build_bundle_image {
 	else
 		echo "SUCCESS: ${build_id}" >> "${LOGS_DIR}/results"
 	fi
-
-	exit 1
 }
 
 function build_bundle_images_dxp_70 {
