@@ -1,0 +1,3056 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="ltr" dir="ltr" lang="en-US">
+
+<head>
+	<title>Home - Liferay DXP</title>
+
+	<meta content="initial-scale=1.0, width=device-width" name="viewport" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+
+
+
+
+
+
+
+
+
+
+
+
+<link data-senna-track="temporary" href="http://localhost:64994" rel="canonical" />
+<link data-senna-track="temporary" href="http://localhost:64994/zh/" hreflang="zh-CN" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/es/" hreflang="es-ES" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/sv/" hreflang="sv-SE" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/ja/" hreflang="ja-JP" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/nl/" hreflang="nl-NL" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/hu/" hreflang="hu-HU" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/ar/" hreflang="ar-SA" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/pt/" hreflang="pt-BR" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/de/" hreflang="de-DE" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/ca/" hreflang="ca-ES" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/fi/" hreflang="fi-FI" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994/fr/" hreflang="fr-FR" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994" hreflang="en-US" rel="alternate" />
+<link data-senna-track="temporary" href="http://localhost:64994" hreflang="x-default" rel="alternate" />
+
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="ar_SA">
+<meta property="og:locale:alternate" content="ca_ES">
+<meta property="og:locale:alternate" content="zh_CN">
+<meta property="og:locale:alternate" content="nl_NL">
+<meta property="og:locale:alternate" content="fi_FI">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="hu_HU">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="sv_SE">
+<meta property="og:site_name" content="Liferay DXP">
+<meta property="og:title" content="Home - Liferay DXP">
+<meta property="og:type" content="website">
+<meta property="og:url" content="http://localhost:64994">
+
+
+<link href="http://localhost:64994/o/classic-theme/images/favicon.ico" rel="icon" />
+
+
+
+<link class="lfr-css-file" data-senna-track="temporary" href="http://localhost:64994/o/classic-theme/css/clay.css?browserId=other&amp;themeId=classic_WAR_classictheme&amp;minifierType=css&amp;languageId=en_US&amp;b=7310&amp;t=1631804400000" id="liferayAUICSS" rel="stylesheet" type="text/css" />
+
+
+
+<link data-senna-track="temporary" href="/o/frontend-css-web/main.css?browserId=other&amp;themeId=classic_WAR_classictheme&amp;minifierType=css&amp;languageId=en_US&amp;b=7310&amp;t=1601509174769" id="liferayPortalCSS" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+	
+
+	
+
+
+
+
+
+	
+
+
+
+	
+
+
+
+
+
+
+
+<script data-senna-track="temporary" type="text/javascript">
+	// <![CDATA[
+		var Liferay = Liferay || {};
+
+		Liferay.Browser = {
+			acceptsGzip: function() {
+				return false;
+			},
+
+			
+
+			getMajorVersion: function() {
+				return 0;
+			},
+
+			getRevision: function() {
+				return '';
+			},
+			getVersion: function() {
+				return '';
+			},
+
+			
+
+			isAir: function() {
+				return false;
+			},
+			isChrome: function() {
+				return false;
+			},
+			isEdge: function() {
+				return false;
+			},
+			isFirefox: function() {
+				return false;
+			},
+			isGecko: function() {
+				return false;
+			},
+			isIe: function() {
+				return false;
+			},
+			isIphone: function() {
+				return false;
+			},
+			isLinux: function() {
+				return false;
+			},
+			isMac: function() {
+				return false;
+			},
+			isMobile: function() {
+				return false;
+			},
+			isMozilla: function() {
+				return false;
+			},
+			isOpera: function() {
+				return false;
+			},
+			isRtf: function() {
+				return false;
+			},
+			isSafari: function() {
+				return false;
+			},
+			isSun: function() {
+				return false;
+			},
+			isWebKit: function() {
+				return false;
+			},
+			isWindows: function() {
+				return false;
+			}
+		};
+
+		Liferay.Data = Liferay.Data || {};
+
+		Liferay.Data.ICONS_INLINE_SVG = true;
+
+		Liferay.Data.NAV_SELECTOR = '#navigation';
+
+		Liferay.Data.NAV_SELECTOR_MOBILE = '#navigationCollapse';
+
+		Liferay.Data.isCustomizationView = function() {
+			return false;
+		};
+
+		Liferay.Data.notices = [
+			
+
+			
+		];
+
+		Liferay.PortletKeys = {
+			DOCUMENT_LIBRARY: 'com_liferay_document_library_web_portlet_DLPortlet',
+			DYNAMIC_DATA_MAPPING: 'com_liferay_dynamic_data_mapping_web_portlet_DDMPortlet',
+			ITEM_SELECTOR: 'com_liferay_item_selector_web_portlet_ItemSelectorPortlet'
+		};
+
+		Liferay.PropsValues = {
+			JAVASCRIPT_SINGLE_PAGE_APPLICATION_TIMEOUT: 0,
+			NTLM_AUTH_ENABLED: false,
+			UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE: 104857600
+		};
+
+		Liferay.ThemeDisplay = {
+
+			
+
+			
+				getLayoutId: function() {
+					return '2';
+				},
+
+				
+
+				getLayoutRelativeControlPanelURL: function() {
+					return '/group/guest/~/control_panel/manage';
+				},
+
+				getLayoutRelativeURL: function() {
+					return '/web/guest/home';
+				},
+				getLayoutURL: function() {
+					return 'http://localhost:64994/web/guest/home';
+				},
+				getParentLayoutId: function() {
+					return '0';
+				},
+				isControlPanel: function() {
+					return false;
+				},
+				isPrivateLayout: function() {
+					return 'false';
+				},
+				isVirtualLayout: function() {
+					return false;
+				},
+			
+
+			getBCP47LanguageId: function() {
+				return 'en-US';
+			},
+			getCanonicalURL: function() {
+
+				
+
+				return 'http://localhost:64994';
+			},
+			getCDNBaseURL: function() {
+				return 'http://localhost:64994';
+			},
+			getCDNDynamicResourcesHost: function() {
+				return '';
+			},
+			getCDNHost: function() {
+				return '';
+			},
+			getCompanyGroupId: function() {
+				return '20123';
+			},
+			getCompanyId: function() {
+				return '20097';
+			},
+			getDefaultLanguageId: function() {
+				return 'en_US';
+			},
+			getDoAsUserIdEncoded: function() {
+				return '';
+			},
+			getLanguageId: function() {
+				return 'en_US';
+			},
+			getParentGroupId: function() {
+				return '20121';
+			},
+			getPathContext: function() {
+				return '';
+			},
+			getPathImage: function() {
+				return '/image';
+			},
+			getPathJavaScript: function() {
+				return '/o/frontend-js-web';
+			},
+			getPathMain: function() {
+				return '/c';
+			},
+			getPathThemeImages: function() {
+				return 'http://localhost:64994/o/classic-theme/images';
+			},
+			getPathThemeRoot: function() {
+				return '/o/classic-theme';
+			},
+			getPlid: function() {
+				return '8';
+			},
+			getPortalURL: function() {
+				return 'http://localhost:64994';
+			},
+			getScopeGroupId: function() {
+				return '20121';
+			},
+			getScopeGroupIdOrLiveGroupId: function() {
+				return '20121';
+			},
+			getSessionId: function() {
+				return '';
+			},
+			getSiteAdminURL: function() {
+				return 'http://localhost:64994/group/guest/~/control_panel/manage?p_p_lifecycle=0&p_p_state=maximized&p_p_mode=view';
+			},
+			getSiteGroupId: function() {
+				return '20121';
+			},
+			getURLControlPanel: function() {
+				return '/group/control_panel?refererPlid=8';
+			},
+			getURLHome: function() {
+				return 'http://localhost:64994/web/guest';
+			},
+			getUserEmailAddress: function() {
+				return '';
+			},
+			getUserId: function() {
+				return '20102';
+			},
+			getUserName: function() {
+				return '';
+			},
+			isAddSessionIdToURL: function() {
+				return false;
+			},
+			isImpersonated: function() {
+				return false;
+			},
+			isSignedIn: function() {
+				return false;
+			},
+			isStateExclusive: function() {
+				return false;
+			},
+			isStateMaximized: function() {
+				return false;
+			},
+			isStatePopUp: function() {
+				return false;
+			}
+		};
+
+		var themeDisplay = Liferay.ThemeDisplay;
+
+		Liferay.AUI = {
+
+			
+
+			getAvailableLangPath: function() {
+				return 'available_languages.jsp?browserId=other&themeId=classic_WAR_classictheme&colorSchemeId=01&minifierType=js&languageId=en_US&b=7310&t=1631804395366';
+			},
+			getCombine: function() {
+				return true;
+			},
+			getComboPath: function() {
+				return '/combo/?browserId=other&minifierType=&languageId=en_US&b=7310&t=1631804403574&';
+			},
+			getDateFormat: function() {
+				return '%m/%d/%Y';
+			},
+			getEditorCKEditorPath: function() {
+				return '/o/frontend-editor-ckeditor-web';
+			},
+			getFilter: function() {
+				var filter = 'raw';
+
+				
+					
+						filter = 'min';
+					
+					
+				
+
+				return filter;
+			},
+			getFilterConfig: function() {
+				var instance = this;
+
+				var filterConfig = null;
+
+				if (!instance.getCombine()) {
+					filterConfig = {
+						replaceStr: '.js' + instance.getStaticResourceURLParams(),
+						searchExp: '\.js$'
+					};
+				}
+
+				return filterConfig;
+			},
+			getJavaScriptRootPath: function() {
+				return '/o/frontend-js-web';
+			},
+			getLangPath: function() {
+				return 'aui_lang.jsp?browserId=other&themeId=classic_WAR_classictheme&colorSchemeId=01&minifierType=js&languageId=en_US&b=7310&t=1631804403574';
+			},
+			getPortletRootPath: function() {
+				return '/html/portlet';
+			},
+			getStaticResourceURLParams: function() {
+				return '?browserId=other&minifierType=&languageId=en_US&b=7310&t=1631804403574';
+			}
+		};
+
+		Liferay.authToken = 'v4cXeE5M';
+
+		
+
+		Liferay.currentURL = '/';
+		Liferay.currentURLEncoded = '%2F';
+	// ]]>
+</script>
+
+<script src="/o/js_loader_config?t=1631804408534" type="text/javascript"></script>
+<script data-senna-track="permanent" src="/combo?browserId=other&minifierType=js&languageId=en_US&b=7310&t=1631804403574&/o/frontend-js-aui-web/aui/aui/aui.js&/o/frontend-js-aui-web/liferay/modules.js&/o/frontend-js-aui-web/liferay/aui_sandbox.js&/o/frontend-js-aui-web/aui/attribute-base/attribute-base.js&/o/frontend-js-aui-web/aui/attribute-complex/attribute-complex.js&/o/frontend-js-aui-web/aui/attribute-core/attribute-core.js&/o/frontend-js-aui-web/aui/attribute-observable/attribute-observable.js&/o/frontend-js-aui-web/aui/attribute-extras/attribute-extras.js&/o/frontend-js-aui-web/aui/event-custom-base/event-custom-base.js&/o/frontend-js-aui-web/aui/event-custom-complex/event-custom-complex.js&/o/frontend-js-aui-web/aui/oop/oop.js&/o/frontend-js-aui-web/aui/aui-base-lang/aui-base-lang.js&/o/frontend-js-aui-web/liferay/dependency.js&/o/frontend-js-aui-web/liferay/util.js&/o/frontend-js-web/loader/config.js&/o/frontend-js-web/loader/loader.js&/o/frontend-js-web/liferay/dom_task_runner.js&/o/frontend-js-web/liferay/events.js&/o/frontend-js-web/liferay/lazy_load.js&/o/frontend-js-web/liferay/liferay.js&/o/frontend-js-web/liferay/global.bundle.js&/o/frontend-js-web/liferay/portlet.js&/o/frontend-js-web/liferay/workflow.js" type="text/javascript"></script>
+
+
+
+
+	
+
+	<script data-senna-track="temporary" src="/o/js_bundle_config?t=1631804425046" type="text/javascript"></script>
+
+
+<script data-senna-track="temporary" type="text/javascript">
+	// <![CDATA[
+		
+			
+				
+				
+			
+		
+
+		
+
+		
+	// ]]>
+</script>
+
+
+
+
+
+	
+		
+
+			
+
+			
+		
+		
+	
+
+
+
+	
+		
+		
+
+			
+
+			
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+
+
+
+
+
+	
+
+
+
+	
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+<link class="lfr-css-file" data-senna-track="temporary" href="http://localhost:64994/o/classic-theme/css/main.css?browserId=other&amp;themeId=classic_WAR_classictheme&amp;minifierType=css&amp;languageId=en_US&amp;b=7310&amp;t=1631804400000" id="liferayThemeCSS" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+	<style data-senna-track="temporary" type="text/css">
+
+		
+
+			
+
+		
+
+	</style>
+
+
+<style data-senna-track="temporary" type="text/css">
+</style>
+<script type="text/javascript">
+// <![CDATA[
+Liferay.SPA = Liferay.SPA || {};
+Liferay.SPA.cacheExpirationTime = -1;
+Liferay.SPA.clearScreensCache = false;
+Liferay.SPA.debugEnabled = false;
+Liferay.SPA.excludedPaths = ["/c/document_library","/documents","/image"];
+Liferay.SPA.loginRedirect = '';
+Liferay.SPA.navigationExceptionSelectors = ':not([target="_blank"]):not([data-senna-off]):not([data-resource-href]):not([data-cke-saved-href]):not([data-cke-saved-href])';
+Liferay.SPA.requestTimeout = 0;
+Liferay.SPA.userNotification = {
+	message: 'It looks like this is taking longer than expected.',
+	timeout: 30000,
+	title: 'Oops'
+};
+// ]]>
+</script><script type="text/javascript">
+// <![CDATA[
+Liferay.Loader.require('frontend-js-spa-web@4.0.17/liferay/init.es', function(frontendJsSpaWeb4017LiferayInitEs) {
+try {
+(function() {
+var frontendJsSpaWebLiferayInitEs = frontendJsSpaWeb4017LiferayInitEs;
+frontendJsSpaWebLiferayInitEs.default.init(
+	function(app) {
+		app.setPortletsBlacklist({"com_liferay_nested_portlets_web_portlet_NestedPortletsPortlet":true,"com_liferay_site_navigation_directory_web_portlet_SitesDirectoryPortlet":true,"com_liferay_lcs_client_web_internal_portlet_LCSClientPortlet":true,"com_liferay_login_web_portlet_LoginPortlet":true,"com_liferay_login_web_portlet_FastLoginPortlet":true});
+		app.setValidStatusCodes([221,490,494,499,491,492,493,495,220]);
+	}
+);
+})();
+} catch (err) {
+	console.error(err);
+}
+});
+// ]]>
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-senna-track="temporary" type="text/javascript">
+	if (window.Analytics) {
+		window._com_liferay_document_library_analytics_isViewFileEntry = false;
+	}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+// <![CDATA[
+Liferay.on(
+	'ddmFieldBlur', function(event) {
+		if (window.Analytics) {
+			Analytics.send(
+				'fieldBlurred',
+				'Form',
+				{
+					fieldName: event.fieldName,
+					focusDuration: event.focusDuration,
+					formId: event.formId,
+					page: event.page
+				}
+			);
+		}
+	}
+);
+
+Liferay.on(
+	'ddmFieldFocus', function(event) {
+		if (window.Analytics) {
+			Analytics.send(
+				'fieldFocused',
+				'Form',
+				{
+					fieldName: event.fieldName,
+					formId: event.formId,
+					page: event.page
+				}
+			);
+		}
+	}
+);
+
+Liferay.on(
+	'ddmFormPageShow', function(event) {
+		if (window.Analytics) {
+			Analytics.send(
+				'pageViewed',
+				'Form',
+				{
+					formId: event.formId,
+					page: event.page,
+					title: event.title
+				}
+			);
+		}
+	}
+);
+
+Liferay.on(
+	'ddmFormSubmit', function(event) {
+		if (window.Analytics) {
+			Analytics.send(
+				'formSubmitted',
+				'Form',
+				{
+					formId: event.formId
+				}
+			);
+		}
+	}
+);
+
+Liferay.on(
+	'ddmFormView', function(event) {
+		if (window.Analytics) {
+			Analytics.send(
+				'formViewed',
+				'Form',
+				{
+					formId: event.formId,
+					title: event.title
+				}
+			);
+		}
+	}
+);
+// ]]>
+</script>
+
+</head>
+
+<body class="other controls-visible  yui3-skin-sam guest-site signed-out public-page site">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<nav class="quick-access-nav" id="tobv_quickAccessNav">
+		<h1 class="hide-accessible">Navigation</h1>
+
+		<ul>
+			
+				<li><a href="#main-content">Skip to Content</a></li>
+			
+
+			
+
+		</ul>
+	</nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="d-flex flex-column min-vh-100">
+
+	<div class="d-flex flex-column flex-fill" id="wrapper">
+			<header id="banner">
+				<div class="navbar navbar-classic navbar-top py-3">
+					<div class="container user-personal-bar">
+						<div class="align-items-center autofit-row">
+							<a class="logo custom-logo align-items-center d-md-inline-flex d-sm-none d-none logo-md" href="http://localhost:64994/web/guest" title="Go to ">
+								<img alt="" class="mr-2" height="56" src="/image/layout_set_logo?img_id=35596&amp;t=1631804433449" />
+
+									<h2 class="font-weight-bold h2 mb-0 text-dark" role="heading" aria-level="1">Liferay DXP</h2>
+							</a>
+
+
+							<div class="autofit-col autofit-col-expand">
+									<div class="justify-content-md-end mr-4 navbar-form" role="search">
+<link href="/o/portal-search-web/css/main.css?browserId=other&amp;themeId=classic_WAR_classictheme&amp;minifierType=css&amp;languageId=en_US&amp;b=7310&amp;t=1601318864000" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	<div class="portlet-boundary portlet-boundary_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_  portlet-static portlet-static-end portlet-barebone portlet-search-bar " id="p_p_id_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_">
+		<span id="p_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch"></span>
+
+
+
+
+	
+
+	
+		
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+		
+<section class="portlet" id="portlet_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch">
+
+
+	<div class="portlet-content">
+
+
+		
+			<div class=" portlet-content-container">
+				
+
+
+	<div class="portlet-body">
+
+
+
+	
+		
+			
+			
+				
+					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+				
+
+				
+					
+					
+						
+
+
+	
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<form action="http://localhost:64994/web/guest/search" class="form  " data-fm-namespace="_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_" id="_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_fm" method="get" name="_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_fm" >
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+
+		
+
+		
+			
+			
+			
+			
+				<input  class="field form-control"  id="_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_formDate"    name="_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_formDate"     type="hidden" value="1631804446687"   />
+			
+		
+
+		
+	
+
+
+
+
+
+
+
+
+
+			
+
+			
+
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				<fieldset class="fieldset search-bar" ><div class="">
+					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+
+		
+
+		
+			
+			
+			
+			
+				<input  class="field search-bar-empty-search-input form-control"  id="_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_emptySearchEnabled"    name="_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_emptySearchEnabled"     type="hidden" value="false"   />
+			
+		
+
+		
+	
+
+
+
+
+
+
+
+
+
+
+					<div class="input-group search-bar-simple">
+						
+							
+							
+								<div class="input-group-item search-bar-keywords-input-wrapper">
+									<input class="form-control input-group-inset input-group-inset-after search-bar-keywords-input" data-qa-id="searchInput" id="dkrk___q" name="q" placeholder="Search..." title="Search" type="text" value="" />
+
+									
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+
+		
+
+		
+			
+			
+			
+			
+				<input  class="field form-control"  id="_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_scope"    name="_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_scope"     type="hidden" value=""   />
+			
+		
+
+		
+	
+
+
+
+
+
+
+
+
+
+
+									<div class="input-group-inset-item input-group-inset-item-after">
+										<button class="btn btn-monospaced btn-unstyled"type="submit" aria-label="Submit" ><span class="inline-item"><svg class="lexicon-icon lexicon-icon-search" role="presentation" viewBox="0 0 512 512"><use xlink:href="http://localhost:64994/o/classic-theme/images/clay/icons.svg#search" /></svg></span></button>
+									</div>
+								</div>
+							
+						
+					</div>
+				</div></fieldset>
+			
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+</form>
+
+
+
+<script type="text/javascript">
+// <![CDATA[
+AUI().use('liferay-form', function(A) {(function() {var $ = AUI.$;var _ = AUI._;
+	Liferay.Form.register(
+		{
+			id: '_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_fm'
+
+			
+				, fieldRules: [
+
+					
+
+				]
+			
+
+			
+
+			, validateOnBlur: true
+		}
+	);
+
+	var onDestroyPortlet = function(event) {
+		if (event.portletId === 'com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch') {
+			delete Liferay.Form._INSTANCES['_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_fm'];
+		}
+	};
+
+	Liferay.on('destroyPortlet', onDestroyPortlet);
+
+	
+
+	Liferay.fire(
+		'_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_formReady',
+		{
+			formName: '_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_fm'
+		}
+	);
+})();});
+// ]]>
+</script>
+
+		<script type="text/javascript">
+// <![CDATA[
+AUI().use('liferay-search-bar', function(A) {(function() {var $ = AUI.$;var _ = AUI._;
+			new Liferay.Search.SearchBar(A.one('#_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_fm'));
+		})();});
+// ]]>
+</script>
+	
+
+
+	
+	
+
+					
+				
+			
+		
+	
+	
+
+
+
+	</div>
+
+			</div>
+		
+	</div>
+</section>
+	
+
+		
+		
+	
+
+
+
+
+
+
+
+	</div>
+
+
+
+
+									</div>
+							</div>
+
+							<div class="autofit-col">
+<link href="/o/com.liferay.product.navigation.user.personal.bar.web/css/main.css?browserId=other&amp;themeId=classic_WAR_classictheme&amp;minifierType=css&amp;languageId=en_US&amp;b=7310&amp;t=1600057878000" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	<div class="portlet-boundary portlet-boundary_com_liferay_product_navigation_user_personal_bar_web_portlet_ProductNavigationUserPersonalBarPortlet_  portlet-static portlet-static-end portlet-borderless portlet-user-personal-bar " id="p_p_id_com_liferay_product_navigation_user_personal_bar_web_portlet_ProductNavigationUserPersonalBarPortlet_">
+		<span id="p_com_liferay_product_navigation_user_personal_bar_web_portlet_ProductNavigationUserPersonalBarPortlet"></span>
+
+
+
+
+	
+
+	
+		
+		
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		<span class="sign-in text-default" role="presentation">
+			<a href="http://localhost:64994/c/portal/login?p_l_id=8" class="sign-in text-default" id="_com_liferay_product_navigation_user_personal_bar_web_portlet_ProductNavigationUserPersonalBarPortlet_qfkd____" data-redirect="true" ><svg aria-hidden="true" class="lexicon-icon lexicon-icon-user" focusable="false" ><use href="http://localhost:64994/o/classic-theme/images/clay/icons.svg#user"></use></svg><span class="taglib-icon-label">Sign In</span></a>
+		</span>
+
+		<script type="text/javascript">
+// <![CDATA[
+(function() {var $ = AUI.$;var _ = AUI._;
+			var signInLink = document.querySelector('.sign-in > a');
+
+			if (signInLink && signInLink.dataset.redirect === 'false') {
+				var signInURL = 'http://localhost:64994/c/portal/login?p_l_id=8';
+
+				var modalSignInURL = Liferay.Util.addParams(
+					'windowState=exclusive',
+					signInURL
+				);
+
+				var setModalContent = function (html) {
+					var modalBody = document.querySelector('.liferay-modal-body');
+
+					if (modalBody) {
+						var fragment = document
+							.createRange()
+							.createContextualFragment(html);
+
+						modalBody.innerHTML = '';
+
+						modalBody.appendChild(fragment);
+					}
+				};
+
+				var loading = false;
+				var redirect = false;
+				var html = '';
+				var modalOpen = false;
+
+				var fetchModalSignIn = function () {
+					if (loading || html) {
+						return;
+					}
+
+					loading = true;
+
+					Liferay.Util.fetch(modalSignInURL)
+						.then(function (response) {
+							return response.text();
+						})
+						.then(function (response) {
+							if (!loading) {
+								return;
+							}
+
+							loading = false;
+
+							if (!response) {
+								redirect = true;
+
+								return;
+							}
+
+							html = response;
+
+							if (modalOpen) {
+								setModalContent(response);
+							}
+						})
+						.catch(function () {
+							redirect = true;
+						});
+				};
+
+				signInLink.addEventListener('mouseover', fetchModalSignIn);
+				signInLink.addEventListener('focus', fetchModalSignIn);
+
+				signInLink.addEventListener('click', function (event) {
+					event.preventDefault();
+
+					if (redirect) {
+						Liferay.Util.navigate(signInURL);
+
+						return;
+					}
+
+					Liferay.Util.openModal({
+						bodyHTML: html ? html : '<span class="loading-animation">',
+						height: '400px',
+						onClose: function () {
+							loading = false;
+							redirect = false;
+							html = '';
+							modalOpen = false;
+						},
+						onOpen: function () {
+							modalOpen = true;
+
+							if (html && document.querySelector('.loading-animation')) {
+								setModalContent(html);
+							}
+						},
+						size: 'md',
+						title: 'Sign In',
+					});
+				});
+			}
+		})();
+// ]]>
+</script>
+	
+
+		
+	
+
+
+
+
+
+
+
+	</div>
+
+
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="navbar navbar-classic navbar-expand-md navbar-light pb-3">
+					<div class="container">
+						<a class="logo custom-logo align-items-center d-inline-flex d-md-none logo-xs" href="http://localhost:64994/web/guest" rel="nofollow">
+							<img alt="" class="mr-2" height="56" src="/image/layout_set_logo?img_id=35596&amp;t=1631804433449" />
+
+								<h2 class="font-weight-bold h2 mb-0 text-dark">Liferay DXP</h2>
+						</a>
+
+	<button aria-controls="navigationCollapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right" data-target="#navigationCollapse" data-toggle="liferay-collapse" type="button">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div aria-expanded="false" class="collapse navbar-collapse" id="navigationCollapse">
+<link href="/o/site-navigation-menu-web/css/main.css?browserId=other&amp;themeId=classic_WAR_classictheme&amp;minifierType=css&amp;languageId=en_US&amp;b=7310&amp;t=1601269540000" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	<div class="portlet-boundary portlet-boundary_com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet_  portlet-static portlet-static-end portlet-barebone portlet-navigation " id="p_p_id_com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet_">
+		<span id="p_com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet"></span>
+
+
+
+
+	
+
+	
+		
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+		
+<section class="portlet" id="portlet_com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet">
+
+
+	<div class="portlet-content">
+
+
+		
+			<div class=" portlet-content-container">
+				
+
+
+	<div class="portlet-body">
+
+
+
+	
+		
+			
+			
+				
+					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+				
+
+				
+					
+					
+						
+
+
+	
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+
+	<div id="navbar_com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet">
+		<ul aria-label="Site Pages" class="navbar-blank navbar-nav navbar-site" role="menubar">
+
+
+
+
+
+
+					<li class="lfr-nav-item nav-item selected active" id="layout_com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet_2" role="presentation">
+						<a aria-labelledby="layout_com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet_2"  class="nav-link text-truncate" href='http://localhost:64994/web/guest/home'  role="menuitem">
+							<span class="text-truncate"> Home </span>
+						</a>
+
+					</li>
+		</ul>
+	</div>
+
+<script type="text/javascript">
+// <![CDATA[
+AUI().use('liferay-navigation-interaction', function(A) {(function() {var $ = AUI.$;var _ = AUI._;		var navigation = A.one('#navbar_com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet');
+
+		Liferay.Data.NAV_INTERACTION_LIST_SELECTOR = '.navbar-site';
+		Liferay.Data.NAV_LIST_SELECTOR = '.navbar-site';
+
+		if (navigation) {
+			navigation.plug(Liferay.NavigationInteraction);
+		}
+})();});
+// ]]>
+</script>
+	
+	
+	
+
+
+	
+	
+
+					
+				
+			
+		
+	
+	
+
+
+
+	</div>
+
+			</div>
+		
+	</div>
+</section>
+	
+
+		
+		
+	
+
+
+
+
+
+
+
+	</div>
+
+
+
+
+	</div>
+					</div>
+				</div>
+			</header>
+
+		<section class=" flex-fill" id="content">
+			<h2 class="sr-only" role="heading" aria-level="1">Home</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		<div class="layout-content portlet-layout" id="main-content" role="main">
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	<div class=" mb-lg-0 ml-lg-0 mr-lg-0 mt-lg-0 pb-lg-5 pl-lg-5 pr-lg-5 pt-lg-5 pr-sm-5 ml-sm-0 mr-sm-0 pb-sm-5 mb-sm-0 pt-sm-5 pl-sm-5 mt-sm-0 pr-5 ml-0 mr-0 pb-5 mb-0 pt-5 pl-5 mt-0 pr-md-5 ml-md-0 mr-md-0 pb-md-5 mb-md-0 pt-md-5 pl-md-5 mt-md-0" style="box-sizing: border-box;background-position: 50% 50%; background-repeat: no-repeat; background-size: cover; background-image: url(/documents/37726/37727/welcome_bg.jpg/c757aea8-53f1-c805-1e97-414abf0b79f5?version=1.0&t=1601509287446&download=true);border-radius: rounded-0;border-style: solid; border-width: 0px;opacity: 1.0;">
+
+				
+
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+		
+		
+
+			
+
+			
+
+			<div class=" container mb-lg-5 mt-lg-5 pb-lg-0 pl-lg-3 pr-lg-3 pt-lg-0 pr-sm-3 pb-sm-0 mb-sm-5 pt-sm-0 pl-sm-3 mt-sm-5 pr-3 pb-0 mb-5 pt-0 pl-3 mt-5 pr-md-3 pb-md-0 mb-md-5 pt-md-0 pl-md-3 mt-md-5" style="box-sizing: border-box;border-radius: rounded-0;border-style: solid; border-width: 0px;opacity: 1.0;">
+
+				
+
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+		
+		
+		
+		
+			<div class="">
+
+				
+
+				<div class=" mb-lg-3 ml-lg-0 mr-lg-0 mt-lg-0 pb-lg-0 pl-lg-0 pr-lg-0 pt-lg-0 text-left mb-sm-3 mb-3 mb-md-3" style="box-sizing: border-box;border-style: solid; border-width: 0px;opacity: 1.0;color: white;">
+					<div id="fragment-0-zeni" > <h1 class="component-heading mb-0 text-break" data-lfr-editable-id="element-text" data-lfr-editable-type="text">Hello World</h1></div><style>.fragment-heading-text-colored a {
+	color: inherit;
+}</style>
+				</div>
+			</div>
+		
+		
+		
+	
+
+
+
+	
+		
+		
+		
+		
+		
+			<div class="">
+
+				
+
+				<div class=" mb-lg-3 ml-lg-0 mr-lg-0 mt-lg-0 pb-lg-0 pl-lg-0 pr-lg-0 pt-lg-0 text-left mb-sm-3 mb-3 mb-md-3" style="box-sizing: border-box;border-style: solid; border-width: 0px;opacity: 1.0;color: white;">
+					<div id="fragment-0-uhcj" > <div class="clearfix component-paragraph text-break" data-lfr-editable-id="element-text" data-lfr-editable-type="rich-text">Welcome to Liferay Digital Experience Platform 7.3.10 GA1 <br>(Athanasius / Build 7310 / September 22, 2020).</div></div><style>.component-paragraph img {
+	max-width: 100%;
+}</style>
+				</div>
+			</div>
+		
+		
+		
+	
+
+
+			</div>
+
+			
+		
+		
+		
+		
+		
+	
+
+
+			</div>
+
+
+
+
+		</div>
+	
+
+
+<form action="#" aria-hidden="true" class="hide" id="hrefFm" method="post" name="hrefFm"><span></span><input hidden type="submit"/></form>		</section>
+
+			<footer id="footer" role="contentinfo">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12 text-center text-md-left">
+Powered By
+							<a class="text-white" href="http://www.liferay.com" rel="external">Liferay</a>
+						</div>
+					</div>
+				</div>
+			</footer>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+
+
+
+
+
+	
+
+
+
+	
+
+
+
+
+
+
+
+
+
+	
+
+	
+
+
+
+
+
+	
+
+
+
+	
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+// <![CDATA[
+
+	
+		
+		
+
+			
+
+			
+		
+	
+
+// ]]>
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	// <![CDATA[
+
+		
+
+		Liferay.currentURL = '/';
+		Liferay.currentURLEncoded = '%2F';
+
+	// ]]>
+</script>
+
+
+
+	
+
+	
+
+	<script type="text/javascript">
+		// <![CDATA[
+			
+				
+
+				
+
+				
+			
+		// ]]>
+	</script>
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+
+		
+
+		
+	
+
+
+<script type="text/javascript">
+// <![CDATA[
+(function() {var $ = AUI.$;var _ = AUI._;
+	var onVote = function (event) {
+		if (window.Analytics) {
+			Analytics.send('VOTE', 'Ratings', {
+				className: event.className,
+				classPK: event.classPK,
+				ratingType: event.ratingType,
+				score: event.score,
+			});
+		}
+	};
+
+	var onDestroyPortlet = function () {
+		Liferay.detach('ratings:vote', onVote);
+		Liferay.detach('destroyPortlet', onDestroyPortlet);
+	};
+
+	Liferay.on('ratings:vote', onVote);
+	Liferay.on('destroyPortlet', onDestroyPortlet);
+})();(function() {var $ = AUI.$;var _ = AUI._;
+	var onShare = function (data) {
+		if (window.Analytics) {
+			Analytics.send('shared', 'SocialBookmarks', {
+				className: data.className,
+				classPK: data.classPK,
+				type: data.type,
+				url: data.url,
+			});
+		}
+	};
+
+	var onDestroyPortlet = function () {
+		Liferay.detach('socialBookmarks:share', onShare);
+		Liferay.detach('destroyPortlet', onDestroyPortlet);
+	};
+
+	Liferay.on('socialBookmarks:share', onShare);
+	Liferay.on('destroyPortlet', onDestroyPortlet);
+})();(function() {var $ = AUI.$;var _ = AUI._;
+	var pathnameRegexp = /\/documents\/(\d+)\/(\d+)\/(.+?)\/([^&]+)/;
+
+	function handleDownloadClick(event) {
+		if (event.target.nodeName.toLowerCase() === 'a' && window.Analytics) {
+			var anchor = event.target;
+			var match = pathnameRegexp.exec(anchor.pathname);
+
+			var fileEntryId =
+				anchor.dataset.analyticsFileEntryId ||
+				(anchor.parentElement &&
+					anchor.parentElement.dataset.analyticsFileEntryId);
+
+			if (fileEntryId && match) {
+				var getParameterValue = function (parameterName) {
+					var result = null;
+
+					anchor.search
+						.substr(1)
+						.split('&')
+						.forEach(function (item) {
+							var tmp = item.split('=');
+
+							if (tmp[0] === parameterName) {
+								result = decodeURIComponent(tmp[1]);
+							}
+						});
+
+					return result;
+				};
+
+				Analytics.send('documentDownloaded', 'Document', {
+					groupId: match[1],
+					fileEntryId: fileEntryId,
+					preview: !!window._com_liferay_document_library_analytics_isViewFileEntry,
+					title: decodeURIComponent(match[3].replace(/\+/gi, ' ')),
+					version: getParameterValue('version'),
+				});
+			}
+		}
+	}
+
+	var onDestroyPortlet = function () {
+		document.body.removeEventListener('click', handleDownloadClick);
+	};
+
+	Liferay.once('destroyPortlet', onDestroyPortlet);
+
+	var onPortletReady = function () {
+		document.body.addEventListener('click', handleDownloadClick);
+	};
+
+	Liferay.once('portletReady', onPortletReady);
+})();(function() {var $ = AUI.$;var _ = AUI._;
+	var onDestroyPortlet = function () {
+		Liferay.detach('messagePosted', onMessagePosted);
+		Liferay.detach('destroyPortlet', onDestroyPortlet);
+	};
+
+	Liferay.on('destroyPortlet', onDestroyPortlet);
+
+	var onMessagePosted = function (event) {
+		if (window.Analytics) {
+			Analytics.send('posted', 'Comment', {
+				className: event.className,
+				classPK: event.classPK,
+				commentId: event.commentId,
+				text: event.text,
+			});
+		}
+	};
+
+	Liferay.on('messagePosted', onMessagePosted);
+})();
+	if (window.svg4everybody && Liferay.Data.ICONS_INLINE_SVG) {
+		svg4everybody(
+			{
+				polyfill: true,
+				validate: function (src, svg, use) {
+					return !src || !src.startsWith('#');
+				}
+			}
+		);
+	}
+
+	
+		Liferay.Portlet.register('com_liferay_product_navigation_user_personal_bar_web_portlet_ProductNavigationUserPersonalBarPortlet');
+	
+
+	Liferay.Portlet.onLoad(
+		{
+			canEditTitle: false,
+			columnPos: 0,
+			isStatic: 'end',
+			namespacedId: 'p_p_id_com_liferay_product_navigation_user_personal_bar_web_portlet_ProductNavigationUserPersonalBarPortlet_',
+			portletId: 'com_liferay_product_navigation_user_personal_bar_web_portlet_ProductNavigationUserPersonalBarPortlet',
+			refreshURL: '/c/portal/render_portlet?p_l_id=8&p_p_id=com_liferay_product_navigation_user_personal_bar_web_portlet_ProductNavigationUserPersonalBarPortlet&p_p_lifecycle=0&p_t_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=null&p_p_col_pos=null&p_p_col_count=null&p_p_static=1&p_p_isolated=1&currentURL=%2F&settingsScope=portletInstance',
+			refreshURLData: {}
+		}
+	);
+
+	
+		Liferay.Portlet.register('com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch');
+	
+
+	Liferay.Portlet.onLoad(
+		{
+			canEditTitle: false,
+			columnPos: 0,
+			isStatic: 'end',
+			namespacedId: 'p_p_id_com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch_',
+			portletId: 'com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch',
+			refreshURL: '/c/portal/render_portlet?p_l_id=8&p_p_id=com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet_INSTANCE_templateSearch&p_p_lifecycle=0&p_t_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=null&p_p_col_pos=null&p_p_col_count=null&p_p_static=1&p_p_isolated=1&currentURL=%2F&settingsScope=portletInstance',
+			refreshURLData: {}
+		}
+	);
+
+	
+		Liferay.Portlet.register('com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet');
+	
+
+	Liferay.Portlet.onLoad(
+		{
+			canEditTitle: false,
+			columnPos: 0,
+			isStatic: 'end',
+			namespacedId: 'p_p_id_com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet_',
+			portletId: 'com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet',
+			refreshURL: '/c/portal/render_portlet?p_l_id=8&p_p_id=com_liferay_site_navigation_menu_web_portlet_SiteNavigationMenuPortlet&p_p_lifecycle=0&p_t_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=null&p_p_col_pos=null&p_p_col_count=null&p_p_static=1&p_p_isolated=1&currentURL=%2F&settingsScope=portletInstance',
+			refreshURLData: {}
+		}
+	);
+Liferay.Loader.require('metal-dom/src/all/dom', 'frontend-js-web/liferay/toast/commands/OpenToast.es', function(metalDomSrcAllDom, frontendJsWebLiferayToastCommandsOpenToastEs) {
+try {
+(function() {
+var dom = metalDomSrcAllDom;
+var $ = AUI.$;var _ = AUI._;
+	var focusInPortletHandler = dom.delegate(
+		document,
+		'focusin',
+		'.portlet',
+		function(event) {
+			dom.addClasses(dom.closest(event.delegateTarget, '.portlet'), 'open');
+		}
+	);
+
+	var focusOutPortletHandler = dom.delegate(
+		document,
+		'focusout',
+		'.portlet',
+		function(event) {
+			dom.removeClasses(dom.closest(event.delegateTarget, '.portlet'), 'open');
+		}
+	);
+
+})();
+(function() {
+var toastCommands = frontendJsWebLiferayToastCommandsOpenToastEs;
+var $ = AUI.$;var _ = AUI._;
+			AUI().use(
+				'liferay-session',
+				function() {
+					Liferay.Session = new Liferay.SessionBase(
+						{
+							autoExtend: true,
+							redirectOnExpire: false,
+							redirectUrl: 'http://localhost:64994/web/guest',
+							sessionLength: 890,
+							warningLength: 0
+						}
+					);
+
+					
+				}
+			);
+		
+})();
+} catch (err) {
+	console.error(err);
+}
+});AUI().use('liferay-menu', 'aui-base', function(A) {(function() {var $ = AUI.$;var _ = AUI._;
+	if (A.UA.mobile) {
+		Liferay.Util.addInputCancel();
+	}
+})();(function() {var $ = AUI.$;var _ = AUI._;
+	new Liferay.Menu();
+
+	var liferayNotices = Liferay.Data.notices;
+
+	for (var i = 0; i < liferayNotices.length; i++) {
+		Liferay.Util.openToast(liferayNotices[i]);
+	}
+
+})();});
+// ]]>
+</script>
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+
+<script src="http://localhost:64994/o/classic-theme/js/main.js?browserId=other&amp;minifierType=js&amp;languageId=en_US&amp;b=7310&amp;t=1631804400000" type="text/javascript"></script>
+
+
+
+
+<script type="text/javascript">
+	// <![CDATA[
+		AUI().use(
+			'aui-base',
+			function(A) {
+				var frameElement = window.frameElement;
+
+				if (frameElement && frameElement.getAttribute('id') === 'simulationDeviceIframe') {
+					A.getBody().addClass('lfr-has-simulation-panel');
+				}
+			}
+		);
+	// ]]>
+</script><script type="text/javascript">
+// <![CDATA[
+Liferay.Loader.require('frontend-js-alert-support-web@1.0.7/index', function(frontendJsAlertSupportWeb107Index) {
+try {
+(function() {
+var AlertProvider = frontendJsAlertSupportWeb107Index;
+AlertProvider.default()
+})();
+} catch (err) {
+	console.error(err);
+}
+});
+// ]]>
+</script><script type="text/javascript">
+// <![CDATA[
+Liferay.Loader.require('frontend-js-tabs-support-web@1.0.8/index', function(frontendJsTabsSupportWeb108Index) {
+try {
+(function() {
+var TabsProvider = frontendJsTabsSupportWeb108Index;
+TabsProvider.default()
+})();
+} catch (err) {
+	console.error(err);
+}
+});
+// ]]>
+</script><script type="text/javascript">
+// <![CDATA[
+Liferay.Loader.require('frontend-js-tooltip-support-web@3.0.2/index', function(frontendJsTooltipSupportWeb302Index) {
+try {
+(function() {
+var TooltipSupport = frontendJsTooltipSupportWeb302Index;
+TooltipSupport.default()
+})();
+} catch (err) {
+	console.error(err);
+}
+});
+// ]]>
+</script><script type="text/javascript">
+// <![CDATA[
+Liferay.Loader.require('remote-app-support-web@1.0.4/index', function(remoteAppSupportWeb104Index) {
+try {
+(function() {
+var RemoteAppSupport = remoteAppSupportWeb104Index;
+RemoteAppSupport.default()
+})();
+} catch (err) {
+	console.error(err);
+}
+});
+// ]]>
+</script><script type="text/javascript">
+// <![CDATA[
+Liferay.Loader.require('frontend-js-dropdown-support-web@1.0.8/index', function(frontendJsDropdownSupportWeb108Index) {
+try {
+(function() {
+var DropdownProvider = frontendJsDropdownSupportWeb108Index;
+DropdownProvider.default()
+})();
+} catch (err) {
+	console.error(err);
+}
+});
+// ]]>
+</script><script type="text/javascript">
+// <![CDATA[
+Liferay.Loader.require('frontend-js-collapse-support-web@1.0.10/index', function(frontendJsCollapseSupportWeb1010Index) {
+try {
+(function() {
+var CollapseProvider = frontendJsCollapseSupportWeb1010Index;
+CollapseProvider.default()
+})();
+} catch (err) {
+	console.error(err);
+}
+});
+// ]]>
+</script>
+</body>
+
+</html>
