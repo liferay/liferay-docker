@@ -7,7 +7,7 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
 RUN apt update && \
-	apt install -y bash curl ffmpeg ghostscript gifsicle imagemagick libnss3 libtcnative-1 tree ttf-dejavu zulu11-jdk=11.0.12-1 telnet && \
+	apt install -y bash curl ffmpeg ghostscript gifsicle imagemagick libnss3 libtcnative-1 telnet tree ttf-dejavu zulu11-jdk=11.0.12-1 && \
 	apt upgrade -y && \
 	apt clean
 
