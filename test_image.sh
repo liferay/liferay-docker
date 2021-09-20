@@ -125,7 +125,8 @@ function test_docker_image_fix_pack_installed {
 			log_test_success
 		else
 			log_test_failure
-			echo "The installed patch (${correct_fix_pack}) does not match the patch version retrived from the patching-tool in the container (${installed_fix_pack})"
+
+			echo "The installed patch (${correct_fix_pack}) does not match the patch version retrived from the Patching Tool in the container (${installed_fix_pack})."
 		fi
 	else
 		log_test_success
