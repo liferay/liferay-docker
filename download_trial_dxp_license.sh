@@ -7,9 +7,14 @@ function main {
 
 	if [[ ${release_file_name} == *-commerce-enterprise-* ]] || [[ ${release_file_name} == *-dxp-* ]]
 	then
-		if [ -z "${LIFERAY_DOCKER_LICENSE_CMD}" ]
+		if [ -z "${LIFERAY_DOCKER_LICENSE_API_HEADER}" ]
 		then
-			echo "Set the environment variable LIFERAY_DOCKER_LICENSE_CMD to generate a trial DXP license."
+			echo "Set the environment variable LIFERAY_DOCKER_LICENSE_API_HEADER to generate a trial DXP license."
+
+			exit 1
+		elif [ -z "${LIFERAY_DOCKER_LICENSE_API_URL}" ]
+		then
+			echo "Set the environment variable LIFERAY_DOCKER_LICENSE_API_URL to generate a trial DXP license."
 
 			exit 1
 		else
@@ -17,7 +22,7 @@ function main {
 
 			local license_file_name="trial-dxp-license-${license_start_date}.xml"
 
-			eval "curl --silent --header \"${LIFERAY_DOCKER_LICENSE_CMD}?licenseLifetime=$((1000 * 60 * 60 * 24 * 90))&startDate=${license_start_date}&owner=docker%40liferay.com\" > ${license_dir}/deploy/${license_file_name}.json"
+			curl --silent --header "${LIFERAY_DOCKER_LICENSE_API_HEADER}" "${LIFERAY_DOCKER_LICENSE_API_URL}?licenseLifetime=$((1000 *60 * 60 * 24 * 90))&startDate=${license_start_date}&owner=docker%40liferay.com" > "${license_dir}/deploy/${license_file_name}.json"
 
 			sed "s/\\\n//g" "${license_dir}/deploy/${license_file_name}.json" |
 			sed "s/\\\t//g" |
@@ -46,9 +51,14 @@ function main {
 
 	if [[ ${release_file_name} == *-commerce-enterprise-* ]]
 	then
-		if [ -z "${LIFERAY_DOCKER_COMMERCE_LICENSE_CMD}" ]
+		if [ -z "${LIFERAY_DOCKER_LICENSE_API_HEADER}" ]
 		then
-			echo "Set the environment variable LIFERAY_DOCKER_COMMERCE_LICENSE_CMD to generate a trial Commerce license."
+			echo "Set the environment variable LIFERAY_DOCKER_LICENSE_API_HEADER to generate a trial Commerce license."
+
+			exit 1
+		elif [ -z "${LIFERAY_DOCKER_COMMERCE_LICENSE_API_URL}" ]
+		then
+			echo "Set the environment variable LIFERAY_DOCKER_COMMERCE_LICENSE_API_URL to generate a trial Commerce license."
 
 			exit 1
 		else
@@ -56,7 +66,7 @@ function main {
 
 			local commerce_license_file_name="trial-commerce-enterprise-license-${license_start_date}.li"
 
-			eval "curl --silent --header \"${LIFERAY_DOCKER_COMMERCE_LICENSE_CMD}?licenseLifetime=$((1000 * 60 * 60 * 24 * 90))&startDate=${license_start_date}&owner=docker%40liferay.com\" > ${license_dir}/data/license/${commerce_license_file_name}"
+			curl --silent --header "${LIFERAY_DOCKER_LICENSE_API_HEADER}" "${LIFERAY_DOCKER_COMMERCE_LICENSE_API_URL}?licenseLifetime=$((1000 * 60 * 60 * 24 * 90))&startDate=${license_start_date}&owner=docker%40liferay.com" > "${license_dir}/data/license/${commerce_license_file_name}"
 
 			sed -i 's/["]//g' "${license_dir}/data/license/${commerce_license_file_name}"
 
