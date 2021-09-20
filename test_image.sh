@@ -172,20 +172,23 @@ function test_health_status {
 	echo ""
 
 	log_test_failure
-	echo "Container health status is: ${status}"
+
+	echo "Container health status is: ${status}."
 }
 
 function test_page {
 	local content
 
 	content=$(curl --fail -s --show-error "${1}")
+
 	local exit_code=$?
 
 	if [ ${exit_code} -gt 0 ]
 	then
 		log_test_failure "${FUNCNAME[1]}"
 
-		echo "curl exit code: ${exit_code}."
+		echo "curl exit code is: ${exit_code}."
+		echo ""
 		echo "${content}"
 	else
 		if [[ "${content}" =~ .*"${2}".* ]]
@@ -193,7 +196,8 @@ function test_page {
 			log_test_success "${FUNCNAME[1]}"
 		else
 			log_test_failure "${FUNCNAME[1]}"
-			echo "The \"${2}\" string is not present in the page source."
+
+			echo "The \"${2}\" string is not present on the page."
 		fi
 	fi
 }
