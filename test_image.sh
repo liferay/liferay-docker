@@ -28,21 +28,21 @@ function clean_up_test_directory {
 	fi
 }
 
-function log_failed_test_result {
+function log_test_failure {
 	TEST_RESULT=1
 
-	if [ -n "$1" ]
+	if [ -n "${1}" ]
 	then
-		echo "[$1] FAILED"
+		echo "[${1}] FAILED"
 	else
 		echo "[${FUNCNAME[1]}] FAILED"
 	fi
 }
 
-function log_success_test_result {
-	if [ -n "$1" ]
+function log_test_success {
+	if [ -n "${1}" ]
 	then
-		echo "[$1] SUCCESS"
+		echo "[${1}] SUCCESS"
 	else
 		echo "[${FUNCNAME[1]}] SUCCESS"
 	fi
@@ -122,13 +122,13 @@ function test_docker_image_fix_pack_installed {
 
 		if [ "${correct_fix_pack}" == "${installed_fix_pack}" ]
 		then
-			log_success_test_result
+			log_test_success
 		else
-			log_failed_test_result
+			log_test_failure
 			echo "The installed patch (${correct_fix_pack}) does not match the patch version retrived from the patching-tool in the container (${installed_fix_pack})"
 		fi
 	else
-		log_success_test_result
+		log_test_success
 	fi
 }
 
@@ -160,7 +160,7 @@ function test_health_status {
 		then
 			echo ""
 
-			log_success_test_result
+			log_test_success
 
 			return
 		fi
@@ -170,26 +170,28 @@ function test_health_status {
 
 	echo ""
 
-	log_failed_test_result
+	log_test_failure
 	echo "Container health status is: ${status}"
 }
 
 function test_page {
 	local content
+
 	content=$(curl --fail -s --show-error "${1}")
 	local exit_code=$?
 
-	if [ $exit_code -gt 0 ]
+	if [ ${exit_code} -gt 0 ]
 	then
-		log_failed_test_result "${FUNCNAME[1]}"
-		echo "curl exited with code: ${exit_code}."
+		log_test_failure "${FUNCNAME[1]}"
+
+		echo "curl exit code: ${exit_code}."
 		echo "${content}"
 	else
 		if [[ "${content}" =~ .*"${2}".* ]]
 		then
-			log_success_test_result "${FUNCNAME[1]}"
+			log_test_success "${FUNCNAME[1]}"
 		else
-			log_failed_test_result "${FUNCNAME[1]}"
+			log_test_failure "${FUNCNAME[1]}"
 			echo "The \"${2}\" string is not present in the page source."
 		fi
 	fi
