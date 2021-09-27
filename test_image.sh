@@ -12,6 +12,7 @@ function check_usage {
 		echo "    LIFERAY_DOCKER_IMAGE_ID: ID of Docker image"
 		echo "    LIFERAY_DOCKER_TEST_HOTFIX_URL: URL of the test hotfix to be installed"
 		echo "    LIFERAY_DOCKER_TEST_INSTALLED_PATCHES: Comma separated list of installed patches (e.g. dxp-4-7210,hotfix-1072-7210)"
+		echo "    LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL: URL of the test patching-tool to be installed"
 		echo ""
 		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2.10.1-sp1-202001171544 ${0}"
 
@@ -60,6 +61,7 @@ function main {
 	test_docker_image_files
 	test_docker_image_fix_pack_installed
 	test_docker_image_hotfix_installed
+	test_docker_image_patching_tool_update
 	test_docker_image_scripts_1
 	test_docker_image_scripts_2
 
@@ -77,15 +79,30 @@ function prepare_mount {
 
 	cp -r templates/test/* "${TEST_DIR}"
 
+	mkdir -p "${TEST_DIR}/patching"
+
+	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL}" ]
+	then
+		local patcing_tool_file_name=${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL##*/}
+
+		download "downloads/patching-tool/${patcing_tool_file_name}" "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL}"
+	else
+		local patcing_tool_file_name=$(basename $(ls -Art downloads/patching-tool/*.zip | tail -n 1))
+	fi
+
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
 	then
-		mkdir -p "${TEST_DIR}/patching"
-
 		local hotfix_file_name=${LIFERAY_DOCKER_TEST_HOTFIX_URL##*/}
 
 		download "downloads/hotfix/${hotfix_file_name}" "${LIFERAY_DOCKER_TEST_HOTFIX_URL}"
 
 		cp "downloads/hotfix/${hotfix_file_name}" "${TEST_DIR}/patching"
+	fi
+
+	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" ]
+	then
+			download "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip"
+			cp "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "${TEST_DIR}/patching/"
 	fi
 }
 
@@ -137,6 +154,22 @@ function test_docker_image_hotfix_installed {
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
 	then
 		test_page "http://localhost:${CONTAINER_PORT_HTTP}/" "Hotfix installation on the Docker image was successful."
+	fi
+}
+
+function test_docker_image_patching_tool_update {
+	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" ]
+	then
+		local output=$(docker logs --details "${CONTAINER_ID}" 2>/dev/null)
+
+		if [[ "${output}" =~ .*"Patching Tool updated successfully".* ]]
+		then
+			log_test_success
+		else
+			log_test_failure
+
+			echo "There was an error with the patching tool upgrade."
+		fi
 	fi
 }
 

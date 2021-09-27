@@ -266,7 +266,6 @@ function update_patching_tool {
 		#
 
 		latest_patching_tool_version=$(./patching_tool_version.sh ${patching_tool_minor_version})
-
 		local exit_code=$?
 
 		if [ ${exit_code} -gt 0 ]
@@ -289,6 +288,11 @@ function update_patching_tool {
 		rm -fr "${TEMP_DIR}/liferay/patching-tool/patches"
 
 		mv "${TEMP_DIR}/liferay/patching-tool-upgrade-patches" "${TEMP_DIR}/liferay/patching-tool/patches"
+
+		if [ ! -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" ]
+		then
+			export LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION="${latest_patching_tool_version}"
+		fi
 	fi
 }
 
