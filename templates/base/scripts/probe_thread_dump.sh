@@ -79,7 +79,14 @@ function main {
 	then
 		echo -e "${curl_content}"
 
-		kill -3 $(pgrep -f "org.apache.catalina.startup.Bootstrap")
+		local thread_dump=$(jattach $(ps -ef | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{print $1}') threaddump)
+		
+		if [ ! -e  "${LIFERAY_THREAD_DUMP_DIRECTORY}" ]
+		then
+			mkdir -p ${LIFERAY_THREAD_DUMP_DIRECTORY}
+		fi
+
+		echo -e "${thread_dump}" > "${LIFERAY_THREAD_DUMP_DIRECTORY}/$(hostname)_$(date +"%Y-%m-%dT%H:%M:%S%z").tdump"
 	fi
 
 	exit ${exit_code}
