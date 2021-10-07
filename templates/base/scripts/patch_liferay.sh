@@ -15,7 +15,7 @@ function apply_patch {
 	elif (!(echo "${patch_file_name}" | grep -q "7310.zip") &&
 		  /opt/liferay/patching-tool/patching-tool.sh apply "${LIFERAY_PATCHING_DIR}/${patch_file_name}")
 	then
-		echo" ${patch_file_name}" > /opt/liferay/patching-tool/patch-applied
+		echo "${patch_file_name}" > /opt/liferay/patching-tool/patch-applied
 
 		install_patch_step_2
 	else
