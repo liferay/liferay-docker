@@ -221,3 +221,10 @@ docker.image.git.id-2.0.1=8bec28e0e6d6bc844bdad9e5300e4a1025910e40
 
 docker.image.change.log-2.0.2=DOCKER-28 DOCKER-6 DOCKER-36
 docker.image.git.id-2.0.2=ec16437fec967e3a8e462f93c571b8d1fc57d459
+
+#
+# Liferay Docker Image Version 2.0.3
+#
+
+docker.image.change.log-2.0.3=DOCKER-38 DOCKER-43 DOCKER-45 DOCKER-26 DOCKER-42
+docker.image.git.id-2.0.3=98a831687fed432447a5a41a45c2fc0826598021
