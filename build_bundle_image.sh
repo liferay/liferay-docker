@@ -266,6 +266,7 @@ function update_patching_tool {
 		#
 
 		latest_patching_tool_version=$(./patching_tool_version.sh ${patching_tool_minor_version})
+
 		local exit_code=$?
 
 		if [ ${exit_code} -gt 0 ]

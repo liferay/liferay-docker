@@ -10,9 +10,9 @@ function check_usage {
 		echo "The script reads the following environment variables:"
 		echo ""
 		echo "    LIFERAY_DOCKER_IMAGE_ID: ID of Docker image"
-		echo "    LIFERAY_DOCKER_TEST_HOTFIX_URL: URL of the test hotfix to be installed"
+		echo "    LIFERAY_DOCKER_TEST_HOTFIX_URL: URL of the test hotfix to install"
 		echo "    LIFERAY_DOCKER_TEST_INSTALLED_PATCHES: Comma separated list of installed patches (e.g. dxp-4-7210,hotfix-1072-7210)"
-		echo "    LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL: URL of the test patching-tool to be installed"
+		echo "    LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL: URL of the test Patching Tool to install"
 		echo ""
 		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2.10.1-sp1-202001171544 ${0}"
 
@@ -61,7 +61,7 @@ function main {
 	test_docker_image_files
 	test_docker_image_fix_pack_installed
 	test_docker_image_hotfix_installed
-	test_docker_image_patching_tool_update
+	test_docker_image_patching_tool_updated
 	test_docker_image_scripts_1
 	test_docker_image_scripts_2
 
@@ -101,8 +101,9 @@ function prepare_mount {
 
 	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" ]
 	then
-			download "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip"
-			cp "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "${TEST_DIR}/patching/"
+		download "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip"
+
+		cp "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "${TEST_DIR}/patching/"
 	fi
 }
 
@@ -157,7 +158,7 @@ function test_docker_image_hotfix_installed {
 	fi
 }
 
-function test_docker_image_patching_tool_update {
+function test_docker_image_patching_tool_updated {
 	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" ]
 	then
 		local output=$(docker logs --details "${CONTAINER_ID}" 2>/dev/null)
@@ -168,7 +169,7 @@ function test_docker_image_patching_tool_update {
 		else
 			log_test_failure
 
-			echo "There was an error with the patching tool upgrade."
+			echo "Unable to update the Patching Tool."
 		fi
 	fi
 }
