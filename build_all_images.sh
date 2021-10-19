@@ -42,7 +42,6 @@ function build_bundle_image {
 	#
 	# LIFERAY_DOCKER_IMAGE_FILTER="7.2.10-dxp-1 "  ./build_all_images.sh
 	# LIFERAY_DOCKER_IMAGE_FILTER=7.2.10 ./build_all_images.sh
-	# LIFERAY_DOCKER_IMAGE_FILTER=commerce ./build_all_images.sh
 	#
 
 	if [ -n "${LIFERAY_DOCKER_IMAGE_FILTER}" ] && [[ ! $(echo "${1} ${2} ${3} ${4}" | grep "${LIFERAY_DOCKER_IMAGE_FILTER}") ]]
@@ -502,9 +501,6 @@ function main {
 	build_base_image
 
 	local release_file_urls=(
-		#releases.liferay.com/commerce/2.0.7/liferay-commerce-2.0.7-7.2.x-201912261227.7z
-		#files.liferay.com/private/ee/commerce/2.1.2/liferay-commerce-enterprise-2.1.2-7.1.x-202007312031.7z
-		#files.liferay.com/private/ee/commerce/2.1.2/liferay-commerce-enterprise-2.1.2-7.2.x-202007312039.7z
 		releases.liferay.com/portal/6.1.2-ga3/liferay-portal-tomcat-6.1.2-ce-ga3-20130816114619181.zip
 		files.liferay.com/private/ee/portal/6.1.30.5/liferay-portal-tomcat-6.1-ee-ga3-sp5-20160201142343123.zip
 		releases.liferay.com/portal/6.2.5-ga6/liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip

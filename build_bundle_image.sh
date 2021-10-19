@@ -6,15 +6,7 @@ function build_docker_image {
 	local docker_image_name
 	local label_name
 
-	if [[ ${RELEASE_FILE_NAME} == *-commerce-enterprise-* ]]
-	then
-		docker_image_name="commerce-enterprise"
-		label_name="Liferay Commerce Enterprise"
-	elif [[ ${RELEASE_FILE_NAME} == *-commerce-* ]]
-	then
-		docker_image_name="commerce"
-		label_name="Liferay Commerce"
-	elif [[ ${RELEASE_FILE_NAME} == *-dxp-* ]] || [[ ${RELEASE_FILE_NAME} == *-private* ]]
+	if [[ ${RELEASE_FILE_NAME} == *-dxp-* ]] || [[ ${RELEASE_FILE_NAME} == *-private* ]]
 	then
 		docker_image_name="dxp"
 		label_name="Liferay DXP"
@@ -66,15 +58,6 @@ function build_docker_image {
 	if [[ ${service_pack_name} == ga* ]] || [[ ${service_pack_name} == sp* ]]
 	then
 		release_version=${release_version}-${service_pack_name}
-	fi
-
-	if [[ ${RELEASE_FILE_NAME} == *-commerce-* ]]
-	then
-		local commerce_portal_variant=${LIFERAY_DOCKER_RELEASE_FILE_URL%-*}
-
-		commerce_portal_variant=${commerce_portal_variant: -5}
-
-		release_version=${release_version}-${commerce_portal_variant}
 	fi
 
 	local label_version=${release_version}
@@ -144,9 +127,8 @@ function check_usage {
 		echo "The script reads the following environment variables:"
 		echo ""
 		echo "    LIFERAY_DOCKER_FIX_PACK_URL (optional): URL to a fix pack"
-		echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API key used for both the trial and commerce license"
-		echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): URL to generate the trial license"
-		echo "    LIFERAY_DOCKER_COMMERCE_LICENSE_API_URL (required for DXP): URL to generate the commerce license"
+		echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API header used to generate the trial license"
+		echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
 		echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
 		echo ""
 		echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0} push"
@@ -162,7 +144,7 @@ function check_usage {
 function download_trial_dxp_license {
 	rm -fr "${TEMP_DIR}/liferay/data/license"
 
-	if (! ./download_trial_dxp_license.sh "${TEMP_DIR}/liferay" $(date "${CURRENT_DATE}" "+%s000") "${RELEASE_FILE_NAME}")
+	if (! ./download_trial_dxp_license.sh "${TEMP_DIR}/liferay" $(date "${CURRENT_DATE}" "+%s000"))
 	then
 		exit 4
 	fi
