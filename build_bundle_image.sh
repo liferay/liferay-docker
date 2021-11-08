@@ -3,31 +3,14 @@
 source ./_common.sh
 
 function build_docker_image {
-	local docker_image_name
-	local label_name
-
-	if [[ ${RELEASE_FILE_NAME} == *-dxp-* ]] || [[ ${RELEASE_FILE_NAME} == *-private* ]]
-	then
-		docker_image_name="dxp"
-		label_name="Liferay DXP"
-	elif [[ ${RELEASE_FILE_NAME} == *-portal-* ]]
-	then
-		docker_image_name="portal"
-		label_name="Liferay Portal"
-	else
-		echo "${RELEASE_FILE_NAME} is an unsupported release file name."
-
-		exit 1
-	fi
-
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
-		docker_image_name=${docker_image_name}-snapshot
+		DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME}-snapshot
 	fi
 
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == http://release-* ]] || [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == *release.liferay.com* ]]
 	then
-		docker_image_name=${docker_image_name}-snapshot
+		DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME}-snapshot
 	fi
 
 	local release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
@@ -97,12 +80,12 @@ function build_docker_image {
 	do
 		if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 		then
-			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-${release_version_single}-${release_hash}")
-			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
-			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_branch}")
+			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_branch}-${release_version_single}-${release_hash}")
+			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
+			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_branch}")
 		else
-			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}-d$(./release_notes.sh get-version)-${TIMESTAMP}")
-			DOCKER_IMAGE_TAGS+=("liferay/${docker_image_name}:${release_version_single}")
+			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_version_single}-d$(./release_notes.sh get-version)-${TIMESTAMP}")
+			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_version_single}")
 		fi
 	done
 
@@ -110,13 +93,29 @@ function build_docker_image {
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-		--build-arg LABEL_NAME="${label_name}" \
+		--build-arg LABEL_NAME="${LABEL_NAME}" \
 		--build-arg LABEL_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 		--build-arg LABEL_VERSION="${label_version}" \
 		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 		"${TEMP_DIR}"
+}
+
+function check_release {
+	if [[ ${RELEASE_FILE_NAME} == *-dxp-* ]] || [[ ${RELEASE_FILE_NAME} == *-private* ]]
+	then
+		DOCKER_IMAGE_NAME="dxp"
+		LABEL_NAME="Liferay DXP"
+	elif [[ ${RELEASE_FILE_NAME} == *-portal-* ]]
+	then
+		DOCKER_IMAGE_NAME="portal"
+		LABEL_NAME="Liferay Portal"
+	else
+		echo "${RELEASE_FILE_NAME} is an unsupported release file name."
+
+		exit 1
+	fi
 }
 
 function check_usage {
@@ -142,11 +141,14 @@ function check_usage {
 }
 
 function download_trial_dxp_license {
-	rm -fr "${TEMP_DIR}/liferay/data/license"
-
-	if (! ./download_trial_dxp_license.sh "${TEMP_DIR}/liferay" $(date "${CURRENT_DATE}" "+%s000"))
+	if [[ ${DOCKER_IMAGE_NAME} == "dxp" ]]
 	then
-		exit 4
+		rm -fr "${TEMP_DIR}/liferay/data/license"
+
+		if (! ./download_trial_dxp_license.sh "${TEMP_DIR}/liferay" $(date "${CURRENT_DATE}" "+%s000"))
+		then
+			exit 4
+		fi
 	fi
 }
 
@@ -175,6 +177,8 @@ function main {
 	make_temp_directory templates/bundle
 
 	prepare_temp_directory "${@}"
+
+	check_release "${@}"
 
 	update_patching_tool
 
