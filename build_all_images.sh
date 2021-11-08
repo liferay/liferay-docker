@@ -498,8 +498,8 @@ function build_bundle_images_dxp_74 {
 		files.liferay.com/private/ee/portal/7.4.13/liferay-dxp-tomcat-7.4.13-ga1-20211020105546063.7z
 
 	build_bundle_image \
-		7.4.13-ga1-nightly \
-		files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13-ga1.7z
+		7.4.13.u1-nightly \
+		files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13.u1.7z
 }
 
 function main {
