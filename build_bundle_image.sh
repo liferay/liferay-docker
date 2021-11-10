@@ -93,7 +93,7 @@ function build_docker_image {
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-		--build-arg LABEL_NAME="${LABEL_NAME}" \
+		--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
 		--build-arg LABEL_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
@@ -106,11 +106,11 @@ function check_release {
 	if [[ ${RELEASE_FILE_NAME} == *-dxp-* ]] || [[ ${RELEASE_FILE_NAME} == *-private* ]]
 	then
 		DOCKER_IMAGE_NAME="dxp"
-		LABEL_NAME="Liferay DXP"
+		DOCKER_LABEL_NAME="Liferay DXP"
 	elif [[ ${RELEASE_FILE_NAME} == *-portal-* ]]
 	then
 		DOCKER_IMAGE_NAME="portal"
-		LABEL_NAME="Liferay Portal"
+		DOCKER_LABEL_NAME="Liferay Portal"
 	else
 		echo "${RELEASE_FILE_NAME} is an unsupported release file name."
 
