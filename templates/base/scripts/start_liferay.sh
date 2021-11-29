@@ -7,8 +7,8 @@ function main {
 
 	if [ "${LIFERAY_THREAD_DUMP_PROBE_ENABLED}" == "true" ]
 	then
-		cat $LIFERAY_THREAD_DUMP_DIRECTORY/*.tdump
-		rm $LIFERAY_THREAD_DUMP_DIRECTORY/*.tdump
+		cat "${LIFERAY_THREAD_DUMP_DIRECTORY}"/*.tdump
+		rm "${LIFERAY_THREAD_DUMP_DIRECTORY}"/*.tdump
 	fi
 
 	if [ "${LIFERAY_JPDA_ENABLED}" == "true" ]
