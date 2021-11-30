@@ -10,7 +10,7 @@ function execute_scripts {
 			echo ""
 			echo "[LIFERAY] Executing ${SCRIPT_NAME}."
 
-			source ${1}/${SCRIPT_NAME}
+			${1}/${SCRIPT_NAME}
 		done
 
 		echo ""
