@@ -105,6 +105,11 @@ function prepare_mount {
 
 		cp "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "${TEST_DIR}/patching/"
 	fi
+
+	if [ -e "${TEST_DIR}/scripts" ]
+	then
+		chmod -R +x "${TEST_DIR}/scripts"
+	fi
 }
 
 function start_container {
