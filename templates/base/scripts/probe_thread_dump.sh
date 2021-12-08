@@ -79,7 +79,7 @@ function main {
 	then
 		echo -e "${curl_content}"
 
-		local thread_dump=$(jattach $(ps -ef | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{print $1}') threaddump)
+		local thread_dump=$(jattach $(pidof java) threaddump)
 
 		if [ ! -e  "${LIFERAY_THREAD_DUMP_DIRECTORY}" ]
 		then
