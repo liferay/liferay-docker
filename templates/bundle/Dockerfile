@@ -1,6 +1,7 @@
 FROM liferay/base:latest
 
 ARG LABEL_BUILD_DATE
+ARG LABEL_LIFERAY_VCS_REF
 ARG LABEL_NAME
 ARG LABEL_TOMCAT_VERSION
 ARG LABEL_VCS_REF
@@ -47,6 +48,7 @@ LABEL org.label-schema.vcs-ref="${LABEL_VCS_REF}"
 LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
+LABEL com.liferay.vcs-ref="${LABEL_LIFERAY_VCS_REF}"
 
 USER liferay:liferay
 

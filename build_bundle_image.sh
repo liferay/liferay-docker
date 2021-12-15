@@ -89,6 +89,11 @@ function build_docker_image {
 		fi
 	done
 
+	if [ -e "${TEMP_DIR}/liferay/.githash" ]
+	then
+		local liferay_vcs_ref=$(cat "${TEMP_DIR}/liferay/.githash")
+	fi
+
 	IFS=${default_ifs}
 
 	docker build \
@@ -98,6 +103,7 @@ function build_docker_image {
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 		--build-arg LABEL_VERSION="${label_version}" \
+		--build-arg LABEL_LIFERAY_VCS_REF="${liferay_vcs_ref}" \
 		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 		"${TEMP_DIR}"
 }
