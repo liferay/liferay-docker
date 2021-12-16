@@ -98,12 +98,12 @@ function build_docker_image {
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
+		--build-arg LABEL_LIFERAY_VCS_REF="${liferay_vcs_ref}" \
 		--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
 		--build-arg LABEL_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 		--build-arg LABEL_VERSION="${label_version}" \
-		--build-arg LABEL_LIFERAY_VCS_REF="${liferay_vcs_ref}" \
 		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 		"${TEMP_DIR}"
 }
