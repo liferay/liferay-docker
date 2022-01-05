@@ -79,7 +79,7 @@ function main {
 	then
 		echo -e "${curl_content}"
 
-		local thread_dump=$(jattach $(pidof java) threaddump)
+		local thread_dump=$(jattach $(cat "${LIFERAY_PID}") threaddump)
 
 		if [ ! -e  "${LIFERAY_THREAD_DUMP_DIRECTORY}" ]
 		then

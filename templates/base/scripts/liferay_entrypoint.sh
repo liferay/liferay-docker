@@ -46,6 +46,8 @@ function start_liferay {
 
 	START_LIFERAY_PID=$!
 
+	echo "${START_LIFERAY_PID}" > "${LIFERAY_PID}"
+
 	wait ${START_LIFERAY_PID}
 
 	trap - TERM INT
