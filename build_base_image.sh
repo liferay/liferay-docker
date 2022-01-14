@@ -24,6 +24,8 @@ function main {
 
 	build_docker_image
 
+	login_docker_hub
+
 	push_docker_images "${1}"
 
 	clean_up_temp_directory

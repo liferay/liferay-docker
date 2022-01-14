@@ -12,6 +12,8 @@ function build_base_image {
 		return
 	fi
 
+	login_docker_hub
+
 	docker pull liferay/base:latest
 
 	base_image_version=$(docker image inspect --format '{{index .Config.Labels "org.label-schema.version"}}' liferay/base:latest)
