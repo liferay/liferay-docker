@@ -116,13 +116,15 @@ function get_tomcat_version {
 }
 
 function login_docker_hub {
-	if [ -n "${LIFERAY_DOCKER_HUB_USERNAME}" ] && [ -n "${LIFERAY_DOCKER_HUB_TOKEN}" ]
+	if [ ! -n "${LIFERAY_DOCKER_HUB_LOGGED_IN}" ] && [ -n "${LIFERAY_DOCKER_HUB_USERNAME}" ] && [ -n "${LIFERAY_DOCKER_HUB_TOKEN}" ]
 	then
 		echo ""
 		echo "Logging in to Docker Hub."
 		echo ""
 
 		echo "${LIFERAY_DOCKER_HUB_TOKEN}" | docker login -u "${LIFERAY_DOCKER_HUB_USERNAME}" --password-stdin
+
+		LIFERAY_DOCKER_HUB_LOGGED_IN=true
 	fi
 }
 
