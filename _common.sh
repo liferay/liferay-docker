@@ -115,20 +115,14 @@ function get_tomcat_version {
 	echo "${liferay_tomcat_version}"
 }
 
-#######################################
-# Login to Docker Hub
-# GLOBALS:
-#   DOCKER_HUB_USERNAME
-#   DOCKER_HUB_TOKEN (or password)
-#######################################
 function login_docker_hub {
-	if [ -n "${DOCKER_HUB_USERNAME}" ] && [ -n "${DOCKER_HUB_TOKEN}" ]
+	if [ -n "${LIFERAY_DOCKER_HUB_USERNAME}" ] && [ -n "${LIFERAY_DOCKER_HUB_TOKEN}" ]
 	then
 		echo ""
 		echo "Logging in to Docker Hub."
 		echo ""
 
-		echo "${DOCKER_HUB_TOKEN}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin
+		echo "${LIFERAY_DOCKER_HUB_TOKEN}" | docker login -u "${LIFERAY_DOCKER_HUB_USERNAME}" --password-stdin
 	fi
 }
 
