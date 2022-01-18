@@ -80,12 +80,12 @@ function build_docker_image {
 	do
 		if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 		then
-			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_branch}-${release_version_single}-${release_hash}")
-			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
-			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_branch}")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:${release_branch}-${release_version_single}-${release_hash}")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:${release_branch}")
 		else
-			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_version_single}-d$(./release_notes.sh get-version)-${TIMESTAMP}")
-			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_version_single}")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:${release_version_single}-d$(./release_notes.sh get-version)-${TIMESTAMP}")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:${release_version_single}")
 		fi
 	done
 
@@ -137,6 +137,7 @@ function check_usage {
 		echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API header used to generate the trial license"
 		echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
 		echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
+		echo "    LIFERAY_DOCKER_REPOSITORY (optional): Custom repository for image push"
 		echo ""
 		echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0} push"
 		echo ""
