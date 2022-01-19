@@ -137,7 +137,7 @@ function check_usage {
 		echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API header used to generate the trial license"
 		echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
 		echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
-		echo "    LIFERAY_DOCKER_REPOSITORY (optional): Custom repository for image push"
+		echo "    LIFERAY_DOCKER_REPOSITORY (optional): Docker repository"
 		echo ""
 		echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0} push"
 		echo ""
