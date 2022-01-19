@@ -12,7 +12,7 @@ function build_base_image {
 		return
 	fi
 
-	login_docker_hub
+	log_in_to_docker_hub
 
 	docker pull liferay/base:latest
 

@@ -115,7 +115,7 @@ function get_tomcat_version {
 	echo "${liferay_tomcat_version}"
 }
 
-function login_docker_hub {
+function log_in_to_docker_hub {
 	if [ ! -n "${LIFERAY_DOCKER_HUB_LOGGED_IN}" ] && [ -n "${LIFERAY_DOCKER_HUB_USERNAME}" ] && [ -n "${LIFERAY_DOCKER_HUB_TOKEN}" ]
 	then
 		echo ""
