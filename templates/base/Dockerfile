@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk:8u302
+FROM azul/zulu-openjdk:11
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
@@ -7,7 +7,7 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
 RUN apt-get update && \
-	apt-get install -y bash curl ffmpeg ghostscript gifsicle imagemagick jattach libnss3 libtcnative-1 telnet tree ttf-dejavu unzip zulu11-jdk=11.0.14-1 && \
+	apt-get install -y bash curl ffmpeg ghostscript gifsicle imagemagick jattach libnss3 libtcnative-1 telnet tree ttf-dejavu unzip zulu8-jdk && \
 	apt-get upgrade -y && \
 	apt-get clean
 
