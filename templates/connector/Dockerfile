@@ -6,6 +6,9 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
+RUN apt-get install cron && \
+	apt-get clean
+
 COPY scripts/* /usr/local/bin/
 
 ENTRYPOINT ["/usr/local/bin/liferay_connector_entrypoint.sh"]
@@ -17,7 +20,5 @@ LABEL org.label-schema.vcs-ref="${LABEL_VCS_REF}"
 LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
-
-USER liferay:liferay
 
 WORKDIR /opt/liferay

@@ -25,6 +25,10 @@ function main {
 	make_temp_directory templates/connector
 
 	build_image
+
+	push_docker_images "${1}"
+
+	clean_up_temp_directory
 }
 
-main
+main "${@}"
