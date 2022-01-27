@@ -1,17 +1,17 @@
 #!/bin/bash
 
 function main {
-	run_connector "${1}"
+	run_job "${1}"
 }
 
-function run_connector {
-	local connector="${1}"
+function run_job {
+	local job="${1}"
 
 	echo ""
-	echo "Starting to run connector ${connector}."
+	echo "Starting to run job ${job}."
 	echo ""
 
-	time "/mnt/liferay/connectors/${1}.sh"
+	time "/mnt/liferay/jobs/${1}.sh"
 }
 
 main "${@}"
