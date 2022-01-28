@@ -63,8 +63,8 @@ function download {
 	fi
 
 	if [[ "${file_url}" != http://mirrors.*.liferay.com* ]] &&
-	[[ "${file_url}" != http://release-1* ]] &&
-	[[ "${file_url}" != https://release.liferay.com* ]]
+		[[ "${file_url}" != http://release-1* ]] &&
+		[[ "${file_url}" != https://release.liferay.com* ]]
 	then
 		if [ ! -n "${LIFERAY_DOCKER_MIRROR}" ]
 		then
@@ -80,7 +80,7 @@ function download {
 
 	mkdir -p $(dirname "${file_name}")
 
-	curl ${LIFERAY_DOCKER_CURL_OPTIONS} --fail --location --output "${file_name}" "${file_url}" || exit 2
+	curl $(echo "${LIFERAY_DOCKER_CURL_OPTIONS}") --fail --location --output "${file_name}" "${file_url}" || exit 2
 }
 
 function get_docker_image_tags_args {
@@ -122,7 +122,7 @@ function log_in_to_docker_hub {
 		echo "Logging in to Docker Hub."
 		echo ""
 
-		echo "${LIFERAY_DOCKER_HUB_TOKEN}" | docker login -u "${LIFERAY_DOCKER_HUB_USERNAME}" --password-stdin
+		echo "${LIFERAY_DOCKER_HUB_TOKEN}" | docker login --password-stdin -u "${LIFERAY_DOCKER_HUB_USERNAME}"
 
 		LIFERAY_DOCKER_HUB_LOGGED_IN=true
 	fi

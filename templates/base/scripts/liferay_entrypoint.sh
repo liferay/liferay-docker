@@ -5,8 +5,9 @@ source /usr/local/bin/_liferay_common.sh
 function handle_kill_TERM {
 	exec 5<>/dev/tcp/localhost/8005 && echo "SHUTDOWN" >&5
 
-	if [ $? -gt 0 ]; then
-		kill -TERM ${START_LIFERAY_PID}
+	if [ $? -gt 0 ]
+	then
+		kill -TERM "${START_LIFERAY_PID}"
 	fi
 }
 

@@ -87,7 +87,7 @@ function prepare_mount {
 
 		download "downloads/patching-tool/${patcing_tool_file_name}" "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL}"
 	else
-		local patcing_tool_file_name=$(basename $(ls -Art downloads/patching-tool/*.zip | tail -n 1))
+		local patcing_tool_file_name=$(find downloads/patching-tool/ -maxdepth 1 -name '*.zip' -printf "%T+\t%f\n" | sort | tail -n 1 | awk '{print $2}')
 	fi
 
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
