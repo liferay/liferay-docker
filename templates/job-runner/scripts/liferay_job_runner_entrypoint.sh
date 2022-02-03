@@ -1,6 +1,8 @@
 #!/bin/bash
 
 function init {
+	. /usr/local/bin/set_java_version.sh
+
 	mkdir -p /opt/liferay/job-queue
 
 	cron
