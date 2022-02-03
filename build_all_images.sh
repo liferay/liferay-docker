@@ -517,8 +517,8 @@ function build_bundle_images_dxp_73 {
 
 function build_bundle_images_dxp_74 {
 	build_bundle_image \
-		7.4.13-u5 \
-		files.liferay.com/private/ee/portal/7.4.13-u5/liferay-dxp-tomcat-7.4.13.u5-20220125192936842.7z
+		7.4.13-u6 \
+		files.liferay.com/private/ee/portal/7.4.13-u6/liferay-dxp-tomcat-7.4.13.u6-20220130175152574.7z
 
 	build_bundle_image \
 		7.4.13.nightly \
@@ -546,7 +546,7 @@ function main {
 		releases.liferay.com/portal/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.7z
 		releases.liferay.com/portal/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.7z
 		releases.liferay.com/portal/7.3.7-ga8/liferay-ce-portal-tomcat-7.3.7-ga8-20210610183559721.7z
-		releases.liferay.com/portal/7.4.3.9-ga9/liferay-ce-portal-tomcat-7.4.3.9-ga9-20220125123415632.7z
+		releases.liferay.com/portal/7.4.3.10-ga10/liferay-ce-portal-tomcat-7.4.3.10-ga10-20220130185310773.7z
 		#releases.liferay.com/portal/snapshot-7.1.x/201902130905/liferay-portal-tomcat-7.1.x.7z
 		releases.liferay.com/portal/snapshot-master/latest/liferay-portal-tomcat-master.7z
 		#files.liferay.com/private/ee/portal/snapshot-ee-6.2.x/201808160944/liferay-portal-tomcat-ee-6.2.x.zip
