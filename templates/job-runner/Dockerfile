@@ -11,7 +11,7 @@ RUN apt-get install cron tini && \
 
 COPY scripts/* /usr/local/bin/
 
-ENTRYPOINT ["/tini", "-v", "--", "/usr/local/bin/liferay_job_runner_entrypoint.sh"]
+ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_job_runner_entrypoint.sh"]
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
