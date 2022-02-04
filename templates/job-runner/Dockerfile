@@ -6,12 +6,12 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-RUN apt-get install cron && \
+RUN apt-get install cron tini && \
 	apt-get clean
 
 COPY scripts/* /usr/local/bin/
 
-ENTRYPOINT ["/usr/local/bin/liferay_job_runner_entrypoint.sh"]
+ENTRYPOINT ["/tini", "-v", "--", "/usr/local/bin/liferay_job_runner_entrypoint.sh"]
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"

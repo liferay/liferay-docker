@@ -3,7 +3,7 @@
 source ./_common.sh
 
 function build_image {
-	local job_runner_image_version=0.1.1
+	local job_runner_image_version=0.1.2
 
 	local base_image_version=$(./release_notes.sh get-version)
 
