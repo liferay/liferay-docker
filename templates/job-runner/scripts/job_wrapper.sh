@@ -11,7 +11,7 @@ function run_job {
 	echo "Starting to run job ${job}."
 	echo ""
 
-	time "/mnt/liferay/jobs/${1}.sh"
+	time /bin/bash "/mnt/liferay/jobs/${1}.sh"
 }
 
 main "${@}"
