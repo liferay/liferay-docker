@@ -8,7 +8,7 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-COPY --chown=liferay:liferay liferay /opt/liferay
+COPY --chown=liferay:liferay liferay /opt/liferay/
 
 RUN ln -fs /opt/liferay/* /home/liferay
 
