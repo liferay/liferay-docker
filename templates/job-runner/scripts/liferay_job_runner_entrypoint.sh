@@ -29,8 +29,10 @@ function register_crontab {
 		cat /mnt/liferay/job-runner-crontab
 	) | crontab -
 
-	echo "The following crontab is installed:"
+	echo "Registered crontab: "
+
 	cat /mnt/liferay/job-runner-crontab
+
 	echo ""
 }
 
