@@ -1,29 +1,15 @@
 #!/bin/bash
 
-function init {
-	JOB=${1}
-
-	mkdir -p /opt/liferay/job-queue
-}
-
 function main {
-	init ${1}
+	mkdir -p /opt/liferay/job-queue
 
-	register
-}
-
-function register {
-	#
-	# Important: Do not retouch when file exists as jobs are executed based on modification date
-	#
-
-	if [ ! -e "/opt/liferay/job-queue/${JOB}" ]
+	if [ ! -e "/opt/liferay/job-queue/${1}" ]
 	then
-		touch "/opt/liferay/job-queue/${JOB}"
+		touch "/opt/liferay/job-queue/${1}"
 
-		echo "Registering ${JOB}"
+		echo "Registering ${1}."
 	else
-		echo "Skipping registering ${JOB} as it's already in the queue."
+		echo "Skipping ${1} because it is already registered."
 	fi
 }
 
