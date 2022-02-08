@@ -12,7 +12,7 @@ function build_image {
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-		--build-arg LABEL_NAME="Liferay Job Runner image" \
+		--build-arg LABEL_NAME="Liferay Job Runner" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 		--build-arg LABEL_VERSION="${job_runner_image_version}" \
