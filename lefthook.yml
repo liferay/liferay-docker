@@ -1,9 +1,8 @@
-# On `git push` lefthook will run spelling and links check for all of the changed files
 pre-commit:
-  commands:
-    "shellchecker":
-      glob: "*.sh" # glob filter
-      run: docker run --rm -v "$PWD:/mnt" koalaman/shellcheck:v0.8.0 {staged_files}
-    "beautysh":
-      glob: "*.sh" # glob filter
-      run: docker run --rm -v "$PWD:/mnt" kreutzakos/beautysh:0.1 {staged_files}
+    commands:
+        "shellchecker":
+            glob: "*.sh"
+            run: docker run --rm -v "$PWD:/mnt" koalaman/shellcheck:v0.8.0 {staged_files}
+        "beautysh":
+            glob: "*.sh"
+            run: docker run --rm -v "$PWD:/mnt" kreutzakos/beautysh:0.1 {staged_files}
