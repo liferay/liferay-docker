@@ -11,13 +11,13 @@ RUN apt-get update && \
 	apt-get upgrade -y && \
 	apt-get clean
 
-COPY scripts/* /usr/local/bin/
+COPY scripts/* /usr/local/bin
 
 RUN adduser --disabled-password --home /home/liferay liferay --uid 1000 && \
 	addgroup liferay liferay && \
 	usermod -g 1000 liferay
 
-COPY --chown=liferay:liferay home/.bashrc /home/liferay/
+COPY --chown=liferay:liferay home/.bashrc /home/liferay
 
 ENV JAVA_VERSION=zulu8
 

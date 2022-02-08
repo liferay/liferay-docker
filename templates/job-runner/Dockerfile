@@ -9,7 +9,7 @@ ARG LABEL_VERSION
 RUN apt-get install cron tini && \
 	apt-get clean
 
-COPY scripts/* /usr/local/bin/
+COPY scripts/* /usr/local/bin
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_job_runner_entrypoint.sh"]
 
