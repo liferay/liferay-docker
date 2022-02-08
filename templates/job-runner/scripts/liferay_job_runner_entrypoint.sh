@@ -17,21 +17,21 @@ function main {
 }
 
 function register_crontab {
-	if [ ! -e /mnt/liferay/job-runner-crontab ]
+	if [ ! -e /mnt/liferay/job-crontab ]
 	then
-		echo "The job-runner-crontab file is not available in the /mnt/liferay/ directory."
+		echo "The job-crontab file is not available in the /mnt/liferay/ directory."
 
 		exit 2
 	fi
 
 	(
 		crontab -l 2>/dev/null
-		cat /mnt/liferay/job-runner-crontab
+		cat /mnt/liferay/job-crontab
 	) | crontab -
 
 	echo "Registered crontab: "
 
-	cat /mnt/liferay/job-runner-crontab
+	cat /mnt/liferay/job-crontab
 
 	echo ""
 }
