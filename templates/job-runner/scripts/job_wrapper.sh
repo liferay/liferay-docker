@@ -2,7 +2,7 @@
 
 function main {
 	echo ""
-	echo "Starting job ${1}."
+	echo "Running job ${1}."
 	echo ""
 
 	time /bin/bash "/mnt/liferay/jobs/${1}.sh"
