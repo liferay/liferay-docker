@@ -60,36 +60,41 @@ function check_usage {
 }
 
 function main {
-	check_usage "${@}"
-
-	local curl_content
-
-	curl_content=$(curl -m "${TIMEOUT}" -s --show-error --url "${DOMAIN}:${PORT}" "${DOMAIN}:${PORT}${FILE_PATH}")
-
-	local exit_code=$?
-
-	if [ -n "${CONTENT}" ]
+	if [ "${LIFERAY_THREAD_DUMP_PROBE_ENABLED}" == "true" ]
 	then
-		curl_content=$(echo "${curl_content}" | grep" ${CONTENT}")
+		check_usage "${@}"
 
-		exit_code=$?
-	fi
+		local curl_content
 
-	if [ ${exit_code} -gt 1 ]
-	then
-		echo -e "${curl_content}"
+		curl_content=$(curl -m "${TIMEOUT}" -s --show-error --url "${DOMAIN}:${PORT}" "${DOMAIN}:${PORT}${FILE_PATH}")
 
-		local thread_dump=$(jattach $(cat "${LIFERAY_PID}") threaddump)
+		local exit_code=$?
 
-		if [ ! -e  "${LIFERAY_THREAD_DUMP_DIRECTORY}" ]
+		if [ -n "${CONTENT}" ]
 		then
-			mkdir -p "${LIFERAY_THREAD_DUMP_DIRECTORY}"
+			curl_content=$(echo "${curl_content}" | grep" ${CONTENT}")
+
+			exit_code=$?
 		fi
 
-		echo -e "${thread_dump}" > "${LIFERAY_THREAD_DUMP_DIRECTORY}/$(hostname)_$(date +"%Y-%m-%dT%H:%M:%S%z").tdump"
-	fi
+		if [ ${exit_code} -gt 1 ]
+		then
+			echo -e "${curl_content}"
 
-	exit ${exit_code}
+			local thread_dump=$(jattach $(cat "${LIFERAY_PID}") threaddump)
+
+			if [ ! -e  "${LIFERAY_THREAD_DUMP_DIRECTORY}" ]
+			then
+				mkdir -p "${LIFERAY_THREAD_DUMP_DIRECTORY}"
+			fi
+
+			echo -e "${thread_dump}" > "${LIFERAY_THREAD_DUMP_DIRECTORY}/$(hostname)_$(date +"%Y-%m-%dT%H:%M:%S%z").tdump"
+		fi
+
+		exit ${exit_code}
+	else
+		echo "Set the environment variable \"LIFERAY_THREAD_DUMP_PROBE_ENABLED\" to \"true\" to enable ${0}."
+	fi
 }
 
 function print_help {
