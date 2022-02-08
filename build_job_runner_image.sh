@@ -3,9 +3,8 @@
 source ./_common.sh
 
 function build_image {
-	local job_runner_image_version=0.1.4
-
 	local base_image_version=$(./release_notes.sh get-version)
+	local job_runner_image_version=0.1.4
 
 	DOCKER_IMAGE_TAGS=()
 	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/job-runner:${job_runner_image_version}-d${base_image_version}-${TIMESTAMP}")
@@ -25,6 +24,8 @@ function main {
 	make_temp_directory templates/job-runner
 
 	build_image
+
+	log_in_to_docker_hub
 
 	push_docker_images "${1}"
 
