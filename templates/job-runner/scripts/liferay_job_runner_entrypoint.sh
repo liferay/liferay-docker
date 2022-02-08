@@ -19,7 +19,7 @@ function main {
 function register_crontab {
 	if [ ! -e /mnt/liferay/job-crontab ]
 	then
-		echo "The job-crontab file is not available in the /mnt/liferay/ directory."
+		echo "The file /mnt/liferay/job-crontab does not exist."
 
 		exit 2
 	fi
