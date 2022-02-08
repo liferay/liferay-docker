@@ -5,4 +5,4 @@ pre-commit:
             run: docker run --rm -v "$PWD:/mnt" koalaman/shellcheck:v0.8.0 {staged_files}
         "beautysh":
             glob: "*.sh"
-            run: docker run --rm -v "$PWD:/mnt" kreutzakos/beautysh:0.1 {staged_files}
+            run: docker run --rm -v "$PWD:/mnt" kreutzakos/beautysh:0.2 {staged_files}
