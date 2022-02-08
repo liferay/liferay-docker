@@ -26,6 +26,7 @@ function register_crontab {
 
 	(
 		crontab -l 2>/dev/null
+
 		cat /mnt/liferay/job-crontab
 	) | crontab -
 
