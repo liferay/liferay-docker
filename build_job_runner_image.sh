@@ -2,7 +2,7 @@
 
 source ./_common.sh
 
-function build_image {
+function build_docker_image {
 	local base_image_version=$(./release_notes.sh get-version)
 	local job_runner_image_version=0.1.4
 
@@ -23,7 +23,7 @@ function build_image {
 function main {
 	make_temp_directory templates/job-runner
 
-	build_image
+	build_docker_image
 
 	log_in_to_docker_hub
 
