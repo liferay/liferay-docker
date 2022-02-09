@@ -4,7 +4,7 @@ source ./_common.sh
 
 function build_docker_image {
 	local base_image_version=$(./release_notes.sh get-version)
-	local job_runner_image_version=0.1.4
+	local job_runner_image_version=0.1.5
 
 	DOCKER_IMAGE_TAGS=()
 	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/job-runner:${job_runner_image_version}-d${base_image_version}-${TIMESTAMP}")
