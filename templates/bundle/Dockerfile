@@ -12,7 +12,7 @@ COPY --chown=liferay:liferay liferay /opt/liferay/
 
 RUN ln -fs /opt/liferay/* /home/liferay
 
-ENTRYPOINT ["/usr/local/bin/liferay_entrypoint.sh"]
+ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_entrypoint.sh"]
 
 ENV JPDA_ADDRESS=8000
 

@@ -6,7 +6,7 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-RUN apt-get install cron tini && \
+RUN apt-get install cron && \
 	apt-get clean
 
 COPY scripts/* /usr/local/bin/
