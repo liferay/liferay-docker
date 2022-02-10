@@ -2,3 +2,6 @@
 downloads
 logs-*
 temp-*
+node_modules
+package.json
+package-lock.json
