@@ -2,6 +2,7 @@
 
 function apply_patch {
 	local patch_file_name=${1}
+	local patch_version=$(echo "${patch_file_name}" | awk -F"-" '{ print $NF }' | awk -F"." '{ print $1 }')
 
 	if [ -e "/opt/liferay/patching-tool/patch-applied" ]
 	then
@@ -12,8 +13,8 @@ function apply_patch {
 			echo ""
 			echo "[LIFERAY] ${patch_file_name} cannot be applied on this container because ${installed_patch} is already installed. Remove ${patch_file_name} from the patching directory to disable this warning message."
 		fi
-	elif ( ! (echo "${patch_file_name}" | grep -q "7310.zip") &&
-	     /opt/liferay/patching-tool/patching-tool.sh apply "${LIFERAY_PATCHING_DIR}/${patch_file_name}")
+	elif [ "$patch_version" -lt 7310 ] &&
+	     ( /opt/liferay/patching-tool/patching-tool.sh apply "${LIFERAY_PATCHING_DIR}/${patch_file_name}" )
 	then
 		echo "${patch_file_name}" > /opt/liferay/patching-tool/patch-applied
 
@@ -27,8 +28,6 @@ function install_patch_step_1 {
 	local patch_file_name="${1}"
 
 	cp "${LIFERAY_PATCHING_DIR}/${patch_file_name}" /opt/liferay/patching-tool/patches
-
-	/opt/liferay/patching-tool/patching-tool.sh setup
 
 	if (/opt/liferay/patching-tool/patching-tool.sh install -force)
 	then
