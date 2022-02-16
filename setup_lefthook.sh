@@ -3,7 +3,8 @@
 function check_permission {
 	if [ "$(id -u)" -ne 0 ]
 	then
-		echo 'This script must be run by root'
+		echo "This script must be run by root."
+
 		exit 1
 	fi
 }
@@ -15,7 +16,8 @@ function configure_lefthook {
 
 	if [ "${exit_code}" -gt 0 ]
 	then
-		echo "Unable to Configure lefthook"
+		echo "Unable to configure Lefthook."
+
 		exit 1
 	fi
 }
@@ -27,7 +29,8 @@ function install_lefthook {
 
 	if [ "${exit_code}" -gt 0 ]
 	then
-		echo "Unable to install lefthook"
+		echo "Unable to install Lefthook."
+
 		exit 1
 	fi
 }
@@ -39,7 +42,8 @@ function install_npm {
 
 	if [ "${exit_code}" -gt 0 ]
 	then
-		echo "Unable to install NPM"
+		echo "Unable to install NPM."
+
 		exit 1
 	fi
 }
