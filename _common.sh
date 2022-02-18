@@ -94,6 +94,25 @@ function get_docker_image_tags_args {
 	echo "${docker_image_tags_args}"
 }
 
+function get_main_key_of_version {
+	local main_keys=$1
+	local version=$2
+	local key=null
+
+	for main_key in $main_keys
+	do
+		local count=$(echo "$version" | grep -c "$main_key")
+
+		if [ "$count" -gt 0 ]
+		then
+			key="$main_key"
+			break
+		fi
+	done
+
+	echo "$key"
+}
+
 function get_tomcat_version {
 	for temp_file_name in "${1}"/tomcat-*
 	do
@@ -138,6 +157,17 @@ function make_temp_directory {
 	mkdir -p "${TEMP_DIR}"
 
 	cp -r "${1}"/* "${TEMP_DIR}"
+}
+
+function null_check {
+	local result="${1}"
+
+	if [ "${1}" == "null" ]
+	then
+		result=""
+	fi
+
+	echo "${result}"
 }
 
 function pid_8080 {
