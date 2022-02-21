@@ -128,6 +128,25 @@ function crawl_yml {
 	fi
 }
 
+function get_main_key_of_version {
+	local main_keys=$1
+	local version=$2
+	local key=null
+
+	for main_key in $main_keys
+	do
+		local count=$(echo "$version" | grep -c "$main_key")
+
+		if [ "$count" -gt 0 ]
+		then
+			key="$main_key"
+			break
+		fi
+	done
+
+	echo "$key"
+}
+
 function main {
 	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && ! ./release_notes.sh fail-on-change
 	then
@@ -147,6 +166,17 @@ function main {
 	echo ""
 
 	cat "${LOGS_DIR}/results"
+}
+
+function null_check {
+	local result="${1}"
+
+	if [ "${1}" == "null" ]
+	then
+		result=""
+	fi
+
+	echo "${result}"
 }
 
 main
