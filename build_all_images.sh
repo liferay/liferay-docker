@@ -147,6 +147,17 @@ function get_main_key_of_version {
 	echo "$key"
 }
 
+function get_string {
+	local result="${1}"
+
+	if [ "${1}" == "null" ]
+	then
+		result=""
+	fi
+
+	echo "${result}"
+}
+
 function main {
 	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && ! ./release_notes.sh fail-on-change
 	then
@@ -166,17 +177,6 @@ function main {
 	echo ""
 
 	cat "${LOGS_DIR}/results"
-}
-
-function get_string {
-	local result="${1}"
-
-	if [ "${1}" == "null" ]
-	then
-		result=""
-	fi
-
-	echo "${result}"
 }
 
 main
