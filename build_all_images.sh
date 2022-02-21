@@ -46,13 +46,13 @@ function build_bundle_image {
 	# LIFERAY_DOCKER_IMAGE_FILTER=7.2.10 ./build_all_images.sh
 	#
 
-	local query=$1
-	local version=$2
+	local query=${1}
+	local version=${2}
 
-	local bundle_url=$(null_check $(yq "$query".bundle_url < bundle_images.yml))
-	local fix_pack_url=$(null_check $(yq "$query".fix_pack_url < bundle_images.yml))
-	local test_installed_patch=$(null_check $( yq "$query".test_installed_patch < bundle_images.yml))
-	local test_hotfix_url=$(null_check $(yq "$query".test_hotfix_url < bundle_images.yml))
+	local bundle_url=$(null_check $(yq "${query}".bundle_url < bundle_images.yml))
+	local fix_pack_url=$(null_check $(yq "${query}".fix_pack_url < bundle_images.yml))
+	local test_installed_patch=$(null_check $( yq "${query}".test_installed_patch < bundle_images.yml))
+	local test_hotfix_url=$(null_check $(yq "${query}".test_hotfix_url < bundle_images.yml))
 
 	if [ ! -n "${version}" ]
 	then
@@ -87,7 +87,7 @@ function build_bundle_image {
 }
 
 function crawl_yml {
-	local specified_version=$LIFERAY_DOCKER_IMAGE_FILTER
+	local specified_version=${LIFERAY_DOCKER_IMAGE_FILTER}
 	local main_keys=$(yq '' < bundle_images.yml | grep -v '  .*' | sed 's/://')
 
 	if [ -z "${LIFERAY_DOCKER_IMAGE_FILTER}" ]
@@ -104,7 +104,7 @@ function crawl_yml {
 		for version in $versions
 		do
 			local query=.\"$(get_main_key_of_version "${main_keys}" "${version}")\".\"$version\"
-			build_bundle_image "$query" "$version"
+			build_bundle_image "${query}" "$version"
 		done
 	else
 		local found_main_key=$(get_main_key_of_version "${main_keys}" "${specified_version}")
