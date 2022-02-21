@@ -119,9 +119,7 @@ function crawl_yml {
 		else
 			local query=.\"${main_key}\".\"${specified_version}\"
 
-			search_output=$(yq "${query}" < bundle_images.yml)
-
-			if [[ "${search_output}" != "null" ]]
+			if [[ "$(yq "${query}" < bundle_images.yml)" != "null" ]]
 			then
 				build_bundle_image "${query}" "${specified_version}"
 			else
