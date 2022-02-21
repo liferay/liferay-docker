@@ -95,31 +95,32 @@ function crawl_yml {
 		specified_version="*"
 	fi
 
-	local top_level_search_output=$(yq .\""$specified_version"\" < bundle_images.yml)
+	local top_level_search_output=$(yq .\""${specified_version}"\" < bundle_images.yml)
 
 	if [[ "${top_level_search_output}" != "null" ]]
 	then
 		local versions=$(echo "${top_level_search_output}"  | grep '^.*:$' | sed 's/://')
 
-		for version in $versions
+		for version in ${versions}
 		do
 			local query=.\"$(get_main_key "${main_keys}" "${version}")\".\"$version\"
+
 			build_bundle_image "${query}" "$version"
 		done
 	else
-		local found_main_key=$(get_main_key "${main_keys}" "${specified_version}")
+		local main_key=$(get_main_key "${main_keys}" "${specified_version}")
 
-		if [[ "${found_main_key}" = "null" ]]
+		if [[ "${main_key}" = "null" ]]
 		then
 			echo "No DXP version found for: $LIFERAY_DOCKER_IMAGE_FILTER"
 			exit 1
 		else
-			local search_word=.\"$found_main_key\".\"$specified_version\"
+			local search_word=.\"${main_key}\".\"${specified_version}\"
 			local low_level_search_output=$(yq "$search_word" < bundle_images.yml)
 
 			if [[ "${low_level_search_output}" != "null" ]]
 			then
-				build_bundle_image "$search_word" "$specified_version"
+				build_bundle_image "$search_word" "${specified_version}"
 			else
 				echo "No DXP version found for: $LIFERAY_DOCKER_IMAGE_FILTER"
 				exit 1
