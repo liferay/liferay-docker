@@ -129,22 +129,23 @@ function crawl_yml {
 }
 
 function get_main_key_of_version {
-	local main_keys=$1
-	local version=$2
+	local main_keys=${1}
+	local version=${2}
 	local key=null
 
-	for main_key in $main_keys
+	for main_key in ${main_keys}
 	do
-		local count=$(echo "$version" | grep -c "$main_key")
+		local count=$(echo "${version}" | grep -c "${main_key}")
 
-		if [ "$count" -gt 0 ]
+		if [ "${count}" -gt 0 ]
 		then
-			key="$main_key"
+			key="${main_key}"
+
 			break
 		fi
 	done
 
-	echo "$key"
+	echo "${key}"
 }
 
 function get_string {
