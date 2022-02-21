@@ -96,11 +96,11 @@ function crawl_yml {
 		specified_version="*"
 	fi
 
-	local top_level_search_output=$(yq .\""${specified_version}"\" < bundle_images.yml)
+	local search_output=$(yq .\""${specified_version}"\" < bundle_images.yml)
 
-	if [[ "${top_level_search_output}" != "null" ]]
+	if [[ "${search_output}" != "null" ]]
 	then
-		local versions=$(echo "${top_level_search_output}"  | grep '^.*:$' | sed 's/://')
+		local versions=$(echo "${search_output}"  | grep '^.*:$' | sed 's/://')
 
 		for version in ${versions}
 		do
@@ -118,9 +118,10 @@ function crawl_yml {
 			exit 1
 		else
 			local query=.\"${main_key}\".\"${specified_version}\"
-			local low_level_search_output=$(yq "${query}" < bundle_images.yml)
 
-			if [[ "${low_level_search_output}" != "null" ]]
+			search_output=$(yq "${query}" < bundle_images.yml)
+
+			if [[ "${search_output}" != "null" ]]
 			then
 				build_bundle_image "${query}" "${specified_version}"
 			else
