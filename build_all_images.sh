@@ -87,8 +87,9 @@ function build_bundle_image {
 }
 
 function crawl_yml {
-	local specified_version=${LIFERAY_DOCKER_IMAGE_FILTER}
 	local main_keys=$(yq '' < bundle_images.yml | grep -v '  .*' | sed 's/://')
+
+	local specified_version=${LIFERAY_DOCKER_IMAGE_FILTER}
 
 	if [ -z "${LIFERAY_DOCKER_IMAGE_FILTER}" ]
 	then
