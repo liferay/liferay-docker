@@ -49,10 +49,10 @@ function build_bundle_image {
 	local query=${1}
 	local version=${2}
 
-	local bundle_url=$(null_check $(yq "${query}".bundle_url < bundle_images.yml))
-	local fix_pack_url=$(null_check $(yq "${query}".fix_pack_url < bundle_images.yml))
-	local test_installed_patch=$(null_check $( yq "${query}".test_installed_patch < bundle_images.yml))
-	local test_hotfix_url=$(null_check $(yq "${query}".test_hotfix_url < bundle_images.yml))
+	local bundle_url=$(get_string $(yq "${query}".bundle_url < bundle_images.yml))
+	local fix_pack_url=$(get_string $(yq "${query}".fix_pack_url < bundle_images.yml))
+	local test_installed_patch=$(get_string $( yq "${query}".test_installed_patch < bundle_images.yml))
+	local test_hotfix_url=$(get_string $(yq "${query}".test_hotfix_url < bundle_images.yml))
 
 	if [ ! -n "${version}" ]
 	then
@@ -168,7 +168,7 @@ function main {
 	cat "${LOGS_DIR}/results"
 }
 
-function null_check {
+function get_string {
 	local result="${1}"
 
 	if [ "${1}" == "null" ]
