@@ -103,11 +103,11 @@ function crawl_yml {
 
 		for version in $versions
 		do
-			local query=.\"$(get_main_key_of_version "${main_keys}" "${version}")\".\"$version\"
+			local query=.\"$(get_main_key "${main_keys}" "${version}")\".\"$version\"
 			build_bundle_image "${query}" "$version"
 		done
 	else
-		local found_main_key=$(get_main_key_of_version "${main_keys}" "${specified_version}")
+		local found_main_key=$(get_main_key "${main_keys}" "${specified_version}")
 
 		if [[ "${found_main_key}" = "null" ]]
 		then
@@ -128,7 +128,7 @@ function crawl_yml {
 	fi
 }
 
-function get_main_key_of_version {
+function get_main_key {
 	local main_keys=${1}
 	local version=${2}
 
