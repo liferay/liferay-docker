@@ -40,12 +40,6 @@ function build_base_image {
 }
 
 function build_bundle_image {
-
-	#
-	# LIFERAY_DOCKER_IMAGE_FILTER="7.2.10-dxp-1 "  ./build_all_images.sh
-	# LIFERAY_DOCKER_IMAGE_FILTER=7.2.10 ./build_all_images.sh
-	#
-
 	local query=${1}
 	local version=${2}
 
@@ -86,7 +80,13 @@ function build_bundle_image {
 	fi
 }
 
-function crawl_yml {
+function build_bundle_images {
+
+	#
+	# LIFERAY_DOCKER_IMAGE_FILTER="7.2.10-dxp-1 "  ./build_all_images.sh
+	# LIFERAY_DOCKER_IMAGE_FILTER=7.2.10 ./build_all_images.sh
+	#
+
 	local main_keys=$(yq '' < bundles.yml | grep -v '  .*' | sed 's/://')
 
 	local specified_version=${LIFERAY_DOCKER_IMAGE_FILTER}
@@ -169,7 +169,7 @@ function main {
 
 	build_base_image
 
-	crawl_yml
+	build_bundle_images
 
 	echo ""
 	echo "Results: "
