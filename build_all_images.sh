@@ -148,14 +148,12 @@ function get_main_key_of_version {
 }
 
 function get_string {
-	local result="${1}"
-
 	if [ "${1}" == "null" ]
 	then
-		result=""
+		echo ""
+	else
+		echo "${1}"
 	fi
-
-	echo "${result}"
 }
 
 function main {
