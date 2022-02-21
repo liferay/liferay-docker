@@ -131,7 +131,6 @@ function crawl_yml {
 function get_main_key_of_version {
 	local main_keys=${1}
 	local version=${2}
-	local key=null
 
 	for main_key in ${main_keys}
 	do
@@ -139,13 +138,11 @@ function get_main_key_of_version {
 
 		if [ "${count}" -gt 0 ]
 		then
-			key="${main_key}"
+			echo "${main_key}"
 
 			break
 		fi
 	done
-
-	echo "${key}"
 }
 
 function get_string {
