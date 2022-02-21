@@ -49,10 +49,10 @@ function build_bundle_image {
 	local query=${1}
 	local version=${2}
 
-	local bundle_url=$(get_string $(yq "${query}".bundle_url < bundle_images.yml))
-	local fix_pack_url=$(get_string $(yq "${query}".fix_pack_url < bundle_images.yml))
-	local test_hotfix_url=$(get_string $(yq "${query}".test_hotfix_url < bundle_images.yml))
-	local test_installed_patch=$(get_string $( yq "${query}".test_installed_patch < bundle_images.yml))
+	local bundle_url=$(get_string $(yq "${query}".bundle_url < bundles.yml))
+	local fix_pack_url=$(get_string $(yq "${query}".fix_pack_url < bundles.yml))
+	local test_hotfix_url=$(get_string $(yq "${query}".test_hotfix_url < bundles.yml))
+	local test_installed_patch=$(get_string $( yq "${query}".test_installed_patch < bundles.yml))
 
 	if [ ! -n "${version}" ]
 	then
@@ -87,7 +87,7 @@ function build_bundle_image {
 }
 
 function crawl_yml {
-	local main_keys=$(yq '' < bundle_images.yml | grep -v '  .*' | sed 's/://')
+	local main_keys=$(yq '' < bundles.yml | grep -v '  .*' | sed 's/://')
 
 	local specified_version=${LIFERAY_DOCKER_IMAGE_FILTER}
 
@@ -96,7 +96,7 @@ function crawl_yml {
 		specified_version="*"
 	fi
 
-	local search_output=$(yq .\""${specified_version}"\" < bundle_images.yml)
+	local search_output=$(yq .\""${specified_version}"\" < bundles.yml)
 
 	if [[ "${search_output}" != "null" ]]
 	then
@@ -113,17 +113,17 @@ function crawl_yml {
 
 		if [[ "${main_key}" = "null" ]]
 		then
-			echo "No DXP version found for: ${LIFERAY_DOCKER_IMAGE_FILTER}"
+			echo "No bundles were found."
 
 			exit 1
 		else
 			local query=.\"${main_key}\".\"${specified_version}\"
 
-			if [[ "$(yq "${query}" < bundle_images.yml)" != "null" ]]
+			if [[ "$(yq "${query}" < bundles.yml)" != "null" ]]
 			then
 				build_bundle_image "${query}" "${specified_version}"
 			else
-				echo "No DXP version found for: ${LIFERAY_DOCKER_IMAGE_FILTER}"
+				echo "No bundles were found."
 
 				exit 1
 			fi
