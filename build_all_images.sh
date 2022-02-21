@@ -104,9 +104,9 @@ function crawl_yml {
 
 		for version in ${versions}
 		do
-			local query=.\"$(get_main_key "${main_keys}" "${version}")\".\"$version\"
+			local query=.\"$(get_main_key "${main_keys}" "${version}")\".\"${version}\"
 
-			build_bundle_image "${query}" "$version"
+			build_bundle_image "${query}" "${version}"
 		done
 	else
 		local main_key=$(get_main_key "${main_keys}" "${specified_version}")
