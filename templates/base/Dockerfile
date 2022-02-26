@@ -9,11 +9,10 @@ ARG LABEL_VERSION
 COPY --chown=root:root repositories/jammy.list /etc/apt/sources.list.d/jammy.list
 
 RUN apt-get update && \
-	apt-get install -t focal -y bash curl findutils ghostscript gifsicle imagemagick jattach libnss3 libtcnative-1 telnet tini tree ttf-dejavu unzip zulu8-jdk && \
+	apt-get install -t focal -y bash curl ghostscript gifsicle imagemagick jattach libnss3 libtcnative-1 telnet tini tree ttf-dejavu unzip zulu8-jdk && \
 	apt-get install -t jammy -y ffmpeg && \
 	apt-get upgrade -t focal -y && \
-	apt-get clean && \
-	dpkg --list | grep "^rc" | cut -d " " -f 3 | xargs dpkg --purge
+	apt-get clean
 
 COPY scripts/* /usr/local/bin/
 
