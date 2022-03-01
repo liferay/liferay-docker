@@ -7,9 +7,10 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
 RUN apt-get update && \
-	apt-get install -y bash curl ffmpeg ghostscript gifsicle imagemagick jattach libnss3 libtcnative-1 telnet tini tree ttf-dejavu unzip zulu8-jdk && \
+	apt-get install -y bash curl findutils ffmpeg ghostscript gifsicle imagemagick jattach libnss3 libtcnative-1 telnet tini tree ttf-dejavu unzip zulu8-jdk && \
 	apt-get upgrade -y && \
-	apt-get clean
+	apt-get clean && \
+	dpkg --list | grep "^rc" | cut -d " " -f 3 | xargs dpkg --purge
 
 COPY scripts/* /usr/local/bin/
 
