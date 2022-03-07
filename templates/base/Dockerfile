@@ -13,7 +13,7 @@ RUN apt-get update && \
 
 COPY scripts/* /usr/local/bin/
 
-RUN adduser --disabled-password --home /home/liferay liferay --uid 1000 && \
+RUN adduser --gecos "Liferay User" --disabled-password --home /home/liferay liferay --uid 1000 && \
 	addgroup liferay liferay && \
 	usermod -g 1000 liferay
 
