@@ -1,10 +1,11 @@
-FROM ubuntu:focal
+FROM --platform=$TARGETPLATFORM ubuntu:focal
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
+ARG TARGETPLATFORM
 
 RUN apt-get update && \
 	apt-get install -y bash curl less libnss3 telnet tini tree unzip && \

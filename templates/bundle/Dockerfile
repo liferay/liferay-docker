@@ -1,4 +1,4 @@
-FROM liferay/jdk11:latest
+FROM --platform=$TARGETPLATFORM  liferay/jdk11:latest
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_LIFERAY_VCS_REF
@@ -7,6 +7,7 @@ ARG LABEL_TOMCAT_VERSION
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
+ARG TARGETPLATFORM
 
 RUN apt-get update && \
 	apt-get install -y ffmpeg ghostscript imagemagick gifsicle libtcnative-1 ttf-dejavu && \

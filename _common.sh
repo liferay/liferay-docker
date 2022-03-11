@@ -158,6 +158,16 @@ function pid_8080 {
 	echo "${pid##p}"
 }
 
+function check_buildx_installation {
+	docker build buildx --help > /dev/null 2>&1
+
+	if [ $? -gt 0 ]
+	then
+		echo "Please check your docker buildx installation as its required for multiplatform builds."
+		exit 1
+	fi
+}
+
 function prepare_tomcat {
 	local liferay_tomcat_version=$(get_tomcat_version "${TEMP_DIR}/liferay")
 
@@ -171,16 +181,6 @@ function prepare_tomcat {
 
 	rm -fr "${TEMP_DIR}"/liferay/logs/*
 	rm -fr "${TEMP_DIR}"/liferay/tomcat/logs/*
-}
-
-function push_docker_images {
-	if [ "${1}" == "push" ]
-	then
-		for docker_image_tag in "${DOCKER_IMAGE_TAGS[@]}"
-		do
-			docker push "${docker_image_tag}"
-		done
-	fi
 }
 
 function start_tomcat {

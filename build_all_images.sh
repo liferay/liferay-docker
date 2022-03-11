@@ -249,6 +249,13 @@ function main {
 		exit 1
 	fi
 
+	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && [ -z ${LIFERAY_DOCKER_IMAGE_PLATFORMS} ]
+	then
+		echo "Set the environment variable LIFERAY_DOCKER_IMAGE_PLATFORMS."
+
+		exit 1
+	fi
+
 	LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
 
 	mkdir -p "${LOGS_DIR}"

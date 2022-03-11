@@ -135,6 +135,7 @@ function check_usage {
 		echo "    LIFERAY_DOCKER_FIX_PACK_URL (optional): URL to a fix pack"
 		echo "    LIFERAY_DOCKER_HUB_TOKEN (optional): Docker Hub token to log in automatically"
 		echo "    LIFERAY_DOCKER_HUB_USERNAME (optional): Docker Hub username to log in automatically"
+		echo "    LIFERAY_DOCKER_IMAGE_PLATFORMS (optional): The platform for which the images are built. Only works if separated by \",\" and only used during push."
 		echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API header used to generate the trial license"
 		echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
 		echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
@@ -206,7 +207,7 @@ function main {
 
 	log_in_to_docker_hub
 
-	push_docker_images "${1}"
+	push_docker_image "${1}"
 
 	clean_up_temp_directory
 }
@@ -238,6 +239,24 @@ function set_parent_image {
 	if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION%-*}" | cut -f1,2,3 -d'.' | cut -f1 -d '-' | sed 's/\.//g' )" -le 7310 ]
 	then
 		sed -i 's/liferay\/jdk11:latest/liferay\/jdk11-jdk8:latest/g' "${TEMP_DIR}"/Dockerfile
+	fi
+}
+
+function push_docker_image {
+	check_buildx_installation
+
+	if [ "${1}" == "push" ]
+	then
+		docker buildx build --push --platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
+			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
+			--build-arg LABEL_LIFERAY_VCS_REF="${liferay_vcs_ref}" \
+			--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
+			--build-arg LABEL_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
+			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
+			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
+			--build-arg LABEL_VERSION="${label_version}" \
+			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
+			"${TEMP_DIR}" || exit 1
 	fi
 }
 
