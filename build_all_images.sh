@@ -160,6 +160,25 @@ function build_jdk11_jdk8_image {
 	fi
 }
 
+function build_job_runner_image {
+	local job_runner_version=1.0
+
+	echo ""
+	echo "Building Docker image Job Runner."
+	echo ""
+
+	time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/job_runner.log
+
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	then
+		echo "FAILED: Job Runner" >> "${LOGS_DIR}/results"
+
+		exit 1
+	else
+		echo "SUCCESS: Job Runner" >> "${LOGS_DIR}/results"
+	fi
+}
+
 function get_latest_docker_hub_version {
 	local token=$(curl -s "https://auth.docker.io/token?service=registry.docker.io&scope=repository:liferay/${1}:pull" | jq -r '.token')
 
@@ -209,6 +228,8 @@ function main {
 	build_jdk11_image
 
 	build_jdk11_jdk8_image
+
+	build_job_runner_image
 
 	build_bundle_images
 
