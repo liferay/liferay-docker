@@ -137,7 +137,7 @@ function get_main_key {
 
 	for main_key in ${main_keys}
 	do
-		local count=$(echo "${version}" | grep -c "${main_key}")
+		local count=$(echo "${version}" | grep -c -E "${main_key}-|${main_key}\.")
 
 		if [ "${count}" -gt 0 ]
 		then
