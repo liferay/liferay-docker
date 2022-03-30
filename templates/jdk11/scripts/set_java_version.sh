@@ -1,17 +1,17 @@
 #!/bin/bash
 
 function create_symlink {
-	if [[ -e /usr/lib/jvm/"${1}"-"${ARC}" ]] && [[ ! -e /usr/lib/jvm/"${1//-/}" ]]
+	if [[ -e /usr/lib/jvm/"${2}"-"${1}" ]] && [[ ! -e /usr/lib/jvm/"${2//-/}" ]]
 	then
-		ln -sf /usr/lib/jvm/"${1}"-"${ARC}" /usr/lib/jvm/"${1//-/}"
+		ln -sf /usr/lib/jvm/"${2}"-"${1}" /usr/lib/jvm/"${2//-/}"
 	fi
 }
 
 function main {
-	ARC=$(dpkg --print-architecture)
+	local architecture=$(dpkg --print-architecture)
 
-	create_symlink "zulu-8"
-	create_symlink "zulu-11"
+	create_symlink "${architecture}" "zulu-8"
+	create_symlink "${architecture}" "zulu-11"
 
 	if [ -n "${JAVA_VERSION}" ]
 	then
@@ -21,7 +21,8 @@ function main {
 			PATH=/usr/lib/jvm/${JAVA_VERSION}/bin/:${PATH}
 
 			local zulu_version=$(echo "${JAVA_VERSION}" | tr -dc '0-9')
-			update-java-alternatives -s zulu-"${zulu_version}"-"${ARC}"
+
+			update-java-alternatives -s zulu-"${zulu_version}"-"${architecture}"
 
 			echo "[LIFERAY] Using ${JAVA_VERSION} JDK. You can use another JDK by setting the \"JAVA_VERSION\" environment varible."
 			echo ""
