@@ -47,6 +47,9 @@ function build_bundle_image {
 	local fix_pack_url=$(get_string $(yq "${query}".fix_pack_url < bundles.yml))
 	local test_hotfix_url=$(get_string $(yq "${query}".test_hotfix_url < bundles.yml))
 	local test_installed_patch=$(get_string $( yq "${query}".test_installed_patch < bundles.yml))
+	local additional_tags=$(get_string $( yq "${query}".additional_tags < bundles.yml))
+
+	version="${version},${additional_tags}"
 
 	if [ ! -n "${version}" ]
 	then
