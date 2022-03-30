@@ -135,18 +135,18 @@ function build_jdk11_image {
 	local jdk11_image_version=1.0
 
 	echo ""
-	echo "Building Docker image JDK11."
+	echo "Building Docker image JDK 11."
 	echo ""
 
 	time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: JDK11" >> "${LOGS_DIR}/results"
+		echo "FAILED: JDK 11" >> "${LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: JDK11" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: JDK 11" >> "${LOGS_DIR}/results"
 	fi
 }
 
@@ -154,18 +154,18 @@ function build_jdk11_jdk8_image {
 	local jdk11_jdk8_image_version=1.0
 
 	echo ""
-	echo "Building Docker image JDK11-JDK8."
+	echo "Building Docker image JDK 11/JDK 8."
 	echo ""
 
 	time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11_jdk8.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: JDK11-JDK8" >> "${LOGS_DIR}/results"
+		echo "FAILED: JDK 11/JDK 8" >> "${LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: JDK11-JDK8" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: JDK 11/JDK 8" >> "${LOGS_DIR}/results"
 	fi
 }
 
