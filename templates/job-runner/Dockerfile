@@ -1,4 +1,4 @@
-FROM liferay/base:latest
+FROM liferay/jdk11:latest
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME

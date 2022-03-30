@@ -1,19 +1,18 @@
-FROM ubuntu:focal
+FROM liferay/jdk11:latest
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
+ARG TARGETARCH
 
-RUN apt-get update && \
-	apt-get install -y bash curl less libnss3 telnet tini tree unzip && \
-	apt-get upgrade -y && \
-	apt-get clean
+ENV JAVA_VERSION=zulu8
 
-RUN adduser --disabled-password --home /home/liferay liferay --uid 1000 && \
-	addgroup liferay liferay && \
-	usermod -g 1000 liferay
+RUN curl -L -s -H 'accept: */*' -X 'GET' -o /tmp/jdk8.deb "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?java_version=8.0&os=linux&arch=$TARGETARCH&hw_bitness=64&ext=deb&bundle_type=jdk&javafx=false" && \
+	apt-get install -y /tmp/jdk8.deb && \
+	rm /tmp/jdk8.deb && \
+	/usr/local/bin/set_java_version.sh 
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"

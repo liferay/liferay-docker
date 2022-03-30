@@ -1,4 +1,4 @@
-FROM liferay/base:latest
+FROM liferay/jdk11:latest
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_LIFERAY_VCS_REF
@@ -7,6 +7,13 @@ ARG LABEL_TOMCAT_VERSION
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
+
+RUN apt-get update && \
+	apt-get install -y ffmpeg ghostscript imagemagick gifsicle libtcnative-1 ttf-dejavu && \
+	apt-get upgrade -y && \
+	apt-get clean
+
+COPY scripts/* /usr/local/bin/
 
 COPY --chown=liferay:liferay liferay /opt/liferay/
 
