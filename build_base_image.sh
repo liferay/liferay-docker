@@ -20,6 +20,8 @@ function build_docker_image {
 }
 
 function main {
+	delete_local_images "liferay/base"
+
 	make_temp_directory templates/base
 
 	build_docker_image

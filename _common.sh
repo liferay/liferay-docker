@@ -48,6 +48,20 @@ function date {
 	fi
 }
 
+function delete_local_images {
+	if [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" == "true" ]] && [ -n "${1}" ]
+	then
+		echo "Deleting local ${1} images."
+
+		local image_id_list=$(docker image ls | grep "${1}" | awk '{print $3}' | uniq)
+
+		for id in $image_id_list
+		do
+			docker image rm -f "${id}"
+		done
+	fi
+}
+
 function download {
 	local file_name="${1}"
 	local file_url="${2}"

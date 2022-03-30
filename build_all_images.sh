@@ -9,6 +9,8 @@ function build_base_image {
 
 	if [[ $(get_latest_docker_hub_version "base") == $(./release_notes.sh get-version) ]]
 	then
+		echo "Latest image version matches with local release version."
+
 		return
 	fi
 

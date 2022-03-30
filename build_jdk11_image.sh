@@ -20,6 +20,8 @@ function build_docker_image {
 }
 
 function main {
+	delete_local_images "liferay/jdk11"
+
 	make_temp_directory templates/jdk11
 
 	build_docker_image
