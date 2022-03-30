@@ -35,10 +35,16 @@ function build_bundle_image {
 	local query=${1}
 	local version=${2}
 
+	local additional_tags=$(get_string $( yq "${query}".additional_tags < bundles.yml))
 	local bundle_url=$(get_string $(yq "${query}".bundle_url < bundles.yml))
 	local fix_pack_url=$(get_string $(yq "${query}".fix_pack_url < bundles.yml))
 	local test_hotfix_url=$(get_string $(yq "${query}".test_hotfix_url < bundles.yml))
 	local test_installed_patch=$(get_string $( yq "${query}".test_installed_patch < bundles.yml))
+
+	if [ -n "${additional_tags}" ]
+	then
+		version="${version},${additional_tags}"
+	fi
 
 	if [ ! -n "${version}" ]
 	then
