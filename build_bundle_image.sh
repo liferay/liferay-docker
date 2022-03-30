@@ -108,6 +108,13 @@ function build_docker_image {
 		"${TEMP_DIR}"
 }
 
+function set_base_image {
+	if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION%-*}" | cut -f1,2,3 -d'.' | cut -f1 -d '-' | sed 's/\.//g' )" -le 7310 ]
+	then
+		sed -i 's/liferay\/jdk11:latest/liferay\/jdk11-jdk8:latest/g' "${TEMP_DIR}"/Dockerfile
+	fi
+}
+
 function check_release {
 	if [[ ${RELEASE_FILE_NAME} == *-dxp-* ]] || [[ ${RELEASE_FILE_NAME} == *-private* ]]
 	then
@@ -184,6 +191,8 @@ function main {
 	check_usage "${@}"
 
 	make_temp_directory templates/bundle
+
+	set_base_image
 
 	prepare_temp_directory "${@}"
 
