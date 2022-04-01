@@ -53,9 +53,7 @@ function delete_local_images {
 	then
 		echo "Deleting local ${1} images."
 
-		local image_id_list=$(docker image ls | grep "${1}" | awk '{print $3}' | uniq)
-
-		for image_id in $image_id_list
+		for image_id in $(docker image ls | grep "${1}" | awk '{print $3}' | uniq)
 		do
 			docker image rm -f "${image_id}"
 		done
