@@ -5,10 +5,9 @@ source ./_common.sh
 BUILD_ALL_IMAGES_PUSH=${1}
 
 function build_base_image {
-
 	log_in_to_docker_hub
 
-	if [[ $(get_latest_release_version "base") == $(./release_notes.sh get-version) ]]
+	if [[ $(get_latest_docker_hub_version "base") == $(./release_notes.sh get-version) ]]
 	then
 		return
 	fi
@@ -159,7 +158,7 @@ function build_jdk11_jdk8_image {
 	fi
 }
 
-function get_latest_release_version {
+function get_latest_docker_hub_version {
 	local token=$(curl -s "https://auth.docker.io/token?service=registry.docker.io&scope=repository:liferay/${1}:pull" | jq -r '.token')
 
 	local version=$(curl -s  -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o '\\"org.label-schema.version\\":\\"[0-9]\.[0-9]\.[0-9]*\\"' | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
