@@ -124,12 +124,20 @@ function build_bundle_images {
 
 function build_jdk11_image {
 	local jdk11_image_version=1.0
+	local latest_available_zulu11_version=$(get_latest_available_zulu_version "11")
+
+	if [[ $(get_latest_docker_hub_zulu_version "8") == "${latest_available_zulu11_version}" ]]
+	then
+		echo "Latest Docker Hub image zulu11 version matches with the latest available zulu11 version."
+
+		return
+	fi
 
 	echo ""
 	echo "Building Docker image JDK 11."
 	echo ""
 
-	time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11.log
+	LIFERAY_DOCKER_ZULU_11_VERSION=${latest_available_zulu11_version} time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -143,12 +151,20 @@ function build_jdk11_image {
 
 function build_jdk11_jdk8_image {
 	local jdk11_jdk8_image_version=1.0
+	local latest_available_zulu8_version=$(get_latest_available_zulu_version "8")
+
+	if [[ $(get_latest_docker_hub_zulu_version "8") == "${latest_available_zulu8_version}" ]]
+	then
+		echo "Latest Docker Hub image zulu8 version matches with the latest available zulu8 version."
+
+		return
+	fi
 
 	echo ""
 	echo "Building Docker image JDK 11/JDK 8."
 	echo ""
 
-	time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11_jdk8.log
+	LIFERAY_DOCKER_ZULU_8_VERSION=${latest_available_zulu8_version} time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11_jdk8.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -179,10 +195,24 @@ function build_job_runner_image {
 	fi
 }
 
+function get_latest_available_zulu_version {
+	local version=$(curl -L -s -H 'accept: */*' "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?java_version=${1}&os=linux&hw_bitness=64&ext=deb&bundle_type=jdk&javafx=false" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
+
+	echo "${version}"
+}
+
 function get_latest_docker_hub_version {
 	local token=$(curl -s "https://auth.docker.io/token?service=registry.docker.io&scope=repository:liferay/${1}:pull" | jq -r '.token')
 
 	local version=$(curl -s  -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o '\\"org.label-schema.version\\":\\"[0-9]\.[0-9]\.[0-9]*\\"' | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
+
+	echo "${version}"
+}
+
+function get_latest_docker_hub_zulu_version {
+	local token=$(curl -s "https://auth.docker.io/token?service=registry.docker.io&scope=repository:liferay/${1}:pull" | jq -r '.token')
+
+	local version=$(curl -s  -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o "\\\\\"org.label-schema.zulu${1}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
 	echo "${version}"
 }

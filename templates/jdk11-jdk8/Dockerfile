@@ -5,11 +5,12 @@ ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
+ARG LABEL_ZULU_8_VERSION
 ARG TARGETARCH
 
 ENV JAVA_VERSION=zulu8
 
-RUN curl -L -s -H 'accept: */*' -X 'GET' -o /tmp/jdk8.deb "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?java_version=8.0&os=linux&arch=$TARGETARCH&hw_bitness=64&ext=deb&bundle_type=jdk&javafx=false" && \
+RUN curl -L -s -H 'accept: */*' -X 'GET' -o /tmp/jdk8.deb "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?java_version=8.0&os=linux&arch=$TARGETARCH&zulu_version=$LABEL_ZULU_8_VERSION&hw_bitness=64&ext=deb&bundle_type=jdk&javafx=false" && \
 	apt-get install -y /tmp/jdk8.deb && \
 	rm /tmp/jdk8.deb && \
 	/usr/local/bin/set_java_version.sh 
@@ -21,3 +22,4 @@ LABEL org.label-schema.vcs-ref="${LABEL_VCS_REF}"
 LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
+LABEL org.label-schema.zulu8_version="${LABEL_ZULU_8_VERSION}"
