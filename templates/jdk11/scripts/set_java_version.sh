@@ -10,11 +10,10 @@ function create_symlink {
 function main {
 	if [ -n "${JAVA_VERSION}" ]
 	then
-
 		if [[ ! -e "/usr/lib/jvm/${JAVA_VERSION}" ]]
 		then
-			local zulu_version=$(echo "${JAVA_VERSION}" | tr -dc '0-9')
 			local architecture=$(dpkg --print-architecture)
+			local zulu_version=$(echo "${JAVA_VERSION}" | tr -dc '0-9')
 
 			create_symlink "${architecture}" "zulu-${zulu_version}"
 			update-java-alternatives -s zulu-"${zulu_version}"-"${architecture}"
