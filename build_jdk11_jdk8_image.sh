@@ -13,13 +13,15 @@ function build_docker_image {
 	then
 		check_docker_buildx
 
-		docker buildx build --push --platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
+		docker buildx build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
 			--build-arg LABEL_NAME="Liferay JDK11 JDK8" \
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${image_version}" \
 			--build-arg LABEL_ZULU_8_VERSION="${LIFERAY_DOCKER_ZULU_8_VERSION}" \
+			--platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
+			--push \
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 			"${TEMP_DIR}" || exit 1
 	else

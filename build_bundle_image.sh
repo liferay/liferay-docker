@@ -247,7 +247,7 @@ function push_docker_image {
 
 	if [ "${1}" == "push" ]
 	then
-		docker buildx build --push --platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
+		docker buildx build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
 			--build-arg LABEL_LIFERAY_VCS_REF="${liferay_vcs_ref}" \
 			--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
@@ -255,6 +255,8 @@ function push_docker_image {
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${label_version}" \
+			--platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
+			--push \
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 			"${TEMP_DIR}" || exit 1
 	fi
