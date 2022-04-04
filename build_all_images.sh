@@ -128,7 +128,7 @@ function build_jdk11_image {
 
 	if [[ $(get_latest_docker_hub_zulu_version "jdk11" "8") == "${latest_available_zulu11_version}" ]]
 	then
-		echo "Latest Docker Hub image zulu11 version matches with the latest available zulu11 version."
+		echo "JDK 11 is up to date."
 
 		return
 	fi
@@ -155,7 +155,7 @@ function build_jdk11_jdk8_image {
 
 	if [[ $(get_latest_docker_hub_zulu_version "jdk11-jdk8" "8") == "${latest_available_zulu8_version}" ]]
 	then
-		echo "Latest Docker Hub image zulu8 version matches with the latest available zulu8 version."
+		echo "JDK 8 is up to date."
 
 		return
 	fi
