@@ -135,7 +135,7 @@ function check_usage {
 		echo "    LIFERAY_DOCKER_FIX_PACK_URL (optional): URL to a fix pack"
 		echo "    LIFERAY_DOCKER_HUB_TOKEN (optional): Docker Hub token to log in automatically"
 		echo "    LIFERAY_DOCKER_HUB_USERNAME (optional): Docker Hub username to log in automatically"
-		echo "    LIFERAY_DOCKER_IMAGE_PLATFORMS (optional): The platform for which the images are built. Only works if separated by \",\" and only used during push."
+		echo "    LIFERAY_DOCKER_IMAGE_PLATFORMS (optional): Comma separated Docker image platforms to build when the \"push\" parameter is set"
 		echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API header used to generate the trial license"
 		echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
 		echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
