@@ -37,9 +37,9 @@ function build_docker_image {
 function main {
 	make_temp_directory templates/job-runner
 
-	build_docker_image "${1}"
-
 	log_in_to_docker_hub
+
+	build_docker_image "${1}"
 
 	clean_up_temp_directory
 }

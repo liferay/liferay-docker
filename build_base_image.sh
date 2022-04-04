@@ -38,9 +38,9 @@ function main {
 
 	make_temp_directory templates/base
 
-	build_docker_image "${1}"
-
 	log_in_to_docker_hub
+
+	build_docker_image "${1}"
 
 	clean_up_temp_directory
 }
