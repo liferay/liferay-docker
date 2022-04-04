@@ -18,7 +18,7 @@ function build_base_image {
 	echo "Building Docker image base."
 	echo ""
 
-	time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/base.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/base.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -50,7 +50,7 @@ function build_bundle_image {
 	echo "Building Docker image ${build_id} based on ${bundle_url}."
 	echo ""
 
-	LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LOGS_DIR}/${build_id}.log"
+	LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LOGS_DIR}/${build_id}.log"
 
 	local build_bundle_image_exit_code=${PIPESTATUS[0]}
 
@@ -137,7 +137,7 @@ function build_jdk11_image {
 	echo "Building Docker image JDK 11."
 	echo ""
 
-	LIFERAY_DOCKER_ZULU_11_VERSION=${latest_available_zulu11_version} time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZULU_11_VERSION=${latest_available_zulu11_version} time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -164,7 +164,7 @@ function build_jdk11_jdk8_image {
 	echo "Building Docker image JDK 11/JDK 8."
 	echo ""
 
-	LIFERAY_DOCKER_ZULU_8_VERSION=${latest_available_zulu8_version} time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11_jdk8.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZULU_8_VERSION=${latest_available_zulu8_version} time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11_jdk8.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -183,7 +183,7 @@ function build_job_runner_image {
 	echo "Building Docker image Job Runner."
 	echo ""
 
-	time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/job_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/job_runner.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
