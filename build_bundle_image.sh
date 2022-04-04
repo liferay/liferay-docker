@@ -243,7 +243,7 @@ function set_parent_image {
 }
 
 function push_docker_image {
-	check_buildx_installation
+	check_docker_buildx
 
 	if [ "${1}" == "push" ]
 	then

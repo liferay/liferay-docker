@@ -11,7 +11,7 @@ function build_docker_image {
 
 	if [ "${1}" == "push" ]
 	then
-		check_buildx_installation
+		check_docker_buildx
 
 		docker buildx build --push --platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \

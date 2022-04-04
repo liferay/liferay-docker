@@ -158,12 +158,13 @@ function pid_8080 {
 	echo "${pid##p}"
 }
 
-function check_buildx_installation {
+function check_docker_buildx {
 	docker build buildx --help > /dev/null 2>&1
 
 	if [ $? -gt 0 ]
 	then
-		echo "Please check your docker buildx installation as its required for multiplatform builds."
+		echo "Docker Buildx is not available."
+
 		exit 1
 	fi
 }
