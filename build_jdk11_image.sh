@@ -21,7 +21,7 @@ function build_docker_image {
 			--build-arg LABEL_VERSION="${image_version}" \
 			--build-arg LABEL_ZULU_11_VERSION="${LIFERAY_DOCKER_ZULU_11_VERSION}" \
 			--platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
-			--push
+			--push \
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 			"${TEMP_DIR}" || exit 1
 	else
