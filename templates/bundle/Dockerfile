@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM  liferay/jdk11:latest
+FROM --platform=${TARGETPLATFORM}  liferay/jdk11:latest
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_LIFERAY_VCS_REF

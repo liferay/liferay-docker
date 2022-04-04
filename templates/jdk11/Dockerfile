@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM liferay/base:latest
+FROM --platform=${TARGETPLATFORM} liferay/base:latest
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
