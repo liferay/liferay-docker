@@ -243,10 +243,10 @@ function set_parent_image {
 }
 
 function push_docker_image {
-	check_docker_buildx
-
 	if [ "${1}" == "push" ]
 	then
+		check_docker_buildx
+
 		docker buildx build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
 			--build-arg LABEL_LIFERAY_VCS_REF="${liferay_vcs_ref}" \
