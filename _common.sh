@@ -1,5 +1,16 @@
 #!/bin/bash
 
+function check_docker_buildx {
+	docker build buildx --help > /dev/null 2>&1
+
+	if [ $? -gt 0 ]
+	then
+		echo "Docker Buildx is not available."
+
+		exit 1
+	fi
+}
+
 function check_utils {
 
 	#
@@ -156,17 +167,6 @@ function pid_8080 {
 	local pid=$(lsof -Fp -i 4tcp:8080 -sTCP:LISTEN | head -n 1)
 
 	echo "${pid##p}"
-}
-
-function check_docker_buildx {
-	docker build buildx --help > /dev/null 2>&1
-
-	if [ $? -gt 0 ]
-	then
-		echo "Docker Buildx is not available."
-
-		exit 1
-	fi
 }
 
 function prepare_tomcat {
