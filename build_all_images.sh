@@ -180,6 +180,14 @@ function build_jdk11_jdk8_image {
 }
 
 function build_job_runner_image {
+	if [[ $(get_latest_docker_hub_version "job-runner") == $(./release_notes.sh get-version) ]]
+	then
+		echo ""
+		echo "Docker image Job Runner is up to date."
+
+		return
+	fi
+
 	local job_runner_version=1.0
 
 	echo ""
