@@ -127,7 +127,7 @@ function build_jdk11_image {
 	local jdk11_image_version=1.0
 	local latest_available_zulu11_version=$(get_latest_available_zulu_version "11")
 
-	if [[ $(get_latest_docker_hub_zulu_version "jdk11" "8") == "${latest_available_zulu11_version}" ]]
+	if [[ $(get_latest_docker_hub_zulu_version "jdk11" "11") == "${latest_available_zulu11_version}" ]]
 	then
 		echo ""
 		echo "Docker image JDK 11 is up to date."
