@@ -262,8 +262,7 @@ function main {
 
 	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && [ -z ${LIFERAY_DOCKER_IMAGE_PLATFORMS} ]
 	then
-		#LIFERAY_DOCKER_IMAGE_PLATFORMS=linux/amd64,linux/arm64
-		LIFERAY_DOCKER_IMAGE_PLATFORMS=linux/amd64
+		LIFERAY_DOCKER_IMAGE_PLATFORMS=linux/amd64,linux/arm64
 	fi
 
 	LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
