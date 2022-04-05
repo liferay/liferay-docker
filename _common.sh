@@ -184,6 +184,10 @@ function prepare_tomcat {
 	rm -fr "${TEMP_DIR}"/liferay/tomcat/logs/*
 }
 
+function remove_temp_dockerfile_platform_variable {
+	sed -i 's/--platform=${TARGETPLATFORM} //g' "${TEMP_DIR}"/Dockerfile
+}
+
 function start_tomcat {
 
 	#

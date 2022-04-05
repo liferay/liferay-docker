@@ -43,7 +43,7 @@ function build_docker_image {
 		release_version=${release_version}-${service_pack_name}
 	fi
 
-	local label_version=${release_version}
+	LABEL_VERSION=${release_version}
 
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
@@ -59,9 +59,9 @@ function build_docker_image {
 
 		if [[ ${release_branch} == master ]]
 		then
-			label_version="Master Snapshot on ${label_version} at ${release_hash}"
+			LABEL_VERSION="Master Snapshot on ${LABEL_VERSION} at ${release_hash}"
 		else
-			label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
+			LABEL_VERSION="${release_branch} Snapshot on ${LABEL_VERSION} at ${release_hash}"
 		fi
 	fi
 
@@ -91,19 +91,20 @@ function build_docker_image {
 
 	if [ -e "${TEMP_DIR}/liferay/.githash" ]
 	then
-		local liferay_vcs_ref=$(cat "${TEMP_DIR}/liferay/.githash")
+		LIFERAY_VCS_REF=$(cat "${TEMP_DIR}/liferay/.githash")
 	fi
 
 	IFS=${default_ifs}
+	remove_temp_dockerfile_platform_variable
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-		--build-arg LABEL_LIFERAY_VCS_REF="${liferay_vcs_ref}" \
+		--build-arg LABEL_LIFERAY_VCS_REF="${LIFERAY_VCS_REF}" \
 		--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
 		--build-arg LABEL_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
-		--build-arg LABEL_VERSION="${label_version}" \
+		--build-arg LABEL_VERSION="${LABEL_VERSION}" \
 		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 		"${TEMP_DIR}" || exit 1
 }
@@ -247,14 +248,16 @@ function push_docker_image {
 	then
 		check_docker_buildx
 
+		sed -i '1s/FROM /FROM --platform=${TARGETPLATFORM} /g' "${TEMP_DIR}"/Dockerfile
+
 		docker buildx build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-			--build-arg LABEL_LIFERAY_VCS_REF="${liferay_vcs_ref}" \
+			--build-arg LABEL_LIFERAY_VCS_REF="${LIFERAY_VCS_REF}" \
 			--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
 			--build-arg LABEL_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
-			--build-arg LABEL_VERSION="${label_version}" \
+			--build-arg LABEL_VERSION="${LABEL_VERSION}" \
 			--platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
 			--push \
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
