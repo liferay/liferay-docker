@@ -7,7 +7,7 @@ BUILD_ALL_IMAGES_PUSH=${1}
 function build_base_image {
 	log_in_to_docker_hub
 
-	if [[ $(get_latest_docker_hub_version "base") == $(./release_notes.sh get-version) ]]
+	if [[ $(get_latest_docker_hub_version "base") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
 		echo "Docker image base is up to date."
@@ -127,7 +127,7 @@ function build_jdk11_image {
 	local jdk11_image_version=1.0
 	local latest_available_zulu11_version=$(get_latest_available_zulu_version "11")
 
-	if [[ $(get_latest_docker_hub_zulu_version "jdk11" "11") == "${latest_available_zulu11_version}" ]]
+	if [[ $(get_latest_docker_hub_zulu_version "jdk11" "11") == "${latest_available_zulu11_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
 		echo "Docker image JDK 11 is up to date."
@@ -155,7 +155,7 @@ function build_jdk11_jdk8_image {
 	local jdk11_jdk8_image_version=1.0
 	local latest_available_zulu8_version=$(get_latest_available_zulu_version "8")
 
-	if [[ $(get_latest_docker_hub_zulu_version "jdk11-jdk8" "8") == "${latest_available_zulu8_version}" ]]
+	if [[ $(get_latest_docker_hub_zulu_version "jdk11-jdk8" "8") == "${latest_available_zulu8_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
 		echo "Docker image JDK 8 is up to date."
@@ -180,7 +180,7 @@ function build_jdk11_jdk8_image {
 }
 
 function build_job_runner_image {
-	if [[ $(get_latest_docker_hub_version "job-runner") == $(./release_notes.sh get-version) ]]
+	if [[ $(get_latest_docker_hub_version "job-runner") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
 		echo "Docker image job runner is up to date."
