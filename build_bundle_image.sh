@@ -1,7 +1,6 @@
 #!/bin/bash
 
 source ./_common.sh
-DOCKER_IMAGE_TAGS=()
 
 function build_docker_image {
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
@@ -70,6 +69,8 @@ function build_docker_image {
 	then
 		release_version=${LIFERAY_DOCKER_RELEASE_VERSION}
 	fi
+
+	DOCKER_IMAGE_TAGS=()
 
 	local default_ifs=${IFS}
 
