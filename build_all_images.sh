@@ -23,11 +23,11 @@ function build_base_image {
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: base" >> "${LOGS_DIR}/results"
+		echo "FAILED: Base" >> "${LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: base" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Base" >> "${LOGS_DIR}/results"
 	fi
 }
 
