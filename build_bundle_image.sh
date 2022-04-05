@@ -95,6 +95,7 @@ function build_docker_image {
 	fi
 
 	IFS=${default_ifs}
+
 	remove_temp_dockerfile_platform_variable
 
 	docker build \
