@@ -10,7 +10,7 @@ function build_base_image {
 	if [[ $(get_latest_docker_hub_version "base") == $(./release_notes.sh get-version) ]]
 	then
 		echo ""
-		echo "Base is up to date."
+		echo "Docker image base is up to date."
 
 		return
 	fi
@@ -130,7 +130,7 @@ function build_jdk11_image {
 	if [[ $(get_latest_docker_hub_zulu_version "jdk11" "8") == "${latest_available_zulu11_version}" ]]
 	then
 		echo ""
-		echo "JDK 11 is up to date."
+		echo "Docker image JDK 11 is up to date."
 
 		return
 	fi
@@ -158,7 +158,7 @@ function build_jdk11_jdk8_image {
 	if [[ $(get_latest_docker_hub_zulu_version "jdk11-jdk8" "8") == "${latest_available_zulu8_version}" ]]
 	then
 		echo ""
-		echo "JDK 8 is up to date."
+		echo "Docker image JDK 8 is up to date."
 
 		return
 	fi
