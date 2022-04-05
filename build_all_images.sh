@@ -183,7 +183,7 @@ function build_job_runner_image {
 	if [[ $(get_latest_docker_hub_version "job-runner") == $(./release_notes.sh get-version) ]]
 	then
 		echo ""
-		echo "Docker image Job Runner is up to date."
+		echo "Docker image job runner is up to date."
 
 		return
 	fi
@@ -191,7 +191,7 @@ function build_job_runner_image {
 	local job_runner_version=1.0
 
 	echo ""
-	echo "Building Docker image Job Runner."
+	echo "Building Docker image job runner."
 	echo ""
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/job_runner.log
