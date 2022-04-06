@@ -31,6 +31,15 @@ function configure_tomcat {
 	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> "${TEMP_DIR}/liferay/tomcat/bin/setenv.sh"
 }
 
+function create_builder_instance {
+	if [ $(docker buildx ls | grep -c -w "liferay-buildkit") -eq 0 ]
+	then
+		echo "Creating Liferay builder instance."
+
+		docker buildx create --name "liferay-buildkit"
+	fi
+}
+
 function date {
 	export LC_ALL=en_US.UTF-8
 	export TZ=America/Los_Angeles

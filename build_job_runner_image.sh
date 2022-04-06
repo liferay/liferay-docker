@@ -14,6 +14,7 @@ function build_docker_image {
 	if [ "${1}" == "push" ]
 	then
 		check_docker_buildx
+		create_builder_instance
 
 		docker buildx build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
@@ -21,6 +22,7 @@ function build_docker_image {
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${job_runner_image_version}" \
+			--builder "liferay-buildkit" \
 			--platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
 			--push \
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
