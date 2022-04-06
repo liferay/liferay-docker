@@ -9,6 +9,11 @@ function check_docker_buildx {
 
 		exit 1
 	fi
+
+	if [ $(docker buildx ls | grep -c -w "liferay-buildkit") -eq 0 ]
+	then
+		docker buildx create --name "liferay-buildkit"
+	fi
 }
 
 function check_utils {
@@ -29,15 +34,6 @@ function clean_up_temp_directory {
 
 function configure_tomcat {
 	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> "${TEMP_DIR}/liferay/tomcat/bin/setenv.sh"
-}
-
-function create_builder_instance {
-	if [ $(docker buildx ls | grep -c -w "liferay-buildkit") -eq 0 ]
-	then
-		echo "Creating Liferay builder instance."
-
-		docker buildx create --name "liferay-buildkit"
-	fi
 }
 
 function date {

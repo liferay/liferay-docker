@@ -14,7 +14,6 @@ function build_docker_image {
 	if [ "${1}" == "push" ]
 	then
 		check_docker_buildx
-		create_builder_instance
 
 		docker buildx build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \

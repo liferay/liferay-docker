@@ -248,7 +248,6 @@ function push_docker_image {
 	if [ "${1}" == "push" ]
 	then
 		check_docker_buildx
-		create_builder_instance
 
 		sed -i '1s/FROM /FROM --platform=${TARGETPLATFORM} /g' "${TEMP_DIR}"/Dockerfile
 
