@@ -18,7 +18,7 @@ RUN apt-get update && \
 	apt-get install -y jattach && \
 	apt-get upgrade -y && \
 	apt-get clean && \
-	curl -L -s -H 'accept: */*' -X 'GET' -o /tmp/jdk11.deb "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?java_version=11.0&os=linux&arch=${TARGETARCH}&zulu_version=$LABEL_ZULU_11_VERSION&hw_bitness=64&ext=deb&bundle_type=jdk&javafx=false" && \
+	curl -L -s -H 'accept: */*' -X 'GET' -o /tmp/jdk11.deb "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=${TARGETARCH}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=11.0&os=linux&zulu_version=$LABEL_ZULU_11_VERSION" && \
 	apt-get install -y /tmp/jdk11.deb && \
 	rm /tmp/jdk11.deb && \
 	/usr/local/bin/set_java_version.sh 

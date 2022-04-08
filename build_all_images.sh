@@ -213,13 +213,13 @@ function build_job_runner_image {
 }
 
 function get_latest_available_zulu_version {
-	local version=$(curl -L -s -H 'accept: */*' "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?java_version=${1}&os=linux&hw_bitness=64&ext=deb&bundle_type=jdk&javafx=false" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
+	local version=$(curl -L -s -H 'accept: */*' "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
 
 	echo "${version}"
 }
 
 function get_latest_docker_hub_version {
-	local token=$(curl -s "https://auth.docker.io/token?service=registry.docker.io&scope=repository:liferay/${1}:pull" | jq -r '.token')
+	local token=$(curl -s "https://auth.docker.io/token?scope=repository:liferay&service=registry.docker.io/${1}:pull" | jq -r '.token')
 
 	local version=$(curl -s  -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o '\\"org.label-schema.version\\":\\"[0-9]\.[0-9]\.[0-9]*\\"' | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
@@ -227,7 +227,7 @@ function get_latest_docker_hub_version {
 }
 
 function get_latest_docker_hub_zulu_version {
-	local token=$(curl -s "https://auth.docker.io/token?service=registry.docker.io&scope=repository:liferay/${1}:pull" | jq -r '.token')
+	local token=$(curl -s "https://auth.docker.io/token?scope=repository:liferay&service=registry.docker.io/${1}:pull" | jq -r '.token')
 
 	local version=$(curl -s  -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o "\\\\\"org.label-schema.zulu${2}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
