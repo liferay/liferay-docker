@@ -237,13 +237,6 @@ function prepare_temp_directory {
 	mv "${TEMP_DIR}/liferay-"* "${TEMP_DIR}/liferay"
 }
 
-function set_parent_image {
-	if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION%-*}" | cut -f1,2,3 -d'.' | cut -f1 -d '-' | sed 's/\.//g' )" -le 7310 ]
-	then
-		sed -i 's/liferay\/jdk11:latest/liferay\/jdk11-jdk8:latest/g' "${TEMP_DIR}"/Dockerfile
-	fi
-}
-
 function push_docker_image {
 	if [ "${1}" == "push" ]
 	then
@@ -264,6 +257,13 @@ function push_docker_image {
 			--push \
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 			"${TEMP_DIR}" || exit 1
+	fi
+}
+
+function set_parent_image {
+	if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION%-*}" | cut -f1,2,3 -d'.' | cut -f1 -d '-' | sed 's/\.//g' )" -le 7310 ]
+	then
+		sed -i 's/liferay\/jdk11:latest/liferay\/jdk11-jdk8:latest/g' "${TEMP_DIR}"/Dockerfile
 	fi
 }
 
