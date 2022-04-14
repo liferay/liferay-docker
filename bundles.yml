@@ -323,7 +323,7 @@
         test_installed_patch: hotfix-3567-7310
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-3567-7310.zip
 7.4.3.20:
-    7.4.3.19-ga20:
+    7.4.3.20-ga20:
         bundle_url: releases.liferay.com/portal/7.4.3.20-ga20/liferay-ce-portal-tomcat-7.4.3.20-ga20-20220408161249276.7z
 7.4.13:
     7.4.13-u20:
