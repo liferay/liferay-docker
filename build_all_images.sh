@@ -131,9 +131,10 @@ function build_bundle_images {
 
 function build_jdk11_image {
 	local jdk11_image_version=1.0
-	local latest_available_zulu11_version=$(get_latest_available_zulu_version "11")
+	local latest_available_zulu11_amd64_version=$(get_latest_available_zulu_version "11" "amd64")
+	local latest_available_zulu11_arm64_version=$(get_latest_available_zulu_version "11" "arm64")
 
-	if [[ $(get_latest_docker_hub_zulu_version "jdk11" "11") == "${latest_available_zulu11_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [[ $(get_latest_docker_hub_zulu_version "jdk11" "11" "amd64") == "${latest_available_zulu11_amd64_version}" ]] && [[ $(get_latest_docker_hub_zulu_version "jdk11" "11" "arm64") == "${latest_available_zulu11_arm64_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
 		echo "Docker image JDK 11 is up to date."
@@ -145,7 +146,7 @@ function build_jdk11_image {
 	echo "Building Docker image JDK 11."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZULU_11_VERSION=${latest_available_zulu11_version} time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZULU_11_AMD64_VERSION=${latest_available_zulu11_amd64_version} LIFERAY_DOCKER_ZULU_11_ARM64_VERSION=${latest_available_zulu11_arm64_version} time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -159,9 +160,10 @@ function build_jdk11_image {
 
 function build_jdk11_jdk8_image {
 	local jdk11_jdk8_image_version=1.0
-	local latest_available_zulu8_version=$(get_latest_available_zulu_version "8")
+	local latest_available_zulu8_amd64_version=$(get_latest_available_zulu_version "8" "amd64")
+	local latest_available_zulu8_arm64_version=$(get_latest_available_zulu_version "8" "arm64")
 
-	if [[ $(get_latest_docker_hub_zulu_version "jdk11-jdk8" "8") == "${latest_available_zulu8_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [[ $(get_latest_docker_hub_zulu_version "jdk11-jdk8" "8" "amd64") == "${latest_available_zulu8_amd64_version}" ]] && [[ $(get_latest_docker_hub_zulu_version "jdk11-jdk8" "8" "arm64") == "${latest_available_zulu8_arm64_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
 		echo "Docker image JDK 8 is up to date."
@@ -173,7 +175,7 @@ function build_jdk11_jdk8_image {
 	echo "Building Docker image JDK 11/JDK 8."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZULU_8_VERSION=${latest_available_zulu8_version} time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11_jdk8.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZULU_8_AMD64_VERSION=${latest_available_zulu8_amd64_version} LIFERAY_DOCKER_ZULU_8_ARM64_VERSION=${latest_available_zulu8_arm64_version}  time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11_jdk8.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -213,7 +215,7 @@ function build_job_runner_image {
 }
 
 function get_latest_available_zulu_version {
-	local version=$(curl -L -s -H 'accept: */*' "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
+	local version=$(curl -H 'accept: */*' -L -s "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
 
 	echo "${version}"
 }
@@ -229,7 +231,7 @@ function get_latest_docker_hub_version {
 function get_latest_docker_hub_zulu_version {
 	local token=$(curl -s "https://auth.docker.io/token?scope=repository:liferay/${1}:pull&service=registry.docker.io" | jq -r '.token')
 
-	local version=$(curl -s  -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o "\\\\\"org.label-schema.zulu${2}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
+	local version=$(curl -s  -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o "\\\\\"org.label-schema.zulu${2}_${3}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
 	echo "${version}"
 }

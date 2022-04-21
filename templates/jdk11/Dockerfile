@@ -1,11 +1,19 @@
-FROM --platform=${TARGETPLATFORM} liferay/base:latest
+FROM --platform=linux/arm64 liferay/base as jdk11-base-arm64
+ARG LABEL_ZULU_11_ARM64_VERSION
+ARG LABEL_ZULU_11_AMD64_VERSION
+ARG LABEL_ZULU_11_VERSION=$LABEL_ZULU_11_ARM64_VERSION
 
+FROM --platform=linux/amd64 liferay/base as jdk11-base-amd64
+ARG LABEL_ZULU_11_ARM64_VERSION
+ARG LABEL_ZULU_11_AMD64_VERSION
+ARG LABEL_ZULU_11_VERSION=$LABEL_ZULU_11_AMD64_VERSION
+
+FROM jdk11-base-${TARGETARCH}
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
-ARG LABEL_ZULU_11_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
@@ -18,7 +26,7 @@ RUN apt-get update && \
 	apt-get install -y jattach && \
 	apt-get upgrade -y && \
 	apt-get clean && \
-	curl -L -s -H 'accept: */*' -X 'GET' -o /tmp/jdk11.deb "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=${TARGETARCH}&bundle_type=jdk&ext=deb&hw_bitness=64&java_version=11.0&javafx=false&os=linux&zulu_version=${LABEL_ZULU_11_VERSION}" && \
+	curl -H 'accept: */*' -L -s -X 'GET' -o /tmp/jdk11.deb "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=${TARGETARCH}&bundle_type=jdk&ext=deb&hw_bitness=64&java_version=11.0&javafx=false&os=linux&zulu_version=${LABEL_ZULU_11_VERSION}" && \
 	apt-get install -y /tmp/jdk11.deb && \
 	rm /tmp/jdk11.deb && \
 	/usr/local/bin/set_java_version.sh 
@@ -31,3 +39,5 @@ LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
 LABEL org.label-schema.zulu11_version="${LABEL_ZULU_11_VERSION}"
+LABEL org.label-schema.zulu11_arm64_version="${LABEL_ZULU_11_ARM64_VERSION}"
+LABEL org.label-schema.zulu11_amd64_version="${LABEL_ZULU_11_AMD64_VERSION}"
