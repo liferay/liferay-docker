@@ -263,6 +263,8 @@ function get_string {
 }
 
 function main {
+	check_utils curl docker git java jq sed sort tr unzip yq 7z
+
 	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && ! ./release_notes.sh fail-on-change
 	then
 		exit 1
