@@ -9,6 +9,7 @@ ARG LABEL_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
+ENV MEMORY_CACHE=0
 ENV NODE_VERSION=node16
 
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
