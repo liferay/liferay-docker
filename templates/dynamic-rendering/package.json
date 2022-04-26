@@ -1,0 +1,13 @@
+{
+	"name": "prerender-docker",
+	"version": "5.20.0",
+	"description": "lightweight prerender container built on ubuntu linux",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js"
+	},
+	"dependencies": {
+		"cache-manager": "4.1.0",
+		"prerender": "5.20.0"
+	}
+}
