@@ -29,6 +29,12 @@ RUN npm install --no-package-lock
 
 EXPOSE 3000
 
+HEALTHCHECK \
+	--interval=1m \
+	--start-period=15s \
+	--timeout=1m \
+	CMD node ./lib/healthcheck.js || exit 1
+
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.job-runner-version="${LABEL_JOB_RUNNER_VERSION}"
 LABEL org.label-schema.name="${LABEL_NAME}"
