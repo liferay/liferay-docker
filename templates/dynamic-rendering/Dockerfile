@@ -20,6 +20,14 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
 	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y nodejs google-chrome-stable && \
 	apt-get clean
 
+WORKDIR /opt/liferay
+
+COPY . /opt/liferay
+
+RUN npm install --no-package-lock
+
+EXPOSE 3000
+
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.job-runner-version="${LABEL_JOB_RUNNER_VERSION}"
 LABEL org.label-schema.name="${LABEL_NAME}"
@@ -28,3 +36,7 @@ LABEL org.label-schema.vcs-ref="${LABEL_VCS_REF}"
 LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
+
+USER liferay:liferay
+
+ENTRYPOINT ["tini", "--", "node", "server.js"]
