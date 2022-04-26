@@ -9,6 +9,17 @@ ARG LABEL_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
+ENV NODE_VERSION=node16
+
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+	curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+	sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
+		>> /etc/apt/sources.list.d/google.list' && \
+	apt-get update && \
+	apt-get upgrade -y && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y nodejs google-chrome-stable && \
+	apt-get clean
+
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.job-runner-version="${LABEL_JOB_RUNNER_VERSION}"
 LABEL org.label-schema.name="${LABEL_NAME}"
