@@ -1,0 +1,56 @@
+services:
+    database:
+        command: mysqld --character-set-filesystem=utf8mb4 --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --disable-ssl --max_allowed_packet=256M 
+        container_name: database
+        environment:
+            - MARIADB_DATABASE=lportal
+            - MARIADB_PASSWORD=password
+            - MARIADB_ROOT_HOST=%
+            - MARIADB_ROOT_PASSWORD=UglyDuckling
+            - MARIADB_USER=user
+        healthcheck:
+            interval: 40s
+            retries: 3
+            test: mysqladmin ping -h 127.0.0.1 -u user --password=password
+            timeout: 5s
+        image: mariadb:10.4
+        ports:
+            - "3306:3306"
+    liferay:
+        container_name: liferay
+        depends_on:
+            database:
+                condition: service_healthy
+            search:
+                condition: service_healthy
+        environment:
+            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver
+            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_ENABLED=false
+            - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar
+            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=UglyDuckling
+            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://database/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false
+            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=root
+        image: liferay/dxp:latest
+        ports:
+            - "8080:8080"
+    search:
+        container_name: search
+        entrypoint: /mnt/entrypoint.sh
+        environment:
+            - discovery.type=single-node
+            - xpack.ml.enabled=false
+            - xpack.monitoring.enabled=false
+            - xpack.security.enabled=false
+            - xpack.sql.enabled=false
+            - xpack.watcher.enabled=false
+        healthcheck:
+            interval: 40s
+            retries: 3
+            test: curl localhost:9200/_cat/health | grep green
+            timeout: 5s
+        image: elasticsearch:7.17.3
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        volumes:
+            - ./files:/mnt
