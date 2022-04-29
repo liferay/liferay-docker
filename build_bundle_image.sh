@@ -89,6 +89,11 @@ function build_docker_image {
 		fi
 	done
 
+	if [[ "${LIFERAY_DOCKER_LATEST}" = "true" ]]
+	then
+		DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:latest")
+	fi
+
 	if [ -e "${TEMP_DIR}/liferay/.githash" ]
 	then
 		LIFERAY_VCS_REF=$(cat "${TEMP_DIR}/liferay/.githash")
