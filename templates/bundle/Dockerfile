@@ -10,7 +10,7 @@ ARG LABEL_VERSION
 ARG TARGETPLATFORM
 
 RUN apt-get update && \
-	apt-get install -y ffmpeg ghostscript imagemagick gifsicle libtcnative-1 ttf-dejavu && \
+	apt-get install -y ffmpeg ghostscript imagemagick gifsicle libtcnative-1 fonts-dejavu && \
 	apt-get upgrade -y && \
 	apt-get clean
 

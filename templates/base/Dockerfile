@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM} ubuntu:focal
+FROM --platform=${TARGETPLATFORM} ubuntu:jammy
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
