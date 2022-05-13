@@ -5,7 +5,9 @@
 		},
 		"dockerfile": "Dockerfile"
 	},
-	"extensions": [],
+	"extensions": [
+		"ms-azuretools.vscode-docker"
+	],
 	"features": {
 		"docker-in-docker": "latest",
 		"git": "os-provided",
