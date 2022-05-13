@@ -12,6 +12,5 @@
 		"java": "8"
 	},
 	"name": "Ubuntu",
-	"remoteUser": "vscode",
-	"settings": {}
+	"remoteUser": "vscode"
 }
