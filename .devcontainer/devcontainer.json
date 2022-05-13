@@ -1,8 +1,5 @@
 {
 	"build": {
-		"args": {
-			"VARIANT": "ubuntu-22.04"
-		},
 		"dockerfile": "Dockerfile"
 	},
 	"extensions": [
