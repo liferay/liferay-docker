@@ -3,4 +3,4 @@ services:
         container_name: job-runner
         image: liferay/job-runner:latest
         volumes:
-        - ./files:/mnt/liferay/
+        - ./files:/mnt/liferay
