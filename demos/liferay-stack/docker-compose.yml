@@ -32,7 +32,7 @@ services:
         ports:
             - "8080:8080"
     search:
-        entrypoint: /mnt/entrypoint.sh
+        entrypoint: /mnt/search_entrypoint.sh
         environment:
             - discovery.type=single-node
             - xpack.ml.enabled=false
