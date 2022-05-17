@@ -11,7 +11,7 @@ services:
         healthcheck:
             interval: 40s
             retries: 3
-            test: mysqladmin ping --host 127.0.0.1 --user user --password=password
+            test: mysqladmin ping --host 127.0.0.1 --password=password --user user
             timeout: 5s
         image: mariadb:10.4
         ports:
