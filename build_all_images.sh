@@ -276,6 +276,8 @@ function main {
 		LIFERAY_DOCKER_IMAGE_PLATFORMS=linux/amd64,linux/arm64
 	fi
 
+	validate_bundles_yml
+
 	LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
 
 	mkdir -p "${LOGS_DIR}"
@@ -295,6 +297,50 @@ function main {
 	echo ""
 
 	cat "${LOGS_DIR}/results"
+}
+
+function validate_bundles_yml {
+	if [ $(yq '.*.*.latest' < bundles.yml | grep "true" -c) -gt 2 ]
+	then
+		echo "Too many latest flagged image."
+		exit 1
+	fi
+
+	local dxp_latest_key_counter=0
+	local main_keys=$(yq '' < bundles.yml | grep -v '  .*' | sed 's/://')
+	local portal_latest_key_counter=0
+
+	for main_key in $main_keys
+	do
+		if [ $(yq .\""${main_key}"\".*.latest < bundles.yml | grep "true\|false" -c) -gt 0 ]
+		then
+			local minor_keys=$(yq .\""${main_key}"\" < bundles.yml | grep -v '  .*' | sed 's/://')
+
+			for minor_key in $minor_keys
+			do
+				if [ $(yq .\""${main_key}"\".\""${minor_key}"\".latest < bundles.yml | grep "true\|false" -c) -gt 0 ]
+				then
+					if [ $(yq .\""${main_key}"\".\""${minor_key}"\".bundle_url < bundles.yml | grep "portal-tomcat") ]
+					then
+						portal_latest_key_counter=$((portal_latest_key_counter+1))
+					elif [ $(yq .\""${main_key}"\".\""${minor_key}"\".bundle_url < bundles.yml | grep "dxp-tomcat") ]
+					then
+						dxp_latest_key_counter=$((dxp_latest_key_counter+1))
+					fi
+				fi
+			done
+		fi
+	done
+
+	if [ $portal_latest_key_counter -gt 1 ]
+	then
+		echo "Number of latest tag flagged portal image: $portal_latest_key_counter"
+		exit 1
+	elif [ $dxp_latest_key_counter -gt 1 ]
+	then
+		echo "Number of latest tag flagged dxp image: $dxp_latest_key_counter"
+		exit 1
+	fi
 }
 
 main
