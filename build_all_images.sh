@@ -302,7 +302,8 @@ function main {
 function validate_bundles_yml {
 	if [ $(yq '.*.*.latest' < bundles.yml | grep "true" -c) -gt 2 ]
 	then
-		echo "Too many latest flagged image."
+		echo "There are too many images designated as latest."
+
 		exit 1
 	fi
 
@@ -310,13 +311,13 @@ function validate_bundles_yml {
 	local main_keys=$(yq '' < bundles.yml | grep -v '  .*' | sed 's/://')
 	local portal_latest_key_counter=0
 
-	for main_key in $main_keys
+	for main_key in ${main_keys}
 	do
 		if [ $(yq .\""${main_key}"\".*.latest < bundles.yml | grep "true\|false" -c) -gt 0 ]
 		then
 			local minor_keys=$(yq .\""${main_key}"\" < bundles.yml | grep -v '  .*' | sed 's/://')
 
-			for minor_key in $minor_keys
+			for minor_key in ${minor_keys}
 			do
 				if [ $(yq .\""${main_key}"\".\""${minor_key}"\".latest < bundles.yml | grep "true\|false" -c) -gt 0 ]
 				then
@@ -332,13 +333,15 @@ function validate_bundles_yml {
 		fi
 	done
 
-	if [ $portal_latest_key_counter -gt 1 ]
+	if [ ${dxp_latest_key_counter} -gt 1 ]
 	then
-		echo "Number of latest tag flagged portal image: $portal_latest_key_counter"
+		echo "There are ${dxp_latest_key_counter} latest DXP images."
+
 		exit 1
-	elif [ $dxp_latest_key_counter -gt 1 ]
+	elif [ ${portal_latest_key_counter} -gt 1 ]
 	then
-		echo "Number of latest tag flagged dxp image: $dxp_latest_key_counter"
+		echo "There are ${portal_latest_key_counter} latest portal images."
+
 		exit 1
 	fi
 }
