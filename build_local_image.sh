@@ -26,14 +26,14 @@ function build_docker_image {
 function check_usage {
 	if [ ! -n "${3}" ]
 	then
-		echo "Usage: ${0} path-to-bundle image-name version <push>"
+		echo "Usage: ${0} path-to-bundle image-name version <--push> <--no_warm_up> <--no_test_image>"
 		echo ""
-		echo "Example: ${0} ../bundles/master portal-snapshot demo-cbe09fb0 <push>"
+		echo "Example: ${0} ../bundles/master portal-snapshot demo-cbe09fb0 --no_warm_up --no_test_image"
 
 		exit 1
 	fi
 
-	check_utils curl docker java
+	check_utils curl docker java rsync
 }
 
 function main {
@@ -43,21 +43,23 @@ function main {
 
 	prepare_temp_directory "${@}"
 
-	prepare_tomcat
+	prepare_tomcat "${@}"
 
 	build_docker_image "${@}"
 
-	test_docker_image
-
-	log_in_to_docker_hub
-
-	push_docker_images "${4}"
+	test_docker_image "${@}"
 
 	clean_up_temp_directory
 }
 
 function prepare_temp_directory {
-	cp -a "${1}" "${TEMP_DIR}/liferay"
+	rsync -aq "${1}" "${TEMP_DIR}/liferay" \
+		--exclude '*.zip' \
+		--exclude 'data/elasticsearch*' \
+		--exclude 'logs/*' \
+		--exclude 'osgi/state' \
+		--exclude 'osgi/test' \
+		--exclude 'tmp'
 }
 
 main "${@}"

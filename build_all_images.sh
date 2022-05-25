@@ -2,8 +2,6 @@
 
 source ./_common.sh
 
-BUILD_ALL_IMAGES_PUSH=${1}
-
 function build_base_image {
 	log_in_to_docker_hub
 
@@ -286,6 +284,11 @@ function get_string {
 
 function main {
 	check_utils 7z curl docker git java jq sed sort tr unzip yq
+
+	if [[ " ${@} " =~ " --push " ]]
+	then
+		BUILD_ALL_IMAGES_PUSH="push"
+	fi
 
 	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && ! ./release_notes.sh fail-on-change
 	then

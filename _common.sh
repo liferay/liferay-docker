@@ -192,15 +192,18 @@ function prepare_tomcat {
 
 	configure_tomcat
 
-	warm_up_tomcat
+	if [[ ! " ${@} " =~ " --no_warm_up " ]]
+	then
+		warm_up_tomcat
+	fi
 
 	rm -fr "${TEMP_DIR}"/liferay/logs/*
 	rm -fr "${TEMP_DIR}"/liferay/tomcat/logs/*
 }
 
-function remove_temp_dockerfile_target_platform {
-	sed -i 's/${TARGETARCH}'/$(get_current_arch)/ "${TEMP_DIR}"/Dockerfile
-	sed -i 's/--platform=${TARGETPLATFORM} //g' "${TEMP_DIR}"/Dockerfile
+function remove_temp_dockerfile_platform_variable {
+	sed -i'' 's/${TARGETARCH}'/$(get_current_arch)/ "${TEMP_DIR}"/Dockerfile
+	sed -i'' 's/--platform=${TARGETPLATFORM} //g' "${TEMP_DIR}"/Dockerfile
 }
 
 function start_tomcat {
@@ -235,9 +238,13 @@ function start_tomcat {
 
 	"./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh" stop
 
-	sleep 30
+	for i in {0..30..1}; do
+		if kill -0 "${pid}" 2>/dev/null; then
+			sleep 1
+		fi
+	done
 
-	kill -9 "${pid}" 2>/dev/null
+	kill -0 "${pid}" 2>/dev/null && kill -9 "${pid}" 2>/dev/null
 
 	rm -fr "${TEMP_DIR}/liferay/data/osgi/state"
 	rm -fr "${TEMP_DIR}/liferay/osgi/state"
@@ -255,13 +262,16 @@ function stat {
 function test_docker_image {
 	export LIFERAY_DOCKER_IMAGE_ID="${DOCKER_IMAGE_TAGS[0]}"
 
-	./test_image.sh
-
-	if [ $? -gt 0 ]
+	if [[ ! " ${@} " =~ " --no_test_image " ]]
 	then
-		echo "Testing failed, exiting."
+		./test_image.sh
 
-		exit 2
+		if [ $? -gt 0 ]
+		then
+			echo "Testing failed, exiting."
+
+			exit 2
+		fi
 	fi
 }
 

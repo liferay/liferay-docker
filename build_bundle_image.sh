@@ -135,7 +135,7 @@ function check_release {
 function check_usage {
 	if [ ! -n "${LIFERAY_DOCKER_RELEASE_FILE_URL}" ]
 	then
-		echo "Usage: ${0} <push>"
+		echo "Usage: ${0} <--push>"
 		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
