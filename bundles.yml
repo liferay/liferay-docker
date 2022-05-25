@@ -331,7 +331,7 @@
         test_installed_patch: hotfix-5343-7310
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-5343-7310.zip
 7.4.3.26:
-    7.4.3.25-ga26:
+    7.4.3.26-ga26:
         bundle_url: releases.liferay.com/portal/7.4.3.26-ga26/liferay-ce-portal-tomcat-7.4.3.26-ga26-20220520184751553.7z
         latest: true
 7.4.13:
