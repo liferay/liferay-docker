@@ -1,0 +1,7 @@
+services:
+    lxc-static-resources:
+        image: liferay/lxc-static-resources:latest
+        ports:
+            - "8080:80"
+        volumes:
+        - ./files/static:/resources

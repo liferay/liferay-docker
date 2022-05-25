@@ -1,0 +1,33 @@
+{
+	admin off
+	auto_https off
+
+	log {
+		format json
+	}
+}
+
+:80 {
+	root * /resources
+	file_server
+	encode gzip
+
+	@options {
+		method OPTIONS
+	}
+
+	respond @options 204
+	respond / 200
+
+	header {
+		Access-Control-Allow-Methods "{env.ACCESS_CONTROL_ALLOW_METHODS}"
+		Access-Control-Allow-Headers "{env.ACCESS_CONTROL_ALLOW_HEADERS}"
+	}
+
+	import /etc/caddy.d/*
+
+	log {
+		output stdout
+		format json
+	}
+}
