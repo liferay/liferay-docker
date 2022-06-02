@@ -1,11 +1,4 @@
-FROM --platform=${TARGETPLATFORM} ubuntu:jammy
-
-ARG LABEL_BUILD_DATE
-ARG LABEL_NAME
-ARG LABEL_VCS_REF
-ARG LABEL_VCS_URL
-ARG LABEL_VERSION
-ARG TARGETPLATFORM
+FROM --platform=${TARGETPLATFORM} ubuntu:jammy AS ubuntu-jammy
 
 RUN apt-get update && \
 	apt-get install -y bash curl less libnss3 telnet tini tree unzip && \
@@ -15,6 +8,15 @@ RUN apt-get update && \
 RUN adduser --disabled-password --home /home/liferay liferay --uid 1000 && \
 	addgroup liferay liferay && \
 	usermod -g 1000 liferay
+
+FROM ubuntu-jammy
+
+ARG LABEL_BUILD_DATE
+ARG LABEL_NAME
+ARG LABEL_VCS_REF
+ARG LABEL_VCS_URL
+ARG LABEL_VERSION
+ARG TARGETPLATFORM
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"

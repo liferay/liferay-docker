@@ -1,16 +1,16 @@
-FROM --platform=linux/amd64 liferay/jdk11 as jdk11-jdk8-base-amd64
+FROM --platform=linux/amd64 liferay/jdk11 as liferay-jdk11-amd64
 
 ARG LABEL_ZULU_8_AMD64_VERSION
 ARG LABEL_ZULU_8_ARM64_VERSION
 ARG LABEL_ZULU_8_VERSION=${LABEL_ZULU_8_AMD64_VERSION}
 
-FROM --platform=linux/arm64 liferay/jdk11 as jdk11-jdk8-base-arm64
+FROM --platform=linux/arm64 liferay/jdk11 as liferay-jdk11-arm64
 
 ARG LABEL_ZULU_8_AMD64_VERSION
 ARG LABEL_ZULU_8_ARM64_VERSION
 ARG LABEL_ZULU_8_VERSION=${LABEL_ZULU_8_ARM64_VERSION}
 
-FROM jdk11-jdk8-base-${TARGETARCH}
+FROM liferay-jdk11-${TARGETARCH}
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
