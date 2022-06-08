@@ -220,6 +220,8 @@ function test_page {
 
 	content=$(curl --fail -s --show-error "${1}")
 
+	echo "${content}"
+
 	local exit_code=$?
 
 	if [ ${exit_code} -gt 0 ]
@@ -227,8 +229,6 @@ function test_page {
 		log_test_failure "${FUNCNAME[1]}"
 
 		echo "curl exit code is: ${exit_code}."
-		echo ""
-		echo "${content}"
 	else
 		if [[ "${content}" =~ .*"${2}".* ]]
 		then
