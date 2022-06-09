@@ -218,9 +218,7 @@ function test_health_status {
 function test_page {
 	local content
 
-	content=$(curl --fail -s --show-error "${1}")
-
-	echo "${content}"
+	content=$(curl --fail -s --show-error -L "${1}")
 
 	local exit_code=$?
 
@@ -228,6 +226,8 @@ function test_page {
 	then
 		log_test_failure "${FUNCNAME[1]}"
 
+		echo "${content}"
+		echo ""
 		echo "curl exit code is: ${exit_code}."
 	else
 		if [[ "${content}" =~ .*"${2}".* ]]
@@ -236,6 +236,8 @@ function test_page {
 		else
 			log_test_failure "${FUNCNAME[1]}"
 
+			echo "${content}"
+			echo ""
 			echo "The \"${2}\" string is not present on the page."
 		fi
 	fi
