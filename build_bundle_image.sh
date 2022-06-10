@@ -182,10 +182,9 @@ function install_fix_pack {
 		cp "downloads/fix-packs/${FIX_PACK_FILE_NAME}" "${TEMP_DIR}/liferay/patching-tool/patches"
 
 		"${TEMP_DIR}/liferay/patching-tool/patching-tool.sh" install
-		"${TEMP_DIR}/liferay/patching-tool/patching-tool.sh" separate temp
 
+		rm -fr "${TEMP_DIR}/liferay/data/hypersonic/"*
 		rm -fr "${TEMP_DIR}/liferay/osgi/state/"*
-		rm -f "${TEMP_DIR}/liferay/patching-tool/patches/"*
 	fi
 }
 
