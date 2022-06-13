@@ -188,7 +188,7 @@ function test_docker_image_scripts_2 {
 }
 
 function test_health_status {
-	echo -en "Waiting for health status"
+	echo -en "Waiting for health status and license deployment"
 
 	for counter in {1..200}
 	do
@@ -197,7 +197,7 @@ function test_health_status {
 		local license_status=$(docker logs ${CONTAINER_ID} 2> /dev/null | grep -c "License registered for DXP Development")
 		local status=$(docker inspect --format="{{json .State.Health.Status}}" "${CONTAINER_ID}")
 
-		if [ "${status}" == "\"healthy\"" ] && [ $license_status -gt 0 ]
+		if [ "${status}" == "\"healthy\"" ] && [ ${license_status} -gt 0 ]
 		then
 			echo ""
 
