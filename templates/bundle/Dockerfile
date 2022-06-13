@@ -57,7 +57,7 @@ HEALTHCHECK \
 LABEL com.liferay.vcs-ref="${LABEL_LIFERAY_VCS_REF}"
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
-LABEL com.liferay.patching-tool_version="${LABEL_LIFERAY_PATCHING_TOOL_VERSION}"
+LABEL com.liferay.patching-tool-version="${LABEL_LIFERAY_PATCHING_TOOL_VERSION}"
 LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.tomcat.version="${LABEL_TOMCAT_VERSION}"
 LABEL org.label-schema.vcs-ref="${LABEL_VCS_REF}"
