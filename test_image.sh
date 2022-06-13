@@ -194,9 +194,10 @@ function test_health_status {
 	do
 		echo -en "."
 
+		local license_status=$(docker logs ${CONTAINER_ID} 2> /dev/null | grep -c "License registered for DXP Development")
 		local status=$(docker inspect --format="{{json .State.Health.Status}}" "${CONTAINER_ID}")
 
-		if [ "${status}" == "\"healthy\"" ]
+		if [ "${status}" == "\"healthy\"" ] && [ $license_status -gt 0 ]
 		then
 			echo ""
 
