@@ -2,7 +2,7 @@ FROM --platform=${TARGETPLATFORM} ubuntu:focal AS ubuntu-focal
 
 RUN apt-get update && \
 	apt-get install --no-install-recommends --yes bash ca-certificates curl less libnss3 telnet tini tree unzip && \
-	apt-get upgrade -y && \
+	apt-get upgrade --yes && \
 	apt-get clean
 
 RUN adduser --disabled-password --home /home/liferay liferay --uid 1000 && \
