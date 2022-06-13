@@ -1,6 +1,6 @@
 FROM --platform=${TARGETPLATFORM} liferay/jdk11:latest AS liferay-jdk11
 
-RUN apt-get install --no-install-recommends -y cron && \
+RUN apt-get install --no-install-recommends --yes cron && \
 	apt-get clean
 
 FROM liferay-jdk11

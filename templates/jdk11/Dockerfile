@@ -26,11 +26,11 @@ COPY --chown=liferay:liferay home/.bashrc /home/liferay/
 COPY --chown=liferay:liferay scripts/set_java_version.sh /usr/local/bin/
 
 RUN apt-get update && \
-	apt-get install --no-install-recommends -y jattach && \
+	apt-get install --no-install-recommends --yes jattach && \
 	apt-get upgrade -y && \
 	apt-get clean && \
 	curl -H 'accept: */*' -L -s -X 'GET' -o /tmp/jdk11.deb "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=${TARGETARCH}&bundle_type=jdk&ext=deb&hw_bitness=64&java_version=11.0&javafx=false&os=linux&zulu_version=${LABEL_ZULU_11_VERSION}" && \
-	apt-get install --no-install-recommends -y /tmp/jdk11.deb && \
+	apt-get install --no-install-recommends --yes /tmp/jdk11.deb && \
 	rm /tmp/jdk11.deb && \
 	/usr/local/bin/set_java_version.sh
 
