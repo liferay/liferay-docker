@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function build_liferay_dxp {
-	echo "Building Liferay DXP as ${SERVICE}."
+	echo ""
 }
 
 function build_webserver {
@@ -59,9 +59,11 @@ function main {
 function process_configuration {
 	for SERVICE in $(yq '' < ${CONFIG_FILE} | grep -v '  .*' | sed 's/://')
 	do
-		local service_image=$(yq ".\"${SERVICE}\".image" < ${CONFIG_FILE})
+		local service_template=$(yq ".\"${SERVICE}\".template" < ${CONFIG_FILE})
 
-		build_${service_image}
+		echo "Building ${SERVICE}."
+
+		build_${service_template}
 	done
 }
 
