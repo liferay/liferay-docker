@@ -104,6 +104,9 @@ function setup_configuration {
 	if [ -e /etc/liferay-managed-dxp.yaml ]
 	then
 		CONFIG_FILE=/etc/liferay-managed-dxp.yml
+	elif [ -e dev.yml ]
+	then
+		CONFIG_FILE=dev.yml
 	else
 		CONFIG_FILE=single_server.yml
 	fi
