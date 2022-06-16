@@ -1,7 +1,12 @@
 #!/bin/bash
 
 function build_liferay_dxp {
-	echo ""
+	local port=$(yq ".\"${SERVICE}\".port" < ${CONFIG_FILE})
+	compose_add 1 "${SERVICE}:"
+	compose_add 1 "    container_name: ${SERVICE}"
+	compose_add 1 "    image: liferay/dxp:7.4.13-u28-d4.1.0-20220613210437"
+	compose_add 1 "    ports:"
+	compose_add 1 "        - \"$port:8080\""
 }
 
 function build_webserver {
@@ -37,11 +42,35 @@ function check_utils {
 	done
 }
 
+function compose_add {
+	local line=""
+	if [ ${1} -eq 0 ]
+	then
+		echo "${2}" >> ${COMPOSE_FILE}
+
+		return 0
+	fi
+
+	for i in {1..${1}}
+	do
+		line="${line}    "
+	done
+
+	line="${line}${2}"
+
+	echo "${line}" >> ${COMPOSE_FILE}
+}
+
 function create_compose_file {
 	OUTPUT_DIR=output/${VERSION}
 	COMPOSE_FILE=${OUTPUT_DIR}/docker-compose.yml
 
-	mkdir -p $(dirname "${COMPOSE_FILE}")
+	mkdir -p ${OUTPUT_DIR}
+
+	if [ -e ${COMPOSE_FILE} ]
+	then
+		rm -f ${COMPOSE_FILE}
+	fi
 
 	echo "services:" >> ${COMPOSE_FILE}
 }
