@@ -1,11 +1,11 @@
 #!/bin/bash
 
 function build_liferay_dxp {
-	echo "Building Liferay DXP as ${LIFERAY_SERVICE}."
+	echo "Building Liferay DXP as ${SERVICE}."
 }
 
 function build_webserver {
-	docker build templates/webserver --tag liferay-webserver:${LIFERAY_MANAGED_DXP_VERSION}
+	docker build templates/webserver --tag liferay-webserver:${VERSION}
 }
 
 function check_usage {
@@ -20,7 +20,7 @@ function check_usage {
 		exit 1
 	fi
 
-	LIFERAY_MANAGED_DXP_VERSION=${1}
+	VERSION=${1}
 
 	check_utils docker yq
 }
@@ -38,7 +38,7 @@ function check_utils {
 }
 
 function create_compose_file {
-	OUTPUT_DIR=output/${LIFERAY_MANAGED_DXP_VERSION}
+	OUTPUT_DIR=output/${VERSION}
 	COMPOSE_FILE=${OUTPUT_DIR}/docker-compose.yml
 
 	mkdir -p $(dirname "${COMPOSE_FILE}")
@@ -57,11 +57,9 @@ function main {
 }
 
 function process_configuration {
-	for service in $(yq '' < ${LIFERAY_MANAGED_DXP_CONFIG} | grep -v '  .*' | sed 's/://')
+	for SERVICE in $(yq '' < ${CONFIG_FILE} | grep -v '  .*' | sed 's/://')
 	do
-		local service_image=$(yq ".\"$service\".image" < ${LIFERAY_MANAGED_DXP_CONFIG})
-
-		LIFERAY_SERVICE=${service}
+		local service_image=$(yq ".\"${SERVICE}\".image" < ${CONFIG_FILE})
 
 		build_${service_image}
 	done
@@ -70,9 +68,9 @@ function process_configuration {
 function setup_configuration {
 	if [ -e /etc/liferay-managed-dxp.yaml ]
 	then
-		LIFERAY_MANAGED_DXP_CONFIG=/etc/liferay-managed-dxp.yml
+		CONFIG_FILE=/etc/liferay-managed-dxp.yml
 	else
-		LIFERAY_MANAGED_DXP_CONFIG=single_server.yml
+		CONFIG_FILE=single_server.yml
 	fi
 }
 
