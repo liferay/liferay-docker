@@ -1,5 +1,9 @@
 #!/bin/bash
 
+function build_webserver {
+	docker build templates/webserver --tag liferay-webserver:${LIFERAY_MANAGED_DXP_VERSION}
+}
+
 function check_usage {
 	if [ ! -n "${1}" ]
 	then
@@ -11,6 +15,8 @@ function check_usage {
 
 		exit 1
 	fi
+
+	LIFERAY_MANAGED_DXP_VERSION=${1}
 
 	check_utils docker
 }
@@ -29,6 +35,8 @@ function check_utils {
 
 function main {
 	check_usage ${@}
+
+	build_webserver
 }
 
 main ${@}
