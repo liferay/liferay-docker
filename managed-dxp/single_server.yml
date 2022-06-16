@@ -1,14 +1,14 @@
+liferay-1:
+    port: 8080
+    template: liferay_dxp
+
+liferay-2:
+    port: 9080
+    template: liferay_dxp
+
 webserver:
-    template: webserver
     backends: [
         localhost:8080,
         localhost:9080
     ]
-
-liferay-1:
-    template: liferay_dxp
-    port: 8080
-
-liferay-2:
-    template: liferay_dxp
-    port: 9080
+    template: webserver
