@@ -4,9 +4,12 @@ RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get --yes install apache2 && \
 	apt-get upgrade --yes && \
 	apt-get clean && \
-	rm -rf /var/lib/apt/lists/* && \
-	a2enmod proxy_ajp
+	rm -rf /var/lib/apt/lists/*
 
-COPY scripts /usr/local/bin
+RUN a2enmod proxy_ajp && \
+	a2enmod proxy_balancer && \
+	a2enmod lbmethod_byrequests
+
+COPY scripts /usr/local/bin/
 
 ENTRYPOINT ["tini", "--", "/usr/local/bin/webserver_entrypoint.sh"]

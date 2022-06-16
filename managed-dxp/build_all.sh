@@ -1,20 +1,31 @@
 #!/bin/bash
 
 function build_liferay_dxp {
-	local port=$(yq ".\"${SERVICE}\".port" < ${CONFIG_FILE})
+	local ajp_port=$(get_config ".\"${SERVICE}\".ajp_port" 8009)
+	local http_port=$(get_config ".\"${SERVICE}\".http_port" 8080)
+
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    image: liferay/dxp:7.4.13-u28-d4.1.0-20220613210437"
 	compose_add 1 "    ports:"
-	compose_add 1 "        - \"$port:8080\""
+	compose_add 1 "        - \"${ajp_port}:8009\""
+	compose_add 1 "        - \"${http_port}:8009\""
 }
 
 function build_webserver {
-	docker build templates/webserver --tag liferay-webserver:${VERSION}
+	local balance_members=$(get_config ".\"${SERVICE}\".balance_members")
+
+	docker build \
+		--tag liferay-webserver:${VERSION} \
+		templates/webserver
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
+	compose_add 1 "    environment:"
+	compose_add 1 "        - LIFERAY_BALANCE_MEMBERS=${balance_members}"
 	compose_add 1 "    image: liferay-webserver:${VERSION}"
+	compose_add 1 "    ports:"
+	compose_add 1 "        - \"80:80\""
 }
 
 function check_usage {
@@ -77,6 +88,17 @@ function create_compose_file {
 	fi
 
 	echo "services:" >> ${COMPOSE_FILE}
+}
+
+function get_config {
+	local yq_output=$(yq ${1} < ${CONFIG_FILE})
+
+	if [ "${yq_output}" == "null" ]
+	then
+		echo ${2}
+	else
+		echo ${yq_output}
+	fi
 }
 
 function main {

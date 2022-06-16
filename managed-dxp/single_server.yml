@@ -1,14 +1,11 @@
 liferay-1:
-    port: 8080
     template: liferay_dxp
 
 liferay-2:
-    port: 9080
+    ajp_port: 9009
+    http_port: 9080
     template: liferay_dxp
 
 webserver:
-    backends: [
-        localhost:8080,
-        localhost:9080
-    ]
+    balance_members: liferay-1:8009,liferay-2:9009
     template: webserver
