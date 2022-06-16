@@ -11,6 +11,10 @@ function build_liferay_dxp {
 
 function build_webserver {
 	docker build templates/webserver --tag liferay-webserver:${VERSION}
+
+	compose_add 1 "${SERVICE}:"
+	compose_add 1 "    container_name: ${SERVICE}"
+	compose_add 1 "    image: liferay-webserver:${VERSION}"
 }
 
 function check_usage {
