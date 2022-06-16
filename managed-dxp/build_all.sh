@@ -11,6 +11,20 @@ function check_usage {
 
 		exit 1
 	fi
+
+	check_utils docker
+}
+
+function check_utils {
+
+	#
+	# https://stackoverflow.com/a/677212
+	#
+
+	for util in "${@}"
+	do
+		command -v "${util}" >/dev/null 2>&1 || { echo >&2 "The utility ${util} is not installed."; exit 1; }
+	done
 }
 
 function main {
