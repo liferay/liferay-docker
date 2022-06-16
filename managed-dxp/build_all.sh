@@ -37,10 +37,21 @@ function check_utils {
 	done
 }
 
+function create_compose_file {
+	OUTPUT_DIR=output/${LIFERAY_MANAGED_DXP_VERSION}
+	COMPOSE_FILE=${OUTPUT_DIR}/docker-compose.yml
+
+	mkdir -p $(dirname "${COMPOSE_FILE}")
+
+	echo "services:" >> ${COMPOSE_FILE}
+}
+
 function main {
 	check_usage ${@}
 
 	setup_configuration
+
+	create_compose_file
 
 	process_configuration
 }
