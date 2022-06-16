@@ -1,5 +1,9 @@
 #!/bin/bash
 
+function build_liferay_dxp {
+	echo "Building Liferay DXP as ${LIFERAY_SERVICE}."
+}
+
 function build_webserver {
 	docker build templates/webserver --tag liferay-webserver:${LIFERAY_MANAGED_DXP_VERSION}
 }
@@ -18,7 +22,7 @@ function check_usage {
 
 	LIFERAY_MANAGED_DXP_VERSION=${1}
 
-	check_utils docker
+	check_utils docker yq
 }
 
 function check_utils {
@@ -36,7 +40,29 @@ function check_utils {
 function main {
 	check_usage ${@}
 
-	build_webserver
+	setup_configuration
+
+	process_configuration
+}
+
+function process_configuration {
+	for service in $(yq '' < ${LIFERAY_MANAGED_DXP_CONFIG} | grep -v '  .*' | sed 's/://')
+	do
+		local service_image=$(yq ".\"$service\".image" < ${LIFERAY_MANAGED_DXP_CONFIG})
+
+		LIFERAY_SERVICE=${service}
+
+		build_${service_image}
+	done
+}
+
+function setup_configuration {
+	if [ -e /etc/liferay-managed-dxp.yaml ]
+	then
+		LIFERAY_MANAGED_DXP_CONFIG=/etc/liferay-managed-dxp.yml
+	else
+		LIFERAY_MANAGED_DXP_CONFIG=single_server.yml
+	fi
 }
 
 main ${@}

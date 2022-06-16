@@ -1,0 +1,14 @@
+webserver:
+    image: webserver
+    backends: [
+        localhost:8080,
+        localhost:9080
+    ]
+
+liferay-1:
+    image: liferay_dxp
+    port: 8080
+
+liferay-2:
+    image: liferay_dxp
+    port: 9080
