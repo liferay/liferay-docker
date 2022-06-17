@@ -23,11 +23,6 @@ ARG TARGETPLATFORM
 
 ENV JAVA_VERSION=zulu8
 
-RUN curl -H 'accept: */*' -L -s -X 'GET' -o /tmp/jdk8.deb "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=${TARGETARCH}&bundle_type=jdk&ext=deb&hw_bitness=64&java_version=8.0&javafx=false&os=linux&zulu_version=${LABEL_ZULU_8_VERSION}" && \
-	apt-get install --no-install-recommends --yes /tmp/jdk8.deb && \
-	rm /tmp/jdk8.deb && \
-	/usr/local/bin/set_java_version.sh
-
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
 LABEL org.label-schema.schema-version="1.0"
@@ -38,3 +33,8 @@ LABEL org.label-schema.version="${LABEL_VERSION}"
 LABEL org.label-schema.zulu8_amd64_version="${LABEL_ZULU_8_AMD64_VERSION}"
 LABEL org.label-schema.zulu8_arm64_version="${LABEL_ZULU_8_ARM64_VERSION}"
 LABEL org.label-schema.zulu8_version="${LABEL_ZULU_8_VERSION}"
+
+RUN curl -H 'accept: */*' -L -s -X 'GET' -o /tmp/jdk8.deb "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=${TARGETARCH}&bundle_type=jdk&ext=deb&hw_bitness=64&java_version=8.0&javafx=false&os=linux&zulu_version=${LABEL_ZULU_8_VERSION}" && \
+	apt-get install --no-install-recommends --yes /tmp/jdk8.deb && \
+	rm /tmp/jdk8.deb && \
+	/usr/local/bin/set_java_version.sh

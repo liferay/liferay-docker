@@ -6,16 +6,13 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-ENV ACCESS_CONTROL_ALLOW_METHODS="GET, POST, OPTIONS"
-ENV ACCESS_CONTROL_ALLOW_HEADERS="*"
-
+COPY Caddyfile /etc/caddy/Caddyfile
 COPY scripts/* /usr/local/bin/
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_caddy_entrypoint.sh"]
 
-RUN mkdir -p /etc/caddy.d /resources
-
-COPY Caddyfile /etc/caddy/Caddyfile
+ENV ACCESS_CONTROL_ALLOW_METHODS="GET, POST, OPTIONS"
+ENV ACCESS_CONTROL_ALLOW_HEADERS="*"
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
@@ -24,3 +21,5 @@ LABEL org.label-schema.vcs-ref="${LABEL_VCS_REF}"
 LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
+
+RUN mkdir -p /etc/caddy.d /resources
