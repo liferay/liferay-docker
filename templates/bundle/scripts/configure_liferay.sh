@@ -84,6 +84,13 @@ function main {
 
 		unset LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME_FILE
 	fi
+
+	if [ -n "${TOMCAT_AJP_PORT}" ]
+	then
+		cp /opt/liferay/tomcat/conf/server.xml /opt/liferay/tomcat/conf/server.xml.original
+
+		cat /opt/liferay/tomcat/conf/server.xml.original | sed -e s/'<!-- Define an AJP 1.3 Connector on port 8009 -->'/"<Connector address=\"0.0.0.0\" port=\"${TOMCAT_AJP_PORT}\" protocol=\"AJP\/1.3\" redirectPort=\"8443\" secretRequired=\"false\" URIEncoding=\"UTF-8\" \/>"/ > /opt/liferay/tomcat/conf/server.xml
+	fi
 }
 
 main
