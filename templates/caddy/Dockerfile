@@ -1,7 +1,6 @@
 FROM caddy:2.5.0
 
 ARG LABEL_BUILD_DATE
-ARG LABEL_CADDY_VERSION
 ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
@@ -17,7 +16,6 @@ COPY scripts/caddycmd.sh /usr/share/caddycmd.sh
 RUN chmod +x /usr/share/caddycmd.sh
 COPY Caddyfile /etc/caddy/Caddyfile
 
-LABEL com.liferay.caddy-version="${LABEL_CADDY_VERSION}"
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
 LABEL org.label-schema.schema-version="1.0"
