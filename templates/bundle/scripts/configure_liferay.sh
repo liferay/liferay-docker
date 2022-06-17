@@ -85,7 +85,7 @@ function main {
 		unset LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME_FILE
 	fi
 
-	if [ -n "${TOMCAT_AJP_PORT}" ]
+	if [ -n "${LIFERAY_TOMCAT_AJP_PORT}" ]
 	then
 		cp /opt/liferay/tomcat/conf/server.xml /opt/liferay/tomcat/conf/server.xml.original
 
