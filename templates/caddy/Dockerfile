@@ -5,15 +5,16 @@ ARG LABEL_NAME
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
-ARG TARGETPLATFORM
-
-RUN mkdir -p /resources /etc/caddy.d
 
 ENV ACCESS_CONTROL_ALLOW_METHODS="GET, POST, OPTIONS"
 ENV ACCESS_CONTROL_ALLOW_HEADERS="*"
 
-COPY scripts/caddycmd.sh /usr/share/caddycmd.sh
-RUN chmod +x /usr/share/caddycmd.sh
+COPY scripts/* /usr/local/bin/
+
+ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_caddy_entrypoint.sh"]
+
+RUN mkdir -p /etc/caddy.d /resources
+
 COPY Caddyfile /etc/caddy/Caddyfile
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
@@ -23,5 +24,3 @@ LABEL org.label-schema.vcs-ref="${LABEL_VCS_REF}"
 LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
-
-CMD ["sh", "-c", "/usr/share/caddycmd.sh"]
