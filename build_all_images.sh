@@ -156,7 +156,6 @@ function build_caddy_image {
 }
 
 function build_jdk11_image {
-	local jdk11_image_version=1.0
 	local latest_available_zulu11_amd64_version=$(get_latest_available_zulu_version "11" "amd64")
 	local latest_available_zulu11_arm64_version=$(get_latest_available_zulu_version "11" "arm64")
 
@@ -185,7 +184,6 @@ function build_jdk11_image {
 }
 
 function build_jdk11_jdk8_image {
-	local jdk11_jdk8_image_version=1.0
 	local latest_available_zulu8_amd64_version=$(get_latest_available_zulu_version "8" "amd64")
 	local latest_available_zulu8_arm64_version=$(get_latest_available_zulu_version "8" "arm64")
 
@@ -221,8 +219,6 @@ function build_job_runner_image {
 
 		return
 	fi
-
-	local job_runner_version=1.0
 
 	echo ""
 	echo "Building Docker image job runner."

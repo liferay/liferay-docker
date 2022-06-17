@@ -3,12 +3,10 @@
 source ./_common.sh
 
 function build_docker_image {
-	local base_image_version=$(./release_notes.sh get-version)
-	local image_version=0.1.0
+	local image_version=$(./release_notes.sh get-version)
 
 	DOCKER_IMAGE_TAGS=()
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/caddy:${image_version}-d${base_image_version}-${TIMESTAMP}")
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/caddy:${image_version%.*}")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/caddy:${image_version}-${TIMESTAMP}")
 	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/caddy")
 
 	if [ "${1}" == "push" ]
