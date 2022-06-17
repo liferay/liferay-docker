@@ -130,6 +130,31 @@ function build_bundle_images {
 	fi
 }
 
+function build_caddy_image {
+	if [[ $(get_latest_docker_hub_version "caddy") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	then
+		echo ""
+		echo "Docker image Caddy is up to date."
+
+		return
+	fi
+
+	echo ""
+	echo "Building Docker image Caddy resources."
+	echo ""
+
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_caddy.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/caddy.log
+
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	then
+		echo "FAILED: Caddy" >> "${LOGS_DIR}/results"
+
+		exit 1
+	else
+		echo "SUCCESS: Caddy" >> "${LOGS_DIR}/results"
+	fi
+}
+
 function build_jdk11_image {
 	local jdk11_image_version=1.0
 	local latest_available_zulu11_amd64_version=$(get_latest_available_zulu_version "11" "amd64")
@@ -215,31 +240,6 @@ function build_job_runner_image {
 	fi
 }
 
-function build_lxc_static_resources_image {
-	if [[ $(get_latest_docker_hub_version "lxc-static-resources") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
-	then
-		echo ""
-		echo "Docker image lxc static resources is up to date."
-
-		return
-	fi
-
-	echo ""
-	echo "Building Docker image lxc static resources."
-	echo ""
-
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_lxc_static_resources_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/lxc_static_resources.log
-
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
-	then
-		echo "FAILED: LXC Static Resources" >> "${LOGS_DIR}/results"
-
-		exit 1
-	else
-		echo "SUCCESS: LXC Static Resources" >> "${LOGS_DIR}/results"
-	fi
-}
-
 function get_latest_available_zulu_version {
 	local version=$(curl -H 'accept: */*' -L -s "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
 
@@ -309,13 +309,13 @@ function main {
 
 	build_base_image
 
+	build_caddy_image
+
 	build_jdk11_image
 
 	build_jdk11_jdk8_image
 
 	build_job_runner_image
-
-	build_lxc_static_resources_image
 
 	build_bundle_images
 
