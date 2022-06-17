@@ -35,6 +35,10 @@ function check_usage {
 	then
 		echo "Usage: ${0} <version>"
 		echo ""
+		echo "The script reads the following environment variables:"
+		echo ""
+		echo "    SERVER_ID (optional): Set the name of the configuration you would like to use. If not set the hostname is used."
+		echo ""
 		echo "Set the version number of the generated images as the first parameter to build the images and configuration."
 		echo ""
 		echo "Example: ${0} 1.0.0"
@@ -79,10 +83,10 @@ function compose_add {
 }
 
 function create_compose_file {
-	OUTPUT_DIR=output/${VERSION}
-	COMPOSE_FILE=${OUTPUT_DIR}/docker-compose.yml
+	BUILD_DIR=builds/${VERSION}
+	COMPOSE_FILE=${BUILD_DIR}/docker-compose.yml
 
-	mkdir -p ${OUTPUT_DIR}
+	mkdir -p ${BUILD_DIR}
 
 	if [ -e ${COMPOSE_FILE} ]
 	then
@@ -125,14 +129,20 @@ function process_configuration {
 }
 
 function setup_configuration {
-	if [ -e /etc/liferay-managed-dxp.yaml ]
+	if [ ! -n "${SERVER_ID}" ]
 	then
-		CONFIG_FILE=/etc/liferay-managed-dxp.yml
-	elif [ -e dev.yml ]
+		SERVER_ID=$(hostname)
+	fi
+
+	if [ -e config/${SERVER_ID}.yml ]
 	then
-		CONFIG_FILE=dev.yml
+		CONFIG_FILE=config/${SERVER_ID}.yml
+
+		echo "Using configuration for server ${SERVER_ID}."
 	else
 		CONFIG_FILE=single_server.yml
+
+		echo "Using the default, single server configuration."
 	fi
 }
 
