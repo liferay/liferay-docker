@@ -36,6 +36,15 @@ function configure_tomcat {
 	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> "${TEMP_DIR}/liferay/tomcat/bin/setenv.sh"
 }
 
+function current_arch {
+	if [ $(uname -m) == "aarch64" ]
+	then
+		echo "arm64"
+	else
+		echo "amd64"
+	fi
+}
+
 function date {
 	export LC_ALL=en_US.UTF-8
 	export TZ=America/Los_Angeles
@@ -189,8 +198,9 @@ function prepare_tomcat {
 	rm -fr "${TEMP_DIR}"/liferay/tomcat/logs/*
 }
 
-function remove_temp_dockerfile_platform_variable {
+function remove_temp_dockerfile_platform_arch_variable {
 	sed -i 's/--platform=${TARGETPLATFORM} //g' "${TEMP_DIR}"/Dockerfile
+	sed -i 's/${TARGETARCH}'/$(current_arch)/ "${TEMP_DIR}"/Dockerfile
 }
 
 function start_tomcat {

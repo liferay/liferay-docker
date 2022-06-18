@@ -25,7 +25,7 @@ function build_docker_image {
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 			"${TEMP_DIR}" || exit 1
 	else
-		remove_temp_dockerfile_platform_variable
+		remove_temp_dockerfile_platform_arch_variable
 
 		docker build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \

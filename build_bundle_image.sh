@@ -101,7 +101,7 @@ function build_docker_image {
 
 	IFS=${default_ifs}
 
-	remove_temp_dockerfile_platform_variable
+	remove_temp_dockerfile_platform_arch_variable
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
