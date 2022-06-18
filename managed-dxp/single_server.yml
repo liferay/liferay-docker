@@ -1,11 +1,20 @@
+db:
+    template: db
+
 liferay-1:
+    ajp_port: 9001
     template: liferay_dxp
+    depends_on: db
 
 liferay-2:
-    ajp_port: 9009
+    ajp_port: 9002
     http_port: 9080
     template: liferay_dxp
+    depends_on: db
 
 webserver:
-    balance_members: liferay-1:8009,liferay-2:9009
+    balance_members: liferay-1:9001,liferay-2:9002
     template: webserver
+    depends_on:
+        - liferay-1
+        - liferay-2

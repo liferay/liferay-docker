@@ -1,5 +1,25 @@
 #!/bin/bash
 
+function build_db {
+	compose_add 1 "${SERVICE}:"
+	compose_add 1 "    container_name: ${SERVICE}"
+	compose_add 1 "    command: mysqld --character-set-filesystem=utf8mb4 --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --disable-ssl --max_allowed_packet=256M"
+	compose_add 1 "    environment:"
+	compose_add 1 "        - MARIADB_DATABASE=lportal"
+	compose_add 1 "        - MARIADB_PASSWORD=password"
+	compose_add 1 "        - MARIADB_ROOT_HOST=%"
+	compose_add 1 "        - MARIADB_ROOT_PASSWORD=UglyDuckling"
+	compose_add 1 "        - MARIADB_USER=lportal"
+	compose_add 1 "    healthcheck:"
+	compose_add 1 "        interval: 40s"
+	compose_add 1 "        retries: 3"
+	compose_add 1 "        test: mysqladmin ping -h 127.0.0.1 -u lportal --password=password"
+	compose_add 1 "        timeout: 5s"
+	compose_add 1 "    image: mariadb:10.4.25-focal"
+	compose_add 1 "    ports:"
+	compose_add 1 "        - \"3306:3306\""
+}
+
 function build_liferay_dxp {
 	local ajp_port=$(get_config ".\"${SERVICE}\".ajp_port" 8009)
 	local http_port=$(get_config ".\"${SERVICE}\".http_port" 8080)
