@@ -35,6 +35,10 @@ function build_db {
 }
 
 function build_liferay_dxp {
+	docker build \
+		--tag liferay-dxp:${VERSION} \
+		templates/liferay-dxp
+
 	local ajp_port=$(get_config ".\"${SERVICE}\".ajp_port" 8009)
 	local http_port=$(get_config ".\"${SERVICE}\".http_port" 8080)
 
@@ -48,7 +52,7 @@ function build_liferay_dxp {
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=UglyDuckling"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://db/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=root"
-	compose_add 1 "    image: liferay/dxp:7.2.10-dxp-18-d4.1.1-snapshot-20220617040326"
+	compose_add 1 "    image: liferay-dxp:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"${ajp_port}:${ajp_port}\""
 	compose_add 1 "        - \"${http_port}:8080\""
