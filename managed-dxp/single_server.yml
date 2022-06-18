@@ -7,6 +7,8 @@ liferay-1:
 
 liferay-2:
     ajp_port: 9002
+    depends_on:
+        - liferay-1
     http_port: 9080
     template: liferay_dxp
 
