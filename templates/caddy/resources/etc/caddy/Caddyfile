@@ -8,7 +8,7 @@
 }
 
 :80 {
-	root * /resources
+	root * /public_html
 	file_server
 	encode gzip
 
