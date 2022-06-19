@@ -20,8 +20,8 @@ ARG LABEL_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
-COPY --chown=liferay:liferay home/.bashrc /home/liferay/
-COPY --chown=liferay:liferay scripts/set_java_version.sh /usr/local/bin/
+COPY --chown=liferay:liferay resources/home/liferay/.bashrc /home/liferay/
+COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENV JAVA_VERSION=zulu11
 

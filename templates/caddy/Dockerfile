@@ -6,8 +6,8 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-COPY Caddyfile /etc/caddy/Caddyfile
-COPY scripts/* /usr/local/bin/
+COPY resources/etc/caddy/* /etc/caddy
+COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_caddy_entrypoint.sh"]
 
