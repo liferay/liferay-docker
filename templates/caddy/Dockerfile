@@ -11,9 +11,6 @@ COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_caddy_entrypoint.sh"]
 
-ENV ACCESS_CONTROL_ALLOW_HEADERS="*"
-ENV ACCESS_CONTROL_ALLOW_METHODS="GET,OPTIONS,POST"
-
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
 LABEL org.label-schema.schema-version="1.0"

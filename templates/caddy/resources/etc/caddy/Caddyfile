@@ -20,8 +20,8 @@
 	respond / 200
 
 	header {
-		Access-Control-Allow-Methods "{env.ACCESS_CONTROL_ALLOW_METHODS}"
-		Access-Control-Allow-Headers "{env.ACCESS_CONTROL_ALLOW_HEADERS}"
+		Access-Control-Allow-Headers "GET,OPTIONS,POST"
+		Access-Control-Allow-Methods *
 	}
 
 	import /etc/caddy.d/*
