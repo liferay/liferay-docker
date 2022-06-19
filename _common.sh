@@ -36,7 +36,7 @@ function configure_tomcat {
 	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> "${TEMP_DIR}/liferay/tomcat/bin/setenv.sh"
 }
 
-function current_arch {
+function get_current_arch {
 	if [ $(uname -m) == "aarch64" ]
 	then
 		echo "arm64"
@@ -200,7 +200,7 @@ function prepare_tomcat {
 
 function remove_temp_dockerfile_platform_arch_variable {
 	sed -i 's/--platform=${TARGETPLATFORM} //g' "${TEMP_DIR}"/Dockerfile
-	sed -i 's/${TARGETARCH}'/$(current_arch)/ "${TEMP_DIR}"/Dockerfile
+	sed -i 's/${TARGETARCH}'/$(get_current_arch)/ "${TEMP_DIR}"/Dockerfile
 }
 
 function start_tomcat {
