@@ -87,9 +87,12 @@ function main {
 
 	if [ -n "${LIFERAY_TOMCAT_AJP_PORT}" ]
 	then
-		cp /opt/liferay/tomcat/conf/server.xml /opt/liferay/tomcat/conf/server.xml.original
+		sed -i s/'<!-- Define an AJP 1.3 Connector on port 8009 -->'/"<Connector address=\"0.0.0.0\" port=\"${LIFERAY_TOMCAT_AJP_PORT}\" protocol=\"AJP\/1.3\" redirectPort=\"8443\" secretRequired=\"false\" URIEncoding=\"UTF-8\" \/>"/ /opt/liferay/tomcat/conf/server.xml
+	fi
 
-		cat /opt/liferay/tomcat/conf/server.xml.original | sed -e s/'<!-- Define an AJP 1.3 Connector on port 8009 -->'/"<Connector address=\"0.0.0.0\" port=\"${LIFERAY_TOMCAT_AJP_PORT}\" protocol=\"AJP\/1.3\" redirectPort=\"8443\" secretRequired=\"false\" URIEncoding=\"UTF-8\" \/>"/ > /opt/liferay/tomcat/conf/server.xml
+	if [ -n "${LIFERAY_TOMCAT_JVM_ROUTE}" ]
+	then
+		sed -i s/"<Engine name=\"Catalina\" defaultHost=\"localhost\">"/"<Engine name=\"Catalina\" defaultHost=\"localhost\" jvmRoute=\"${LIFERAY_TOMCAT_JVM_ROUTE}\">"/ /opt/liferay/tomcat/conf/server.xml
 	fi
 }
 
