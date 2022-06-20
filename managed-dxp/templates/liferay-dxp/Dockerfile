@@ -8,7 +8,7 @@ RUN apt-get update && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
-COPY files /opt/liferay
-COPY scripts /usr/local/liferay/scripts
+COPY resources/opt/liferay /opt/liferay/
+COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
 
 USER liferay
