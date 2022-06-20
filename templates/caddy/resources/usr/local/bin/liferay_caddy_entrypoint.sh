@@ -3,7 +3,7 @@ function main {
 	do
 		local url="https://${i}"
 
-		cat >> /etc/caddy.d/cors.txt << EOF
+		cat >> /etc/caddy.d/liferay_caddy_file << EOF
 @origin${url} header Origin ${url}
 header @origin${url} Access-Control-Allow-Origin "${url}"
 header @origin${url} Vary Origin
