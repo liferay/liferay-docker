@@ -77,9 +77,9 @@ function prepare_mount {
 
 	mkdir -p "${TEST_DIR}"
 
-	cp -r templates/test/* "${TEST_DIR}"
+	cp -r templates/test/resources/* "${TEST_DIR}"
 
-	mkdir -p "${TEST_DIR}/patching"
+	mkdir -p "${TEST_DIR}/mnt/liferay/patching"
 
 	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL}" ]
 	then
@@ -96,26 +96,26 @@ function prepare_mount {
 
 		download "downloads/hotfix/${hotfix_file_name}" "${LIFERAY_DOCKER_TEST_HOTFIX_URL}"
 
-		cp "downloads/hotfix/${hotfix_file_name}" "${TEST_DIR}/patching"
+		cp "downloads/hotfix/${hotfix_file_name}" "${TEST_DIR}/mnt/liferay/patching"
 	fi
 
 	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" ]
 	then
 		download "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip"
 
-		cp "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "${TEST_DIR}/patching/"
+		cp "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "${TEST_DIR}/mnt/liferay/patching/"
 	fi
 
-	if [ -e "${TEST_DIR}/scripts" ]
+	if [ -e "${TEST_DIR}/mnt/liferay/scripts" ]
 	then
-		chmod -R +x "${TEST_DIR}/scripts"
+		chmod -R +x "${TEST_DIR}/mnt/liferay/scripts"
 	fi
 }
 
 function start_container {
 	echo "Starting container from image ${LIFERAY_DOCKER_IMAGE_ID}."
 
-	CONTAINER_ID=$(docker run -d -p 8080 -v "${PWD}/${TEST_DIR}":/mnt/liferay "${LIFERAY_DOCKER_IMAGE_ID}")
+	CONTAINER_ID=$(docker run -d -p 8080 -v "${PWD}/${TEST_DIR}/mnt/liferay":/mnt/liferay "${LIFERAY_DOCKER_IMAGE_ID}")
 
 	CONTAINER_PORT_HTTP=$(docker port "${CONTAINER_ID}" 8080/tcp)
 
