@@ -1,4 +1,4 @@
-FROM liferay/dxp:7.4.13-u28-d4.1.2-snapshot-20220618053134
+FROM liferay/dxp:7.4.13-u29-d4.1.2-20220620032147
 
 USER 0
 
