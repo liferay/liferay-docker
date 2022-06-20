@@ -1,16 +1,16 @@
 function main {
-    for i in $(echo ${LIFERAY_CADDY_CORS_ALLOWED_ORIGIN} | tr "," "\n")
-    do
-        ADDRESS="https://${i}"
+	for i in $(echo ${LIFERAY_CADDY_CORS_ALLOWED_ORIGIN} | tr "," "\n")
+	do
+		local address="https://${i}"
 
-    	cat >> /etc/caddy.d/cors.txt << EOF
-    	@origin${ADDRESS} header Origin ${ADDRESS}
-        header @origin${ADDRESS} Access-Control-Allow-Origin "${ADDRESS}"
-        header @origin${ADDRESS} Vary Origin
+		cat >> /etc/caddy.d/cors.txt << EOF
+@origin${address} header Origin ${address}
+header @origin${address} Access-Control-Allow-Origin "${address}"
+header @origin${address} Vary Origin
 EOF
-    done
+	done
 
-    caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+	caddy run --adapter caddyfile --config /etc/caddy/Caddyfile
 }
 
 main
