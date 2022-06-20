@@ -92,7 +92,7 @@ function main {
 
 	if [ -n "${LIFERAY_TOMCAT_JVM_ROUTE}" ]
 	then
-		sed -i s/"<Engine name=\"Catalina\" defaultHost=\"localhost\">"/"<Engine name=\"Catalina\" defaultHost=\"localhost\" jvmRoute=\"${LIFERAY_TOMCAT_JVM_ROUTE}\">"/ /opt/liferay/tomcat/conf/server.xml
+		sed -i s/"<Engine name=\"Catalina\" defaultHost=\"localhost\">"/"<Engine defaultHost=\"localhost\" jvmRoute=\"${LIFERAY_TOMCAT_JVM_ROUTE}\" name=\"Catalina\">"/ /opt/liferay/tomcat/conf/server.xml
 	fi
 }
 
