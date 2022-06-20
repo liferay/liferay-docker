@@ -13,5 +13,5 @@ liferay-2:
     template: liferay_dxp
 
 webserver:
-    balance_members: liferay-1:9001,liferay-2:9002
+    balance_members: liferay-1::liferay-1:9001,liferay-2::liferay-2:9002
     template: webserver
