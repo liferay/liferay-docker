@@ -9,7 +9,7 @@ ARG LABEL_VERSION
 COPY resources/etc/caddy/* /etc/caddy
 COPY resources/usr/local/bin/* /usr/local/bin/
 
-ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_caddy_entrypoint.sh"]
+ENTRYPOINT /usr/local/bin/liferay_caddy_entrypoint.sh
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
