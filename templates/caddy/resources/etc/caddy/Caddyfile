@@ -8,16 +8,8 @@
 }
 
 :80 {
-	root * /public_html
-	file_server
 	encode gzip
-
-	@options {
-		method OPTIONS
-	}
-
-	respond @options 204
-	respond / 200
+	file_server
 
 	header {
 		Access-Control-Allow-Headers "GET,OPTIONS,POST"
@@ -27,7 +19,14 @@
 	import /etc/caddy.d/*
 
 	log {
-		output stdout
 		format json
+		output stdout
 	}
+
+	respond / 200
+
+	@options method OPTIONS
+	respond @options 204
+
+	root * /public_html
 }
