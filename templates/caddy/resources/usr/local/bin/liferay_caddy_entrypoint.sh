@@ -1,4 +1,4 @@
-for i in $(echo ${CORS_ALLOWED_ORIGIN} | tr "," "\n")
+for i in $(echo ${LIFERAY_CADDY_CORS_ALLOWED_ORIGIN} | tr "," "\n")
 do
     ADDRESS="https://${i}"
 
