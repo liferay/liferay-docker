@@ -53,6 +53,7 @@ function build_liferay_dxp {
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=root"
 	compose_add 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
 	compose_add 1 "        - LIFERAY_TOMCAT_AJP_PORT=${ajp_port}"
+	compose_add 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${SERVICE}"
 	compose_add 1 "        - LIFERAY_WEB_PERIOD_SERVER_PERIOD_DISPLAY_PERIOD_NODE=true"
 	compose_add 1 "    image: liferay-dxp:${VERSION}"
 	compose_add 1 "    ports:"
