@@ -50,7 +50,7 @@ function build_liferay_dxp {
 		templates/liferay-dxp
 
 	local ajp_port=$(get_config ".\"${SERVICE}\".ajp_port" 8009)
-	local clusterlink_port=$(get_config ".\"${SERVICE}\".clusterlink_port" 7800)
+	local clusterlink_expose=$(get_config ".\"${SERVICE}\".clusterlink_expose" "true")
 	local external_address=$(get_config ".\"${SERVICE}\".external_address" ${SERVICE})
 	local http_port=$(get_config ".\"${SERVICE}\".http_port" 8080)
 
@@ -79,7 +79,13 @@ function build_liferay_dxp {
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"${ajp_port}:8009\""
 	compose_add 1 "        - \"${http_port}:8080\""
-	compose_add 1 "        - \"${clusterlink_port}:7800\""
+
+	if [ "${clusterlink_expose}" == "true" ]
+	then
+		compose_add 3 "- \"7800:7800\""
+		compose_add 3 "- \"7801:7801\""
+	fi
+
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /opt/shared-volume:/opt/shared-volume"
 }

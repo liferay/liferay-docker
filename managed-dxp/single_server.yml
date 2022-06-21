@@ -2,11 +2,12 @@ db:
     template: db
 
 liferay-1:
+    clusterlink_expose: false
     template: liferay_dxp
 
 liferay-2:
     ajp_port: 8010
-    clusterlink_port: 7801
+    clusterlink_expose: false
     depends_on:
         - liferay-1
     http_port: 9080
