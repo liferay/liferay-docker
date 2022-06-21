@@ -60,7 +60,7 @@ function build_liferay_dxp {
 	compose_add 1 "        - \"${ajp_port}:${ajp_port}\""
 	compose_add 1 "        - \"${http_port}:8080\""
 	compose_add 1 "    volumes:"
-	compose_add 1 "        - ./shared-volume:/opt/shared-volume"
+	compose_add 1 "        - /opt/shared-volume:/opt/shared-volume"
 }
 
 function build_webserver {
