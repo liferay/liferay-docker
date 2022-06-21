@@ -11,4 +11,6 @@ RUN apt-get update && \
 COPY resources/opt/liferay /opt/liferay/
 COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
 
+RUN chown -R liferay:liferay /opt/liferay/deploy
+
 USER liferay

@@ -35,6 +35,16 @@ function build_db {
 }
 
 function build_liferay_dxp {
+	if [ -e "config/liferay-license.xml" ]
+	then
+		mkdir -p templates/liferay-dxp/resources/opt/liferay/deploy/
+		cp config/liferay-license.xml templates/liferay-dxp/resources/opt/liferay/deploy/license.xml
+	else
+		echo "ERROR: Copy a valid Liferay DXP license to config/liferay-license.xml before running this script."
+
+		exit 1
+	fi
+
 	docker build \
 		--tag liferay-dxp:${VERSION} \
 		templates/liferay-dxp
@@ -51,6 +61,7 @@ function build_liferay_dxp {
 	compose_add 1 "        - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_TRANSPORT_PERIOD_NUMBER0=transport-channel-logic-${SERVICE}"
 	compose_add 1 "        - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_CONTROL=/opt/liferay/cluster-link-tcp.xml"
 	compose_add 1 "        - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_TRANSPORT_PERIOD__NUMBER0_=/opt/liferay/cluster-link-tcp.xml"
+	compose_add 1 "        - LIFERAY_DISABLE_TRIAL_LICENSE=true"
 	compose_add 1 "        - LIFERAY_DL_PERIOD_STORE_PERIOD_IMPL=com.liferay.portal.store.file.system.AdvancedFileSystemStore"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=UglyDuckling"
