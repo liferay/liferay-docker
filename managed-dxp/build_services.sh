@@ -1,19 +1,4 @@
 #!/bin/bash
-function add_depends_on {
-	local depends_on=$(get_config ".\"${SERVICE}\".depends_on[]")
-
-	if [ -n "${depends_on}" ]
-	then
-		compose_add 2 "depends_on:"
-		for dependency in ${depends_on}
-		do
-			echo "Adding dependency ${dependency}"
-			compose_add 3 "${dependency}:"
-			compose_add 3 "    condition: service_healthy"
-		done
-	fi
-}
-
 function build_db {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -201,8 +186,6 @@ function process_configuration {
 		echo "Building ${SERVICE}."
 
 		build_${service_template}
-
-		add_depends_on
 	done
 }
 
