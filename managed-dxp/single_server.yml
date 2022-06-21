@@ -7,6 +7,7 @@ liferay-1:
 
 liferay-2:
     ajp_port: 9002
+    clusterlink_port: 7801
     depends_on:
         - liferay-1
     http_port: 9080
