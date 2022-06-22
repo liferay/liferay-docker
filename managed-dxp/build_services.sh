@@ -1,4 +1,5 @@
 #!/bin/bash
+
 function build_db {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -77,24 +78,24 @@ function build_search {
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
-    compose_add 1 "    environment:"
-    compose_add 1 "        - discovery.type=single-node"
-    compose_add 1 "        - xpack.ml.enabled=false"
-    compose_add 1 "        - xpack.monitoring.enabled=false"
-    compose_add 1 "        - xpack.security.enabled=false"
-    compose_add 1 "        - xpack.sql.enabled=false"
-    compose_add 1 "        - xpack.watcher.enabled=false"
-    compose_add 1 "    healthcheck:"
-    compose_add 1 "        interval: 40s"
-    compose_add 1 "        retries: 3"
-    compose_add 1 "        test: curl localhost:9200/_cat/health | grep green"
-    compose_add 1 "        timeout: 5s"
-    compose_add 1 "    hostname: ${SERVICE}"
-    compose_add 1 "    image: search:${VERSION}"
-    compose_add 1 "    mem_limit: 8G"
-    compose_add 1 "    ports:"
-    compose_add 1 "        - \"9200:9200\""
-    compose_add 1 "        - \"9300:9300\""
+	compose_add 1 "    environment:"
+	compose_add 1 "        - discovery.type=single-node"
+	compose_add 1 "        - xpack.ml.enabled=false"
+	compose_add 1 "        - xpack.monitoring.enabled=false"
+	compose_add 1 "        - xpack.security.enabled=false"
+	compose_add 1 "        - xpack.sql.enabled=false"
+	compose_add 1 "        - xpack.watcher.enabled=false"
+	compose_add 1 "    healthcheck:"
+	compose_add 1 "        interval: 40s"
+	compose_add 1 "        retries: 3"
+	compose_add 1 "        test: curl localhost:9200/_cat/health | grep green"
+	compose_add 1 "        timeout: 5s"
+	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    image: search:${VERSION}"
+	compose_add 1 "    mem_limit: 8G"
+	compose_add 1 "    ports:"
+	compose_add 1 "        - \"9200:9200\""
+	compose_add 1 "        - \"9300:9300\""
 }
 
 function build_webserver {
