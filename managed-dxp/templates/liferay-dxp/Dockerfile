@@ -8,9 +8,7 @@ RUN apt-get update && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
-COPY resources/opt/liferay /opt/liferay/
+COPY --chown=liferay:liferay resources/opt/liferay /opt/liferay/
 COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
-
-RUN chown -R liferay:liferay /opt/liferay/deploy
 
 USER liferay

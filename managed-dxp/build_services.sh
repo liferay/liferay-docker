@@ -37,6 +37,7 @@ function build_liferay_dxp {
 	local ajp_port=$(get_config ".\"${SERVICE}\".ajp_port" 8009)
 	local clusterlink_expose=$(get_config ".\"${SERVICE}\".clusterlink_expose" "true")
 	local external_address=$(get_config ".\"${SERVICE}\".external_address" ${SERVICE})
+	local search_addresses=$(get_config ".\"${SERVICE}\".search_addresses")
 	local http_port=$(get_config ".\"${SERVICE}\".http_port" 8080)
 
 	compose_add 1 "${SERVICE}:"
@@ -55,6 +56,7 @@ function build_liferay_dxp {
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://db/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=root"
 	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE} -Djgroups.external_addr=${external_address}"
+	compose_add 1 "        - LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
 	compose_add 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
 	compose_add 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
 	compose_add 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${SERVICE}"

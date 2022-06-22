@@ -3,12 +3,14 @@ db:
 
 liferay-1:
     clusterlink_expose: false
+    search_addresses: search:9200,search-2:9200
     template: liferay_dxp
 
 liferay-2:
     ajp_port: 8010
     clusterlink_expose: false
     http_port: 9080
+    search_addresses: search:9300
     template: liferay_dxp
 
 search:
