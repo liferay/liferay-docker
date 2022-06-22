@@ -11,6 +11,9 @@ liferay-2:
     http_port: 9080
     template: liferay_dxp
 
+search:
+    template: search
+
 webserver:
     balance_members: liferay-1::liferay-1:8009,liferay-2::liferay-2:8010
     template: webserver
