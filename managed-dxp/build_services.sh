@@ -36,7 +36,7 @@ function build_liferay {
 		--tag liferay:${VERSION} \
 		templates/liferay
 
-	local external_address=$(get_config ".${HOST}.ip" ${SERVICE})
+	local external_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
 	local search_addresses=$(find_services search 9200)
 
 	compose_add 1 "${SERVICE}:"
@@ -76,7 +76,7 @@ function build_search {
 		--tag search:${VERSION} \
 		templates/search
 
-	local external_address=$(get_config ".${HOST}.ip" ${SERVICE})
+	local external_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
 	local seed_hosts=$(find_services search 9300)
 
 	compose_add 1 "${SERVICE}:"
