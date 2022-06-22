@@ -19,11 +19,11 @@ function build_db {
 	compose_add 1 "        - \"3306:3306\""
 }
 
-function build_liferay_dxp {
+function build_liferay {
 	if [ -e "config/liferay-license.xml" ]
 	then
-		mkdir -p templates/liferay-dxp/resources/opt/liferay/deploy/
-		cp config/liferay-license.xml templates/liferay-dxp/resources/opt/liferay/deploy/license.xml
+		mkdir -p templates/liferay/resources/opt/liferay/deploy/
+		cp config/liferay-license.xml templates/liferay/resources/opt/liferay/deploy/license.xml
 	else
 		echo "ERROR: Copy a valid Liferay DXP license to config/liferay-license.xml before running this script."
 
@@ -31,14 +31,11 @@ function build_liferay_dxp {
 	fi
 
 	docker build \
-		--tag liferay-dxp:${VERSION} \
-		templates/liferay-dxp
+		--tag liferay:${VERSION} \
+		templates/liferay
 
-	local ajp_port=$(get_config ".\"${SERVICE}\".ajp_port" 8009)
-	local clusterlink_expose=$(get_config ".\"${SERVICE}\".clusterlink_expose" "true")
-	local external_address=$(get_config ".\"${SERVICE}\".external_address" ${SERVICE})
-	local search_addresses=$(get_config ".\"${SERVICE}\".search_addresses")
-	local http_port=$(get_config ".\"${SERVICE}\".http_port" 8080)
+	local external_address=$(get_config ".${HOST}.ip" ${SERVICE})
+	local search_addresses=$(find_services search 9200)
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -62,17 +59,12 @@ function build_liferay_dxp {
 	compose_add 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${SERVICE}"
 	compose_add 1 "        - LIFERAY_WEB_PERIOD_SERVER_PERIOD_DISPLAY_PERIOD_NODE=true"
 	compose_add 1 "    hostname: ${SERVICE}"
-	compose_add 1 "    image: liferay-dxp:${VERSION}"
+	compose_add 1 "    image: liferay:${VERSION}"
 	compose_add 1 "    ports:"
-	compose_add 1 "        - \"${ajp_port}:8009\""
-	compose_add 1 "        - \"${http_port}:8080\""
-
-	if [ "${clusterlink_expose}" == "true" ]
-	then
-		compose_add 3 "- \"7800:7800\""
-		compose_add 3 "- \"7801:7801\""
-	fi
-
+	compose_add 1 "        - \"7800:7800\""
+	compose_add 1 "        - \"7801:7801\""
+	compose_add 1 "        - \"8009:8009\""
+	compose_add 1 "        - \"8080:8080\""
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /opt/shared-volume:/opt/shared-volume"
 }
@@ -103,11 +95,11 @@ function build_search {
 }
 
 function build_webserver {
-	local balance_members=$(get_config ".\"${SERVICE}\".balance_members")
-
 	docker build \
 		--tag liferay-webserver:${VERSION} \
 		templates/webserver
+
+	local balance_members=$(find_services liferay 8009)
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -125,7 +117,8 @@ function check_usage {
 		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
-		echo "    SERVER_ID (optional): Set the name of the configuration you would like to use. If not set the hostname is used."
+		echo "    CONFIG (optional): Set the name of the configuration you would like to use. If not set the \"production\" is used."
+		echo "    HOST (optional): Set the name of the host you for which to generate the services. If not set the hostname is used."
 		echo ""
 		echo "Set the version number of the generated images as the first parameter to build the images and configuration."
 		echo ""
@@ -195,6 +188,37 @@ function get_config {
 	fi
 }
 
+function find_services {
+	local search_for=${1}
+	local port=${2}
+
+	local list
+	for host in $(yq ".hosts" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
+	do
+		for service in $(yq ".hosts.${host}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
+		do
+			if [ "${service}" == ${search_for} ]
+			then
+				local config_host=${host}
+
+				if [ "${HOST}" == "localhost" ]
+				then
+					config_host="${service}"
+				fi
+
+				if [ -n "${list}" ]
+				then
+					list="${list},${config_host}:${port}"
+				else
+					list="${config_host}:${port}"
+				fi
+			fi
+		done
+	done
+
+	echo ${list}
+}
+
 function main {
 	check_usage ${@}
 
@@ -206,9 +230,33 @@ function main {
 }
 
 function process_configuration {
-	for SERVICE in $(yq '' < ${CONFIG_FILE} | grep -v '  .*' | sed 's/://')
+	if [ ! -n "${HOST}" ]
+	then
+		HOST=$(hostname)
+	fi
+
+	local host_config=$(get_config ".hosts.${HOST}")
+	if [ ! -n "${host_config}" ]
+	then
+		HOST=localhost
+
+		host_config=$(get_config ".hosts.${HOST}")
+		if [ ! -n "${host_config}" ]
+		then
+			echo "Couldn't find a matching host in the configuration. Set the HOST environment variable."
+
+			exit 1
+		fi
+	fi
+
+	for SERVICE in $(yq ".hosts.${HOST}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//')
 	do
-		local service_template=$(yq ".\"${SERVICE}\".template" < ${CONFIG_FILE})
+		local service_template=${SERVICE}
+
+		if [ "${HOST}" != "localhost" ]
+		then
+			SERVICE=${SERVICE}-${HOST}
+		fi
 
 		echo "Building ${SERVICE}."
 
@@ -217,16 +265,15 @@ function process_configuration {
 }
 
 function setup_configuration {
-	if [ ! -n "${SERVER_ID}" ]
+	if [ ! -n "${CONFIG}" ]
 	then
-		SERVER_ID=$(hostname)
+		CONFIG=production
 	fi
-
-	if [ -e config/${SERVER_ID}.yml ]
+	if [ -e config/${CONFIG}.yml ]
 	then
-		CONFIG_FILE=config/${SERVER_ID}.yml
+		CONFIG_FILE=config/${CONFIG}.yml
 
-		echo "Using configuration for server ${SERVER_ID}."
+		echo "Using configuration ${CONFIG_FILE}."
 	else
 		CONFIG_FILE=single_server.yml
 

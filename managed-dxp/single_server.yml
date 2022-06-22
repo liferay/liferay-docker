@@ -1,21 +1,7 @@
-db:
-    template: db
-
-liferay-1:
-    clusterlink_expose: false
-    search_addresses: search:9200,search-2:9200
-    template: liferay_dxp
-
-liferay-2:
-    ajp_port: 8010
-    clusterlink_expose: false
-    http_port: 9080
-    search_addresses: search:9300
-    template: liferay_dxp
-
-search:
-    template: search
-
-webserver:
-    balance_members: liferay-1::liferay-1:8009,liferay-2::liferay-2:8010
-    template: webserver
+hosts:
+    localhost:
+        services:
+            - db
+            - liferay
+            - search
+            - webserver

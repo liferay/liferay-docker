@@ -1,0 +1,17 @@
+hosts:
+    vm-1:
+        ip: 192.168.0.184
+        services:
+            - db
+            - liferay
+            - search
+            - webserver
+    vm-2:
+        ip: 192.168.0.57
+        services:
+            - liferay
+            - search
+    vm-3:
+        ip: 192.168.0.216
+        services:
+            - search
