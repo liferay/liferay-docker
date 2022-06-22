@@ -76,16 +76,17 @@ function build_search {
 		--tag search:${VERSION} \
 		templates/search
 
+	local external_address=$(get_config ".${HOST}.ip" ${SERVICE})
 	local seed_hosts=$(find_services search 9300)
-
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
-	compose_add 1 "        - discovery.type=single-node"
+	compose_add 1 "        - network.publish_host=${external_address}"
 	compose_add 1 "        - node.name=${SERVICE}"
 	compose_add 1 "        - cluster.name=liferay-search"
 	compose_add 1 "        - discovery.seed_hosts=${seed_hosts}"
+	compose_add 1 "        - cluster.initial_master_nodes=${seed_hosts}"
 	compose_add 1 "        - xpack.ml.enabled=false"
 	compose_add 1 "        - xpack.monitoring.enabled=false"
 	compose_add 1 "        - xpack.security.enabled=false"
