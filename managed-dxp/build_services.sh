@@ -76,6 +76,7 @@ function build_search {
 		templates/search
 
 	compose_add 1 "${SERVICE}:"
+	compose_add 1 "    container_name: ${SERVICE}"
     compose_add 1 "    environment:"
     compose_add 1 "        - discovery.type=single-node"
     compose_add 1 "        - xpack.ml.enabled=false"
