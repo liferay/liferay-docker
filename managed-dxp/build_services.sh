@@ -254,7 +254,7 @@ function find_services {
 					add_item="${service}-${host}"
 				elif [ "${template}" == "host_port" ]
 				then
-					if [ "${host}" == "localhost" ]
+					if [ "${host}" == "localhost" ] || [ "${host}" == "${HOST}" ]
 					then
 						add_item="${service}-${host}:${postfix}"
 					else
