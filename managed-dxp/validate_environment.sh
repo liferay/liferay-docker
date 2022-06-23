@@ -1,5 +1,22 @@
 #!/bin/bash
 
+function check_document_library_permissions {
+	local dl_dir=/opt/shared-volume/document-library
+	if [ -e ${dl_dir} ]
+	then
+		if ( ! ls -lnd ${dl_dir} | grep "1000 1000" &>/dev/null )
+		then
+			echo "The permissions of the ${dl_dir} are not correct. Please change the owner to 1000:1000."
+
+			ERROR=1
+		fi
+	else
+		echo "The document_library folder ${dl_dir} does not exist. Please create it and change the owner of it to uid:gid 1000:1000."
+
+		ERROR=1
+	fi
+}
+
 function check_utils {
 	for util in docker-compose yq
 	do
@@ -19,6 +36,8 @@ function check_vm_max_map_count {
 }
 
 function main {
+	check_document_library_permissions
+
 	check_utils
 
 	check_vm_max_map_count
