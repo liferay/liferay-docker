@@ -1,24 +1,42 @@
 #!/bin/bash
 
+function add_secrets {
+	compose_add 0 "secrets:"
+
+	local secret_dir=$(get_config .configuration.secret_dir /opt/shared-volume/secrets)
+
+	for secret in sql_liferay_password sql_root_password
+	do
+		local secret_file="${secret_dir}/${secret}.txt"
+		if [ ! -e "${secret_file}" ]
+		then
+			pwgen -1ys 24 > ${secret_file}
+			chmod 600 ${secret_file}
+		fi
+
+		compose_add 1 "${secret}:"
+		compose_add 1 "    file: ${secret_file}"
+	done
+}
+
 function build_db {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    command: mysqld --character-set-filesystem=utf8mb4 --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --disable-ssl --max_allowed_packet=256M"
 	compose_add 1 "    environment:"
 	compose_add 1 "        - MARIADB_DATABASE=lportal"
-	compose_add 1 "        - MARIADB_PASSWORD=password"
-	compose_add 1 "        - MARIADB_ROOT_HOST=%"
-	compose_add 1 "        - MARIADB_ROOT_PASSWORD=UglyDuckling"
+	compose_add 1 "        - MARIADB_PASSWORD_FILE=/run/secrets/sql_liferay_password"
+	compose_add 1 "        - MARIADB_ROOT_HOST=localhost"
+	compose_add 1 "        - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/sql_root_password"
 	compose_add 1 "        - MARIADB_USER=lportal"
-	compose_add 1 "    healthcheck:"
-	compose_add 1 "        interval: 40s"
-	compose_add 1 "        retries: 3"
-	compose_add 1 "        test: mysqladmin ping -h 127.0.0.1 -u lportal --password=password"
-	compose_add 1 "        timeout: 5s"
+	compose_add 1 "        - MARIADB_USER_HOST=%"
 	compose_add 1 "    hostname: ${SERVICE}"
 	compose_add 1 "    image: mariadb:10.4.25-focal"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"3306:3306\""
+	compose_add 1 "    secrets:"
+	compose_add 1 "        - sql_liferay_password"
+	compose_add 1 "        - sql_root_password"
 }
 
 function build_liferay {
@@ -36,6 +54,7 @@ function build_liferay {
 		--tag liferay:${VERSION} \
 		templates/liferay
 
+	local db_address=$(find_services db host_port 3306)
 	local host_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
 	local search_addresses=$(find_services search host_port 9200)
 
@@ -51,9 +70,9 @@ function build_liferay {
 	compose_add 1 "        - LIFERAY_DISABLE_TRIAL_LICENSE=true"
 	compose_add 1 "        - LIFERAY_DL_PERIOD_STORE_PERIOD_IMPL=com.liferay.portal.store.file.system.AdvancedFileSystemStore"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver"
-	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=UglyDuckling"
-	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://db/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
-	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=root"
+	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE=/run/secrets/sql_liferay_password"
+	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://${db_address}/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
+	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal"
 	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE} -Djgroups.external_addr=${host_address}"
 	compose_add 1 "        - LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
 	compose_add 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
@@ -67,6 +86,8 @@ function build_liferay {
 	compose_add 1 "        - \"7801:7801\""
 	compose_add 1 "        - \"8009:8009\""
 	compose_add 1 "        - \"8080:8080\""
+	compose_add 1 "    secrets:"
+	compose_add 1 "        - sql_liferay_password"
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /opt/shared-volume:/opt/shared-volume"
 }
@@ -170,7 +191,7 @@ function check_usage {
 
 	VERSION=${1}
 
-	check_utils docker yq
+	check_utils docker docker-compose pwgen yq
 }
 
 function check_utils {
@@ -214,8 +235,6 @@ function create_compose_file {
 	then
 		rm -f ${COMPOSE_FILE}
 	fi
-
-	echo "services:" >> ${COMPOSE_FILE}
 }
 
 function get_config {
@@ -283,10 +302,14 @@ function main {
 
 	create_compose_file
 
-	process_configuration
+	add_secrets
+
+	add_services
 }
 
-function process_configuration {
+function add_services {
+	compose_add 0 "services:"
+
 	if [ ! -n "${HOST}" ]
 	then
 		HOST=$(hostname)

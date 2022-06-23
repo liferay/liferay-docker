@@ -35,6 +35,19 @@ function command_deploy {
 	ln -s "${1}" deploy
 }
 
+function command_down {
+	cd builds/deploy
+
+	local service=${1}
+
+	if [ -n "${service}" ]
+	then
+		service=$(get_service ${service})
+	fi
+
+	docker-compose down ${service}
+}
+
 function command_install {
 	echo "#!/bin/bash" > /usr/local/bin/orca
 	echo "" >> /usr/local/bin/orca

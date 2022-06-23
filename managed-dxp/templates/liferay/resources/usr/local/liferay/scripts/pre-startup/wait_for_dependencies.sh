@@ -9,9 +9,15 @@ function wait_for_mysql {
 			local db_host=${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL}
 			db_host=${db_host##*://}
 			db_host=${db_host%%/*}
+			db_host=${db_host%%:*}
 
 			local db_user=${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME}
 			local db_password=${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD}
+
+			if [ -n "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE}" ]
+			then
+				db_password=$(cat ${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE})
+			fi
 
 			echo "Testing database server connection to ${db_user}@${db_host}."
 

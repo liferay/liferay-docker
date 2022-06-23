@@ -7,3 +7,6 @@ hosts:
             - search
             - logserver
             - webserver
+
+configuration:
+    secret_dir: /opt/shared-volume/secrets
