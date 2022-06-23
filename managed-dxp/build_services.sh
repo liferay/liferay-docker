@@ -226,7 +226,7 @@ function find_services {
 					add_item="${service}-${host}"
 				elif [ "${template}" == "host_port" ]
 				then
-					add_item="${service}-${host}:${postfix}"
+					add_item="${host}:${postfix}"
 				fi
 
 				if [ -n "${list}" ]
