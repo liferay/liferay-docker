@@ -19,6 +19,40 @@ function add_secrets {
 	done
 }
 
+function add_services {
+	compose_add 0 "services:"
+
+	if [ ! -n "${HOST}" ]
+	then
+		HOST=$(hostname)
+	fi
+
+	local host_config=$(get_config ".hosts.${HOST}")
+	if [ ! -n "${host_config}" ]
+	then
+		HOST=localhost
+
+		host_config=$(get_config ".hosts.${HOST}")
+		if [ ! -n "${host_config}" ]
+		then
+			echo "Couldn't find a matching host in the configuration. Set the HOST environment variable."
+
+			exit 1
+		fi
+	fi
+
+	for SERVICE in $(yq ".hosts.${HOST}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//')
+	do
+		local service_template=${SERVICE}
+
+		SERVICE=${SERVICE}-${HOST}
+
+		echo "Building ${SERVICE}."
+
+		build_${service_template}
+	done
+}
+
 function build_db {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -305,40 +339,6 @@ function main {
 	add_secrets
 
 	add_services
-}
-
-function add_services {
-	compose_add 0 "services:"
-
-	if [ ! -n "${HOST}" ]
-	then
-		HOST=$(hostname)
-	fi
-
-	local host_config=$(get_config ".hosts.${HOST}")
-	if [ ! -n "${host_config}" ]
-	then
-		HOST=localhost
-
-		host_config=$(get_config ".hosts.${HOST}")
-		if [ ! -n "${host_config}" ]
-		then
-			echo "Couldn't find a matching host in the configuration. Set the HOST environment variable."
-
-			exit 1
-		fi
-	fi
-
-	for SERVICE in $(yq ".hosts.${HOST}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//')
-	do
-		local service_template=${SERVICE}
-
-		SERVICE=${SERVICE}-${HOST}
-
-		echo "Building ${SERVICE}."
-
-		build_${service_template}
-	done
 }
 
 function setup_configuration {
