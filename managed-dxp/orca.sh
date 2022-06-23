@@ -57,6 +57,10 @@ function command_install {
 }
 
 function command_up {
+	if ( ! ./validate_environment.sh )
+	then
+		exit 1
+	fi
 	cd builds/deploy
 	local service=${1}
 
