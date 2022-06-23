@@ -3,5 +3,7 @@ hosts:
         services:
             - db
             - liferay
+            - logproxy
             - search
+            - logserver
             - webserver

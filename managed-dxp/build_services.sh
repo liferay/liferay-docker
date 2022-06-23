@@ -71,6 +71,34 @@ function build_liferay {
 	compose_add 1 "        - /opt/shared-volume:/opt/shared-volume"
 }
 
+function build_logproxy {
+	local logserver=$(find_services logserver host_port 514)
+
+	compose_add 1 "${SERVICE}:"
+	compose_add 1 "    command: syslog+udp://${logserver}"
+	compose_add 1 "    container_name: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    image: gliderlabs/logspout"
+	compose_add 1 "    volumes:"
+	compose_add 1 "        - /var/run/docker.sock:/var/run/docker.sock"
+}
+
+function build_logserver {
+	docker build \
+		--tag logserver:${VERSION} \
+		templates/logserver
+
+	compose_add 1 "${SERVICE}:"
+	compose_add 1 "    command: -F --no-caps"
+	compose_add 1 "    container_name: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    image: logserver:${VERSION}"
+	compose_add 1 "    ports:"
+	compose_add 1 "        - 514:514/udp"
+	compose_add 1 "    volumes:"
+	compose_add 1 "        - /opt/shared-volume/logs:/var/log/syslogng/"
+}
+
 function build_search {
 	docker build \
 		--tag search:${VERSION} \
@@ -226,7 +254,12 @@ function find_services {
 					add_item="${service}-${host}"
 				elif [ "${template}" == "host_port" ]
 				then
-					add_item="${host}:${postfix}"
+					if [ "${host}" == "localhost" ]
+					then
+						add_item="${service}-${host}:${postfix}"
+					else
+						add_item="${host}:${postfix}"
+					fi
 				fi
 
 				if [ -n "${list}" ]
