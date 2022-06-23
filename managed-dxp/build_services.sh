@@ -36,8 +36,8 @@ function build_liferay {
 		--tag liferay:${VERSION} \
 		templates/liferay
 
-	local external_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
-	local search_addresses=$(find_services search 9200)
+	local host_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
+	local search_addresses=$(find_services search host_port 9200)
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -54,7 +54,7 @@ function build_liferay {
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=UglyDuckling"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://db/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=root"
-	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE} -Djgroups.external_addr=${external_address}"
+	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE} -Djgroups.external_addr=${host_address}"
 	compose_add 1 "        - LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
 	compose_add 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
 	compose_add 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
@@ -76,16 +76,17 @@ function build_search {
 		--tag search:${VERSION} \
 		templates/search
 
-	local external_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
-	local seed_hosts=$(find_services search 9300)
+	local host_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
+	local search_services_names=$(find_services search service_name)
+	local seed_hosts=$(find_services search host_port 9300 true)
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
-	compose_add 1 "        - cluster.initial_master_nodes=${seed_hosts}"
+	compose_add 1 "        - cluster.initial_master_nodes=${search_services_names}"
 	compose_add 1 "        - cluster.name=liferay-search"
 	compose_add 1 "        - discovery.seed_hosts=${seed_hosts}"
-	compose_add 1 "        - network.publish_host=${external_address}"
+	compose_add 1 "        - network.publish_host=${host_address}"
 	compose_add 1 "        - node.name=${SERVICE}"
 	compose_add 1 "        - xpack.ml.enabled=false"
 	compose_add 1 "        - xpack.monitoring.enabled=false"
@@ -110,7 +111,7 @@ function build_webserver {
 		--tag liferay-webserver:${VERSION} \
 		templates/webserver
 
-	local balance_members=$(find_services liferay 8009)
+	local balance_members=$(find_services liferay host_port 8009)
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -202,28 +203,39 @@ function get_config {
 
 function find_services {
 	local search_for=${1}
-	local port=${2}
+	local template=${2}
+	local postfix=${3}
+	local exclude_this_host=${4}
 
 	local list
 	for host in $(yq ".hosts" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
 	do
+		if [ "${exclude_this_host}" == "true" ] && [ "${host}" == "${HOST}" ]
+		then
+			continue
+		fi
+
 		for service in $(yq ".hosts.${host}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
 		do
 			if [ "${service}" == ${search_for} ]
 			then
-				local config_host=${host}
+				local add_item
 
-				if [ "${HOST}" == "localhost" ]
+				if [ "${template}" == "service_name" ]
 				then
-					config_host="${service}"
+					add_item="${service}-${host}"
+				elif [ "${template}" == "host_port" ]
+				then
+					add_item="${service}-${host}:${postfix}"
 				fi
 
 				if [ -n "${list}" ]
 				then
-					list="${list},${config_host}:${port}"
+					list="${list},${add_item}"
 				else
-					list="${config_host}:${port}"
+					list="${add_item}"
 				fi
+
 			fi
 		done
 	done
@@ -265,10 +277,7 @@ function process_configuration {
 	do
 		local service_template=${SERVICE}
 
-		if [ "${HOST}" != "localhost" ]
-		then
-			SERVICE=${SERVICE}-${HOST}
-		fi
+		SERVICE=${SERVICE}-${HOST}
 
 		echo "Building ${SERVICE}."
 
