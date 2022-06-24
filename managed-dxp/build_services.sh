@@ -58,14 +58,17 @@ function build_db {
 		--tag db:${VERSION} \
 		templates/db
 
-	local cluster_hosts=$(find_services db host_port 4567 true)
+	local cluster_addresses=$(find_services db host_port 4567 true)
+	local db_addresses=$(find_services db host_port 3306 true)
 	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
-	compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${ORCA_DB_BOOTSTRAP}"
-	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://${cluster_hosts}"
+	compose_add 1 "        - LIFERAY_DB_ADDRESSES=${database_hosts}"
+	compose_add 1 "        - LIFERAY_DB_SKIP_WAIT=\${LIFERAY_DB_SKIP_WAIT:-}"
+	compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${LIFERAY_DB_BOOTSTRAP:-}"
+	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://${cluster_addresses}"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
 	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/run/secrets/sql_backup_password"
 	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_USER=orca_mariabackup"
@@ -229,8 +232,10 @@ function check_usage {
 		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
-		echo "    CONFIG (optional): Set the name of the configuration you would like to use. If not set the \"production\" is used."
-		echo "    HOST (optional): Set the name of the host you for which to generate the services. If not set the hostname is used."
+		echo "    LIFERAY_ORCA_CONFIG (optional): Set the name of the configuration you would like to use. If not set the \"production\" is used."
+		echo "    LIFERAY_ORCA_HOST (optional): Set the name of the host you for which to generate the services. If not set the hostname is used."
+		echo "    LIFERAY_DB_BOOTSTRAP (optional): Set this to yes if you'd like to start a new database cluster."
+		echo "    LIFERAY_DB_SKIP_WAIT (optional): Set this to false if you would like the db container to start without waiting for the others."
 		echo ""
 		echo "Set the version number of the generated images as the first parameter to build the images and configuration."
 		echo ""
@@ -239,7 +244,9 @@ function check_usage {
 		exit 1
 	fi
 
-	VERSION=${1}
+	CONFIG="${LIFERAY_ORCA_CONFIG}"
+	HOST="${LIFERAY_ORCA_HOST}"
+	VERSION="${1}"
 
 	check_utils docker docker-compose pwgen yq
 }
@@ -343,30 +350,6 @@ function find_services {
 	done
 
 	echo ${list}
-}
-
-function host_service_id {
-	local search_for=${1}
-
-	local id=0
-
-	for host in $(yq ".hosts" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
-	do
-		for service in $(yq ".hosts.${host}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
-		do
-			if [ "${service}" == ${search_for} ]
-			then
-				id=$((id+1))
-			fi
-
-			if [ "$host" == "$HOST" ]
-			then
-				echo ${id}
-
-				return
-			fi
-		done
-	done
 }
 
 function main {
