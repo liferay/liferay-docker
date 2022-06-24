@@ -236,8 +236,6 @@ function check_usage {
 		echo ""
 		echo "    LIFERAY_ORCA_CONFIG (optional): Set the name of the configuration you would like to use. If not set the \"production\" is used."
 		echo "    LIFERAY_ORCA_HOST (optional): Set the name of the host you for which to generate the services. If not set the hostname is used."
-		echo "    LIFERAY_DB_BOOTSTRAP (optional): Set this to yes if you'd like to start a new database cluster."
-		echo "    LIFERAY_DB_SKIP_WAIT (optional): Set this to false if you would like the db container to start without waiting for the others."
 		echo ""
 		echo "Set the version number of the generated images as the first parameter to build the images and configuration."
 		echo ""

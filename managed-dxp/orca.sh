@@ -8,7 +8,14 @@ function check_usage {
 		echo "Available commands:"
 		echo "  - bad: builds as 'latest' and deploys automatically"
 		echo "  - build: calls build_services.sh"
-		echo "  - install: installs this script."
+		echo "  - down: calls docker-compose down"
+		echo "  - install: installs this script"
+		echo "  - up: validates the configuration and starts the services with docker-compose up"
+		echo ""
+		echo "The script reads the following environment variables:"
+		echo ""
+		echo "    LIFERAY_DB_BOOTSTRAP (optional): Set this to yes if you'd like to start a new database cluster."
+		echo "    LIFERAY_DB_SKIP_WAIT (optional): Set this to false if you would like the db container to start without waiting for the others."
 
 		exit 1
 	fi
