@@ -65,7 +65,7 @@ function build_db {
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
 
-	if [ $(host_service_id db) ]
+	if [ $(host_service_id db) -eq 1 ]
 	then
 		compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=yes"
 	fi
