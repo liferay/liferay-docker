@@ -65,7 +65,7 @@ function build_db {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
-	compose_add 1 "        - LIFERAY_DB_ADDRESSES=${database_hosts}"
+	compose_add 1 "        - LIFERAY_DB_ADDRESSES=${db_addresses}"
 	compose_add 1 "        - LIFERAY_DB_SKIP_WAIT=\${LIFERAY_DB_SKIP_WAIT:-}"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${LIFERAY_DB_BOOTSTRAP:-}"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://${cluster_addresses}"
@@ -90,6 +90,8 @@ function build_db {
 	compose_add 1 "        - sql_backup_password"
 	compose_add 1 "        - sql_liferay_password"
 	compose_add 1 "        - sql_root_password"
+	compose_add 1 "    volumes:"
+	compose_add 1 "        - /opt/liferay/db-data:/bitnami/mariadb"
 }
 
 function build_liferay {

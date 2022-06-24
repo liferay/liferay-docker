@@ -1,5 +1,22 @@
 #!/bin/bash
 
+function check_db_data_permissions {
+	local db_data_dir=/opt/liferay/db-data
+	if [ -e ${db_data_dir} ]
+	then
+		if ( ! ls -lnd ${db_data_dir} | grep "1001" &>/dev/null )
+		then
+			echo "The permissions of the ${db_data_dir} are not correct. Please change the owner to uid 1001."
+
+			ERROR=1
+		fi
+	else
+		echo "The database data folder ${db_data_dir} does not exist. Please create it and change the owner of it to uid:gid 1000:1000."
+
+		ERROR=1
+	fi
+}
+
 function check_document_library_permissions {
 	local dl_dir=/opt/shared-volume/document-library
 	if [ -e ${dl_dir} ]
