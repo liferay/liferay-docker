@@ -5,7 +5,7 @@ function add_secrets {
 
 	local secret_dir=$(get_config .configuration.secret_dir /opt/shared-volume/secrets)
 
-	for secret in sql_liferay_password sql_root_password
+	for secret in sql_backup_password sql_liferay_password sql_root_password
 	do
 		local secret_file="${secret_dir}/${secret}.txt"
 		if [ ! -e "${secret_file}" ]
@@ -54,20 +54,29 @@ function add_services {
 }
 
 function build_db {
+	docker build \
+		--tag db:${VERSION} \
+		templates/db
+
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    command: mysqld --character-set-filesystem=utf8mb4 --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --disable-ssl --max_allowed_packet=256M"
 	compose_add 1 "    environment:"
+	compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=yes"
+	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://liferay-db"
+	compose_add 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
+	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/run/secrets/sql_liferay_password"
 	compose_add 1 "        - MARIADB_DATABASE=lportal"
 	compose_add 1 "        - MARIADB_PASSWORD_FILE=/run/secrets/sql_liferay_password"
 	compose_add 1 "        - MARIADB_ROOT_HOST=localhost"
 	compose_add 1 "        - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/sql_root_password"
 	compose_add 1 "        - MARIADB_USER=lportal"
-	compose_add 1 "        - MARIADB_USER_HOST=%"
 	compose_add 1 "    hostname: ${SERVICE}"
-	compose_add 1 "    image: mariadb:10.4.25-focal"
+	compose_add 1 "    image: db:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"3306:3306\""
+	compose_add 1 "        - \"4444:4444\""
+	compose_add 1 "        - \"4567:4567\""
+	compose_add 1 "        - \"4568:4568\""
 	compose_add 1 "    secrets:"
 	compose_add 1 "        - sql_liferay_password"
 	compose_add 1 "        - sql_root_password"
