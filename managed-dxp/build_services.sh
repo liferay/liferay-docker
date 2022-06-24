@@ -64,12 +64,7 @@ function build_db {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
-
-	if [ $(host_service_id db) -eq 1 ]
-	then
-		compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=yes"
-	fi
-
+	compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${ORCA_DB_BOOTSTRAP}"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://${cluster_hosts}"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
 	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/run/secrets/sql_backup_password"
