@@ -59,14 +59,21 @@ function build_db {
 		templates/db
 
 	local cluster_hosts=$(find_services db host_port 4567 true)
+	local host_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
-	compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=yes"
+
+	if [ $(host_service_id db) ]
+	then
+		compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=yes"
+	fi
+
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://${cluster_hosts}"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
 	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/run/secrets/sql_liferay_password"
+	compose_add 1 "        - MARIADB_GALERA_NODE_ADDRESS=${host_address}:4568"
 	compose_add 1 "        - MARIADB_DATABASE=lportal"
 	compose_add 1 "        - MARIADB_PASSWORD_FILE=/run/secrets/sql_liferay_password"
 	compose_add 1 "        - MARIADB_ROOT_HOST=localhost"
@@ -338,6 +345,30 @@ function find_services {
 	done
 
 	echo ${list}
+}
+
+function host_service_id {
+	local search_for=${1}
+
+	local id=0
+
+	for host in $(yq ".hosts" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
+	do
+		for service in $(yq ".hosts.${host}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
+		do
+			if [ "${service}" == ${search_for} ]
+			then
+				id=$((id+1))
+			fi
+
+			if [ "$host" == "$HOST" ]
+			then
+				echo ${id}
+
+				return
+			fi
+		done
+	done
 }
 
 function main {
