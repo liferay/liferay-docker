@@ -33,7 +33,7 @@ function wait_for_primary {
 
 	while true
 	do
-		for db_address in ${LIFERAY_DATABASE_ADDRESSES//,/ }
+		for db_address in ${LIFERAY_DB_ADDRESSES//,/ }
 		do
 			local db_host=${db_address%%:*}
 			local db_password
@@ -46,7 +46,7 @@ function wait_for_primary {
 			fi
 		done
 
-		echo "Unsuccessful connections to ${LIFERAY_DATABASE_ADDRESSES}. Waiting."
+		echo "Unsuccessful connections to ${LIFERAY_DB_ADDRESSES}. Waiting."
 
 		sleep 3
 	done
