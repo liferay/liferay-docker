@@ -272,7 +272,7 @@ function warm_up_tomcat {
 	# the Hypersonic files can take over 20 seconds.
 	#
 
-	if [ -d "${TEMP_DIR}/liferay/data/hsql" ]
+	if [ -e "${TEMP_DIR}/liferay/data/hsql/lportal.script" ]
 	then
 		if [ $(stat "${TEMP_DIR}/liferay/data/hsql/lportal.script") -lt 1024000 ]
 		then
@@ -280,9 +280,7 @@ function warm_up_tomcat {
 		else
 			echo Tomcat is already warmed up.
 		fi
-	fi
-
-	if [ -d "${TEMP_DIR}/liferay/data/hypersonic" ]
+	elif [ -e "${TEMP_DIR}/liferay/data/hypersonic/lportal.script" ]
 	then
 		if [ $(stat "${TEMP_DIR}/liferay/data/hypersonic/lportal.script") -lt 1024000 ]
 		then
@@ -290,5 +288,7 @@ function warm_up_tomcat {
 		else
 			echo Tomcat is already warmed up.
 		fi
+	else
+		start_tomcat
 	fi
 }
