@@ -53,6 +53,8 @@ function check_vm_max_map_count {
 }
 
 function main {
+	check_db_data_permissions
+
 	check_document_library_permissions
 
 	check_utils
