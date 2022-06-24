@@ -58,11 +58,13 @@ function build_db {
 		--tag db:${VERSION} \
 		templates/db
 
+	local cluster_hosts=$(find_services db host_port 4567 true)
+
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=yes"
-	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://liferay-db"
+	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://${cluster_hosts}"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
 	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/run/secrets/sql_liferay_password"
 	compose_add 1 "        - MARIADB_DATABASE=lportal"
