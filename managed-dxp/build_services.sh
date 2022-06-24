@@ -75,7 +75,7 @@ function build_db {
 	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/run/secrets/sql_liferay_password"
 	compose_add 1 "        - MARIADB_GALERA_NODE_ADDRESS=${host_ip}"
 	compose_add 1 "        - MARIADB_DATABASE=lportal"
-	compose_add 1 "        - MARIADB_EXTRA_FLAGS=\"--wsrep_provider_options=ist.recv_addr=${host_ip}:4568;ist.recv_bind=0.0.0.0:4568 --wsrep_node_incoming_address=${host_ip} --wsrep_sst_receive_address=${host_ip}\""
+	compose_add 1 "        - MARIADB_EXTRA_FLAGS=--wsrep_provider_options=ist.recv_addr=${host_ip}:4568;ist.recv_bind=0.0.0.0:4568 --wsrep_node_incoming_address=${host_ip} --wsrep_sst_receive_address=${host_ip}"
 	compose_add 1 "        - MARIADB_PASSWORD_FILE=/run/secrets/sql_liferay_password"
 	compose_add 1 "        - MARIADB_ROOT_HOST=localhost"
 	compose_add 1 "        - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/sql_root_password"
