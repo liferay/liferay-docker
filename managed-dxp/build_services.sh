@@ -89,6 +89,7 @@ function build_db {
 	compose_add 1 "        - \"4567:4567\""
 	compose_add 1 "        - \"4568:4568\""
 	compose_add 1 "    secrets:"
+	compose_add 1 "        - sql_backup_password"
 	compose_add 1 "        - sql_liferay_password"
 	compose_add 1 "        - sql_root_password"
 }
