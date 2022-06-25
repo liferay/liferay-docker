@@ -1,9 +1,11 @@
 #!/bin/bash
 
+set -e
+
 function add_secrets {
 	compose_add 0 "secrets:"
 
-	local secret_dir=$(get_config .configuration.secret_dir /opt/shared-volume/secrets)
+	local secret_dir=$(get_config .configuration.secret_dir /opt/liferay/shared-volume/secrets)
 
 	for secret in sql_backup_password sql_liferay_password sql_root_password
 	do
@@ -144,7 +146,7 @@ function build_liferay {
 	compose_add 1 "    secrets:"
 	compose_add 1 "        - sql_liferay_password"
 	compose_add 1 "    volumes:"
-	compose_add 1 "        - /opt/shared-volume:/opt/shared-volume"
+	compose_add 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
 }
 
 function build_logproxy {
@@ -172,7 +174,7 @@ function build_logserver {
 	compose_add 1 "    ports:"
 	compose_add 1 "        - 514:514/udp"
 	compose_add 1 "    volumes:"
-	compose_add 1 "        - /opt/shared-volume/logs:/var/log/syslogng/"
+	compose_add 1 "        - /opt/liferay/shared-volume/logs:/var/log/syslogng/"
 }
 
 function build_search {

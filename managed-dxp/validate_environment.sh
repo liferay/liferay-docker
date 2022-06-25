@@ -18,7 +18,7 @@ function check_db_data_permissions {
 }
 
 function check_document_library_permissions {
-	local dl_dir=/opt/shared-volume/document-library
+	local dl_dir=/opt/liferay/shared-volume/document-library
 	if [ -e ${dl_dir} ]
 	then
 		if ( ! ls -lnd ${dl_dir} | grep "1000 1000" &>/dev/null )
