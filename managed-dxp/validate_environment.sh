@@ -11,7 +11,7 @@ function check_db_data_permissions {
 			ERROR=1
 		fi
 	else
-		echo "The database data folder ${db_data_dir} does not exist. Please create it and change the owner of it to uid:gid 1000:1000."
+		echo "The database data folder ${db_data_dir} does not exist. Please create it and change the owner of it to uid:gid 1001."
 
 		ERROR=1
 	fi
