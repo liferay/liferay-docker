@@ -13,10 +13,16 @@ function check_usage {
 		echo "  - ssh <service name>: logs in to the named service container"
 		echo "  - up: validates the configuration and starts the services with docker-compose up"
 		echo ""
+		ecgi "All other commands are executed as docker-compose commands from the correct folder."
+		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
 		echo "    LIFERAY_DB_BOOTSTRAP (optional): Set this to yes if you'd like to start a new database cluster."
 		echo "    LIFERAY_DB_SKIP_WAIT (optional): Set this to false if you would like the db container to start without waiting for the others."
+		echo ""
+		echo "Examples:"
+		echo "  - orca up -d liferay: starts the Liferay service in the background"
+		echo "  - orca ps: shows the list of running services"
 
 		exit 1
 	fi
@@ -53,6 +59,8 @@ function command_down {
 		service=$(get_service ${service})
 	fi
 
+	echo "service: ${service}"
+
 	docker-compose down ${service}
 }
 
@@ -69,7 +77,7 @@ function command_ssh {
 
 	cd builds/deploy
 
-	docker-compose exec ${2} ${3} ${4} $(get_service ${service}) /bin/bash
+	docker-compose exec $(get_service ${service}) /bin/bash
 }
 
 function command_up {
@@ -78,14 +86,36 @@ function command_up {
 		exit 1
 	fi
 	cd builds/deploy
-	local service=${1}
 
-	if [ -n "${service}" ]
+	local other_params
+	local service
+
+	for param in ${1} ${2} ${3} ${4} ${5}
+	do
+		if (! echo ${param} | grep "^[-]")
+		then
+			service=${param}
+
+			break
+		else
+			other_params="${other_params} ${param}"
+		fi
+	done
+
+	service=$(get_service ${service})
+
+	docker-compose up --remove-orphans ${other_params} ${service}
+}
+
+function execute_command {
+	if [[ $(type -t "command_${1}") == "function" ]]
 	then
-		service=$(get_service ${service})
-	fi
+		command_${1} "${2}" "${3}" "${4}"
+	else
+		cd "builds/deploy"
 
-	docker-compose up --remove-orphans ${service}
+		docker-compose ${@}
+	fi
 }
 
 function get_service {
@@ -120,7 +150,7 @@ function main {
 
 	check_usage ${@}
 
-	command_${1} "${2}" "${3}" "${4}"
+	execute_command ${@}
 }
 
 main ${@}
