@@ -20,9 +20,9 @@
          thread_pool.keep_alive_time="30000"/>
 
     <JDBC_PING
-          connection_url="jdbc:mariadb://db/lportal?characterEncoding=UTF-8&amp;dontTrackOpenResources=true&amp;holdResultsOpenOverStatementClose=true&amp;serverTimezone=GMT&amp;useFastDateParsing=false&amp;useUnicode=true&amp;useSSL=false"
-          connection_username="lportal"
-          connection_password="password"
+          connection_url="${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL}"
+          connection_username="${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME}"
+          connection_password="${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD}"
           connection_driver="org.mariadb.jdbc.Driver"/>
     <MERGE3  min_interval="10000"
              max_interval="30000"/>

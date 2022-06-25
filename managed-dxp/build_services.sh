@@ -41,7 +41,7 @@ function add_services {
 		fi
 	fi
 
-	for SERVICE in $(yq ".hosts.${HOST}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//')
+	for SERVICE in $(yq ".hosts.${HOST}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
 	do
 		local service_template=${SERVICE}
 
@@ -109,7 +109,7 @@ function build_liferay {
 		--tag liferay:${VERSION} \
 		templates/liferay
 
-	local db_address=$(find_services db host_port 3306)
+	local db_address=$(get_config ".hosts.${HOST}.configuration.liferay.db" "db-${HOST}")
 	local host_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
 	local search_addresses=$(find_services search host_port 9200)
 
