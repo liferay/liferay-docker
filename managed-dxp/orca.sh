@@ -10,6 +10,7 @@ function check_usage {
 		echo "  - build: calls build_services.sh"
 		echo "  - down: calls docker-compose down"
 		echo "  - install: installs this script"
+		echo "  - ssh <service name>: logs in to the named service container"
 		echo "  - up: validates the configuration and starts the services with docker-compose up"
 		echo ""
 		echo "The script reads the following environment variables:"
@@ -63,6 +64,14 @@ function command_install {
 	chmod a+x /usr/local/bin/orca
 }
 
+function command_ssh {
+	service=${1}
+
+	cd builds/deploy
+
+	docker-compose exec ${2} ${3} ${4} $(get_service ${service}) /bin/bash
+}
+
 function command_up {
 	if ( ! ./validate_environment.sh )
 	then
@@ -80,7 +89,23 @@ function command_up {
 }
 
 function get_service {
-	docker-compose config --services | grep -m1 ${1}
+	local services=$(docker-compose config --services | grep ${1})
+	local count=$(echo "${services}" | wc -w)
+
+	if [ $count -eq 1 ]
+	then
+		echo ${services}
+	elif [ $count -eq 0 ]
+	then
+		echo "Couldn't find any running services with this name." >&2
+
+		exit 1
+	else
+		echo "Found more services with the give name, specify name correctly:" >&2
+		echo ${services} >&2
+
+		exit 1
+	fi
 }
 
 function go_to_folder {
