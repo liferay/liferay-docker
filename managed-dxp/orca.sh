@@ -85,6 +85,7 @@ function command_up {
 	then
 		exit 1
 	fi
+
 	cd builds/deploy
 
 	local other_params
@@ -92,7 +93,7 @@ function command_up {
 
 	for param in ${1} ${2} ${3} ${4} ${5}
 	do
-		if (! echo ${param} | grep "^[-]")
+		if (! echo "${param}" | grep "^[-]" &>/dev/null)
 		then
 			service=${param}
 
@@ -102,7 +103,10 @@ function command_up {
 		fi
 	done
 
-	service=$(get_service ${service})
+	if [ -n "${service}" ]
+	then
+		service=$(get_service ${service})
+	fi
 
 	docker-compose up --remove-orphans ${other_params} ${service}
 }
