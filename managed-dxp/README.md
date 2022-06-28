@@ -8,7 +8,7 @@ Create a new mounted filesystem (xfs recommended) to /opt/gluster-data
 
 Execute the following commands on all servers:
 
-    $ apt-get --yes install docker-compose git glusterfs-server
+    $ apt-get --yes install docker-compose git glusterfs-server pwgen
     $ systemctl enable glusterd
     $ systemctl start glusterd 
     $ mkdir -p /opt/gluster-data/gv0
@@ -18,6 +18,7 @@ Execute the following commands on all servers:
     $ git clone https://github.com/liferay/liferay-docker.git
     $ cd liferay-docker/managed-dxp
     $ ./orca.sh install
+    $ snap install yq
 
 Then log in to the first server and execute the following:
 
