@@ -9,7 +9,7 @@ function check_usage {
 		echo "  - bad: builds as 'latest' and deploys automatically"
 		echo "  - build: calls build_services.sh"
 		echo "  - down: calls docker-compose down"
-		echo "  - force_master: changes the database configuration and makes the currend server the master. Only use this in emergencies and on the node which was last written by the cluster."
+		echo "  - force_primary: changes the database configuration and makes the current server the primary. Only use this in emergencies and on the node which was last written by the cluster."
 		echo "  - install: installs this script"
 		echo "  - mysql: logs into the db server on this container"
 		echo "  - ssh <service name>: logs in to the named service container"
@@ -66,7 +66,7 @@ function command_down {
 	docker-compose down ${service}
 }
 
-function command_force_master {
+function command_force_primary {
 	sed -i "s/safe_to_bootstrap: 0/safe_to_bootstrap: 1/" /opt/liferay/db-data/data/grastate.dat
 }
 
