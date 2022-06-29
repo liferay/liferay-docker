@@ -112,7 +112,7 @@ function build_liferay {
 		templates/liferay
 
 	local db_address=$(get_config ".hosts.${HOST}.configuration.liferay.db" "db-${HOST}")
-	local host_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
+	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
 	local search_addresses=$(find_services search host_port 9200)
 
 	compose_add 1 "${SERVICE}:"
@@ -130,7 +130,7 @@ function build_liferay {
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE=/run/secrets/sql_liferay_password"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://${db_address}/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal"
-	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE} -Djgroups.external_addr=${host_address}"
+	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE} -Djgroups.external_addr=${host_ip}"
 	compose_add 1 "        - LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
 	compose_add 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
 	compose_add 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
@@ -182,7 +182,7 @@ function build_search {
 		--tag search:${VERSION} \
 		templates/search
 
-	local host_address=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
+	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
 	local search_services_names=$(find_services search service_name)
 	local seed_hosts=$(find_services search host_port 9300 true)
 
@@ -192,7 +192,7 @@ function build_search {
 	compose_add 1 "        - cluster.initial_master_nodes=${search_services_names}"
 	compose_add 1 "        - cluster.name=liferay-search"
 	compose_add 1 "        - discovery.seed_hosts=${seed_hosts}"
-	compose_add 1 "        - network.publish_host=${host_address}"
+	compose_add 1 "        - network.publish_host=${host_ip}"
 	compose_add 1 "        - node.name=${SERVICE}"
 	compose_add 1 "        - xpack.ml.enabled=false"
 	compose_add 1 "        - xpack.monitoring.enabled=false"
@@ -336,7 +336,9 @@ function find_services {
 					then
 						add_item="${service}-${host}:${postfix}"
 					else
-						add_item="${host}:${postfix}"
+						local host_ip=$(get_config ".hosts.${host}.ip" ${host})
+
+						add_item="${host_ip}:${postfix}"
 					fi
 				fi
 
