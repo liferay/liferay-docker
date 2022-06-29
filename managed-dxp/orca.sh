@@ -9,11 +9,13 @@ function check_usage {
 		echo "  - bad: builds as 'latest' and deploys automatically"
 		echo "  - build: calls build_services.sh"
 		echo "  - down: calls docker-compose down"
+		echo "  - force_master: changes the database configuration and makes the currend server the master. Only use this in emergencies and on the node which was last written by the cluster."
 		echo "  - install: installs this script"
+		echo "  - mysql: logs into the db server on this container"
 		echo "  - ssh <service name>: logs in to the named service container"
 		echo "  - up: validates the configuration and starts the services with docker-compose up"
 		echo ""
-		ecgi "All other commands are executed as docker-compose commands from the correct folder."
+		echo "All other commands are executed as docker-compose commands from the correct folder."
 		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
@@ -64,12 +66,22 @@ function command_down {
 	docker-compose down ${service}
 }
 
+function command_force_master {
+	sed -i "s/safe_to_bootstrap: 0/safe_to_bootstrap: 1/" /opt/liferay/db-data/data/grastate.dat
+}
+
 function command_install {
 	echo "#!/bin/bash" > /usr/local/bin/orca
 	echo "" >> /usr/local/bin/orca
 	echo "$(pwd)/orca.sh \${@}" >> /usr/local/bin/orca
 
 	chmod a+x /usr/local/bin/orca
+}
+
+function command_mysql {
+	cd builds/deploy
+
+	docker-compose exec $(get_service db) /usr/local/bin/connect_to_mysql.sh
 }
 
 function command_ssh {
