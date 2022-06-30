@@ -10,6 +10,7 @@ function add_secrets {
 	for secret in sql_backup_password sql_liferay_password sql_root_password
 	do
 		local secret_file="${secret_dir}/${secret}.txt"
+
 		if [ ! -e "${secret_file}" ]
 		then
 			pwgen -1s 24 > ${secret_file}
@@ -30,11 +31,12 @@ function add_services {
 	fi
 
 	local host_config=$(get_config ".hosts.${HOST}")
+
 	if [ ! -n "${host_config}" ]
 	then
-		HOST=localhost
-
+		HOST="localhost"
 		host_config=$(get_config ".hosts.${HOST}")
+
 		if [ ! -n "${host_config}" ]
 		then
 			echo "Couldn't find a matching host in the configuration. Set the HOST environment variable."
@@ -43,11 +45,11 @@ function add_services {
 		fi
 	fi
 
-	for SERVICE in $(yq ".hosts.${HOST}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
+	for SERVICE in $(yq ".hosts.${HOST}.services" < "${CONFIG_FILE}" | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
 	do
-		local service_template=${SERVICE}
+		local service_template="${SERVICE}"
 
-		SERVICE=${SERVICE}-${HOST}
+		SERVICE="${SERVICE}-${HOST}"
 
 		echo "Building ${SERVICE}."
 
@@ -57,8 +59,8 @@ function add_services {
 
 function build_db {
 	docker build \
-		--tag db:${VERSION} \
-		templates/db
+		--tag "db:${VERSION}" \
+		"templates/db"
 
 	local cluster_addresses=$(find_services db host_port 4567 true)
 	local db_addresses=$(find_services db host_port 3306 true)
@@ -99,8 +101,8 @@ function build_db {
 function build_liferay {
 	if [ -e "config/liferay-license.xml" ]
 	then
-		mkdir -p templates/liferay/resources/opt/liferay/deploy/
-		cp config/liferay-license.xml templates/liferay/resources/opt/liferay/deploy/license.xml
+		mkdir -p "templates/liferay/resources/opt/liferay/deploy/"
+		cp "config/liferay-license.xml" "templates/liferay/resources/opt/liferay/deploy/license.xml"
 	else
 		echo "ERROR: Copy a valid Liferay DXP license to config/liferay-license.xml before running this script."
 
@@ -108,8 +110,8 @@ function build_liferay {
 	fi
 
 	docker build \
-		--tag liferay:${VERSION} \
-		templates/liferay
+		--tag "liferay:${VERSION}" \
+		"templates/liferay"
 
 	local db_address=$(get_config ".hosts.${HOST}.configuration.liferay.db" "db-${HOST}")
 	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
@@ -163,8 +165,8 @@ function build_logproxy {
 
 function build_logserver {
 	docker build \
-		--tag logserver:${VERSION} \
-		templates/logserver
+		--tag "logserver:${VERSION}" \
+		"templates/logserver"
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    command: -F --no-caps"
@@ -179,8 +181,8 @@ function build_logserver {
 
 function build_search {
 	docker build \
-		--tag search:${VERSION} \
-		templates/search
+		--tag "search:${VERSION}" \
+		"templates/search"
 
 	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
 	local search_services_names=$(find_services search service_name)
@@ -214,8 +216,8 @@ function build_search {
 
 function build_webserver {
 	docker build \
-		--tag liferay-webserver:${VERSION} \
-		templates/webserver
+		--tag "liferay-webserver:${VERSION}" \
+		"templates/webserver"
 
 	local balance_members=$(find_services liferay host_port 8009)
 
@@ -270,10 +272,11 @@ function compose_add {
 	then
 		echo "${2}" >> ${COMPOSE_FILE}
 
-		return 0
+		return
 	fi
 
 	local line=""
+
 	for i in $(seq ${1})
 	do
 		line="${line}    "
@@ -285,14 +288,14 @@ function compose_add {
 }
 
 function create_compose_file {
-	BUILD_DIR=builds/${VERSION}
-	COMPOSE_FILE=${BUILD_DIR}/docker-compose.yml
+	BUILD_DIR="builds/${VERSION}"
+	COMPOSE_FILE="${BUILD_DIR}/docker-compose.yml"
 
-	mkdir -p ${BUILD_DIR}
+	mkdir -p "${BUILD_DIR}"
 
-	if [ -e ${COMPOSE_FILE} ]
+	if [ -e "${COMPOSE_FILE}" ]
 	then
-		rm -f ${COMPOSE_FILE}
+		rm -f "${COMPOSE_FILE}"
 	fi
 }
 
@@ -301,19 +304,20 @@ function get_config {
 
 	if [ "${yq_output}" == "null" ]
 	then
-		echo ${2}
+		echo "${2}"
 	else
-		echo ${yq_output}
+		echo "${yq_output}"
 	fi
 }
 
 function find_services {
-	local search_for=${1}
-	local template=${2}
-	local postfix=${3}
-	local exclude_this_host=${4}
+	local search_for="${1}"
+	local template="${2}"
+	local postfix="${3}"
+	local exclude_this_host="${4}"
 
 	local list
+
 	for host in $(yq ".hosts" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
 	do
 		if [ "${exclude_this_host}" == "true" ] && [ "${host}" == "${HOST}" ]
@@ -321,9 +325,9 @@ function find_services {
 			continue
 		fi
 
-		for service in $(yq ".hosts.${host}.services" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
+		for service in $(yq ".hosts.${host}.services" < "${CONFIG_FILE}" | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
 		do
-			if [ "${service}" == ${search_for} ]
+			if [ "${service}" == "${search_for}" ]
 			then
 				local add_item
 
@@ -353,7 +357,7 @@ function find_services {
 		done
 	done
 
-	echo ${list}
+	echo "${list}"
 }
 
 function main {
@@ -371,15 +375,15 @@ function main {
 function setup_configuration {
 	if [ ! -n "${CONFIG}" ]
 	then
-		CONFIG=production
+		CONFIG="production"
 	fi
-	if [ -e config/${CONFIG}.yml ]
+	if [ -e "config/${CONFIG}.yml" ]
 	then
-		CONFIG_FILE=config/${CONFIG}.yml
+		CONFIG_FILE="config/${CONFIG}.yml"
 
 		echo "Using configuration ${CONFIG_FILE}."
 	else
-		CONFIG_FILE=single_server.yml
+		CONFIG_FILE="single_server.yml"
 
 		echo "Using the default, single server configuration."
 	fi

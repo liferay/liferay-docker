@@ -31,9 +31,9 @@ function check_usage {
 }
 
 function command_bad {
-	command_build latest
+	command_build "latest"
 
-	command_deploy latest
+	command_deploy "latest"
 }
 
 function command_build {
@@ -41,27 +41,25 @@ function command_build {
 }
 
 function command_deploy {
-	cd builds
+	cd "builds"
 
-	if [ -e deploy ]
+	if [ -e "deploy" ]
 	then
-		rm -rf deploy
+		rm -rf "deploy"
 	fi
 
-	ln -s "${1}" deploy
+	ln -s "${1}" "deploy"
 }
 
 function command_down {
-	cd builds/deploy
+	cd "builds/deploy"
 
-	local service=${1}
+	local service="${1}"
 
 	if [ -n "${service}" ]
 	then
 		service=$(get_service ${service})
 	fi
-
-	echo "service: ${service}"
 
 	docker-compose down ${service}
 }
@@ -71,25 +69,25 @@ function command_force_primary {
 }
 
 function command_install {
-	echo "#!/bin/bash" > /usr/local/bin/orca
-	echo "" >> /usr/local/bin/orca
-	echo "$(pwd)/orca.sh \${@}" >> /usr/local/bin/orca
+	echo "#!/bin/bash" > "/usr/local/bin/orca"
+	echo "" >> "/usr/local/bin/orca"
+	echo "$(pwd)/orca.sh \${@}" >> "/usr/local/bin/orca"
 
-	chmod a+x /usr/local/bin/orca
+	chmod a+x "/usr/local/bin/orca"
 }
 
 function command_mysql {
-	cd builds/deploy
+	cd "builds/deploy"
 
-	docker-compose exec $(get_service db) /usr/local/bin/connect_to_mysql.sh
+	docker-compose exec "$(get_service db)" "/usr/local/bin/connect_to_mysql.sh"
 }
 
 function command_ssh {
-	service=${1}
+	service="${1}"
 
-	cd builds/deploy
+	cd "builds/deploy"
 
-	docker-compose exec $(get_service ${service}) /bin/bash
+	docker-compose exec "$(get_service ${service})" "/bin/bash"
 }
 
 function command_up {
@@ -98,16 +96,16 @@ function command_up {
 		exit 1
 	fi
 
-	cd builds/deploy
+	cd "builds/deploy"
 
 	local other_params
 	local service
 
-	for param in ${1} ${2} ${3} ${4} ${5}
+	for param in "${1}" "${2}" "${3}" "${4}" "${5}"
 	do
 		if (! echo "${param}" | grep "^[-]" &>/dev/null)
 		then
-			service=${param}
+			service="${param}"
 
 			break
 		else
@@ -135,20 +133,20 @@ function execute_command {
 }
 
 function get_service {
-	local services=$(docker-compose config --services | grep ${1})
+	local services=$(docker-compose config --services | grep "${1}")
 	local count=$(echo "${services}" | wc -w)
 
-	if [ $count -eq 1 ]
+	if [ "${count}" -eq 1 ]
 	then
-		echo ${services}
-	elif [ $count -eq 0 ]
+		echo "${services}"
+	elif [ ${count} -eq 0 ]
 	then
 		echo "Couldn't find any running services with this name." >&2
 
 		exit 1
 	else
 		echo "Found more services with the give name, specify name correctly:" >&2
-		echo ${services} >&2
+		echo "${services}" >&2
 
 		exit 1
 	fi
@@ -157,7 +155,7 @@ function get_service {
 function go_to_folder {
 	local script_path=$(readlink /proc/$$/fd/255 2>/dev/null)
 
-	cd $(dirname ${script_path})
+	cd $(dirname "${script_path}")
 
 }
 
