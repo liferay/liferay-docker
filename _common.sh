@@ -1,5 +1,21 @@
 #!/bin/bash
 
+function check_docker_buildx {
+	docker build buildx --help > /dev/null 2>&1
+
+	if [ $? -gt 0 ]
+	then
+		echo "Docker Buildx is not available."
+
+		exit 1
+	fi
+
+	if [ $(docker buildx ls | grep -c -w "liferay-buildkit") -eq 0 ]
+	then
+		docker buildx create --name "liferay-buildkit"
+	fi
+}
+
 function check_utils {
 
 	#
@@ -48,6 +64,18 @@ function date {
 	fi
 }
 
+function delete_local_images {
+	if [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" == "true" ]] && [ -n "${1}" ]
+	then
+		echo "Deleting local ${1} images."
+
+		for image_id in $(docker image ls | grep "${1}" | awk '{print $3}' | uniq)
+		do
+			docker image rm -f "${image_id}"
+		done
+	fi
+}
+
 function download {
 	local file_name="${1}"
 	local file_url="${2}"
@@ -63,8 +91,8 @@ function download {
 	fi
 
 	if [[ "${file_url}" != http://mirrors.*.liferay.com* ]] &&
-	[[ "${file_url}" != http://release-1* ]] &&
-	[[ "${file_url}" != https://release.liferay.com* ]]
+	   [[ "${file_url}" != http://release-1* ]] &&
+	   [[ "${file_url}" != https://release.liferay.com* ]]
 	then
 		if [ ! -n "${LIFERAY_DOCKER_MIRROR}" ]
 		then
@@ -80,7 +108,16 @@ function download {
 
 	mkdir -p $(dirname "${file_name}")
 
-	curl ${LIFERAY_DOCKER_CURL_OPTIONS} --fail --location --output "${file_name}" "${file_url}" || exit 2
+	curl $(echo "${LIFERAY_DOCKER_CURL_OPTIONS}") --fail --location --output "${file_name}" "${file_url}" || exit 2
+}
+
+function get_current_arch {
+	if [ $(uname -m) == "aarch64" ]
+	then
+		echo "arm64"
+	else
+		echo "amd64"
+	fi
 }
 
 function get_docker_image_tags_args {
@@ -113,6 +150,19 @@ function get_tomcat_version {
 	fi
 
 	echo "${liferay_tomcat_version}"
+}
+
+function log_in_to_docker_hub {
+	if [ ! -n "${LIFERAY_DOCKER_HUB_LOGGED_IN}" ] && [ -n "${LIFERAY_DOCKER_HUB_TOKEN}" ] && [ -n "${LIFERAY_DOCKER_HUB_USERNAME}" ]
+	then
+		echo ""
+		echo "Logging in to Docker Hub."
+		echo ""
+
+		echo "${LIFERAY_DOCKER_HUB_TOKEN}" | docker login --password-stdin -u "${LIFERAY_DOCKER_HUB_USERNAME}"
+
+		LIFERAY_DOCKER_HUB_LOGGED_IN=true
+	fi
 }
 
 function make_temp_directory {
@@ -148,14 +198,9 @@ function prepare_tomcat {
 	rm -fr "${TEMP_DIR}"/liferay/tomcat/logs/*
 }
 
-function push_docker_images {
-	if [ "${1}" == "push" ]
-	then
-		for docker_image_tag in "${DOCKER_IMAGE_TAGS[@]}"
-		do
-			docker push "${docker_image_tag}"
-		done
-	fi
+function remove_temp_dockerfile_target_platform {
+	sed -i 's/${TARGETARCH}'/$(get_current_arch)/ "${TEMP_DIR}"/Dockerfile
+	sed -i 's/--platform=${TARGETPLATFORM} //g' "${TEMP_DIR}"/Dockerfile
 }
 
 function start_tomcat {
@@ -227,7 +272,7 @@ function warm_up_tomcat {
 	# the Hypersonic files can take over 20 seconds.
 	#
 
-	if [ -d "${TEMP_DIR}/liferay/data/hsql" ]
+	if [ -e "${TEMP_DIR}/liferay/data/hsql/lportal.script" ]
 	then
 		if [ $(stat "${TEMP_DIR}/liferay/data/hsql/lportal.script") -lt 1024000 ]
 		then
@@ -235,9 +280,7 @@ function warm_up_tomcat {
 		else
 			echo Tomcat is already warmed up.
 		fi
-	fi
-
-	if [ -d "${TEMP_DIR}/liferay/data/hypersonic" ]
+	elif [ -e "${TEMP_DIR}/liferay/data/hypersonic/lportal.script" ]
 	then
 		if [ $(stat "${TEMP_DIR}/liferay/data/hypersonic/lportal.script") -lt 1024000 ]
 		then
@@ -245,5 +288,7 @@ function warm_up_tomcat {
 		else
 			echo Tomcat is already warmed up.
 		fi
+	else
+		start_tomcat
 	fi
 }

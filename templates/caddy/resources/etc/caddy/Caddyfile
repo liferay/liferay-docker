@@ -1,0 +1,32 @@
+{
+	admin off
+	auto_https off
+
+	log {
+		format json
+	}
+}
+
+:80 {
+	encode gzip
+	file_server
+
+	header {
+		Access-Control-Allow-Headers "GET,OPTIONS,POST"
+		Access-Control-Allow-Methods *
+	}
+
+	import /etc/caddy.d/*
+
+	log {
+		format json
+		output stdout
+	}
+
+	respond / 200
+
+	@options method OPTIONS
+	respond @options 204
+
+	root * /public_html
+}

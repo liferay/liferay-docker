@@ -1,0 +1,5 @@
+services:
+    job-runner:
+        image: liferay/job-runner:latest
+        volumes:
+        - ./files:/mnt/liferay

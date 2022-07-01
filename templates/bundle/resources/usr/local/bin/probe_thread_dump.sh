@@ -60,6 +60,13 @@ function check_usage {
 }
 
 function main {
+	if [ "${LIFERAY_THREAD_DUMP_PROBE_ENABLED}" != "true" ]
+	then
+		echo "Set the environment variable \"LIFERAY_THREAD_DUMP_PROBE_ENABLED\" to \"true\" to enable ${0}."
+
+		exit 1
+	fi
+
 	check_usage "${@}"
 
 	local curl_content
@@ -83,7 +90,7 @@ function main {
 
 		if [ ! -e  "${LIFERAY_THREAD_DUMP_DIRECTORY}" ]
 		then
-			mkdir -p ${LIFERAY_THREAD_DUMP_DIRECTORY}
+			mkdir -p "${LIFERAY_THREAD_DUMP_DIRECTORY}"
 		fi
 
 		echo -e "${thread_dump}" > "${LIFERAY_THREAD_DUMP_DIRECTORY}/$(hostname)_$(date +"%Y-%m-%dT%H:%M:%S%z").tdump"

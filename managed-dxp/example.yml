@@ -1,0 +1,21 @@
+hosts:
+    vm-1:
+        ip: 192.168.0.184
+        services:
+            - db
+            - liferay
+            - logproxy
+            - search
+            - webserver
+    vm-2:
+        ip: 192.168.0.57
+        services:
+            - liferay
+            - logproxy
+            - search
+    vm-3:
+        ip: 192.168.0.216
+        services:
+            - search
+            - logproxy
+            - logserver

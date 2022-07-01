@@ -1,0 +1,12 @@
+hosts:
+    localhost:
+        services:
+            - db
+            - liferay
+            - logproxy
+            - search
+            - logserver
+            - webserver
+
+configuration:
+    secret_dir: /opt/shared-volume/secrets

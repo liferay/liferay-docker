@@ -8,8 +8,10 @@ function build_docker_image {
 
 	DOCKER_IMAGE_TAGS=()
 
-	DOCKER_IMAGE_TAGS+=("${docker_image_name}:${release_version}-${TIMESTAMP}")
-	DOCKER_IMAGE_TAGS+=("${docker_image_name}:${release_version}")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}${docker_image_name}:${release_version}-${TIMESTAMP}")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}${docker_image_name}:${release_version}")
+
+	remove_temp_dockerfile_target_platform
 
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
@@ -46,6 +48,8 @@ function main {
 	build_docker_image "${@}"
 
 	test_docker_image
+
+	log_in_to_docker_hub
 
 	push_docker_images "${4}"
 

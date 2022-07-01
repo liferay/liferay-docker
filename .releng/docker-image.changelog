@@ -284,3 +284,304 @@ docker.image.git.id-2.0.10=c6ada88cbea562ac9729f00380d5fd65de926efc
 
 docker.image.change.log-2.0.11=DOCKER-61 DOCKER-65
 docker.image.git.id-2.0.11=e079b55f99306e57df3ff9bfce8db7430df2dd89
+
+#
+# Liferay Docker Image Version 2.0.12
+#
+
+docker.image.change.log-2.0.12=DOCKER-69
+docker.image.git.id-2.0.12=a3a726ab8c0f5fce0f410769f9ea7a1b379f02b7
+
+#
+# Liferay Docker Image Version 2.0.13
+#
+
+docker.image.change.log-2.0.13=DOCKER-68
+docker.image.git.id-2.0.13=ef759ba57e675921c274905e389a355acf71763f
+
+#
+# Liferay Docker Image Version 2.0.14
+#
+
+docker.image.change.log-2.0.14=DOCKER-66
+docker.image.git.id-2.0.14=d8c52ea96f585b86d4e26a99add8b535802d778d
+
+#
+# Liferay Docker Image Version 2.0.15
+#
+
+docker.image.change.log-2.0.15=DOCKER-73 DOCKER-73DOCKER-72
+docker.image.git.id-2.0.15=9075b073e4f596f3db9a4c6e7106f21207c68c68
+
+#
+# Liferay Docker Image Version 2.0.16
+#
+
+docker.image.change.log-2.0.16=DOCKER-71 DOCKER-72
+docker.image.git.id-2.0.16=93d86cf1f07d1aee589d32745dbea22eaf9e0074
+
+#
+# Liferay Docker Image Version 2.0.17
+#
+
+docker.image.change.log-2.0.17=DOCKER-77 DOCKER-71
+docker.image.git.id-2.0.17=0927f37644818e5c2b522068fe56958ccf3f3456
+
+#
+# Liferay Docker Image Version 2.0.18
+#
+
+docker.image.change.log-2.0.18=DOCKER-78 DOCKER-77
+docker.image.git.id-2.0.18=11ba4e760f80b16a98728a55761d157a833da9e5
+
+#
+# Liferay Docker Image Version 2.0.19
+#
+
+docker.image.change.log-2.0.19=DOCKER-80
+docker.image.git.id-2.0.19=37e0a18fadabde2943e064d17637555118daaca5
+
+#
+# Liferay Docker Image Version 2.0.20
+#
+
+docker.image.change.log-2.0.20=DOCKER-79 DOCKER-49
+docker.image.git.id-2.0.20=d79324bc93c5dd0e81850e7243df2413e624dd9a
+
+#
+# Liferay Docker Image Version 2.0.21
+#
+
+docker.image.change.log-2.0.21=DOCKER-76
+docker.image.git.id-2.0.21=1f51742f1bc86e94fa7655280b81aa9e45fc0c00
+
+#
+# Liferay Docker Image Version 2.0.22
+#
+
+docker.image.change.log-2.0.22=DOCKER-88
+docker.image.git.id-2.0.22=8eff6bc9ade5243d469062e6741dd304a3169496
+
+#
+# Liferay Docker Image Version 2.0.23
+#
+
+docker.image.change.log-2.0.23=DOCKER-76
+docker.image.git.id-2.0.23=22db6f9038ce1dd51ef4bee75b533ec28944bf66
+
+#
+# Liferay Docker Image Version 2.0.24
+#
+
+docker.image.change.log-2.0.24=DOCKER-92 DOCKER-93
+docker.image.git.id-2.0.24=483ae5fa9e372ec0b1d17221ecb679a85d3e50ae
+
+#
+# Liferay Docker Image Version 2.0.25
+#
+
+docker.image.change.log-2.0.25=DOCKER-96
+docker.image.git.id-2.0.25=d03cafbbc9e351eda23ea3b75f170951f89aa8d1
+
+#
+# Liferay Docker Image Version 3.0.0
+#
+
+docker.image.change.log-3.0.0=DOCKER-82 DOCKER-97
+docker.image.git.id-3.0.0=95292ceb7a12627f7bfb3e732ad3c2d0b20ea8eb
+
+#
+# Liferay Docker Image Version 3.0.1
+#
+
+docker.image.change.log-3.0.1=DOCKER-103
+docker.image.git.id-3.0.1=516293e07bf5aa874d621f6d4b081de8f6a9667d
+
+#
+# Liferay Docker Image Version 3.0.2
+#
+
+docker.image.change.log-3.0.2=DOCKER-82
+docker.image.git.id-3.0.2=0374075c2c934b5076567eeee51a78d012496842
+
+#
+# Liferay Docker Image Version 3.0.3
+#
+
+docker.image.change.log-3.0.3=DOCKER-104 DOCKER-67 DOCKER-104 DOCKER-82, DOCKER-89 DOCKER-102 DOCKER-82
+docker.image.git.id-3.0.3=7f484877591c3afa387529f65d09cf11b68717a1
+
+#
+# Liferay Docker Image Version 3.0.4
+#
+
+docker.image.change.log-3.0.4=DOCKER-67
+docker.image.git.id-3.0.4=5b2cb2f0bc5a6afce7079ea352630d8f1ec00398
+
+#
+# Liferay Docker Image Version 3.0.5
+#
+
+docker.image.change.log-3.0.5=DOCKER-67
+docker.image.git.id-3.0.5=52551424bd25f4652ea63ca1489ca2511327b351
+
+#
+# Liferay Docker Image Version 3.0.6
+#
+
+docker.image.change.log-3.0.6=DOCKER-105
+docker.image.git.id-3.0.6=1d2ed68a0a9c4e47741efca378a173d81b7960a3
+
+#
+# Liferay Docker Image Version 3.0.7
+#
+
+docker.image.change.log-3.0.7=DOCKER-105
+docker.image.git.id-3.0.7=0985084f68e529d977a1862b773922a76fb008be
+
+#
+# Liferay Docker Image Version 3.0.8
+#
+
+docker.image.change.log-3.0.8=DOCKER-105
+docker.image.git.id-3.0.8=fbdff7810509ee62cfaf6a6a6e4cd10a83962f5b
+
+#
+# Liferay Docker Image Version 3.0.9
+#
+
+docker.image.change.log-3.0.9=DOCKER-107
+docker.image.git.id-3.0.9=23988deeeb1c2677efbb509703cda848b9e6a586
+
+#
+# Liferay Docker Image Version 3.0.10
+#
+
+docker.image.change.log-3.0.10=DOCKER-109 DOCKER-100
+docker.image.git.id-3.0.10=9cb75702561d0029a20ca6258d8d7dab8fb861db
+
+#
+# Liferay Docker Image Version 3.0.11
+#
+
+docker.image.change.log-3.0.11=DOCKER-101 DOCKER-108 DOCKER-111 DOCKER-108
+docker.image.git.id-3.0.11=1e49651c172bbd0238fe33cff83763c5cf315d5a
+
+#
+# Liferay Docker Image Version 3.0.12
+#
+
+docker.image.change.log-3.0.12=DOCKER-115
+docker.image.git.id-3.0.12=a019c2105d5ed234f4c32cb55ff8b7d3a5fe72e3
+
+#
+# Liferay Docker Image Version 3.0.13
+#
+
+docker.image.change.log-3.0.13=DOCKER-118
+docker.image.git.id-3.0.13=9fbd7d233e3cdc55ece232bfbef2e8086731728c
+
+#
+# Liferay Docker Image Version 3.0.14
+#
+
+docker.image.change.log-3.0.14=DOCKER-120
+docker.image.git.id-3.0.14=95372a94340a053b2a020267e4c9becd72b0e8ed
+
+#
+# Liferay Docker Image Version 4.0.0
+#
+
+docker.image.change.log-4.0.0=DOCKER-114 DOCKER-122
+docker.image.git.id-4.0.0=e5bbda4a38cd0236c43b81794d3059a752c67b64
+
+#
+# Liferay Docker Image Version 4.0.1
+#
+
+docker.image.change.log-4.0.1=DOCKER-124
+docker.image.git.id-4.0.1=2b874984e6bebaaa8b429a1ddee595c0de5a395c
+
+#
+# Liferay Docker Image Version 4.0.2
+#
+
+docker.image.change.log-4.0.2=DOCKER-90
+docker.image.git.id-4.0.2=09ee34def21c3d9ce18aa5f3cb2cdce4609de5fb
+
+#
+# Liferay Docker Image Version 4.0.3
+#
+
+docker.image.change.log-4.0.3=DOCKER-125
+docker.image.git.id-4.0.3=9532901b2dfa08d812c5b3087fe697531835dd24
+
+#
+# Liferay Docker Image Version 4.0.4
+#
+
+docker.image.change.log-4.0.4=DOCKER-83
+docker.image.git.id-4.0.4=926be668a8765738cb89ab7abb323f4ec8b4ec3c
+
+#
+# Liferay Docker Image Version 4.0.5
+#
+
+docker.image.change.log-4.0.5=DOCKER-127
+docker.image.git.id-4.0.5=6564e9b48a2b040d8bddc838127116939130dd48
+
+#
+# Liferay Docker Image Version 4.0.6
+#
+
+docker.image.change.log-4.0.6=DOCKER-134
+docker.image.git.id-4.0.6=82cb776fdfe22f45f2d0b2764e1e68cad1bf7640
+
+#
+# Liferay Docker Image Version 4.0.7
+#
+
+docker.image.change.log-4.0.7=DOCKER-132
+docker.image.git.id-4.0.7=469aa6749365c6297ac38cc3a45fcd9a6f609283
+
+#
+# Liferay Docker Image Version 4.0.8
+#
+
+docker.image.change.log-4.0.8=DOCKER-137
+docker.image.git.id-4.0.8=c3587755894cc4c89ae1e5a2e98cddec6f75860d
+
+#
+# Liferay Docker Image Version 4.1.0
+#
+
+docker.image.change.log-4.1.0=DOCKER-132 DOCKER-135 DOCKER-131
+docker.image.git.id-4.1.0=1100253169024626a7045eead3547b26d2d4aebd
+
+#
+# Liferay Docker Image Version 4.1.1
+#
+
+docker.image.change.log-4.1.1=DOCKER-140 DOCKER-131
+docker.image.git.id-4.1.1=b2ac9d3ac01e72f8241ed2acbda7c594141f76d6
+
+#
+# Liferay Docker Image Version 4.1.2
+#
+
+docker.image.change.log-4.1.2=DOCKER-130 DOCKER-142 DOCKER-141
+docker.image.git.id-4.1.2=3ac4255a029ad057e4ee84165d1a5433b3223ed2
+
+#
+# Liferay Docker Image Version 4.1.3
+#
+
+docker.image.change.log-4.1.3=DOCKER-144 DOCKER-130
+docker.image.git.id-4.1.3=5642629eb38c16cc7440483b8efca8f2587f10bf
+
+#
+# Liferay Docker Image Version 4.1.4
+#
+
+docker.image.change.log-4.1.4=DOCKER-143
+docker.image.git.id-4.1.4=67d37fdc36b3fa405d4515c9c34a22eeebd07d18

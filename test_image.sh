@@ -77,9 +77,9 @@ function prepare_mount {
 
 	mkdir -p "${TEST_DIR}"
 
-	cp -r templates/test/* "${TEST_DIR}"
+	cp -r templates/test/resources/* "${TEST_DIR}"
 
-	mkdir -p "${TEST_DIR}/patching"
+	mkdir -p "${TEST_DIR}/mnt/liferay/patching"
 
 	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL}" ]
 	then
@@ -87,7 +87,7 @@ function prepare_mount {
 
 		download "downloads/patching-tool/${patcing_tool_file_name}" "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL}"
 	else
-		local patcing_tool_file_name=$(basename $(ls -Art downloads/patching-tool/*.zip | tail -n 1))
+		local patcing_tool_file_name=$(find downloads/patching-tool/ -maxdepth 1 -name '*.zip' -printf "%T+\t%f\n" | sort | tail -n 1 | awk '{print $2}')
 	fi
 
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
@@ -96,26 +96,26 @@ function prepare_mount {
 
 		download "downloads/hotfix/${hotfix_file_name}" "${LIFERAY_DOCKER_TEST_HOTFIX_URL}"
 
-		cp "downloads/hotfix/${hotfix_file_name}" "${TEST_DIR}/patching"
+		cp "downloads/hotfix/${hotfix_file_name}" "${TEST_DIR}/mnt/liferay/patching"
 	fi
 
 	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" ]
 	then
 		download "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip"
 
-		cp "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "${TEST_DIR}/patching/"
+		cp "downloads/patching-tool/patching-tool-${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}.zip" "${TEST_DIR}/mnt/liferay/patching/"
 	fi
 
-	if [ -e "${TEST_DIR}/scripts" ]
+	if [ -e "${TEST_DIR}/mnt/liferay/scripts" ]
 	then
-		chmod -R +x "${TEST_DIR}/scripts"
+		chmod -R +x "${TEST_DIR}/mnt/liferay/scripts"
 	fi
 }
 
 function start_container {
 	echo "Starting container from image ${LIFERAY_DOCKER_IMAGE_ID}."
 
-	CONTAINER_ID=$(docker run -d -p 8080 -v "${PWD}/${TEST_DIR}":/mnt/liferay "${LIFERAY_DOCKER_IMAGE_ID}")
+	CONTAINER_ID=$(docker run -d -p 8080 -v "${PWD}/${TEST_DIR}/mnt/liferay":/mnt/liferay "${LIFERAY_DOCKER_IMAGE_ID}")
 
 	CONTAINER_PORT_HTTP=$(docker port "${CONTAINER_ID}" 8080/tcp)
 
@@ -194,9 +194,11 @@ function test_health_status {
 	do
 		echo -en "."
 
-		local status=$(docker inspect --format="{{json .State.Health.Status}}" "${CONTAINER_ID}")
+		local health_status=$(docker inspect --format="{{json .State.Health.Status}}" "${CONTAINER_ID}")
+		local ignore_license=$(docker logs ${CONTAINER_ID} 2> /dev/null | grep -c "Starting Liferay Portal")
+		local license_status=$(docker logs ${CONTAINER_ID} 2> /dev/null | grep -c "License registered for DXP Development")
 
-		if [ "${status}" == "\"healthy\"" ]
+		if [ "${health_status}" == "\"healthy\"" ] && ([ ${ignore_license} -gt 0 ] || [ ${license_status} -gt 0 ])
 		then
 			echo ""
 
@@ -212,13 +214,13 @@ function test_health_status {
 
 	log_test_failure
 
-	echo "Container health status is: ${status}."
+	echo "Container health status is: ${health_status}."
 }
 
 function test_page {
 	local content
 
-	content=$(curl --fail -s --show-error "${1}")
+	content=$(curl --fail -s --show-error -L "${1}")
 
 	local exit_code=$?
 
@@ -226,9 +228,9 @@ function test_page {
 	then
 		log_test_failure "${FUNCNAME[1]}"
 
-		echo "curl exit code is: ${exit_code}."
-		echo ""
 		echo "${content}"
+		echo ""
+		echo "curl exit code is: ${exit_code}."
 	else
 		if [[ "${content}" =~ .*"${2}".* ]]
 		then
@@ -236,6 +238,8 @@ function test_page {
 		else
 			log_test_failure "${FUNCNAME[1]}"
 
+			echo "${content}"
+			echo ""
 			echo "The \"${2}\" string is not present on the page."
 		fi
 	fi

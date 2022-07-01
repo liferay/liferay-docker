@@ -1,0 +1,8 @@
+pre-commit:
+    commands:
+        "shellchecker":
+            glob: "*.sh"
+            run: docker run --rm -v "$PWD:/mnt" koalaman/shellcheck:v0.8.0 {staged_files}
+        "beautysh":
+            glob: "*.sh"
+            run: docker run --rm -v "$PWD:/mnt" kreutzakos/beautysh:0.2 {staged_files}

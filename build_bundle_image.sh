@@ -43,7 +43,7 @@ function build_docker_image {
 		release_version=${release_version}-${service_pack_name}
 	fi
 
-	local label_version=${release_version}
+	LABEL_VERSION=${release_version}
 
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
@@ -59,9 +59,9 @@ function build_docker_image {
 
 		if [[ ${release_branch} == master ]]
 		then
-			label_version="Master Snapshot on ${label_version} at ${release_hash}"
+			LABEL_VERSION="Master Snapshot on ${LABEL_VERSION} at ${release_hash}"
 		else
-			label_version="${release_branch} Snapshot on ${label_version} at ${release_hash}"
+			LABEL_VERSION="${release_branch} Snapshot on ${LABEL_VERSION} at ${release_hash}"
 		fi
 	fi
 
@@ -80,32 +80,40 @@ function build_docker_image {
 	do
 		if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 		then
-			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_branch}-${release_version_single}-${release_hash}")
-			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
-			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_branch}")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:${release_branch}-${release_version_single}-${release_hash}")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:${release_branch}")
 		else
-			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_version_single}-d$(./release_notes.sh get-version)-${TIMESTAMP}")
-			DOCKER_IMAGE_TAGS+=("liferay/${DOCKER_IMAGE_NAME}:${release_version_single}")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:${release_version_single}-d$(./release_notes.sh get-version)-${TIMESTAMP}")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:${release_version_single}")
 		fi
 	done
 
+	if [[ "${LIFERAY_DOCKER_LATEST}" = "true" ]]
+	then
+		DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/${DOCKER_IMAGE_NAME}:latest")
+	fi
+
 	if [ -e "${TEMP_DIR}/liferay/.githash" ]
 	then
-		local liferay_vcs_ref=$(cat "${TEMP_DIR}/liferay/.githash")
+		LIFERAY_VCS_REF=$(cat "${TEMP_DIR}/liferay/.githash")
 	fi
 
 	IFS=${default_ifs}
 
+	remove_temp_dockerfile_target_platform
+
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-		--build-arg LABEL_LIFERAY_VCS_REF="${liferay_vcs_ref}" \
+		--build-arg LABEL_LIFERAY_PATCHING_TOOL_VERSION="${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" \
+		--build-arg LABEL_LIFERAY_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
+		--build-arg LABEL_LIFERAY_VCS_REF="${LIFERAY_VCS_REF}" \
 		--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
-		--build-arg LABEL_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
-		--build-arg LABEL_VERSION="${label_version}" \
+		--build-arg LABEL_VERSION="${LABEL_VERSION}" \
 		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
-		"${TEMP_DIR}"
+		"${TEMP_DIR}" || exit 1
 }
 
 function check_release {
@@ -131,10 +139,15 @@ function check_usage {
 		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
+		echo "    LIFERAY_DOCKER_DEVELOPER_MODE (optional): If set to \"true\" all local images will be deleted before building a one."
 		echo "    LIFERAY_DOCKER_FIX_PACK_URL (optional): URL to a fix pack"
+		echo "    LIFERAY_DOCKER_HUB_TOKEN (optional): Docker Hub token to log in automatically"
+		echo "    LIFERAY_DOCKER_HUB_USERNAME (optional): Docker Hub username to log in automatically"
+		echo "    LIFERAY_DOCKER_IMAGE_PLATFORMS (optional): Comma separated Docker image platforms to build when the \"push\" parameter is set"
 		echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API header used to generate the trial license"
 		echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
 		echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
+		echo "    LIFERAY_DOCKER_REPOSITORY (optional): Docker repository"
 		echo ""
 		echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0} push"
 		echo ""
@@ -170,10 +183,9 @@ function install_fix_pack {
 		cp "downloads/fix-packs/${FIX_PACK_FILE_NAME}" "${TEMP_DIR}/liferay/patching-tool/patches"
 
 		"${TEMP_DIR}/liferay/patching-tool/patching-tool.sh" install
-		"${TEMP_DIR}/liferay/patching-tool/patching-tool.sh" separate temp
 
+		rm -fr "${TEMP_DIR}/liferay/data/hypersonic/"*
 		rm -fr "${TEMP_DIR}/liferay/osgi/state/"*
-		rm -f "${TEMP_DIR}/liferay/patching-tool/patches/"*
 	fi
 }
 
@@ -181,6 +193,8 @@ function main {
 	check_usage "${@}"
 
 	make_temp_directory templates/bundle
+
+	set_parent_image
 
 	prepare_temp_directory "${@}"
 
@@ -198,7 +212,9 @@ function main {
 
 	test_docker_image
 
-	push_docker_images "${1}"
+	log_in_to_docker_hub
+
+	push_docker_image "${1}"
 
 	clean_up_temp_directory
 }
@@ -224,6 +240,37 @@ function prepare_temp_directory {
 	fi
 
 	mv "${TEMP_DIR}/liferay-"* "${TEMP_DIR}/liferay"
+}
+
+function push_docker_image {
+	if [ "${1}" == "push" ]
+	then
+		check_docker_buildx
+
+		sed -i '1s/FROM /FROM --platform=${TARGETPLATFORM} /g' "${TEMP_DIR}"/Dockerfile
+
+		docker buildx build \
+			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
+			--build-arg LABEL_LIFERAY_PATCHING_TOOL_VERSION="${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" \
+			--build-arg LABEL_LIFERAY_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
+			--build-arg LABEL_LIFERAY_VCS_REF="${LIFERAY_VCS_REF}" \
+			--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
+			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
+			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
+			--build-arg LABEL_VERSION="${LABEL_VERSION}" \
+			--builder "liferay-buildkit" \
+			--platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
+			--push \
+			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
+			"${TEMP_DIR}" || exit 1
+	fi
+}
+
+function set_parent_image {
+	if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION%-*}" | cut -f1,2,3 -d'.' | cut -f1 -d '-' | sed 's/\.//g' )" -le 7310 ]
+	then
+		sed -i 's/liferay\/jdk11:latest/liferay\/jdk11-jdk8:latest/g' "${TEMP_DIR}"/Dockerfile
+	fi
 }
 
 function update_patching_tool {
