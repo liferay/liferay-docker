@@ -1,6 +1,7 @@
 hosts:
     localhost:
         services:
+            - antivirus
             - backup
             - db
             - liferay
