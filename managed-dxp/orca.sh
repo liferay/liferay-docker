@@ -30,6 +30,12 @@ function check_usage {
 	fi
 }
 
+function command_backup {
+	cd "builds/deploy"
+
+	docker-compose exec "$(get_service backup)" "/usr/local/bin/backup.sh"
+}
+
 function command_bad {
 	command_build "latest"
 

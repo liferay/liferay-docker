@@ -57,6 +57,28 @@ function add_services {
 	done
 }
 
+function build_backup {
+	docker build \
+		--tag "backup:${VERSION}" \
+		"templates/backup"
+
+	local db_addresses=$(find_services db host_port "3306")
+
+	compose_add 1 "${SERVICE}:"
+	compose_add 1 "    container_name: ${SERVICE}"
+	compose_add 1 "    environment:"
+	compose_add 1 "        - LIFERAY_BACKUP_CRON_EXPRESSION=0 */4 * * *"
+	compose_add 1 "        - LIFERAY_DB_ADDRESSES=${db_addresses}"
+	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    image: backup:${VERSION}"
+	compose_add 1 "    secrets:"
+	compose_add 1 "        - sql_root_password"
+	compose_add 1 "    volumes:"
+	compose_add 1 "        - /opt/liferay/backups:/opt/liferay/backups"
+	compose_add 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
+
+}
+
 function build_db {
 	docker build \
 		--tag "db:${VERSION}" \
