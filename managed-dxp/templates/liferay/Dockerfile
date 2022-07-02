@@ -1,4 +1,4 @@
-FROM zsoltbalogh/managed-dxp-dxp:latest
+FROM liferay/dxp:7.4.13-u31-d4.1.4-20220629111505
 
 USER 0
 
