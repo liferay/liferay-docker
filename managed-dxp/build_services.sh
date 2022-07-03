@@ -88,6 +88,17 @@ function build_backup {
 
 }
 
+function build_ci {
+	compose_add 1 "${SERVICE}:"
+	compose_add 1 "    container_name: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    image: jenkins/jenkins:lts-jdk11"
+	compose_add 1 "    ports:"
+	compose_add 1 "        - \"9080:8080\""
+	compose_add 1 "    volumes:"
+	compose_add 1 "        - /opt/liferay/jenkins-home:/var/jenkins_home"
+}
+
 function build_db {
 	docker build \
 		--tag "db:${VERSION}" \

@@ -3,6 +3,7 @@ hosts:
         services:
             - antivirus
             - backup
+            - ci
             - db
             - liferay
             - logproxy

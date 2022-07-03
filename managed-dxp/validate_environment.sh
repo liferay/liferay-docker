@@ -1,39 +1,28 @@
 #!/bin/bash
 
-function check_db_data_permissions {
-	local db_data_dir="/opt/liferay/db-data"
+function check_dir {
+	local dir=${1}
+	local uid=${2}
 
-	if [ -e "${db_data_dir}" ]
+	if [ -d "${dir}" ]
 	then
-		if ( ! ls -lnd ${db_data_dir} | grep "1001" &>/dev/null )
+		if [ ! $(stat -c '%u' "${dir}") -eq "${uid}" ]
 		then
-			echo "The permissions of the ${db_data_dir} are not correct. Please change the owner to uid 1001."
+			echo "The permissions of the ${dir} are not correct. Please change the owner to uid ${uid}."
 
 			ERROR=1
 		fi
 	else
-		echo "The database data folder ${db_data_dir} does not exist. Please create it and change the owner of it to uid 1001."
+		echo "The directory ${dir} does not exist. Please create it and change the owner of it to uid ${uid}."
 
 		ERROR=1
 	fi
 }
 
-function check_document_library_permissions {
-	local dl_dir="/opt/liferay/shared-volume/document-library"
-
-	if [ -e "${dl_dir}" ]
-	then
-		if ( ! ls -lnd ${dl_dir} | grep "1000 1000" &>/dev/null )
-		then
-			echo "The permissions of the ${dl_dir} are not correct. Please change the owner to 1000:1000."
-
-			ERROR=1
-		fi
-	else
-		echo "The document_library folder ${dl_dir} does not exist. Please create it and change the owner to 1000:1000."
-
-		ERROR=1
-	fi
+function check_dirs {
+	check_dir "/opt/liferay/db-data" 1001
+	check_dir "/opt/liferay/jenkins-home" 1000
+	check_dir "/opt/liferay/shared-volume/document-library" 1000
 }
 
 function check_utils {
@@ -55,11 +44,9 @@ function check_vm_max_map_count {
 }
 
 function main {
-	check_db_data_permissions
-
-	check_document_library_permissions
-
 	check_utils
+
+	check_dirs
 
 	check_vm_max_map_count
 
