@@ -130,6 +130,8 @@ function build_db {
 }
 
 function build_liferay {
+	rm -fr "templates/liferay/resources/opt/liferay/deploy/"
+
 	if [ -e "config/liferay-license.xml" ]
 	then
 		mkdir -p "templates/liferay/resources/opt/liferay/deploy/"
@@ -138,6 +140,15 @@ function build_liferay {
 		echo "ERROR: Copy a valid Liferay DXP license to config/liferay-license.xml before running this script."
 
 		exit 1
+	fi
+
+	if [ -d "/opt/liferay/shared-volume/deploy/" ]
+	then
+		cp /opt/liferay/shared-volume/deploy/* "templates/liferay/resources/opt/liferay/deploy/"
+
+		echo "Copying the following files to deploy:"
+
+		ls -l /opt/liferay/shared-volume/deploy/
 	fi
 
 	docker build \
@@ -173,10 +184,12 @@ function build_liferay {
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://${db_address}/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal"
 	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE} -Djgroups.external_addr=${host_ip}"
+	compose_add 1 "        - LIFERAY_SCHEMA_PERIOD_MODULE_PERIOD_BUILD_PERIOD_AUTO_PERIOD_UPGRADE=true"
 	compose_add 1 "        - LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
 	compose_add 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
 	compose_add 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
 	compose_add 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${SERVICE}"
+	compose_add 1 "        - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true"
 	compose_add 1 "        - LIFERAY_WEB_PERIOD_SERVER_PERIOD_DISPLAY_PERIOD_NODE=true"
 	compose_add 1 "    hostname: ${SERVICE}"
 	compose_add 1 "    image: liferay:${VERSION}"
