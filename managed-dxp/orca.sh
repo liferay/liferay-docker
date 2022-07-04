@@ -8,7 +8,6 @@ function check_usage {
 		echo "Available commands:"
 		echo "  - bad: builds as 'latest' and deploys automatically"
 		echo "  - build: calls build_services.sh"
-		echo "  - down: calls docker-compose down"
 		echo "  - force_primary: changes the database configuration and makes the current server the primary. Only use this in emergencies and on the node which was last written by the cluster."
 		echo "  - install: installs this script"
 		echo "  - mysql: logs into the db server on this container"
@@ -33,7 +32,7 @@ function check_usage {
 function command_backup {
 	cd "builds/deploy"
 
-	docker-compose exec "$(get_service backup)" "/usr/local/bin/backup.sh"
+	docker-compose exec "backup" "/usr/local/bin/backup.sh"
 }
 
 function command_bad {
@@ -72,30 +71,14 @@ function command_install {
 function command_mysql {
 	cd "builds/deploy"
 
-	docker-compose exec "$(get_service db)" "/usr/local/bin/connect_to_mysql.sh"
+	docker-compose exec "db" "/usr/local/bin/connect_to_mysql.sh"
 }
 
 function command_ssh {
-	service="${1}"
-
 	cd "builds/deploy"
 
-	docker-compose exec "$(get_service ${service})" "/bin/bash"
+	docker-compose exec "${1}" "/bin/bash"
 }
-
-function command_stop {
-	cd "builds/deploy"
-
-	local service="${1}"
-
-	if [ -n "${service}" ]
-	then
-		service=$(get_service ${service})
-	fi
-
-	echo docker-compose stop -t 30 ${service}
-}
-
 
 function command_up {
 	if ( ! ./validate_environment.sh )
@@ -105,27 +88,7 @@ function command_up {
 
 	cd "builds/deploy"
 
-	local other_params
-	local service
-
-	for param in "${1}" "${2}" "${3}" "${4}" "${5}"
-	do
-		if (! echo "${param}" | grep "^[-]" &>/dev/null)
-		then
-			service="${param}"
-
-			break
-		else
-			other_params="${other_params} ${param}"
-		fi
-	done
-
-	if [ -n "${service}" ]
-	then
-		service=$(get_service ${service})
-	fi
-
-	docker-compose up --remove-orphans ${other_params} ${service}
+	docker-compose up ${@}
 }
 
 function execute_command {
@@ -136,26 +99,6 @@ function execute_command {
 		cd "builds/deploy"
 
 		docker-compose ${@}
-	fi
-}
-
-function get_service {
-	local services=$(docker-compose config --services | grep "${1}")
-	local count=$(echo "${services}" | wc -w)
-
-	if [ "${count}" -eq 1 ]
-	then
-		echo "${services}"
-	elif [ ${count} -eq 0 ]
-	then
-		echo "Couldn't find any running services with this name." >&2
-
-		exit 1
-	else
-		echo "Found more services with the give name, specify name correctly:" >&2
-		echo "${services}" >&2
-
-		exit 1
 	fi
 }
 
