@@ -47,20 +47,18 @@ function add_services {
 
 	for SERVICE in $(yq ".hosts.${HOST}.services" < "${CONFIG_FILE}" | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
 	do
-		local service_template="${SERVICE}"
-
-		SERVICE="${SERVICE}-${HOST}"
+		SERVICE_HOST="${SERVICE}-${HOST}"
 
 		echo "Building ${SERVICE}."
 
-		build_${service_template}
+		build_${SERVICE}
 	done
 }
 
 function build_antivirus {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: clamav/clamav:0.105"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"3310:3310\""
@@ -78,7 +76,7 @@ function build_backup {
 	compose_add 1 "    environment:"
 	compose_add 1 "        - LIFERAY_BACKUP_CRON_EXPRESSION=0 */4 * * *"
 	compose_add 1 "        - LIFERAY_DB_ADDRESSES=${db_addresses}"
-	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: backup:${VERSION}"
 	compose_add 1 "    secrets:"
 	compose_add 1 "        - sql_root_password"
@@ -91,7 +89,7 @@ function build_backup {
 function build_ci {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: jenkins/jenkins:lts-jdk11"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"9080:8080\""
@@ -106,7 +104,7 @@ function build_db {
 
 	local cluster_addresses=$(find_services db host_port 4567 true)
 	local db_addresses=$(find_services db host_port 3306 true)
-	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
+	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE_HOST})
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -125,7 +123,7 @@ function build_db {
 	compose_add 1 "        - MARIADB_ROOT_HOST=localhost"
 	compose_add 1 "        - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/sql_root_password"
 	compose_add 1 "        - MARIADB_USER=lportal"
-	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: db:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"3306:3306\""
@@ -168,7 +166,7 @@ function build_liferay {
 
 	local antivirus_address=$(find_services antivirus host_port 3310)
 	local db_address=$(get_config ".hosts.${HOST}.configuration.liferay.db" "db-${HOST}")
-	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
+	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE_HOST})
 	local liferay_addresses=$(find_services liferay host_port 8080 true)
 	local search_addresses=$(find_services search host_port 9200)
 
@@ -180,8 +178,8 @@ function build_liferay {
 	if [ -n "${liferay_addresses}" ]
 	then
 		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_ENABLED=true"
-		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_CONTROL=control-channel-${SERVICE}"
-		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_TRANSPORT_PERIOD_NUMBER0=transport-channel-logic-${SERVICE}"
+		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_CONTROL=control-channel-${HOST}"
+		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_TRANSPORT_PERIOD_NUMBER0=transport-channel-logic-${HOST}"
 		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_CONTROL=/opt/liferay/cluster-link-tcp.xml"
 		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_TRANSPORT_PERIOD__NUMBER0_=/opt/liferay/cluster-link-tcp.xml"
 		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_AUTODETECT_PERIOD_ADDRESS="
@@ -194,15 +192,15 @@ function build_liferay {
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE=/run/secrets/sql_liferay_password"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://${db_address}/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal"
-	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE} -Djgroups.external_addr=${host_ip}"
+	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE_HOST} -Djgroups.external_addr=${host_ip}"
 	compose_add 1 "        - LIFERAY_SCHEMA_PERIOD_MODULE_PERIOD_BUILD_PERIOD_AUTO_PERIOD_UPGRADE=true"
 	compose_add 1 "        - LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
 	compose_add 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
 	compose_add 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
-	compose_add 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${SERVICE}"
+	compose_add 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${HOST}"
 	compose_add 1 "        - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true"
 	compose_add 1 "        - LIFERAY_WEB_PERIOD_SERVER_PERIOD_DISPLAY_PERIOD_NODE=true"
-	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: liferay:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"7800:7800\""
@@ -221,7 +219,7 @@ function build_logproxy {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    command: syslog+udp://${logserver}"
 	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: gliderlabs/logspout"
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /var/run/docker.sock:/var/run/docker.sock"
@@ -235,7 +233,7 @@ function build_logserver {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    command: -F --no-caps"
 	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: logserver:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - 514:514/udp"
@@ -248,7 +246,7 @@ function build_search {
 		--tag "search:${VERSION}" \
 		"templates/search"
 
-	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE})
+	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE_HOST})
 	local search_services_names=$(find_services search service_name)
 	local seed_hosts=$(find_services search host_port 9300 true)
 
@@ -259,7 +257,7 @@ function build_search {
 	compose_add 1 "        - cluster.name=liferay-search"
 	compose_add 1 "        - discovery.seed_hosts=${seed_hosts}"
 	compose_add 1 "        - network.publish_host=${host_ip}"
-	compose_add 1 "        - node.name=${SERVICE}"
+	compose_add 1 "        - node.name=${SERVICE_HOST}"
 	compose_add 1 "        - xpack.ml.enabled=false"
 	compose_add 1 "        - xpack.monitoring.enabled=false"
 	compose_add 1 "        - xpack.security.enabled=false"
@@ -270,7 +268,7 @@ function build_search {
 	compose_add 1 "        retries: 3"
 	compose_add 1 "        test: curl localhost:9200/_cat/health | grep green"
 	compose_add 1 "        timeout: 5s"
-	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: search:${VERSION}"
 	compose_add 1 "    mem_limit: 8G"
 	compose_add 1 "    ports:"
@@ -289,7 +287,7 @@ function build_webserver {
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
 	compose_add 1 "        - LIFERAY_BALANCE_MEMBERS=${balance_members}"
-	compose_add 1 "    hostname: ${SERVICE}"
+	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: liferay-webserver:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"80:80\""
