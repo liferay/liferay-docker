@@ -57,19 +57,6 @@ function command_deploy {
 	ln -s "${1}" "deploy"
 }
 
-function command_down {
-	cd "builds/deploy"
-
-	local service="${1}"
-
-	if [ -n "${service}" ]
-	then
-		service=$(get_service ${service})
-	fi
-
-	docker-compose down ${service}
-}
-
 function command_force_primary {
 	sed -i "s/safe_to_bootstrap: 0/safe_to_bootstrap: 1/" /opt/liferay/db-data/data/grastate.dat
 }
@@ -95,6 +82,20 @@ function command_ssh {
 
 	docker-compose exec "$(get_service ${service})" "/bin/bash"
 }
+
+function command_stop {
+	cd "builds/deploy"
+
+	local service="${1}"
+
+	if [ -n "${service}" ]
+	then
+		service=$(get_service ${service})
+	fi
+
+	echo docker-compose stop -t 30 ${service}
+}
+
 
 function command_up {
 	if ( ! ./validate_environment.sh )
