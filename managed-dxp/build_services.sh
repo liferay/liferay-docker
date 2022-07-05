@@ -140,6 +140,7 @@ function build_db {
 
 function build_liferay {
 	rm -fr "templates/liferay/resources/opt/liferay/deploy/"
+	rm -fr "templates/liferay/resources/opt/liferay/patching-tool/patches"
 
 	if [ -e "config/liferay-license.xml" ]
 	then
@@ -158,6 +159,15 @@ function build_liferay {
 		echo "Copying the following files to deploy:"
 
 		ls -l /opt/liferay/shared-volume/deploy/
+	fi
+
+	if [ $(find "config/" -maxdepth 1 -type f -name "liferay-*.zip" | wc -l) == 1 ]
+	then
+		mkdir -p templates/liferay/resources/opt/liferay/patching-tool/patches
+
+		echo "Copying hotfix to deploy: $(ls config/liferay-*.zip)"
+
+		cp config/liferay-*.zip templates/liferay/resources/opt/liferay/patching-tool/patches
 	fi
 
 	docker build \

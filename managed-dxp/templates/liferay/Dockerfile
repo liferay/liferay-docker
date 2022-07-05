@@ -13,3 +13,5 @@ COPY resources/usr/local/bin /usr/local/bin/
 COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
 
 USER liferay
+
+RUN /usr/local/bin/install_patch_on_build.sh
