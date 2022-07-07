@@ -12,8 +12,8 @@
 	file_server
 
 	header {
-		Access-Control-Allow-Headers "GET,OPTIONS,POST"
-		Access-Control-Allow-Methods *
+		Access-Control-Allow-Headers *
+		Access-Control-Allow-Methods "GET,OPTIONS,POST"
 	}
 
 	import /etc/caddy.d/*
