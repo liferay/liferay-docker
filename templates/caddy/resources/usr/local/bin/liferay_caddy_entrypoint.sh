@@ -9,7 +9,7 @@ header @origin${url} Access-Control-Allow-Origin "${url}"
 header @origin${url} Vary Origin
 EOF
 
-		if [ "${ALLOW_INSECURE}" == "true" ]
+		if [ "${LIFERAY_CADDY_ALLOW_HTTP}" == "true" ]
 		then
 			url="http://${i}"
 
