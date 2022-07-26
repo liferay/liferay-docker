@@ -202,7 +202,7 @@ function prepare_tomcat {
 }
 
 function remove_temp_dockerfile_platform_variable {
-	sed -i'' 's/${TARGETARCH}'/$(get_current_arch)/ "${TEMP_DIR}"/Dockerfile
+	sed -i'.bak' 's/${TARGETARCH}'/$(get_current_arch)/ "${TEMP_DIR}"/Dockerfile
 	sed -i'' 's/--platform=${TARGETPLATFORM} //g' "${TEMP_DIR}"/Dockerfile
 }
 
