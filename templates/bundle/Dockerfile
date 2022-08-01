@@ -17,7 +17,6 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 ARG TARGETPLATFORM
 
-COPY scripts/* /usr/local/bin/
 COPY --chown=liferay:liferay liferay /opt/liferay/
 COPY resources/usr/local/bin/* /usr/local/bin/
 

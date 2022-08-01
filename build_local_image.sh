@@ -26,7 +26,7 @@ function build_docker_image {
 function check_usage {
 	if [ ! -n "${3}" ]
 	then
-		echo "Usage: ${0} path-to-bundle image-name version <--push> <--no_warm_up> <--no_test_image>"
+		echo "Usage: ${0} path-to-bundle image-name version --no_warm_up --no_test_image --push"
 		echo ""
 		echo "Example: ${0} ../bundles/master portal-snapshot demo-cbe09fb0 --no_warm_up --no_test_image"
 
@@ -53,13 +53,14 @@ function main {
 }
 
 function prepare_temp_directory {
-	rsync -aq "${1}" "${TEMP_DIR}/liferay" \
-		--exclude '*.zip' \
-		--exclude 'data/elasticsearch*' \
-		--exclude 'logs/*' \
-		--exclude 'osgi/state' \
-		--exclude 'osgi/test' \
-		--exclude 'tmp'
+	rsync -aq \
+		--exclude "*.zip" \
+		--exclude "data/elasticsearch*" \
+		--exclude "logs/*" \
+		--exclude "osgi/state" \
+		--exclude "osgi/test" \
+		--exclude "tmp" \
+		"${1}" "${TEMP_DIR}/liferay"
 }
 
 main "${@}"
