@@ -192,7 +192,7 @@ function prepare_tomcat {
 
 	configure_tomcat
 
-	if [[ ! " ${@} " =~ " --no_warm_up " ]]
+	if [[ ! " ${@} " =~ " --no-warm-up " ]]
 	then
 		warm_up_tomcat
 	fi
@@ -262,7 +262,7 @@ function stat {
 function test_docker_image {
 	export LIFERAY_DOCKER_IMAGE_ID="${DOCKER_IMAGE_TAGS[0]}"
 
-	if [[ ! " ${@} " =~ " --no_test_image " ]]
+	if [[ ! " ${@} " =~ " --no-test-image " ]]
 	then
 		./test_image.sh
 
