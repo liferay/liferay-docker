@@ -238,8 +238,10 @@ function start_tomcat {
 
 	"./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh" stop
 
-	for i in {0..30..1}; do
-		if kill -0 "${pid}" 2>/dev/null; then
+	for i in {0..30..1}
+	do
+		if kill -0 "${pid}" 2>/dev/null
+		then
 			sleep 1
 		fi
 	done
