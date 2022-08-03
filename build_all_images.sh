@@ -372,4 +372,4 @@ function validate_bundles_yml {
 	fi
 }
 
-main
+main "${@}"
