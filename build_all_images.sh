@@ -285,7 +285,7 @@ function get_string {
 function main {
 	check_utils 7z curl docker git java jq sed sort tr unzip yq
 
-	if [[ " ${@} " =~ " --push " ]]
+	if [[ " ${@} " =~ " --push" ]]
 	then
 		BUILD_ALL_IMAGES_PUSH="push"
 	fi
