@@ -59,6 +59,7 @@ function prepare_temp_directory {
 		--exclude "logs/*" \
 		--exclude "osgi/state" \
 		--exclude "osgi/test" \
+		--exclude "portal-setup-wizard.properties" \
 		--exclude "tmp" \
 		"${1}" "${TEMP_DIR}/liferay"
 }
