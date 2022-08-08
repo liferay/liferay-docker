@@ -15,9 +15,8 @@ Execute the following commands on all servers:
     $ mkdir -p /opt/liferay/shared-volume
     $ echo "$(hostname):/gv0 /opt/liferay/shared-volume glusterfs defaults 0 0" >> /etc/fstab
     $ cd /opt/liferay
-    $ git clone https://github.com/liferay/liferay-docker.git
-    $ cd liferay-docker/managed-dxp
-    $ ./orca.sh install
+    $ curl https://raw.githubusercontent.com/liferay/liferay-docker/master/managed-dxp/install_orca.sh -o /tmp/install_orca.sh
+    $ . /tmp/install_orca.sh
     $ snap install yq
 
 Then log in to the first server and execute the following:
