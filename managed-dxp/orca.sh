@@ -6,7 +6,7 @@ function check_usage {
 		echo "Usage: orca <command>"
 		echo ""
 		echo "Available commands:"
-		echo "  - bad: builds as 'latest' and deploys automatically"
+		echo "  - all: builds as 'latest' and deploys automatically"
 		echo "  - build: calls build_services.sh"
 		echo "  - force_primary: changes the database configuration and makes the current server the primary. Only use this in emergencies and on the node which was last written by the cluster."
 		echo "  - install: installs this script"
@@ -35,7 +35,7 @@ function command_backup {
 	docker-compose exec "backup" "/usr/local/bin/backup.sh"
 }
 
-function command_bad {
+function command_all {
 	command_build "latest"
 
 	command_deploy "latest"
