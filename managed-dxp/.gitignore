@@ -1,4 +1,4 @@
 builds
-config
+configs
 templates/liferay/resources/opt/liferay/deploy/
 templates/liferay/resources/opt/liferay/patching-tool/patches/

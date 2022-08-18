@@ -449,13 +449,13 @@ function setup_configuration {
 	then
 		CONFIG="production"
 	fi
-	if [ -e "config/${CONFIG}.yml" ]
+	if [ -e "configs/${CONFIG}.yml" ]
 	then
-		CONFIG_FILE="config/${CONFIG}.yml"
+		CONFIG_FILE="configs/${CONFIG}.yml"
 
 		echo "Using configuration ${CONFIG_FILE}."
 	else
-		CONFIG_FILE="single_server.yml"
+		CONFIG_FILE="configs/single_server.yml"
 
 		echo "Using the default, single server configuration."
 	fi
