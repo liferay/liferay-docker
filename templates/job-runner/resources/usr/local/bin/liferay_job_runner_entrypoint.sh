@@ -4,14 +4,14 @@ function init {
 	. /usr/local/bin/set_java_version.sh
 
 	mkdir -p /opt/liferay/job-queue
-
-	cron
 }
 
 function main {
 	init
 
 	register_crontab
+
+	cron
 
 	run_jobs
 }

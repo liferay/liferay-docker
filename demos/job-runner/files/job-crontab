@@ -1,2 +1,3 @@
+@reboot /usr/local/bin/register_job.sh init
 * * * * * /usr/local/bin/register_job.sh every_minute
 ${EVERY_TWO_MINUTES} /usr/local/bin/register_job.sh every_two_minutes
