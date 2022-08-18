@@ -42,7 +42,7 @@ function command_all {
 }
 
 function command_build {
-	./build_services.sh ${@}
+	scripts/build_services.sh ${@}
 }
 
 function command_deploy {
@@ -105,7 +105,7 @@ function execute_command {
 function go_to_folder {
 	local script_path=$(readlink /proc/$$/fd/255 2>/dev/null)
 
-	cd $(dirname "${script_path}")
+	cd $(dirname "${script_path}")/../
 
 }
 
