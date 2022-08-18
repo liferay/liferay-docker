@@ -81,7 +81,7 @@ function command_ssh {
 }
 
 function command_up {
-	if ( ! ./validate_environment.sh )
+	if ( ! scripts/validate_environment.sh )
 	then
 		exit 1
 	fi
