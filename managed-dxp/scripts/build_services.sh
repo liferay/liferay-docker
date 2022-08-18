@@ -142,12 +142,12 @@ function build_liferay {
 	rm -fr "templates/liferay/resources/opt/liferay/deploy/"
 	rm -fr "templates/liferay/resources/opt/liferay/patching-tool/patches"
 
-	if [ -e "config/liferay-license.xml" ]
+	if [ -e "configs/liferay-license.xml" ]
 	then
 		mkdir -p "templates/liferay/resources/opt/liferay/deploy/"
-		cp "config/liferay-license.xml" "templates/liferay/resources/opt/liferay/deploy/license.xml"
+		cp "configs/liferay-license.xml" "templates/liferay/resources/opt/liferay/deploy/license.xml"
 	else
-		echo "ERROR: Copy a valid Liferay DXP license to config/liferay-license.xml before running this script."
+		echo "ERROR: Copy a valid Liferay DXP license to configs/liferay-license.xml before running this script."
 
 		exit 1
 	fi
@@ -161,13 +161,13 @@ function build_liferay {
 		ls -l /opt/liferay/shared-volume/deploy/
 	fi
 
-	if [ $(find "config/" -maxdepth 1 -type f -name "liferay-*.zip" | wc -l) == 1 ]
+	if [ $(find "configs/" -maxdepth 1 -type f -name "liferay-*.zip" | wc -l) == 1 ]
 	then
 		mkdir -p templates/liferay/resources/opt/liferay/patching-tool/patches
 
-		echo "Copying hotfix to deploy: $(ls config/liferay-*.zip)"
+		echo "Copying hotfix to deploy: $(ls configs/liferay-*.zip)"
 
-		cp config/liferay-*.zip templates/liferay/resources/opt/liferay/patching-tool/patches
+		cp configs/liferay-*.zip templates/liferay/resources/opt/liferay/patching-tool/patches
 	fi
 
 	docker build \
