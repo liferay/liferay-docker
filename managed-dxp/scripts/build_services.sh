@@ -56,18 +56,18 @@ function add_services {
 }
 
 function build_antivirus {
+	docker_build antivirus
+
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: clamav/clamav:0.105"
+	compose_add 1 "    image: antivirus:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"3310:3310\""
 }
 
 function build_backup {
-	docker build \
-		--tag "backup:${VERSION}" \
-		"templates/backup"
+	docker_build backup
 
 	local db_addresses=$(find_services db host_port "3306")
 
@@ -87,10 +87,12 @@ function build_backup {
 }
 
 function build_ci {
+	docker_build ci
+
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: jenkins/jenkins:lts-jdk11"
+	compose_add 1 "    image: ci:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"9080:8080\""
 	compose_add 1 "    volumes:"
@@ -98,9 +100,7 @@ function build_ci {
 }
 
 function build_db {
-	docker build \
-		--tag "db:${VERSION}" \
-		"templates/db"
+	docker_build db
 
 	local cluster_addresses=$(find_services db host_port 4567 true)
 	local db_addresses=$(find_services db host_port 3306 true)
@@ -170,9 +170,7 @@ function build_liferay {
 		cp configs/liferay-*.zip templates/liferay/resources/opt/liferay/patching-tool/patches
 	fi
 
-	docker build \
-		--tag "liferay:${VERSION}" \
-		"templates/liferay"
+	docker_build liferay
 
 	local antivirus_address=$(find_services antivirus host_port 3310)
 	local db_address=$(get_config ".hosts.${HOST}.configuration.liferay.db" "db-${HOST}")
@@ -224,21 +222,20 @@ function build_liferay {
 }
 
 function build_logproxy {
+	docker_build logproxy
 	local logserver=$(find_services logserver host_port 514)
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    command: syslog+udp://${logserver}"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: gliderlabs/logspout"
+	compose_add 1 "    image: logproxy:${VERSION}"
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /var/run/docker.sock:/var/run/docker.sock"
 }
 
 function build_logserver {
-	docker build \
-		--tag "logserver:${VERSION}" \
-		"templates/logserver"
+	docker_build logserver
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    command: -F --no-caps"
@@ -252,9 +249,7 @@ function build_logserver {
 }
 
 function build_search {
-	docker build \
-		--tag "search:${VERSION}" \
-		"templates/search"
+	docker_build search
 
 	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE_HOST})
 	local search_services_names=$(find_services search service_name)
@@ -287,9 +282,7 @@ function build_search {
 }
 
 function build_webserver {
-	docker build \
-		--tag "liferay-webserver:${VERSION}" \
-		"templates/webserver"
+	docker_build webserver
 
 	local balance_members=$(find_services liferay host_port 8009)
 
@@ -298,7 +291,7 @@ function build_webserver {
 	compose_add 1 "    environment:"
 	compose_add 1 "        - LIFERAY_BALANCE_MEMBERS=${balance_members}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: liferay-webserver:${VERSION}"
+	compose_add 1 "    image: webserver:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"80:80\""
 }
@@ -369,6 +362,12 @@ function create_compose_file {
 	then
 		rm -f "${COMPOSE_FILE}"
 	fi
+}
+
+function docker_build {
+	docker build \
+		--tag "${1}:${VERSION}" \
+		"templates/${1}"
 }
 
 function get_config {

@@ -1,0 +1,1 @@
+FROM clamav/clamav:0.105
