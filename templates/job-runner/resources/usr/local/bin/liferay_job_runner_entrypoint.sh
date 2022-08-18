@@ -27,12 +27,12 @@ function register_crontab {
 	(
 		crontab -l 2>/dev/null
 
-		cat /mnt/liferay/job-crontab
+		cat /mnt/liferay/job-crontab | envsubst
 	) | crontab -
 
 	echo "Registered crontab: "
 
-	cat /mnt/liferay/job-crontab
+	crontab -l
 
 	echo ""
 }

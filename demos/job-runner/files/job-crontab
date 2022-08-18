@@ -1,2 +1,2 @@
 * * * * * /usr/local/bin/register_job.sh every_minute
-*/2 * * * * /usr/local/bin/register_job.sh every_two_minutes
+${EVERY_TWO_MINUTES} /usr/local/bin/register_job.sh every_two_minutes
