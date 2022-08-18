@@ -1,3 +1,4 @@
-@reboot /usr/local/bin/register_job.sh init
 * * * * * /usr/local/bin/register_job.sh every_minute
-${EVERY_TWO_MINUTES} /usr/local/bin/register_job.sh every_two_minutes
+*/2 * * * * /usr/local/bin/register_job.sh every_two_minutes
+${EVERY_THREE_MINUTES} /usr/local/bin/register_job.sh every_three_minutes
+@reboot /usr/local/bin/register_job.sh init
