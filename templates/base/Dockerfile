@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM} ubuntu:focal AS ubuntu-focal
+FROM --platform=${TARGETPLATFORM} ubuntu:jammy AS ubuntu-jammy
 
 RUN apt-get update && \
 	apt-get install --no-install-recommends --yes bash ca-certificates curl less libnss3 telnet tini tree unzip && \
@@ -9,7 +9,7 @@ RUN adduser --disabled-password --home /home/liferay liferay --uid 1000 && \
 	addgroup liferay liferay && \
 	usermod -g 1000 liferay
 
-FROM ubuntu-focal
+FROM ubuntu-jammy
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
