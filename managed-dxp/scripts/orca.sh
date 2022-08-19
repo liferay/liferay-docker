@@ -64,7 +64,7 @@ function command_force_primary {
 function command_install {
 	echo "#!/bin/bash" > "/usr/local/bin/orca"
 	echo "" >> "/usr/local/bin/orca"
-	echo "$(pwd)/orca.sh \${@}" >> "/usr/local/bin/orca"
+	echo "$(pwd)/scripts/orca.sh \${@}" >> "/usr/local/bin/orca"
 
 	chmod a+x "/usr/local/bin/orca"
 }

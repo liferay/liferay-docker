@@ -15,7 +15,7 @@ function install_orca {
 
 	cd managed-dxp
 
-	./orca.sh install
+	scripts/orca.sh install
 }
 
 function install_requirements {
