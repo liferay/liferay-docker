@@ -11,6 +11,7 @@ function check_usage {
 		echo "  - force_primary: changes the database configuration and makes the current server the primary. Only use this in emergencies and on the node which was last written by the cluster."
 		echo "  - install: installs this script"
 		echo "  - mysql: logs into the db server on this container"
+		echo "  - setup_shared_volume: enables glusterfs and creates the necessary mount point for the shared volume"
 		echo "  - ssh <service name>: logs in to the named service container"
 		echo "  - up: validates the configuration and starts the services with docker-compose up"
 		echo ""
@@ -72,6 +73,21 @@ function command_mysql {
 	cd "builds/deploy"
 
 	docker-compose exec "db" "/usr/local/bin/connect_to_mysql.sh"
+}
+
+function command_setup_shared_volume {
+	if [ ! -e "/opt/gluster-data/gv0" ]
+	then
+		echo "To set up the shared volume, the /opt/gluster-data/gv0 directory must exist on the server. It's recommened to have it as a separate volume with xfs on it."
+
+		retun
+	fi
+
+	systemctl enable glusterd
+	systemctl start glusterd
+
+	mkdir -p /opt/liferay/shared-volume
+	echo "$(hostname):/gv0 /opt/liferay/shared-volume glusterfs defaults 0 0" >> /etc/fstab
 }
 
 function command_ssh {
