@@ -113,11 +113,27 @@ function prepare_mount {
 function start_container {
 	echo "Starting container from image ${LIFERAY_DOCKER_IMAGE_ID}."
 
-	CONTAINER_ID=$(docker run -d -p 8080 -v "${PWD}/${TEST_DIR}/mnt/liferay":/mnt/liferay "${LIFERAY_DOCKER_IMAGE_ID}")
+	local docker_network_run_option=""
+	local docker_repo_path=${PWD}
 
-	CONTAINER_PORT_HTTP=$(docker port "${CONTAINER_ID}" 8080/tcp)
+	if [ -n "${DOCKER_NETWORK_NAME}" ]
+	then
 
-	CONTAINER_PORT_HTTP=${CONTAINER_PORT_HTTP##*:}
+		CONTAINER_PORT_HTTP=8080
+		DOCKER_CONTAINER_HOSTNAME=portal-container
+		docker_repo_path="/data/slaves/${DOCKER_NETWORK_NAME}/git/liferay/liferay-docker"
+
+		docker_network_run_option="--hostname=${DOCKER_CONTAINER_HOSTNAME} --name=${DOCKER_CONTAINER_HOSTNAME} --network=${DOCKER_NETWORK_NAME}"
+	fi
+
+	CONTAINER_ID=$(docker run -d -p 8080 -v "${docker_repo_path}/${TEST_DIR}/mnt/liferay":/mnt/liferay ${docker_network_run_option} "${LIFERAY_DOCKER_IMAGE_ID}")
+
+	if [ -z "${DOCKER_NETWORK_NAME}" ]
+	then
+		CONTAINER_PORT_HTTP=$(docker port "${CONTAINER_ID}" 8080/tcp)
+
+		CONTAINER_PORT_HTTP=${CONTAINER_PORT_HTTP##*:}
+	fi
 
 	TEST_RESULT=0
 }
@@ -130,7 +146,7 @@ function stop_container {
 }
 
 function test_docker_image_files {
-	test_page "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp" "TEST"
+	test_page "http://${DOCKER_CONTAINER_HOSTNAME}:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp" "TEST"
 }
 
 function test_docker_image_fix_pack_installed {
@@ -157,7 +173,7 @@ function test_docker_image_fix_pack_installed {
 function test_docker_image_hotfix_installed {
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
 	then
-		test_page "http://localhost:${CONTAINER_PORT_HTTP}/" "Hotfix installation on the Docker image was successful."
+		test_page "http://${DOCKER_CONTAINER_HOSTNAME}:${CONTAINER_PORT_HTTP}/" "Hotfix installation on the Docker image was successful."
 	fi
 }
 
@@ -178,11 +194,11 @@ function test_docker_image_patching_tool_updated {
 }
 
 function test_docker_image_scripts_1 {
-	test_page "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_1.jsp" "TEST1"
+	test_page "http://${DOCKER_CONTAINER_HOSTNAME}:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_1.jsp" "TEST1"
 }
 
 function test_docker_image_scripts_2 {
-	test_page "http://localhost:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_2.jsp" "TEST2"
+	test_page "http://${DOCKER_CONTAINER_HOSTNAME}:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_2.jsp" "TEST2"
 }
 
 function test_health_status {
@@ -242,5 +258,7 @@ function test_page {
 		fi
 	fi
 }
+
+DOCKER_CONTAINER_HOSTNAME="localhost"
 
 main "${@}"
