@@ -290,6 +290,22 @@ function build_search {
 	compose_add 1 "        - \"9300:9300\""
 }
 
+function build_vault {
+	docker_build vault
+
+	compose_add 1 "${SERVICE}:"
+	compose_add 1 "    container_name: ${SERVICE}"
+	compose_add 1 "    environment:"
+	compose_add 1 "        - VAULT_RAFT_NODE_ID=${HOST}"
+	compose_add 1 "    hostname: ${SERVICE_HOST}"
+	compose_add 1 "    image: vault:${VERSION}"
+	compose_add 1 "    ports:"
+	compose_add 1 "        - \"8200:8200\""
+	compose_add 1 "        - \"8201:8201\""
+	compose_add 1 "    volumes:"
+	compose_add 1 "        - /opt/liferay/vault/data:/opt/liferay/vault/data"
+}
+
 function build_web_server {
 	docker_build web-server
 

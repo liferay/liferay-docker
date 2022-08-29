@@ -23,6 +23,7 @@ function check_dirs {
 	check_dir "/opt/liferay/db-data" 1001
 	check_dir "/opt/liferay/jenkins-home" 1000
 	check_dir "/opt/liferay/shared-volume/document-library" 1000
+	check_dir "/opt/liferay/vault/data/" 1000
 }
 
 function check_utils {

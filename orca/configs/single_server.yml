@@ -9,4 +9,5 @@ hosts:
             - log-proxy
             - log-server
             - search
+            - vault
             - web-server
