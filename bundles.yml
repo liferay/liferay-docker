@@ -215,6 +215,10 @@
         bundle_url: files.liferay.com/private/ee/portal/7.1.10-dxp-27/liferay-dxp-tomcat-7.1.10-dxp-27-slim-20220701154333275.7z
         test_installed_patch: dxp-27-7110,hotfix-6488-7110
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.1.10/hotfix/liferay-hotfix-6488-7110.zip
+    7.1.10-dxp-28:
+        bundle_url: files.liferay.com/private/ee/portal/7.1.10-dxp-28/liferay-dxp-tomcat-7.1.10-dxp-28-slim-20220823192814876.7z
+        test_installed_patch: dxp-28-7110,hotfix-6556-7110
+        test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.1.10/hotfix/liferay-hotfix-6556-7110.zip
 7.2.1:
     7.2.1-ga2:
         bundle_url: releases.liferay.com/portal/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.7z
