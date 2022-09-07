@@ -51,7 +51,7 @@ function command_deploy {
 
 	if [ -e "deploy" ]
 	then
-		rm -rf "deploy"
+		rm -fr "deploy"
 	fi
 
 	ln -s "${1}" "deploy"

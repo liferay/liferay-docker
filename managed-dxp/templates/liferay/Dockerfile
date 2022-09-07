@@ -6,7 +6,7 @@ RUN apt-get update && \
 	apt-get --yes install mariadb-client && \
 	apt-get upgrade --yes && \
 	apt-get clean && \
-	rm -rf /var/lib/apt/lists/*
+	rm -fr /var/lib/apt/lists/*
 
 COPY --chown=liferay:liferay resources/opt/liferay /opt/liferay/
 COPY resources/usr/local/bin /usr/local/bin/

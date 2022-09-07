@@ -4,7 +4,7 @@ RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get --yes install apache2 && \
 	apt-get upgrade --yes && \
 	apt-get clean && \
-	rm -rf /var/lib/apt/lists/*
+	rm -fr /var/lib/apt/lists/*
 
 RUN a2enmod proxy_ajp && \
 	a2enmod proxy_balancer && \
