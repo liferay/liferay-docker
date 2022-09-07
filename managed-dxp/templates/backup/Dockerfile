@@ -8,5 +8,3 @@ RUN apt-get update && \
 
 COPY resources/mnt/liferay /mnt/liferay/
 COPY resources/usr/local/bin /usr/local/bin/
-
-ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_backup_entrypoint.sh"]
