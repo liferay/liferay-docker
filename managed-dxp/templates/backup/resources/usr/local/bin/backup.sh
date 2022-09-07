@@ -1,15 +1,5 @@
 #!/bin/bash
 
-function check_usage {
-	CURRENT_DATE=$(date)
-
-	TIMESTAMP=$(date "${CURRENT_DATE}" "+%Y%m%d%H%M%S")
-	BACKUP_DIR=$(date "${CURRENT_DATE}" "+%Y-%m/%Y-%m-%d/%Y-%m-%d-%H%M%S")
-	BACKUP_DIR="/opt/liferay/backups/${BACKUP_DIR}"
-
-	mkdir -p "${BACKUP_DIR}"
-}
-
 function date {
 	export TZ=UTC
 
@@ -37,22 +27,28 @@ function date {
 	fi
 }
 
-function execute_backups {
-	backup_db.sh "${BACKUP_DIR}" "${TIMESTAMP}" &
+function main {
+	local current_date=$(date)
 
-	backup_document_library.sh "${BACKUP_DIR}" "${TIMESTAMP}" &
+	local backup_dir=$(date "${current_date}" "+%Y-%m/%Y-%m-%d/%Y-%m-%d-%H%M%S")
+
+	backup_dir="/opt/liferay/backups/${backup_dir}"
+
+	mkdir -p "${backup_dir}"
+
+	echo "Starting backup at ${backup_dir}."
+
+	local timestamp=$(date "${current_date}" "+%Y%m%d%H%M%S")
+
+	backup_db.sh "${backup_dir}" "${timestamp}" &
+
+	backup_document_library.sh "${backup_dir}" "${timestamp}" &
 
 	wait
 
-	echo "Both backup jobs have exited, backup directory: ${BACKUP_DIR}."
+	echo "Exited backup at ${backup_dir}."
 
-	ls -lh "${BACKUP_DIR}"
+	ls -hl "${backup_dir}"
 }
 
-function main {
-	check_usage ${@}
-
-	execute_backups
-}
-
-main ${@}
+main "${@}"

@@ -2,25 +2,14 @@
 
 set -e
 
-function backup {
+function main {
 	echo "Starting document library backup."
 
-	cd "/opt/liferay/shared-volume/"
+	cd /opt/liferay/shared-volume
 
-	tar cz document-library > "${BACKUP_DIR}/document-library-${TIMESTAMP}.tar.gz"
+	tar cz document-library > "${1}/document-library-${2}.tar.gz"
 
-	echo "Filesystem backup is completed successfully."
+	echo "Document library backup was completed successfully."
 }
 
-function check_usage {
-	BACKUP_DIR="${1}"
-	TIMESTAMP="${2}"
-}
-
-function main {
-	check_usage ${@}
-
-	backup
-}
-
-main ${@}
+main "${@}"

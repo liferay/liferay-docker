@@ -3,25 +3,37 @@
 set -e
 set -o pipefail
 
-function backup {
+function check_usage {
+	if [ ! -n ${ORCA_DB_ADDRESSES} ]
+	then
+		echo "Set the ORCA_DB_ADDRESSES environment variable to a comma separated list of database servers (e.g. db-1:3306,db-2:3306)."
+
+		exit 1
+	fi
+}
+
+function main {
+	check_usage
+
 	echo "Starting database backup."
 
-	local database_server_address
-	for database_server_address in ${LIFERAY_DB_ADDRESSES//,/ }
+	local db_address
+
+	for db_address in ${ORCA_DB_ADDRESSES//,/ }
 	do
-		echo "Trying to dump the database from ${database_server_address}."
+		echo "Dumping ${db_address}."
 
-		local db_host="${database_server_address%%:*}"
+		local db_host="${db_address%%:*}"
 
-		if (mysqldump -h "${db_host}" -u "root" -p"$(cat /run/secrets/sql_root_password)" "lportal" | gzip > "${BACKUP_DIR}/db-lportal-${TIMESTAMP}.sql.gz")
+		if (mysqldump -h "${db_host}" -u "root" -p"$(cat /run/secrets/sql_root_password)" "lportal" | gzip > "${1}/db-lportal-${2}.sql.gz")
 		then
-			local backup_success=1
+			local success=1
 
 			break
 		fi
 	done
 
-	if [ -n "${backup_success}" ]
+	if [ -n "${success}" ]
 	then
 		echo "Database backup was completed successfully."
 	else
@@ -29,22 +41,4 @@ function backup {
 	fi
 }
 
-function check_usage {
-	BACKUP_DIR="${1}"
-	TIMESTAMP="${2}"
-
-	if [ ! -n ${LIFERAY_DB_ADDRESSES} ]
-	then
-		echo "Set the LIFERAY_DB_ADDRESSES environment variable to comma separated list of database servers. Example: db-1:3306,db2:3306"
-
-		exit 1
-	fi
-}
-
-function main {
-	check_usage ${@}
-
-	backup
-}
-
-main ${@}
+main "${@}"
