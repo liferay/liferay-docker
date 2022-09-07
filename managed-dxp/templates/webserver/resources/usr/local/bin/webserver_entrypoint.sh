@@ -6,17 +6,18 @@ function add_conf_line {
 
 function generate_liferay_conf {
 	add_conf_line "<VirtualHost *:80>"
-	add_conf_line "    ServerAdmin webmaster@localhost"
 	add_conf_line "    DocumentRoot /var/www/html"
+	add_conf_line "    ServerAdmin webmaster@localhost"
 	add_conf_line ""
 	add_conf_line "    <Proxy \"balancer://cluster\">"
 
-	for balance_member in ${LIFERAY_BALANCE_MEMBERS//,/ }
+	for balance_member in ${ORCA_WEB_SERVER_BALANCE_MEMBERS//,/ }
 	do
 		local route="${balance_member%%::*}"
 		local host_port="${balance_member##*::}"
 		add_conf_line "        BalancerMember \"ajp://${host_port}\" route=${route} loadfactor=1"
 	done
+
 	add_conf_line "        ProxySet stickysession=JSESSIONID"
 	add_conf_line "    </Proxy>"
 	add_conf_line "    ProxyPreserveHost On"
