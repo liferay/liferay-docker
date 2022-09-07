@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mysql -u root -p$(cat /run/secrets/sql_root_password) lportal
+mysql -p$(cat /run/secrets/mysql_root_password) -u root lportal

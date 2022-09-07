@@ -7,7 +7,7 @@ function main {
 
 	cd /opt/liferay/shared-volume
 
-	tar cz document-library > "${1}/document-library-${2}.tar.gz"
+	tar cz document-library > ${1}/document-library-${2}.tar.gz
 
 	echo "Document library backup was completed successfully."
 }

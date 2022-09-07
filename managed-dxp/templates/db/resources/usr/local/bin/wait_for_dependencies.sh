@@ -1,59 +1,54 @@
 #!/bin/bash
 
-function wait_for_primary {
-	if [ -n "${LIFERAY_DB_SKIP_WAIT}" ]
+function main {
+	if [ -n "${MARIADB_GALERA_CLUSTER_BOOTSTRAP}" ]
 	then
-		echo "Skipping wait as LIFERAY_DB_SKIP_WAIT was set."
+		echo "Do not wait for dependencies because the environment variable MARIADB_GALERA_CLUSTER_BOOTSTRAP was set."
 
 		return
 	fi
 
-	if [ -n "${MARIADB_GALERA_CLUSTER_BOOTSTRAP}" ]
+	if [ -n "${ORCA_DB_SKIP_WAIT}" ]
 	then
-		echo "Bootstrap was requested, not blocking startup."
+		echo "Do not wait for dependencies because the environment variable ORCA_DB_SKIP_WAIT was set."
 
 		return
 	fi
 
 	if [ ! -e "/bitnami/mariadb/data/grastate.dat" ]
 	then
-		echo "Couldn't find galera state file, not blocking startup."
+		echo "Do not wait for dependencies because Galera state file does not exist."
 
 		return
 	fi
 
 	if (grep "safe_to_bootstrap: 1" "/bitnami/mariadb/data/grastate.dat" &>/dev/null)
 	then
-		echo "This is the master node, not blocking startup."
+		echo "Do not wait for dependencies because this is the master node."
 
 		return
 	fi
 
-	local db_password="$(cat ${MARIADB_PASSWORD_FILE})"
+	local db_password=$(cat ${MARIADB_PASSWORD_FILE})
 
 	while true
 	do
-		for db_address in ${LIFERAY_DB_ADDRESSES//,/ }
+		for db_address in ${ORCA_DB_ADDRESSES//,/ }
 		do
 			local db_host="${db_address%%:*}"
-			local db_password
 
-			if (echo "select 1" | mysql --connect-timeout=3 -h"${db_host}" -p"${db_password}" -u"${MARIADB_USER}" &>/dev/null)
+			if (echo "select 1" | mysql --connect-timeout=3 -h${db_host} -p${db_password} -u${MARIADB_USER} &>/dev/null)
 			then
-				echo "Successfully opened connection to ${db_host}."
+				echo "Connected to ${db_host}."
 
 				return
 			fi
 		done
 
-		echo "Unsuccessful connections to ${LIFERAY_DB_ADDRESSES}. Waiting."
+		echo "Unable to connect to ${ORCA_DB_ADDRESSES}. Waiting."
 
 		sleep 3
 	done
-}
-
-function main {
-	wait_for_primary
 }
 
 main
