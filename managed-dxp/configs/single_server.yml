@@ -6,7 +6,7 @@ hosts:
             - ci
             - db
             - liferay
-            - logproxy
+            - log-proxy
+            - log-server
             - search
-            - logserver
-            - webserver
+            - web-server
