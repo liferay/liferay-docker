@@ -12,4 +12,4 @@ RUN a2enmod proxy_ajp && \
 
 COPY resources/usr/local/bin /usr/local/bin/
 
-ENTRYPOINT ["tini", "--", "/usr/local/bin/webserver_entrypoint.sh"]
+ENTRYPOINT ["tini", "--", "/usr/local/bin/web_server_entrypoint.sh"]
