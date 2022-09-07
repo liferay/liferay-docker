@@ -221,27 +221,27 @@ function build_liferay {
 	compose_add 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
 }
 
-function build_logproxy {
-	docker_build logproxy
-	local logserver=$(find_services logserver host_port 514)
+function build_log_proxy {
+	docker_build log-proxy
+	local log_server=$(find_services log-server host_port 514)
 
 	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    command: syslog+udp://${logserver}"
+	compose_add 1 "    command: syslog+udp://${log_server}"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: logproxy:${VERSION}"
+	compose_add 1 "    image: log-proxy:${VERSION}"
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /var/run/docker.sock:/var/run/docker.sock"
 }
 
-function build_logserver {
-	docker_build logserver
+function build_log_server {
+	docker_build log-server
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    command: -F --no-caps"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: logserver:${VERSION}"
+	compose_add 1 "    image: log-server:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - 514:514/udp"
 	compose_add 1 "    volumes:"
@@ -281,8 +281,8 @@ function build_search {
 	compose_add 1 "        - \"9300:9300\""
 }
 
-function build_webserver {
-	docker_build webserver
+function build_web_server {
+	docker_build web-server
 
 	local balance_members=$(find_services liferay host_port 8009)
 
@@ -291,7 +291,7 @@ function build_webserver {
 	compose_add 1 "    environment:"
 	compose_add 1 "        - LIFERAY_BALANCE_MEMBERS=${balance_members}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: webserver:${VERSION}"
+	compose_add 1 "    image: web-server:${VERSION}"
 	compose_add 1 "    ports:"
 	compose_add 1 "        - \"80:80\""
 }
