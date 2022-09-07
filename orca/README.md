@@ -8,7 +8,7 @@ Create a new mounted filesystem (xfs recommended) to /opt/gluster-data/gv0
 
 Execute the following commands on all servers:
 
-    $ curl https://raw.githubusercontent.com/liferay/liferay-docker/master/managed-dxp/scripts/install_orca.sh -o /tmp/install_orca.sh
+    $ curl https://raw.githubusercontent.com/liferay/liferay-docker/master/orca/scripts/install_orca.sh -o /tmp/install_orca.sh
     $ . /tmp/install_orca.sh
 
 Then log in to the first server and execute the following:

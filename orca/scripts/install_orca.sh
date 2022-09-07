@@ -9,11 +9,11 @@ function install_orca {
 	git remote add origin https://github.com/liferay/liferay-docker.git
 	git config core.sparseCheckout true
 
-	echo "managed-dxp" >> .git/info/sparse-checkout
+	echo "orca" >> .git/info/sparse-checkout
 
 	git pull origin master
 
-	cd managed-dxp
+	cd orca
 
 	scripts/orca.sh install
 }
