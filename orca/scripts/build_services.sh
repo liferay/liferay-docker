@@ -51,7 +51,9 @@ function add_services {
 
 		echo "Building ${SERVICE}."
 
-		build_${SERVICE}
+		local build_service_function=build_$(echo ${SERVICE} | sed -e "s/-/_/")
+
+		${build_service_function}
 	done
 }
 
