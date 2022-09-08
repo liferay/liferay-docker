@@ -50,10 +50,6 @@ function main {
 
 	check_vm_max_map_count
 
-	print_result
-}
-
-function print_result {
 	if [ -n "${ERROR}" ]
 	then
 		echo "There was at least one error during validation. Please fix them before starting the services."

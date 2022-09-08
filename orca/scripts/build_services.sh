@@ -25,17 +25,17 @@ function add_secrets {
 function add_services {
 	compose_add 0 "services:"
 
-	if [ ! -n "${HOST}" ]
+	if [ ! -n "${ORCA_HOST}" ]
 	then
-		HOST=$(hostname)
+		ORCA_HOST=$(hostname)
 	fi
 
-	local host_config=$(get_config ".hosts.${HOST}")
+	local host_config=$(get_config ".hosts.${ORCA_HOST}")
 
 	if [ ! -n "${host_config}" ]
 	then
-		HOST="localhost"
-		host_config=$(get_config ".hosts.${HOST}")
+		ORCA_HOST="localhost"
+		host_config=$(get_config ".hosts.${ORCA_HOST}")
 
 		if [ ! -n "${host_config}" ]
 		then
@@ -45,9 +45,9 @@ function add_services {
 		fi
 	fi
 
-	for SERVICE in $(yq ".hosts.${HOST}.services" < "${CONFIG_FILE}" | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
+	for SERVICE in $(yq ".hosts.${ORCA_HOST}.services" < "${CONFIG_FILE}" | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
 	do
-		SERVICE_HOST="${SERVICE}-${HOST}"
+		SERVICE_HOST="${SERVICE}-${ORCA_HOST}"
 
 		echo "Building ${SERVICE}."
 
@@ -106,7 +106,7 @@ function build_db {
 
 	local cluster_addresses=$(find_services db host_port 4567 true)
 	local db_addresses=$(find_services db host_port 3306 true)
-	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE_HOST})
+	local host_ip=$(get_config ".hosts.${ORCA_HOST}.ip" ${SERVICE_HOST})
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -175,8 +175,8 @@ function build_liferay {
 	docker_build liferay
 
 	local antivirus_host=$(find_services antivirus host_port)
-	local db_address=$(get_config ".hosts.${HOST}.configuration.liferay.db" "db-${HOST}")
-	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE_HOST})
+	local db_address=$(get_config ".hosts.${ORCA_HOST}.configuration.liferay.db" "db-${ORCA_HOST}")
+	local host_ip=$(get_config ".hosts.${ORCA_HOST}.ip" ${SERVICE_HOST})
 	local liferay_addresses=$(find_services liferay host_port 8080 true)
 	local search_addresses=$(find_services search host_port 9200)
 
@@ -187,8 +187,8 @@ function build_liferay {
 	if [ -n "${liferay_addresses}" ]
 	then
 		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_ENABLED=true"
-		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_CONTROL=control-channel-${HOST}"
-		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_TRANSPORT_PERIOD_NUMBER0=transport-channel-logic-${HOST}"
+		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_CONTROL=control-channel-${ORCA_HOST}"
+		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_TRANSPORT_PERIOD_NUMBER0=transport-channel-logic-${ORCA_HOST}"
 		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_CONTROL=/opt/liferay/cluster-link-tcp.xml"
 		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_TRANSPORT_PERIOD__NUMBER0_=/opt/liferay/cluster-link-tcp.xml"
 		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_AUTODETECT_PERIOD_ADDRESS="
@@ -212,7 +212,7 @@ function build_liferay {
 	compose_add 1 "        - LIFERAY_SCHEMA_PERIOD_MODULE_PERIOD_BUILD_PERIOD_AUTO_PERIOD_UPGRADE=true"
 	compose_add 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
 	compose_add 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
-	compose_add 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${HOST}"
+	compose_add 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${ORCA_HOST}"
 	compose_add 1 "        - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true"
 	compose_add 1 "        - LIFERAY_WEB_PERIOD_SERVER_PERIOD_DISPLAY_PERIOD_NODE=true"
 	compose_add 1 "        - ORCA_LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
@@ -231,6 +231,7 @@ function build_liferay {
 
 function build_log_proxy {
 	docker_build log-proxy
+
 	local log_server=$(find_services log-server host_port 514)
 
 	compose_add 1 "${SERVICE}:"
@@ -259,7 +260,7 @@ function build_log_server {
 function build_search {
 	docker_build search
 
-	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE_HOST})
+	local host_ip=$(get_config ".hosts.${ORCA_HOST}.ip" ${SERVICE_HOST})
 	local search_services_names=$(find_services search service_name)
 	local seed_hosts=$(find_services search host_port 9300 true)
 
@@ -311,8 +312,8 @@ function check_usage {
 		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
-		echo "    LIFERAY_ORCA_CONFIG (optional): Set the name of the configuration you would like to use. If not set the \"production\" is used."
-		echo "    LIFERAY_ORCA_HOST (optional): Set the name of the host you for which to generate the services. If not set the hostname is used."
+		echo "    ORCA_CONFIG (optional): Set the name of the configuration you would like to use. If not set the \"production\" is used."
+		echo "    ORCA_HOST (optional): Set the name of the host you for which to generate the services. If not set the hostname is used."
 		echo ""
 		echo "Set the version number of the generated images as the first parameter to build the images and configuration."
 		echo ""
@@ -321,8 +322,6 @@ function check_usage {
 		exit 1
 	fi
 
-	CONFIG="${LIFERAY_ORCA_CONFIG}"
-	HOST="${LIFERAY_ORCA_HOST}"
 	VERSION="${1}"
 
 	check_utils docker docker-compose pwgen yq
@@ -338,6 +337,23 @@ function check_utils {
 	do
 		command -v "${util}" >/dev/null 2>&1 || { echo >&2 "The utility ${util} is not installed."; exit 1; }
 	done
+}
+
+function choose_configuration {
+	if [ ! -n "${ORCA_CONFIG}" ]
+	then
+		ORCA_CONFIG="production"
+	fi
+	if [ -e "configs/${ORCA_CONFIG}.yml" ]
+	then
+		CONFIG_FILE="configs/${ORCA_CONFIG}.yml"
+
+		echo "Using configuration ${CONFIG_FILE}."
+	else
+		CONFIG_FILE="configs/single_server.yml"
+
+		echo "Using the default, single server configuration."
+	fi
 }
 
 function compose_add {
@@ -404,7 +420,7 @@ function find_services {
 
 	for host in $(yq ".hosts" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
 	do
-		if [ "${exclude_this_host}" == "true" ] && [ "${host}" == "${HOST}" ]
+		if [ "${exclude_this_host}" == "true" ] && [ "${host}" == "${ORCA_HOST}" ]
 		then
 			continue
 		fi
@@ -420,7 +436,7 @@ function find_services {
 					add_item="${service}-${host}"
 				elif [ "${template}" == "host_port" ]
 				then
-					if [ "${host}" == "localhost" ] || [ "${host}" == "${HOST}" ]
+					if [ "${host}" == "localhost" ] || [ "${host}" == "${ORCA_HOST}" ]
 					then
 						add_item="${service}-${host}${postfix}"
 					else
@@ -447,30 +463,13 @@ function find_services {
 function main {
 	check_usage ${@}
 
-	setup_configuration
+	choose_configuration
 
 	create_compose_file
 
 	add_secrets
 
 	add_services
-}
-
-function setup_configuration {
-	if [ ! -n "${CONFIG}" ]
-	then
-		CONFIG="production"
-	fi
-	if [ -e "configs/${CONFIG}.yml" ]
-	then
-		CONFIG_FILE="configs/${CONFIG}.yml"
-
-		echo "Using configuration ${CONFIG_FILE}."
-	else
-		CONFIG_FILE="configs/single_server.yml"
-
-		echo "Using the default, single server configuration."
-	fi
 }
 
 main ${@}

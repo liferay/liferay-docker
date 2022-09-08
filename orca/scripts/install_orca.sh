@@ -1,6 +1,11 @@
 #!/bin/bash
 
-function install_orca {
+function main {
+	apt-get update
+	apt-get --yes install docker-compose git glusterfs-server pwgen
+
+	snap install yq
+
 	mkdir -p /opt/liferay/orca
 
 	cd /opt/liferay/orca
@@ -16,19 +21,6 @@ function install_orca {
 	cd orca
 
 	scripts/orca.sh install
-}
-
-function install_requirements {
-	apt-get update
-	apt-get --yes install docker-compose git glusterfs-server pwgen
-
-	snap install yq
-}
-
-function main {
-	install_requirements
-
-	install_orca
 }
 
 main

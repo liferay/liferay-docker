@@ -49,12 +49,7 @@ function command_build {
 function command_deploy {
 	cd "builds"
 
-	if [ -e "deploy" ]
-	then
-		rm -fr "deploy"
-	fi
-
-	ln -s "${1}" "deploy"
+	ln -fs "${1}" "deploy"
 }
 
 function command_force_primary {
@@ -78,7 +73,7 @@ function command_mysql {
 function command_setup_shared_volume {
 	if [ ! -e "/opt/gluster-data/gv0" ]
 	then
-		echo "To set up the shared volume, the /opt/gluster-data/gv0 directory must exist on the server. It's recommened to have it as a separate volume with xfs on it."
+		echo "To set up the shared volume, the /opt/gluster-data/gv0 directory must exist on the server. It's recommended to have it as a separate volume with xfs on it."
 
 		retun
 	fi
@@ -118,15 +113,10 @@ function execute_command {
 	fi
 }
 
-function go_to_folder {
+function main {
 	local script_path=$(readlink /proc/$$/fd/255 2>/dev/null)
 
 	cd $(dirname "${script_path}")/../
-
-}
-
-function main {
-	go_to_folder
 
 	check_usage ${@}
 
