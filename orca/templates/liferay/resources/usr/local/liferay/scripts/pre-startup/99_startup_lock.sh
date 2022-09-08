@@ -15,10 +15,6 @@ function add_lock {
 	fi
 }
 
-function execute_background_task {
-	nohup remove_lock_on_startup.sh &
-}
-
 function wait_until_free {
 	while [ -e "/opt/liferay/shared-volume/liferay-startup-lock" ] && [ "$(hostname)" != "$(cat /opt/liferay/shared-volume/liferay-startup-lock)" ]
 	do
@@ -35,7 +31,7 @@ function main {
 
 	add_lock
 
-	execute_background_task
+	nohup remove_lock_on_startup.sh &
 }
 
 main
