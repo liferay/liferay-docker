@@ -1,4 +1,4 @@
-FROM liferay/job-runner:4.1.4-20220629112801
+FROM liferay/job-runner:5.0.0-20220830072327
 
 RUN apt-get update && \
 	apt-get --yes install mariadb-client && \
