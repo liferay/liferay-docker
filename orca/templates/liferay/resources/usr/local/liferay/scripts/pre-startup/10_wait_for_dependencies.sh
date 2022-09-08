@@ -34,18 +34,18 @@ function wait_for_mysql {
 }
 
 function wait_for_search {
-	if [ ! -n {LIFERAY_SEARCH_ADDRESSES} ]
+	if [ ! -n {ORCA_LIFERAY_SEARCH_ADDRESSES} ]
 	then
 		echo "There's no remote search service configured."
 
 		return
 	fi
 
-	echo "Testing search service connections: ${LIFERAY_SEARCH_ADDRESSES}."
+	echo "Testing search service connections: ${ORCA_LIFERAY_SEARCH_ADDRESSES}."
 
 	while true
 	do
-		for search_address in ${LIFERAY_SEARCH_ADDRESSES//,/ }
+		for search_address in ${ORCA_LIFERAY_SEARCH_ADDRESSES//,/ }
 		do
 			if ( curl --max-time 3 --silent "${search_address}/_cat/health" | grep "green" &>/dev/null)
 			then
@@ -55,7 +55,7 @@ function wait_for_search {
 			fi
 		done
 
-		echo "Waiting for at least one search server to report green status (${LIFERAY_SEARCH_ADDRESSES})."
+		echo "Waiting for at least one search server to report green status (${ORCA_LIFERAY_SEARCH_ADDRESSES})."
 
 		sleep 3
 	done
