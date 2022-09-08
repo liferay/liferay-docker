@@ -174,7 +174,7 @@ function build_liferay {
 
 	docker_build liferay
 
-	local antivirus_address=$(find_services antivirus host_port 3310)
+	local antivirus_host=$(find_services antivirus host_port)
 	local db_address=$(get_config ".hosts.${HOST}.configuration.liferay.db" "db-${HOST}")
 	local host_ip=$(get_config ".hosts.${HOST}.ip" ${SERVICE_HOST})
 	local liferay_addresses=$(find_services liferay host_port 8080 true)
@@ -183,7 +183,6 @@ function build_liferay {
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
-	compose_add 1 "        - LIFERAY_ANTIVIRUS_ADDRESS=${antivirus_address}"
 
 	if [ -n "${liferay_addresses}" ]
 	then
@@ -195,6 +194,9 @@ function build_liferay {
 		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_AUTODETECT_PERIOD_ADDRESS="
 	fi
 
+	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_HOSTNAME=\"${antivirus_host}\""
+	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_PORT=I\"3310\""
+	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_TIMEOUT=I\"10000\""
 	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_NETWORK_UPPERCASEH_OST_UPPERCASEA_DDRESSES=\"${search_addresses}\""
 	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_OPERATION_UPPERCASEM_ODE=\"REMOTE\""
 	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_PRODUCTION_UPPERCASEM_ODE_UPPERCASEE_NABLED=B\"true\""
@@ -395,6 +397,11 @@ function find_services {
 
 	local list
 
+	if [ -n "${postfix}" ]
+	then
+		postfix=":${postfix}"
+	fi
+
 	for host in $(yq ".hosts" < ${CONFIG_FILE} | grep -v '  .*' | sed 's/-[ ]//' | sed 's/:.*//')
 	do
 		if [ "${exclude_this_host}" == "true" ] && [ "${host}" == "${HOST}" ]
@@ -415,11 +422,11 @@ function find_services {
 				then
 					if [ "${host}" == "localhost" ] || [ "${host}" == "${HOST}" ]
 					then
-						add_item="${service}-${host}:${postfix}"
+						add_item="${service}-${host}${postfix}"
 					else
 						local host_ip=$(get_config ".hosts.${host}.ip" ${host})
 
-						add_item="${host_ip}:${postfix}"
+						add_item="${host_ip}${postfix}"
 					fi
 				fi
 
