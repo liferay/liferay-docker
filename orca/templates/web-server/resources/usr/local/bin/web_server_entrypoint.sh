@@ -5,6 +5,8 @@ function generate_liferay_conf {
 		echo "${1}" >> "/etc/apache2/sites-available/liferay.conf"
 	}
 
+	rm -f "/etc/apache2/sites-available/liferay.conf"
+
 	write "<VirtualHost *:80>"
 	write "    DocumentRoot /var/www/html"
 	write "    ProxyPreserveHost On"
