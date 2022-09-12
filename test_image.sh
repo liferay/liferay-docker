@@ -115,11 +115,11 @@ function start_container {
 
 	local docker_network_run_option
 
-	if [ -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
+	if [ -n "${DOCKER_NETWORK_NAME}" ]
 	then
 		CONTAINER_HOST=portal-container
 
-		docker_network_run_option="--network=${LIFERAY_DOCKER_NETWORK_NAME}"
+		docker_network_run_option="--network=${DOCKER_NETWORK_NAME}"
 	else
 		CONTAINER_HOST=localhost
 	fi
