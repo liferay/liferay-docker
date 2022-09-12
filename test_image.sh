@@ -114,8 +114,8 @@ function prepare_mount {
 function start_container {
 	echo "Starting container from image ${LIFERAY_DOCKER_IMAGE_ID}."
 
-	local docker_network_run_option=""
-	local docker_repo_path=${PWD}
+	local container_docker_network_run_option=""
+	local container_repo_path=${PWD}
 
 	if [ -z "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
@@ -126,12 +126,12 @@ function start_container {
 	then
 		CONTAINER_PORT_HTTP=8080
 		CONTAINER_HOSTNAME=portal-container
-		docker_repo_path="/data/slaves/${LIFERAY_DOCKER_NETWORK_NAME}/git/liferay/liferay-docker"
+		container_repo_path="/data/slaves/${LIFERAY_DOCKER_NETWORK_NAME}/git/liferay/liferay-docker"
 
-		docker_network_run_option="--hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME}"
+		container_docker_network_run_option="--hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME}"
 	fi
 
-	CONTAINER_ID=$(docker run -d -p 8080 -v "${docker_repo_path}/${TEST_DIR}/mnt/liferay":/mnt/liferay ${docker_network_run_option} "${LIFERAY_DOCKER_IMAGE_ID}")
+	CONTAINER_ID=$(docker run -d -p 8080 -v "${container_repo_path}/${TEST_DIR}/mnt/liferay":/mnt/liferay ${container_docker_network_run_option} "${LIFERAY_DOCKER_IMAGE_ID}")
 
 	if [ -z "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
