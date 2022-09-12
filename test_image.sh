@@ -10,7 +10,6 @@ function check_usage {
 		echo "The script reads the following environment variables:"
 		echo ""
 		echo "    LIFERAY_DOCKER_IMAGE_ID: ID of Docker image"
-		echo "    LIFERAY_DOCKER_NETWORK_NAME: Network name when running Docker"
 		echo "    LIFERAY_DOCKER_TEST_HOTFIX_URL: URL of the test hotfix to install"
 		echo "    LIFERAY_DOCKER_TEST_INSTALLED_PATCHES: Comma separated list of installed patches (e.g. dxp-4-7210,hotfix-1072-7210)"
 		echo "    LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL: URL of the test Patching Tool to install"
