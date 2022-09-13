@@ -1,47 +1,52 @@
 #!/bin/bash
 
 function wait_for_mysql {
-	local driver="${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME}"
-	if [ -n "${driver}" ]
+	local jdbc_driver_class_name="${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME}"
+
+	if [ ! -n "${jdbc_driver_class_name}" ]
 	then
-		if (echo "$driver" | grep -i "mysql" &>/dev/null) || (echo "$driver" | grep -i "mariadb" &>/dev/null)
+		return
+	fi
+
+	if (echo "${jdbc_driver_class_name}" | grep -i "mariadb" &>/dev/null) || (echo "${jdbc_driver_class_name}" | grep -i "mysql" &>/dev/null)
+	then
+		local db_host="${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL}"
+
+		db_host="${db_host##*://}"
+		db_host="${db_host%%/*}"
+		db_host="${db_host%%:*}"
+
+		local db_password=${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD}
+
+		if [ -n "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE}" ]
 		then
-			local db_host="${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL}"
-			db_host="${db_host##*://}"
-			db_host="${db_host%%/*}"
-			db_host="${db_host%%:*}"
-
-			local db_user="${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME}"
-			local db_password="${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD}"
-
-			if [ -n "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE}" ]
-			then
-				db_password=$(cat "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE}")
-			fi
-
-			echo "Testing database server connection to ${db_user}@${db_host}."
-
-			while ! (echo "select 1" | mysql -h "${db_host}" -p"${db_password}" -u "${db_user}" &>/dev/null)
-			do
-				echo "Waiting for database server to become online: ${db_user}@${db_host}."
-
-				sleep 3
-			done
-
-			echo "Database server ${db_user}@${db_host} is available."
+			db_password=$(cat "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE}")
 		fi
+
+		local db_username=${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME}
+
+		echo "Connecting to database server ${db_username}@${db_host}."
+
+		while ! (echo "select 1" | mysql -h "${db_host}" -p"${db_password}" -u "${db_username}" &>/dev/null)
+		do
+			echo "Waiting for database server ${db_username}@${db_host}."
+
+			sleep 3
+		done
+
+		echo "Database server ${db_username}@${db_host} is available."
 	fi
 }
 
 function wait_for_search {
 	if [ ! -n {ORCA_LIFERAY_SEARCH_ADDRESSES} ]
 	then
-		echo "There's no remote search service configured."
+		echo "Do not wait for search server because the environment variable ORCA_LIFERAY_SEARCH_ADDRESSES was not set."
 
 		return
 	fi
 
-	echo "Testing search service connections: ${ORCA_LIFERAY_SEARCH_ADDRESSES}."
+	echo "Connecting to ${ORCA_LIFERAY_SEARCH_ADDRESSES}."
 
 	while true
 	do
@@ -49,13 +54,13 @@ function wait_for_search {
 		do
 			if ( curl --max-time 3 --silent "${search_address}/_cat/health" | grep "green" &>/dev/null)
 			then
-				echo "Search service ${search_address} is reporting green."
+				echo "Search server ${search_address} is available."
 
 				return
 			fi
 		done
 
-		echo "Waiting for at least one search server to report green status (${ORCA_LIFERAY_SEARCH_ADDRESSES})."
+		echo "Waiting for at least one search server to become available."
 
 		sleep 3
 	done
