@@ -10,7 +10,7 @@ function check_usage {
 		echo "The script reads the following environment variables:"
 		echo ""
 		echo "    LIFERAY_DOCKER_IMAGE_ID: ID of Docker image"
-		echo "    LIFERAY_DOCKER_NETWORK_NAME: Name of CI node container's Docker network"
+		echo "    LIFERAY_DOCKER_NETWORK_NAME: Name of the CI node container's Docker network"
 		echo "    LIFERAY_DOCKER_TEST_HOTFIX_URL: URL of the test hotfix to install"
 		echo "    LIFERAY_DOCKER_TEST_INSTALLED_PATCHES: Comma separated list of installed patches (e.g. dxp-4-7210,hotfix-1072-7210)"
 		echo "    LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL: URL of the test Patching Tool to install"
@@ -114,7 +114,7 @@ function prepare_mount {
 function start_container {
 	echo "Starting container from image ${LIFERAY_DOCKER_IMAGE_ID}."
 
-	# Temporary fix until IT rebuilds the CI servers, use only the LIFERAY_* variables.
+	# TODO Temporary fix until IT rebuilds the CI servers
 
 	if [ ! -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
@@ -124,24 +124,24 @@ function start_container {
 	CONTAINER_HOSTNAME="localhost"
 
 	local network_parameters
-	local test_dir_absolute_path="${PWD}/${TEST_DIR}"
+	local test_dir="${PWD}/${TEST_DIR}"
 
 	if [ -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
-		CONTAINER_PORT_HTTP=8080
 		CONTAINER_HOSTNAME=portal-container
-		test_dir_absolute_path="/data/slaves/${LIFERAY_DOCKER_NETWORK_NAME}/git/liferay/liferay-docker/${TEST_DIR}"
+		CONTAINER_HTTP_PORT=8080
+		test_dir="/data/slaves/${LIFERAY_DOCKER_NETWORK_NAME}/git/liferay/liferay-docker/${TEST_DIR}"
 
 		network_parameters="--hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME}"
 	fi
 
-	CONTAINER_ID=$(docker run -d -p 8080 -v "${test_dir_absolute_path}/mnt/liferay":/mnt/liferay ${network_parameters} "${LIFERAY_DOCKER_IMAGE_ID}")
+	CONTAINER_ID=$(docker run -d -p 8080 -v "${test_dir}/mnt/liferay":/mnt/liferay ${network_parameters} "${LIFERAY_DOCKER_IMAGE_ID}")
 
 	if [ ! -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
-		CONTAINER_PORT_HTTP=$(docker port "${CONTAINER_ID}" 8080/tcp)
+		CONTAINER_HTTP_PORT=$(docker port "${CONTAINER_ID}" 8080/tcp)
 
-		CONTAINER_PORT_HTTP=${CONTAINER_PORT_HTTP##*:}
+		CONTAINER_HTTP_PORT=${CONTAINER_HTTP_PORT##*:}
 	fi
 
 	TEST_RESULT=0
@@ -155,7 +155,7 @@ function stop_container {
 }
 
 function test_docker_image_files {
-	test_page "http://${CONTAINER_HOSTNAME}:${CONTAINER_PORT_HTTP}/test_docker_image_files.jsp" "TEST"
+	test_page "http://${CONTAINER_HOSTNAME}:${CONTAINER_HTTP_PORT}/test_docker_image_files.jsp" "TEST"
 }
 
 function test_docker_image_fix_pack_installed {
@@ -182,7 +182,7 @@ function test_docker_image_fix_pack_installed {
 function test_docker_image_hotfix_installed {
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
 	then
-		test_page "http://${CONTAINER_HOSTNAME}:${CONTAINER_PORT_HTTP}/" "Hotfix installation on the Docker image was successful."
+		test_page "http://${CONTAINER_HOSTNAME}:${CONTAINER_HTTP_PORT}/" "Hotfix installation on the Docker image was successful."
 	fi
 }
 
@@ -203,11 +203,11 @@ function test_docker_image_patching_tool_updated {
 }
 
 function test_docker_image_scripts_1 {
-	test_page "http://${CONTAINER_HOSTNAME}:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_1.jsp" "TEST1"
+	test_page "http://${CONTAINER_HOSTNAME}:${CONTAINER_HTTP_PORT}/test_docker_image_scripts_1.jsp" "TEST1"
 }
 
 function test_docker_image_scripts_2 {
-	test_page "http://${CONTAINER_HOSTNAME}:${CONTAINER_PORT_HTTP}/test_docker_image_scripts_2.jsp" "TEST2"
+	test_page "http://${CONTAINER_HOSTNAME}:${CONTAINER_HTTP_PORT}/test_docker_image_scripts_2.jsp" "TEST2"
 }
 
 function test_health_status {
