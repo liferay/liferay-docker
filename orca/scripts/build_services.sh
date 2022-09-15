@@ -2,24 +2,12 @@
 
 set -e
 
-function add_secrets {
-	compose_add 0 "secrets:"
+function add_secret {
+	local uid=${1}
+	local secret=${2}
 
-	local secret_dir=$(get_config .configuration.secret_dir /opt/liferay/shared-volume/secrets)
-
-	for secret in mysql_backup_password mysql_liferay_password mysql_root_password
-	do
-		local secret_file="${secret_dir}/${secret}.txt"
-
-		if [ ! -e "${secret_file}" ]
-		then
-			pwgen -1s 24 > ${secret_file}
-			chmod 600 ${secret_file}
-		fi
-
-		compose_add 1 "${secret}:"
-		compose_add 1 "    file: ${secret_file}"
-	done
+	echo "$uid:$secret" >> ${BUILD_DIR}/secrets
+	compose_add 3 "- ${secret}"
 }
 
 function add_services {
@@ -81,7 +69,7 @@ function build_backup {
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: backup:${VERSION}"
 	compose_add 1 "    secrets:"
-	compose_add 1 "        - mysql_root_password"
+	add_secret 1000 mysql_root_password
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /opt/liferay/backups:/opt/liferay/backups"
 	compose_add 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
@@ -133,9 +121,9 @@ function build_db {
 	compose_add 1 "        - \"4567:4567\""
 	compose_add 1 "        - \"4568:4568\""
 	compose_add 1 "    secrets:"
-	compose_add 1 "        - mysql_backup_password"
-	compose_add 1 "        - mysql_liferay_password"
-	compose_add 1 "        - mysql_root_password"
+	add_secret 1001 mysql_backup_password
+	add_secret 1001 mysql_liferay_password
+	add_secret 1001 mysql_root_password
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /opt/liferay/db-data:/bitnami/mariadb"
 }
@@ -224,7 +212,7 @@ function build_liferay {
 	compose_add 1 "        - \"8009:8009\""
 	compose_add 1 "        - \"8080:8080\""
 	compose_add 1 "    secrets:"
-	compose_add 1 "        - mysql_liferay_password"
+	add_secret 1000 mysql_liferay_password
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
 }
@@ -482,8 +470,6 @@ function main {
 	choose_configuration
 
 	create_compose_file
-
-	add_secrets
 
 	add_services
 }

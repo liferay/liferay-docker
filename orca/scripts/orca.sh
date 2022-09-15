@@ -13,6 +13,7 @@ function check_usage {
 		echo "  - mysql: logs into the db server on this container"
 		echo "  - setup_shared_volume: enables glusterfs and creates the necessary mount point for the shared volume"
 		echo "  - ssh <service name>: logs in to the named service container"
+		echo "  - unseal: unseals the vault operator"
 		echo "  - up: validates the configuration and starts the services with docker-compose up"
 		echo ""
 		echo "All other commands are executed as docker-compose commands from the correct folder."
@@ -91,6 +92,12 @@ function command_ssh {
 	docker-compose exec "${1}" "/bin/bash"
 }
 
+function command_unseal {
+	cd "builds/deploy"
+
+	docker-compose exec "vault" /usr/bin/vault operator unseal
+}
+
 function command_up {
 	if ( ! scripts/validate_environment.sh )
 	then
@@ -98,6 +105,10 @@ function command_up {
 	fi
 
 	cd "builds/deploy"
+
+	../../scripts/prepare_secrets.sh
+
+	exit
 
 	docker-compose up ${@}
 }
