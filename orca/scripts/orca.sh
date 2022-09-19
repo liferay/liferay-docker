@@ -106,10 +106,6 @@ function command_up {
 
 	cd "builds/deploy"
 
-	../../scripts/prepare_secrets.sh
-
-	exit
-
 	docker-compose up ${@}
 }
 

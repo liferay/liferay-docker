@@ -41,7 +41,14 @@ function add_services {
 
 		local build_service_function=build_$(echo ${SERVICE} | sed -e "s/-/_/")
 
+		rm -fr docker-build
+		mkdir -p docker-build
+
+		cp -a templates/${SERVICE}/* docker-build
+
 		${build_service_function}
+
+		rm -fr docker-build
 	done
 }
 
@@ -129,13 +136,10 @@ function build_db {
 }
 
 function build_liferay {
-	rm -fr "templates/liferay/resources/opt/liferay/deploy/"
-	rm -fr "templates/liferay/resources/opt/liferay/patching-tool/patches"
-
 	if [ -e "configs/liferay-license.xml" ]
 	then
-		mkdir -p "templates/liferay/resources/opt/liferay/deploy/"
-		cp "configs/liferay-license.xml" "templates/liferay/resources/opt/liferay/deploy/license.xml"
+		mkdir -p "docker-build/resources/opt/liferay/deploy/"
+		cp "configs/liferay-license.xml" "docker-build/resources/opt/liferay/deploy/license.xml"
 	else
 		echo "ERROR: Copy a valid Liferay DXP license to configs/liferay-license.xml before running this script."
 
@@ -144,7 +148,7 @@ function build_liferay {
 
 	if [ -d "/opt/liferay/shared-volume/deploy/" ]
 	then
-		cp /opt/liferay/shared-volume/deploy/* "templates/liferay/resources/opt/liferay/deploy/"
+		cp /opt/liferay/shared-volume/deploy/* "docker-build/resources/opt/liferay/deploy/"
 
 		echo "Copying the following files to deploy:"
 
@@ -153,11 +157,11 @@ function build_liferay {
 
 	if [ $(find "configs/" -maxdepth 1 -type f -name "liferay-*.zip" | wc -l) == 1 ]
 	then
-		mkdir -p templates/liferay/resources/opt/liferay/patching-tool/patches
+		mkdir -p docker-build/resources/opt/liferay/patching-tool/patches
 
 		echo "Copying hotfix to deploy: $(ls configs/liferay-*.zip)"
 
-		cp configs/liferay-*.zip templates/liferay/resources/opt/liferay/patching-tool/patches
+		cp configs/liferay-*.zip docker-build/resources/opt/liferay/patching-tool/patches
 	fi
 
 	docker_build liferay
@@ -395,7 +399,7 @@ function create_compose_file {
 function docker_build {
 	docker build \
 		--tag "${1}:${VERSION}" \
-		"templates/${1}"
+		docker-build
 }
 
 function get_config {
