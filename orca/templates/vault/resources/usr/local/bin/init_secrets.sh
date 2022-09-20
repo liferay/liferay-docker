@@ -1,9 +1,11 @@
 #!/bin/bash
 
 function check_usage {
-	if [ ! -n "$VAULT_TOKEN" ]
+	if [ ! -n "${VAULT_TOKEN}" ]
 	then
 		echo "Set VAULT_TOKEN environment before running this script."
+
+		exit 1
 	fi
 }
 
@@ -11,7 +13,9 @@ function create_password {
 	if ( ! secret_exists ${1} )
 	then
 		local password=$(pwgen -1 -s 20)
-		echo "{\"data\": {\"password\": \"${password}\"}}" | curl_vault POST v1/secret/data/${1}
+		echo "{\"data\": {\"password\": \"${password}\"}}" | curl_vault POST "v1/secret/data/${1}" > /dev/null
+
+		echo "Generated secret ${1}."
 	else
 		echo "Secret ${1} already exists, skippping."
 	fi
@@ -27,7 +31,9 @@ function curl_vault {
 	local request=${1}
 	local path=${2}
 
-	curl --data @- --header "X-Vault-Token: $VAULT_TOKEN" --request ${request} --silent http://127.0.0.1:8200/${path}
+	curl --data @- --fail --header "X-Vault-Token: ${VAULT_TOKEN}" --request ${request} --silent http://127.0.0.1:8200/${path}
+
+	return ${?}
 }
 
 function main {

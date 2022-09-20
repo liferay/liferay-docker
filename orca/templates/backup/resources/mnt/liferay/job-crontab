@@ -1,1 +1,2 @@
+@reboot /usr/local/bin/register_job.sh fetch_secrets
 ${ORCA_BACKUP_CRON_EXPRESSION} /usr/local/bin/register_job.sh backup

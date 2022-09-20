@@ -2,14 +2,6 @@
 
 set -e
 
-function add_secret {
-	local uid=${1}
-	local secret=${2}
-
-	echo "$uid:$secret" >> ${BUILD_DIR}/secrets
-	compose_add 3 "- ${secret}"
-}
-
 function add_services {
 	compose_add 0 "services:"
 
@@ -44,6 +36,7 @@ function add_services {
 		rm -fr docker-build
 		mkdir -p docker-build
 
+		cp -a templates/_common/* docker-build
 		cp -a templates/${SERVICE}/* docker-build
 
 		${build_service_function}
@@ -67,16 +60,17 @@ function build_backup {
 	docker_build backup
 
 	local db_addresses=$(find_services db host_port "3306")
+	local vault_addresses=$(find_services vault host_port 8200)
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
 	compose_add 1 "        - ORCA_BACKUP_CRON_EXPRESSION=0 */4 * * *"
 	compose_add 1 "        - ORCA_DB_ADDRESSES=${db_addresses}"
+	compose_add 1 "        - ORCA_VAULT_ADDRESSES=${vault_addresses}"
+	compose_add 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_backup:-}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: backup:${VERSION}"
-	compose_add 1 "    secrets:"
-	add_secret 1000 mysql_root_password
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /opt/liferay/backups:/opt/liferay/backups"
 	compose_add 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
@@ -102,6 +96,7 @@ function build_db {
 	local cluster_addresses=$(find_services db host_port 4567 true)
 	local db_addresses=$(find_services db host_port 3306 true)
 	local host_ip=$(get_config ".hosts.${ORCA_HOST}.ip" ${SERVICE_HOST})
+	local vault_addresses=$(find_services vault host_port 8200)
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -111,15 +106,17 @@ function build_db {
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://${cluster_addresses}"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${ORCA_DB_SKIP_WAIT:-}"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
-	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/run/secrets/mysql_backup_password"
+	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/tmp/orca-secrets/mysql_backup_password"
 	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_USER=orca_mariabackup"
 	compose_add 1 "        - MARIADB_GALERA_NODE_ADDRESS=${host_ip}"
-	compose_add 1 "        - MARIADB_PASSWORD_FILE=/run/secrets/mysql_liferay_password"
+	compose_add 1 "        - MARIADB_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
 	compose_add 1 "        - MARIADB_ROOT_HOST=localhost"
-	compose_add 1 "        - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password"
+	compose_add 1 "        - MARIADB_ROOT_PASSWORD_FILE=/tmp/orca-secrets/mysql_root_password"
 	compose_add 1 "        - MARIADB_USER=lportal"
 	compose_add 1 "        - ORCA_DB_ADDRESSES=${db_addresses}"
 	compose_add 1 "        - ORCA_DB_SKIP_WAIT=\${ORCA_DB_SKIP_WAIT:-}"
+	compose_add 1 "        - ORCA_VAULT_ADDRESSES=${vault_addresses}"
+	compose_add 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_db:-}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: db:${VERSION}"
 	compose_add 1 "    ports:"
@@ -127,10 +124,6 @@ function build_db {
 	compose_add 1 "        - \"4444:4444\""
 	compose_add 1 "        - \"4567:4567\""
 	compose_add 1 "        - \"4568:4568\""
-	compose_add 1 "    secrets:"
-	add_secret 1001 mysql_backup_password
-	add_secret 1001 mysql_liferay_password
-	add_secret 1001 mysql_root_password
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /opt/liferay/db-data:/bitnami/mariadb"
 }
@@ -171,6 +164,7 @@ function build_liferay {
 	local host_ip=$(get_config ".hosts.${ORCA_HOST}.ip" ${SERVICE_HOST})
 	local liferay_addresses=$(find_services liferay host_port 8080 true)
 	local search_addresses=$(find_services search host_port 9200)
+	local vault_addresses=$(find_services vault host_port 8200)
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
@@ -197,7 +191,7 @@ function build_liferay {
 	compose_add 1 "        - LIFERAY_DL_PERIOD_STORE_PERIOD_ANTIVIRUS_PERIOD_ENABLED=true"
 	compose_add 1 "        - LIFERAY_DL_PERIOD_STORE_PERIOD_IMPL=com.liferay.portal.store.file.system.AdvancedFileSystemStore"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver"
-	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE=/run/secrets/mysql_liferay_password"
+	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://${db_address}/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
 	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal"
 	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE_HOST} -Djgroups.external_addr=${host_ip}"
@@ -208,6 +202,8 @@ function build_liferay {
 	compose_add 1 "        - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true"
 	compose_add 1 "        - LIFERAY_WEB_PERIOD_SERVER_PERIOD_DISPLAY_PERIOD_NODE=true"
 	compose_add 1 "        - ORCA_LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
+	compose_add 1 "        - ORCA_VAULT_ADDRESSES=${vault_addresses}"
+	compose_add 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_liferay:-}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: liferay:${VERSION}"
 	compose_add 1 "    ports:"
@@ -215,8 +211,6 @@ function build_liferay {
 	compose_add 1 "        - \"7801:7801\""
 	compose_add 1 "        - \"8009:8009\""
 	compose_add 1 "        - \"8080:8080\""
-	compose_add 1 "    secrets:"
-	add_secret 1000 mysql_liferay_password
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
 }

@@ -25,7 +25,7 @@ function main {
 
 		local db_host=${db_address%%:*}
 
-		if (mysqldump -h ${db_host} -p$(cat /run/secrets/mysql_root_password) -u root lportal | gzip > ${1}/db-lportal-${2}.sql.gz)
+		if (mysqldump -h ${db_host} -p$(cat /tmp/orca-secrets/mysql_root_password) -u root lportal | gzip > ${1}/db-lportal-${2}.sql.gz)
 		then
 			local success=1
 
