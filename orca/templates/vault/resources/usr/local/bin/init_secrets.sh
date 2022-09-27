@@ -1,37 +1,35 @@
 #!/bin/bash
 
 function check_usage {
-	if [ ! -n "${VAULT_TOKEN}" ]
+	if [ ! -n "${ORCA_VAULT_TOKEN}" ]
 	then
-		echo "Set VAULT_TOKEN environment before running this script."
+		echo "Set the environment variable ORCA_VAULT_TOKEN."
 
 		exit 1
 	fi
 }
 
 function create_password {
-	if ( ! secret_exists ${1} )
+	if ( ! has_secret ${1} )
 	then
 		local password=$(pwgen -1 -s 20)
+
 		echo "{\"data\": {\"password\": \"${password}\"}}" | curl_vault POST "v1/secret/data/${1}" > /dev/null
 
 		echo "Generated secret ${1}."
 	else
-		echo "Secret ${1} already exists, skippping."
+		echo "Secret ${1} already exists."
 	fi
 }
 
-function secret_exists {
-	echo "" | curl_vault GET v1/secret/data/${1} > /dev/null 2>&1
+function curl_vault {
+	curl --data @- --fail --header "X-Vault-Token: ${ORCA_VAULT_TOKEN}" --request ${1} --silent http://127.0.0.1:8200/${2}
 
 	return ${?}
 }
 
-function curl_vault {
-	local request=${1}
-	local path=${2}
-
-	curl --data @- --fail --header "X-Vault-Token: ${VAULT_TOKEN}" --request ${request} --silent http://127.0.0.1:8200/${path}
+function has_secret {
+	echo "" | curl_vault GET v1/secret/data/${1} > /dev/null 2>&1
 
 	return ${?}
 }

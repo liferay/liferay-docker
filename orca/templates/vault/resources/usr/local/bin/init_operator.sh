@@ -3,8 +3,10 @@
 vault operator init
 
 echo ""
-
 echo "Next steps:"
-echo "1. Store these keys into the 1Password vault for Orca"
-echo "2. Export the VAULT_TOKEN environment variable to the value of \"Initial Root Token on this container.\" (listed above)"
+echo ""
+echo "1. Store the generated keys in 1Password."
+echo ""
+echo "2. Export the environment variable ORCA_VAULT_TOKEN to the initial root token on this container (see above)."
+echo ""
 echo "3. Run init_secrets.sh"

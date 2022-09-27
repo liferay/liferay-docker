@@ -6,7 +6,7 @@ set -o pipefail
 function check_usage {
 	if [ ! -n ${ORCA_DB_ADDRESSES} ]
 	then
-		echo "Set the ORCA_DB_ADDRESSES environment variable to a comma separated list of database servers (e.g. db-1:3306,db-2:3306)."
+		echo "Set the environment variable ORCA_DB_ADDRESSES to a comma separated list of database servers (e.g. db-1:3306,db-2:3306)."
 
 		exit 1
 	fi
