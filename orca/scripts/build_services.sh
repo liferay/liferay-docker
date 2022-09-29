@@ -39,7 +39,7 @@ function add_services {
 
 		if [ ! -n "${host_config}" ]
 		then
-			echo "Couldn't find a matching host in the configuration. Set the HOST environment variable."
+			echo "Couldn't find a matching host in the configuration. Set the ORCA_HOST environment variable."
 
 			exit 1
 		fi
