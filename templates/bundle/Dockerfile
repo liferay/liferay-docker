@@ -22,7 +22,7 @@ COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_entrypoint.sh"]
 
-ENV JPDA_ADDRESS=8000
+ENV JPDA_ADDRESS=0.0.0.0:8000
 
 ENV LIFERAY_DISABLE_TRIAL_LICENSE=false
 ENV LIFERAY_HOME=/opt/liferay
