@@ -3,7 +3,7 @@
 function check_usage {
 	if [ ! -n "${ORCA_VAULT_ADDRESSES}" ] ||  [ ! -n "${ORCA_VAULT_TOKEN}" ]
 	then
-		echo "Set ORCA_VAULT_ADDRESSES and ORCA_VAULT_TOKEN to enable loading of secrets"
+		echo "Set the environment variables ORCA_VAULT_ADDRESSES and ORCA_VAULT_TOKEN."
 
 		exit 1
 	fi
@@ -18,9 +18,9 @@ function load_secrets {
        password=${password##*password\":\"}
        password=${password%%\"*}
 
-       echo ${password} > /tmp/orca-secrets/${secret}
+       echo "${password}" > "/tmp/orca-secrets/${secret}"
        
-       chmod 600 /tmp/orca-secrets/${secret}
+       chmod 600 "/tmp/orca-secrets/${secret}"
 	done
 }
 
