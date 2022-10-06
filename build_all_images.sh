@@ -234,6 +234,34 @@ function build_job_runner_image {
 	fi
 }
 
+function build_zabbix_server_image {
+	local latest_liferay_zabbix_server_version=$(get_latest_docker_hub_zabbix_server_version "liferay/zabbix-server")
+	local latest_official_zabbix_server_version=$(get_latest_docker_hub_zabbix_server_version "zabbix/zabbix-server-mysql")
+
+	if [[ "${latest_liferay_zabbix_server_version}" == "${latest_official_zabbix_server_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	then
+		echo ""
+		echo "Docker image Zabbix Server is up to date."
+
+		return
+	fi
+
+	echo ""
+	echo "Building Docker image Zabbix Server."
+	echo ""
+
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server.log
+
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	then
+		echo "FAILED: Zabbix Server" >> "${LOGS_DIR}/results"
+
+		exit 1
+	else
+		echo "SUCCESS: Zabbix Server" >> "${LOGS_DIR}/results"
+	fi
+}
+
 function get_latest_available_zulu_version {
 	local version=$(curl -H 'accept: */*' -L -s "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
 
@@ -244,6 +272,22 @@ function get_latest_docker_hub_version {
 	local token=$(curl -s "https://auth.docker.io/token?scope=repository:liferay/${1}:pull&service=registry.docker.io" | jq -r '.token')
 
 	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o '\\"org.label-schema.version\\":\\"[0-9]\.[0-9]\.[0-9]*\\"' | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
+
+	echo "${version}"
+}
+
+function get_latest_docker_hub_zabbix_server_version {
+	local image_tag="${1}"
+	local label_name="org.opencontainers.image.version"
+
+	if [[ "${image_tag}" =~ "liferay/" ]]
+	then
+		local label_name="org.label-schema.zabbix-version"
+	fi
+
+	local token=$(curl -s "https://auth.docker.io/token?scope=repository:${image_tag}:pull&service=registry.docker.io" | jq -r '.token')
+
+	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/${image_tag}/manifests/ubuntu-latest" | grep -o "\\\\\"${label_name}\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
 	echo "${version}"
 }
@@ -313,6 +357,8 @@ function main {
 	build_jdk11_image
 
 	build_jdk11_jdk8_image
+
+	build_zabbix_server_image
 
 	build_job_runner_image
 
