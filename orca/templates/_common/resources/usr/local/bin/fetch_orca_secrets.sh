@@ -14,13 +14,21 @@ function load_secrets {
 
 	for secret in "${@}"
 	do
-       local password=$(curl --fail --header "X-Vault-Token: ${ORCA_VAULT_TOKEN}" --request GET --silent "http://${VAULT_ADDRESS}/v1/secret/data/${secret}")
-       password=${password##*password\":\"}
-       password=${password%%\"*}
+		echo "Fetching secret ${secret}."
 
-       echo "${password}" > "/tmp/orca-secrets/${secret}"
-       
-       chmod 600 "/tmp/orca-secrets/${secret}"
+		local password=$(curl --fail --header "X-Vault-Token: ${ORCA_VAULT_TOKEN}" --request GET --silent "http://${ORCA_VAULT_ADDRESSES}/v1/secret/data/${secret}")
+
+		if [ "${?}" -gt 0 ]
+		then
+			echo "Fetching secret failed with error ${?}"
+		fi
+
+		password=${password##*password\":\"}
+		password=${password%%\"*}
+
+		echo "${password}" > "/tmp/orca-secrets/${secret}"
+
+		chmod 600 "/tmp/orca-secrets/${secret}"
 	done
 }
 
@@ -39,13 +47,11 @@ function wait_for_vault {
 
 	while true
 	do
-		for vault_address in ${ORCA_VAULT_ADDRESSES//,/ }
+		for ORCA_VAULT_ADDRESSES in ${ORCA_VAULT_ADDRESSES//,/ }
 		do
-			if ( curl --max-time 3 --silent "http://${vault_address}/v1/sys/health" | grep "\"sealed\":false" &>/dev/null)
+			if ( curl --max-time 3 --silent "http://${ORCA_VAULT_ADDRESSES}/v1/sys/health" | grep "\"sealed\":false" &>/dev/null)
 			then
-				echo "Vault server ${vault_address} is available."
-
-				VAULT_ADDRESS=${vault_address}
+				echo "Vault server ${ORCA_VAULT_ADDRESSES} is available."
 
 				return
 			fi

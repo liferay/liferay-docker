@@ -7,14 +7,16 @@ function check_usage {
 
 		exit 1
 	fi
+
+	export VAULT_TOKEN="${ORCA_VAULT_TOKEN}"
 }
 
 function create_password {
-	if ( ! has_secret ${1} )
+	if ( ! vault kv get secret/data/${1} > /dev/null 2>&1 )
 	then
 		local password=$(pwgen -1 -s 20)
 
-		echo "{\"data\": {\"password\": \"${password}\"}}" | curl_vault POST "v1/secret/data/${1}" > /dev/null
+		vault kv put secret/data/${1} "password=${password}"
 
 		echo "Generated secret ${1}."
 	else
@@ -22,20 +24,10 @@ function create_password {
 	fi
 }
 
-function curl_vault {
-	curl --data @- --fail --header "X-Vault-Token: ${ORCA_VAULT_TOKEN}" --request ${1} --silent http://127.0.0.1:8200/${2}
-
-	return ${?}
-}
-
-function has_secret {
-	echo "" | curl_vault GET v1/secret/data/${1} > /dev/null 2>&1
-
-	return ${?}
-}
-
 function main {
 	check_usage
+
+	vault secrets enable -path=secret kv >/dev/null 2>&1
 
 	create_password mysql_backup_password
 	create_password mysql_liferay_password
