@@ -2,7 +2,7 @@
 
 Simple default configuration to deploy Liferay DXP Clusters on Linux servers, only using simple tools.
 
-## Ubuntu reqirements
+## Ubuntu requirements
 
 Create a new mounted filesystem (xfs recommended) to /opt/gluster-data/gv0
 
@@ -20,3 +20,7 @@ Then log in to the first server and execute the following:
     $ gluster volume start gv0
     $ gluster volume info
     $ mount /opt/liferay/shared-volume
+
+## Running in other OS
+
+Only Ubuntu (22.04 ~ Jammy) is supported. If you need to run in another OS, please use a VM with Ubuntu. 
