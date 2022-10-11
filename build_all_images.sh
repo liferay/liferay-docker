@@ -262,6 +262,34 @@ function build_zabbix_server_image {
 	fi
 }
 
+function build_zabbix_server_web_interface_image {
+	local latest_liferay_zabbix_server_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "liferay/zabbix-server-web-interface")
+	local latest_official_zabbix_serverr_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "zabbix/zabbix-web-nginx-mysql")
+
+	if [[ "${latest_liferay_zabbix_server_web_interface_version}" == "${latest_official_zabbix_serverr_web_interface_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	then
+		echo ""
+		echo "Docker image Zabbix Server Web Interface is up to date."
+
+		return
+	fi
+
+	echo ""
+	echo "Building Docker image Zabbix Server Web Interface."
+	echo ""
+
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_serverr_web_interface_version} time ./build_zabbix_server_web_interface_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server.log
+
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	then
+		echo "FAILED: Zabbix Server Web Interface" >> "${LOGS_DIR}/results"
+
+		exit 1
+	else
+		echo "SUCCESS: Zabbix Server Web Interface" >> "${LOGS_DIR}/results"
+	fi
+}
+
 function get_latest_available_zulu_version {
 	local version=$(curl -H 'accept: */*' -L -s "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
 
@@ -350,19 +378,12 @@ function main {
 
 	mkdir -p "${LOGS_DIR}"
 
-	build_base_image
 
-	build_caddy_image
-
-	build_jdk11_image
-
-	build_jdk11_jdk8_image
 
 	build_zabbix_server_image
 
-	build_job_runner_image
+	build_zabbix_server_web_interface_image
 
-	build_bundle_images
 
 	echo ""
 	echo "Results: "
