@@ -126,6 +126,8 @@ function execute_command {
 	then
 		command_${1} "${2}" "${3}" "${4}"
 	else
+		echo "Unrecognized command for Orca ($1), passing to docker-compose..."
+
 		cd builds/deploy
 
 		docker-compose ${@}
