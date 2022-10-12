@@ -2,48 +2,6 @@
 
 set -e
 
-function build_services {
-	write_docker_compose_file 0 "services:"
-
-	if [ ! -n "${ORCA_HOST}" ]
-	then
-		ORCA_HOST=$(hostname)
-	fi
-
-	local host=$(query_configuration ".hosts.${ORCA_HOST}")
-
-	if [ ! -n "${host}" ]
-	then
-		ORCA_HOST="localhost"
-
-		host=$(query_configuration ".hosts.${ORCA_HOST}")
-
-		if [ ! -n "${host}" ]
-		then
-			echo "Unable to find a matching host in the configuration. Set the environment variable ORCA_HOST."
-
-			exit 1
-		fi
-	fi
-
-	for SERVICE_NAME in $(yq ".hosts.${ORCA_HOST}.services" < "${CONFIG_FILE}" | grep -v "  .*" | sed "s/-[ ]//" | sed "s/:.*//")
-	do
-		SERVICE_HOST="${SERVICE_NAME}-${ORCA_HOST}"
-
-		echo "Building ${SERVICE_NAME}."
-
-		rm -fr docker-build
-		mkdir -p docker-build
-
-		cp -a templates/_common/* docker-build
-		cp -a templates/${SERVICE_NAME}/* docker-build
-
-		build_service_$(echo ${SERVICE_NAME} | sed -e "s/-/_/")
-
-		rm -fr docker-build
-	done
-}
-
 function build_service_antivirus {
 	docker_build antivirus
 
@@ -283,6 +241,48 @@ function build_service_web_server {
 	write_docker_compose_file 1 "    image: web-server:${VERSION}"
 	write_docker_compose_file 1 "    ports:"
 	write_docker_compose_file 1 "        - \"80:80\""
+}
+
+function build_services {
+	write_docker_compose_file 0 "services:"
+
+	if [ ! -n "${ORCA_HOST}" ]
+	then
+		ORCA_HOST=$(hostname)
+	fi
+
+	local host=$(query_configuration ".hosts.${ORCA_HOST}")
+
+	if [ ! -n "${host}" ]
+	then
+		ORCA_HOST="localhost"
+
+		host=$(query_configuration ".hosts.${ORCA_HOST}")
+
+		if [ ! -n "${host}" ]
+		then
+			echo "Unable to find a matching host in the configuration. Set the environment variable ORCA_HOST."
+
+			exit 1
+		fi
+	fi
+
+	for SERVICE_NAME in $(yq ".hosts.${ORCA_HOST}.services" < "${CONFIG_FILE}" | grep -v "  .*" | sed "s/-[ ]//" | sed "s/:.*//")
+	do
+		SERVICE_HOST="${SERVICE_NAME}-${ORCA_HOST}"
+
+		echo "Building ${SERVICE_NAME}."
+
+		rm -fr docker-build
+		mkdir -p docker-build
+
+		cp -a templates/_common/* docker-build
+		cp -a templates/${SERVICE_NAME}/* docker-build
+
+		build_service_$(echo ${SERVICE_NAME} | sed -e "s/-/_/")
+
+		rm -fr docker-build
+	done
 }
 
 function check_usage {
