@@ -62,8 +62,8 @@ function build_backup {
 	write_docker_compose 1 "    container_name: ${SERVICE}"
 	write_docker_compose 1 "    environment:"
 	write_docker_compose 1 "        - ORCA_BACKUP_CRON_EXPRESSION=0 */4 * * *"
-	write_docker_compose 1 "        - ORCA_DB_ADDRESSES=$(find_services db host_port 3306)"
-	write_docker_compose 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
+	write_docker_compose 1 "        - ORCA_DB_ADDRESSES=$(query_services db host_port 3306)"
+	write_docker_compose 1 "        - ORCA_VAULT_ADDRESSES=$(query_services vault host_port 8200)"
 	write_docker_compose 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_backup:-}"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
 	write_docker_compose 1 "    image: backup:${VERSION}"
@@ -93,7 +93,7 @@ function build_db {
 	write_docker_compose 1 "    environment:"
 	write_docker_compose 1 "        - MARIADB_DATABASE=lportal"
 	write_docker_compose 1 "        - MARIADB_EXTRA_FLAGS=--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --wsrep_provider_options=ist.recv_addr=${host_ip}:4568;ist.recv_bind=0.0.0.0:4568 --wsrep_node_incoming_address=${host_ip} --wsrep_sst_receive_address=${host_ip}"
-	write_docker_compose 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://$(find_services db host_port 4567 true)"
+	write_docker_compose 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://$(query_services db host_port 4567 true)"
 	write_docker_compose 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${ORCA_DB_SKIP_WAIT:-}"
 	write_docker_compose 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
 	write_docker_compose 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/tmp/orca-secrets/mysql_backup_password"
@@ -103,9 +103,9 @@ function build_db {
 	write_docker_compose 1 "        - MARIADB_ROOT_HOST=localhost"
 	write_docker_compose 1 "        - MARIADB_ROOT_PASSWORD_FILE=/tmp/orca-secrets/mysql_root_password"
 	write_docker_compose 1 "        - MARIADB_USER=lportal"
-	write_docker_compose 1 "        - ORCA_DB_ADDRESSES=$(find_services db host_port 3306 true)"
+	write_docker_compose 1 "        - ORCA_DB_ADDRESSES=$(query_services db host_port 3306 true)"
 	write_docker_compose 1 "        - ORCA_DB_SKIP_WAIT=\${ORCA_DB_SKIP_WAIT:-}"
-	write_docker_compose 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
+	write_docker_compose 1 "        - ORCA_VAULT_ADDRESSES=$(query_services vault host_port 8200)"
 	write_docker_compose 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_db:-}"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
 	write_docker_compose 1 "    image: db:${VERSION}"
@@ -150,13 +150,13 @@ function build_liferay {
 
 	docker_build liferay
 
-	local search_addresses=$(find_services search host_port 9200)
+	local search_addresses=$(query_services search host_port 9200)
 
 	write_docker_compose 1 "${SERVICE}:"
 	write_docker_compose 1 "    container_name: ${SERVICE}"
 	write_docker_compose 1 "    environment:"
 
-	if [ -n "$(find_services liferay host_port 8080 true)" ]
+	if [ -n "$(query_services liferay host_port 8080 true)" ]
 	then
 		write_docker_compose 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_ENABLED=true"
 		write_docker_compose 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_CONTROL=control-channel-${ORCA_HOST}"
@@ -166,7 +166,7 @@ function build_liferay {
 		write_docker_compose 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_AUTODETECT_PERIOD_ADDRESS="
 	fi
 
-	write_docker_compose 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_HOSTNAME=\"$(find_services antivirus host_port)\""
+	write_docker_compose 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_HOSTNAME=\"$(query_services antivirus host_port)\""
 	write_docker_compose 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_PORT=I\"3310\""
 	write_docker_compose 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_TIMEOUT=I\"10000\""
 	write_docker_compose 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_NETWORK_UPPERCASEH_OST_UPPERCASEA_DDRESSES=\"${search_addresses}\""
@@ -188,7 +188,7 @@ function build_liferay {
 	write_docker_compose 1 "        - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true"
 	write_docker_compose 1 "        - LIFERAY_WEB_PERIOD_SERVER_PERIOD_DISPLAY_PERIOD_NODE=true"
 	write_docker_compose 1 "        - ORCA_LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
-	write_docker_compose 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
+	write_docker_compose 1 "        - ORCA_VAULT_ADDRESSES=$(query_services vault host_port 8200)"
 	write_docker_compose 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_liferay:-}"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
 	write_docker_compose 1 "    image: liferay:${VERSION}"
@@ -205,7 +205,7 @@ function build_log_proxy {
 	docker_build log-proxy
 
 	write_docker_compose 1 "${SERVICE}:"
-	write_docker_compose 1 "    command: syslog+udp://$(find_services log-server host_port 514)"
+	write_docker_compose 1 "    command: syslog+udp://$(query_services log-server host_port 514)"
 	write_docker_compose 1 "    container_name: ${SERVICE}"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
 	write_docker_compose 1 "    image: log-proxy:${VERSION}"
@@ -233,9 +233,9 @@ function build_search {
 	write_docker_compose 1 "${SERVICE}:"
 	write_docker_compose 1 "    container_name: ${SERVICE}"
 	write_docker_compose 1 "    environment:"
-	write_docker_compose 1 "        - cluster.initial_master_nodes=$(find_services search service_name)"
+	write_docker_compose 1 "        - cluster.initial_master_nodes=$(query_services search service_name)"
 	write_docker_compose 1 "        - cluster.name=liferay-search"
-	write_docker_compose 1 "        - discovery.seed_hosts=$(find_services search host_port 9300 true)"
+	write_docker_compose 1 "        - discovery.seed_hosts=$(query_services search host_port 9300 true)"
 	write_docker_compose 1 "        - network.publish_host=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
 	write_docker_compose 1 "        - node.name=${SERVICE_HOST}"
 	write_docker_compose 1 "        - xpack.ml.enabled=false"
@@ -278,7 +278,7 @@ function build_web_server {
 	write_docker_compose 1 "${SERVICE}:"
 	write_docker_compose 1 "    container_name: ${SERVICE}"
 	write_docker_compose 1 "    environment:"
-	write_docker_compose 1 "        - ORCA_WEB_SERVER_BALANCE_MEMBERS=$(find_services liferay host_port 8009)"
+	write_docker_compose 1 "        - ORCA_WEB_SERVER_BALANCE_MEMBERS=$(query_services liferay host_port 8009)"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
 	write_docker_compose 1 "    image: web-server:${VERSION}"
 	write_docker_compose 1 "    ports:"
@@ -361,7 +361,7 @@ function get_config {
 	fi
 }
 
-function find_services {
+function query_services {
 	local list
 
 	for host in $(yq ".hosts" < ${CONFIG_FILE} | grep -v "  .*" | sed "s/-[ ]//" | sed "s/:.*//")
