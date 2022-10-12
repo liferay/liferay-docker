@@ -6,41 +6,42 @@ function check_usage {
 		echo "Usage: orca <command>"
 		echo ""
 		echo "Available commands:"
-		echo "  - all: builds as 'latest' and deploys automatically"
-		echo "  - build: calls build_services.sh"
-		echo "  - force_primary: changes the database configuration and makes the current server the primary. Only use this in emergencies and on the node which was last written by the cluster."
-		echo "  - install: installs this script"
-		echo "  - mysql: logs into the db server on this container"
-		echo "  - setup_shared_volume: enables glusterfs and creates the necessary mount point for the shared volume"
-		echo "  - ssh <service name>: logs in to the named service container"
-		echo "  - unseal: unseals the vault operator"
-		echo "  - up: validates the configuration and starts the services with docker-compose up"
+		echo "    all: Build as \"latest\" and deploy automatically"
+		echo "    build: Call build_services.sh"
+		echo "    force_primary: Change the database server configuration and make the current server the primary. Only use this in emergencies and on the node which was last written by the cluster."
+		echo "    install: Install this script"
+		echo "    mysql: Log into database server on this host"
+		echo "    setup_shared_volume: Enable GlusterFS and create the necessary mount point for the shared volume"
+		echo "    ssh <service>: Log in to the service's container"
+		echo "    unseal: Unseal the vault operator"
+		echo "    up: Validate the configuration and start the services with \"docker-compose up\""
 		echo ""
-		echo "All other commands are executed as docker-compose commands from the correct folder."
+		echo "All other commands are executed as docker-compose commands from the correct directory."
 		echo ""
-		echo "The script reads the following environment variables:"
+		echo "This script reads the following environment variables:"
 		echo ""
-		echo "    ORCA_DB_BOOTSTRAP (optional): Set this to yes if you'd like to start a new database cluster."
-		echo "    ORCA_DB_SKIP_WAIT (optional): Set this to false if you would like the db container to start without waiting for the others."
+		echo "    ORCA_DB_BOOTSTRAP (optional): Set this to yes to start a new database cluster"
+		echo "    ORCA_DB_SKIP_WAIT (optional): Set this to true if the database container should start without waiting for others"
 		echo ""
 		echo "Examples:"
-		echo "  - orca up -d liferay: starts the Liferay service in the background"
-		echo "  - orca ps: shows the list of running services"
+		echo ""
+		echo "    orca ps: Show the list of running services"
+		echo "    orca up -d liferay: Start the Liferay service in the background"
 
 		exit 1
 	fi
 }
 
-function command_backup {
-	cd "builds/deploy"
+function command_all {
+	command_build latest
 
-	docker-compose exec "backup" "/usr/local/bin/backup.sh"
+	command_deploy latest
 }
 
-function command_all {
-	command_build "latest"
+function command_backup {
+	cd builds/deploy
 
-	command_deploy "latest"
+	docker-compose exec backup /usr/local/bin/backup.sh
 }
 
 function command_build {
@@ -48,9 +49,9 @@ function command_build {
 }
 
 function command_deploy {
-	cd "builds"
+	cd builds
 
-	ln -fs "${1}" "deploy"
+	ln -fs ${1} deploy
 }
 
 function command_force_primary {
@@ -66,36 +67,37 @@ function command_install {
 }
 
 function command_mysql {
-	cd "builds/deploy"
+	cd builds/deploy
 
-	docker-compose exec "db" "/usr/local/bin/connect_to_mysql.sh"
+	docker-compose exec db /usr/local/bin/connect_to_mysql.sh
 }
 
 function command_setup_shared_volume {
 	if [ ! -e "/opt/gluster-data/gv0" ]
 	then
-		echo "To set up the shared volume, the /opt/gluster-data/gv0 directory must exist on the server. It's recommended to have it as a separate volume with xfs on it."
+		echo "To set up the shared volume, the /opt/gluster-data/gv0 directory must exist on the host. It should be a separate volume formatted with XFS."
 
-		retun
+		return
 	fi
 
 	systemctl enable glusterd
 	systemctl start glusterd
 
 	mkdir -p /opt/liferay/shared-volume
+
 	echo "$(hostname):/gv0 /opt/liferay/shared-volume glusterfs defaults 0 0" >> /etc/fstab
 }
 
 function command_ssh {
-	cd "builds/deploy"
+	cd builds/deploy
 
-	docker-compose exec "${1}" "/bin/bash"
+	docker-compose exec ${1} /bin/bash
 }
 
 function command_unseal {
-	cd "builds/deploy"
+	cd builds/deploy
 
-	docker-compose exec "vault" /usr/bin/vault operator unseal
+	docker-compose exec vault /usr/bin/vault operator unseal
 }
 
 function command_up {
@@ -113,7 +115,7 @@ function command_up {
 		done
 	fi
 
-	cd "builds/deploy"
+	cd builds/deploy
 
 	docker-compose up ${@}
 }
@@ -123,7 +125,7 @@ function execute_command {
 	then
 		command_${1} "${2}" "${3}" "${4}"
 	else
-		cd "builds/deploy"
+		cd builds/deploy
 
 		docker-compose ${@}
 	fi

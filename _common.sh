@@ -24,7 +24,7 @@ function check_utils {
 
 	for util in "${@}"
 	do
-		command -v "${util}" >/dev/null 2>&1 || { echo >&2 "The utility ${util} is not installed."; exit 1; }
+		command -v "${util}" >/dev/null 2>&1 || {echo >&2 "The utility ${util} is not installed."; exit 1;}
 	done
 }
 

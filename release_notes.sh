@@ -13,10 +13,10 @@ function check_usage {
 		echo ""
 		echo "This script requires the first parameter to be set to one of these options:"
 		echo ""
-		echo "    commit: Writes and commits the necessary version change with the change log"
+		echo "    commit: Write and commit the necessary version change with the change log"
 		echo "    display: Display the required version number change"
 		echo "    fail-on-change: The script will return an error code if there was a version number changing commit since the last release notes change"
-		echo "    get-version: Returns the current version number"
+		echo "    get-version: Return the current version number"
 
 		exit 1
 	fi
