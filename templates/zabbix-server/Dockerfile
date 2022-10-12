@@ -51,7 +51,7 @@ RUN apt-get update && \
 	apt-get clean
 
 RUN groupadd --gid 1995 --system zabbix && \
-	useradd --comment "Zabbix Monitoring System" -G root,dialout -g zabbix --home-dir /var/lib/zabbix/ --shell /sbin/nologin --system --uid 1997 zabbix
+	useradd -G root,dialout -g zabbix --home-dir /var/lib/zabbix/ --shell /sbin/nologin --system --uid 1997 zabbix
 
 RUN chown --quiet -R zabbix:root /etc/zabbix /var/lib/zabbix && \
 	chgrp -R 0 /etc/zabbix /var/lib/zabbix && \
