@@ -382,13 +382,6 @@ function get_config {
 }
 
 function find_services {
-	local colon_and_port="${3}"
-
-	if [ -n "${colon_and_port}" ]
-	then
-		colon_and_port=":${colon_and_port}"
-	fi
-
 	local list
 
 	for host in $(yq ".hosts" < ${CONFIG_FILE} | grep -v "  .*" | sed "s/-[ ]//" | sed "s/:.*//")
@@ -408,11 +401,11 @@ function find_services {
 				then
 					if [ "${host}" == "localhost" ] || [ "${host}" == "${ORCA_HOST}" ]
 					then
-						item="${service}-${host}${colon_and_port}"
+						item="${service}-${host}:${3}"
 					else
 						local host_ip=$(get_config .hosts.${host}.ip ${host})
 
-						item="${host_ip}${colon_and_port}"
+						item="${host_ip}:${3}"
 					fi
 				elif [ "${2}" == "service_name" ]
 				then
