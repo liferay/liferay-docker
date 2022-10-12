@@ -332,26 +332,6 @@ function choose_configuration {
 	fi
 }
 
-function write {
-	if [ ${1} -eq 0 ]
-	then
-		echo "${2}" >> ${DOCKER_COMPOSE_FILE}
-
-		return
-	fi
-
-	local line=""
-
-	for i in $(seq ${1})
-	do
-		line="${line}    "
-	done
-
-	line="${line}${2}"
-
-	echo "${line}" >> ${DOCKER_COMPOSE_FILE}
-}
-
 function create_docker_compose_file {
 	BUILD_DIR="builds/${VERSION}"
 	DOCKER_COMPOSE_FILE="${BUILD_DIR}/docker-compose.yml"
@@ -434,6 +414,26 @@ function main {
 	create_docker_compose_file
 
 	add_services
+}
+
+function write {
+	if [ ${1} -eq 0 ]
+	then
+		echo "${2}" >> ${DOCKER_COMPOSE_FILE}
+
+		return
+	fi
+
+	local line=""
+
+	for i in $(seq ${1})
+	do
+		line="${line}    "
+	done
+
+	line="${line}${2}"
+
+	echo "${line}" >> ${DOCKER_COMPOSE_FILE}
 }
 
 main ${@}
