@@ -264,9 +264,9 @@ function build_zabbix_server_image {
 
 function build_zabbix_server_web_interface_image {
 	local latest_liferay_zabbix_server_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "liferay/zabbix-server-web-interface")
-	local latest_official_zabbix_serverr_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "zabbix/zabbix-web-nginx-mysql")
+	local latest_official_zabbix_server_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "zabbix/zabbix-web-nginx-mysql")
 
-	if [[ "${latest_liferay_zabbix_server_web_interface_version}" == "${latest_official_zabbix_serverr_web_interface_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [[ "${latest_liferay_zabbix_server_web_interface_version}" == "${latest_official_zabbix_server_web_interface_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
 		echo "Docker image Zabbix Server Web Interface is up to date."
@@ -278,7 +278,7 @@ function build_zabbix_server_web_interface_image {
 	echo "Building Docker image Zabbix Server Web Interface."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_serverr_web_interface_version} time ./build_zabbix_server_web_interface_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server_web_interface.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_server_web_interface_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server_web_interface.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
