@@ -244,6 +244,16 @@ function build_service_web_server {
 }
 
 function build_services {
+	BUILD_DIR="builds/${VERSION}"
+	DOCKER_COMPOSE_FILE="${BUILD_DIR}/docker-compose.yml"
+
+	mkdir -p "${BUILD_DIR}"
+
+	if [ -e "${DOCKER_COMPOSE_FILE}" ]
+	then
+		rm -f "${DOCKER_COMPOSE_FILE}"
+	fi
+
 	write_docker_compose_file 0 "services:"
 
 	if [ ! -n "${ORCA_HOST}" ]
@@ -332,18 +342,6 @@ function choose_configuration {
 	fi
 }
 
-function create_docker_compose_file {
-	BUILD_DIR="builds/${VERSION}"
-	DOCKER_COMPOSE_FILE="${BUILD_DIR}/docker-compose.yml"
-
-	mkdir -p "${BUILD_DIR}"
-
-	if [ -e "${DOCKER_COMPOSE_FILE}" ]
-	then
-		rm -f "${DOCKER_COMPOSE_FILE}"
-	fi
-}
-
 function docker_build {
 	docker build \
 		--tag "${1}:${VERSION}" \
@@ -354,8 +352,6 @@ function main {
 	check_usage ${@}
 
 	choose_configuration
-
-	create_docker_compose_file
 
 	build_services
 }
