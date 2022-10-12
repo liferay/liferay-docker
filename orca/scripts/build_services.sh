@@ -350,6 +350,16 @@ function docker_build {
 		docker-build
 }
 
+function main {
+	check_usage ${@}
+
+	choose_configuration
+
+	create_docker_compose_file
+
+	add_services
+}
+
 function query_configuration {
 	local yq_output=$(yq ${1} < ${CONFIG_FILE})
 
@@ -359,16 +369,6 @@ function query_configuration {
 	else
 		echo "${yq_output}"
 	fi
-}
-
-function main {
-	check_usage ${@}
-
-	choose_configuration
-
-	create_docker_compose_file
-
-	add_services
 }
 
 function query_services {
