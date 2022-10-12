@@ -15,11 +15,12 @@ function add_services {
 	if [ ! -n "${host_config}" ]
 	then
 		ORCA_HOST="localhost"
+
 		host_config=$(get_config ".hosts.${ORCA_HOST}")
 
 		if [ ! -n "${host_config}" ]
 		then
-			echo "Couldn't find a matching host in the configuration. Set the ORCA_HOST environment variable."
+			echo "Unable to find a matching host in the configuration. Set the environment variable ORCA_HOST."
 
 			exit 1
 		fi
@@ -31,15 +32,13 @@ function add_services {
 
 		echo "Building ${SERVICE}."
 
-		local build_service_function=build_$(echo ${SERVICE} | sed -e "s/-/_/")
-
 		rm -fr docker-build
 		mkdir -p docker-build
 
 		cp -a templates/_common/* docker-build
 		cp -a templates/${SERVICE}/* docker-build
 
-		${build_service_function}
+		build_$(echo ${SERVICE} | sed -e "s/-/_/")
 
 		rm -fr docker-build
 	done
@@ -59,22 +58,18 @@ function build_antivirus {
 function build_backup {
 	docker_build backup
 
-	local db_addresses=$(find_services db host_port "3306")
-	local vault_addresses=$(find_services vault host_port 8200)
-
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
 	compose_add 1 "        - ORCA_BACKUP_CRON_EXPRESSION=0 */4 * * *"
-	compose_add 1 "        - ORCA_DB_ADDRESSES=${db_addresses}"
-	compose_add 1 "        - ORCA_VAULT_ADDRESSES=${vault_addresses}"
+	compose_add 1 "        - ORCA_DB_ADDRESSES=$(find_services db host_port 3306)"
+	compose_add 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
 	compose_add 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_backup:-}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: backup:${VERSION}"
 	compose_add 1 "    volumes:"
 	compose_add 1 "        - /opt/liferay/backups:/opt/liferay/backups"
 	compose_add 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
-
 }
 
 function build_ci {
@@ -93,17 +88,14 @@ function build_ci {
 function build_db {
 	docker_build db
 
-	local cluster_addresses=$(find_services db host_port 4567 true)
-	local db_addresses=$(find_services db host_port 3306 true)
 	local host_ip=$(get_config ".hosts.${ORCA_HOST}.ip" ${SERVICE_HOST})
-	local vault_addresses=$(find_services vault host_port 8200)
 
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
 	compose_add 1 "        - MARIADB_DATABASE=lportal"
 	compose_add 1 "        - MARIADB_EXTRA_FLAGS=--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --wsrep_provider_options=ist.recv_addr=${host_ip}:4568;ist.recv_bind=0.0.0.0:4568 --wsrep_node_incoming_address=${host_ip} --wsrep_sst_receive_address=${host_ip}"
-	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://${cluster_addresses}"
+	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://$(find_services db host_port 4567 true)"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${ORCA_DB_SKIP_WAIT:-}"
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
 	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/tmp/orca-secrets/mysql_backup_password"
@@ -113,9 +105,9 @@ function build_db {
 	compose_add 1 "        - MARIADB_ROOT_HOST=localhost"
 	compose_add 1 "        - MARIADB_ROOT_PASSWORD_FILE=/tmp/orca-secrets/mysql_root_password"
 	compose_add 1 "        - MARIADB_USER=lportal"
-	compose_add 1 "        - ORCA_DB_ADDRESSES=${db_addresses}"
+	compose_add 1 "        - ORCA_DB_ADDRESSES=$(find_services db host_port 3306 true)"
 	compose_add 1 "        - ORCA_DB_SKIP_WAIT=\${ORCA_DB_SKIP_WAIT:-}"
-	compose_add 1 "        - ORCA_VAULT_ADDRESSES=${vault_addresses}"
+	compose_add 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
 	compose_add 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_db:-}"
 	compose_add 1 "    hostname: ${SERVICE_HOST}"
 	compose_add 1 "    image: db:${VERSION}"
