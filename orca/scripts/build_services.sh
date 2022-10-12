@@ -2,7 +2,7 @@
 
 set -e
 
-function add_services {
+function build_services {
 	write_docker_compose_file 0 "services:"
 
 	if [ ! -n "${ORCA_HOST}" ]
@@ -357,7 +357,7 @@ function main {
 
 	create_docker_compose_file
 
-	add_services
+	build_services
 }
 
 function query_configuration {
