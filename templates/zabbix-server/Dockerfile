@@ -1,10 +1,11 @@
-# Original dockerfile https://github.com/zabbix/zabbix-docker/blob/6.2/Dockerfiles/server-mysql/ubuntu/Dockerfile
+#
+# See https://github.com/zabbix/zabbix-docker/blob/6.2/Dockerfiles/server-mysql/ubuntu/Dockerfile
+#
 
-ARG BUILD_BASE_IMAGE=zabbix/zabbix-server-mysql:ubuntu-latest
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
-FROM ${BUILD_BASE_IMAGE} as base
+FROM zabbix/zabbix-server-mysql:ubuntu-latest as zabbix-server-mysql
 
 FROM --platform=${TARGETPLATFORM} liferay/base:latest
 
@@ -29,16 +30,16 @@ LABEL org.label-schema.zabbix-version="${LABEL_ZABBIX_VERSION}"
 
 STOPSIGNAL SIGTERM
 
-COPY --from=base ["/usr/sbin/zabbix_server", "/usr/sbin/zabbix_server"]
-COPY --from=base ["/usr/bin/zabbix_get", "/usr/bin/zabbix_get"]
-COPY --from=base ["/usr/bin/zabbix_sender", "/usr/bin/zabbix_sender"]
-COPY --from=base ["/etc/zabbix/zabbix_server.conf", "/etc/zabbix/zabbix_server.conf"]
-COPY --from=base ["/usr/share/doc/zabbix-server-mysql/create.sql.gz", "/usr/share/doc/zabbix-server-mysql/create.sql.gz"]
-COPY --from=base ["/usr/bin/docker-entrypoint.sh", "/usr/bin/docker-entrypoint.sh"]
-COPY --from=base ["/var/lib/zabbix", "/var/lib/zabbix"]
-COPY --from=base ["/etc/zabbix", "/etc/zabbix"]
-COPY --from=base ["/usr/lib/zabbix/", "/usr/lib/zabbix/"]
-COPY --from=base ["/usr/share/doc/zabbix-server-mysql", "/usr/share/doc/zabbix-server-mysql"]
+COPY --from=zabbix-server-mysql ["/usr/sbin/zabbix_server", "/usr/sbin/zabbix_server"]
+COPY --from=zabbix-server-mysql ["/usr/bin/zabbix_get", "/usr/bin/zabbix_get"]
+COPY --from=zabbix-server-mysql ["/usr/bin/zabbix_sender", "/usr/bin/zabbix_sender"]
+COPY --from=zabbix-server-mysql ["/etc/zabbix/zabbix_server.conf", "/etc/zabbix/zabbix_server.conf"]
+COPY --from=zabbix-server-mysql ["/usr/share/doc/zabbix-server-mysql/create.sql.gz", "/usr/share/doc/zabbix-server-mysql/create.sql.gz"]
+COPY --from=zabbix-server-mysql ["/usr/bin/docker-entrypoint.sh", "/usr/bin/docker-entrypoint.sh"]
+COPY --from=zabbix-server-mysql ["/var/lib/zabbix", "/var/lib/zabbix"]
+COPY --from=zabbix-server-mysql ["/etc/zabbix", "/etc/zabbix"]
+COPY --from=zabbix-server-mysql ["/usr/lib/zabbix/", "/usr/lib/zabbix/"]
+COPY --from=zabbix-server-mysql ["/usr/share/doc/zabbix-server-mysql", "/usr/share/doc/zabbix-server-mysql"]
 
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes fping iputils-ping libevent-2.1 libcurl4 libmysqlclient21 libopenipmi0 libpcre2-8-0 libsnmp40 libssh-4 libssl3 libxml2 mysql-client nmap snmp-mibs-downloader traceroute tzdata unixodbc && \
