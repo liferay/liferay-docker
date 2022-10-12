@@ -19,14 +19,12 @@ ARG LABEL_ZABBIX_VERSION
 CMD ["/usr/sbin/zabbix_server", "--foreground", "-c", "/etc/zabbix/zabbix_server.conf"]
 
 COPY --from=zabbix-server-mysql ["/etc/zabbix", "/etc/zabbix"]
-COPY --from=zabbix-server-mysql ["/etc/zabbix/zabbix_server.conf", "/etc/zabbix/zabbix_server.conf"]
 COPY --from=zabbix-server-mysql ["/usr/bin/docker-entrypoint.sh", "/usr/bin/docker-entrypoint.sh"]
 COPY --from=zabbix-server-mysql ["/usr/bin/zabbix_get", "/usr/bin/zabbix_get"]
 COPY --from=zabbix-server-mysql ["/usr/bin/zabbix_sender", "/usr/bin/zabbix_sender"]
-COPY --from=zabbix-server-mysql ["/usr/lib/zabbix/", "/usr/lib/zabbix/"]
+COPY --from=zabbix-server-mysql ["/usr/lib/zabbix", "/usr/lib/zabbix"]
 COPY --from=zabbix-server-mysql ["/usr/sbin/zabbix_server", "/usr/sbin/zabbix_server"]
 COPY --from=zabbix-server-mysql ["/usr/share/doc/zabbix-server-mysql", "/usr/share/doc/zabbix-server-mysql"]
-COPY --from=zabbix-server-mysql ["/usr/share/doc/zabbix-server-mysql/create.sql.gz", "/usr/share/doc/zabbix-server-mysql/create.sql.gz"]
 COPY --from=zabbix-server-mysql ["/var/lib/zabbix", "/var/lib/zabbix"]
 
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/bin/docker-entrypoint.sh"]
