@@ -88,8 +88,6 @@ function build_ci {
 function build_db {
 	docker_build db
 
-	local host_ip=$(get_config ".hosts.${ORCA_HOST}.ip" ${SERVICE_HOST})
-
 	compose_add 1 "${SERVICE}:"
 	compose_add 1 "    container_name: ${SERVICE}"
 	compose_add 1 "    environment:"
@@ -100,7 +98,7 @@ function build_db {
 	compose_add 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
 	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/tmp/orca-secrets/mysql_backup_password"
 	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_USER=orca_mariabackup"
-	compose_add 1 "        - MARIADB_GALERA_NODE_ADDRESS=${host_ip}"
+	compose_add 1 "        - MARIADB_GALERA_NODE_ADDRESS=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
 	compose_add 1 "        - MARIADB_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
 	compose_add 1 "        - MARIADB_ROOT_HOST=localhost"
 	compose_add 1 "        - MARIADB_ROOT_PASSWORD_FILE=/tmp/orca-secrets/mysql_root_password"
