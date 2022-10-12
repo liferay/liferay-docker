@@ -26,19 +26,19 @@ function add_services {
 		fi
 	fi
 
-	for SERVICE in $(yq ".hosts.${ORCA_HOST}.services" < "${CONFIG_FILE}" | grep -v "  .*" | sed "s/-[ ]//" | sed "s/:.*//")
+	for SERVICE_NAME in $(yq ".hosts.${ORCA_HOST}.services" < "${CONFIG_FILE}" | grep -v "  .*" | sed "s/-[ ]//" | sed "s/:.*//")
 	do
-		SERVICE_HOST="${SERVICE}-${ORCA_HOST}"
+		SERVICE_HOST="${SERVICE_NAME}-${ORCA_HOST}"
 
-		echo "Building ${SERVICE}."
+		echo "Building ${SERVICE_NAME}."
 
 		rm -fr docker-build
 		mkdir -p docker-build
 
 		cp -a templates/_common/* docker-build
-		cp -a templates/${SERVICE}/* docker-build
+		cp -a templates/${SERVICE_NAME}/* docker-build
 
-		build_$(echo ${SERVICE} | sed -e "s/-/_/")
+		build_$(echo ${SERVICE_NAME} | sed -e "s/-/_/")
 
 		rm -fr docker-build
 	done
@@ -47,8 +47,8 @@ function add_services {
 function build_antivirus {
 	docker_build antivirus
 
-	write_docker_compose 1 "${SERVICE}:"
-	write_docker_compose 1 "    container_name: ${SERVICE}"
+	write_docker_compose 1 "${SERVICE_NAME}:"
+	write_docker_compose 1 "    container_name: ${SERVICE_NAME}"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
 	write_docker_compose 1 "    image: antivirus:${VERSION}"
 	write_docker_compose 1 "    ports:"
@@ -58,8 +58,8 @@ function build_antivirus {
 function build_backup {
 	docker_build backup
 
-	write_docker_compose 1 "${SERVICE}:"
-	write_docker_compose 1 "    container_name: ${SERVICE}"
+	write_docker_compose 1 "${SERVICE_NAME}:"
+	write_docker_compose 1 "    container_name: ${SERVICE_NAME}"
 	write_docker_compose 1 "    environment:"
 	write_docker_compose 1 "        - ORCA_BACKUP_CRON_EXPRESSION=0 */4 * * *"
 	write_docker_compose 1 "        - ORCA_DB_ADDRESSES=$(query_services db host_port 3306)"
@@ -75,8 +75,8 @@ function build_backup {
 function build_ci {
 	docker_build ci
 
-	write_docker_compose 1 "${SERVICE}:"
-	write_docker_compose 1 "    container_name: ${SERVICE}"
+	write_docker_compose 1 "${SERVICE_NAME}:"
+	write_docker_compose 1 "    container_name: ${SERVICE_NAME}"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
 	write_docker_compose 1 "    image: ci:${VERSION}"
 	write_docker_compose 1 "    ports:"
@@ -88,8 +88,8 @@ function build_ci {
 function build_db {
 	docker_build db
 
-	write_docker_compose 1 "${SERVICE}:"
-	write_docker_compose 1 "    container_name: ${SERVICE}"
+	write_docker_compose 1 "${SERVICE_NAME}:"
+	write_docker_compose 1 "    container_name: ${SERVICE_NAME}"
 	write_docker_compose 1 "    environment:"
 	write_docker_compose 1 "        - MARIADB_DATABASE=lportal"
 	write_docker_compose 1 "        - MARIADB_EXTRA_FLAGS=--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --wsrep_provider_options=ist.recv_addr=${host_ip}:4568;ist.recv_bind=0.0.0.0:4568 --wsrep_node_incoming_address=${host_ip} --wsrep_sst_receive_address=${host_ip}"
@@ -152,8 +152,8 @@ function build_liferay {
 
 	local search_addresses=$(query_services search host_port 9200)
 
-	write_docker_compose 1 "${SERVICE}:"
-	write_docker_compose 1 "    container_name: ${SERVICE}"
+	write_docker_compose 1 "${SERVICE_NAME}:"
+	write_docker_compose 1 "    container_name: ${SERVICE_NAME}"
 	write_docker_compose 1 "    environment:"
 
 	if [ -n "$(query_services liferay host_port 8080 true)" ]
@@ -204,9 +204,9 @@ function build_liferay {
 function build_log_proxy {
 	docker_build log-proxy
 
-	write_docker_compose 1 "${SERVICE}:"
+	write_docker_compose 1 "${SERVICE_NAME}:"
 	write_docker_compose 1 "    command: syslog+udp://$(query_services log-server host_port 514)"
-	write_docker_compose 1 "    container_name: ${SERVICE}"
+	write_docker_compose 1 "    container_name: ${SERVICE_NAME}"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
 	write_docker_compose 1 "    image: log-proxy:${VERSION}"
 	write_docker_compose 1 "    volumes:"
@@ -216,9 +216,9 @@ function build_log_proxy {
 function build_log_server {
 	docker_build log-server
 
-	write_docker_compose 1 "${SERVICE}:"
+	write_docker_compose 1 "${SERVICE_NAME}:"
 	write_docker_compose 1 "    command: -F --no-caps"
-	write_docker_compose 1 "    container_name: ${SERVICE}"
+	write_docker_compose 1 "    container_name: ${SERVICE_NAME}"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
 	write_docker_compose 1 "    image: log-server:${VERSION}"
 	write_docker_compose 1 "    ports:"
@@ -230,8 +230,8 @@ function build_log_server {
 function build_search {
 	docker_build search
 
-	write_docker_compose 1 "${SERVICE}:"
-	write_docker_compose 1 "    container_name: ${SERVICE}"
+	write_docker_compose 1 "${SERVICE_NAME}:"
+	write_docker_compose 1 "    container_name: ${SERVICE_NAME}"
 	write_docker_compose 1 "    environment:"
 	write_docker_compose 1 "        - cluster.initial_master_nodes=$(query_services search service_name)"
 	write_docker_compose 1 "        - cluster.name=liferay-search"
@@ -259,8 +259,8 @@ function build_search {
 function build_vault {
 	docker_build vault
 
-	write_docker_compose 1 "${SERVICE}:"
-	write_docker_compose 1 "    container_name: ${SERVICE}"
+	write_docker_compose 1 "${SERVICE_NAME}:"
+	write_docker_compose 1 "    container_name: ${SERVICE_NAME}"
 	write_docker_compose 1 "    environment:"
 	write_docker_compose 1 "        - VAULT_RAFT_NODE_ID=${HOST}"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
@@ -275,8 +275,8 @@ function build_vault {
 function build_web_server {
 	docker_build web-server
 
-	write_docker_compose 1 "${SERVICE}:"
-	write_docker_compose 1 "    container_name: ${SERVICE}"
+	write_docker_compose 1 "${SERVICE_NAME}:"
+	write_docker_compose 1 "    container_name: ${SERVICE_NAME}"
 	write_docker_compose 1 "    environment:"
 	write_docker_compose 1 "        - ORCA_WEB_SERVER_BALANCE_MEMBERS=$(query_services liferay host_port 8009)"
 	write_docker_compose 1 "    hostname: ${SERVICE_HOST}"
