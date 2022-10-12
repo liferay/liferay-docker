@@ -361,6 +361,16 @@ function get_config {
 	fi
 }
 
+function main {
+	check_usage ${@}
+
+	choose_configuration
+
+	create_docker_compose_file
+
+	add_services
+}
+
 function query_services {
 	local list
 
@@ -404,16 +414,6 @@ function query_services {
 	done
 
 	echo "${list}"
-}
-
-function main {
-	check_usage ${@}
-
-	choose_configuration
-
-	create_docker_compose_file
-
-	add_services
 }
 
 function write_docker_compose {
