@@ -3,7 +3,7 @@
 set -e
 
 function add_services {
-	compose_add 0 "services:"
+	write 0 "services:"
 
 	if [ ! -n "${ORCA_HOST}" ]
 	then
@@ -47,75 +47,75 @@ function add_services {
 function build_antivirus {
 	docker_build antivirus
 
-	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: antivirus:${VERSION}"
-	compose_add 1 "    ports:"
-	compose_add 1 "        - \"3310:3310\""
+	write 1 "${SERVICE}:"
+	write 1 "    container_name: ${SERVICE}"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: antivirus:${VERSION}"
+	write 1 "    ports:"
+	write 1 "        - \"3310:3310\""
 }
 
 function build_backup {
 	docker_build backup
 
-	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    environment:"
-	compose_add 1 "        - ORCA_BACKUP_CRON_EXPRESSION=0 */4 * * *"
-	compose_add 1 "        - ORCA_DB_ADDRESSES=$(find_services db host_port 3306)"
-	compose_add 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
-	compose_add 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_backup:-}"
-	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: backup:${VERSION}"
-	compose_add 1 "    volumes:"
-	compose_add 1 "        - /opt/liferay/backups:/opt/liferay/backups"
-	compose_add 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
+	write 1 "${SERVICE}:"
+	write 1 "    container_name: ${SERVICE}"
+	write 1 "    environment:"
+	write 1 "        - ORCA_BACKUP_CRON_EXPRESSION=0 */4 * * *"
+	write 1 "        - ORCA_DB_ADDRESSES=$(find_services db host_port 3306)"
+	write 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
+	write 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_backup:-}"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: backup:${VERSION}"
+	write 1 "    volumes:"
+	write 1 "        - /opt/liferay/backups:/opt/liferay/backups"
+	write 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
 }
 
 function build_ci {
 	docker_build ci
 
-	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: ci:${VERSION}"
-	compose_add 1 "    ports:"
-	compose_add 1 "        - \"9080:8080\""
-	compose_add 1 "    volumes:"
-	compose_add 1 "        - /opt/liferay/jenkins-home:/var/jenkins_home"
+	write 1 "${SERVICE}:"
+	write 1 "    container_name: ${SERVICE}"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: ci:${VERSION}"
+	write 1 "    ports:"
+	write 1 "        - \"9080:8080\""
+	write 1 "    volumes:"
+	write 1 "        - /opt/liferay/jenkins-home:/var/jenkins_home"
 }
 
 function build_db {
 	docker_build db
 
-	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    environment:"
-	compose_add 1 "        - MARIADB_DATABASE=lportal"
-	compose_add 1 "        - MARIADB_EXTRA_FLAGS=--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --wsrep_provider_options=ist.recv_addr=${host_ip}:4568;ist.recv_bind=0.0.0.0:4568 --wsrep_node_incoming_address=${host_ip} --wsrep_sst_receive_address=${host_ip}"
-	compose_add 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://$(find_services db host_port 4567 true)"
-	compose_add 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${ORCA_DB_SKIP_WAIT:-}"
-	compose_add 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
-	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/tmp/orca-secrets/mysql_backup_password"
-	compose_add 1 "        - MARIADB_GALERA_MARIABACKUP_USER=orca_mariabackup"
-	compose_add 1 "        - MARIADB_GALERA_NODE_ADDRESS=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
-	compose_add 1 "        - MARIADB_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
-	compose_add 1 "        - MARIADB_ROOT_HOST=localhost"
-	compose_add 1 "        - MARIADB_ROOT_PASSWORD_FILE=/tmp/orca-secrets/mysql_root_password"
-	compose_add 1 "        - MARIADB_USER=lportal"
-	compose_add 1 "        - ORCA_DB_ADDRESSES=$(find_services db host_port 3306 true)"
-	compose_add 1 "        - ORCA_DB_SKIP_WAIT=\${ORCA_DB_SKIP_WAIT:-}"
-	compose_add 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
-	compose_add 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_db:-}"
-	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: db:${VERSION}"
-	compose_add 1 "    ports:"
-	compose_add 1 "        - \"3306:3306\""
-	compose_add 1 "        - \"4444:4444\""
-	compose_add 1 "        - \"4567:4567\""
-	compose_add 1 "        - \"4568:4568\""
-	compose_add 1 "    volumes:"
-	compose_add 1 "        - /opt/liferay/db-data:/bitnami/mariadb"
+	write 1 "${SERVICE}:"
+	write 1 "    container_name: ${SERVICE}"
+	write 1 "    environment:"
+	write 1 "        - MARIADB_DATABASE=lportal"
+	write 1 "        - MARIADB_EXTRA_FLAGS=--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --wsrep_provider_options=ist.recv_addr=${host_ip}:4568;ist.recv_bind=0.0.0.0:4568 --wsrep_node_incoming_address=${host_ip} --wsrep_sst_receive_address=${host_ip}"
+	write 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://$(find_services db host_port 4567 true)"
+	write 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${ORCA_DB_SKIP_WAIT:-}"
+	write 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
+	write 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/tmp/orca-secrets/mysql_backup_password"
+	write 1 "        - MARIADB_GALERA_MARIABACKUP_USER=orca_mariabackup"
+	write 1 "        - MARIADB_GALERA_NODE_ADDRESS=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
+	write 1 "        - MARIADB_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
+	write 1 "        - MARIADB_ROOT_HOST=localhost"
+	write 1 "        - MARIADB_ROOT_PASSWORD_FILE=/tmp/orca-secrets/mysql_root_password"
+	write 1 "        - MARIADB_USER=lportal"
+	write 1 "        - ORCA_DB_ADDRESSES=$(find_services db host_port 3306 true)"
+	write 1 "        - ORCA_DB_SKIP_WAIT=\${ORCA_DB_SKIP_WAIT:-}"
+	write 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
+	write 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_db:-}"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: db:${VERSION}"
+	write 1 "    ports:"
+	write 1 "        - \"3306:3306\""
+	write 1 "        - \"4444:4444\""
+	write 1 "        - \"4567:4567\""
+	write 1 "        - \"4568:4568\""
+	write 1 "    volumes:"
+	write 1 "        - /opt/liferay/db-data:/bitnami/mariadb"
 }
 
 function build_liferay {
@@ -152,137 +152,137 @@ function build_liferay {
 
 	local search_addresses=$(find_services search host_port 9200)
 
-	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    environment:"
+	write 1 "${SERVICE}:"
+	write 1 "    container_name: ${SERVICE}"
+	write 1 "    environment:"
 
 	if [ -n "$(find_services liferay host_port 8080 true)" ]
 	then
-		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_ENABLED=true"
-		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_CONTROL=control-channel-${ORCA_HOST}"
-		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_TRANSPORT_PERIOD_NUMBER0=transport-channel-logic-${ORCA_HOST}"
-		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_CONTROL=/opt/liferay/cluster-link-tcp.xml"
-		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_TRANSPORT_PERIOD__NUMBER0_=/opt/liferay/cluster-link-tcp.xml"
-		compose_add 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_AUTODETECT_PERIOD_ADDRESS="
+		write 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_ENABLED=true"
+		write 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_CONTROL=control-channel-${ORCA_HOST}"
+		write 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_TRANSPORT_PERIOD_NUMBER0=transport-channel-logic-${ORCA_HOST}"
+		write 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_CONTROL=/opt/liferay/cluster-link-tcp.xml"
+		write 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_TRANSPORT_PERIOD__NUMBER0_=/opt/liferay/cluster-link-tcp.xml"
+		write 2 "    - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_AUTODETECT_PERIOD_ADDRESS="
 	fi
 
-	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_HOSTNAME=\"$(find_services antivirus host_port)\""
-	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_PORT=I\"3310\""
-	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_TIMEOUT=I\"10000\""
-	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_NETWORK_UPPERCASEH_OST_UPPERCASEA_DDRESSES=\"${search_addresses}\""
-	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_OPERATION_UPPERCASEM_ODE=\"REMOTE\""
-	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_PRODUCTION_UPPERCASEM_ODE_UPPERCASEE_NABLED=B\"true\""
-	compose_add 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_STORE_PERIOD_FILE_PERIOD_SYSTEM_PERIOD_CONFIGURATION_PERIOD__UPPERCASEA_DVANCED_UPPERCASEF_ILE_UPPERCASES_YSTEM_UPPERCASES_TORE_UPPERCASEC_ONFIGURATION_UNDERLINE_ROOT_UPPERCASED_IR=\"/opt/liferay/shared-volume/document-library\""
-	compose_add 1 "        - LIFERAY_DISABLE_TRIAL_LICENSE=true"
-	compose_add 1 "        - LIFERAY_DL_PERIOD_STORE_PERIOD_ANTIVIRUS_PERIOD_ENABLED=true"
-	compose_add 1 "        - LIFERAY_DL_PERIOD_STORE_PERIOD_IMPL=com.liferay.portal.store.file.system.AdvancedFileSystemStore"
-	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver"
-	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
-	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://$(get_config .hosts.${ORCA_HOST}.configuration.liferay.db db-${ORCA_HOST})/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
-	compose_add 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal"
-	compose_add 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE_HOST} -Djgroups.external_addr=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
-	compose_add 1 "        - LIFERAY_SCHEMA_PERIOD_MODULE_PERIOD_BUILD_PERIOD_AUTO_PERIOD_UPGRADE=true"
-	compose_add 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
-	compose_add 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
-	compose_add 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${ORCA_HOST}"
-	compose_add 1 "        - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true"
-	compose_add 1 "        - LIFERAY_WEB_PERIOD_SERVER_PERIOD_DISPLAY_PERIOD_NODE=true"
-	compose_add 1 "        - ORCA_LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
-	compose_add 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
-	compose_add 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_liferay:-}"
-	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: liferay:${VERSION}"
-	compose_add 1 "    ports:"
-	compose_add 1 "        - \"7800:7800\""
-	compose_add 1 "        - \"7801:7801\""
-	compose_add 1 "        - \"8009:8009\""
-	compose_add 1 "        - \"8080:8080\""
-	compose_add 1 "    volumes:"
-	compose_add 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
+	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_HOSTNAME=\"$(find_services antivirus host_port)\""
+	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_PORT=I\"3310\""
+	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_TIMEOUT=I\"10000\""
+	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_NETWORK_UPPERCASEH_OST_UPPERCASEA_DDRESSES=\"${search_addresses}\""
+	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_OPERATION_UPPERCASEM_ODE=\"REMOTE\""
+	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_PRODUCTION_UPPERCASEM_ODE_UPPERCASEE_NABLED=B\"true\""
+	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_STORE_PERIOD_FILE_PERIOD_SYSTEM_PERIOD_CONFIGURATION_PERIOD__UPPERCASEA_DVANCED_UPPERCASEF_ILE_UPPERCASES_YSTEM_UPPERCASES_TORE_UPPERCASEC_ONFIGURATION_UNDERLINE_ROOT_UPPERCASED_IR=\"/opt/liferay/shared-volume/document-library\""
+	write 1 "        - LIFERAY_DISABLE_TRIAL_LICENSE=true"
+	write 1 "        - LIFERAY_DL_PERIOD_STORE_PERIOD_ANTIVIRUS_PERIOD_ENABLED=true"
+	write 1 "        - LIFERAY_DL_PERIOD_STORE_PERIOD_IMPL=com.liferay.portal.store.file.system.AdvancedFileSystemStore"
+	write 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver"
+	write 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
+	write 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://$(get_config .hosts.${ORCA_HOST}.configuration.liferay.db db-${ORCA_HOST})/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
+	write 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal"
+	write 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE_HOST} -Djgroups.external_addr=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
+	write 1 "        - LIFERAY_SCHEMA_PERIOD_MODULE_PERIOD_BUILD_PERIOD_AUTO_PERIOD_UPGRADE=true"
+	write 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
+	write 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
+	write 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${ORCA_HOST}"
+	write 1 "        - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true"
+	write 1 "        - LIFERAY_WEB_PERIOD_SERVER_PERIOD_DISPLAY_PERIOD_NODE=true"
+	write 1 "        - ORCA_LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
+	write 1 "        - ORCA_VAULT_ADDRESSES=$(find_services vault host_port 8200)"
+	write 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_liferay:-}"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: liferay:${VERSION}"
+	write 1 "    ports:"
+	write 1 "        - \"7800:7800\""
+	write 1 "        - \"7801:7801\""
+	write 1 "        - \"8009:8009\""
+	write 1 "        - \"8080:8080\""
+	write 1 "    volumes:"
+	write 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
 }
 
 function build_log_proxy {
 	docker_build log-proxy
 
-	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    command: syslog+udp://$(find_services log-server host_port 514)"
-	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: log-proxy:${VERSION}"
-	compose_add 1 "    volumes:"
-	compose_add 1 "        - /var/run/docker.sock:/var/run/docker.sock"
+	write 1 "${SERVICE}:"
+	write 1 "    command: syslog+udp://$(find_services log-server host_port 514)"
+	write 1 "    container_name: ${SERVICE}"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: log-proxy:${VERSION}"
+	write 1 "    volumes:"
+	write 1 "        - /var/run/docker.sock:/var/run/docker.sock"
 }
 
 function build_log_server {
 	docker_build log-server
 
-	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    command: -F --no-caps"
-	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: log-server:${VERSION}"
-	compose_add 1 "    ports:"
-	compose_add 1 "        - 514:514/udp"
-	compose_add 1 "    volumes:"
-	compose_add 1 "        - /opt/liferay/shared-volume/logs:/var/log/syslogng/"
+	write 1 "${SERVICE}:"
+	write 1 "    command: -F --no-caps"
+	write 1 "    container_name: ${SERVICE}"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: log-server:${VERSION}"
+	write 1 "    ports:"
+	write 1 "        - 514:514/udp"
+	write 1 "    volumes:"
+	write 1 "        - /opt/liferay/shared-volume/logs:/var/log/syslogng/"
 }
 
 function build_search {
 	docker_build search
 
-	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    environment:"
-	compose_add 1 "        - cluster.initial_master_nodes=$(find_services search service_name)"
-	compose_add 1 "        - cluster.name=liferay-search"
-	compose_add 1 "        - discovery.seed_hosts=$(find_services search host_port 9300 true)"
-	compose_add 1 "        - network.publish_host=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
-	compose_add 1 "        - node.name=${SERVICE_HOST}"
-	compose_add 1 "        - xpack.ml.enabled=false"
-	compose_add 1 "        - xpack.monitoring.enabled=false"
-	compose_add 1 "        - xpack.security.enabled=false"
-	compose_add 1 "        - xpack.sql.enabled=false"
-	compose_add 1 "        - xpack.watcher.enabled=false"
-	compose_add 1 "    healthcheck:"
-	compose_add 1 "        interval: 40s"
-	compose_add 1 "        retries: 3"
-	compose_add 1 "        test: curl localhost:9200/_cat/health | grep green"
-	compose_add 1 "        timeout: 5s"
-	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: search:${VERSION}"
-	compose_add 1 "    mem_limit: 8G"
-	compose_add 1 "    ports:"
-	compose_add 1 "        - \"9200:9200\""
-	compose_add 1 "        - \"9300:9300\""
+	write 1 "${SERVICE}:"
+	write 1 "    container_name: ${SERVICE}"
+	write 1 "    environment:"
+	write 1 "        - cluster.initial_master_nodes=$(find_services search service_name)"
+	write 1 "        - cluster.name=liferay-search"
+	write 1 "        - discovery.seed_hosts=$(find_services search host_port 9300 true)"
+	write 1 "        - network.publish_host=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
+	write 1 "        - node.name=${SERVICE_HOST}"
+	write 1 "        - xpack.ml.enabled=false"
+	write 1 "        - xpack.monitoring.enabled=false"
+	write 1 "        - xpack.security.enabled=false"
+	write 1 "        - xpack.sql.enabled=false"
+	write 1 "        - xpack.watcher.enabled=false"
+	write 1 "    healthcheck:"
+	write 1 "        interval: 40s"
+	write 1 "        retries: 3"
+	write 1 "        test: curl localhost:9200/_cat/health | grep green"
+	write 1 "        timeout: 5s"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: search:${VERSION}"
+	write 1 "    mem_limit: 8G"
+	write 1 "    ports:"
+	write 1 "        - \"9200:9200\""
+	write 1 "        - \"9300:9300\""
 }
 
 function build_vault {
 	docker_build vault
 
-	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    environment:"
-	compose_add 1 "        - VAULT_RAFT_NODE_ID=${HOST}"
-	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: vault:${VERSION}"
-	compose_add 1 "    ports:"
-	compose_add 1 "        - \"8200:8200\""
-	compose_add 1 "        - \"8201:8201\""
-	compose_add 1 "    volumes:"
-	compose_add 1 "        - /opt/liferay/vault/data:/opt/liferay/vault/data"
+	write 1 "${SERVICE}:"
+	write 1 "    container_name: ${SERVICE}"
+	write 1 "    environment:"
+	write 1 "        - VAULT_RAFT_NODE_ID=${HOST}"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: vault:${VERSION}"
+	write 1 "    ports:"
+	write 1 "        - \"8200:8200\""
+	write 1 "        - \"8201:8201\""
+	write 1 "    volumes:"
+	write 1 "        - /opt/liferay/vault/data:/opt/liferay/vault/data"
 }
 
 function build_web_server {
 	docker_build web-server
 
-	compose_add 1 "${SERVICE}:"
-	compose_add 1 "    container_name: ${SERVICE}"
-	compose_add 1 "    environment:"
-	compose_add 1 "        - ORCA_WEB_SERVER_BALANCE_MEMBERS=$(find_services liferay host_port 8009)"
-	compose_add 1 "    hostname: ${SERVICE_HOST}"
-	compose_add 1 "    image: web-server:${VERSION}"
-	compose_add 1 "    ports:"
-	compose_add 1 "        - \"80:80\""
+	write 1 "${SERVICE}:"
+	write 1 "    container_name: ${SERVICE}"
+	write 1 "    environment:"
+	write 1 "        - ORCA_WEB_SERVER_BALANCE_MEMBERS=$(find_services liferay host_port 8009)"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: web-server:${VERSION}"
+	write 1 "    ports:"
+	write 1 "        - \"80:80\""
 }
 
 function check_usage {
@@ -332,10 +332,10 @@ function choose_configuration {
 	fi
 }
 
-function compose_add {
+function write {
 	if [ ${1} -eq 0 ]
 	then
-		echo "${2}" >> ${COMPOSE_FILE}
+		echo "${2}" >> ${DOCKER_COMPOSE_FILE}
 
 		return
 	fi
@@ -349,18 +349,18 @@ function compose_add {
 
 	line="${line}${2}"
 
-	echo "${line}" >> ${COMPOSE_FILE}
+	echo "${line}" >> ${DOCKER_COMPOSE_FILE}
 }
 
-function create_compose_file {
+function create_docker_compose_file {
 	BUILD_DIR="builds/${VERSION}"
-	COMPOSE_FILE="${BUILD_DIR}/docker-compose.yml"
+	DOCKER_COMPOSE_FILE="${BUILD_DIR}/docker-compose.yml"
 
 	mkdir -p "${BUILD_DIR}"
 
-	if [ -e "${COMPOSE_FILE}" ]
+	if [ -e "${DOCKER_COMPOSE_FILE}" ]
 	then
-		rm -f "${COMPOSE_FILE}"
+		rm -f "${DOCKER_COMPOSE_FILE}"
 	fi
 }
 
@@ -431,7 +431,7 @@ function main {
 
 	choose_configuration
 
-	create_compose_file
+	create_docker_compose_file
 
 	add_services
 }
