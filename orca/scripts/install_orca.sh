@@ -18,11 +18,17 @@ function main {
 
 	git pull origin master
 
+	#
+	# TODO Fix /opt/liferay/orca/orca
+	#
+
 	cd orca
+
+	#
+	# TODO install
+	#
 
 	scripts/orca.sh install
 }
 
 main
-
-
