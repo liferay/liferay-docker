@@ -38,13 +38,13 @@ function add_services {
 		cp -a templates/_common/* docker-build
 		cp -a templates/${SERVICE_NAME}/* docker-build
 
-		build_$(echo ${SERVICE_NAME} | sed -e "s/-/_/")
+		build_service_$(echo ${SERVICE_NAME} | sed -e "s/-/_/")
 
 		rm -fr docker-build
 	done
 }
 
-function build_antivirus {
+function build_service_antivirus {
 	docker_build antivirus
 
 	write_docker_compose_file 1 "${SERVICE_NAME}:"
@@ -55,7 +55,7 @@ function build_antivirus {
 	write_docker_compose_file 1 "        - \"3310:3310\""
 }
 
-function build_backup {
+function build_service_backup {
 	docker_build backup
 
 	write_docker_compose_file 1 "${SERVICE_NAME}:"
@@ -72,7 +72,7 @@ function build_backup {
 	write_docker_compose_file 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
 }
 
-function build_ci {
+function build_service_ci {
 	docker_build ci
 
 	write_docker_compose_file 1 "${SERVICE_NAME}:"
@@ -85,7 +85,7 @@ function build_ci {
 	write_docker_compose_file 1 "        - /opt/liferay/jenkins-home:/var/jenkins_home"
 }
 
-function build_db {
+function build_service_db {
 	docker_build db
 
 	write_docker_compose_file 1 "${SERVICE_NAME}:"
@@ -118,7 +118,7 @@ function build_db {
 	write_docker_compose_file 1 "        - /opt/liferay/db-data:/bitnami/mariadb"
 }
 
-function build_liferay {
+function build_service_liferay {
 	if [ -e configs/liferay-license.xml ]
 	then
 		mkdir -p "docker-build/resources/opt/liferay/deploy"
@@ -201,7 +201,7 @@ function build_liferay {
 	write_docker_compose_file 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
 }
 
-function build_log_proxy {
+function build_service_log_proxy {
 	docker_build log-proxy
 
 	write_docker_compose_file 1 "${SERVICE_NAME}:"
@@ -213,7 +213,7 @@ function build_log_proxy {
 	write_docker_compose_file 1 "        - /var/run/docker.sock:/var/run/docker.sock"
 }
 
-function build_log_server {
+function build_service_log_server {
 	docker_build log-server
 
 	write_docker_compose_file 1 "${SERVICE_NAME}:"
@@ -227,7 +227,7 @@ function build_log_server {
 	write_docker_compose_file 1 "        - /opt/liferay/shared-volume/logs:/var/log/syslogng/"
 }
 
-function build_search {
+function build_service_search {
 	docker_build search
 
 	write_docker_compose_file 1 "${SERVICE_NAME}:"
@@ -256,7 +256,7 @@ function build_search {
 	write_docker_compose_file 1 "        - \"9300:9300\""
 }
 
-function build_vault {
+function build_service_vault {
 	docker_build vault
 
 	write_docker_compose_file 1 "${SERVICE_NAME}:"
@@ -272,7 +272,7 @@ function build_vault {
 	write_docker_compose_file 1 "        - /opt/liferay/vault/data:/opt/liferay/vault/data"
 }
 
-function build_web_server {
+function build_service_web_server {
 	docker_build web-server
 
 	write_docker_compose_file 1 "${SERVICE_NAME}:"
