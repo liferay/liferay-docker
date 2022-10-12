@@ -10,13 +10,13 @@ function add_services {
 		ORCA_HOST=$(hostname)
 	fi
 
-	local host_config=$(get_config ".hosts.${ORCA_HOST}")
+	local host_config=$(query_configuration ".hosts.${ORCA_HOST}")
 
 	if [ ! -n "${host_config}" ]
 	then
 		ORCA_HOST="localhost"
 
-		host_config=$(get_config ".hosts.${ORCA_HOST}")
+		host_config=$(query_configuration ".hosts.${ORCA_HOST}")
 
 		if [ ! -n "${host_config}" ]
 		then
@@ -98,7 +98,7 @@ function build_db {
 	write_docker_compose 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
 	write_docker_compose 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/tmp/orca-secrets/mysql_backup_password"
 	write_docker_compose 1 "        - MARIADB_GALERA_MARIABACKUP_USER=orca_mariabackup"
-	write_docker_compose 1 "        - MARIADB_GALERA_NODE_ADDRESS=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
+	write_docker_compose 1 "        - MARIADB_GALERA_NODE_ADDRESS=$(query_configuration .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
 	write_docker_compose 1 "        - MARIADB_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
 	write_docker_compose 1 "        - MARIADB_ROOT_HOST=localhost"
 	write_docker_compose 1 "        - MARIADB_ROOT_PASSWORD_FILE=/tmp/orca-secrets/mysql_root_password"
@@ -178,9 +178,9 @@ function build_liferay {
 	write_docker_compose 1 "        - LIFERAY_DL_PERIOD_STORE_PERIOD_IMPL=com.liferay.portal.store.file.system.AdvancedFileSystemStore"
 	write_docker_compose 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver"
 	write_docker_compose 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
-	write_docker_compose 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://$(get_config .hosts.${ORCA_HOST}.configuration.liferay.db db-${ORCA_HOST})/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
+	write_docker_compose 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://$(query_configuration .hosts.${ORCA_HOST}.configuration.liferay.db db-${ORCA_HOST})/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
 	write_docker_compose 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal"
-	write_docker_compose 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE_HOST} -Djgroups.external_addr=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
+	write_docker_compose 1 "        - LIFERAY_JVM_OPTS=-Djgroups.bind_addr=${SERVICE_HOST} -Djgroups.external_addr=$(query_configuration .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
 	write_docker_compose 1 "        - LIFERAY_SCHEMA_PERIOD_MODULE_PERIOD_BUILD_PERIOD_AUTO_PERIOD_UPGRADE=true"
 	write_docker_compose 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
 	write_docker_compose 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
@@ -236,7 +236,7 @@ function build_search {
 	write_docker_compose 1 "        - cluster.initial_master_nodes=$(query_services search service_name)"
 	write_docker_compose 1 "        - cluster.name=liferay-search"
 	write_docker_compose 1 "        - discovery.seed_hosts=$(query_services search host_port 9300 true)"
-	write_docker_compose 1 "        - network.publish_host=$(get_config .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
+	write_docker_compose 1 "        - network.publish_host=$(query_configuration .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
 	write_docker_compose 1 "        - node.name=${SERVICE_HOST}"
 	write_docker_compose 1 "        - xpack.ml.enabled=false"
 	write_docker_compose 1 "        - xpack.monitoring.enabled=false"
@@ -350,7 +350,7 @@ function docker_build {
 		docker-build
 }
 
-function get_config {
+function query_configuration {
 	local yq_output=$(yq ${1} < ${CONFIG_FILE})
 
 	if [ "${yq_output}" == "null" ]
@@ -393,7 +393,7 @@ function query_services {
 					then
 						item="${service}-${host}:${3}"
 					else
-						local host_ip=$(get_config .hosts.${host}.ip ${host})
+						local host_ip=$(query_configuration .hosts.${host}.ip ${host})
 
 						item="${host_ip}:${3}"
 					fi
