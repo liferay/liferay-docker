@@ -378,12 +378,21 @@ function main {
 
 	mkdir -p "${LOGS_DIR}"
 
+	build_base_image
 
+	build_caddy_image
 
+	build_jdk11_image
+
+	build_jdk11_jdk8_image
+
+	build_job_runner_image
+	
 	build_zabbix_server_image
 
 	build_zabbix_server_web_interface_image
-
+ 
+	build_bundle_images
 
 	echo ""
 	echo "Results: "
