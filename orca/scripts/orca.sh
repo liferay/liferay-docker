@@ -111,6 +111,7 @@ function command_up {
 		for token in $(ls /opt/liferay/tokens)
 		do
 			echo "Setting the ${token} token."
+
 			export ORCA_VAULT_TOKEN_${token}=$(cat /opt/liferay/tokens/${token})
 		done
 	fi
@@ -132,9 +133,7 @@ function execute_command {
 }
 
 function main {
-	local script_path=$(readlink /proc/$$/fd/255 2>/dev/null)
-
-	cd $(dirname "${script_path}")/../
+	cd $(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/../
 
 	check_usage ${@}
 
