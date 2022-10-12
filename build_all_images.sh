@@ -306,11 +306,12 @@ function get_latest_docker_hub_version {
 
 function get_latest_docker_hub_zabbix_server_version {
 	local image_tag="${1}"
+
 	local label_name="org.opencontainers.image.version"
 
 	if [[ "${image_tag}" =~ "liferay/" ]]
 	then
-		local label_name="org.label-schema.zabbix-version"
+		label_name="org.label-schema.zabbix-version"
 	fi
 
 	local token=$(curl -s "https://auth.docker.io/token?scope=repository:${image_tag}:pull&service=registry.docker.io" | jq -r '.token')
