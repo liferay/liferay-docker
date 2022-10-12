@@ -7,17 +7,19 @@ RUN apt-get update && \
 	apt-get update && \
 	apt-get install vault
 
+#
 # Workaround for https://github.com/hashicorp/vault/issues/10924
+#
+
 RUN setcap -r /usr/bin/vault
 
 COPY resources/opt/liferay/vault /opt/liferay/vault
 COPY resources/usr/local/bin /usr/local/bin
 
+ENTRYPOINT ["vault", "server", "-config=config.hcl"]
+
+ENV VAULT_ADDR='http://127.0.0.1:8200'
 
 USER liferay
 
 WORKDIR /opt/liferay/vault
-
-ENV VAULT_ADDR='http://127.0.0.1:8200'
-
-ENTRYPOINT ["vault", "server", "-config=config.hcl"]

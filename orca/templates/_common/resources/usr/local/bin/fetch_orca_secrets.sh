@@ -20,7 +20,7 @@ function load_secrets {
 
 		if [ "${?}" -gt 0 ]
 		then
-			echo "Fetching secret failed with error ${?}"
+			echo "Fetching secret failed with error ${?}."
 		fi
 
 		password=${password##*password\":\"}
@@ -43,7 +43,7 @@ function main {
 }
 
 function wait_for_vault {
-	echo "Connecting to vault: ${ORCA_VAULT_ADDRESSES}."
+	echo "Connecting to vault ${ORCA_VAULT_ADDRESSES}."
 
 	while true
 	do
@@ -51,13 +51,13 @@ function wait_for_vault {
 		do
 			if ( curl --max-time 3 --silent "http://${ORCA_VAULT_ADDRESSES}/v1/sys/health" | grep "\"sealed\":false" &>/dev/null)
 			then
-				echo "Vault server ${ORCA_VAULT_ADDRESSES} is available."
+				echo "Vault ${ORCA_VAULT_ADDRESSES} is available."
 
 				return
 			fi
 		done
 
-		echo "Waiting for at least one vault server to become available."
+		echo "Waiting for at least one vault to become available."
 
 		sleep 3
 	done
