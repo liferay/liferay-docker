@@ -6,8 +6,8 @@ function build_docker_image {
 	local image_version=$(./release_notes.sh get-version)
 
 	DOCKER_IMAGE_TAGS=()
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/zabbix-server-web-interface:${image_version}-${TIMESTAMP}")
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/zabbix-server-web-interface")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/zabbix-web:${image_version}-${TIMESTAMP}")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/zabbix-web")
 
 	if [ "${1}" == "push" ]
 	then
@@ -15,7 +15,7 @@ function build_docker_image {
 
 		docker buildx build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-			--build-arg LABEL_NAME="Liferay Zabbix Server Web Interface" \
+			--build-arg LABEL_NAME="Liferay Zabbix Web" \
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${image_version}" \
@@ -30,7 +30,7 @@ function build_docker_image {
 
 		docker build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-			--build-arg LABEL_NAME="Liferay Zabbix Server Web Interface" \
+			--build-arg LABEL_NAME="Liferay Zabbix Web" \
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${image_version}" \
@@ -41,9 +41,9 @@ function build_docker_image {
 }
 
 function main {
-	delete_local_images "liferay/zabbix-server-web-interface"
+	delete_local_images "liferay/zabbix-web"
 
-	make_temp_directory templates/zabbix-server-web-interface
+	make_temp_directory templates/zabbix-web
 
 	log_in_to_docker_hub
 
