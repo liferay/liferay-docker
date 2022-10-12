@@ -262,7 +262,7 @@ function build_zabbix_server_image {
 	fi
 }
 
-function build_zabbix_server_web_interface_image {
+function build_zabbix_web_image {
 	local latest_liferay_zabbix_server_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "liferay/zabbix-server-web-interface")
 	local latest_official_zabbix_server_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "zabbix/zabbix-web-nginx-mysql")
 
@@ -278,7 +278,7 @@ function build_zabbix_server_web_interface_image {
 	echo "Building Docker image Zabbix Server Web Interface."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_server_web_interface_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server_web_interface.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server_web_interface.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -390,7 +390,7 @@ function main {
 	
 	build_zabbix_server_image
 
-	build_zabbix_server_web_interface_image
+	build_zabbix_web_image
  
 	build_bundle_images
 
