@@ -244,15 +244,9 @@ function build_service_web_server {
 }
 
 function build_services {
-	BUILD_DIR="builds/${VERSION}"
-	DOCKER_COMPOSE_FILE="${BUILD_DIR}/docker-compose.yml"
+	mkdir -p builds/${VERSION}
 
-	mkdir -p "${BUILD_DIR}"
-
-	if [ -e "${DOCKER_COMPOSE_FILE}" ]
-	then
-		rm -f "${DOCKER_COMPOSE_FILE}"
-	fi
+	rm -f builds/${VERSION}/docker-compose.yml
 
 	write_docker_compose_file 0 "services:"
 
