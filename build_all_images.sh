@@ -241,52 +241,52 @@ function build_zabbix_server_image {
 	if [[ "${latest_liferay_zabbix_server_version}" == "${latest_official_zabbix_server_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
-		echo "Docker image Zabbix Server is up to date."
+		echo "Docker image Zabbix server is up to date."
 
 		return
 	fi
 
 	echo ""
-	echo "Building Docker image Zabbix Server."
+	echo "Building Docker image Zabbix server."
 	echo ""
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Zabbix Server" >> "${LOGS_DIR}/results"
+		echo "FAILED: Zabbix server" >> "${LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Zabbix Server" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Zabbix server" >> "${LOGS_DIR}/results"
 	fi
 }
 
 function build_zabbix_web_image {
-	local latest_liferay_zabbix_server_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "liferay/zabbix-server-web-interface")
+	local latest_liferay_zabbix_server_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "liferay/zabbix-web")
 	local latest_official_zabbix_server_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "zabbix/zabbix-web-nginx-mysql")
 
 	if [[ "${latest_liferay_zabbix_server_web_interface_version}" == "${latest_official_zabbix_server_web_interface_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
-		echo "Docker image Zabbix Server Web Interface is up to date."
+		echo "Docker image Zabbix web is up to date."
 
 		return
 	fi
 
 	echo ""
-	echo "Building Docker image Zabbix Server Web Interface."
+	echo "Building Docker image Zabbix web."
 	echo ""
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server_web_interface.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Zabbix Server Web Interface" >> "${LOGS_DIR}/results"
+		echo "FAILED: Zabbix web" >> "${LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Zabbix Server Web Interface" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Zabbix web" >> "${LOGS_DIR}/results"
 	fi
 }
 
