@@ -10,15 +10,15 @@ function add_services {
 		ORCA_HOST=$(hostname)
 	fi
 
-	local host_config=$(query_configuration ".hosts.${ORCA_HOST}")
+	local host=$(query_configuration ".hosts.${ORCA_HOST}")
 
-	if [ ! -n "${host_config}" ]
+	if [ ! -n "${host}" ]
 	then
 		ORCA_HOST="localhost"
 
-		host_config=$(query_configuration ".hosts.${ORCA_HOST}")
+		host=$(query_configuration ".hosts.${ORCA_HOST}")
 
-		if [ ! -n "${host_config}" ]
+		if [ ! -n "${host}" ]
 		then
 			echo "Unable to find a matching host in the configuration. Set the environment variable ORCA_HOST."
 
