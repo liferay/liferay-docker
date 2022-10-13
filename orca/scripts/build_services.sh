@@ -414,7 +414,7 @@ function query_services {
 function write {
 	if [ ${1} -eq 0 ]
 	then
-		echo "${2}" >> ${DOCKER_COMPOSE_FILE}
+		echo "${2}" >> builds/${VERSION}/docker-compose.yml
 
 		return
 	fi
@@ -428,7 +428,7 @@ function write {
 
 	line="${line}${2}"
 
-	echo "${line}" >> ${DOCKER_COMPOSE_FILE}
+	echo "${line}" >> builds/${VERSION}/docker-compose.yml
 }
 
 main ${@}
