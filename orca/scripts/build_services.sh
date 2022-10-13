@@ -52,7 +52,7 @@ function build_service_db {
 	write 1 "        - MARIADB_DATABASE=lportal"
 	write 1 "        - MARIADB_EXTRA_FLAGS=--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --wsrep_provider_options=ist.recv_addr=${host_ip}:4568;ist.recv_bind=0.0.0.0:4568 --wsrep_node_incoming_address=${host_ip} --wsrep_sst_receive_address=${host_ip}"
 	write 1 "        - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://$(query_services db host_port 4567 true)"
-	write 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${ORCA_DB_SKIP_WAIT:-}"
+	write 1 "        - MARIADB_GALERA_CLUSTER_BOOTSTRAP=\${ORCA_DB_BOOTSTRAP:-}"
 	write 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
 	write 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/tmp/orca-secrets/mysql_backup_password"
 	write 1 "        - MARIADB_GALERA_MARIABACKUP_USER=orca_mariabackup"
