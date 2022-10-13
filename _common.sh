@@ -17,14 +17,14 @@ function check_docker_buildx {
 }
 
 function check_utils {
-
-	#
-	# https://stackoverflow.com/a/677212
-	#
-
 	for util in "${@}"
 	do
-		command -v "${util}" >/dev/null 2>&1 || {echo >&2 "The utility ${util} is not installed."; exit 1;}
+		if (! command -v "${util}" &>/dev/null)
+		then
+			echo "The utility ${util} is not installed."
+
+			exit 1
+		fi
 	done
 }
 

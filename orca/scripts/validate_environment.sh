@@ -27,9 +27,14 @@ function check_dirs {
 }
 
 function check_utils {
-	for util in docker-compose yq
+	for util in "${@}"
 	do
-		command -v "${util}" >/dev/null 2>&1 || {echo >&2 "The utility ${util} is not installed."; ORCA_VALIDATION_ERROR=1;}
+		if (! command -v "${util}" &>/dev/null)
+		then
+			echo "The utility ${util} is not installed."
+
+			ORCA_VALIDATION_ERROR=1
+		fi
 	done
 }
 
