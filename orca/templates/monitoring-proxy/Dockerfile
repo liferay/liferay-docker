@@ -1,0 +1,1 @@
+FROM zabbix/zabbix-proxy-mysql:6.2.3-ubuntu

@@ -8,6 +8,7 @@ hosts:
             - liferay
             - log-proxy
             - log-server
+            - monitoring-proxy
             - search
             - vault
             - web-server
