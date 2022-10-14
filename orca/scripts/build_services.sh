@@ -145,6 +145,7 @@ function build_service_liferay {
 	write 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${ORCA_HOST}"
 	write 1 "        - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true"
 	write 1 "        - LIFERAY_WEB_PERIOD_SERVER_PERIOD_DISPLAY_PERIOD_NODE=true"
+	write 1 "        - LIFERAY_ZABBIX_AGENT_ENABLED=true"
 	write 1 "        - ORCA_LIFERAY_SEARCH_ADDRESSES=${search_addresses}"
 	write 1 "        - ORCA_VAULT_ADDRESSES=$(query_services vault host_port 8200)"
 	write 1 "        - ORCA_VAULT_TOKEN=\${ORCA_VAULT_TOKEN_liferay:-}"
@@ -155,6 +156,7 @@ function build_service_liferay {
 	write 1 "        - \"7801:7801\""
 	write 1 "        - \"8009:8009\""
 	write 1 "        - \"8080:8080\""
+	write 1 "        - \"10050:10050\""
 	write 1 "    volumes:"
 	write 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
 }
