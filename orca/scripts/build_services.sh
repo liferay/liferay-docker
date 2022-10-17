@@ -201,12 +201,35 @@ function build_service_monitoring_proxy {
 	write 1 "        - ZBX_HOSTNAME=${SERVICE_HOST}"
 	write 1 "        - ZBX_SERVER_HOST=zabbix-server"
 	write 1 "        - ZBX_PROXYMODE=1"
-	write 1 "        - DB_SERVER_HOST=monitoring-proxy-database"
+	write 1 "        - DB_SERVER_HOST=monitoring-proxy-db"
 	write 1 "        - MYSQL_DATABASE=zabbix"
 	write 1 "        - MYSQL_USER=zabbix"
 	write 1 "        - MYSQL_PASSWORD=zabbix_pwd"
 	write 1 "        - MYSQL_ROOT_USER=root"
 	write 1 "        - MYSQL_ROOT_PASSWORD=root_pwd"
+}
+
+function build_service_monitoring_proxy-db {
+	docker_build monitoring-proxy-db
+
+	write 1 "${SERVICE_NAME}:"
+	write 1 "    container_name: ${SERVICE_NAME}"
+	write 1 "    environment:"
+	write 1 "        - MARIADB_DATABASE=zabbix"
+	write 1 "        - MARIADB_EXTRA_FLAGS=--character-set-server=utf8 --collation-server=utf8_bin --default-authentication-plugin=mysql_native_password"
+	write 1 "        - MARIADB_USER=zabbix"
+	write 1 "        - MARIADB_PASSWORD=zabbix_pwd"
+	write 1 "        - MARIADB_ROOT_USER=root"
+	write 1 "        - MARIADB_ROOT_PASSWORD=root_pwd"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: monitoring-proxy-db:${VERSION}"
+	write 1 "    ports:"
+	write 1 "        - \"3306:3306\""
+	write 1 "        - \"4444:4444\""
+	write 1 "        - \"4567:4567\""
+	write 1 "        - \"4568:4568\""
+	write 1 "    volumes:"
+	write 1 "        - /opt/liferay/db-data:/bitnami/mariadb"
 }
 
 function build_service_search {

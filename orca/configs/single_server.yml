@@ -9,6 +9,7 @@ hosts:
             - log-proxy
             - log-server
             - monitoring-proxy
+            - monitoring-proxy-db
             - search
             - vault
             - web-server
