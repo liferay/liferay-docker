@@ -50,7 +50,7 @@ function check_vm_max_map_count {
 }
 
 function main {
-	check_utils
+	check_utils docker docker-compose yq
 
 	check_dirs
 
