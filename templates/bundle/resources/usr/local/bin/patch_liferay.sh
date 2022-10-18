@@ -49,16 +49,16 @@ function main {
 		echo "[LIFERAY] Updating Patching Tool."
 
 		mv /opt/liferay/patching-tool/patches /opt/liferay/patching-tool-upgrade-patches
+		mv /opt/liferay/patching-tool/default.properties /opt/liferay/patching-tool-default.properties
 
 		rm -fr /opt/liferay/patching-tool
 
 		unzip -d /opt/liferay -q "${LIFERAY_PATCHING_DIR}"/patching-tool-*
 
-		/opt/liferay/patching-tool/patching-tool.sh auto-discovery ../tomcat
-
 		rm -fr /opt/liferay/patching-tool/patches
 
 		mv /opt/liferay/patching-tool-upgrade-patches /opt/liferay/patching-tool/patches
+		mv /opt/liferay/patching-tool-default.properties /opt/liferay/patching-tool/default.properties
 
 		echo ""
 		echo "[LIFERAY] Patching Tool updated successfully."
