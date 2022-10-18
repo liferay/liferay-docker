@@ -48,8 +48,8 @@ function main {
 		echo ""
 		echo "[LIFERAY] Updating Patching Tool."
 
-		mv /opt/liferay/patching-tool/patches /opt/liferay/patching-tool-upgrade-patches
 		mv /opt/liferay/patching-tool/default.properties /opt/liferay/patching-tool-default.properties
+		mv /opt/liferay/patching-tool/patches /opt/liferay/patching-tool-upgrade-patches
 
 		rm -fr /opt/liferay/patching-tool
 
@@ -57,8 +57,8 @@ function main {
 
 		rm -fr /opt/liferay/patching-tool/patches
 
-		mv /opt/liferay/patching-tool-upgrade-patches /opt/liferay/patching-tool/patches
 		mv /opt/liferay/patching-tool-default.properties /opt/liferay/patching-tool/default.properties
+		mv /opt/liferay/patching-tool-upgrade-patches /opt/liferay/patching-tool/patches
 
 		echo ""
 		echo "[LIFERAY] Patching Tool updated successfully."
