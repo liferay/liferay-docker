@@ -24,14 +24,45 @@ function create_password {
 	fi
 }
 
+function create_policies {
+	vault policy write shared shared.hcl
+	vault policy write backup backup.hcl
+	vault policy write db db.hcl
+	vault policy write liferay liferay.hcl
+}
+
+function create_services_auth {
+	vault auth enable -path="userpass-${1}" userpass
+
+	local password=$(pwgen -1 -s 20)
+	vault write auth/userpass-${1}/users/${1} password="${password}" policies="${1}" >/dev/null
+
+	local accessor_id=$(vault auth list -format=json | jq -r '.["userpass-backup/"].accessor')
+
+	local entity_id=$(vault write -format=json identity/entity name="shared" policies="shared" | jq -r ".data.id")
+	vault write identity/entity-alias name="${1}" canonical_id="${entity_id}" mount_accessor="${accessor_id}" >/dev/null
+
+	echo ${password}
+}
+
 function main {
 	check_usage
 
 	vault secrets enable -path=secret kv >/dev/null 2>&1
 
+	create_policies
+
+	local backup_password=$(create_services_auth backup)
+	local db_password=$(create_services_auth db)
+	local liferay_password=$(create_services_auth liferay)
+
 	create_password mysql_backup_password
 	create_password mysql_liferay_password
 	create_password mysql_root_password
+
+	echo "export ORCA_BACKUP_PASSWORD=${backup_password}"
+	echo "export ORCA_DB_PASSWORD=${db_password}"
+	echo "export ORCA_LIFERAY_PASSWORD=${liferay_password}"
 }
 
 main
