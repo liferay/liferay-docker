@@ -1,22 +1,31 @@
 #!/bin/bash
 
 function check_usage {
-	if [ ! -n "${ORCA_VAULT_ADDRESSES}" ] ||  [ ! -n "${ORCA_VAULT_TOKEN}" ]
+	if [ ! -n "${ORCA_VAULT_ADDRESSES}" ] ||  [ ! -n "${ORCA_SERVICE_PASSWORD}" ]
 	then
-		echo "Set the environment variables ORCA_VAULT_ADDRESSES and ORCA_VAULT_TOKEN."
+		echo "Set the environment variables ORCA_VAULT_ADDRESSES and ORCA_SERVICE_PASSWORD."
 
 		exit 1
 	fi
 }
 
+function get_token {
+  local token=$(vault login -format=json -method=userpass -path=userpass-${1} username=${1} password=${ORCA_SERVICE_PASSWORD} | jq -r ".auth.client_token")
+
+  echo ${token}
+}
+
 function load_secrets {
 	mkdir -p /tmp/orca-secrets
+
+	local token="${1}"
+	shift
 
 	for secret in "${@}"
 	do
 		echo "Fetching secret ${secret}."
 
-		local password=$(curl --fail --header "X-Vault-Token: ${ORCA_VAULT_TOKEN}" --request GET --silent "http://${ORCA_VAULT_ADDRESSES}/v1/secret/data/${secret}")
+		local password=$(curl --fail --header "X-Vault-Token: ${token}" --request GET --silent "http://${ORCA_VAULT_ADDRESSES}/v1/secret/data/${secret}")
 
 		if [ "${?}" -gt 0 ]
 		then
@@ -33,11 +42,15 @@ function load_secrets {
 }
 
 function main {
+  local service="${1}"
+  shift
+
 	check_usage
 
 	wait_for_vault
 
-	load_secrets "${@}"
+	local token=$(get_token ${service})
+	load_secrets ${token} "${@}"
 
 	unset ORCA_VAULT_TOKEN
 }
