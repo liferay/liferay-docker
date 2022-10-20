@@ -10,9 +10,9 @@ function check_usage {
 }
 
 function get_token {
-    local token=$(vault login -format=json -method=userpass -path=userpass-${1} username=${1} password=${ORCA_SERVICE_PASSWORD} | jq -r ".auth.client_token")
+	local token=$(vault login -format=json -method=userpass -path=userpass-${1} username=${1} password=${ORCA_SERVICE_PASSWORD} | jq -r ".auth.client_token")
 
-    echo ${token}
+	echo ${token}
 }
 
 function load_secrets {
@@ -42,8 +42,8 @@ function load_secrets {
 }
 
 function main {
-    local service="${1}"
-    shift
+	local service="${1}"
+	shift
 
 	check_usage
 

@@ -1,3 +1,3 @@
 path "secret/data/shared" {
-   capabilities = ["list"]
+	capabilities = ["list"]
 }
