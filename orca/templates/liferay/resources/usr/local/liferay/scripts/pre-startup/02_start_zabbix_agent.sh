@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function main {
-	if [ "${LIFERAY_ZABBIX_AGENT_ENABLED}" == "true" ]
+	if [ "${ORCA_LIFERAY_ZABBIX_AGENT_ENABLED}" == "true" ]
 	then
 		echo ""
 		echo "[LIFERAY] Starting Zabbix Agent2."
