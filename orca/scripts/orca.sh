@@ -116,6 +116,16 @@ function command_up {
 		done
 	fi
 
+	if [ -d /opt/liferay/passwords ]
+	then
+		for service in $(ls /opt/liferay/passwords)
+		do
+			echo "Setting the password for ${service}."
+
+			export ORCA_${service}_PASSWORD=$(cat /opt/liferay/passwords/${service})
+		done
+	fi
+
 	cd builds/deploy
 
 	docker-compose up ${@}

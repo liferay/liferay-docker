@@ -60,9 +60,9 @@ function main {
 	create_password mysql_liferay_password
 	create_password mysql_root_password
 
-	echo "export ORCA_BACKUP_PASSWORD=${backup_password}"
-	echo "export ORCA_DB_PASSWORD=${db_password}"
-	echo "export ORCA_LIFERAY_PASSWORD=${liferay_password}"
+	echo "echo \"${backup_password}\" > /opt/liferay/passwords/BACKUP"
+	echo "echo \"${db_password}\" > /opt/liferay/passwords/DB"
+	echo "echo \"${liferay_password}\" > /opt/liferay/passwords/LIFERAY"
 }
 
 main
