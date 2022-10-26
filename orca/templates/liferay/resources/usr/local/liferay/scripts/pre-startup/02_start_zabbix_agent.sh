@@ -2,7 +2,7 @@
 
 if [ "${ORCA_LIFERAY_ZABBIX_AGENT_ENABLED}" == "true" ]
 then
-	echo "Starting zabbix agent."
+	echo "Starting Zabbix agent."
 
 	/usr/sbin/zabbix_agent2 -c /etc/zabbix/zabbix_agent2.conf &
 else
