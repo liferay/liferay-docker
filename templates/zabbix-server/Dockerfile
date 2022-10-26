@@ -2,13 +2,12 @@
 # See https://github.com/zabbix/zabbix-docker/blob/6.2/Dockerfiles/server-mysql/ubuntu/Dockerfile
 #
 
-ARG TARGETARCH
-ARG TARGETPLATFORM
-
 FROM zabbix/zabbix-server-mysql:ubuntu-latest as zabbix-server-mysql
 
 FROM --platform=${TARGETPLATFORM} liferay/base:latest
 
+ARG TARGETARCH
+ARG TARGETPLATFORM
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
 ARG LABEL_VCS_REF
