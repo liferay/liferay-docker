@@ -209,7 +209,7 @@ function build_service_monitoring_proxy {
 	write 1 "        - ZBX_SERVER_HOST=zabbix-server"
 }
 
-function build_service_monitoring_proxy-db {
+function build_service_monitoring_proxy_db {
 	docker_build monitoring-proxy-db
 
 	write 1 "${SERVICE_NAME}:"
@@ -327,7 +327,7 @@ function build_services {
 		cp -a templates/_common/* docker-build
 		cp -a templates/${SERVICE_NAME}/* docker-build
 
-		build_service_$(echo ${SERVICE_NAME} | sed -e "s/-/_/")
+		build_service_$(echo ${SERVICE_NAME} | sed -e "s/-/_/g")
 
 		rm -fr docker-build
 	done
