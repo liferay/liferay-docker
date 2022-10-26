@@ -11,10 +11,10 @@ RUN curl -H 'accept: */*' -L -s -X 'GET' -o /tmp/zabbix_agent.deb https://repo.z
 	apt-get clean && \
 	rm -fr /var/lib/apt/lists/*
 
+COPY resources/etc/zabbix/zabbix_agent2.conf /etc/zabbix/zabbix_agent2.conf
 COPY --chown=liferay:liferay resources/opt/liferay /opt/liferay/
 COPY resources/usr/local/bin /usr/local/bin/
 COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
-COPY resources/etc/zabbix/zabbix_agent2.conf /etc/zabbix/zabbix_agent2.conf
 
 RUN mkdir -p /etc/zabbix && \
 	mkdir -p /etc/zabbix/zabbix_agentd.d && \
