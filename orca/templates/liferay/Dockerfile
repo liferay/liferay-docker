@@ -18,7 +18,6 @@ COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
 
 RUN mkdir -p /etc/zabbix && \
 	mkdir -p /etc/zabbix/zabbix_agentd.d && \
-	mkdir -p /var/lib/zabbix && \
 	mkdir -p /var/lib/zabbix/buffer && \
 	mkdir -p /var/lib/zabbix/enc && \
 	mkdir -p /var/lib/zabbix/modules && \
