@@ -61,9 +61,11 @@ RUN ln -fs /dev/fd/2 /var/log/nginx/error.log && \
 RUN	chown --quiet -R zabbix:root /etc/nginx /etc/php/8.1/fpm/php-fpm.conf /etc/php/8.1/fpm/pool.d && \
 	chgrp -R 0 /etc/nginx /etc/php/8.1/fpm/php-fpm.conf /etc/php/8.1/fpm/pool.d && \
 	chmod -R g=u /etc/nginx /etc/php/8.1/fpm/php-fpm.conf /etc/php/8.1/fpm/pool.d && \
+	\
 	chown --quiet -R zabbix:root /etc/zabbix /usr/share/zabbix/include/defines.inc.php /usr/share/zabbix/modules && \
 	chgrp -R 0 /etc/zabbix /usr/share/zabbix/include/defines.inc.php /usr/share/zabbix/modules && \
 	chmod -R g=u /etc/zabbix /usr/share/zabbix/include/defines.inc.php /usr/share/zabbix/modules && \
+	\
 	chown --quiet -R zabbix:root /var/lib/php/session && \
 	chgrp -R 0 /var/lib/php/session && \
 	chmod -R g=u /var/lib/php/session
