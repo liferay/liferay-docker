@@ -19,15 +19,15 @@ COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
 RUN mkdir -p /etc/zabbix && \
 	mkdir -p /etc/zabbix/zabbix_agentd.d && \
 	mkdir -p /var/lib/zabbix && \
-	mkdir -p /var/run/zabbix && \
+	mkdir -p /var/lib/zabbix/buffer && \
 	mkdir -p /var/lib/zabbix/enc && \
 	mkdir -p /var/lib/zabbix/modules && \
-	mkdir -p /var/lib/zabbix/buffer && \
-	mkdir -p /var/log/zabbix/ && \
+	mkdir -p /var/log/zabbix && \
+	mkdir -p /var/run/zabbix && \
 	touch /var/log/zabbix/zabbix_agent2.log && \
-	chown --quiet -R liferay:liferay /etc/zabbix/ /var/lib/zabbix/ /var/run/zabbix/ && \
-	chgrp -R 0 /etc/zabbix/ /var/lib/zabbix/ /var/run/zabbix/ && \
-	chmod -R g=u /etc/zabbix/ /var/lib/zabbix/ /var/run/zabbix/
+	chown --quiet -R liferay:liferay /etc/zabbix /var/lib/zabbix /var/run/zabbix && \
+	chgrp -R 0 /etc/zabbix /var/lib/zabbix /var/run/zabbix && \
+	chmod -R g=u /etc/zabbix /var/lib/zabbix /var/run/zabbix
 
 USER liferay
 
