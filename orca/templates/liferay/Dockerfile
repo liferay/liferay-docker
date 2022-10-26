@@ -2,19 +2,14 @@ FROM liferay/dxp:7.4.13-u45-d5.0.1-20221006125539
 
 USER 0
 
-RUN apt-get update && \
-	apt-get --yes install mariadb-client && \
-	apt-get upgrade --yes && \
-	apt-get clean && \
-	rm -fr /var/lib/apt/lists/*
-
 RUN curl -H 'accept: */*' -L -s -X 'GET' -o /tmp/zabbix_agent.deb https://repo.zabbix.com/zabbix/6.3/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.3-1%2Bubuntu22.04_all.deb && \
 	dpkg -i /tmp/zabbix_agent.deb && \
 	rm -rf /tmp/zabbix_agent.deb && \
-	apt update && \
-	apt-get upgrade --yes  && \
-	apt install zabbix-agent2  && \
-	apt-get clean
+	apt-get update && \
+	apt-get --yes install mariadb-client zabbix-agent2 && \
+	apt-get upgrade --yes && \
+	apt-get clean && \
+	rm -fr /var/lib/apt/lists/*
 
 COPY --chown=liferay:liferay resources/opt/liferay /opt/liferay/
 COPY resources/usr/local/bin /usr/local/bin/
