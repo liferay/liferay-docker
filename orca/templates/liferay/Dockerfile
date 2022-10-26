@@ -4,7 +4,7 @@ USER 0
 
 RUN curl -H 'accept: */*' -L -s -X 'GET' -o /tmp/zabbix_agent.deb https://repo.zabbix.com/zabbix/6.3/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.3-1%2Bubuntu22.04_all.deb && \
 	dpkg -i /tmp/zabbix_agent.deb && \
-	rm -rf /tmp/zabbix_agent.deb && \
+	rm -fr /tmp/zabbix_agent.deb && \
 	apt-get update && \
 	apt-get --yes install mariadb-client zabbix-agent2 && \
 	apt-get upgrade --yes && \
