@@ -226,7 +226,7 @@ function build_service_monitoring_proxy-db {
 	write 1 "    ports:"
 	write 1 "        - \"3306:3306\""
 	write 1 "    volumes:"
-	write 1 "        - /opt/liferay/db-data:/bitnami/mariadb"
+	write 1 "        - /opt/liferay/monitoring-proxy-db-data:/bitnami/mariadb"
 }
 
 function build_service_search {
