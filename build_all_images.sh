@@ -310,13 +310,15 @@ function get_latest_docker_hub_zabbix_server_version {
 	local token=$(curl -s "https://auth.docker.io/token?scope=repository:${image_tag}:pull&service=registry.docker.io" | jq -r '.token')
 
 	local label_name="org.opencontainers.image.version"
+	local tag="ubuntu-latest"
 
 	if [[ "${image_tag}" =~ "liferay/" ]]
 	then
 		label_name="org.label-schema.zabbix-version"
+		tag="latest"
 	fi
 
-	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/${image_tag}/manifests/ubuntu-latest" | grep -o "\\\\\"${label_name}\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
+	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/${image_tag}/manifests/${tag}" | grep -o "\\\\\"${label_name}\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
 	echo "${version}"
 }
