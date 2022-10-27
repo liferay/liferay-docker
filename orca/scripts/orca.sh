@@ -106,16 +106,6 @@ function command_up {
 		exit 1
 	fi
 
-	if [ -d /opt/liferay/tokens ]
-	then
-		for token in $(ls /opt/liferay/tokens)
-		do
-			echo "Setting the ${token} token."
-
-			export ORCA_VAULT_TOKEN_${token}=$(cat /opt/liferay/tokens/${token})
-		done
-	fi
-
 	if [ -d /opt/liferay/passwords ]
 	then
 		for service in $(ls /opt/liferay/passwords)
