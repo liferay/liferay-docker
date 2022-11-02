@@ -6,12 +6,16 @@ const cache = require('./lib/cache');
 var server = prerender({
 	chromeLocation: '/usr/bin/google-chrome',
 	chromeFlags: [
-		'--disable-gpu',
 		'--disable-dev-shm-usage',
-		'--headless',
+		'--disable-gl-drawing-for-tests',
+		'--disable-gpu',
 		'--hide-scrollbars',
+		'--no-proxy-server',
 		'--no-sandbox',
-		'--remote-debugging-port=9222'
+		'--proxy-server="direct://"',
+		'--proxy-bypass-list=*',
+		'--remote-debugging-port=9222',
+		'--user-data-dir=/tmp/chrome-data'
 	],
 });
 

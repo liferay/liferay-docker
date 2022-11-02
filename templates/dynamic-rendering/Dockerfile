@@ -18,7 +18,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
 		>> /etc/apt/sources.list.d/google.list' && \
 	apt-get update && \
 	apt-get upgrade -y && \
-	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y nodejs google-chrome-stable && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y nodejs google-chrome-stable xvfb && \
 	apt-get clean
 
 WORKDIR /usr/src/app
@@ -46,4 +46,4 @@ LABEL org.label-schema.version="${LABEL_VERSION}"
 
 USER liferay:liferay
 
-ENTRYPOINT ["tini", "--", "node", "server.js"]
+ENTRYPOINT ["tini", "--", "xvfb-run", "--server-args=-screen 0 1024x768x24", "node", "server.js"]
