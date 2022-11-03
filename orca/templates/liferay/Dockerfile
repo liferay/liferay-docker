@@ -2,7 +2,8 @@ FROM liferay/dxp:7.4.13-u45-d5.0.1-20221006125539
 
 USER 0
 
-RUN curl -H 'accept: */*' -L -s -X 'GET' -o /tmp/zabbix_agent.deb https://repo.zabbix.com/zabbix/6.3/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.3-1%2Bubuntu22.04_all.deb && \
+RUN if test $(dpkg --print-architecture) = "arm64"; then zabbix_platform="ubuntu-arm64"; else zabbix_platform="ubuntu"; fi && \
+	curl -H 'accept: */*' -L -s -X 'GET' -o /tmp/zabbix_agent.deb https://repo.zabbix.com/zabbix/6.3/${zabbix_platform}/pool/main/z/zabbix-release/zabbix-release_6.3-1%2Bubuntu22.04_all.deb && \
 	dpkg -i /tmp/zabbix_agent.deb && \
 	rm -fr /tmp/zabbix_agent.deb && \
 	apt-get update && \
