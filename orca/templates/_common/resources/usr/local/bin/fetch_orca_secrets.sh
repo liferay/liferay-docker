@@ -1,16 +1,16 @@
 #!/bin/bash
 
 function check_usage {
-	if [ ! -n "${ORCA_VAULT_ADDRESSES}" ] ||  [ ! -n "${ORCA_SERVICE_PASSWORD}" ]
+	if [ ! -n "${ORCA_VAULT_ADDRESSES}" ] ||  [ ! -n "${ORCA_VAULT_SERVICE_PASSWORD}" ]
 	then
-		echo "Set the environment variables ORCA_VAULT_ADDRESSES and ORCA_SERVICE_PASSWORD."
+		echo "Set the environment variables ORCA_VAULT_ADDRESSES and ORCA_VAULT_SERVICE_PASSWORD."
 
 		exit 1
 	fi
 }
 
 function get_token {
-	local token=$(vault login -format=json -method=userpass -path=userpass-${1} username=${1} password=${ORCA_SERVICE_PASSWORD} | jq -r ".auth.client_token")
+	local token=$(vault login -format=json -method=userpass -path=userpass-${1} username=${1} password=${ORCA_VAULT_SERVICE_PASSWORD} | jq -r ".auth.client_token")
 
 	echo ${token}
 }

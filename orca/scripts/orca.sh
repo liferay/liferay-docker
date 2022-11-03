@@ -112,7 +112,7 @@ function command_up {
 		do
 			echo "Setting the password for ${service}."
 
-			export ORCA_${service}_PASSWORD=$(cat /opt/liferay/passwords/${service})
+			export ORCA_VAULT_${service}_PASSWORD=$(cat /opt/liferay/passwords/${service})
 		done
 	fi
 
