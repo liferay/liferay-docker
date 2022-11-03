@@ -23,4 +23,4 @@ Then log in to the first server and execute the following:
 
 ## Running in other OS
 
-Only Ubuntu (22.04 ~ Jammy) is supported. If you need to run in another OS, please use a VM with Ubuntu. 
+Only Ubuntu (20.04+) is supported currently. If you need to run in another OS, please use a VM with Ubuntu.
