@@ -4,11 +4,9 @@ function main {
 	apt-get update
 	apt-get --yes install docker-compose git glusterfs-server pwgen
 
-	#	Install yq if necessary
-	if ! command -v yq &> /dev/null; then
+	if (! command -v yq &> /dev/null)
+	then
 		snap install yq
-	else
-		yq --version
 	fi
 
 	mkdir -p /opt/liferay/orca
