@@ -10,7 +10,7 @@ function check_usage {
 }
 
 function get_token {
-	local token=$(vault login -format=json -method=userpass -path=userpass-${1} username=${1} password=${ORCA_VAULT_SERVICE_PASSWORD} | jq -r ".auth.client_token")
+	local token=$(curl --fail --request POST --silent "http://${ORCA_VAULT_ADDRESSES}/v1/auth/userpass/login/${1}" --data "{'password':'${ORCA_VAULT_SERVICE_PASSWORD}'}");
 
 	echo ${token}
 }
