@@ -32,7 +32,7 @@ function create_policies {
 }
 
 function create_services_auth {
-	vault auth enable -path="userpass-${1}" userpass
+	vault auth enable -path="userpass-${1}" userpass >/dev/null
 
 	local password=$(pwgen -1 -s 20)
 	vault write auth/userpass-${1}/users/${1} password="${password}" policies="${1}" >/dev/null
