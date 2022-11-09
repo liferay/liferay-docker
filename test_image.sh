@@ -130,12 +130,12 @@ function start_container {
 	then
 		CONTAINER_HOSTNAME=portal-container
 		CONTAINER_HTTP_PORT=8080
-		test_dir="/data/slaves/${LIFERAY_DOCKER_NETWORK_NAME}/git/liferay/liferay-docker/${TEST_DIR}"
+		test_dir="/data/${LIFERAY_DOCKER_NETWORK_NAME}/liferay/liferay-docker/${TEST_DIR}"
 
 		network_parameters="--hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME}"
 	fi
 
-	CONTAINER_ID=$(docker run -d -p 8080 -v "${test_dir}/mnt/liferay":/mnt/liferay ${network_parameters} "${LIFERAY_DOCKER_IMAGE_ID}")
+	CONTAINER_ID=$(docker run -d -p 8080 -v "${test_dir}/mnt:/mnt:rw" ${network_parameters} "${LIFERAY_DOCKER_IMAGE_ID}")
 
 	if [ ! -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
