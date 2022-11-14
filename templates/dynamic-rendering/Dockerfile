@@ -9,7 +9,7 @@ ARG LABEL_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
-COPY . /usr/src/app
+COPY resources/usr/src/app/* /usr/src/app
 
 ENV MEMORY_CACHE=0
 ENV NODE_VERSION=node16
