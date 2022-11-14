@@ -25,10 +25,10 @@ function create_password {
 }
 
 function create_policies {
-	vault policy write shared shared.hcl
-	vault policy write backup backup.hcl
-	vault policy write db db.hcl
-	vault policy write liferay liferay.hcl
+	for policy in policy_*.hcl
+	do
+		vault policy write shared ${policy}
+	done
 }
 
 function create_services_auth {

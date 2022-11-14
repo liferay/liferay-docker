@@ -49,8 +49,7 @@ function main {
 
 	wait_for_vault
 
-	local token=$(get_token ${service})
-	load_secrets ${token} "${@}"
+	load_secrets $(get_token ${service}) "${@}"
 
 	unset ORCA_VAULT_TOKEN
 }
