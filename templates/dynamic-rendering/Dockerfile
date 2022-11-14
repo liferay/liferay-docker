@@ -1,31 +1,20 @@
 FROM liferay/base
 
 ARG LABEL_BUILD_DATE
-ARG LABEL_PRERENDER_VERSION
 ARG LABEL_NAME
+ARG LABEL_PRERENDER_VERSION
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
+COPY . /usr/src/app
+
 ENV MEMORY_CACHE=0
 ENV NODE_VERSION=node16
 
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
-	curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-	sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
-		>> /etc/apt/sources.list.d/google.list' && \
-	apt-get update && \
-	apt-get upgrade -y && \
-	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y nodejs google-chrome-stable xvfb && \
-	apt-get clean
-
-WORKDIR /usr/src/app
-
-COPY . /usr/src/app
-
-RUN npm install --no-package-lock
+ENTRYPOINT ["tini", "--", "xvfb-run", "--server-args=-screen 0 1024x768x24", "node", "server.js"]
 
 EXPOSE 3000
 
@@ -44,6 +33,16 @@ LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
 
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+	curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+	sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+	apt-get update && \
+	apt-get upgrade -y && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y nodejs google-chrome-stable xvfb && \
+	apt-get clean && \
+	\
+	npm install --no-package-lock
+
 USER liferay:liferay
 
-ENTRYPOINT ["tini", "--", "xvfb-run", "--server-args=-screen 0 1024x768x24", "node", "server.js"]
+WORKDIR /usr/src/app
