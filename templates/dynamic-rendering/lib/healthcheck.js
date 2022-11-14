@@ -1,24 +1,28 @@
 const http = require('http');
 
-const options = {
-	port: 3000,
-	path:'http://localhost:3000/http://localhost:3001',
-	timeout: 2000
+const EXIT_CODE = {
+  ERROR: 1,
+  SUCCESS: 0,
 };
 
-const healthCheck = http.request(options, (res) => {
-	console.log(`HEALTHCHECK STATUS: ${res.statusCode}`);
-	if (res.statusCode == 200) {
-		process.exit(0);
-	}
-	else {
-		process.exit(1);
-	}
+const options = {
+  path: 'http://localhost:3000/http://localhost:3001',
+  port: 3000,
+  timeout: 2000,
+};
+
+const healthCheck = http.request(options, (response) => {
+  console.log(`HEALTHCHECK STATUS: ${response.statusCode}`);
+
+  process.exit(
+    response.statusCode == 200 ? EXIT_CODE.SUCCESS : EXIT_CODE.ERROR
+  );
 });
 
-healthCheck.on('error', function (err) {
-	console.error('ERROR');
-	process.exit(1);
+healthCheck.on('error', function (error) {
+  console.error(`HEALTHCHECK ERROR: ${error.message}`);
+
+  process.exit(EXIT_CODE.ERROR);
 });
 
 healthCheck.end();
