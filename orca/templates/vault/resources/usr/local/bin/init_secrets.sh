@@ -50,11 +50,11 @@ function main {
 
 	vault secrets enable -path=secret kv >/dev/null 2>&1
 
-	create_policies
-
 	create_password mysql_backup_password
 	create_password mysql_liferay_password
 	create_password mysql_root_password
+
+	create_policies
 
 	echo "echo \"$(create_services_auth backup)\" > /opt/liferay/passwords/BACKUP"
 	echo "echo \"$(create_services_auth db)\" > /opt/liferay/passwords/DB"
