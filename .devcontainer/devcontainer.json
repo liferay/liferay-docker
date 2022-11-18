@@ -2,7 +2,9 @@
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
-	"extensions": ["ms-azuretools.vscode-docker"],
+	"extensions": [
+		"ms-azuretools.vscode-docker"
+	],
 	"features": {
 		"docker-in-docker": "latest",
 		"git": "os-provided",
