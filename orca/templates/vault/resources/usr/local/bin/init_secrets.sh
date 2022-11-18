@@ -35,11 +35,12 @@ function create_services_auth {
 	vault auth enable -path="userpass-${1}" userpass >/dev/null
 
 	local password=$(pwgen -1 -s 20)
+
 	vault write auth/userpass-${1}/users/${1} password="${password}" policies="${1}" >/dev/null
 
 	local accessor_id=$(vault auth list -format=json | jq -r '.["userpass-backup/"].accessor')
-
 	local entity_id=$(vault write -format=json identity/entity name="shared" policies="shared" | jq -r ".data.id")
+
 	vault write identity/entity-alias name="${1}" canonical_id="${entity_id}" mount_accessor="${accessor_id}" >/dev/null
 
 	echo ${password}
