@@ -31,7 +31,7 @@ function create_policies {
 	done
 }
 
-function create_services_auth {
+function create_service_password {
 	vault auth enable -path="userpass-${1}" userpass >/dev/null
 
 	local password=$(pwgen -1 -s 20)
@@ -57,9 +57,9 @@ function main {
 
 	create_policies
 
-	echo "echo \"$(create_services_auth backup)\" > /opt/liferay/passwords/BACKUP"
-	echo "echo \"$(create_services_auth db)\" > /opt/liferay/passwords/DB"
-	echo "echo \"$(create_services_auth liferay)\" > /opt/liferay/passwords/LIFERAY"
+	echo "echo \"$(create_service_password backup)\" > /opt/liferay/passwords/BACKUP"
+	echo "echo \"$(create_service_password db)\" > /opt/liferay/passwords/DB"
+	echo "echo \"$(create_service_password liferay)\" > /opt/liferay/passwords/LIFERAY"
 }
 
 main
