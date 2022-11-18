@@ -52,17 +52,13 @@ function main {
 
 	create_policies
 
-	local backup_password=$(create_services_auth backup)
-	local db_password=$(create_services_auth db)
-	local liferay_password=$(create_services_auth liferay)
-
 	create_password mysql_backup_password
 	create_password mysql_liferay_password
 	create_password mysql_root_password
 
-	echo "echo \"${backup_password}\" > /opt/liferay/passwords/BACKUP"
-	echo "echo \"${db_password}\" > /opt/liferay/passwords/DB"
-	echo "echo \"${liferay_password}\" > /opt/liferay/passwords/LIFERAY"
+	echo "echo \"$(create_services_auth backup)\" > /opt/liferay/passwords/BACKUP"
+	echo "echo \"$(create_services_auth db)\" > /opt/liferay/passwords/DB"
+	echo "echo \"$(create_services_auth liferay)\" > /opt/liferay/passwords/LIFERAY"
 }
 
 main
