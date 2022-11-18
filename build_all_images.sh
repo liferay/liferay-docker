@@ -8,13 +8,13 @@ function build_base_image {
 	if [[ $(get_latest_docker_hub_version "base") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
-		echo "Docker image base is up to date."
+		echo "Docker image Base is up to date."
 
 		return
 	fi
 
 	echo ""
-	echo "Building Docker image base."
+	echo "Building Docker image Base."
 	echo ""
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/base.log
@@ -157,13 +157,13 @@ function build_dynamic_rendering_image {
 	if [[ $(get_latest_docker_hub_version "job-runner") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
-		echo "Docker image dynamic rendering is up to date."
+		echo "Docker image Dynamic Rendering is up to date."
 
 		return
 	fi
 
 	echo ""
-	echo "Building Docker image dynamic rendering."
+	echo "Building Docker image Dynamic Rendering."
 	echo ""
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/dynamic_rendering.log
@@ -238,13 +238,13 @@ function build_job_runner_image {
 	if [[ $(get_latest_docker_hub_version "job-runner") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
-		echo "Docker image job runner is up to date."
+		echo "Docker image Job Runner is up to date."
 
 		return
 	fi
 
 	echo ""
-	echo "Building Docker image job runner."
+	echo "Building Docker image Job Runner."
 	echo ""
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/job_runner.log
@@ -266,24 +266,24 @@ function build_zabbix_server_image {
 	if [[ "${latest_liferay_zabbix_server_version}" == "${latest_official_zabbix_server_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
-		echo "Docker image Zabbix server is up to date."
+		echo "Docker image Zabbix Server is up to date."
 
 		return
 	fi
 
 	echo ""
-	echo "Building Docker image Zabbix server."
+	echo "Building Docker image Zabbix Server."
 	echo ""
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Zabbix server" >> "${LOGS_DIR}/results"
+		echo "FAILED: Zabbix Server" >> "${LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Zabbix server" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Zabbix Server" >> "${LOGS_DIR}/results"
 	fi
 }
 
@@ -294,24 +294,24 @@ function build_zabbix_web_image {
 	if [[ "${latest_liferay_zabbix_server_web_interface_version}" == "${latest_official_zabbix_server_web_interface_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
-		echo "Docker image Zabbix web is up to date."
+		echo "Docker image Zabbix Web is up to date."
 
 		return
 	fi
 
 	echo ""
-	echo "Building Docker image Zabbix web."
+	echo "Building Docker image Zabbix Web."
 	echo ""
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server_web_interface.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Zabbix web" >> "${LOGS_DIR}/results"
+		echo "FAILED: Zabbix Web" >> "${LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Zabbix web" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Zabbix Web" >> "${LOGS_DIR}/results"
 	fi
 }
 
