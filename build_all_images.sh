@@ -153,6 +153,31 @@ function build_caddy_image {
 	fi
 }
 
+function build_dynamic_rendering_image {
+	if [[ $(get_latest_docker_hub_version "job-runner") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	then
+		echo ""
+		echo "Docker image dynamic rendering is up to date."
+
+		return
+	fi
+
+	echo ""
+	echo "Building Docker image dynamic rendering."
+	echo ""
+
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/dynamic_rendering.log
+
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	then
+		echo "FAILED: Dynamic Rendering" >> "${LOGS_DIR}/results"
+
+		exit 1
+	else
+		echo "SUCCESS: Dynamic Rendering" >> "${LOGS_DIR}/results"
+	fi
+}
+
 function build_jdk11_image {
 	local latest_available_zulu11_amd64_version=$(get_latest_available_zulu_version "11" "amd64")
 	local latest_available_zulu11_arm64_version=$(get_latest_available_zulu_version "11" "arm64")
@@ -383,18 +408,15 @@ function main {
 
 	build_base_image
 
-	build_caddy_image
-
 	build_jdk11_image
-
 	build_jdk11_jdk8_image
 
+	build_caddy_image
+	build_dynamic_rendering_image
 	build_job_runner_image
-	
 	build_zabbix_server_image
-
 	build_zabbix_web_image
- 
+	 
 	build_bundle_images
 
 	echo ""
