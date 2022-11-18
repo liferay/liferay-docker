@@ -10,8 +10,8 @@ RUN apt-get update && \
 
 USER 1001
 
+CMD [ "/opt/bitnami/scripts/mariadb-galera/run.sh" ]
+
 COPY resources/usr/local/bin /usr/local/bin/
 
 ENTRYPOINT [ "/usr/local/bin/liferay_entrypoint.sh" ]
-
-CMD [ "/opt/bitnami/scripts/mariadb-galera/run.sh" ]
