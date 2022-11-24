@@ -412,7 +412,7 @@ function main {
 	build_jdk11_jdk8_image
 
 	build_caddy_image
-	build_dynamic_rendering_image
+	#build_dynamic_rendering_image
 	build_job_runner_image
 	build_zabbix_server_image
 	build_zabbix_web_image
