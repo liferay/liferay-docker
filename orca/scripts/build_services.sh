@@ -224,7 +224,7 @@ function build_service_monitoring_proxy_db {
 	write 1 "    hostname: ${SERVICE_HOST}"
 	write 1 "    image: monitoring-proxy-db:${VERSION}"
 	write 1 "    ports:"
-	write 1 "        - \"3306:3306\""
+	write 1 "        - \"4306:3306\""
 	write 1 "    volumes:"
 	write 1 "        - /opt/liferay/monitoring-proxy-db-data:/bitnami/mariadb"
 }
