@@ -1,1 +1,1 @@
-FROM bitnami/mariadb:10.4
+FROM bitnami/mariadb:10.5

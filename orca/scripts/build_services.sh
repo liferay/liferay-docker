@@ -191,10 +191,11 @@ function build_service_monitoring_proxy {
 	docker_build monitoring-proxy
 
 	write 1 "${SERVICE_NAME}:"
-	write 1 "    command: -F --no-caps"
+	#write 1 "    command: -F --no-caps"
 	write 1 "    container_name: ${SERVICE_NAME}"
 	write 1 "    environment:"
 	write 1 "        - DB_SERVER_HOST=monitoring-proxy-db"
+	#write 1 "        - DB_SERVER_PORT=4306"
 	write 1 "        - MYSQL_DATABASE=zabbix"
 	write 1 "        - MYSQL_PASSWORD=zabbix_pwd"
 	write 1 "        - MYSQL_ROOT_PASSWORD=root_pwd"
@@ -205,6 +206,8 @@ function build_service_monitoring_proxy {
 	write 1 "        - ZBX_SERVER_HOST=zabbix-server"
 	write 1 "    hostname: ${SERVICE_HOST}"
 	write 1 "    image: monitoring-proxy:${VERSION}"
+	write 1 "    links:"
+        write 1 "        - monitoring-proxy-db:monitoring-proxy-db"
 	write 1 "    ports:"
 	write 1 "        - 10051:10051"
 }
@@ -476,3 +479,4 @@ function write {
 }
 
 main ${@}
+
