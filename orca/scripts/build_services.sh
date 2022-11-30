@@ -215,10 +215,10 @@ function build_service_monitoring_proxy_db {
 	write 1 "${SERVICE_NAME}:"
 	write 1 "    container_name: ${SERVICE_NAME}"
 	write 1 "    environment:"
-	write 1 "        - MARIADB_PORT_NUMBER=4306"
 	write 1 "        - MARIADB_DATABASE=zabbix"
 	write 1 "        - MARIADB_EXTRA_FLAGS=--character-set-server=utf8 --collation-server=utf8_bin --default-authentication-plugin=mysql_native_password"
 	write 1 "        - MARIADB_PASSWORD=zabbix_pwd"
+	write 1 "        - MARIADB_PORT_NUMBER=4306"
 	write 1 "        - MARIADB_ROOT_PASSWORD=root_pwd"
 	write 1 "        - MARIADB_ROOT_USER=root"
 	write 1 "        - MARIADB_USER=zabbix"
@@ -477,4 +477,3 @@ function write {
 }
 
 main ${@}
-
