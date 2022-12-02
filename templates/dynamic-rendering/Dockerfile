@@ -1,4 +1,4 @@
-FROM liferay/base
+FROM liferay/base:latest
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME

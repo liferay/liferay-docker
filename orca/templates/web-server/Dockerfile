@@ -1,4 +1,5 @@
-FROM liferay/base:4.1.0-20220613095221
+#Base image name: liferay/base:4.1.0-20220613095221
+FROM liferay/base@sha256:69216037cf0ba5e1b1aeca38c2c038713ec29bf3d824e5ad7a0debc0a822dceb
 
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get --yes install apache2 && \

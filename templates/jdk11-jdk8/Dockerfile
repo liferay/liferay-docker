@@ -1,10 +1,10 @@
-FROM --platform=linux/amd64 liferay/jdk11 as liferay-jdk11-amd64
+FROM --platform=linux/amd64 liferay/jdk11:latest as liferay-jdk11-amd64
 
 ARG LABEL_ZULU_8_AMD64_VERSION
 ARG LABEL_ZULU_8_ARM64_VERSION
 ARG LABEL_ZULU_8_VERSION=${LABEL_ZULU_8_AMD64_VERSION}
 
-FROM --platform=linux/arm64 liferay/jdk11 as liferay-jdk11-arm64
+FROM --platform=linux/arm64 liferay/jdk11:latest as liferay-jdk11-arm64
 
 ARG LABEL_ZULU_8_AMD64_VERSION
 ARG LABEL_ZULU_8_ARM64_VERSION
