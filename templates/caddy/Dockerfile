@@ -1,4 +1,4 @@
-#Base image name: caddy:2.5.0
+#FROM caddy:2.5.0
 FROM caddy@sha256:9fd29c443b9632275c7dee65b736044bf3eef7f0ff0acde17524d6bfa565d9c1
 
 ARG LABEL_BUILD_DATE

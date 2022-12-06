@@ -1,2 +1,2 @@
-#Base image name: gliderlabs/logspout:v3.2.14
+#FROM gliderlabs/logspout:v3.2.14
 FROM gliderlabs/logspout@sha256:77ef12dc219ea7e130423e28f3d720efa8a011a93418764b2aa94140ca28838d

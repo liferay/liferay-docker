@@ -1,2 +1,2 @@
-#Base image name: clamav/clamav:0.105
+#FROM clamav/clamav:0.105
 FROM clamav/clamav@sha256:eabac0589e352255f1ab4ca14fd919d7cbab80a4a37556c1e76086b4114eee06

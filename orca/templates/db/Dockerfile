@@ -1,4 +1,4 @@
-#Base image name: bitnami/mariadb-galera:10.4
+#FROM bitnami/mariadb-galera:10.4
 FROM bitnami/mariadb-galera@sha256:45d7ca6c585eea7de4246f87d92057892f0fa93d6c9306e7082dd84865260af7
 
 USER 0
