@@ -1,2 +1,2 @@
 #FROM gliderlabs/logspout:v3.2.14
-FROM gliderlabs/logspout@sha256:77ef12dc219ea7e130423e28f3d720efa8a011a93418764b2aa94140ca28838d
+FROM gliderlabs/logspout@sha256:f32a5944c8e3ba12a773ebb4e1b0660a9ddf6199139a6ec8db8a719f6e473292
