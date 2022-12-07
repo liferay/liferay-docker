@@ -1,5 +1,5 @@
 #FROM bitnami/mariadb-galera:10.4
-FROM bitnami/mariadb-galera@sha256:45d7ca6c585eea7de4246f87d92057892f0fa93d6c9306e7082dd84865260af7
+FROM bitnami/mariadb-galera@sha256:19cb3929b2c2b08bd8240339da0fb193529349091b805370b6cf8be67c3e4fe1
 
 USER 0
 
