@@ -256,6 +256,7 @@ function push_docker_image {
 			--build-arg LABEL_LIFERAY_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
 			--build-arg LABEL_LIFERAY_VCS_REF="${LIFERAY_VCS_REF}" \
 			--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
+			--build-arg LABEL_RELEASE_VERSION="${LIFERAY_DOCKER_RELEASE_VERSION}" \
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${LABEL_VERSION}" \
