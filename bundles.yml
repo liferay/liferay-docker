@@ -406,13 +406,13 @@
         bundle_url: files.liferay.com/private/ee/portal/7.3.10-u18/liferay-dxp-tomcat-7.3.10.u18-20221212081617833.7z
         test_installed_patch: hotfix-6782-7310
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-6782-7310.zip 
-7.4.3.55:
-    7.4.3.55-ga55:
+7.4.3.56:
+    7.4.3.56-ga56:
         bundle_url: releases.liferay.com/portal/7.4.3.55-ga55/liferay-ce-portal-tomcat-7.4.3.55-ga55-20221214100304403.7z
         latest: true
 7.4.13:
     7.4.13-u55:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u55/liferay-dxp-tomcat-7.4.13.u55-20221214070552598.7z
+        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u56/liferay-dxp-tomcat-7.4.13.u56-20221222145959924.7z
         latest: true
     7.4.13.nightly:
         bundle_url: files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
