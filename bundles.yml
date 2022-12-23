@@ -411,7 +411,7 @@
         bundle_url: releases.liferay.com/portal/7.4.3.55-ga55/liferay-ce-portal-tomcat-7.4.3.55-ga55-20221214100304403.7z
         latest: true
 7.4.13:
-    7.4.13-u55:
+    7.4.13-u56:
         bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u56/liferay-dxp-tomcat-7.4.13.u56-20221222145959924.7z
         latest: true
     7.4.13.nightly:
