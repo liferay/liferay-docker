@@ -1,9 +1,10 @@
 #!/bin/bash
 
 function check_usage {
+	CONNECTION_TIMEOUT=20
 	FILE_PATH="/"
 	PORT=8080
-	TIMEOUT=20
+	TIMEOUT=25
 
 	while [ "${1}" != "" ]
 	do
@@ -42,6 +43,12 @@ function check_usage {
 				TIMEOUT=${1}
 
 				;;
+			-z)
+				shift
+
+				CONNECTION_TIMEOUT=${1}
+
+				;;
 			*)
 				print_help
 
@@ -71,7 +78,7 @@ function main {
 
 	local curl_content
 
-	curl_content=$(curl -m "${TIMEOUT}" -s --show-error --url "${DOMAIN}:${PORT}" "${DOMAIN}:${PORT}${FILE_PATH}")
+	curl_content=$(curl --connect-timeout "${CONNECTION_TIMEOUT}" -m "${TIMEOUT}" -s --show-error --url "${DOMAIN}:${PORT}" "${DOMAIN}:${PORT}${FILE_PATH}")
 
 	local exit_code=$?
 
@@ -100,7 +107,7 @@ function main {
 }
 
 function print_help {
-	echo "Usage: ${0} -c <content> -d <domain> -f <path> -p <port> -t <timeout>"
+	echo "Usage: ${0} -c <content> -d <domain> -f <path> -p <port> -t <timeout> -z <connection-timeout>"
 	echo ""
 	echo "The script can be configured with the following arguments:"
 	echo ""
@@ -109,6 +116,7 @@ function print_help {
 	echo "	-f (optional): Path of the URL to check"
 	echo "  -p (optional): HTTP port of the URL to check"
 	echo "	-t (optional): Timeout in seconds"
+	echo "	-z (optional): Connection timeout in seconds"
 	echo ""
 	echo "Example: ${0} -d \"http://localhost\" -f \"/c/portal/layout\"" -p 8080 -t 20
 
