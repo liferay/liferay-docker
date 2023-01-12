@@ -1,23 +1,23 @@
 #!/bin/bash
 
-echo "Starting cleanup process"
+docker_compose="docker compose"
 
-for available_environment in $(ls | grep "env-")
+if (command -v docker-compose &>/dev/null)
+then
+	docker_compose="docker-compose"
+fi
+
+for environment in $(ls | grep "env-")
 do
-	cd "${available_environment}" || exit
-	echo "Deleting ${available_environment} docker compose environment"
-	docker-compose -p "${available_environment}" rm -s -f -v
+	echo "Cleaning up ${environment}."
 
-	echo "Deleting ${available_environment} docker volume"
-	docker volume rm -f "${available_environment}_mysql-db"
+	cd "${environment}"
+	${docker_compose} down
 
-	echo "Deleting ${available_environment} docker network"
-	docker network rm "${available_environment}_default"
+	docker image rm liferay:${environment}
+	docker image rm search:${environment}
 
 	cd ..
 
-	echo "Deleting ${available_environment} directory"
-	rm -fr "${available_environment}"
+	rm -fr "${environment}"
 done
-
-echo "Finished cleanup process"
