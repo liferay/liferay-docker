@@ -405,7 +405,11 @@
     7.3.10-u18:
         bundle_url: files.liferay.com/private/ee/portal/7.3.10-u18/liferay-dxp-tomcat-7.3.10.u18-20221212081617833.7z
         test_installed_patch: hotfix-6782-7310
-        test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-6782-7310.zip 
+        test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-6782-7310.zip
+    7.3.10-u19:
+        bundle_url: files.liferay.com/private/ee/portal/7.3.10-u19/liferay-dxp-tomcat-7.3.10.u19-20230104065351766.7z
+        test_installed_patch: hotfix-6886-7310
+        test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-6886-7310.zip
 7.4.3.58:
     7.4.3.58-ga58:
         bundle_url: releases-cdn.liferay.com/portal/7.4.3.58-ga58/liferay-ce-portal-tomcat-7.4.3.58-ga58-20230106095040120.7z
