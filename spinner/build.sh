@@ -192,11 +192,18 @@ function main {
 }
 
 function print_image_usage {
+	local docker_compose="docker compose"
+
+	if (command -v docker-compose &>/dev/null)
+	then
+		docker_compose="docker-compose"
+	fi
+
 	echo ""
 	echo "The configuration is ready to use. It's available in the ${STACK_NAME} folder. To start all services up, use the following commands:"
 	echo ""
 	echo "cd ${STACK_NAME}"
-	echo "docker compose up -d database search && docker-compose up liferay"
+	echo "${docker_compose} up -d database search && ${docker_compose} up liferay"
 	echo ""
 	echo "All ports are only listening on localhost, you can connect to the following services:"
 	echo " - DXP web: http://localhost:18080 test@lxc.app:test"
