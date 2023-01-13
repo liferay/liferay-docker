@@ -412,11 +412,11 @@
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-6886-7310.zip
 7.4.3.59:
     7.4.3.59-ga59:
-        bundle_url: releases-cdn.liferay.com/portal/7.4.3.59-ga59/liferay-ce-portal-tomcat-7.4.3.59-ga59-20230111002448786.7z
+        bundle_url: releases-cdn.liferay.com/portal/7.4.3.59-ga59/liferay-ce-portal-tomcat-7.4.3.59-ga59-20230112145006317.7z
         latest: true
 7.4.13:
     7.4.13-u59:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u59/liferay-dxp-tomcat-7.4.13.u59-20230110232044509.7z
+        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u59/liferay-dxp-tomcat-7.4.13.u59-20230112132719526.7z
         latest: true
     7.4.13.nightly:
         bundle_url: files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
