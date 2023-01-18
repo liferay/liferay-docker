@@ -6,6 +6,14 @@ function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."
 	echo ""
 
+	if [[ "${DOCKER_TCMALLOC_ENABLED}" == "true" ]]
+	then
+		LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4"
+		echo -e '\nexport LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4"' >> ~/.bashrc
+
+		export LD_PRELOAD
+	fi
+
 	if [ -d /etc/liferay/mount ]
 	then
 		LIFERAY_MOUNT_DIR=/etc/liferay/mount
