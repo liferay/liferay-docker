@@ -3,6 +3,8 @@
 function build_docker_images {
 	docker build ${STACK_DIR}/liferay -t "liferay:${STACK_NAME}"
 	docker build ${STACK_DIR}/search -t "search:${STACK_NAME}"
+
+	rm -fr ${STACK_DIR}/liferay ${STACK_DIR}/search
 }
 
 function check_usage {
@@ -76,6 +78,10 @@ function create_liferay_configuration {
 		rm -f liferay_mount/files/${1}
 	}
 
+	function write_company {
+		echo "${1}" >> "liferay_mount/files/osgi/configs/com.liferay.portal.instances.internal.configuration.PortalInstancesConfiguration~spinner-test.com.config"
+	}
+
 	mkdir -p liferay_mount/files
 
 	cp -a ${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/common/* liferay_mount/files
@@ -94,6 +100,13 @@ function create_liferay_configuration {
 
 	mv liferay_mount/files/patching liferay_mount
 	mv liferay_mount/files/scripts liferay_mount
+
+	write_company "active=B\"true\""
+	write_company "maxUsers=I\"0\""
+	write_company "mx=\"spinner-test.com\""
+	write_company "siteInitializerKey=\"\""
+	write_company "virtualHostname=\"spinner-test.com\""
+
 }
 
 function create_liferay_dockerfile {
@@ -206,7 +219,8 @@ function print_image_usage {
 	echo "${docker_compose} up -d database search && ${docker_compose} up liferay"
 	echo ""
 	echo "All ports are only listening on localhost, you can connect to the following services:"
-	echo " - DXP web: http://localhost:18080 test@lxc.app:test"
+	echo " - Customer virtual instance: http://spinner-test.com:18080 test@spinner-test.com:test (add spinner-test.com to your hosts file mapped to 127.0.0.1)"
+	echo " - Admin virtual instance: http://localhost:18080 test@lxc.app:test"
 	echo " - DXP debug: localhost:18000"
 	echo " - MariaDB: localhost:13306 root:password. Default database: lportal, additional databases: lpartition_*"
 	echo ""
