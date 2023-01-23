@@ -9,7 +9,8 @@ function main {
 	if [[ "${DOCKER_TCMALLOC_ENABLED}" == "true" ]]
 	then
 		LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4"
-		echo -e '\nexport LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4"' >> ~/.bashrc
+
+		echo -e '\nexport LD_PRELOAD="${LD_PRELOAD}"' >> ~/.bashrc
 
 		export LD_PRELOAD
 	fi
