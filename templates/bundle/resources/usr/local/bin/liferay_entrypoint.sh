@@ -10,9 +10,9 @@ function main {
 	then
 		LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4"
 
-		echo -e '\nexport LD_PRELOAD="${LD_PRELOAD}"' >> ~/.bashrc
-
 		export LD_PRELOAD
+
+		echo -e '\nexport LD_PRELOAD="${LD_PRELOAD}"' >> ~/.bashrc
 	fi
 
 	if [ -d /etc/liferay/mount ]
