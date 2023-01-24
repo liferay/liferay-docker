@@ -281,6 +281,7 @@ function build_service_vault {
 	write 1 "${SERVICE_NAME}:"
 	write 1 "    container_name: ${SERVICE_NAME}"
 	write 1 "    environment:"
+	write 1 "        - ORCA_DEVELOPMENT_MODE=$(query_configuration .development)"
 	write 1 "        - VAULT_RAFT_NODE_ID=${HOST}"
 	write 1 "    hostname: ${SERVICE_HOST}"
 	write 1 "    image: vault:${VERSION}"

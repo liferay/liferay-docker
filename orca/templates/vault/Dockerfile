@@ -16,7 +16,7 @@ RUN setcap -r /usr/bin/vault
 COPY resources/opt/liferay/vault /opt/liferay/vault
 COPY resources/usr/local/bin /usr/local/bin
 
-ENTRYPOINT ["vault", "server", "-config=config.hcl"]
+ENTRYPOINT ["tini", "--", "/usr/local/bin/vault_entrypoint.sh"]
 
 ENV VAULT_ADDR='http://127.0.0.1:8200'
 

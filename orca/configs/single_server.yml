@@ -1,3 +1,4 @@
+development: true
 hosts:
     localhost:
         services:
