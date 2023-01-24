@@ -28,7 +28,8 @@ function create_policies {
 	for policy in policy_*.hcl
 	do
 		local policy_name=${policy#"policy_"}
-		local policy_name=${policy_name%".hcl"}
+
+		policy_name=${policy_name%".hcl"}
 
 		vault policy write ${policy_name} ${policy}
 	done
