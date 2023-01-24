@@ -169,7 +169,13 @@ function build_service_log_proxy {
 	write 1 "    hostname: ${SERVICE_HOST}"
 	write 1 "    image: log-proxy:${VERSION}"
 	write 1 "    volumes:"
-	write 1 "        - /var/run/docker.sock:/var/run/docker.sock"
+
+	if [ -e /run/user/${UID}/docker.sock ]
+	then
+		write 3 "- /run/user/${UID}/docker.sock:/var/run/docker.sock"
+	else
+		write 3 "- /var/run/docker.sock:/var/run/docker.sock"
+	fi
 }
 
 function build_service_log_server {
