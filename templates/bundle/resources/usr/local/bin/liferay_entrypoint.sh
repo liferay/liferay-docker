@@ -12,7 +12,7 @@ function main {
 
 		export LD_PRELOAD
 
-		echo -e '\nexport LD_PRELOAD="${LD_PRELOAD}"' >> ~/.bashrc
+		echo -e "\nexport LD_PRELOAD=\"${LD_PRELOAD}\"" >> ~/.bashrc
 	fi
 
 	if [ -d /etc/liferay/mount ]
