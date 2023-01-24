@@ -10,7 +10,10 @@ function check_usage {
 }
 
 function get_token {
-	local token=$(curl --fail --request POST --silent "http://${ORCA_VAULT_ADDRESSES}/v1/auth/userpass/login/${1}" --data "{'password':'${ORCA_VAULT_SERVICE_PASSWORD}'}");
+	local token=$(curl --fail --request POST --silent "http://${ORCA_VAULT_ADDRESSES}/v1/auth/userpass-${1}/login/${1}" --data '{"password": "'${ORCA_VAULT_SERVICE_PASSWORD}'"}');
+
+	local token=${token##*client_token\":\"}
+	local token=${token%%\"*}
 
 	echo ${token}
 }

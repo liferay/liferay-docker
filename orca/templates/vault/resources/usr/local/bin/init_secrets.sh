@@ -27,7 +27,10 @@ function create_password {
 function create_policies {
 	for policy in policy_*.hcl
 	do
-		vault policy write shared ${policy}
+		local policy_name=${policy#"policy_"}
+		local policy_name=${policy_name%".hcl"}
+
+		vault policy write ${policy_name} ${policy}
 	done
 }
 
