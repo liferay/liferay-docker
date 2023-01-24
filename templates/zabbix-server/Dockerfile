@@ -43,7 +43,7 @@ LABEL org.label-schema.version="${LABEL_VERSION}"
 LABEL org.label-schema.zabbix-version="${LABEL_ZABBIX_VERSION}"
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes fping iputils-ping libevent-2.1 libcurl4 libmysqlclient21 libopenipmi0 libpcre2-8-0 libsnmp40 libssh-4 libssl3 libxml2 mysql-client nmap snmp-mibs-downloader traceroute tzdata unixodbc && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes fping iputils-ping libevent-2.1 libcurl4 libmysqlclient21 libopenipmi0 libpcre2-8-0 libsnmp40 libssh-4 libssl3 libxml2 mysql-client nmap snmp-mibs-downloader traceroute tzdata unixodbc && \
 	apt-get upgrade --yes && \
 	apt-get clean
 

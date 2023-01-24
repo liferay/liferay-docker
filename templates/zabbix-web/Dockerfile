@@ -43,7 +43,7 @@ LABEL org.label-schema.version="${LABEL_VERSION}"
 LABEL org.label-schema.zabbix-version="${LABEL_ZABBIX_VERSION}"
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" bash ca-certificates curl libldap-common locales mysql-client nginx php8.1-bcmath php8.1-fpm php8.1-gd php8.1-ldap php8.1-mbstring php8.1-mysql php8.1-xml supervisor && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" bash ca-certificates curl libldap-common locales mysql-client nginx php8.1-bcmath php8.1-fpm php8.1-gd php8.1-ldap php8.1-mbstring php8.1-mysql php8.1-xml supervisor && \
 	apt-get upgrade --yes && \
 	apt-get clean
 
