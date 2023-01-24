@@ -1,18 +1,7 @@
 #!/bin/bash
 
-function check_usage {
-	if [ ! -n "${ORCA_VAULT_TOKEN}" ]
-	then
-		echo "Set the environment variable ORCA_VAULT_TOKEN."
-
-		exit 1
-	fi
-
-	export VAULT_TOKEN="${ORCA_VAULT_TOKEN}"
-}
-
 function create_password {
-	if ( ! vault kv get secret/data/${1} > /dev/null 2>&1 )
+	if (! vault kv get secret/data/${1} &>/dev/null)
 	then
 		local password=$(pwgen -1 -s 20)
 
@@ -50,10 +39,38 @@ function create_service_password {
 	echo ${password}
 }
 
-function main {
-	check_usage
+function init_operator {
+	local operator_init=$(vault operator init -key-shares=1 -key-threshold=1)
 
-	vault secrets enable -path=secret kv >/dev/null 2>&1
+	UNSEAL_KEY=$(echo "${operator_init}" | grep "Unseal Key 1:")
+	UNSEAL_KEY=${UNSEAL_KEY##*: }
+
+	VAULT_TOKEN=$(echo "${operator_init}" | grep "Initial Root Token:")
+	VAULT_TOKEN=${VAULT_TOKEN##*: }
+
+	vault operator unseal "${UNSEAL_KEY}" >/dev/null
+
+	export VAULT_TOKEN
+
+	while true
+	do
+		if ( curl --max-time 3 --silent "http://localhost:8200/v1/sys/health" | grep "\"standby\":false" &>/dev/null)
+		then
+			echo "Vault operator is available."
+
+			break
+		fi
+
+		echo "Waiting for the operator become available."
+
+		sleep 1
+	done
+
+	vault secrets enable -path=secret kv
+}
+
+function main {
+	init_operator
 
 	create_password mysql_backup_password
 	create_password mysql_liferay_password
@@ -64,6 +81,11 @@ function main {
 	echo "echo \"$(create_service_password backup)\" > /opt/liferay/passwords/BACKUP"
 	echo "echo \"$(create_service_password db)\" > /opt/liferay/passwords/DB"
 	echo "echo \"$(create_service_password liferay)\" > /opt/liferay/passwords/LIFERAY"
+
+	echo ""
+	echo "Please save the following secrets to 1Password:"
+	echo "Root Token: ${VAULT_TOKEN}"
+	echo "Unseal key: ${UNSEAL_KEY}"
 }
 
 main
