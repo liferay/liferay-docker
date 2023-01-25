@@ -9,22 +9,24 @@ function create_dir {
 		if [ ! $(stat -c '%u' "${dir}") -eq "${service_uid}" ]
 		then
 			echo -n "Setting owner of ${dir} to ${service_uid}..."
-			if ( sudo chown "${service_uid}" "${dir}" )
+			if (sudo chown "${service_uid}" "${dir}")
 			then
 				echo "done."
 			else
 				echo "failed!"
+
 				ORCA_VALIDATION_ERROR=1
 			fi
 		fi
 	else
 		echo -n "${dir} does not exist, creating..."
-		if ( sudo install -d "${dir}" -o "${service_uid}" )
+		if (sudo install -d "${dir}" -o "${service_uid}")
 		then
 			echo "done."
 		else
 			echo "failed!"
-		        ORCA_VALIDATION_ERROR=1
+
+			ORCA_VALIDATION_ERROR=1
 		fi
 	fi
 }
