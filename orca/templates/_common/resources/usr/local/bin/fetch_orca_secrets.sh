@@ -1,7 +1,12 @@
 #!/bin/bash
 
 function check_usage {
-	if [ ! -n "${ORCA_VAULT_ADDRESSES}" ] ||  [ ! -n "${ORCA_VAULT_SERVICE_PASSWORD}" ]
+	if [ "${ORCA_DEVELOPMENT_MODE}" == "true" ]
+	then
+		ORCA_VAULT_SERVICE_PASSWORD="development"
+	fi
+
+	if [ ! -n "${ORCA_VAULT_ADDRESSES}" ] || [ ! -n "${ORCA_VAULT_SERVICE_PASSWORD}" ]
 	then
 		echo "Set the environment variables ORCA_VAULT_ADDRESSES and ORCA_VAULT_SERVICE_PASSWORD."
 

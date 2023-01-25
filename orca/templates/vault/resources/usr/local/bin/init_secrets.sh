@@ -29,7 +29,12 @@ function create_policies {
 function create_service_password {
 	vault auth enable -path="userpass-${1}" userpass >/dev/null
 
-	local password=$(pwgen -1 -s 20)
+	if [ "${ORCA_DEVELOPMENT_MODE}" == "true" ]
+	then
+		local password="development"
+	else
+		local password=$(pwgen -1 -s 20)
+	fi
 
 	vault write auth/userpass-${1}/users/${1} password="${password}" policies="${1}" >/dev/null
 
@@ -68,6 +73,15 @@ function main {
 	create_password mysql_liferay_password
 	create_password mysql_root_password
 
+	SERVICES=("backup" "db" "liferay")
+
+	declare -A service_passwords
+
+	for service in "${SERVICES[@]}"
+	do
+		service_passwords[${service}]=$(create_service_password ${service})
+	done
+
 	create_policies
 
 	save_secrets
@@ -80,9 +94,12 @@ function save_secrets {
 		echo "${UNSEAL_KEY}" > /opt/liferay/vault/data/unseal_key
 	else
 		echo "Distribute the serice passwords to the hosts which run them:"
-		echo "echo \"$(create_service_password backup)\" > /opt/liferay/passwords/BACKUP"
-		echo "echo \"$(create_service_password db)\" > /opt/liferay/passwords/DB"
-		echo "echo \"$(create_service_password liferay)\" > /opt/liferay/passwords/LIFERAY"
+
+		for service in "${SERVICES[@]}"
+		do
+			echo "echo \"${service_passwords[${service}]}\" > /opt/liferay/passwords/${service^^}"
+		done
+
 		echo ""
 		echo "Please save the following secrets to 1Password:"
 		echo "Root Token: ${VAULT_TOKEN}"
