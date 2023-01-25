@@ -1,30 +1,40 @@
 #!/bin/bash
 
-function check_dir {
-	local dir=${1}
-	local uid=${2}
+function create_dir {
+	local dir="${1}"
+	local service_uid="${2}"
 
 	if [ -d "${dir}" ]
 	then
-		if [ ! $(stat -c '%u' "${dir}") -eq "${uid}" ]
+		if [ ! $(stat -c '%u' "${dir}") -eq "${service_uid}" ]
 		then
-			echo "The permissions of directory ${dir} are not correct. Change the owner to ${uid}."
-
-			ORCA_VALIDATION_ERROR=1
+			echo -n "Setting owner of ${dir} to ${service_uid}..."
+			if ( sudo chown "${service_uid}" "${dir}" )
+			then
+				echo "done."
+			else
+				echo "failed!"
+				ORCA_VALIDATION_ERROR=1
+			fi
 		fi
 	else
-		echo "The directory ${dir} does not exist. Create it and change the owner to ${uid}."
-
-		ORCA_VALIDATION_ERROR=1
+		echo -n "${dir} does not exist, creating..."
+		if ( sudo install -d "${dir}" -o "${service_uid}" )
+		then
+			echo "done."
+		else
+			echo "failed!"
+		        ORCA_VALIDATION_ERROR=1
+		fi
 	fi
 }
 
-function check_dirs {
-	check_dir "/opt/liferay/db-data" 1001
-	check_dir "/opt/liferay/jenkins-home" 1000
-	check_dir "/opt/liferay/monitoring-proxy-db-data" 1001
-	check_dir "/opt/liferay/shared-volume/document-library" 1000
-	check_dir "/opt/liferay/vault/data" 1000
+function create_dirs {
+	create_dir "/opt/liferay/db-data" 1001
+	create_dir "/opt/liferay/jenkins-home" 1000
+	create_dir "/opt/liferay/monitoring-proxy-db-data" 1001
+	create_dir "/opt/liferay/shared-volume/document-library" 1000
+	create_dir "/opt/liferay/vault/data" 1000
 }
 
 function check_utils {
@@ -53,7 +63,7 @@ function check_vm_max_map_count {
 function main {
 	check_utils docker docker-compose yq
 
-	check_dirs
+	create_dirs
 
 	check_vm_max_map_count
 
