@@ -1,21 +1,17 @@
 #!/bin/bash
 
 function build_docker_images {
-	docker build ${STACK_DIR}/liferay -t "liferay:${STACK_NAME}"
-	docker build ${STACK_DIR}/search -t "search:${STACK_NAME}"
+	cd ${STACK_DIR}/liferay
+	docker build . -t "liferay:${STACK_NAME}"
+
+	cd ${STACK_DIR}/search
+	docker build . -t "search:${STACK_NAME}"
 
 	rm -fr ${STACK_DIR}/liferay ${STACK_DIR}/search
 }
 
 function check_usage {
 	check_utils docker
-
-	if [[ "${MSYSTEM}" =~ .*"MINGW".* ]] && [[ $MSYS_NO_PATHCONV -ne 1 ]]
-	then
-		echo "Looks like you are using a Git Bash environment. Please set the MSYS_NO_PATHCONV windows environment variable to 1."
-
-		exit 1
-	fi
 
 	ENVIRONMENT=${1}
 
