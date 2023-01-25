@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /usr/local/bin/_common.sh
+
 function create_password {
 	if (! vault kv get secret/data/${1} &>/dev/null)
 	then
@@ -52,19 +54,7 @@ function init_operator {
 
 	export VAULT_TOKEN
 
-	while true
-	do
-		if ( curl --max-time 3 --silent "http://localhost:8200/v1/sys/health" | grep "\"standby\":false" &>/dev/null)
-		then
-			echo "Vault operator is available."
-
-			break
-		fi
-
-		echo "Waiting for the operator become available."
-
-		sleep 1
-	done
+	wait_for_operator "\"standby\":false"
 
 	vault secrets enable -path=secret kv
 }
@@ -80,14 +70,24 @@ function main {
 
 	create_policies
 
-	echo "echo \"$(create_service_password backup)\" > /opt/liferay/passwords/BACKUP"
-	echo "echo \"$(create_service_password db)\" > /opt/liferay/passwords/DB"
-	echo "echo \"$(create_service_password liferay)\" > /opt/liferay/passwords/LIFERAY"
+	save_secrets
+}
 
-	echo ""
-	echo "Please save the following secrets to 1Password:"
-	echo "Root Token: ${VAULT_TOKEN}"
-	echo "Unseal key: ${UNSEAL_KEY}"
+function save_secrets {
+	if [ "${ORCA_DEVELOPMENT_MODE}" == "true" ]
+	then
+		echo "${VAULT_TOKEN}" > /opt/liferay/vault/data/root-token
+		echo "${UNSEAL_KEY}" > /opt/liferay/vault/data/unseal_key
+	else
+		echo "Distribute the serice passwords to the hosts which run them:"
+		echo "echo \"$(create_service_password backup)\" > /opt/liferay/passwords/BACKUP"
+		echo "echo \"$(create_service_password db)\" > /opt/liferay/passwords/DB"
+		echo "echo \"$(create_service_password liferay)\" > /opt/liferay/passwords/LIFERAY"
+		echo ""
+		echo "Please save the following secrets to 1Password:"
+		echo "Root Token: ${VAULT_TOKEN}"
+		echo "Unseal key: ${UNSEAL_KEY}"
+	fi
 }
 
 function wait_for_vault {
