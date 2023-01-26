@@ -193,11 +193,11 @@ function generate_configuration {
 function main {
 	check_usage "${@}"
 
-	generate_configuration
+	generate_configuration | tee -a ${STACK_DIR}/build.out
 
-	build_docker_images
+	build_docker_images | tee -a ${STACK_DIR}/build.out
 
-	print_image_usage
+	print_image_usage | tee -a ${STACK_DIR}/build.out
 }
 
 function print_image_usage {
