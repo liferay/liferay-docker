@@ -54,12 +54,13 @@ function check_utils {
 	done
 }
 
-function check_vm_max_map_count {
-	local current_value=$(sysctl -n vm.max_map_count)
-
-	if [ "${current_value}" -lt 262144 ]
+function set_vm_max_map_count {
+	echo "Setting sysctl value: 'vm.max_map_count=262144'..."
+	if (sudo sysctl -w vm.max_map_count=262144)
 	then
-		echo "Elasticsearch requires vm.max_map_count to be at least 262144. Run \"sysctl -w vm.max_map_count=262144\" as a temporary solution or edit /etc/sysctl.conf and set vm.max_map_count to 262144 to make it permanent."
+		echo "done."
+	else
+		echo "fail!"
 
 		ORCA_VALIDATION_ERROR=1
 	fi
@@ -70,7 +71,7 @@ function main {
 
 	create_dirs
 
-	check_vm_max_map_count
+	set_vm_max_map_count
 
 	if [ -n "${ORCA_VALIDATION_ERROR}" ]
 	then
