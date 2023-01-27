@@ -104,7 +104,7 @@ function save_secrets {
 
 		echo ""
 		echo "Please save the following secrets to 1Password:"
-		echo "Root Token: ${VAULT_TOKEN}"
+		echo "Root token: ${VAULT_TOKEN}"
 		echo "Unseal key: ${UNSEAL_KEY}"
 	fi
 }
