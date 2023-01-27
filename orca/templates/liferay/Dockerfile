@@ -3,6 +3,11 @@ FROM liferay/dxp@sha256:8a288a450ca6835e2fa4a3d47f302d4f46ea69a7a467f0ba5ecbda1c
 
 USER 0
 
+RUN apt-get update && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes mariadb-client && \
+	apt-get upgrade --yes && \
+	apt-get clean
+
 COPY --chown=liferay:liferay resources/opt/liferay /opt/liferay/
 COPY resources/usr/local/bin /usr/local/bin/
 COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
