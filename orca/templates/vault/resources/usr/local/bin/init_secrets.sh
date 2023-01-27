@@ -29,11 +29,13 @@ function create_policies {
 function create_service_password {
 	vault auth enable -path="userpass-${1}" userpass >/dev/null
 
+	local password
+
 	if [ "${ORCA_DEVELOPMENT_MODE}" == "true" ]
 	then
-		local password="development"
+		password="development"
 	else
-		local password=$(pwgen -1 -s 20)
+		password=$(pwgen -1 -s 20)
 	fi
 
 	vault write auth/userpass-${1}/users/${1} password="${password}" policies="${1}" >/dev/null
