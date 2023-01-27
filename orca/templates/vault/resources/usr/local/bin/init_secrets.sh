@@ -117,7 +117,7 @@ function wait_for_vault {
 			break
 		fi
 
-		echo "Waiting for the server become available."
+		echo "Waiting for the server to become available."
 
 		sleep 1
 	done

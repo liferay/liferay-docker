@@ -10,7 +10,7 @@ function wait_for_operator {
 			break
 		fi
 
-		echo "Waiting for the operator become available."
+		echo "Waiting for the operator to become available."
 
 		sleep 1
 	done
