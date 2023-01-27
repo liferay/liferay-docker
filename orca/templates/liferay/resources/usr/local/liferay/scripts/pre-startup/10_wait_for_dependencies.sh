@@ -36,7 +36,7 @@ function wait_for_mysql {
 }
 
 function wait_for_search {
-	if [ ! -n {ORCA_LIFERAY_SEARCH_ADDRESSES} ]
+	if [ ! -n "${ORCA_LIFERAY_SEARCH_ADDRESSES}" ]
 	then
 		echo "Do not wait for search server because the environment variable ORCA_LIFERAY_SEARCH_ADDRESSES was not set."
 
