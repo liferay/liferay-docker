@@ -92,8 +92,8 @@ function main {
 function save_secrets {
 	if [ "${ORCA_DEVELOPMENT_MODE}" == "true" ]
 	then
-		echo "${VAULT_TOKEN}" > /opt/liferay/vault/data/root-token
 		echo "${UNSEAL_KEY}" > /opt/liferay/vault/data/unseal_key
+		echo "${VAULT_TOKEN}" > /opt/liferay/vault/data/root-token
 	else
 		echo "Distribute the serice passwords to the hosts which run them:"
 
