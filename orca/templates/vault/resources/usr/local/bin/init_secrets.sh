@@ -61,7 +61,7 @@ function init_operator {
 
 	export VAULT_TOKEN
 
-	wait_for_operator "\"standby\": false"
+	wait_for_operator "\"standby\":false"
 
 	vault secrets enable -path=secret kv
 }
