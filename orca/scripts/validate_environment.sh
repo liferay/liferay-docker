@@ -70,7 +70,7 @@ function main {
 }
 
 function set_vm_max_map_count {
-	echo "Setting sysctl value: 'vm.max_map_count=262144'..."
+	echo "Setting sysctl value: \"vm.max_map_count=262144\"..."
 
 	if (sudo sysctl -w vm.max_map_count=262144)
 	then
