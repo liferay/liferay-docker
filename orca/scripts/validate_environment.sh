@@ -54,19 +54,6 @@ function check_utils {
 	done
 }
 
-function set_vm_max_map_count {
-	echo "Setting sysctl value: 'vm.max_map_count=262144'..."
-
-	if (sudo sysctl -w vm.max_map_count=262144)
-	then
-		echo "done."
-	else
-		echo "failed."
-
-		ORCA_VALIDATION_ERROR=1
-	fi
-}
-
 function main {
 	check_utils docker docker-compose yq
 
@@ -79,6 +66,19 @@ function main {
 		echo "There was at least one error during validation. Please fix them before starting the services."
 
 		exit 1
+	fi
+}
+
+function set_vm_max_map_count {
+	echo "Setting sysctl value: 'vm.max_map_count=262144'..."
+
+	if (sudo sysctl -w vm.max_map_count=262144)
+	then
+		echo "done."
+	else
+		echo "failed."
+
+		ORCA_VALIDATION_ERROR=1
 	fi
 }
 
