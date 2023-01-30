@@ -8,7 +8,7 @@ function create_dir {
 	then
 		if [ ! $(stat -c '%u' "${dir}") -eq "${service_uid}" ]
 		then
-			echo -n "Setting owner of ${dir} to ${service_uid}..."
+			echo -n "Setting owner of ${dir} to ${service_uid}... "
 
 			if (sudo chown "${service_uid}" "${dir}")
 			then
@@ -20,7 +20,7 @@ function create_dir {
 			fi
 		fi
 	else
-		echo -n "${dir} does not exist, creating..."
+		echo -n "${dir} does not exist, creating... "
 
 		if (sudo install -d "${dir}" -o "${service_uid}")
 		then
@@ -70,7 +70,7 @@ function main {
 }
 
 function set_vm_max_map_count {
-	echo "Setting sysctl value: \"vm.max_map_count=262144\"..."
+	echo "Setting sysctl value: \"vm.max_map_count=262144\"... "
 
 	if (sudo sysctl -w vm.max_map_count=262144)
 	then
