@@ -6,7 +6,7 @@ function create_dir {
 
 	if [ -d "${dir}" ]
 	then
-		if [ ! $(stat -c '%u' "${dir}") -eq "${service_uid}" ]
+		if [ ! "$(stat -c '%u' "${dir}")" -eq "${service_uid}" ]
 		then
 			echo -n "Setting owner of ${dir} to ${service_uid}... "
 

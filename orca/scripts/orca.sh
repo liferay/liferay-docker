@@ -39,7 +39,7 @@ function command_all {
 }
 
 function command_backup {
-	cd builds/deploy
+	cd builds/deploy || exit 1
 
 	docker-compose exec backup /usr/local/bin/backup.sh
 }
@@ -49,9 +49,9 @@ function command_build {
 }
 
 function command_deploy {
-	cd builds
+	cd builds || exit 1
 
-	ln -fns ${1} deploy
+	ln -fns "${1}" deploy
 }
 
 function command_force_primary {
@@ -67,7 +67,7 @@ function command_install {
 }
 
 function command_mysql {
-	cd builds/deploy
+	cd builds/deploy || exit 1
 
 	docker-compose exec db /usr/local/bin/connect_to_mysql.sh
 }
@@ -89,13 +89,13 @@ function command_setup_shared_volume {
 }
 
 function command_ssh {
-	cd builds/deploy
+	cd builds/deploy || exit 1
 
-	docker-compose exec ${1} /bin/bash
+	docker-compose exec "${1}" /bin/bash
 }
 
 function command_unseal {
-	cd builds/deploy
+	cd builds/deploy || exit 1
 
 	docker-compose exec vault /usr/bin/vault operator unseal
 }
@@ -108,15 +108,19 @@ function command_up {
 
 	if [ -d /opt/liferay/passwords ]
 	then
-		for service in $(ls /opt/liferay/passwords)
+		for service in /opt/liferay/passwords/*
 		do
+			[[ -e ${service} ]] || break
+
+			service=${service##*/}
+
 			echo "Setting the password for ${service}."
 
-			export ORCA_VAULT_${service}_PASSWORD=$(cat /opt/liferay/passwords/${service})
+			export "ORCA_VAULT_${service}_PASSWORD"="$(cat "/opt/liferay/passwords/${service}")"
 		done
 	fi
 
-	cd builds/deploy
+	cd builds/deploy || exit 1
 
 	docker-compose up ${@}
 }
@@ -124,18 +128,18 @@ function command_up {
 function execute_command {
 	if [[ $(type -t "command_${1}") == "function" ]]
 	then
-		command_${1} "${2}" "${3}" "${4}"
+		"command_${1}" "${2}" "${3}" "${4}"
 	else
 		echo "${1}: Unrecognized command for orca, passing to docker-compose."
 
-		cd builds/deploy
+		cd builds/deploy || exit 1
 
 		docker-compose ${@}
 	fi
 }
 
 function main {
-	cd $(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/../
+	cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/../" || exit 1
 
 	check_usage ${@}
 
