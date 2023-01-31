@@ -455,11 +455,21 @@ function query_services {
 				then
 					if [ "${host}" == "localhost" ] || [ "${host}" == "${ORCA_HOST}" ]
 					then
-						item="${service}-${host}:${3}"
+						if [ -z ${3} ]
+						then
+							item="${service}-${host}"
+						else
+							item="${service}-${host}:${3}"
+						fi
 					else
 						local host_ip=$(query_configuration .hosts.${host}.ip ${host})
 
-						item="${host_ip}:${3}"
+						if [ -z ${3} ]
+						then
+							item="${host_ip}"
+						else
+							item="${host_ip}:${3}"
+						fi
 					fi
 				elif [ "${2}" == "service_name" ]
 				then
