@@ -11,7 +11,7 @@ function main {
 
 	mkdir -p /opt/liferay/orca
 
-	cd /opt/liferay/orca
+	cd /opt/liferay/orca || exit 1
 
 	git init
 	git remote add origin https://github.com/liferay/liferay-docker.git
@@ -25,7 +25,7 @@ function main {
 	# TODO Fix /opt/liferay/orca/orca
 	#
 
-	cd orca
+	cd orca || exit 1
 
 	#
 	# TODO install
