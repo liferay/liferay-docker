@@ -13,6 +13,7 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 ARG TARGETPLATFORM
 
+COPY --chown=liferay:liferay etc/creation-date /etc/creation-date
 COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_job_runner_entrypoint.sh"]

@@ -17,6 +17,7 @@ ARG LABEL_ZABBIX_VERSION
 
 CMD ["/usr/sbin/zabbix_server", "--foreground", "-c", "/etc/zabbix/zabbix_server.conf"]
 
+COPY --chown=liferay:liferay etc/creation-date /etc/creation-date
 COPY --from=zabbix-server-mysql ["/etc/zabbix", "/etc/zabbix"]
 COPY --from=zabbix-server-mysql ["/usr/bin/docker-entrypoint.sh", "/usr/bin/docker-entrypoint.sh"]
 COPY --from=zabbix-server-mysql ["/usr/bin/zabbix_get", "/usr/bin/zabbix_get"]
