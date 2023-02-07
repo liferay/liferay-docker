@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 function generate_liferay_conf {
 	function write {
