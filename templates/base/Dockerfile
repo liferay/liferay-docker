@@ -1,5 +1,6 @@
 FROM --platform=${TARGETPLATFORM} ubuntu:jammy AS ubuntu-jammy
 
+ENV LANG C.UTF-8
 COPY resources/etc/created-date /etc/created-date
 
 RUN apt-get update && \
