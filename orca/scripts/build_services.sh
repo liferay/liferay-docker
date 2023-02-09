@@ -409,6 +409,7 @@ function choose_configuration {
 function docker_build {
 	docker \
 		-l warning \
+		\
 		build \
 		--quiet \
 		--tag "${1}:${VERSION}" \
