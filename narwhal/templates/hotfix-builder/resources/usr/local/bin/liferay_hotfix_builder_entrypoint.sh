@@ -3,7 +3,7 @@
 function clone_repository {
 	if [ -e /opt/liferay/dev/projects/${1} ]
 	then
-		return
+		return ${SKIPPED}
 	fi
 
 	mkdir -p /opt/liferay/dev/projects/
@@ -15,9 +15,9 @@ function clone_repository {
 function compile_dxp {
 	if [ -e ${BUILD_DIR}/built-sha ] && [ $(cat ${BUILD_DIR}/built-sha) == ${NARWHAL_GIT_SHA} ]
 	then
-		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile step."
+		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile_dxp step."
 
-		return
+		return ${SKIPPED}
 	fi
 
 	cd /opt/liferay/dev/projects/liferay-portal-ee
@@ -36,6 +36,7 @@ function compile_dxp {
 
 function create_folders {
 	BUILD_DIR=/opt/liferay/builds/${NARWHAL_BUILD_ID}
+
 	mkdir -p ${BUILD_DIR}
 }
 
@@ -51,6 +52,13 @@ function get_dxp_version {
 }
 
 function git_update {
+	if [ -e ${BUILD_DIR}/built-sha ] && [ $(cat ${BUILD_DIR}/built-sha) == ${NARWHAL_GIT_SHA} ]
+	then
+		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the git checkout step."
+
+		return ${SKIPPED}
+	fi
+
 	cd /opt/liferay/dev/projects/liferay-portal-ee
 
 	git fetch upstream --tags
@@ -61,6 +69,8 @@ function git_update {
 }
 
 function main {
+	SKIPPED=5
+
 	create_folders
 
 	time_run setup_ssh
@@ -70,7 +80,7 @@ function main {
 
 	wait
 
-#	time_run git_update
+	time_run git_update
 
 	time_run pre_compile_setup
 
@@ -87,6 +97,13 @@ function main {
 
 function pre_compile_setup {
 	cd /opt/liferay/dev/projects/liferay-portal-ee
+
+	if [ -e "build.profile-dxp.properties" ]
+	then
+		echo "build.profile-dxp.properties exists, skipping pre_compile_setup."
+
+		return ${SKIPPED}
+	fi
 
 	ant setup-profile-dxp
 }
@@ -113,24 +130,40 @@ function setup_ssh {
 	chmod 600 ${HOME}/.ssh/id_rsa
 }
 
-function time_run {
-	local start_time=$(date +%s)
-	local run_id=$(echo "${@}" | tr " " "_")
-	local log_file=${BUILD_DIR}/build_${start_time}_$run_id.txt
+function echo_time {
+	local seconds=${1}
 
-	echo ">>> Starting the \"${@}\" phase. Logfile: ${log_file}. $(date)"
+	printf '%02dh:%02dm:%02ds' $((seconds/3600)) $((seconds%3600/60)) $((secons%60))
+}
+
+function time_run {
+	local run_id=$(echo "${@}" | tr " " "_")
+	local start_time=$(date +%s)
+
+	local log_file=${BUILD_DIR}/build_${start_time}_${run_id}.txt
+
+	echo ">>> Starting the \"${@}\" phase. Log: ${log_file}. $(date)"
 
 	${@} &>${log_file}
+
 	local exit_code=${?}
 
 	local end_time=$(date +%s)
 
-	echo ">>> Finished \"${@}\" in $((end_time - start_time)) seconds. Exit code ${exit_code}. $(date)"
-
-	if [ "${exit_code}" -gt 0 ]
+	if [ ${exit_code} == ${SKIPPED} ]
 	then
-		echo "${@} exited with error, full log file: ${log_file}. Printing the last 100 lines:"
-		tail -n 100 "${log_file}"
+		echo ">>> Skipped \"${@}\". $(date)"
+	else
+		local seconds=$((end_time - start_time))
+
+		echo ">>> Finished \"${@}\" in $(echo_time ${seconds}). Exit code ${exit_code}. $(date)"
+
+		if [ "${exit_code}" -gt 0 ]
+		then
+			echo "${@} exited with error, full log file: ${log_file}. Printing the last 100 lines:"
+
+			tail -n 100 "${log_file}"
+		fi
 	fi
 }
 

@@ -8,4 +8,5 @@ then
 fi
 
 cd templates/hotfix-builder
-docker build . -t hotfix-builder && docker run -it -v ${HOME}/.hotfix-builder-cache:/opt/liferay/ -e NARWHAL_BUILD_ID=1 -e NARWHAL_GIT_SHA=7.4.13-u60 -e NARWHAL_GITHUB_SSH_KEY="$(cat $HOME/.ssh/id_rsa)" hotfix-builder
+
+docker build . -t hotfix-builder && docker run -it -v ${HOME}/.hotfix-builder-cache:/opt/liferay/ -e NARWHAL_BUILD_ID=1 -e NARWHAL_GIT_SHA=fix-pack-fix-240397335 -e NARWHAL_GITHUB_SSH_KEY="$(cat $HOME/.ssh/id_rsa)" hotfix-builder
