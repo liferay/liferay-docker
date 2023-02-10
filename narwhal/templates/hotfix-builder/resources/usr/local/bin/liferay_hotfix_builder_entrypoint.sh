@@ -185,7 +185,12 @@ function git_update {
 
 	cd /opt/liferay/dev/projects/liferay-portal-ee
 
-	git fetch upstream --tags
+	if (git remote | grep -q upstream)
+	then
+		git fetch upstream --tags
+	else
+		git fetch origin --tags
+	fi
 
 	git clean -df
 	git reset --hard
