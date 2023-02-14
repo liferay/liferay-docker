@@ -345,8 +345,8 @@ function build_services {
 		rm -fr docker-build
 		mkdir -p docker-build
 
-		cp -a templates/_common/* docker-build
-		cp -a templates/${SERVICE_NAME}/* docker-build
+		cp -r templates/_common/* docker-build
+		cp -r templates/${SERVICE_NAME}/* docker-build
 
 		build_service_$(echo ${SERVICE_NAME} | sed -e "s/-/_/g")
 

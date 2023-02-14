@@ -70,8 +70,8 @@ function create_liferay_configuration {
 
 	mkdir -p liferay_mount/files
 
-	cp -a ${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/common/* liferay_mount/files
-	cp -a ${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${ENVIRONMENT}/* liferay_mount/files
+	cp -r ${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/common/* liferay_mount/files
+	cp -r ${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${ENVIRONMENT}/* liferay_mount/files
 
 	echo "Deleting the following files from configuration to ensure DXP can run locally:"
 
