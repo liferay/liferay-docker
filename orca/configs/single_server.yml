@@ -13,5 +13,7 @@ hosts:
             - monitoring-proxy
             - monitoring-proxy-db
             - search
+            - teleport-agent-test
+            - teleport-proxy
             - vault
             - web-server
