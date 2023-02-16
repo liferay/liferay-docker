@@ -285,6 +285,38 @@ function build_service_search {
 	write 1 "        - \"9300:9300\""
 }
 
+function build_service_teleport_agent_test {
+	docker_build teleport-agent-test
+
+	write 1 "${SERVICE_NAME}:"
+	write 1 "    container_name: ${SERVICE_NAME}"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: teleport-agent-test:${VERSION}"
+	write 1 "    volumes:"
+	write 1 "        - /opt/liferay/teleport/agent-test:/agent-test"
+}
+
+function build_service_teleport_proxy {
+	docker_build teleport-proxy
+
+	write 1 "${SERVICE_NAME}:"
+	write 1 "    container_name: ${SERVICE_NAME}"
+	write 1 "    environment:"
+	write 1 "        - GITHUB_ID=$(query_github_creds ".github.id")"
+	write 1 "        - GITHUB_SECRET=$(query_github_creds ".github.secret")"
+	write 1 "        - ORCA_DEVELOPMENT_MODE=$(query_configuration .development)"
+	write 1 "        - ORCA_VAULT_ADDRESSES=$(query_services vault host_port 8200)"
+	write 1 "        - ORCA_VAULT_SERVICE_PASSWORD=\${ORCA_VAULT_TELEPORT_PROXY_PASSWORD:-}"
+	write 1 "    hostname: ${SERVICE_HOST}"
+	write 1 "    image: teleport-proxy:${VERSION}"
+	write 1 "    ports:"
+	write 1 "        - \"3025:3025\""
+	write 1 "        - \"3080:3080\""
+	write 1 "    volumes:"
+	write 1 "        - /opt/liferay/teleport/agent-test:/agent-test"
+	write 1 "        - /opt/liferay/teleport/data:/var/lib/teleport"
+}
+
 function build_service_vault {
 	docker_build vault
 
@@ -392,10 +424,12 @@ function choose_configuration {
 	if [ -e "configs/${ORCA_CONFIG}.yml" ]
 	then
 		CONFIG_FILE="configs/${ORCA_CONFIG}.yml"
+		GITHUB_CONFIG_FILE="configs/${ORCA_CONFIG}-github.yml"
 
 		echo "Using configuration ${CONFIG_FILE}."
 	else
 		CONFIG_FILE="configs/single_server.yml"
+		GITHUB_CONFIG_FILE="configs/single_server-github.yml"
 
 		echo "Using the default single server configuration."
 	fi
@@ -421,6 +455,24 @@ function main {
 
 function query_configuration {
 	local yq_output=$(yq "${1}" < ${CONFIG_FILE})
+
+	if [ "${yq_output}" == "null" ]
+	then
+		echo "${2}"
+	else
+		echo "${yq_output}"
+	fi
+}
+
+function query_github_creds {
+	if [ ! -e "${GITHUB_CONFIG_FILE}" ]
+	then
+		echo "No GitHub config file exists: ${GITHUB_CONFIG_FILE}."
+		echo "Use configs/example-github.yml as a template"
+		exit 1
+	fi
+
+	local yq_output=$(yq ${1} < ${GITHUB_CONFIG_FILE})
 
 	if [ "${yq_output}" == "null" ]
 	then
