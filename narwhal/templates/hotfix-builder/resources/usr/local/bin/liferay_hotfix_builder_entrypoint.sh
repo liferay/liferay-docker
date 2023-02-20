@@ -102,7 +102,7 @@ function compile_dxp {
 }
 
 function create_folders {
-	BUILD_DIR=/opt/liferay/builds/${NARWHAL_BUILD_ID}
+	BUILD_DIR=/opt/liferay/build/
 
 	mkdir -p ${BUILD_DIR}
 }
@@ -258,6 +258,10 @@ function package {
 	cd ${BUILD_DIR}/hotfix
 
 	zip -r ../liferay-hotfix-${NARWHAL_BUILD_ID}.zip *
+
+	cd ..
+
+	rm -fr hotfix
 }
 
 function pre_compile_setup {
