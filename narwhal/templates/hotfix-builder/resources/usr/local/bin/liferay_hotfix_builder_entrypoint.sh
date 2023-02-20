@@ -105,6 +105,8 @@ function create_folders {
 	BUILD_DIR=/opt/liferay/build/
 
 	mkdir -p ${BUILD_DIR}
+
+	echo 0 > ${BUILD_DIR}/.step
 }
 
 function create_hotfix {
@@ -254,6 +256,16 @@ function manage_jar {
 	fi
 }
 
+function next_step {
+	local step=$(cat ${BUILD_DIR}/.step)
+
+	step=$((step + 1))
+
+	echo ${step} > ${BUILD_DIR}/.step
+
+	printf '%02d' ${step}
+}
+
 function package {
 	cd ${BUILD_DIR}/hotfix
 
@@ -303,7 +315,7 @@ function time_run {
 	local run_id=$(echo "${@}" | tr " " "_")
 	local start_time=$(date +%s)
 
-	local log_file=${BUILD_DIR}/build_${start_time}_${run_id}.txt
+	local log_file=${BUILD_DIR}/build_${start_time}_step_$(next_step)_${run_id}.txt
 
 	echo ">>> Starting the \"${@}\" phase. Log: ${log_file}. $(date)"
 
