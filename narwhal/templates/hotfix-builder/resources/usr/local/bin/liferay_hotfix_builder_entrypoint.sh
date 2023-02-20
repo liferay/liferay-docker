@@ -338,6 +338,8 @@ function time_run {
 			echo "${@} exited with error, full log file: ${log_file}. Printing the last 100 lines:"
 
 			tail -n 100 "${log_file}"
+
+			exit ${exit_code}
 		fi
 	fi
 }
