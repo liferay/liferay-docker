@@ -45,7 +45,7 @@ function command_backup {
 }
 
 function command_build {
-	scripts/build_services.sh ${@}
+	scripts/build_services.sh "${@}"
 }
 
 function command_deploy {
@@ -122,28 +122,29 @@ function command_up {
 
 	cd builds/deploy || exit 1
 
-	docker-compose up ${@}
+	docker-compose up "${@}"
 }
 
 function execute_command {
 	if [[ $(type -t "command_${1}") == "function" ]]
 	then
-		"command_${1}" "${2}" "${3}" "${4}"
+		suffix="${1}"
+		shift
+		"command_${suffix}" "${@}"
 	else
 		echo "${1}: Unrecognized command for orca, passing to docker-compose."
 
 		cd builds/deploy || exit 1
 
-		docker-compose ${@}
+		docker-compose "${@}"
 	fi
 }
 
 function main {
 	cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/../" || exit 1
 
-	check_usage ${@}
+	check_usage "${@}"
 
-	execute_command ${@}
+	execute_command "${@}"
 }
-
-main ${@}
+main "${@}"
