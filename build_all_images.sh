@@ -17,7 +17,7 @@ function build_base_image {
 	echo "Building Docker image Base."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/base.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/base.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -56,7 +56,7 @@ function build_bundle_image {
 	echo "Building Docker image ${build_id} based on ${bundle_url}."
 	echo ""
 
-	LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_LATEST=${latest} LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LOGS_DIR}/${build_id}.log"
+	LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_LATEST=${latest} LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LOGS_DIR}/${build_id}.log"
 
 	local build_bundle_image_exit_code=${PIPESTATUS[0]}
 
@@ -141,7 +141,7 @@ function build_caddy_image {
 	echo "Building Docker image Caddy resources."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_caddy_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/caddy.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_caddy_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/caddy.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -166,7 +166,7 @@ function build_dynamic_rendering_image {
 	echo "Building Docker image Dynamic Rendering."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/dynamic_rendering.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/dynamic_rendering.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -194,7 +194,7 @@ function build_jdk11_image {
 	echo "Building Docker image JDK 11."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZULU_11_AMD64_VERSION=${latest_available_zulu11_amd64_version} LIFERAY_DOCKER_ZULU_11_ARM64_VERSION=${latest_available_zulu11_arm64_version} time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_11_AMD64_VERSION=${latest_available_zulu11_amd64_version} LIFERAY_DOCKER_ZULU_11_ARM64_VERSION=${latest_available_zulu11_arm64_version} time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -222,7 +222,7 @@ function build_jdk11_jdk8_image {
 	echo "Building Docker image JDK 11/JDK 8."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZULU_8_AMD64_VERSION=${latest_available_zulu8_amd64_version} LIFERAY_DOCKER_ZULU_8_ARM64_VERSION=${latest_available_zulu8_arm64_version} time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11_jdk8.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_8_AMD64_VERSION=${latest_available_zulu8_amd64_version} LIFERAY_DOCKER_ZULU_8_ARM64_VERSION=${latest_available_zulu8_arm64_version} time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11_jdk8.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -247,7 +247,7 @@ function build_job_runner_image {
 	echo "Building Docker image Job Runner."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/job_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/job_runner.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -275,7 +275,7 @@ function build_zabbix_server_image {
 	echo "Building Docker image Zabbix Server."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -303,7 +303,7 @@ function build_zabbix_web_image {
 	echo "Building Docker image Zabbix Web."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server_web_interface.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server_web_interface.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -398,6 +398,11 @@ function main {
 	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && [ -z "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" ]
 	then
 		LIFERAY_DOCKER_IMAGE_PLATFORMS=linux/amd64,linux/arm64
+	fi
+
+	if [ -z "${LIFERAY_DOCKER_REPOSITORY}" ]
+	then
+		LIFERAY_DOCKER_REPOSITORY=liferay
 	fi
 
 	validate_bundles_yml

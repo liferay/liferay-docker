@@ -6,8 +6,8 @@ function build_docker_image {
 	local image_version=$(./release_notes.sh get-version)
 
 	DOCKER_IMAGE_TAGS=()
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/zabbix-web:${image_version}-${TIMESTAMP}")
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/zabbix-web")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/zabbix-web:${image_version}-${TIMESTAMP}")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/zabbix-web")
 
 	if [ "${1}" == "push" ]
 	then
@@ -41,7 +41,7 @@ function build_docker_image {
 }
 
 function main {
-	delete_local_images "liferay/zabbix-web"
+	delete_local_images "${LIFERAY_DOCKER_REPOSITORY}/zabbix-web"
 
 	make_temp_directory templates/zabbix-web
 

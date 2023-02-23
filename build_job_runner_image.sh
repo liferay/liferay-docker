@@ -6,8 +6,8 @@ function build_docker_image {
 	local image_version=$(./release_notes.sh get-version)
 
 	DOCKER_IMAGE_TAGS=()
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/job-runner:${image_version}-${TIMESTAMP}")
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/job-runner")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/job-runner:${image_version}-${TIMESTAMP}")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/job-runner")
 
 	if [ "${1}" == "push" ]
 	then

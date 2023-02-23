@@ -6,8 +6,8 @@ function build_docker_image {
 	local image_version=$(./release_notes.sh get-version)
 
 	DOCKER_IMAGE_TAGS=()
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/base:${image_version}-${TIMESTAMP}")
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}liferay/base")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/base:${image_version}-${TIMESTAMP}")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/base")
 
 	if [ "${1}" == "push" ]
 	then
@@ -39,7 +39,7 @@ function build_docker_image {
 }
 
 function main {
-	delete_local_images "liferay/base"
+	delete_local_images "${LIFERAY_DOCKER_REPOSITORY}/base"
 
 	make_temp_directory templates/base
 
