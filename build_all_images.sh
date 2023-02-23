@@ -259,6 +259,31 @@ function build_job_runner_image {
 	fi
 }
 
+function build_noop_image {
+	if [[ $(get_latest_docker_hub_version "noop") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	then
+		echo ""
+		echo "Docker image NOOP is up to date."
+
+		return
+	fi
+
+	echo ""
+	echo "Building Docker image NOOP."
+	echo ""
+
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_noop_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/noop.log
+
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	then
+		echo "FAILED: NOOP" >> "${LOGS_DIR}/results"
+
+		exit 1
+	else
+		echo "SUCCESS: NOOP" >> "${LOGS_DIR}/results"
+	fi
+}
+
 function build_zabbix_server_image {
 	local latest_liferay_zabbix_server_version=$(get_latest_docker_hub_zabbix_server_version "liferay/zabbix-server")
 	local latest_official_zabbix_server_version=$(get_latest_docker_hub_zabbix_server_version "zabbix/zabbix-server-mysql")
@@ -417,8 +442,8 @@ function main {
 	build_jdk11_jdk8_image
 
 	build_caddy_image
-	#build_dynamic_rendering_image
 	build_job_runner_image
+	build_noop_image
 	build_zabbix_server_image
 	build_zabbix_web_image
 	 
