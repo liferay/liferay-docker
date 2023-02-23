@@ -429,6 +429,11 @@ function main {
 	echo ""
 
 	cat "${LOGS_DIR}/results"
+
+	if [ $(cat "${LOGS_DIR}/results" | grep -c "FAILED") != 0 ]
+	then
+		exit 1
+	fi
 }
 
 function validate_bundles_yml {
