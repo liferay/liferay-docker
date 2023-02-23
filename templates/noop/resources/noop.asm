@@ -1,6 +1,6 @@
-; Smallest possible ELF binary for Linux x86
-; Code taken from https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html
-; build it with: nasm -f bin -o noop noop.asm
+; Build command: nasm -f bin -o noop noop.asm
+;
+; See https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html
 
   BITS 32
 
