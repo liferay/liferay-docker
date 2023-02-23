@@ -305,7 +305,7 @@ function prepare_update {
 function setup_ssh {
 	mkdir -p ${HOME}/.ssh
 
-	ssh-keyscan -t rsa github.com >> ${HOME}/.ssh/known_hosts
+	ssh-keyscan github.com >> ${HOME}/.ssh/known_hosts
 
 	echo "${NARWHAL_GITHUB_SSH_KEY}" > ${HOME}/.ssh/id_rsa
 	chmod 600 ${HOME}/.ssh/id_rsa
