@@ -133,6 +133,10 @@ function generate_configuration {
 	create_liferay_configuration
 
 	write "services:"
+	write "    antivirus:"
+	write "        image: clamav/clamav:1.0.1-1"
+	write "        ports:"
+	write "            - \"3310:3310\""
 	write "    database:"
 	write "        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --character-set-filesystem=utf8mb4 --max_allowed_packet=256M --tls-version=''"
 	write "        environment:"
@@ -212,7 +216,7 @@ function print_image_usage {
 	echo "The configuration is ready to use. It's available in the ${STACK_NAME} folder. To start all services up, use the following commands:"
 	echo ""
 	echo "cd ${STACK_NAME}"
-	echo "${docker_compose} up -d database search && ${docker_compose} up liferay"
+	echo "${docker_compose} up -d antivirus database search && ${docker_compose} up liferay"
 	echo ""
 	echo "All ports are only listening on localhost, you can connect to the following services:"
 	echo " - Customer virtual instance: http://spinner-test.com:18080 test@spinner-test.com:test (add spinner-test.com to your hosts file mapped to 127.0.0.1)"
