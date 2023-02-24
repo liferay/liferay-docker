@@ -14,9 +14,6 @@ do
 	cd "${environment}"
 	${docker_compose} down
 
-	docker image rm liferay:${environment}
-	docker image rm search:${environment}
-
 	cd ..
 
 	rm -fr "${environment}"
