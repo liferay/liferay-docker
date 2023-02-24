@@ -160,7 +160,7 @@ function build_service_liferay {
 	write 1 "        - \"8009:8009\""
 	write 1 "        - \"8080:8080\""
 	write 1 "    volumes:"
-	write 1 "        - /opt/liferay/shared-volume:/opt/liferay/shared-volume"
+	write 1 "        - /opt/liferay/shared-volume:/opt/liferay/data"
 }
 
 function build_service_log_proxy {

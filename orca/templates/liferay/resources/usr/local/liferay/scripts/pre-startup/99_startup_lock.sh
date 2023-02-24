@@ -1,11 +1,11 @@
 #!/bin/bash
 
 function add_lock {
-	echo $(hostname) > /opt/liferay/shared-volume/liferay-startup-lock
+	echo $(hostname) > /opt/liferay/data/liferay-startup-lock
 
 	sleep 2
 
-	if [ "$(hostname)" != "$(cat /opt/liferay/shared-volume/liferay-startup-lock)" ]
+	if [ "$(hostname)" != "$(cat /opt/liferay/data/liferay-startup-lock)" ]
 	then
 		echo "Unable to acquire lock."
 
@@ -16,9 +16,9 @@ function add_lock {
 }
 
 function wait_until_free {
-	while [ -e "/opt/liferay/shared-volume/liferay-startup-lock" ] && [ "$(hostname)" != "$(cat /opt/liferay/shared-volume/liferay-startup-lock)" ]
+	while [ -e "/opt/liferay/data/liferay-startup-lock" ] && [ "$(hostname)" != "$(cat /opt/liferay/data/liferay-startup-lock)" ]
 	do
-		echo "Wait for $(cat /opt/liferay/shared-volume/liferay-startup-lock) to start up."
+		echo "Wait for $(cat /opt/liferay/data/liferay-startup-lock) to start up."
 
 		sleep 3
 	done

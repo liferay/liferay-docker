@@ -7,4 +7,4 @@ do
 	sleep 3
 done
 
-rm "/opt/liferay/shared-volume/liferay-startup-lock"
+rm "/opt/liferay/data/liferay-startup-lock"
