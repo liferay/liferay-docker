@@ -59,6 +59,8 @@ function generate_data {
 				then
 					for version in *
 					do
+						local file_path="${companyId}/${repository}/${file}/${version}"
+
 						local full_type=$(file -b "${version}")
 						local type=${full_type%% *}
 
@@ -70,6 +72,14 @@ function generate_data {
 							elif (unzip -l "${version}" | grep manifest.xml &>/dev/null)
 							then
 								type="LAR"
+
+								if [[ $(find "${version}" -ctime +29 | wc -l) -gt 0 ]]
+								then
+									echo "${file_path}" >> "${TMP_DIR}/${companyId}/lar_30_days"
+								elif [[ $(find "${version}" -ctime +6 | wc -l) -gt 0 ]]
+								then
+									echo "${file_path}" >> "${TMP_DIR}/${companyId}/lar_7_days"
+								fi
 							fi
 						fi
 
@@ -85,7 +95,7 @@ function generate_data {
 						local md5=$(md5sum "${version}" | sed -e "s/\ .*//")
 
 						echo "${size} ${md5}" >> "${TMP_DIR}/${companyId}/type_$type"
-						echo "${companyId}/${repository}/${file}/${version} ${type} ${size} ${md5} ${full_type})" >> "${TMP_DIR}/${companyId}/all"
+						echo "${file_path} ${type} ${size} ${md5} ${full_type})" >> "${TMP_DIR}/${companyId}/all"
 					done
 				fi
 			done
@@ -158,6 +168,20 @@ function print_data {
 		done
 
 		echo ""
+
+		if [ -e lar_7_days ]
+		then
+			echo "More than 7 days old LAR files:"
+
+			cat lar_7_days
+		fi
+
+		if [ -e lar_30_days ]
+		then
+			echo "More than 30 days old LAR files:"
+
+			cat lar_30_days
+		fi
 
 		cd "${TMP_DIR}" || exit 3
 	done
