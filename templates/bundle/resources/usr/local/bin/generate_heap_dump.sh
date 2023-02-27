@@ -1,9 +1,7 @@
 #!/bin/bash
 
 function check_usage {
-	DELAY=5
-	HEAP_DUMP_DIRECTORY="${LIFERAY_HOME}/data/heap_dumps"
-	NUMBER_OF_HEAP_DUMPS=20
+	HEAP_DUMP_DIR="${LIFERAY_HOME}/data/sre/heap_dumps"
 
 	while [ "${1}" != "" ]
 	do
@@ -11,13 +9,7 @@ function check_usage {
 			-d)
 				shift
 
-				DELAY=${1}
-
-				;;
-			-f)
-				shift
-
-				HEAP_DUMP_DIRECTORY=${1}
+				HEAP_DUMP_DIR=${1}
 
 				;;
 			-h)
@@ -35,28 +27,24 @@ function check_usage {
 }
 
 generate_heap_dump() {
-	local id=$2
-	local date=$(date +'%D-%H:%M:%S')
+	local date=$(date +'%Y-%m-%d')
+	local time=$(date +'%H-%M-%S')
 	
-	mkdir -p "${HEAP_DUMP_DIRECTORY}/${date}"
+	mkdir -p "${HEAP_DUMP_DIR}/${date}"
 
-	echo "[Liferay] Generating ${HEAP_DUMP_DIRECTORY}/${date}/heapdump${id}.txt"
+	echo "[Liferay] Generating ${HEAP_DUMP_DIR}/${date}/heap_dump-${time}.txt"
 
-	jattach $(cat "${LIFERAY_PID}") dumpheap "${HEAP_DUMP_DIRECTORY}/${date}/heapdump${id}.txt"
+	jattach $(cat "${LIFERAY_PID}") dumpheap "${HEAP_DUMP_DIR}/${date}/heap_dump-${time}.txt"
 }
 
 main() {
 	check_usage "${@}"
 
-	mkdir -p "${HEAP_DUMP_DIRECTORY}"
+	mkdir -p "${HEAP_DUMP_DIR}"
 
-	for i in $(seq 1 $NUMBER_OF_HEAP_DUMPS)
-	do
-		generate_heap_dump $i
-		sleep $DELAY
-	done
+	generate_heap_dump
 
-	echo "[Liferay] Heap dumps generated"
+	echo "[Liferay] Heap dump generated"
 }
 
 function print_help {
@@ -64,10 +52,9 @@ function print_help {
 	echo ""
 	echo "The script can be configured with the following arguments:"
 	echo ""
-	echo "	-d (optional): Delay in seconds between two heap dump generation."
-	echo "	-f (optional): Directory path to which the heap dumps are saved."
+	echo "	-d (optional): Directory path to which the heap dumps are saved."
 	echo ""
-	echo "Example: ${0} -d $DELAY -f \"${HEAP_DUMP_DIRECTORY}\""
+	echo "Example: ${0} -d \"${HEAP_DUMP_DIR}\""
 
 	exit 2
 }
