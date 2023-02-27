@@ -44,7 +44,7 @@ function generate_data {
 
 		for repository in *
 		do
-			if [[ "${repository}" -eq 0 ]] || [ ! -d "${pwd}/${companyId}/${repository}" ] || [[ $(find "${pwd}/${companyId}/${repository}" -maxdepth 1 -type f | wc -l 2>/dev/null) -eq 0 ]]
+			if [[ "${repository}" -eq 0 ]] || [ ! -d "${pwd}/${companyId}/${repository}" ] || [[ $(find "${pwd}/${companyId}/${repository}" -maxdepth 1 -mindepth 1 | wc -l 2>/dev/null) -eq 0 ]]
 			then
 				continue
 			fi
@@ -55,7 +55,7 @@ function generate_data {
 			do
 				cd "${pwd}/${companyId}/${repository}/${file}" || exit 3
 
-				if [[ $(find . -maxdepth 1 -type f | wc -l) -gt 0 ]]
+				if [[ $(find . -maxdepth 1 -mindepth 1 | wc -l) -gt 0 ]]
 				then
 					for version in *
 					do
