@@ -40,7 +40,7 @@ function calculate_results {
 
 		for dir in adaptive document_preview document_thumbnail
 		do
-			generated_dir_size "${dir}" >> "${RESULTS_DIR}/${company_id}/generated_files"
+			get_regenerated_dir_size "${dir}" >> "${RESULTS_DIR}/${company_id}/regenerated_dirs"
 		done
 
 		lcd "${pwd}/${company_id}"
@@ -107,7 +107,7 @@ function calculate_results {
 	done
 }
 
-function generated_dir_size {
+function get_regenerated_dir_size {
 	local size=$(du -s "${1}" 2>/dev/null)
 
 	if [ -n "${size}" ]
@@ -137,10 +137,10 @@ function main {
 		calculate_results
 	fi
 
-	print_data
+	print_results
 }
 
-function print_data {
+function print_results {
 	lcd "${RESULTS_DIR}"
 
 	for companyId in *
@@ -151,7 +151,7 @@ function print_data {
 		echo ""
 		echo "Type,Count,Unique Count,Size MB,Unique Size MB"
 
-		cat generated_files
+		cat regenerated_dirs
 
 		for type in type_*
 		do
