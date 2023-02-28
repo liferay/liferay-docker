@@ -45,41 +45,42 @@ function generate_data {
 
 		lcd "${pwd}/${company_id}"
 
-		for repository in *
+		for repository_id in *
 		do
-			if [[ "${repository}" -eq 0 ]] || [ ! -d "${pwd}/${company_id}/${repository}" ] || [[ $(find "${pwd}/${company_id}/${repository}" -maxdepth 1 -mindepth 1 | wc -l 2>/dev/null) -eq 0 ]]
+			if [[ "${repository_id}" -eq 0 ]] || [ ! -d "${pwd}/${company_id}/${repository_id}" ] || [[ $(find "${pwd}/${company_id}/${repository_id}" -maxdepth 1 -mindepth 1 | wc -l 2>/dev/null) -eq 0 ]]
 			then
 				continue
 			fi
 
-			lcd "${pwd}/${company_id}/${repository}"
+			lcd "${pwd}/${company_id}/${repository_id}"
 
-			for file in *
+			for file_entry_id in *
 			do
-				lcd "${pwd}/${company_id}/${repository}/${file}"
+				lcd "${pwd}/${company_id}/${repository_id}/${file_entry_id}"
 
 				if [[ $(find . -maxdepth 1 -mindepth 1 | wc -l) -gt 0 ]]
 				then
-					for version in *
+					for file_version in *
 					do
-						local file_path="${company_id}/${repository}/${file}/${version}"
+						local file_path="${company_id}/${repository_id}/${file_entry_id}/${file_version}"
 
-						local full_type=$(file -b "${version}")
+						local full_type=$(file_entry_id -b "${file_version}")
+
 						local type=${full_type%% *}
 
 						if [[ ${type} == "Zip" ]]
 						then
-							if (! unzip -l "${version}" &>/dev/null)
+							if (! unzip -l "${file_version}" &>/dev/null)
 							then
 								type="BrokenZip"
-							elif (unzip -l "${version}" | grep manifest.xml &>/dev/null)
+							elif (unzip -l "${file_version}" | grep manifest.xml &>/dev/null)
 							then
 								type="LAR"
 
-								if [[ $(find "${version}" -ctime +29 | wc -l) -gt 0 ]]
+								if [[ $(find "${file_version}" -ctime +29 | wc -l) -gt 0 ]]
 								then
 									echo "${file_path}" >> "${TEMP_DIR}/${company_id}/lar_30_days"
-								elif [[ $(find "${version}" -ctime +6 | wc -l) -gt 0 ]]
+								elif [[ $(find "${file_version}" -ctime +6 | wc -l) -gt 0 ]]
 								then
 									echo "${file_path}" >> "${TEMP_DIR}/${company_id}/lar_7_days"
 								fi
@@ -94,10 +95,10 @@ function generate_data {
 							fi
 						fi
 
-						local size=$(stat --printf="%s" "${version}")
-						local md5=$(md5sum "${version}" | sed -e "s/\ .*//")
+						local md5=$(md5sum "${file_version}" | sed -e "s/\ .*//")
+						local size=$(stat --printf="%s" "${file_version}")
 
-						echo "${size} ${md5}" >> "${TEMP_DIR}/${company_id}/type_$type"
+						echo "${size} ${md5}" >> "${TEMP_DIR}/${company_id}/type_${type}"
 						echo "${file_path} ${type} ${size} ${md5} ${full_type})" >> "${TEMP_DIR}/${company_id}/all"
 					done
 				fi
@@ -146,29 +147,36 @@ function print_data {
 	do
 		lcd "${company_id}"
 
-		echo "CSV Data for company ${company_id}"
+		echo "CSV data for company ${company_id}:"
 		echo ""
-		echo "Type,Count,Unique count,Size MB,Unique size MB"
+		echo "Type,Count,Unique Count,Size MB,Unique Size MB"
 
 		cat generated_files
 
 		for type in type_*
 		do
 			type=${type#type_}
+
 			echo -en "${type},"
 
 			local count=$(wc -l "type_${type}" | sed -e "s/\ .*//")
+
 			echo -en "${count},"
 
 			local unique=$(sed -e "s/.*\ //" < "type_${type}"| sort | uniq | wc -l)
+
 			echo -en "${unique},"
 
 			local size=$(sed -e "s/\ .*//" < "type_${type}"| tr '\n' '+' | sed -e "s/\+$/\n/" | bc)
+
 			size=$((size / 1048576))
+
 			echo -en "${size},"
 
 			local unique_size=$(sort < "type_${type}"| uniq | sed -e "s/\ .*//" | tr '\n' '+' | sed -e "s/\+$/\n/" | bc)
+
 			unique_size=$((unique_size / 1048576))
+
 			echo -en "${unique_size}"
 
 			echo ""
@@ -178,14 +186,14 @@ function print_data {
 
 		if [ -e lar_7_days ]
 		then
-			echo "More than 7 days old LAR files:"
+			echo "LAR files older than 7 days:"
 
 			cat lar_7_days
 		fi
 
 		if [ -e lar_30_days ]
 		then
-			echo "More than 30 days old LAR files:"
+			echo "LAR files older than 30 days:"
 
 			cat lar_30_days
 		fi
