@@ -17,9 +17,9 @@ function check_usage {
 }
 
 function generate_data {
-	rm -fr "${TEMP_DIR}"
+	rm -fr "${RESULTS_DIR}"
 
-	mkdir -p "${TEMP_DIR}"
+	mkdir -p "${RESULTS_DIR}"
 
 	lcd document_library
 
@@ -34,13 +34,13 @@ function generate_data {
 
 		lcd "${pwd}/${company_id}"
 
-		mkdir -p "${TEMP_DIR}/${company_id}"
+		mkdir -p "${RESULTS_DIR}/${company_id}"
 
 		lcd "${pwd}/${company_id}/0"
 
 		for dir in adaptive document_preview document_thumbnail
 		do
-			generated_dir_size "${dir}" >> "${TEMP_DIR}/${company_id}/generated_files"
+			generated_dir_size "${dir}" >> "${RESULTS_DIR}/${company_id}/generated_files"
 		done
 
 		lcd "${pwd}/${company_id}"
@@ -79,10 +79,10 @@ function generate_data {
 
 								if [[ $(find "${file_version}" -ctime +29 | wc -l) -gt 0 ]]
 								then
-									echo "${file_path}" >> "${TEMP_DIR}/${company_id}/lar_30_days"
+									echo "${file_path}" >> "${RESULTS_DIR}/${company_id}/lar_30_days"
 								elif [[ $(find "${file_version}" -ctime +6 | wc -l) -gt 0 ]]
 								then
-									echo "${file_path}" >> "${TEMP_DIR}/${company_id}/lar_7_days"
+									echo "${file_path}" >> "${RESULTS_DIR}/${company_id}/lar_7_days"
 								fi
 							fi
 						fi
@@ -98,8 +98,8 @@ function generate_data {
 						local md5=$(md5sum "${file_version}" | sed -e "s/\ .*//")
 						local size=$(stat --printf="%s" "${file_version}")
 
-						echo "${size} ${md5}" >> "${TEMP_DIR}/${company_id}/type_${type}"
-						echo "${file_path} ${type} ${size} ${md5} ${full_type})" >> "${TEMP_DIR}/${company_id}/all"
+						echo "${size} ${md5}" >> "${RESULTS_DIR}/${company_id}/type_${type}"
+						echo "${file_path} ${type} ${size} ${md5} ${full_type})" >> "${RESULTS_DIR}/${company_id}/all"
 					done
 				fi
 			done
@@ -126,13 +126,13 @@ function lcd {
 }
 
 function main {
-	TEMP_DIR=/tmp/dl_inspect_cache
+	RESULTS_DIR=/tmp/inspect_document_library_results
 
 	check_usage
 
-	if [ -e ${TEMP_DIR} ]
+	if [ -e ${RESULTS_DIR} ]
 	then
-		echo "Not calculating again because ${TEMP_DIR} exists from a previous run."
+		echo "Not calculating again because ${RESULTS_DIR} exists from a previous run."
 	else
 		generate_data
 	fi
@@ -141,7 +141,7 @@ function main {
 }
 
 function print_data {
-	lcd "${TEMP_DIR}"
+	lcd "${RESULTS_DIR}"
 
 	for companyId in *
 	do
@@ -198,7 +198,7 @@ function print_data {
 			cat lar_30_days
 		fi
 
-		lcd "${TEMP_DIR}"
+		lcd "${RESULTS_DIR}"
 	done
 }
 
