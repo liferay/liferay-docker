@@ -1,22 +1,25 @@
 #!/bin/bash
 
 function check_usage {
-	if [ ! -e document_library ]
+	if [ -e document_library ]
 	then
-		if [ -e /opt/liferay/data ]
-		then
-			cd /opt/liferay/data || exit 3
-		else
-			echo "Run this script from the Liferay data directory, which contains document_library."
+		return
+	fi
 
-			exit 1
-		fi
+	if [ -e /opt/liferay/data ]
+	then
+		cd /opt/liferay/data || exit 3
+	else
+		echo "Run this script from the Liferay data directory which contains the document_library directory."
+
+		exit 1
 	fi
 }
 
 function generate_data {
-	rm -fr "${TMP_DIR}"
-	mkdir -p "${TMP_DIR}"
+	rm -fr "${TEMP_DIR}"
+
+	mkdir -p "${TEMP_DIR}"
 
 	cd document_library || exit 3
 
@@ -31,13 +34,13 @@ function generate_data {
 
 		cd "${pwd}/${companyId}" || exit 3
 
-		mkdir -p "${TMP_DIR}/${companyId}"
+		mkdir -p "${TEMP_DIR}/${companyId}"
 
 		cd "${pwd}/${companyId}/0" || exit 3
 
 		for dir in adaptive document_preview document_thumbnail
 		do
-			generated_dir_size "${dir}" >> "${TMP_DIR}/${companyId}/generated_files"
+			generated_dir_size "${dir}" >> "${TEMP_DIR}/${companyId}/generated_files"
 		done
 
 		cd "${pwd}/${companyId}" || exit 3
@@ -75,10 +78,10 @@ function generate_data {
 
 								if [[ $(find "${version}" -ctime +29 | wc -l) -gt 0 ]]
 								then
-									echo "${file_path}" >> "${TMP_DIR}/${companyId}/lar_30_days"
+									echo "${file_path}" >> "${TEMP_DIR}/${companyId}/lar_30_days"
 								elif [[ $(find "${version}" -ctime +6 | wc -l) -gt 0 ]]
 								then
-									echo "${file_path}" >> "${TMP_DIR}/${companyId}/lar_7_days"
+									echo "${file_path}" >> "${TEMP_DIR}/${companyId}/lar_7_days"
 								fi
 							fi
 						fi
@@ -94,8 +97,8 @@ function generate_data {
 						local size=$(stat --printf="%s" "${version}")
 						local md5=$(md5sum "${version}" | sed -e "s/\ .*//")
 
-						echo "${size} ${md5}" >> "${TMP_DIR}/${companyId}/type_$type"
-						echo "${file_path} ${type} ${size} ${md5} ${full_type})" >> "${TMP_DIR}/${companyId}/all"
+						echo "${size} ${md5}" >> "${TEMP_DIR}/${companyId}/type_$type"
+						echo "${file_path} ${type} ${size} ${md5} ${full_type})" >> "${TEMP_DIR}/${companyId}/all"
 					done
 				fi
 			done
@@ -118,13 +121,13 @@ function generated_dir_size {
 }
 
 function main {
-	TMP_DIR=/tmp/dl_inspect_cache
+	TEMP_DIR=/tmp/dl_inspect_cache
 
 	check_usage
 
-	if [ -e ${TMP_DIR} ]
+	if [ -e ${TEMP_DIR} ]
 	then
-		echo "${TMP_DIR} exists from a previous run, not calculating again."
+		echo "${TEMP_DIR} exists from a previous run, not calculating again."
 	else
 		generate_data
 	fi
@@ -133,7 +136,7 @@ function main {
 }
 
 function print_data {
-	cd "${TMP_DIR}" || exit 3
+	cd "${TEMP_DIR}" || exit 3
 
 	for companyId in *
 	do
@@ -183,7 +186,7 @@ function print_data {
 			cat lar_30_days
 		fi
 
-		cd "${TMP_DIR}" || exit 3
+		cd "${TEMP_DIR}" || exit 3
 	done
 }
 
