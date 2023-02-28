@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM} liferay/jdk11:latest AS liferay-jdk11
+FROM --platform=${TARGETPLATFORM} liferay/jdk11-jdk8:latest AS liferay-jdk11-jdk8
 
 COPY resources/etc/created-date /etc/created-date
 
@@ -7,7 +7,7 @@ RUN apt-get update && \
 	apt-get upgrade --yes && \
 	apt-get clean
 
-FROM liferay-jdk11
+FROM liferay-jdk11-jdk8
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_LIFERAY_PATCHING_TOOL_VERSION
@@ -25,6 +25,7 @@ COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_entrypoint.sh"]
 
+ENV JAVA_VERSION=zulu11
 ENV JPDA_ADDRESS=0.0.0.0:8000
 
 ENV LIFERAY_DISABLE_TRIAL_LICENSE=false
