@@ -166,8 +166,9 @@ function log_in_to_docker_hub {
 	fi
 }
 
-function make_creation_date_file {
+function make_created_date_file {
 	local current_date=$(date)
+
 	current_date=$(date "${current_date}" "+%D")
 
 	local file_date=$(cat templates/_common/etc/created-date)
@@ -187,7 +188,7 @@ function make_temp_directory {
 
 	mkdir -p "${TEMP_DIR}"
 
-	make_creation_date_file
+	make_created_date_file
 
 	cp -r templates/_common/* "${TEMP_DIR}"
 	cp -r "${1}"/* "${TEMP_DIR}"
