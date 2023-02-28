@@ -40,12 +40,12 @@ function check_usage {
 	done
 }
 
-generate_thread_dump() {
+function generate_thread_dump {
 	local date=$(date +'%Y-%m-%d')
 
 	mkdir -p "${THREAD_DUMPS_DIR}/${date}"
 
-	local id=${2}
+	local id=${1}
 	local time=$(date +'%H-%M-%S')
 
 	echo "[Liferay] Generating ${THREAD_DUMPS_DIR}/${date}/thread_dump-${time}-${id}.txt"
@@ -55,14 +55,14 @@ generate_thread_dump() {
 	echo -e "${thread_dump}" > "${THREAD_DUMPS_DIR}/${date}/thread_dump-${time}-${id}.txt"
 }
 
-main() {
+function main {
 	check_usage "${@}"
 
-	for i in $(seq 1 ${NUMBER_OF_THREAD_DUMPS})
+	for i in $(seq 1 "${NUMBER_OF_THREAD_DUMPS}")
 	do
-		generate_thread_dump ${i}
+		generate_thread_dump "${i}"
 
-		sleep ${SLEEP}
+		sleep "${SLEEP}"
 	done
 
 	echo "[Liferay] Generated thread dumps"
