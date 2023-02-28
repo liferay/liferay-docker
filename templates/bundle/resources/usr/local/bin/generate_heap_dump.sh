@@ -26,7 +26,7 @@ function check_usage {
 	done
 }
 
-generate_heap_dump() {
+function generate_heap_dump {
 	local date=$(date +'%Y-%m-%d')
 
 	mkdir -p "${HEAP_DUMPS_DIR}/${date}"
@@ -38,7 +38,7 @@ generate_heap_dump() {
 	jattach $(cat "${LIFERAY_PID}") dumpheap "${HEAP_DUMPS_DIR}/${date}/heap_dump-${time}.txt"
 }
 
-main() {
+function main {
 	check_usage "${@}"
 
 	mkdir -p "${HEAP_DUMPS_DIR}"
