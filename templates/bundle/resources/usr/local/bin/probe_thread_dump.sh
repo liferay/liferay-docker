@@ -95,12 +95,12 @@ function main {
 
 		local thread_dump=$(jattach $(cat "${LIFERAY_PID}") threaddump)
 
-		if [ ! -e  "${LIFERAY_THREAD_DUMP_DIRECTORY}" ]
+		if [ ! -e  "${LIFERAY_THREAD_DUMPS_DIRECTORY}" ]
 		then
-			mkdir -p "${LIFERAY_THREAD_DUMP_DIRECTORY}"
+			mkdir -p "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
 		fi
 
-		echo -e "${thread_dump}" > "${LIFERAY_THREAD_DUMP_DIRECTORY}/$(hostname)_$(date +"%Y-%m-%dT%H:%M:%S%z").tdump"
+		echo -e "${thread_dump}" > "${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +"%Y-%m-%dT%H:%M:%S%z").tdump"
 	fi
 
 	exit ${exit_code}
