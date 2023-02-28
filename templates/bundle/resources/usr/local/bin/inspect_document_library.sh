@@ -1,21 +1,5 @@
 #!/bin/bash
 
-function check_usage {
-	if [ -e document_library ]
-	then
-		return
-	fi
-
-	if [ -e /opt/liferay/data ]
-	then
-		lcd /opt/liferay/data
-	else
-		echo "Run this script from the Liferay data directory which contains the document_library directory."
-
-		exit 1
-	fi
-}
-
 function calculate_results {
 	rm -fr "${RESULTS_DIR}"
 
@@ -27,27 +11,27 @@ function calculate_results {
 
 	for company_id in *
 	do
-		if [ ! -d "${pwd}/${company_id}" ]
+		if [ ! -d "${pwd}/${company_id}/0" ]
 		then
 			continue
 		fi
-
-		lcd "${pwd}/${company_id}"
 
 		mkdir -p "${RESULTS_DIR}/${company_id}"
 
 		lcd "${pwd}/${company_id}/0"
 
-		for dir in adaptive document_preview document_thumbnail
+		for regenerated_dir in adaptive document_preview document_thumbnail
 		do
-			get_regenerated_dir_size "${dir}" >> "${RESULTS_DIR}/${company_id}/regenerated_dirs"
+			get_regenerated_dir_size "${regenerated_dir}" >> "${RESULTS_DIR}/${company_id}/regenerated_dirs"
 		done
 
 		lcd "${pwd}/${company_id}"
 
 		for repository_id in *
 		do
-			if [[ "${repository_id}" -eq 0 ]] || [ ! -d "${pwd}/${company_id}/${repository_id}" ] || [[ $(find "${pwd}/${company_id}/${repository_id}" -maxdepth 1 -mindepth 1 | wc -l 2>/dev/null) -eq 0 ]]
+			if [[ "${repository_id}" -eq 0 ]] ||
+			   [ ! -d "${pwd}/${company_id}/${repository_id}" ] ||
+			   [[ $(find "${pwd}/${company_id}/${repository_id}" -maxdepth 1 -mindepth 1 | wc -l 2>/dev/null) -eq 0 ]]
 			then
 				continue
 			fi
@@ -64,9 +48,9 @@ function calculate_results {
 					do
 						local file_path="${company_id}/${repository_id}/${file_entry_id}/${file_version}"
 
-						local full_type=$(file_entry_id -b "${file_version}")
+						local file_brief=$(file -b "${file_version}")
 
-						local type=${full_type%% *}
+						local type=${file_brief%% *}
 
 						if [[ ${type} == "Zip" ]]
 						then
@@ -89,7 +73,7 @@ function calculate_results {
 
 						if [[ ${type} == "ISO" ]]
 						then
-							if (echo "${full_type}" | grep MP4 &>/dev/null)
+							if (echo "${file_brief}" | grep MP4 &>/dev/null)
 							then
 								type=MP4
 							fi
@@ -99,12 +83,28 @@ function calculate_results {
 						local size=$(stat --printf="%s" "${file_version}")
 
 						echo "${size} ${md5}" >> "${RESULTS_DIR}/${company_id}/type_${type}"
-						echo "${file_path} ${type} ${size} ${md5} ${full_type})" >> "${RESULTS_DIR}/${company_id}/all"
+						echo "${file_path} ${type} ${size} ${md5} ${file_brief})" >> "${RESULTS_DIR}/${company_id}/all"
 					done
 				fi
 			done
 		done
 	done
+}
+
+function check_usage {
+	if [ -e document_library ]
+	then
+		return
+	fi
+
+	if [ -e /opt/liferay/data ]
+	then
+		lcd /opt/liferay/data
+	else
+		echo "Run this script from the Liferay data directory which contains the document_library directory."
+
+		exit 1
+	fi
 }
 
 function get_regenerated_dir_size {
