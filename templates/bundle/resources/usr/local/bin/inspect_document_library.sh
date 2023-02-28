@@ -143,7 +143,7 @@ function main {
 function print_results {
 	lcd "${RESULTS_DIR}"
 
-	for companyId in *
+	for company_id in *
 	do
 		lcd "${company_id}"
 
