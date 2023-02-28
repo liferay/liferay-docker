@@ -21,7 +21,7 @@ ARG LABEL_ZULU_8_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
-COPY --chown=liferay:liferay etc/creation-date /etc/creation-date
+COPY --chown=liferay:liferay etc/created-date /etc/created-date
 
 ENV JAVA_VERSION=zulu8
 

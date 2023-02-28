@@ -170,11 +170,11 @@ function make_creation_date_file {
 	local current_date=$(date)
 	current_date=$(date "${current_date}" "+%D")
 
-	local file_date=$(cat templates/_common/etc/creation-date)
+	local file_date=$(cat templates/_common/etc/created-date)
 
 	if [[ "${current_date}" != "${file_date}" ]]
 	then
-		echo "${current_date}" > templates/_common/etc/creation-date
+		echo "${current_date}" > templates/_common/etc/created-date
 	fi
 }
 

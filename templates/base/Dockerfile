@@ -1,6 +1,6 @@
 FROM --platform=${TARGETPLATFORM} ubuntu:jammy AS ubuntu-jammy
 
-COPY --chown=liferay:liferay etc/creation-date /etc/creation-date
+COPY --chown=liferay:liferay etc/created-date /etc/created-date
 
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bash ca-certificates curl less libnss3 telnet tini tree unzip && \

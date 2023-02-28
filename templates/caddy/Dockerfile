@@ -6,7 +6,7 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-COPY --chown=liferay:liferay etc/creation-date /etc/creation-date
+COPY --chown=liferay:liferay etc/created-date /etc/created-date
 COPY resources/etc/caddy/* /etc/caddy
 COPY resources/usr/local/bin/* /usr/local/bin/
 

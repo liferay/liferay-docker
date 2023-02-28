@@ -20,7 +20,7 @@ ARG LABEL_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
-COPY --chown=liferay:liferay etc/creation-date /etc/creation-date
+COPY --chown=liferay:liferay etc/created-date /etc/created-date
 COPY --chown=liferay:liferay resources/home/liferay/.bashrc /home/liferay/
 COPY resources/usr/local/bin/* /usr/local/bin/
 
