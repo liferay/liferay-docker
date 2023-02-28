@@ -192,7 +192,7 @@ function make_temp_directory {
 		echo "${current_date}" > templates/_common/resources/etc/created-date
 	fi
 
-	cp -r templates/_common/resources/* "${TEMP_DIR}/resources"
+	cp -r templates/_common/* "${TEMP_DIR}"
 }
 
 function pid_8080 {
