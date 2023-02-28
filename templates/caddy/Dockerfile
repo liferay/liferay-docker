@@ -6,8 +6,8 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-COPY resources/etc/created-date /etc/created-date
 COPY resources/etc/caddy/* /etc/caddy
+COPY resources/etc/created-date /etc/created-date
 COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENTRYPOINT /usr/local/bin/liferay_caddy_entrypoint.sh
