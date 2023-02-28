@@ -16,7 +16,7 @@ function check_usage {
 	fi
 }
 
-function generate_data {
+function calculate_results {
 	rm -fr "${RESULTS_DIR}"
 
 	mkdir -p "${RESULTS_DIR}"
@@ -134,7 +134,7 @@ function main {
 	then
 		echo "Not calculating again because ${RESULTS_DIR} exists from a previous run."
 	else
-		generate_data
+		calculate_results
 	fi
 
 	print_data
