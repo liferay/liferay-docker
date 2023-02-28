@@ -3,7 +3,7 @@
 function check_usage {
 	NUMBER_OF_THREAD_DUMPS=20
 	SLEEP=5
-	THREAD_DUMP_DIR="${LIFERAY_HOME}/data/sre/thread_dumps"
+	THREAD_DUMPS_DIR="${LIFERAY_HOME}/data/sre/thread_dumps"
 
 	while [ "${1}" != "" ]
 	do
@@ -11,7 +11,7 @@ function check_usage {
 			-d)
 				shift
 
-				THREAD_DUMP_DIR=${1}
+				THREAD_DUMPS_DIR=${1}
 
 				;;
 			-h)
@@ -41,16 +41,18 @@ function check_usage {
 }
 
 generate_thread_dump() {
-	local id=${2}
 	local date=$(date +'%Y-%m-%d')
-	local time=$(date +'%H-%M-%S')
 	
-	mkdir -p "${THREAD_DUMP_DIR}/${date}"
+	mkdir -p "${THREAD_DUMPS_DIR}/${date}"
 
-	echo "[Liferay] Generating ${THREAD_DUMP_DIR}/${date}/thread_dump-${time}-${id}.txt"
+	local id=${2}
+	local time=$(date +'%H-%M-%S')
+
+	echo "[Liferay] Generating ${THREAD_DUMPS_DIR}/${date}/thread_dump-${time}-${id}.txt"
 
 	local thread_dump=$(jattach $(cat "${LIFERAY_PID}") threaddump)
-	echo -e "${thread_dump}" > "${THREAD_DUMP_DIR}/${date}/thread_dump-${time}-${id}.txt"
+
+	echo -e "${thread_dump}" > "${THREAD_DUMPS_DIR}/${date}/thread_dump-${time}-${id}.txt"
 }
 
 main() {
@@ -63,7 +65,7 @@ main() {
 		sleep ${SLEEP}
 	done
 
-	echo "[Liferay] Thread dumps generated"
+	echo "[Liferay] Generated thread dumps"
 }
 
 function print_help {
@@ -71,11 +73,11 @@ function print_help {
 	echo ""
 	echo "The script can be configured with the following arguments:"
 	echo ""
-	echo "	-d (optional): Directory path to which the thread dumps are saved."
-	echo "	-n (optional): Number of thread dumps to generate."
-	echo "	-s (optional): Sleep in seconds between two thread dump generation."
+	echo "	-d (optional): Directory path to which the thread dumps are saved"
+	echo "	-n (optional): Number of thread dumps to generate"
+	echo "	-s (optional): Sleep in seconds between two thread dumps"
 	echo ""
-	echo "Example: ${0} -d \"${THREAD_DUMP_DIR}\" -n ${NUMBER_OF_THREAD_DUMPS} -s ${SLEEP}"
+	echo "Example: ${0} -d \"${THREAD_DUMPS_DIR}\" -n ${NUMBER_OF_THREAD_DUMPS} -s ${SLEEP}"
 
 	exit 2
 }
