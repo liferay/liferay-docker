@@ -1,18 +1,21 @@
 #!/bin/bash
 
 function check_usage {
-	SLEEP=5
 	NUMBER_OF_THREAD_DUMPS=20
+	SLEEP=5
 	THREAD_DUMP_DIR="${LIFERAY_HOME}/data/sre/thread_dumps"
 
 	while [ "${1}" != "" ]
 	do
 		case ${1} in
-
 			-d)
 				shift
 
 				THREAD_DUMP_DIR=${1}
+
+				;;
+			-h)
+				print_help
 
 				;;
 			-n)
@@ -25,10 +28,6 @@ function check_usage {
 				shift
 
 				SLEEP=${1}
-
-				;;
-			-h)
-				print_help
 
 				;;
 			*)
