@@ -8,7 +8,7 @@ function check_usage {
 
 	if [ -e /opt/liferay/data ]
 	then
-		cd /opt/liferay/data || exit 3
+		lcd /opt/liferay/data
 	else
 		echo "Run this script from the Liferay data directory which contains the document_library directory."
 
@@ -21,48 +21,48 @@ function generate_data {
 
 	mkdir -p "${TEMP_DIR}"
 
-	cd document_library || exit 3
+	lcd document_library
 
-	pwd=$(pwd)
+	local pwd=$(pwd)
 
-	for companyId in *
+	for company_id in *
 	do
-		if [ ! -d "${pwd}/${companyId}" ]
+		if [ ! -d "${pwd}/${company_id}" ]
 		then
 			continue
 		fi
 
-		cd "${pwd}/${companyId}" || exit 3
+		lcd "${pwd}/${company_id}"
 
-		mkdir -p "${TEMP_DIR}/${companyId}"
+		mkdir -p "${TEMP_DIR}/${company_id}"
 
-		cd "${pwd}/${companyId}/0" || exit 3
+		lcd "${pwd}/${company_id}/0"
 
 		for dir in adaptive document_preview document_thumbnail
 		do
-			generated_dir_size "${dir}" >> "${TEMP_DIR}/${companyId}/generated_files"
+			generated_dir_size "${dir}" >> "${TEMP_DIR}/${company_id}/generated_files"
 		done
 
-		cd "${pwd}/${companyId}" || exit 3
+		lcd "${pwd}/${company_id}"
 
 		for repository in *
 		do
-			if [[ "${repository}" -eq 0 ]] || [ ! -d "${pwd}/${companyId}/${repository}" ] || [[ $(find "${pwd}/${companyId}/${repository}" -maxdepth 1 -mindepth 1 | wc -l 2>/dev/null) -eq 0 ]]
+			if [[ "${repository}" -eq 0 ]] || [ ! -d "${pwd}/${company_id}/${repository}" ] || [[ $(find "${pwd}/${company_id}/${repository}" -maxdepth 1 -mindepth 1 | wc -l 2>/dev/null) -eq 0 ]]
 			then
 				continue
 			fi
 
-			cd "${pwd}/${companyId}/${repository}" || exit 3
+			lcd "${pwd}/${company_id}/${repository}"
 
 			for file in *
 			do
-				cd "${pwd}/${companyId}/${repository}/${file}" || exit 3
+				lcd "${pwd}/${company_id}/${repository}/${file}"
 
 				if [[ $(find . -maxdepth 1 -mindepth 1 | wc -l) -gt 0 ]]
 				then
 					for version in *
 					do
-						local file_path="${companyId}/${repository}/${file}/${version}"
+						local file_path="${company_id}/${repository}/${file}/${version}"
 
 						local full_type=$(file -b "${version}")
 						local type=${full_type%% *}
@@ -78,10 +78,10 @@ function generate_data {
 
 								if [[ $(find "${version}" -ctime +29 | wc -l) -gt 0 ]]
 								then
-									echo "${file_path}" >> "${TEMP_DIR}/${companyId}/lar_30_days"
+									echo "${file_path}" >> "${TEMP_DIR}/${company_id}/lar_30_days"
 								elif [[ $(find "${version}" -ctime +6 | wc -l) -gt 0 ]]
 								then
-									echo "${file_path}" >> "${TEMP_DIR}/${companyId}/lar_7_days"
+									echo "${file_path}" >> "${TEMP_DIR}/${company_id}/lar_7_days"
 								fi
 							fi
 						fi
@@ -97,8 +97,8 @@ function generate_data {
 						local size=$(stat --printf="%s" "${version}")
 						local md5=$(md5sum "${version}" | sed -e "s/\ .*//")
 
-						echo "${size} ${md5}" >> "${TEMP_DIR}/${companyId}/type_$type"
-						echo "${file_path} ${type} ${size} ${md5} ${full_type})" >> "${TEMP_DIR}/${companyId}/all"
+						echo "${size} ${md5}" >> "${TEMP_DIR}/${company_id}/type_$type"
+						echo "${file_path} ${type} ${size} ${md5} ${full_type})" >> "${TEMP_DIR}/${company_id}/all"
 					done
 				fi
 			done
@@ -120,6 +120,10 @@ function generated_dir_size {
 	fi
 }
 
+function lcd {
+	cd "${1}" || exit 3
+}
+
 function main {
 	TEMP_DIR=/tmp/dl_inspect_cache
 
@@ -127,7 +131,7 @@ function main {
 
 	if [ -e ${TEMP_DIR} ]
 	then
-		echo "${TEMP_DIR} exists from a previous run, not calculating again."
+		echo "Not calculating again because ${TEMP_DIR} exists from a previous run."
 	else
 		generate_data
 	fi
@@ -136,13 +140,13 @@ function main {
 }
 
 function print_data {
-	cd "${TEMP_DIR}" || exit 3
+	lcd "${TEMP_DIR}"
 
 	for companyId in *
 	do
-		cd "${companyId}" || exit 3
+		lcd "${company_id}"
 
-		echo "CSV Data for company ${companyId}"
+		echo "CSV Data for company ${company_id}"
 		echo ""
 		echo "Type,Count,Unique count,Size MB,Unique size MB"
 
@@ -186,7 +190,7 @@ function print_data {
 			cat lar_30_days
 		fi
 
-		cd "${TEMP_DIR}" || exit 3
+		lcd "${TEMP_DIR}"
 	done
 }
 
