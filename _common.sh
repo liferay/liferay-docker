@@ -166,19 +166,6 @@ function log_in_to_docker_hub {
 	fi
 }
 
-function make_created_date_file {
-	local current_date=$(date)
-
-	current_date=$(date "${current_date}" "+%D")
-
-	local file_date=$(cat templates/_common/etc/created-date)
-
-	if [[ "${current_date}" != "${file_date}" ]]
-	then
-		echo "${current_date}" > templates/_common/etc/created-date
-	fi
-}
-
 function make_temp_directory {
 	CURRENT_DATE=$(date)
 
@@ -188,10 +175,24 @@ function make_temp_directory {
 
 	mkdir -p "${TEMP_DIR}"
 
-	make_created_date_file
-
-	cp -r templates/_common/* "${TEMP_DIR}"
 	cp -r "${1}"/* "${TEMP_DIR}"
+
+	#
+	# templates/_common/resources/etc/created-date
+	#
+
+	local current_date=$(date)
+
+	current_date=$(date "${current_date}" "+%D")
+
+	local file_date=$(cat templates/_common/resources/etc/created-date)
+
+	if [[ "${current_date}" != "${file_date}" ]]
+	then
+		echo "${current_date}" > templates/_common/resources/etc/created-date
+	fi
+
+	cp -r templates/_common/resources/* "${TEMP_DIR}/resources"
 }
 
 function pid_8080 {

@@ -6,4 +6,4 @@ node_modules
 package-lock.json
 package.json
 temp-*
-templates/_common/etc/created-date
+templates/_common/resources/etc/created-date
