@@ -9,7 +9,7 @@ ARG LABEL_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
-COPY --chown=liferay:liferay etc/created-date /etc/created-date
+COPY etc/created-date /etc/created-date
 COPY resources/usr/src/app/* /usr/src/app
 
 ENV MEMORY_CACHE=0

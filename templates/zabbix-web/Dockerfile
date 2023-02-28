@@ -15,7 +15,7 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 ARG LABEL_ZABBIX_VERSION
 
-COPY --chown=liferay:liferay etc/created-date /etc/created-date
+COPY etc/created-date /etc/created-date
 COPY --from=zabbix-web-nginx-mysql ["/etc/apt/preferences.d/99nginx", "/etc/apt/preferences.d/99nginx"]
 COPY --from=zabbix-web-nginx-mysql ["/etc/apt/sources.list.d/nginx.list", "/etc/apt/sources.list.d/nginx.list"]
 COPY --from=zabbix-web-nginx-mysql ["/etc/apt/trusted.gpg.d/nginx.gpg", "/etc/apt/trusted.gpg.d/nginx.gpg"]
