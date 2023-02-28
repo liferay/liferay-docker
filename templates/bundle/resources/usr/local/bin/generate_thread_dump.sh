@@ -42,7 +42,7 @@ function check_usage {
 
 generate_thread_dump() {
 	local date=$(date +'%Y-%m-%d')
-	
+
 	mkdir -p "${THREAD_DUMPS_DIR}/${date}"
 
 	local id=${2}
