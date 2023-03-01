@@ -1,5 +1,9 @@
 #!/bin/bash
 
+function lcd {
+	cd "${1}" || exit 3
+}
+
 function main {
 	apt-get update
 	apt-get --yes install docker-compose git glusterfs-server pwgen
@@ -11,7 +15,7 @@ function main {
 
 	mkdir -p /opt/liferay/orca
 
-	cd /opt/liferay/orca || exit 1
+	lcd /opt/liferay/orca
 
 	git init
 	git remote add origin https://github.com/liferay/liferay-docker.git
@@ -25,7 +29,7 @@ function main {
 	# TODO Fix /opt/liferay/orca/orca
 	#
 
-	cd orca || exit 1
+	lcd orca
 
 	#
 	# TODO install
