@@ -5,7 +5,7 @@ Simple default configuration to deploy Liferay DXP Clusters on Linux servers, on
 ## Host requirements
 
 1. must have `amd64` CPU
-    * The host must run on an `amd64` architecture (Intel). `arm64` is currently not supported, so you won't be able to use the tool for example on computers with M1 chips from Apple or various arm-based AWS instances. 
+    * The host must run on an `amd64` architecture (Intel). `arm64` is currently not supported, so you won't be able to use the tool for example on computers with M1 chips from Apple or various arm-based AWS instances.
     * The support for `arm64` may be added in the future, but it's currently not a priority.
 
 ## OS requirements
