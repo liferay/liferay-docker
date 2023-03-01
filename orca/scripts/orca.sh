@@ -51,7 +51,7 @@ function command_build {
 function command_deploy {
 	cd builds
 
-	ln -fs ${1} deploy
+	ln -fns ${1} deploy
 }
 
 function command_force_primary {
