@@ -39,7 +39,7 @@ function command_all {
 }
 
 function command_backup {
-	cd builds/deploy || exit 1
+	lcd builds/deploy
 
 	docker-compose exec backup /usr/local/bin/backup.sh
 }
@@ -49,7 +49,7 @@ function command_build {
 }
 
 function command_deploy {
-	cd builds || exit 1
+	lcd builds
 
 	ln -fns "${1}" deploy
 }
@@ -67,7 +67,7 @@ function command_install {
 }
 
 function command_mysql {
-	cd builds/deploy || exit 1
+	lcd builds/deploy
 
 	docker-compose exec db /usr/local/bin/connect_to_mysql.sh
 }
@@ -89,13 +89,13 @@ function command_setup_shared_volume {
 }
 
 function command_ssh {
-	cd builds/deploy || exit 1
+	lcd builds/deploy
 
 	docker-compose exec "${1}" /bin/bash
 }
 
 function command_unseal {
-	cd builds/deploy || exit 1
+	lcd builds/deploy
 
 	docker-compose exec vault /usr/bin/vault operator unseal
 }
@@ -120,7 +120,7 @@ function command_up {
 		done
 	fi
 
-	cd builds/deploy || exit 1
+	lcd builds/deploy
 
 	docker-compose up "${@}"
 }
@@ -134,17 +134,22 @@ function execute_command {
 	else
 		echo "${1}: Unrecognized command for orca, passing to docker-compose."
 
-		cd builds/deploy || exit 1
+		lcd builds/deploy
 
 		docker-compose "${@}"
 	fi
 }
 
+function lcd {
+	cd "${1}" || exit 3
+}
+
 function main {
-	cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/../" || exit 1
+	lcd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/../"
 
 	check_usage "${@}"
 
 	execute_command "${@}"
 }
+
 main "${@}"
