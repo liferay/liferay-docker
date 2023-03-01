@@ -185,12 +185,7 @@ function make_temp_directory {
 
 	current_date=$(date "${current_date}" "+%D")
 
-	local file_date=$(cat templates/_common/resources/etc/created-date)
-
-	if [[ "${current_date}" != "${file_date}" ]]
-	then
-		echo "${current_date}" > templates/_common/resources/etc/created-date
-	fi
+	echo "${current_date}" > templates/_common/resources/etc/created-date
 
 	cp -r templates/_common/* "${TEMP_DIR}"
 }
