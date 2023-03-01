@@ -108,7 +108,7 @@ function command_up {
 
 	if [ -d /opt/liferay/passwords ]
 	then
-		for service in $(ls /opt/liferay/passwords)
+		find /opt/liferay/passwords/ -type f | while IFS= read -r -d '' service
 		do
 			echo "Setting the password for ${service}."
 
