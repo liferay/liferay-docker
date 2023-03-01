@@ -108,12 +108,8 @@ function command_up {
 
 	if [ -d /opt/liferay/passwords ]
 	then
-		for service in /opt/liferay/passwords/*
+		for service in $(ls /opt/liferay/passwords)
 		do
-			[[ -e ${service} ]] || break
-
-			service=${service##*/}
-
 			echo "Setting the password for ${service}."
 
 			export "ORCA_VAULT_${service}_PASSWORD"="$(cat "/opt/liferay/passwords/${service}")"
