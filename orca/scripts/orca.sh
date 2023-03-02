@@ -106,23 +106,23 @@ function command_up {
 		exit 1
 	fi
 
-	if [ -d /opt/liferay/passwords ]
-	then
-		find /opt/liferay/passwords/ -type f | while IFS= read -r -d '' service
-		do
+	lcd builds/deploy
+
+	for service in $(docker-compose config --services)
+	do
+		if [ -e "/opt/liferay/passwords/${service}" ]
+		then
 			echo "Setting the password for ${service}."
 
 			export "ORCA_VAULT_${service}_PASSWORD"="$(cat "/opt/liferay/passwords/${service}")"
-		done
-	fi
-
-	lcd builds/deploy
+		fi
+	done
 
 	docker-compose up "${@}"
 }
 
 function execute_command {
-	if [[ $(type -t "command_${1}") == "function" ]]
+	if [[ $(type -t "command_${1}") == "func""tion" ]]
 	then
 		suffix="${1}"
 		shift
