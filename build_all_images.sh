@@ -29,6 +29,31 @@ function build_base_image {
 	fi
 }
 
+function build_batch_image {
+	if [[ $(get_latest_docker_hub_version "batch") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	then
+		echo ""
+		echo "Docker image BATCH is up to date."
+
+		return
+	fi
+
+	echo ""
+	echo "Building Docker image BATCH."
+	echo ""
+
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_batch_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/batch.log
+
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	then
+		echo "FAILED: BATCH" >> "${LOGS_DIR}/results"
+
+		exit 1
+	else
+		echo "SUCCESS: BATCH" >> "${LOGS_DIR}/results"
+	fi
+}
+
 function build_bundle_image {
 	local query=${1}
 	local version=${2}
@@ -504,6 +529,7 @@ function main {
 	build_jdk11_image
 	build_jdk11_jdk8_image
 
+	build_batch_image
 	build_caddy_image
 	build_jar_runner_image
 	build_job_runner_image
