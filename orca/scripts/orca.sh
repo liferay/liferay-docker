@@ -122,6 +122,10 @@ function command_up {
 }
 
 function execute_command {
+	#
+	# The "func""tion" is a workaround for a beautysh bug
+	#
+
 	if [[ $(type -t "command_${1}") == "func""tion" ]]
 	then
 		suffix="${1}"
