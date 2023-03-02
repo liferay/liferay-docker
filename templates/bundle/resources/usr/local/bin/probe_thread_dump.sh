@@ -100,7 +100,7 @@ function main {
 			mkdir -p "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
 		fi
 
-		echo -e "${thread_dump}" > "${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +"%Y-%m-%dT%H:%M:%S%z").tdump"
+		echo -e "${thread_dump}" > "${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
 	fi
 
 	exit ${exit_code}
