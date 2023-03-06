@@ -2,8 +2,6 @@ FROM --platform=${TARGETPLATFORM} ubuntu:jammy AS ubuntu-jammy
 
 COPY resources/etc/created-date /etc/created-date
 
-ENV LANG C.UTF-8
-
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bash ca-certificates curl less libnss3 telnet tini tree unzip && \
 	apt-get upgrade --yes && \
@@ -21,6 +19,8 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 ARG TARGETPLATFORM
+
+ENV LANG C.UTF-8
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
