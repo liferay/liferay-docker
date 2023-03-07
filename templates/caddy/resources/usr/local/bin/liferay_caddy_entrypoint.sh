@@ -21,6 +21,18 @@ EOF
 		fi
 	done
 
+	if [ -n "${LIFERAY_CADDY_404_URL}" ]
+	then
+		cat >> /etc/caddy.d/liferay_caddy_file << EOF
+handle_errors {
+	@404 expression {http.error.status_code} == 404
+	handle @404 {
+		redir * ${LIFERAY_CADDY_404_URL} 301
+	}
+}
+EOF
+	fi
+
 	caddy run --adapter caddyfile --config /etc/caddy/Caddyfile
 }
 
