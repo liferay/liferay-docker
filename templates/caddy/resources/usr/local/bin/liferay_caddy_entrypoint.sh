@@ -25,10 +25,12 @@ EOF
 	then
 		cat >> /etc/caddy.d/liferay_caddy_file << EOF
 handle_errors {
+
 	@404 expression {http.error.status_code} == 404
 	handle @404 {
 		redir * ${LIFERAY_CADDY_404_URL} 301
 	}
+
 }
 EOF
 	fi
