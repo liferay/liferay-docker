@@ -12,7 +12,7 @@ function check_usage {
 		echo "Environment was not set, using x1e4prd."
 	fi
 
-	cd "$(dirname "$0")"
+	lcd "$(dirname "$0")"
 
 	if [ ! -n "${LIFERAY_LXC_REPOSITORY_DIR}" ]
 	then
@@ -32,9 +32,7 @@ function check_usage {
 		echo ""
 		echo "By default the x1e4prd environment configuration is used."
 		echo ""
-		echo "Example:"
-		echo ""
-		echo "    ${0} x1e4prd"
+		echo "Example: ${0} x1e4prd"
 
 		exit 1
 	fi
@@ -61,7 +59,7 @@ function create_liferay_configuration {
 	function delete_config {
 		echo " - ${1}"
 
-		rm -f liferay_mount/files/${1}
+		rm -f "liferay_mount/files/${1}"
 	}
 
 	function write_company {
@@ -70,8 +68,8 @@ function create_liferay_configuration {
 
 	mkdir -p liferay_mount/files
 
-	cp -r ${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/common/* liferay_mount/files
-	cp -r ${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${ENVIRONMENT}/* liferay_mount/files
+	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/common/* liferay_mount/files
+	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/"${ENVIRONMENT}"/* liferay_mount/files
 
 	echo "Deleting the following files from configuration to ensure DXP can run locally:"
 
@@ -96,17 +94,23 @@ function create_liferay_configuration {
 }
 
 function create_liferay_dockerfile {
-	echo "FROM $(grep -e '^liferay.workspace.docker.image.liferay=' ${LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties | cut -d'=' -f2)" > build/liferay/Dockerfile
+	(
+		echo "FROM $(grep -e '^liferay.workspace.docker.image.liferay=' "${LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties" | cut -d'=' -f2)"
 
-	echo "COPY resources/opt/liferay /opt/liferay/" >> build/liferay/Dockerfile
-	echo "COPY resources/usr/local/bin /usr/local/bin/" >> build/liferay/Dockerfile
-	echo "COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/" >> build/liferay/Dockerfile
+		echo "COPY resources/opt/liferay /opt/liferay/"
+		echo "COPY resources/usr/local/bin /usr/local/bin/"
+		echo "COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/"
 
-	cat ${LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext >> build/liferay/Dockerfile
+		cat "${LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
+	) > build/liferay/Dockerfile
 }
 
 function generate_configuration {
-	function generate_liferay_configuration {
+	function write {
+		echo "${1}" >> docker-compose.yml
+	}
+
+	function write_liferay {
 		write "    ${1}:"
 		write "        build: ./build/liferay"
 		write "        environment:"
@@ -146,11 +150,8 @@ function generate_configuration {
 		write "            - ./liferay_mount:/mnt/liferay"
 	}
 
-	function write {
-		echo "${1}" >> docker-compose.yml
-	}
 
-	cd ${STACK_DIR}
+	lcd "${STACK_DIR}"
 
 	mkdir -p build/liferay/resources/opt/liferay
 	cp ../../orca/templates/liferay/resources/opt/liferay/cluster-link-tcp.xml build/liferay/resources/opt/liferay
@@ -191,8 +192,8 @@ function generate_configuration {
 	write "            - ./database_import:/docker-entrypoint-initdb.d"
 	write "            - mysql-db:/var/lib/mysql"
 
-	generate_liferay_configuration liferay-1 0
-	generate_liferay_configuration liferay-2 1
+	write_liferay liferay-1 0
+	write_liferay liferay-2 1
 
 	write "    search:"
 	write "        build: ./build/search"
@@ -208,12 +209,16 @@ function generate_configuration {
 	write "     mysql-db:"
 }
 
+function lcd {
+	cd "${1}" || exit 3
+}
+
 function main {
 	check_usage "${@}"
 
-	generate_configuration | tee -a ${STACK_DIR}/build.out
+	generate_configuration | tee -a "${STACK_DIR}/build.out"
 
-	print_image_usage | tee -a ${STACK_DIR}/build.out
+	print_image_usage | tee -a "${STACK_DIR}/build.out"
 }
 
 function print_image_usage {
