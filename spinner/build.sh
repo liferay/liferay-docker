@@ -37,6 +37,13 @@ function check_usage {
 		exit 1
 	fi
 
+	if [[ $(find dxp-activation-key -name "*.xml" | wc -l ) -eq 0 ]]
+	then
+		echo "Copy a valid DXP license to the dxp-activation-key directory before running this script."
+
+		exit 1
+	fi
+
 	STACK_NAME="env-${ENVIRONMENT}-"$(date +%s)
 	STACK_DIR=$(pwd)/${STACK_NAME}
 
@@ -66,7 +73,9 @@ function create_liferay_configuration {
 		echo "${1}" >> "liferay_mount/files/osgi/configs/com.liferay.portal.instances.internal.configuration.PortalInstancesConfiguration~spinner-test.com.config"
 	}
 
-	mkdir -p liferay_mount/files
+	mkdir -p liferay_mount/files/deploy
+
+	cp -r ../dxp-activation-key/*.xml liferay_mount/files/deploy
 
 	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/common/* liferay_mount/files
 	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/"${ENVIRONMENT}"/* liferay_mount/files
@@ -118,16 +127,17 @@ function generate_configuration {
 		write "            - LCP_SECRET_DATABASE_HOST=database"
 		write "            - LCP_SECRET_DATABASE_PASSWORD=password"
 		write "            - LCP_SECRET_DATABASE_USER=root"
-		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_ENABLED=true"
+		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_AUTODETECT_PERIOD_ADDRESS="
 		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_CONTROL=control-channel-${1}"
 		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_TRANSPORT_PERIOD_NUMBER0=transport-channel-logic-${1}"
 		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_CONTROL=/opt/liferay/cluster-link-tcp.xml"
 		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_TRANSPORT_PERIOD__NUMBER0_=/opt/liferay/cluster-link-tcp.xml"
-		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_AUTODETECT_PERIOD_ADDRESS="
+		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_ENABLED=true"
 		write "            - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_CLUSTER_UPPERCASEN_AME=\"liferay_cluster\""
 		write "            - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_NETWORK_UPPERCASEH_OST_UPPERCASEA_DDRESSES=\"search:9200\""
 		write "            - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_OPERATION_UPPERCASEM_ODE=\"REMOTE\""
 		write "            - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_PRODUCTION_UPPERCASEM_ODE_UPPERCASEE_NABLED=B\"true\""
+		write "            - LIFERAY_DISABLE_TRIAL_LICENSE=true"
 		write "            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver"
 		write "            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=password"
 		write "            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mysql://database/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
