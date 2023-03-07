@@ -164,7 +164,7 @@ function generate_configuration {
 	cp ../../orca/templates/liferay/resources/usr/local/liferay/scripts/pre-startup/99_startup_lock.sh build/liferay/resources/usr/local/liferay/scripts/pre-startup
 
 	mkdir -p build/search/
-	cp ../../orca/templates/search/Dockerfile build/search/
+	grep -v "^FROM" ../../orca/templates/search/Dockerfile | sed -e "s/#FROM/FROM/" > build/search/Dockerfile
 
 	mkdir -p database_import
 
@@ -178,14 +178,14 @@ function generate_configuration {
 	write "        ports:"
 	write "            - \"3310:3310\""
 	write "    database:"
-	write "        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --character-set-filesystem=utf8mb4 --max_allowed_packet=256M --tls-version=''"
+	write "        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --character-set-filesystem=utf8mb4 --default-authentication-plugin=mysql_native_password --max_allowed_packet=256M --tls-version=''"
 	write "        environment:"
 	write "            - MYSQL_DATABASE=lportal"
 	write "            - MYSQL_PASSWORD=password"
 	write "            - MYSQL_ROOT_HOST=%"
 	write "            - MYSQL_ROOT_PASSWORD=password"
 	write "            - MYSQL_USER=dxpcloud"
-	write "        image: mysql:5.7"
+	write "        image: mysql:8.0.32"
 	write "        ports:"
 	write "            - 127.0.0.1:13306:3306"
 	write "        volumes:"
@@ -241,7 +241,7 @@ function print_image_usage {
 	echo " - Customer virtual instance: http://spinner-test.com:18080 test@spinner-test.com:test (add spinner-test.com to your hosts file mapped to 127.0.0.1)"
 	echo " - Admin virtual instance: http://localhost:18080 test@lxc.app:test"
 	echo " - DXP debug: localhost:18000"
-	echo " - MariaDB: localhost:13306 root:password. Default database: lportal, additional databases: lpartition_*"
+	echo " - MySQL: localhost:13306 root:password. Default database: lportal, additional databases: lpartition_*"
 	echo ""
 	echo "The configuration as similar to the LXC configuration as possible, however some changes were made to ensure it runs on localhost or to make authentication easy for testing."
 	echo "You can make changes to the liferay_mount folder or the docker-compose.yml to test various changes in configuration."
