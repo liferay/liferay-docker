@@ -25,7 +25,7 @@ do
 	echo "Cleaning up ${environment}."
 
 	lcd "${environment}"
-	${docker_compose} down --local all -v
+	${docker_compose} down --rmi local -v
 
 	rm -fr "${environment}"
 done
