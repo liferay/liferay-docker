@@ -1,0 +1,40 @@
+moduledir 'narwhal/puppet/modules/r10k'
+
+mod 'accounts',
+	:git => 'https://github.com/puppetlabs/puppetlabs-accounts.git',
+	:ref => 'main'
+
+mod 'apt',
+	:git => 'https://github.com/puppetlabs/puppetlabs-apt.git',
+	:ref => 'main'
+
+mod 'concat',
+	:git => 'https://github.com/puppetlabs/puppetlabs-concat.git',
+	:ref => 'main'
+
+mod 'debconf',
+	:git => 'https://github.com/smoeding/puppet-debconf.git'
+
+mod 'docker',
+	:git => 'https://github.com/puppetlabs/puppetlabs-docker.git',
+	:ref => 'main'
+
+mod 'inifle',
+	:git => 'https://github.com/puppetlabs/puppetlabs-inifile.git',
+	:ref => 'main'
+
+mod 'snap',
+	:git => 'https://github.com/root-expert/puppet-snap.git'
+
+mod 'ssh',
+	:git => 'https://github.com/saz/puppet-ssh.git'
+
+mod 'stdlib',
+	:git => 'https://github.com/puppetlabs/puppetlabs-stdlib',
+	:ref => 'main'
+
+mod 'sudo',
+	:git => 'https://github.com/saz/puppet-sudo.git'
+
+mod 'timezone',
+	:git => 'https://github.com/saz/puppet-timezone.git'

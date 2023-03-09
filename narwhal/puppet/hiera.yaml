@@ -1,0 +1,16 @@
+---
+# Hiera 5 Global configuration file
+version: 5
+defaults:
+  datadir: data
+hierarchy:
+  - name: "Secret data: per-node, per-datacenter, common"
+    # eyaml backend
+    lookup_key: eyaml_lookup_key
+    paths:
+      - "secrets/nodes/%{trusted.certname}.eyaml"  # Include explicit file extension
+      - "secrets/location/%{facts.whereami}.eyaml"
+      - "common.eyaml"
+    options:
+      pkcs7_private_key: /etc/puppetlabs/puppet/keys/private_key.pkcs7.pem
+      pkcs7_public_key: /etc/puppetlabs/puppet/keys/public_key.pkcs7.pem
