@@ -119,9 +119,21 @@ function generate_configuration {
 		echo "${1}" >> docker-compose.yml
 	}
 
+	function write_deploy {
+		write "        deploy:"
+		write "            resources:"
+		write "                limits:"
+		write "                    memory: ${1}"
+		write "                reservations:"
+		write "                    memory: ${1}"
+	}
+
 	function write_liferay {
 		write "    ${1}:"
 		write "        build: ./build/liferay"
+
+		write_deploy 6G
+
 		write "        environment:"
 		write "            - LCP_LIFERAY_UPGRADE_ENABLED=\${LCP_LIFERAY_UPGRADE_ENABLED:-}"
 		write "            - LCP_SECRET_DATABASE_HOST=database"
@@ -184,11 +196,17 @@ function generate_configuration {
 
 	write "services:"
 	write "    antivirus:"
+
+	write_deploy 1G
+
 	write "        image: clamav/clamav:1.0.1-1"
 	write "        ports:"
 	write "            - \"3310:3310\""
 	write "    database:"
 	write "        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --character-set-filesystem=utf8mb4 --default-authentication-plugin=mysql_native_password --max_allowed_packet=256M --tls-version=''"
+
+	write_deploy 1G
+
 	write "        environment:"
 	write "            - MYSQL_DATABASE=lportal"
 	write "            - MYSQL_PASSWORD=password"
@@ -207,6 +225,9 @@ function generate_configuration {
 
 	write "    search:"
 	write "        build: ./build/search"
+
+	write_deploy 2G
+
 	write "        environment:"
 	write "            - discovery.type=single-node"
 	write "            - xpack.ml.enabled=false"
