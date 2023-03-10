@@ -4,6 +4,8 @@ class pts_users::users::jenkins {
 
   accounts::user { $user:
     comment            => "Jenkins (${pts_users::users::hostname_uppercase})",
+	uid                => 1000,
+	gid                => 1000,
     groups             => [ 'docker', 'ptsaccess' ],
     sshkey_custom_path => "/etc/ssh/auths/${user}.pub",
     sshkey_owner       => 'root',
