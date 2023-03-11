@@ -47,6 +47,13 @@ hosts:
             - liferay
             - log-proxy
             - web-server
+<<<<<<< HEAD
+    web2:
+        ip: 10.111.111.102
+        services:
+            - liferay
+            - log-proxy
+            - web-server
     web2:
         ip: 10.111.111.102
         services:
