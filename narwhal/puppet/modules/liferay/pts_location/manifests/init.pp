@@ -8,6 +8,15 @@ class pts_location {
   }
 
   case $::networkdefault {
+    '10.111.111.0': {
+      $location = 'lfr-bpo-intra'
+      $prompt_host_color = 'blue'
+      $puppet_server_hostname = 'bob1.bud.liferay.com'
+      $puppet_server_ip = '192.168.233.201'
+      $puppet_server_alias = 'pts-bpo.bud.liferay.com'
+      $timezone = 'Europe/Budapest'
+    }
+
     '192.168.232.0': {
       $location = 'bpo-ci'
       $prompt_host_color = 'cyan'

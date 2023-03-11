@@ -3,7 +3,9 @@ class pts_system {
   Class['pts_ssh'] -> Class['pts_users']
 
   include pts_location
+  include pts_packages
   include pts_puppet_agent
+  include pts_schedule
   include pts_ssh
   include pts_timezone
   include pts_users

@@ -9,7 +9,7 @@ class pts_ssh {
       'PasswordAuthentication' => 'no',
       'PermitRootLogin'        => 'no',
       'PrintMotd'              => 'yes',
-      'X11Forwarding'          => 'no',
+      'X11Forwarding'          => 'yes',
       'UseDNS'                 => 'no',
     },
   }
