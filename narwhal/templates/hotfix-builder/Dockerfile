@@ -10,5 +10,3 @@ ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_hotfix_builder_entrypoint.sh"]
 ENV ANT_OPTS="-Xmx10G"
 
 COPY resources/usr/local/bin/* /usr/local/bin/
-
-USER liferay
