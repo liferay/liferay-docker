@@ -149,6 +149,7 @@ function create_documentation {
 		else
 			writeln ","
 		fi
+
 		writeln "        {"
 		writeln "            \"path\": \"${file}\","
 		writeln "            \"checksum\": \"${checksum}\""
