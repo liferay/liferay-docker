@@ -352,7 +352,7 @@ function next_step {
 function package {
 	lcd "${BUILD_DIR}"/hotfix
 
-	rm checksums removed_files
+	rm -f ../liferay-hotfix-"${NARWHAL_BUILD_ID}".zip checksums removed_files
 
 	zip -r ../liferay-hotfix-"${NARWHAL_BUILD_ID}".zip ./*
 
