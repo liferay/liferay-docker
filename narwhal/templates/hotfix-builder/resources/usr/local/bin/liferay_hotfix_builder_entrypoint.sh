@@ -101,6 +101,41 @@ function compile_dxp {
 	return ${exit_code}
 }
 
+function create_documentation {
+	function write {
+		echo "${1}" >> "${BUILD_DIR}/hotfix/hotfix_documentation.json"
+	}
+
+	write "{"
+	write "    \"removed\" :["
+	#write "      "MODULES_BASE_PATH/com.liferay.journal.web-4.0.86.jar",
+	write "    ],"
+	write "    \"added\" :["
+	#{
+	#  "path": "MODULES_BASE_PATH/com.liferay.journal.web-4.0.86-hotfix-999.jar",
+	#  "checksum" : "aaaabbbb22223333"},
+	write "    ],"
+	write "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
+	write "    \"build\": {"
+	write "        \"date\": \"$(date)\","
+	write "        \"git-revision\": \"TBD\","
+	write "        \"id\": \"219379428\","
+	write "        \"builder-revision\": \"TBD\""
+	write "    },"
+	write "    \"patch\": {"
+	write "        \"built-for\": \"TBD\","
+	write "        \"id\": \"hotfix-1-7413\","
+	write "        \"name\": \"hotfix-999\","
+	write "        \"product\": \"7413\","
+	write "        \"requirements\": \"${DXP_VERSION}\""
+	write "    },"
+	write "    \"patching-tool\": {"
+	write "        \"incompatible-version-message\": \"Please update Patching Tool to version 4.0.2 or higher in order to use this patch.\","
+	write "        \"version\": \"4002\""
+	write "    }"
+	write "}"
+}
+
 function create_folders {
 	BUILD_DIR=/opt/liferay/build
 
@@ -126,7 +161,7 @@ function create_hotfix {
 			then
 				echo "Deleted ${deleted_file}"
 
-				echo "${deleted_file}" >> "${BUILD_DIR}"/hotfix/deleted_files.txt
+				echo "${deleted_file}" >> "${BUILD_DIR}"/hotfix/removed_files.txt
 			fi
 		elif (echo "${change}" | grep "^Only in ${PATCHED_DIR}" &>/dev/null)
 		then
@@ -138,8 +173,6 @@ function create_hotfix {
 			then
 				echo "New file ${new_file}"
 				add_file "${new_file}"
-
-				echo "${new_file}" >> "${BUILD_DIR}"/hotfix/new_files.txt
 			fi
 		else
 			local changed_file=${change#Files }
@@ -242,6 +275,8 @@ function main {
 	time_run create_hotfix
 
 	time_run calculate_checksums
+
+	time_run create_documentation
 
 	time_run package
 
