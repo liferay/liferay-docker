@@ -1,7 +1,9 @@
 #!/bin/bash
 
 function add_file {
-	file_dir=$(dirname "${1}")
+	local file_name=$(transform_file_name "${1}")
+
+	local file_dir=$(dirname "${file_name}")
 
 	mkdir -p "${BUILD_DIR}/hotfix/binaries/${file_dir}"
 
@@ -113,7 +115,7 @@ function create_documentation {
 	write "    ],"
 	write "    \"added\" :["
 
-	while read -r line < "${BUILD_DIR}"/hotfix/checksums
+	while read -r line
 	do
 		local checksum=${line%% *}
 		local file=${line##* ./}
@@ -122,7 +124,7 @@ function create_documentation {
 		write "            \"path\": \"${file}\","
 		write "            \"checksum\": \"${checksum}\""
 		write "        },"
-	done
+	done < "${BUILD_DIR}"/hotfix/checksums
 
 	write "    ],"
 	write "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
@@ -135,7 +137,7 @@ function create_documentation {
 	write "    \"patch\": {"
 	write "        \"built-for\": \"TBD\","
 	write "        \"id\": \"hotfix-1-7413\","
-	write "        \"name\": \"hotfix-999\","
+	write "        \"name\": \"hotfix-1\","
 	write "        \"product\": \"7413\","
 	write "        \"requirements\": \"${DXP_VERSION}\""
 	write "    },"
@@ -391,6 +393,14 @@ function time_run {
 			exit ${exit_code}
 		fi
 	fi
+}
+
+function transform_file_name {
+	local file_name=$(echo "${1}" | sed -e s#osgi/modules#MODULES_BASE_PATH#)
+
+	file_name=$(echo "${file_name}" | sed -e s#tomcat.*/webapps/ROOT#WAR_PATH#)
+
+	echo "${file_name}"
 }
 
 main
