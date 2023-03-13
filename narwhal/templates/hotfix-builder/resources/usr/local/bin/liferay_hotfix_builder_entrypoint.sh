@@ -13,7 +13,7 @@ function calculate_checksums {
 
 	find . -print0 | while IFS= read -r -d '' file
 	do
-		md5sum "${file}" >> ../checksums.txt
+		md5sum "${file}" >> ../checksums
 	done
 }
 
@@ -104,6 +104,7 @@ function compile_dxp {
 function create_documentation {
 	function write {
 		echo "${1}" >> "${BUILD_DIR}/hotfix/hotfix_documentation.json"
+		echo "${1}"
 	}
 
 	write "{"
@@ -111,9 +112,18 @@ function create_documentation {
 	#write "      "MODULES_BASE_PATH/com.liferay.journal.web-4.0.86.jar",
 	write "    ],"
 	write "    \"added\" :["
-	#{
-	#  "path": "MODULES_BASE_PATH/com.liferay.journal.web-4.0.86-hotfix-999.jar",
-	#  "checksum" : "aaaabbbb22223333"},
+
+	while read -r line < "${BUILD_DIR}"/hotfix/checksums
+	do
+		local checksum=${line%% *}
+		local file=${line##* ./}
+
+		write "        {"
+		write "            \"path\": \"${file}\","
+		write "            \"checksum\": \"${checksum}\""
+		write "        },"
+	done
+
 	write "    ],"
 	write "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
 	write "    \"build\": {"
