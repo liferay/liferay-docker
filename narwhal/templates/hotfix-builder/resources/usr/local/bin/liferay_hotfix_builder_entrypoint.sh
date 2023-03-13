@@ -205,7 +205,7 @@ function create_hotfix {
 			then
 				echo "Removed ${removed_file}"
 
-				echo "${removed_file}" >> "${BUILD_DIR}"/hotfix/removed_files
+				transform_file_name "${removed_file}" >> "${BUILD_DIR}"/hotfix/removed_files
 			fi
 		elif (echo "${change}" | grep "^Only in ${PATCHED_DIR}" &>/dev/null)
 		then
