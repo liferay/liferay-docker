@@ -105,47 +105,78 @@ function compile_dxp {
 
 function create_documentation {
 	function write {
-		echo "${1}" >> "${BUILD_DIR}/hotfix/hotfix_documentation.json"
-		echo "${1}"
+		echo -en "${1}" >> "${BUILD_DIR}/hotfix/hotfix_documentation.json"
+		echo -en "${1}"
 	}
 
-	write "{"
-	write "    \"removed\" :["
-	#write "      "MODULES_BASE_PATH/com.liferay.journal.web-4.0.86.jar",
-	write "    ],"
-	write "    \"added\" :["
+	function writeln {
+		write "${1}\n"
+	}
+
+	writeln "{"
+	writeln "    \"removed\" :["
+
+	if [ -e "${BUILD_DIR}"/hotfix/removed_files ]
+	then
+		local first_line=true
+		while read -r file
+		do
+			if [ "${first_line}" = true ]
+			then
+				first_line=false
+			else
+				writeln ","
+			fi
+
+			write "        \"file\": \"${file}\""
+		done < "${BUILD_DIR}"/hotfix/removed_files
+
+		writeln ""
+	fi
+
+	writeln "    ],"
+	writeln "    \"added\" :["
+
+	local first_line=true
 
 	while read -r line
 	do
 		local checksum=${line%% *}
 		local file=${line##* ./}
-
-		write "        {"
-		write "            \"path\": \"${file}\","
-		write "            \"checksum\": \"${checksum}\""
-		write "        },"
+		if [ "${first_line}" = true ]
+		then
+			first_line=false
+		else
+			writeln ","
+		fi
+		writeln "        {"
+		writeln "            \"path\": \"${file}\","
+		writeln "            \"checksum\": \"${checksum}\""
+		write "        }"
 	done < "${BUILD_DIR}"/hotfix/checksums
 
-	write "    ],"
-	write "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
-	write "    \"build\": {"
-	write "        \"date\": \"$(date)\","
-	write "        \"git-revision\": \"TBD\","
-	write "        \"id\": \"219379428\","
-	write "        \"builder-revision\": \"TBD\""
-	write "    },"
-	write "    \"patch\": {"
-	write "        \"built-for\": \"TBD\","
-	write "        \"id\": \"hotfix-1-7413\","
-	write "        \"name\": \"hotfix-1\","
-	write "        \"product\": \"7413\","
-	write "        \"requirements\": \"${DXP_VERSION}\""
-	write "    },"
-	write "    \"patching-tool\": {"
-	write "        \"incompatible-version-message\": \"Please update Patching Tool to version 4.0.2 or higher in order to use this patch.\","
-	write "        \"version\": \"4002\""
-	write "    }"
-	write "}"
+	writeln ""
+
+	writeln "    ],"
+	writeln "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
+	writeln "    \"build\": {"
+	writeln "        \"date\": \"$(date)\","
+	writeln "        \"git-revision\": \"TBD\","
+	writeln "        \"id\": \"219379428\","
+	writeln "        \"builder-revision\": \"TBD\""
+	writeln "    },"
+	writeln "    \"patch\": {"
+	writeln "        \"built-for\": \"TBD\","
+	writeln "        \"id\": \"hotfix-1-7413\","
+	writeln "        \"name\": \"hotfix-1\","
+	writeln "        \"product\": \"7413\","
+	writeln "        \"requirements\": \"${DXP_VERSION}\""
+	writeln "    },"
+	writeln "    \"patching-tool\": {"
+	writeln "        \"incompatible-version-message\": \"Please update Patching Tool to version 4.0.2 or higher in order to use this patch.\","
+	writeln "        \"version\": \"4002\""
+	writeln "    }"
+	writeln "}"
 }
 
 function create_folders {
@@ -164,16 +195,16 @@ function create_hotfix {
 	do
 		if (echo "${change}" | grep "^Only in ${UPDATE_DIR}" &>/dev/null)
 		then
-			local deleted_file=${change#Only in }
-			deleted_file=$(echo "${deleted_file}" | sed -e "s#: #/#" | sed -e "s#${UPDATE_DIR}##")
-			deleted_file=${deleted_file#/}
-			echo "${deleted_file}"
+			local removed_file=${change#Only in }
+			removed_file=$(echo "${removed_file}" | sed -e "s#: #/#" | sed -e "s#${UPDATE_DIR}##")
+			removed_file=${removed_file#/}
+			echo "${removed_file}"
 
-			if (in_scope "${deleted_file}")
+			if (in_scope "${removed_file}")
 			then
-				echo "Deleted ${deleted_file}"
+				echo "Removed ${removed_file}"
 
-				echo "${deleted_file}" >> "${BUILD_DIR}"/hotfix/removed_files.txt
+				echo "${removed_file}" >> "${BUILD_DIR}"/hotfix/removed_files
 			fi
 		elif (echo "${change}" | grep "^Only in ${PATCHED_DIR}" &>/dev/null)
 		then
@@ -319,6 +350,8 @@ function next_step {
 
 function package {
 	lcd "${BUILD_DIR}"/hotfix
+
+	rm checksums removed_files
 
 	zip -r ../liferay-hotfix-"${NARWHAL_BUILD_ID}".zip ./*
 
