@@ -39,6 +39,8 @@ function build_docker_image {
 }
 
 function main {
+	delete_local_images "${LIFERAY_DOCKER_REPOSITORY}/noop"
+
 	make_temp_directory templates/noop
 
 	log_in_to_docker_hub
