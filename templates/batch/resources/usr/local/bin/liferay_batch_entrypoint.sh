@@ -6,7 +6,7 @@
 # BATCH_DIRECTORY       (optional) the top directory in which to locate batch
 #                       data files (default to "/batch")
 # BATCH_FILE_EXTENSION  (optional) the extension of batch data files to process
-#                       (default to "*.jsont")
+#                       (default to "*.batch-engine-data.json")
 # BATCH_OAUTH_APP_ERC   (required) specify by external reference code the oauth
 #                       application to use
 # BATCH_VERBOSE         (optional) sets the verbose output (any value will be
@@ -14,7 +14,7 @@
 #
 
 BATCH_DIRECTORY=${BATCH_DIRECTORY:-/batch}
-BATCH_FILE_EXTENSION=${BATCH_FILE_EXTENSION:-*.jsont}
+BATCH_FILE_EXTENSION=${BATCH_FILE_EXTENSION:-*.batch-engine-data.json}
 
 if [ -e /etc/liferay/localdev/rootCA.pem ]
 then
