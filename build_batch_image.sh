@@ -15,7 +15,7 @@ function build_docker_image {
 
 		docker buildx build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-			--build-arg LABEL_NAME="Liferay BATCH" \
+			--build-arg LABEL_NAME="Liferay Batch" \
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${image_version}" \
@@ -29,7 +29,7 @@ function build_docker_image {
 
 		docker build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-			--build-arg LABEL_NAME="Liferay BATCH" \
+			--build-arg LABEL_NAME="Liferay Batch" \
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${image_version}" \
@@ -39,6 +39,8 @@ function build_docker_image {
 }
 
 function main {
+	delete_local_images "${LIFERAY_DOCKER_REPOSITORY}/batch"
+
 	make_temp_directory templates/batch
 
 	log_in_to_docker_hub
