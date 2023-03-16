@@ -28,7 +28,7 @@ then
 fi
 
 function main {
-	local data_files=$(find ${LIFERAY_BATCH_DIRECTORY} -type f -name "$LIFERAY_BATCH_FILE_EXTENSION")
+	local data_files=$(find ${LIFERAY_BATCH_DIRECTORY} -type f -name "${LIFERAY_BATCH_FILE_EXTENSION}")
 
 	if [ "${data_files}" == "" ]
 	then
@@ -36,7 +36,7 @@ function main {
 		exit 1
 	fi
 
-	if [ "$LIFERAY_BATCH_OAUTH_APP_ERC" == "" ]
+	if [ "${LIFERAY_BATCH_OAUTH_APP_ERC}" == "" ]
 	then
 		cat <<EOF
 No OAuth Profile was selected for JOB processing!
@@ -88,7 +88,7 @@ EOF
 	local token_result=$(\
 		curl \
 			-s \
-			$LIFERAY_BATCH_CURL_FLAGS \
+			${LIFERAY_BATCH_CURL_FLAGS} \
 			-X POST \
 			"${LIFERAY_BATCH_DXP_SERVER_PROTOCOL}://${LIFERAY_BATCH_DXP_MAIN_DOMAIN}${LIFERAY_BATCH_OAUTH2_TOKEN_URI}" \
 			-H 'Content-type: application/x-www-form-urlencoded' \
@@ -100,7 +100,7 @@ EOF
 		echo "token_result: ${token_result}"
 	fi
 
-	LIFERAY_BATCH_ACCESS_TOKEN=$(jq -r '.access_token' <<< $token_result)
+	LIFERAY_BATCH_ACCESS_TOKEN=$(jq -r '.access_token' <<< ${token_result})
 
 	if [ ! -z ${LIFERAY_BATCH_VERBOSE:+x} ]
 	then
@@ -113,7 +113,7 @@ EOF
 		exit 1
 	fi
 
-	for i in $data_files
+	for i in ${data_files}
 	do
 		process_batch $i
 	done
@@ -140,7 +140,7 @@ process_batch() {
 
 	local parameters=$(jq -r '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' ${1} 2>/dev/null)
 
-	if [ "$parameters" != "" ]
+	if [ "${parameters}" != "" ]
 	then
 		parameters="?${parameters}"
 	fi
@@ -153,7 +153,7 @@ process_batch() {
 	local post_result=$(\
 		curl \
 			-s \
-			$BATCH_CURL_FLAGS \
+			${LIFERAY_BATCH_CURL_FLAGS} \
 			-X 'POST' \
 			"${LIFERAY_BATCH_DXP_SERVER_PROTOCOL}://${LIFERAY_BATCH_DXP_MAIN_DOMAIN}${href}${parameters}" \
 			-H 'accept: application/json' \
@@ -173,16 +173,16 @@ process_batch() {
 		echo "post_result=${post_result}"
 	fi
 
-	local external_reference_code=$(jq -r '.externalReferenceCode' <<< "$post_result")
+	local external_reference_code=$(jq -r '.externalReferenceCode' <<< "${post_result}")
 
-	local execute_status=$(jq -r '.executeStatus//.status' <<< "$post_result")
+	local execute_status=$(jq -r '.executeStatus//.status' <<< "${post_result}")
 
 	until [ "${execute_status}" == "COMPLETED" ] || [ "${execute_status}" == "FAILED" ] || [ "${execute_status}" == "NOT_FOUND" ]
 	do
 		local status_result=$(\
 			curl \
 				-s \
-				$BATCH_CURL_FLAGS \
+				${LIFERAY_BATCH_CURL_FLAGS} \
 				-X 'GET' \
 				"${LIFERAY_BATCH_DXP_SERVER_PROTOCOL}://${LIFERAY_BATCH_DXP_MAIN_DOMAIN}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}" \
 				-H 'accept: application/json' \
