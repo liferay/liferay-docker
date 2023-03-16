@@ -33,24 +33,24 @@ function build_batch_image {
 	if [[ $(get_latest_docker_hub_version "batch") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
-		echo "Docker image BATCH is up to date."
+		echo "Docker image Batch is up to date."
 
 		return
 	fi
 
 	echo ""
-	echo "Building Docker image BATCH."
+	echo "Building Docker image Batch."
 	echo ""
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_batch_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/batch.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: BATCH" >> "${LOGS_DIR}/results"
+		echo "FAILED: Batch" >> "${LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: BATCH" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Batch" >> "${LOGS_DIR}/results"
 	fi
 }
 
