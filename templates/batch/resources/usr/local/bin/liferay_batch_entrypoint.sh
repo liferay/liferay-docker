@@ -56,7 +56,7 @@ EOF
 
 	if [ ! -z ${LIFERAY_BATCH_VERBOSE:+x} ]
 	then
-		echo "LIFERAY_BATCH_OAUTH_APP_ERC = ${LIFERAY_BATCH_OAUTH_APP_ERC}"
+		echo "LIFERAY_BATCH_OAUTH_APP_ERC=${LIFERAY_BATCH_OAUTH_APP_ERC}"
 	fi
 
 	if [ ! -z ${LIFERAY_BATCH_VERBOSE:+x} ]
@@ -76,12 +76,12 @@ EOF
 	if [ ! -z ${LIFERAY_BATCH_VERBOSE:+x} ]
 	then
 		echo "########################"
-		echo "LIFERAY_BATCH_DXP_MAIN_DOMAIN: ${LIFERAY_BATCH_DXP_MAIN_DOMAIN}"
-		echo "LIFERAY_BATCH_DXP_SERVER_PROTOCOL: ${LIFERAY_BATCH_DXP_SERVER_PROTOCOL}"
-		echo "LIFERAY_BATCH_OAUTH_APP_ERC: ${LIFERAY_BATCH_OAUTH_APP_ERC}"
-		echo "LIFERAY_BATCH_OAUTH2_CLIENT_ID: ${LIFERAY_BATCH_OAUTH2_CLIENT_ID}"
-		echo "LIFERAY_BATCH_OAUTH2_CLIENT_SECRET: ${LIFERAY_BATCH_OAUTH2_CLIENT_SECRET}"
-		echo "LIFERAY_BATCH_OAUTH2_TOKEN_URI: ${LIFERAY_BATCH_OAUTH2_TOKEN_URI}"
+		echo "LIFERAY_BATCH_DXP_MAIN_DOMAIN=${LIFERAY_BATCH_DXP_MAIN_DOMAIN}"
+		echo "LIFERAY_BATCH_DXP_SERVER_PROTOCOL=${LIFERAY_BATCH_DXP_SERVER_PROTOCOL}"
+		echo "LIFERAY_BATCH_OAUTH_APP_ERC=${LIFERAY_BATCH_OAUTH_APP_ERC}"
+		echo "LIFERAY_BATCH_OAUTH2_CLIENT_ID=${LIFERAY_BATCH_OAUTH2_CLIENT_ID}"
+		echo "LIFERAY_BATCH_OAUTH2_CLIENT_SECRET=${LIFERAY_BATCH_OAUTH2_CLIENT_SECRET}"
+		echo "LIFERAY_BATCH_OAUTH2_TOKEN_URI=${LIFERAY_BATCH_OAUTH2_TOKEN_URI}"
 		echo "########################"
 	fi
 
@@ -97,7 +97,7 @@ EOF
 
 	if [ ! -z ${LIFERAY_BATCH_VERBOSE:+x} ]
 	then
-		echo "token_result: ${token_result}"
+		echo "token_result=${token_result}"
 	fi
 
 	LIFERAY_BATCH_ACCESS_TOKEN=$(jq -r '.access_token' <<< ${token_result})
@@ -191,7 +191,7 @@ process_batch() {
 
 		execute_status=$(jq -r '.executeStatus//.status' <<< "$status_result")
 
-		echo "execute_status: ${execute_status}"
+		echo "execute_status=${execute_status}"
 	done
 
 	if [ "${execute_status}" == "FAILED" ]
