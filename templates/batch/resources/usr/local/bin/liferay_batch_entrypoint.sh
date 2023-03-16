@@ -28,9 +28,9 @@ then
 fi
 
 function main {
-	local DATA_FILES=$(find ${LIFERAY_BATCH_DIRECTORY} -type f -name "$LIFERAY_BATCH_FILE_EXTENSION")
+	local data_files=$(find ${LIFERAY_BATCH_DIRECTORY} -type f -name "$LIFERAY_BATCH_FILE_EXTENSION")
 
-	if [ "${DATA_FILES}" == "" ]
+	if [ "${data_files}" == "" ]
 	then
 		echo "There are no data files. Exiting with nothing to do!"
 		exit 1
@@ -85,7 +85,7 @@ EOF
 		echo "########################"
 	fi
 
-	local TOKEN_RESULT=$(\
+	local token_result=$(\
 		curl \
 			-s \
 			$LIFERAY_BATCH_CURL_FLAGS \
@@ -97,10 +97,10 @@ EOF
 
 	if [ ! -z ${LIFERAY_BATCH_VERBOSE:+x} ]
 	then
-		echo "TOKEN_RESULT: ${TOKEN_RESULT}"
+		echo "token_result: ${token_result}"
 	fi
 
-	LIFERAY_BATCH_ACCESS_TOKEN=$(jq -r '.access_token' <<< $TOKEN_RESULT)
+	LIFERAY_BATCH_ACCESS_TOKEN=$(jq -r '.access_token' <<< $token_result)
 
 	if [ ! -z ${LIFERAY_BATCH_VERBOSE:+x} ]
 	then
@@ -113,7 +113,7 @@ EOF
 		exit 1
 	fi
 
-	for i in $DATA_FILES
+	for i in $data_files
 	do
 		process_batch $i
 	done
@@ -123,46 +123,46 @@ process_batch() {
 	echo "########################"
 	echo "######### BATCH ${1}"
 
-	local BATCH_ITEMS=$(jq -r '.items' ${1})
+	local items=$(jq -r '.items' ${1})
 
-	local BATCH_HREF=$(jq -r '.actions.createBatch.href' ${1})
-	BATCH_HREF="${BATCH_HREF#*://*/}"
+	local href=$(jq -r '.actions.createBatch.href' ${1})
+	href="${href#*://*/}"
 
-	if [[ ! $BATCH_HREF =~ ^/.* ]]
+	if [[ ! $href =~ ^/.* ]]
 	then
-		BATCH_HREF="/${BATCH_HREF}"
+		href="/${href}"
 	fi
 
 	if [ ! -z ${LIFERAY_BATCH_VERBOSE:+x} ]
 	then
-		echo "BATCH_HREF=${BATCH_HREF}"
+		echo "href=${href}"
 	fi
 
-	local PARAMETERS=$(jq -r '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' ${1} 2>/dev/null)
+	local parameters=$(jq -r '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' ${1} 2>/dev/null)
 
-	if [ "$PARAMETERS" != "" ]
+	if [ "$parameters" != "" ]
 	then
-		PARAMETERS="?${PARAMETERS}"
+		parameters="?${parameters}"
 	fi
 
 	if [ ! -z ${LIFERAY_BATCH_VERBOSE:+x} ]
 	then
-		echo "PARAMETERS=${PARAMETERS}"
+		echo "parameters=${parameters}"
 	fi
 
-	local RESULT=$(\
+	local post_result=$(\
 		curl \
 			-s \
 			$BATCH_CURL_FLAGS \
 			-X 'POST' \
-			"${LIFERAY_BATCH_DXP_SERVER_PROTOCOL}://${LIFERAY_BATCH_DXP_MAIN_DOMAIN}${BATCH_HREF}${PARAMETERS}" \
+			"${LIFERAY_BATCH_DXP_SERVER_PROTOCOL}://${LIFERAY_BATCH_DXP_MAIN_DOMAIN}${href}${parameters}" \
 			-H 'accept: application/json' \
 			-H 'Content-Type: application/json' \
 			-H "Authorization: Bearer ${LIFERAY_BATCH_ACCESS_TOKEN}" \
-			-d "${BATCH_ITEMS}" \
+			-d "${items}" \
 		| jq -r '.')
 
-	if [ "${RESULT}x" == "x" ]
+	if [ "${post_result}x" == "x" ]
 	then
 		echo "An error occured!"
 		exit 1
@@ -170,31 +170,31 @@ process_batch() {
 
 	if [ ! -z ${LIFERAY_BATCH_VERBOSE:+x} ]
 	then
-		echo "RESULT=${RESULT}"
+		echo "post_result=${post_result}"
 	fi
 
-	local BATCH_EXTERNAL_REFERENCE_CODE=$(jq -r '.externalReferenceCode' <<< "$RESULT")
+	local external_reference_code=$(jq -r '.externalReferenceCode' <<< "$post_result")
 
-	local BATCH_STATUS=$(jq -r '.executeStatus//.status' <<< "$RESULT")
+	local execute_status=$(jq -r '.executeStatus//.status' <<< "$post_result")
 
-	until [ "${BATCH_STATUS}" == "COMPLETED" ] || [ "${BATCH_STATUS}" == "FAILED" ] || [ "${BATCH_STATUS}" == "NOT_FOUND" ]
+	until [ "${execute_status}" == "COMPLETED" ] || [ "${execute_status}" == "FAILED" ] || [ "${execute_status}" == "NOT_FOUND" ]
 	do
-		local RESULT=$(\
+		local status_result=$(\
 			curl \
 				-s \
 				$BATCH_CURL_FLAGS \
 				-X 'GET' \
-				"${LIFERAY_BATCH_DXP_SERVER_PROTOCOL}://${LIFERAY_BATCH_DXP_MAIN_DOMAIN}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${BATCH_EXTERNAL_REFERENCE_CODE}" \
+				"${LIFERAY_BATCH_DXP_SERVER_PROTOCOL}://${LIFERAY_BATCH_DXP_MAIN_DOMAIN}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}" \
 				-H 'accept: application/json' \
 				-H "Authorization: Bearer ${LIFERAY_BATCH_ACCESS_TOKEN}" \
 			| jq -r '.')
 
-		BATCH_STATUS=$(jq -r '.executeStatus//.status' <<< "$RESULT")
+		execute_status=$(jq -r '.executeStatus//.status' <<< "$status_result")
 
-		echo "BATCH STATUS: ${BATCH_STATUS}"
+		echo "execute_status: ${execute_status}"
 	done
 
-	if [ "${BATCH_STATUS}" == "FAILED" ]
+	if [ "${execute_status}" == "FAILED" ]
 	then
 		exit 1
 	fi
