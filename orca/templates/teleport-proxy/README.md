@@ -1,7 +1,7 @@
 # Quick start guide
 
 ## single_server.yml
-- Add `teleport-proxy` and `teleport-agent-test` configs/ <env>.yml
+- Add `teleport-proxy` and `teleport-agent-test` configs/<ENV>.yml
 
 ## Setup teleport service
 - Create `configs/<env>.-github.yml` from the template file
@@ -22,7 +22,7 @@ teleport-proxy$ teleport_init.sh
 - After this the `teleport-agent-test` docker container should be able to find and use `tokent.txt` and start the service successfully.
 
 
-## install teleport on the local machine
+## install teleport on the client machine
 ```bash
 wget https://apt.releases.teleport.dev/gpg -O /etc/apt/teleport-archive-keyring.asc
 echo "deb [signed-by=/etc/apt/teleport-archive-keyring.asc] https://apt.releases.teleport.dev/ubuntu jammy stable/v12" > /etc/apt/sources.list.d/teleport.list
@@ -62,8 +62,8 @@ token is created via `teleport_init.sh
 $ teleport start --roles=node --token=/token.txt --auth-server=teleport-proxy
 ```
 
-## tsh ssh command to a backend server
-- hostname is : `<hiostname>-<clustername>`, as it is added on the proxy
+## tsh ssh shell access to a remote backend server
+- hostname is: `<hiostname>-<clustername>`, as it is added on the proxy
 
 ```bash
 tsh ssh tomposmiko@teleport-agent-test-localhost
