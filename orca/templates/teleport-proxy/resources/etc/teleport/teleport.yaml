@@ -18,6 +18,7 @@ teleport:
   diag_addr: ""
 auth_service:
   enabled: "yes"
+  cluster_name: demo.orca.lfr
   listen_addr: 0.0.0.0:3025
   proxy_listener_mode: multiplex
   authentication:
@@ -30,6 +31,8 @@ ssh_service:
     period: 1m0s
 proxy_service:
   enabled: "yes"
-  https_keypairs: []
+  https_keypairs:
+    - cert_file: /etc/teleport/server.crt
+      key_file: /etc/teleport/server.key
   https_keypairs_reload_interval: 0s
   acme: {}
