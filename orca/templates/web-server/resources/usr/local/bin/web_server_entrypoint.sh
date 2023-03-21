@@ -8,7 +8,10 @@ function generate_liferay_conf {
 	rm -f "/etc/apache2/sites-available/liferay.conf"
 
 	write "<VirtualHost *:80>"
+	write "    ServerName liferay-web"
 	write "    DocumentRoot /var/www/html"
+	write "    ErrorLog /proc/self/fd/2"
+	write "    CustomLog /proc/self/fd/1 vhost_combined"
 	write "    ProxyPreserveHost On"
 	write "    ProxyPass \"/\" \"balancer://cluster/\""
 	write "    ServerAdmin webmaster@localhost"
@@ -52,9 +55,9 @@ function start_apache2 {
 
 	source /etc/apache2/envvars
 
-	/usr/sbin/apache2 -k start
+	/usr/sbin/apache2 -DFOREGROUND
 
-	tail -f /var/log/apache2/error.log
+	#tail -f /var/log/apache2/error.log
 }
 
 main
