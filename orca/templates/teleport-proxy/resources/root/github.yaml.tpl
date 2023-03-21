@@ -11,7 +11,7 @@ spec:
   # Connector display name that will be shown on the Web UI login screen
   display: GitHub
   # Callback URL that will be called after successful authentication
-  redirect_url: https://localhost:3080/v1/webapi/github/callback
+  redirect_url: https://__GITHUB_REDIRECT_HOST__:3080/v1/webapi/github/callback
   # Mapping of org/team memberships onto allowed roles
   teams_to_roles:
     - organization: liferay-orca-test # GitHub organization name
