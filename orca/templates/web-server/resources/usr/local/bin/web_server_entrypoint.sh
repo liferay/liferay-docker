@@ -57,8 +57,6 @@ function start_apache2 {
 	source /etc/apache2/envvars
 
 	/usr/sbin/apache2 -DFOREGROUND
-
-	#tail -f /var/log/apache2/error.log
 }
 
 main
