@@ -2,14 +2,13 @@
 
 # USE THIS SCRIPT ON SINGLE SERVER CONFIGURATION FOR TESTING PURPOSES ONLY!
 
-
 function gen_github(){
 	# Configure GitHub authentication
 	# GitHub credentials defined in configs/<env>-github.yml
 	sed \
-		-e "s/__GITHUB_ID__/$GITHUB_ID/" \
-		-e "s/__GITHUB_REDIRECT_HOST__/$GITHUB_REDIRECT_HOST/" \
-		-e "s/__GITHUB_SECRET__/$GITHUB_SECRET/" \
+		-e "s@__GITHUB_ID__@$GITHUB_ID@" \
+		-e "s@__GITHUB_REDIRECT_HOST__@$GITHUB_REDIRECT_HOST@" \
+		-e "s@__GITHUB_SECRET__@$GITHUB_SECRET@" \
 		/root/github.yaml.tpl > /root/github.yaml
 	tctl create -f /root/github.yaml
 }
