@@ -41,11 +41,6 @@ hosts:
         services:
             - log-proxy
             - search
-    jumper:
-        ip: 10.111.111.10
-        services:
-            - log-proxy
-            - teleport-proxy
     web1:
         ip: 10.111.111.101
         services:
