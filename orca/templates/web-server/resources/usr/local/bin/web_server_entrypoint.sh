@@ -8,11 +8,9 @@ function generate_liferay_conf {
 	rm -f "/etc/apache2/sites-available/liferay.conf"
 
 	write "<VirtualHost *:80>"
-	write "    DocumentRoot /var/www/html"
-	write ""
 	write "    CustomLog /proc/self/fd/1 vhost_combined"
+	write "    DocumentRoot /var/www/html"
 	write "    ErrorLog /proc/self/fd/2"
-	write ""
 	write "    ProxyPreserveHost On"
 	write "    ProxyPass \"/\" \"balancer://cluster/\""
 	write "    ServerAdmin webmaster@localhost"
