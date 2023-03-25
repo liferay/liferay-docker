@@ -57,7 +57,7 @@ function build_service_db {
 	write 1 "        - MARIADB_GALERA_CLUSTER_NAME=liferay-db"
 	write 1 "        - MARIADB_GALERA_MARIABACKUP_PASSWORD_FILE=/tmp/orca-secrets/mysql_backup_password"
 	write 1 "        - MARIADB_GALERA_MARIABACKUP_USER=orca_mariabackup"
-	write 1 "        - MARIADB_GALERA_NODE_ADDRESS=$(query_configuration .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
+	write 1 "        - MARIADB_GALERA_NODE_ADDRESS=$(query_configuration .hosts."${ORCA_HOST}".ip "${SERVICE_HOST}")"
 	write 1 "        - MARIADB_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
 	write 1 "        - MARIADB_ROOT_HOST=localhost"
 	write 1 "        - MARIADB_ROOT_PASSWORD_FILE=/tmp/orca-secrets/mysql_root_password"
@@ -130,7 +130,7 @@ function build_service_liferay {
 	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_PORT=I\"3310\""
 	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_ANTIVIRUS_PERIOD_CLAMD_PERIOD_SCANNER_PERIOD_INTERNAL_PERIOD_CONFIGURATION_PERIOD__UPPERCASEC_LAMD_UPPERCASEA_NTIVIRUS_UPPERCASES_CANNER_UPPERCASEC_ONFIGURATION_UNDERLINE_TIMEOUT=I\"10000\""
 	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_NETWORK_UPPERCASEH_OST_UPPERCASEA_DDRESSES=\"${search_addresses}\""
-	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_OPERATION_UPPERCASEM_ODE=\"REMOTE\""
+	 write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_OPERATION_UPPERCASEM_ODE=\"REMOTE\""
 	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_SEARCH_PERIOD_ELASTICSEARCH_NUMBER7__PERIOD_CONFIGURATION_PERIOD__UPPERCASEE_LASTICSEARCH_UPPERCASEC_ONFIGURATION_UNDERLINE_PRODUCTION_UPPERCASEM_ODE_UPPERCASEE_NABLED=B\"true\""
 	write 1 "        - LIFERAY_CONFIGURATION_PERIOD_OVERRIDE_PERIOD_COM_PERIOD_LIFERAY_PERIOD_PORTAL_PERIOD_STORE_PERIOD_FILE_PERIOD_SYSTEM_PERIOD_CONFIGURATION_PERIOD__UPPERCASEA_DVANCED_UPPERCASEF_ILE_UPPERCASES_YSTEM_UPPERCASES_TORE_UPPERCASEC_ONFIGURATION_UNDERLINE_ROOT_UPPERCASED_IR=\"/opt/liferay/shared-volume/document-library\""
 	write 1 "        - LIFERAY_DISABLE_TRIAL_LICENSE=true"
@@ -138,9 +138,9 @@ function build_service_liferay {
 	write 1 "        - LIFERAY_DL_PERIOD_STORE_PERIOD_IMPL=com.liferay.portal.store.file.system.AdvancedFileSystemStore"
 	write 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver"
 	write 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE=/tmp/orca-secrets/mysql_liferay_password"
-	write 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://$(query_configuration .hosts.${ORCA_HOST}.configuration.liferay.db db-${ORCA_HOST})/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
+	write 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://$(query_configuration .hosts."${ORCA_HOST}".configuration.liferay.db db-"${ORCA_HOST}")/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false"
 	write 1 "        - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal"
-	write 1 "        - LIFERAY_JVM_OPTS=-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.host=0.0.0.0 -Dcom.sun.management.jmxremote.port=5000 -Dcom.sun.management.jmxremote.rmi.port=5000 -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=liferay -Djgroups.bind_addr=${SERVICE_HOST} -Djgroups.external_addr=$(query_configuration .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
+	write 1 "        - LIFERAY_JVM_OPTS=-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.host=0.0.0.0 -Dcom.sun.management.jmxremote.port=5000 -Dcom.sun.management.jmxremote.rmi.port=5000 -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=liferay -Djgroups.bind_addr=${SERVICE_HOST} -Djgroups.external_addr=$(query_configuration .hosts."${ORCA_HOST}".ip "${SERVICE_HOST}")"
 	write 1 "        - LIFERAY_SCHEMA_PERIOD_MODULE_PERIOD_BUILD_PERIOD_AUTO_PERIOD_UPGRADE=true"
 	write 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
 	write 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
@@ -258,7 +258,7 @@ function build_service_search {
 	write 1 "        - cluster.initial_master_nodes=$(query_services search service_name)"
 	write 1 "        - cluster.name=liferay-search"
 	write 1 "        - discovery.seed_hosts=$(query_services search host_port 9300 true)"
-	write 1 "        - network.publish_host=$(query_configuration .hosts.${ORCA_HOST}.ip ${SERVICE_HOST})"
+	write 1 "        - network.publish_host=$(query_configuration .hosts."${ORCA_HOST}".ip "${SERVICE_HOST}")"
 	write 1 "        - node.name=${SERVICE_HOST}"
 	write 1 "        - xpack.ml.enabled=false"
 	write 1 "        - xpack.monitoring.enabled=false"
@@ -309,9 +309,9 @@ function build_service_web_server {
 }
 
 function build_services {
-	mkdir -p builds/${VERSION}
+	mkdir -p builds/"${VERSION}"
 
-	rm -f builds/${VERSION}/docker-compose.yml
+	rm -f builds/"${VERSION}"/docker-compose.yml
 
 	write 0 "services:"
 
@@ -346,9 +346,9 @@ function build_services {
 		mkdir -p docker-build
 
 		cp -r templates/_common/* docker-build
-		cp -r templates/${SERVICE_NAME}/* docker-build
+		cp -r templates/"${SERVICE_NAME}"/* docker-build
 
-		build_service_$(echo ${SERVICE_NAME} | sed -e "s/-/_/g")
+		build_service_$(echo "${SERVICE_NAME}" | sed -e "s/-/_/g")
 
 		rm -fr docker-build
 	done
@@ -417,7 +417,7 @@ function docker_build {
 }
 
 function main {
-	check_usage ${@}
+	check_usage "${@}"
 
 	choose_configuration
 
@@ -425,7 +425,7 @@ function main {
 }
 
 function query_configuration {
-	local yq_output=$(yq ${1} < ${CONFIG_FILE})
+	local yq_output=$(yq "${1}" < ${CONFIG_FILE})
 
 	if [ "${yq_output}" == "null" ]
 	then
@@ -462,7 +462,7 @@ function query_services {
 							item="${service}-${host}"
 						fi
 					else
-						local host_ip=$(query_configuration .hosts.${host}.ip ${host})
+						local host_ip=$(query_configuration .hosts."${host}".ip "${host}")
 
 						if [ -n "${3}" ]
 						then
@@ -491,23 +491,23 @@ function query_services {
 }
 
 function write {
-	if [ ${1} -eq 0 ]
+	if [ "${1}" -eq 0 ]
 	then
-		echo "${2}" >> builds/${VERSION}/docker-compose.yml
+		echo "${2}" >> builds/"${VERSION}"/docker-compose.yml
 
 		return
 	fi
 
 	local line=""
 
-	for i in $(seq ${1})
+	for i in $(seq "${1}")
 	do
 		line="${line}    "
 	done
 
 	line="${line}${2}"
 
-	echo "${line}" >> builds/${VERSION}/docker-compose.yml
+	echo "${line}" >> builds/"${VERSION}"/docker-compose.yml
 }
 
-main ${@}
+main "${@}"
