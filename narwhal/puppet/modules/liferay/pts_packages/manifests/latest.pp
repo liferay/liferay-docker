@@ -35,7 +35,7 @@ class pts_packages::latest {
     'mc',
     'mtr-tiny',
     'net-tools',
-	'netplan.io',
+    'netplan.io',
     'ngrep',
     'openssl',
     'passwd',
