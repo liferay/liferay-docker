@@ -36,12 +36,23 @@ function create_dir {
 }
 
 function create_dirs {
-	create_dir "/opt/liferay/db-data" 1001
-	create_dir "/opt/liferay/jenkins-home" 1000
-	create_dir "/opt/liferay/monitoring-proxy-db-data" 1001
-	create_dir "/opt/liferay/shared-volume" 1000
-	create_dir "/opt/liferay/shared-volume/document-library" 1000
-	create_dir "/opt/liferay/vault/data" 1000
+	local db_uid=1001
+
+	local default_uid=1000
+
+	if [ "${DOCKER_HOST}" == "unix:///run/user/$(id -u)/docker.sock" ]
+	then
+		db_uid=1000
+		default_uid=166535
+	fi
+
+	create_dir "/opt/liferay/backup" ${default_uid}
+	create_dir "/opt/liferay/db-data" ${db_uid}
+	create_dir "/opt/liferay/jenkins-home" ${default_uid}
+	create_dir "/opt/liferay/monitoring-proxy-db-data" ${db_uid}
+	create_dir "/opt/liferay/shared-volume" ${default_uid}
+	create_dir "/opt/liferay/shared-volume/document-library" ${default_uid}
+	create_dir "/opt/liferay/vault/data" ${default_uid}
 }
 
 function main {

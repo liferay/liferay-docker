@@ -9,8 +9,6 @@ RUN apt-get update && \
 	apt-get clean && \
 	rm -fr /var/lib/apt/lists/*
 
-USER 1001
-
 CMD [ "/opt/bitnami/scripts/mariadb-galera/run.sh" ]
 
 COPY resources/usr/local/bin /usr/local/bin/
