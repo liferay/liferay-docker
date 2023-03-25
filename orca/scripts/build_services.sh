@@ -145,6 +145,8 @@ function build_service_liferay {
 	write 1 "        - LIFERAY_JVM_OPTS=-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.host=0.0.0.0 -Dcom.sun.management.jmxremote.port=5000 -Dcom.sun.management.jmxremote.rmi.port=5000 -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=liferay -Djgroups.bind_addr=${SERVICE_HOST} -Djgroups.external_addr=$(query_configuration .hosts."${ORCA_HOST}".ip "${SERVICE_HOST}")"
 	write 1 "        - LIFERAY_SCHEMA_PERIOD_MODULE_PERIOD_BUILD_PERIOD_AUTO_PERIOD_UPGRADE=true"
 	write 1 "        - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
+	write 1 "        - LIFERAY_THREAD_DUMP_PROBE_ENABLED=true"
+	write 1 "        - LIFERAY_THREAD_DUMPS_DIRECTORY=/opt/liferay/data/sre/thread_dumps"
 	write 1 "        - LIFERAY_TOMCAT_AJP_PORT=8009"
 	write 1 "        - LIFERAY_TOMCAT_JVM_ROUTE=${ORCA_HOST}"
 	write 1 "        - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true"
@@ -161,6 +163,7 @@ function build_service_liferay {
 	write 1 "        - \"7801:7801\""
 	write 1 "        - \"8009:8009\""
 	write 1 "        - \"8080:8080\""
+	write 1 "    restart: always"
 	write 1 "    volumes:"
 	write 1 "        - /opt/liferay/shared-volume:/opt/liferay/data"
 }

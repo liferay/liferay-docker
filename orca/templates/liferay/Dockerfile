@@ -1,5 +1,5 @@
-#FROM liferay/dxp:7.4.13-u45-d5.0.1-20221006125539
-FROM liferay/dxp@sha256:8a288a450ca6835e2fa4a3d47f302d4f46ea69a7a467f0ba5ecbda1c674981a4
+#FROM liferay/dxp:7.4.13-u69-d5.0.19-20230322143344
+FROM liferay/dxp@sha256:cb01f23843fc4bb66285778795eb0dce1c7a8fb468668c1c3b0fb370c06174e1
 
 USER 0
 
@@ -13,7 +13,7 @@ COPY resources/usr/local/bin /usr/local/bin/
 COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
 
 HEALTHCHECK --retries=3 \
-	CMD /usr/local/bin/probe_thread_dump.sh -d "http://localhost" -f "/c/portal/robots" -p 8080 -t 20 
+	CMD /usr/local/bin/probe_thread_dump.sh -d "http://localhost" -f "/c/portal/robots" -p 8080 -t 20
 
 USER liferay
 
