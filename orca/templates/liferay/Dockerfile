@@ -12,6 +12,9 @@ COPY --chown=liferay:liferay resources/opt/liferay /opt/liferay/
 COPY resources/usr/local/bin /usr/local/bin/
 COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
 
+HEALTHCHECK --retries=3 \
+	CMD /usr/local/bin/probe_thread_dump.sh -d "http://localhost" -f "/c/portal/robots" -p 8080 -t 20 
+
 USER liferay
 
 RUN /usr/local/bin/install_patch_on_build.sh

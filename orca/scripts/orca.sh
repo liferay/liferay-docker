@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_common.sh
+
 function check_usage {
 	if [ ! -n "${1}" ]
 	then
@@ -14,9 +16,9 @@ function check_usage {
 		echo "    setup_shared_volume: Enable GlusterFS and create the necessary mount point for the shared volume"
 		echo "    ssh <service>: Log in to the service's container"
 		echo "    unseal: Unseal the vault operator"
-		echo "    up: Validate the configuration and start the services with \"docker-compose up\""
+		echo "    up: Validate the configuration and start the services with \"docker compose up\""
 		echo ""
-		echo "All other commands are executed as docker-compose commands from the correct directory."
+		echo "All other commands are executed as docker compose commands from the correct directory."
 		echo ""
 		echo "This script reads the following environment variables:"
 		echo ""
@@ -41,7 +43,7 @@ function command_all {
 function command_backup {
 	lcd builds/deploy
 
-	docker-compose exec backup /usr/local/bin/backup.sh
+	docker_compose exec backup /usr/local/bin/backup.sh
 }
 
 function command_build {
@@ -69,7 +71,7 @@ function command_install {
 function command_mysql {
 	lcd builds/deploy
 
-	docker-compose exec db /usr/local/bin/connect_to_mysql.sh
+	docker_compose exec db /usr/local/bin/connect_to_mysql.sh
 }
 
 function command_setup_shared_volume {
@@ -91,13 +93,13 @@ function command_setup_shared_volume {
 function command_ssh {
 	lcd builds/deploy
 
-	docker-compose exec "${1}" /bin/bash
+	docker_compose exec "${1}" /bin/bash
 }
 
 function command_unseal {
 	lcd builds/deploy
 
-	docker-compose exec vault /usr/bin/vault operator unseal
+	docker_compose exec vault /usr/bin/vault operator unseal
 }
 
 function command_up {
@@ -108,7 +110,7 @@ function command_up {
 
 	lcd builds/deploy
 
-	for service in $(docker-compose config --services)
+	for service in $(docker_compose config --services)
 	do
 		if [ -e "/opt/liferay/passwords/${service}" ]
 		then
@@ -118,7 +120,7 @@ function command_up {
 		fi
 	done
 
-	docker-compose up "${@}"
+	docker_compose up "${@}"
 }
 
 function execute_command {
@@ -128,16 +130,12 @@ function execute_command {
 		shift
 		"command_${suffix}" "${@}"
 	else
-		echo "${1}: Unrecognized command for orca, passing to docker-compose."
+		echo "${1}: Unrecognized command for orca, passing to docker compose."
 
 		lcd builds/deploy
 
-		docker-compose "${@}"
+		docker_compose "${@}"
 	fi
-}
-
-function lcd {
-	cd "${1}" || exit 3
 }
 
 function main {

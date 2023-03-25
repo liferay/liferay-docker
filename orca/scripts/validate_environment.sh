@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_common.sh
+
 function create_dir {
 	local dir="${1}"
 	local service_uid="${2}"
@@ -42,20 +44,8 @@ function create_dirs {
 	create_dir "/opt/liferay/vault/data" 1000
 }
 
-function check_utils {
-	for util in "${@}"
-	do
-		if (! command -v "${util}" &>/dev/null)
-		then
-			echo "The utility ${util} is not installed."
-
-			ORCA_VALIDATION_ERROR=1
-		fi
-	done
-}
-
 function main {
-	check_utils docker docker-compose yq
+	check_utils docker yq
 
 	create_dirs
 

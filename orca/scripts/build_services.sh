@@ -2,6 +2,8 @@
 
 set -e
 
+source $(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_common.sh
+
 function build_service_antivirus {
 	docker_build antivirus
 
@@ -373,19 +375,7 @@ function check_usage {
 
 	VERSION="${1}"
 
-	check_utils docker docker-compose pwgen yq
-}
-
-function check_utils {
-	for util in "${@}"
-	do
-		if (! command -v "${util}" &>/dev/null)
-		then
-			echo "The utility ${util} is not installed."
-
-			exit 1
-		fi
-	done
+	check_utils docker pwgen yq
 }
 
 function choose_configuration {
