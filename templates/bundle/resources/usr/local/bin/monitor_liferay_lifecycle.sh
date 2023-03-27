@@ -54,7 +54,7 @@ function monitor_responsiveness {
 
 			exit_code=$?
 
-			if [[ ${exit_code} -gt 0 ]]
+			if [ ${exit_code} -gt 0 ]
 			then
 				generate_thread_dump
 
@@ -66,11 +66,11 @@ function monitor_responsiveness {
 			update_container_status live
 		fi
 
-		if [[ "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" -gt 0 ]] && [[ ${exit_code} -gt 0 ]]
+		if [ "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" -gt 0 ] && [ ${exit_code} -gt 0 ]
 		then
 			fail_count=$((fail_count + 1))
 
-			if [[ "${fail_count}" -ge "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" ]]
+			if [ "${fail_count}" -eq "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" ]
 			then
 				kill_service
 			fi
