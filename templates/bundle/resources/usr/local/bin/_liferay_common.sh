@@ -18,12 +18,26 @@ function execute_scripts {
 }
 
 function update_container_status {
-	if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" == "true" ]]
+	if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" != "true" ]]
 	then
-		echo "Container status: ${1}"
-		(
-			echo "status=${1}"
-			echo "update_time=$(date +%s)"
-		) > /opt/liferay/container_status
+		return
 	fi
+
+	local old_status=$(grep status= /opt/liferay/container_status)
+	old_status=${old_status#status=}
+
+	if [ "${old_status}" == "${1}" ]
+	then
+		touch /opt/liferay/container_status
+
+		return
+	fi
+
+	echo "Container status: ${1}"
+
+	(
+		echo "status=${1}"
+		echo "update_time=$(date +%s)"
+	) > /opt/liferay/container_status
+
 }

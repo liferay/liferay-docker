@@ -7,7 +7,11 @@ function generate_thread_dump {
 
 	mkdir -p "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
 
-	echo -e "${thread_dump}" > "${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
+	local file_name="${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
+
+	echo -e "${thread_dump}" > "${file_name}"
+
+	echo "Generated thread dump to ${file_name}"
 }
 
 function monitor_responsiveness {
