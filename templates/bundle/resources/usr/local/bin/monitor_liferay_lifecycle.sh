@@ -14,8 +14,24 @@ function generate_thread_dump {
 	echo "Generated thread dump to ${file_name}"
 }
 
+function kill_service {
+	echo "Killing container as it reached the LIFERAY_CONTAINER_KILL_ON_FAILURE threshold."
+
+	kill $(cat "${LIFERAY_PID}")
+
+	echo "Waiting 30 seconds for shut down."
+
+	sleep 30
+
+	echo "Forcefully killing the Liferay service in the container."
+
+	kill -9 $(cat "${LIFERAY_PID}")
+}
+
 function monitor_responsiveness {
 	sleep 20
+
+	local fail_count=0
 
 	while (true)
 	do
@@ -38,14 +54,26 @@ function monitor_responsiveness {
 
 			exit_code=$?
 
-			if [ ${exit_code} -gt 0 ]
+			if [[ ${exit_code} -gt 0 ]]
 			then
 				generate_thread_dump
 
 				update_container_status fail,content-missing
 			fi
 		else
+			fail_count=0
+
 			update_container_status live
+		fi
+
+		if [[ "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" -gt 0 ]] && [[ ${exit_code} -gt 0 ]]
+		then
+			fail_count=$((fail_count + 1))
+
+			if [[ "${fail_count}" -ge "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" ]]
+			then
+				kill_service
+			fi
 		fi
 
 		sleep 60
