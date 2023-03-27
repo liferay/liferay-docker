@@ -11,11 +11,11 @@ function generate_thread_dump {
 
 	echo -e "${thread_dump}" > "${file_name}"
 
-	echo "Generated thread dump to ${file_name}"
+	echo "Generated a thread dump at ${file_name}."
 }
 
 function kill_service {
-	echo "Killing container as it reached the LIFERAY_CONTAINER_KILL_ON_FAILURE threshold."
+	echo "Killing container since it reached the LIFERAY_CONTAINER_KILL_ON_FAILURE threshold."
 
 	kill $(cat "${LIFERAY_PID}")
 

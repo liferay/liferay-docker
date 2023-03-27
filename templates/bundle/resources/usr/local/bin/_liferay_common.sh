@@ -24,6 +24,7 @@ function update_container_status {
 	fi
 
 	local old_status=$(grep status= /opt/liferay/container_status)
+
 	old_status=${old_status#status=}
 
 	if [ "${old_status}" == "${1}" ]
