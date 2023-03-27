@@ -37,7 +37,6 @@ function create_dir {
 
 function create_dirs {
 	local db_uid=1001
-
 	local default_uid=1000
 
 	if [ "${DOCKER_HOST}" == "unix:///run/user/$(id -u)/docker.sock" ]

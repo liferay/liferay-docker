@@ -18,7 +18,7 @@ function check_usage {
 		echo "    unseal: Unseal the vault operator"
 		echo "    up: Validate the configuration and start the services with \"docker compose up\""
 		echo ""
-		echo "All other commands are executed as docker compose commands from the correct directory."
+		echo "All other commands are executed as Docker Compose commands from the correct directory."
 		echo ""
 		echo "This script reads the following environment variables:"
 		echo ""
