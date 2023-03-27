@@ -24,15 +24,27 @@ function main {
 
 	export LIFERAY_MOUNT_DIR
 
+	update_container_status pre-configure-scripts
+
 	execute_scripts /usr/local/liferay/scripts/pre-configure
 
 	. set_java_version.sh
 
+	update_container_status configure
+
 	. configure_liferay.sh
+
+	update_container_status pre-startup-scripts
 
 	execute_scripts /usr/local/liferay/scripts/pre-startup
 
+	update_container_status liferay-start
+
+	start_monitor_liferay_lifecycle
+
 	start_liferay
+
+	update_container_status post-shutdown
 
 	execute_scripts /usr/local/liferay/scripts/post-shutdown
 
@@ -48,6 +60,13 @@ function start_liferay {
 	echo "${START_LIFERAY_PID}" > "${LIFERAY_PID}"
 
 	wait ${START_LIFERAY_PID}
+}
+
+function start_monitor_liferay_lifecycle {
+	if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" == "true" ]]
+	then
+		/usr/local/bin/monitor_liferay_lifecycle.sh &
+	fi
 }
 
 main

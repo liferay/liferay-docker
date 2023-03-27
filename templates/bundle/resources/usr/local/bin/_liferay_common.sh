@@ -16,3 +16,14 @@ function execute_scripts {
 		echo ""
 	fi
 }
+
+function update_container_status {
+	if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" == "true" ]]
+	then
+		echo "Container status: ${1}"
+		(
+			echo "status=${1}"
+			echo "update_time=$(date +%s)"
+		) > /opt/liferay/container_status
+	fi
+}
