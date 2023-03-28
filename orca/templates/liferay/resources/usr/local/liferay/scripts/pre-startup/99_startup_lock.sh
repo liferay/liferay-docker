@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function add_lock {
-	echo $(hostname) > /opt/liferay/data/liferay-startup-lock
+	hostname > /opt/liferay/data/liferay-startup-lock
 
 	sleep 2
 
