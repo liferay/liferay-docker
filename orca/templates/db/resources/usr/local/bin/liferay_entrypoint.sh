@@ -4,4 +4,4 @@ fetch_orca_secrets.sh db mysql_backup_password mysql_liferay_password mysql_root
 
 wait_for_dependencies.sh
 
-/opt/bitnami/scripts/mariadb-galera/entrypoint.sh ${@}
+/usr/local/bin/percona_entrypoint.sh ${@}
