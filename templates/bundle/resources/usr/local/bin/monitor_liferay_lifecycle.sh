@@ -85,16 +85,34 @@ function monitor_startup {
 
 	while (! cat /opt/liferay/tomcat/logs/* | grep "org.apache.catalina.startup.Catalina.start Server startup in" &>/dev/null)
 	do
+		touch_startup_lock
+
 		sleep 3
 	done
 
 	update_container_status live
+
+	remove_startup_lock
 }
 
 function main {
 	monitor_startup
 
 	monitor_responsiveness
+}
+
+function touch_startup_lock {
+	if [ -n "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}" ] && [ -e "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}" ]
+	then
+		touch "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}"
+	fi
+}
+
+function remove_startup_lock {
+	if [ -n "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}" ] && [ -e "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}" ]
+	then
+		rm -fr "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}"
+	fi
 }
 
 main

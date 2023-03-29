@@ -1,11 +1,11 @@
 #!/bin/bash
 
 function add_lock {
-	hostname > /opt/liferay/data/liferay-startup-lock
+	hostname > "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}"
 
-	sleep 2
+	sleep 1
 
-	if [ "$(hostname)" != "$(cat /opt/liferay/data/liferay-startup-lock)" ]
+	if [ "$(hostname)" != "$(cat "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}")" ]
 	then
 		echo "Unable to acquire lock."
 
@@ -16,9 +16,16 @@ function add_lock {
 }
 
 function wait_until_free {
-	while [ -e "/opt/liferay/data/liferay-startup-lock" ] && [ "$(hostname)" != "$(cat /opt/liferay/data/liferay-startup-lock)" ]
+	while [ -e "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}" ] && [ "$(hostname)" != "$(cat "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}")" ]
 	do
-		echo "Wait for $(cat /opt/liferay/data/liferay-startup-lock) to start up."
+		echo "Wait for $(cat "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}") to start up."
+
+		if [ "$(find "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}" -mmin +2)" ]
+		then
+			echo "Lock created by $(cat "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}") was not updated for 2 minutes, removing."
+
+			rm -f "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}"
+		fi
 
 		sleep 3
 	done
@@ -30,8 +37,6 @@ function main {
 	wait_until_free
 
 	add_lock
-
-	nohup remove_lock_on_startup.sh &
 }
 
 main

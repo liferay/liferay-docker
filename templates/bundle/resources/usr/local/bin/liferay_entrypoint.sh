@@ -24,6 +24,22 @@ function main {
 
 	export LIFERAY_MOUNT_DIR
 
+	if [[ "${LIFERAY_CONTAINER_STARTUP_LOCK_ENABLED}" == "true" ]]
+	then
+		if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" != "true" ]]
+		then
+			echo "Container status needs to be enabled with LIFERAY_CONTAINER_STATUS_ENABLED to enable startup lock."
+
+			exit 1
+		fi
+
+		update_container_status acquiring-startup-lock
+
+		/usr/local/bin/startup_lock.sh
+	fi
+
+	start_monitor_liferay_lifecycle
+
 	update_container_status pre-configure-scripts
 
 	execute_scripts /usr/local/liferay/scripts/pre-configure
@@ -39,8 +55,6 @@ function main {
 	execute_scripts /usr/local/liferay/scripts/pre-startup
 
 	update_container_status liferay-start
-
-	start_monitor_liferay_lifecycle
 
 	start_liferay
 
