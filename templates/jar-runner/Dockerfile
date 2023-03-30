@@ -1,9 +1,9 @@
-FROM --platform=${TARGETPLATFORM} liferay/jdk11:latest AS liferay-jdk11
+FROM --platform=${TARGETPLATFORM} liferay/jdk11-jdk8:latest AS liferay-jdk11-jdk8
 
 RUN curl -fsSL "https://dl.filippo.io/mkcert/latest?for=linux/$(dpkg --print-architecture)" -o /usr/local/bin/mkcert && \
 	chmod +x /usr/local/bin/mkcert
 
-FROM liferay-jdk11
+FROM liferay-jdk11-jdk8
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
