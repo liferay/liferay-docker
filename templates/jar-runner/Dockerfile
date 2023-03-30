@@ -17,6 +17,7 @@ RUN \
 
 COPY resources/opt/app/app.sh /opt/app/app.sh
 
+ENV LANG C.UTF-8
 ENV LIFERAY_JAR_RUNNER_DEBUG_PORT=8001
 ENV LIFERAY_JAR_RUNNER_OPTS=-Xmx512m -agentlib:jdwp=transport=dt_socket,address=*:${LIFERAY_JAR_RUNNER_DEBUG_PORT},server=y,suspend=n
 
