@@ -6,8 +6,8 @@ function build_docker_image {
 	local image_version=$(./release_notes.sh get-version)
 
 	DOCKER_IMAGE_TAGS=()
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/jar-runner:${image_version}-${TIMESTAMP}")
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/jar-runner")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/job-runner:${image_version}-${TIMESTAMP}")
+	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/job-runner")
 
 	if [ "${1}" == "push" ]
 	then
@@ -15,7 +15,7 @@ function build_docker_image {
 
 		docker buildx build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-			--build-arg LABEL_NAME="Liferay Jar Runner" \
+			--build-arg LABEL_NAME="Liferay Job Runner" \
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${image_version}" \
@@ -29,7 +29,7 @@ function build_docker_image {
 
 		docker build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-			--build-arg LABEL_NAME="Liferay Jar Runner" \
+			--build-arg LABEL_NAME="Liferay Job Runner" \
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${image_version}" \
@@ -39,9 +39,7 @@ function build_docker_image {
 }
 
 function main {
-	delete_local_images "${LIFERAY_DOCKER_REPOSITORY}/jar-runner"
-
-	make_temp_directory templates/jar-runner
+	make_temp_directory templates/job-runner
 
 	log_in_to_docker_hub
 
