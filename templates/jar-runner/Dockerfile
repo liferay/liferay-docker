@@ -1,8 +1,7 @@
 FROM --platform=${TARGETPLATFORM} liferay/jdk11:latest AS liferay-jdk11
 
 RUN curl -fsSL "https://dl.filippo.io/mkcert/latest?for=linux/$(dpkg --print-architecture)" -o /usr/local/bin/mkcert && \
-	chmod +x /usr/local/bin/mkcert && \
-	mkdir /var/lib/caroot
+	chmod +x /usr/local/bin/mkcert
 
 FROM liferay-jdk11
 
