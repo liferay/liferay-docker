@@ -179,27 +179,27 @@ function build_dynamic_rendering_image {
 }
 
 function build_jar_runner_image {
-	if [[ $(get_latest_docker_hub_version "job-runner") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [[ $(get_latest_docker_hub_version "jar-runner") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
-		echo "Docker image Job Runner is up to date."
+		echo "Docker image JAR Runner is up to date."
 
 		return
 	fi
 
 	echo ""
-	echo "Building Docker image Job Runner."
+	echo "Building Docker image JAR Runner."
 	echo ""
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_jar_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jar_runner.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Jar Runner" >> "${LOGS_DIR}/results"
+		echo "FAILED: JAR Runner" >> "${LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Jar Runner" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: JAR Runner" >> "${LOGS_DIR}/results"
 	fi
 }
 
