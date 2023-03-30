@@ -11,7 +11,7 @@ COPY resources/noop /
 
 CMD [ "/noop" ]
 
-ENV LANG C.UTF-8
+ENV LANG="C.UTF-8"
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
