@@ -18,6 +18,7 @@ COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_jar_runner_entrypoint.sh"]
 
+ENV JAVA_HOME=/usr/lib/jvm/zulu11
 ENV LANG C.UTF-8
 ENV LIFERAY_JAR_RUNNER_JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y
 
