@@ -1,15 +1,14 @@
-FROM ubuntu:jammy
+# ubuntu:jammy-20230308
+FROM ubuntu:jammy@sha256:7a57c69fe1e9d5b97c5fe649849e79f2cfc3bf11d10bbd5218b4eb61716aebe6
 
 # original source: https://github.com/percona/percona-docker/blob/master/percona-server-8.0/Dockerfile
 
-ENV PS_VERSION 8.0.32-24
-ENV OS_VER jammy
-ENV FULL_PERCONA_VERSION "$PS_VERSION.$OS_VER"
 ENV DEBIAN_FRONTEND noninteractive
+ENV PS_VERSION 8.0.32-24
 ENV TZ Etc/UTC
 
 RUN groupadd -g 1001 mysql && \
-	useradd -u 1001 -g 1001 -s /bin/false -d /var/lib/mysql mysql
+	useradd -d /var/lib/mysql -g 1001 -s /bin/false -u 1001 mysql
 
 RUN set -ex; \
 	apt-get update && \
@@ -22,17 +21,15 @@ RUN set -ex; \
 	rm -rf /var/cache/apt /var/lib/apt && \
 	rm -rf /var/lib/mysql
 
-RUN install -m 0775 -o mysql -g root -d /var/lib/mysql /var/run/mysqld && \
-	install -m 0775 -o root -g root -d /docker-entrypoint-initdb.d && \
+RUN install -d /var/lib/mysql /var/run/mysqld -g root -m 0700 -o mysql && \
 	echo "$TZ" > /etc/localtime && dpkg-reconfigure tzdata && \
 	find /etc/mysql/conf.d/ /etc/mysql/mysql.cnf /etc/mysql/mysql.conf.d/ -name '*.cnf' -print0 \
 		| xargs -0 grep -lZE '^(bind-address|log|user)' \
-		| xargs -rt -0 sed -Ei 's/^(bind-address|log|user)/#&/'; \
-	# don't reverse lookup hostnames, they are usually another container
-	echo '[mysqld]\nskip-host-cache\nskip-name-resolve' > /etc/mysql/mysql.conf.d/docker.cnf
+		| xargs -rt -0 sed -Ei 's/^(bind-address|log|user)/#&/'
 
-#COPY resources/docker-entrypoint.sh /docker-entrypoint.sh
+COPY resources/etc/mysql/mysql.conf.d/ /etc/mysql/mysql.conf.d/
 COPY resources/usr/local/bin/ /usr/local/bin/
+
 ENTRYPOINT ["/usr/local/bin/liferay_entrypoint.sh"]
 
 USER mysql

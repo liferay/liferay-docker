@@ -1,0 +1,10 @@
+[mysqld]
+character_set_server = utf8
+collation_server = utf8_bin
+general_log_file = /var/lib/mysql/log/general.log
+host_cache_size=0
+log-bin=/var/lib/mysql/log/binlog
+secure_log_path=/var/lib/mysql/log
+skip-name-resolve
+slow_query_log_file = /var/lib/mysql/log/slow.log
+ssl = off

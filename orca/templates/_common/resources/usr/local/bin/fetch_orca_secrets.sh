@@ -15,12 +15,29 @@ function check_usage {
 }
 
 function get_token {
-	local token=$(curl --fail --request POST --silent "http://${ORCA_VAULT_ADDRESSES}/v1/auth/userpass-${1}/login/${1}" --data '{"password": "'${ORCA_VAULT_SERVICE_PASSWORD}'"}')
+	round=0
+
+	while true
+	do
+		if [ "${round}" -le 120 ]
+		then
+			round=$((round+1))
+		else
+			echo "Fetching token for login ${1} was unsuccessful for 2 mins. Exiting"
+			exit 1
+		fi
+
+		local token=$(curl --fail --request POST --silent "http://${ORCA_VAULT_ADDRESSES}/v1/auth/userpass-${1}/login/${1}" --data "{\"password\": \"${ORCA_VAULT_SERVICE_PASSWORD}\"}")
+		if [ -n "${token}" ]
+		then
+			break
+		fi
+	done
 
 	token=${token##*client_token\":\"}
 	token=${token%%\"*}
 
-	echo ${token}
+	echo "${token}"
 }
 
 function load_secrets {
@@ -31,14 +48,33 @@ function load_secrets {
 
 	for secret in "${@}"
 	do
-		echo "Fetching secret ${secret}."
+		local round=0
 
-		local password=$(curl --fail --header "X-Vault-Token: ${token}" --request GET --silent "http://${ORCA_VAULT_ADDRESSES}/v1/secret/data/${secret}")
+		while true;
+		do
+			if [ "${round}" -le 120 ]
+				then
+					echo "Fetching secret '${secret}'...round #$((round=round+1))."
+				else
+					echo "Fetching secret '${secret}' was unsuccessful for 2 mins. Exiting"
+					exit 1
+			fi
 
-		if [ "${?}" -gt 0 ]
-		then
-			echo "Fetching secret failed with error ${?}."
-		fi
+			local password=$(curl --fail --header "X-Vault-Token: ${token}" --request GET --silent "http://${ORCA_VAULT_ADDRESSES}/v1/secret/data/${secret}")
+
+			ret="${?}"
+
+			if [ "${ret}" -gt 0 ]
+			then
+				echo "Fetching secret '${secret}' failed with error ${ret}."
+			fi
+
+			if [ -n "${password}" ]
+			then
+				echo "Fetching secret '${secret}' succeeded."
+				break
+			fi
+		done
 
 		password=${password##*password\":\"}
 		password=${password%%\"*}
@@ -57,7 +93,7 @@ function main {
 
 	wait_for_vault
 
-	load_secrets $(get_token ${service}) "${@}"
+	load_secrets $(get_token "${service}") "${@}"
 
 	unset ORCA_VAULT_TOKEN
 }

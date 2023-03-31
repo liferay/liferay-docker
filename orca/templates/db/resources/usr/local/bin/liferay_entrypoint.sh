@@ -1,7 +1,13 @@
 #!/bin/bash
 
+set -e
+
+# shellcheck disable=SC1091
+. _liferay_common.sh
+
 fetch_orca_secrets.sh db mysql_backup_password mysql_liferay_password mysql_root_password
 
-wait_for_dependencies.sh
+mysql_init.sh
 
-/usr/local/bin/percona_entrypoint.sh ${@}
+block_begin "Start mysqld process"
+mysqld

@@ -64,7 +64,6 @@ function build_service_db {
 	write 1 "        - MARIADB_ROOT_HOST=localhost"
 	write 1 "        - MARIADB_ROOT_PASSWORD_FILE=/tmp/orca-secrets/mysql_root_password"
 	write 1 "        - MARIADB_USER=lportal"
-	write 1 "        - ORCA_DB_ADDRESSES=$(query_services db host_port 3306 true)"
 	write 1 "        - ORCA_DB_SKIP_WAIT=\${ORCA_DB_SKIP_WAIT:-}"
 	write 1 "        - ORCA_DEVELOPMENT_MODE=$(query_configuration .development)"
 	write 1 "        - ORCA_VAULT_ADDRESSES=$(query_services vault host_port 8200)"
@@ -77,7 +76,7 @@ function build_service_db {
 	write 1 "        - \"4567:4567\""
 	write 1 "        - \"4568:4568\""
 	write 1 "    volumes:"
-	write 1 "        - /opt/liferay/db-data:/bitnami/mariadb"
+	write 1 "        - /opt/liferay/db-data:/var/lib/mysql"
 }
 
 function build_service_liferay {
