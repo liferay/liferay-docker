@@ -200,6 +200,18 @@ function generate_configuration {
 
 	mkdir -p database_import
 
+	mkdir -p build/webserver/resources/etc/nginx
+	cp -a ${LIFERAY_LXC_REPOSITORY_DIR}/webserver/configs/common/blocks.d/ build/webserver/resources/etc/nginx
+	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_pass.conf
+	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_protection.conf
+
+	cp -a ${LIFERAY_LXC_REPOSITORY_DIR}/webserver/configs/common/conf.d/ build/webserver/resources/etc/nginx
+	cp -a ${LIFERAY_LXC_REPOSITORY_DIR}/webserver/configs/common/public/ build/webserver/resources/etc/nginx
+	cp ../resources/webserver/etc/nginx/nginx.conf build/webserver/resources/etc/nginx
+
+	mkdir -p build/webserver/resources/etc/usr
+	cp -a ../resources/webserver/usr/ build/webserver/resources/usr
+
 	create_liferay_dockerfile
 
 	create_liferay_configuration
