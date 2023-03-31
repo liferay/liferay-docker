@@ -296,7 +296,7 @@ function print_image_usage {
 	echo "The configuration is ready to use. It's available in the ${STACK_NAME} folder. To start all services up, use the following commands:"
 	echo ""
 	echo "cd ${STACK_NAME}"
-	echo "${docker_compose} up -d antivirus database search && ${docker_compose} up liferay-1"
+	echo "${docker_compose} up -d antivirus database search webserver && ${docker_compose} up liferay-1"
 	echo ""
 	echo "If you would like to test with clustering, start the second liferay node too: ${docker_compose} up liferay-2"
 	echo ""
