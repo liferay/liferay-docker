@@ -193,7 +193,6 @@ function generate_configuration {
 
 	mkdir -p build/liferay/resources/usr/local/liferay/scripts/pre-startup
 	cp ../../orca/templates/liferay/resources/usr/local/liferay/scripts/pre-startup/10_wait_for_dependencies.sh build/liferay/resources/usr/local/liferay/scripts/pre-startup
-	cp ../../orca/templates/liferay/resources/usr/local/liferay/scripts/pre-startup/99_startup_lock.sh build/liferay/resources/usr/local/liferay/scripts/pre-startup
 
 	mkdir -p build/search/
 	grep -v "^FROM" ../../orca/templates/search/Dockerfile | sed -e "s/#FROM/FROM/" > build/search/Dockerfile
