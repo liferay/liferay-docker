@@ -114,6 +114,16 @@ function create_liferay_dockerfile {
 	) > build/liferay/Dockerfile
 }
 
+function create_webserver_dockerfile {
+	(
+		echo $(head -n 1 ${LIFERAY_LXC_REPOSITORY_DIR}/webserver/Dockerfile)
+
+		echo "COPY resources/etc/nginx /etc/nginx"
+		echo "COPY resources/usr/local /usr/local"
+
+	) > build/webserver/Dockerfile
+}
+
 function generate_configuration {
 	function write {
 		echo "${1}" >> docker-compose.yml
@@ -194,6 +204,8 @@ function generate_configuration {
 
 	create_liferay_configuration
 
+	create_webserver_dockerfile
+
 	write "services:"
 	write "    antivirus:"
 
@@ -238,6 +250,14 @@ function generate_configuration {
 	write "volumes:"
 	write "     liferay-document-library:"
 	write "     mysql-db:"
+
+	write "    webserver:"
+	write "        build: ./build/webserver"
+
+	write_deploy 1G
+
+	write "        ports:"
+	write "            - 127.0.0.1:80:80"
 }
 
 function lcd {
