@@ -17,7 +17,7 @@ COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_jar_runner_entrypoint.sh"]
 
-ENV JAVA_HOME=/usr/lib/jvm/zulu11
+ENV JAVA_VERSION=zulu11
 ENV LANG="C.UTF-8"
 ENV LIFERAY_JAR_RUNNER_JAVA_OPTS="-Xmx512m"
 
@@ -28,5 +28,7 @@ LABEL org.label-schema.vcs-ref="${LABEL_VCS_REF}"
 LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
+
+USER liferay:liferay
 
 WORKDIR /opt/liferay

@@ -13,6 +13,9 @@ then
 	./usr/local/bin/liferay_jar_runner_set_up.sh
 fi
 
+export JAVA_HOME=/usr/lib/jvm/${JAVA_VERSION}
+export PATH=/usr/lib/jvm/${JAVA_VERSION}/bin/:${PATH}
+
 java ${LIFERAY_JAR_RUNNER_JAVA_OPTS} -jar /opt/liferay/jar-runner.jar
 
 if [ -e /usr/local/bin/liferay_jar_runner_tear_down.sh ]
