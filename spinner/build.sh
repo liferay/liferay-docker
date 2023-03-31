@@ -258,9 +258,6 @@ function generate_configuration {
 	write "            - xpack.security.enabled=false"
 	write "            - xpack.sql.enabled=false"
 	write "            - xpack.watcher.enabled=false"
-	write "volumes:"
-	write "     liferay-document-library:"
-	write "     mysql-db:"
 
 	write "    webserver:"
 	write "        build: ./build/webserver"
@@ -269,6 +266,10 @@ function generate_configuration {
 
 	write "        ports:"
 	write "            - 127.0.0.1:80:80"
+
+	write "volumes:"
+	write "     liferay-document-library:"
+	write "     mysql-db:"
 }
 
 function lcd {
