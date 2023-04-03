@@ -455,7 +455,7 @@ function main {
 }
 
 function query_configuration {
-	local yq_output=$(yq "${1}" < ${CONFIG_FILE})
+	local yq_output=$(yq "${1}" < "${CONFIG_FILE}")
 
 	if [ "${yq_output}" == "null" ]
 	then
@@ -473,7 +473,7 @@ function query_github_creds {
 		exit 1
 	fi
 
-	local yq_output=$(yq ${1} < ${GITHUB_CONFIG_FILE})
+	local yq_output=$(yq "${1}" < "${GITHUB_CONFIG_FILE}")
 
 	if [ "${yq_output}" == "null" ]
 	then
@@ -486,7 +486,7 @@ function query_github_creds {
 function query_services {
 	local list
 
-	for host in $(yq ".hosts" < ${CONFIG_FILE} | grep -v "  .*" | sed "s/-[ ]//" | sed "s/:.*//")
+	for host in $(yq ".hosts" < "${CONFIG_FILE}" | grep -v "  .*" | sed "s/-[ ]//" | sed "s/:.*//")
 	do
 		if [ "${4}" == "true" ] && [ "${host}" == "${ORCA_HOST}" ]
 		then
