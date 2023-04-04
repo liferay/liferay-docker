@@ -1,25 +1,19 @@
 #!/bin/bash
 
 function block_begin {
-	text="${1}"
-
-	lecho ">>> BEGIN: ${text}"
+	lecho ">>> BEGIN: ${1}"
 }
 
 function block_finish {
-	text="${1}"
-
-	lecho ">>> FINISH: ${text}"
+	lecho ">>> FINISH: ${1}"
 
 	echo
 }
 
 function fail {
-	text="${1}"
-
 	local ts=$(date "+%Y-%m-%d %T.%6N")
 
-	lecho >&2 "!!! ERROR: ${text}"
+	lecho >&2 "!!! ERROR: ${1}"
 
 	echo
 
@@ -27,15 +21,11 @@ function fail {
 }
 
 function msg {
-	text="${1}"
-
-	lecho "--- MSG: ${text}"
+	lecho "--- MSG: ${1}"
 }
 
 function lecho {
-	text="${1}"
-
 	local ts=$(date "+%Y-%m-%d %T.%6N")
 
-	echo "${ts} [orca][$0] ${text}"
+	echo "${ts} [orca][$0] ${1}"
 }
