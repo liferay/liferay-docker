@@ -148,7 +148,7 @@ function stop_first_run {
 
 	msg "kill -s TERM ${pid}"
 
-	if ! kill -s TERM "${pid}" || ! wait "${pid}"
+	if ! (kill -s TERM "${pid}" || wait "${pid}")
 	then
 		fail "Temporary mysql instance cannot be shut down."
 		exit 1
