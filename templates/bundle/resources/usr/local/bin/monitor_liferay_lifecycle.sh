@@ -11,62 +11,83 @@ function generate_thread_dump {
 
 	echo -e "${thread_dump}" > "${file_name}"
 
-	echo "Generated a thread dump at ${file_name}."
+	lecho "Generated a thread dump at ${file_name}."
+}
+
+function lecho {
+	echo -en "Lifecycle monitor: "
+
+	echo "${@}"
 }
 
 function kill_service {
-	echo "Killing container since it reached the LIFERAY_CONTAINER_KILL_ON_FAILURE threshold."
+	lecho "Killing container since it reached the LIFERAY_CONTAINER_KILL_ON_FAILURE threshold."
 
 	kill $(cat "${LIFERAY_PID}")
 
-	echo "Waiting 30 seconds for shut down."
+	lecho "Waiting 30 seconds for shut down."
 
 	sleep 30
 
-	echo "Forcefully killing the Liferay service in the container."
+	lecho "Forcefully killing the Liferay service in the container."
 
 	kill -9 $(cat "${LIFERAY_PID}")
 }
 
-function monitor_responsiveness {
-	sleep 20
-
+function main {
 	local fail_count=0
+
+	local started=false
+
+	local curl_max_time=$((LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT + 10))
 
 	while (true)
 	do
+		if [ "${started}" != true ]
+		then
+			touch_startup_lock
+
+			update_container_status liferay-start
+		fi
+
 		local curl_content
 
-		curl_content=$(curl --connect-timeout "${LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT}" --fail --max-time "${LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT}" --show-error --silent --url "localhost:8080" "${LIFERAY_CONTAINER_STATUS_REQUEST_URL}")
+		curl_content=$(curl --connect-timeout "${LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT}" --fail --max-time "${curl_max_time}" --show-error --silent --url "localhost:8080" "${LIFERAY_CONTAINER_STATUS_REQUEST_URL}" 2>/dev/null)
 
 		local exit_code=$?
 
 		if [ ${exit_code} -gt 0 ]
 		then
-			echo -e "${curl_content}"
+			if [ "${started}" == "true" ]
+			then
+				generate_thread_dump
 
-			generate_thread_dump
-
-			update_container_status fail,http-response-error,curl-return-code-${exit_code}
+				update_container_status fail,http-response-error,curl-return-code-${exit_code}
+			fi
 		elif [ -n "${LIFERAY_CONTAINER_STATUS_REQUEST_CONTENT}" ]
 		then
 			curl_content=$(echo "${curl_content}" | grep "${LIFERAY_CONTAINER_STATUS_REQUEST_CONTENT}")
 
 			exit_code=$?
 
-			if [ ${exit_code} -gt 0 ]
+			if [ ${exit_code} -gt 0 ] && [ "${started}" == "true" ]
 			then
 				generate_thread_dump
 
 				update_container_status fail,content-missing
 			fi
-		else
+		fi
+
+		if [ ${exit_code} -eq 0 ]
+		then
 			fail_count=0
+
+			started=true
 
 			update_container_status live
 		fi
 
-		if [ "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" -gt 0 ] && [ ${exit_code} -gt 0 ]
+		if [ "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" -gt 0 ] && [ ${exit_code} -gt 0 ] && [ "${started}" == "true" ]
 		then
 			fail_count=$((fail_count + 1))
 
@@ -76,29 +97,13 @@ function monitor_responsiveness {
 			fi
 		fi
 
-		sleep 60
+		if [ "${started}" != true ] && [ ${exit_code} -gt 1 ]
+		then
+			sleep 3
+		else
+			sleep 30
+		fi
 	done
-}
-
-function monitor_startup {
-	sleep 10
-
-	while (! cat /opt/liferay/tomcat/logs/* | grep "org.apache.catalina.startup.Catalina.start Server startup in" &>/dev/null)
-	do
-		touch_startup_lock
-
-		sleep 3
-	done
-
-	update_container_status live
-
-	remove_startup_lock
-}
-
-function main {
-	monitor_startup
-
-	monitor_responsiveness
 }
 
 function remove_startup_lock {
