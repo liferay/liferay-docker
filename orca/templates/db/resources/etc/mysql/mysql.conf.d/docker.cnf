@@ -1,6 +1,6 @@
 [mysqld]
-character_set_server = utf8
-collation_server = utf8_bin
+character_set_server = utf8mb4
+collation_server = utf8mb4_unicode_ci
 general_log_file = /var/lib/mysql/log/general.log
 host_cache_size=0
 log-bin=/var/lib/mysql/log/binlog
