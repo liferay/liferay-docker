@@ -1,16 +1,16 @@
 class pts_orca {
 
-  include pts_docker
+	include pts_docker
 
-  package { 'pwgen':
-    ensure => latest,
-  }
+	package { 'pwgen':
+		ensure => latest,
+	}
 
-  include snap
+	include snap
 
-  package { 'yq':
-    ensure   => installed,
-    provider => 'snap',
-  }
+	package { 'yq':
+		ensure	 => installed,
+		provider => 'snap',
+	}
 
 }

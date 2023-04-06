@@ -8,15 +8,15 @@
 ################################################################################
 class pts_hosts::primary {
 
-  # do not add primary interface entries if that have been disabled
-  unless ( $pts_hosts::primary == false ) {
+	# do not add primary interface entries if that have been disabled
+	unless ( $pts_hosts::primary == false ) {
 
-    # Create entry for localhost
-    pts_hosts::add { $::ipdefault:
-      fqdn    => $::fqdn,
-      aliases => $::hostname,
-    }
+		# Create entry for localhost
+		pts_hosts::add { $::ipdefault:
+			fqdn		=> $::fqdn,
+			aliases => $::hostname,
+		}
 
-  }
+	}
 
 }

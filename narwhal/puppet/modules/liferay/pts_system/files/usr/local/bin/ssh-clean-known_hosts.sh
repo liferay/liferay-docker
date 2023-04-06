@@ -2,8 +2,8 @@
 
 if [ -z "$1" ];
  then
-   echo "No hostname provided!"
-   exit 1
+	 echo "No hostname provided!"
+	 exit 1
 fi
 
 FORWARD_HOST="$1"

@@ -1,20 +1,22 @@
 class pts_ci_node {
-  Class['docker'] -> Class['pts_users::users::jenkins']
-  include docker
-  include pts_users::users::jenkins
+	Class['docker'] -> Class['pts_users::users::jenkins']
+	include docker
+	include pts_users::users::jenkins
+	include snap
 
-  package { [
-    'jq',
-    'openjdk-11-jdk',
-    'p7zip-full'
-    ]:
-    ensure => latest
-  }
+	package {
+		[
+			'jq',
+			'openjdk-11-jdk',
+			'p7zip-full'
+		]:
+		ensure => latest
+	}
 
-  include snap
 
-  package { 'yq':
-    ensure   => installed,
-    provider => 'snap',
-  }
+	package {
+		'yq':
+			ensure	 => installed,
+			provider => 'snap',
+	}
 }

@@ -1,5 +1,5 @@
 class pts_users::groups {
 
-  include pts_users::groups::ptsaccess
+	include pts_users::groups::ptsaccess
 
 }

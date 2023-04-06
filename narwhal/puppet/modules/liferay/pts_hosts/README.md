@@ -15,7 +15,7 @@ loopback interfaces (ipv4 and ipv6) as well.
 ### What hosts affects
 
 * This module will make changes to your hosts file - /etc/hosts for most
-  operating systems.
+	operating systems.
 
 ### Beginning with hosts
 
@@ -25,8 +25,8 @@ Declare the class and add entries as follows:
 class { '::hosts' : }
 
 ::hosts::add { '192.168.0.1' :
-    fqdn    => 'router.mydomain.com',
-    aliases => [ 'router' ]
+		fqdn		=> 'router.mydomain.com',
+		aliases => [ 'router' ]
 }
 ```
 
@@ -38,13 +38,13 @@ Declare the class. There are a number of optional parameters whose defaults
 are listed below:
 ```
 class { '::hosts' :
-    file        => '/etc/hosts',
-    owner       => 'root',
-    group       => 'root',
-    mode        => '0644',
-    localhost   => true,
-    primary     => true,
-    purge       => false,
+		file				=> '/etc/hosts',
+		owner			 => 'root',
+		group			 => 'root',
+		mode				=> '0644',
+		localhost	 => true,
+		primary		 => true,
+		purge			 => false,
 }
 ```
 
@@ -62,8 +62,8 @@ class { '::hosts' :
 Create hosts file entries as follows:
 ```
 ::hosts::add { '192.168.0.1' :
-    fqdn    => 'router.mydomain.com',
-    aliases => [ 'router' ],
+		fqdn		=> 'router.mydomain.com',
+		aliases => [ 'router' ],
 }
 ```
 

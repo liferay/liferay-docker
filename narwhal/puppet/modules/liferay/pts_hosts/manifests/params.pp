@@ -7,17 +7,17 @@
 ################################################################################
 class pts_hosts::params {
 
-  $hostsfile   = '/etc/hosts'
+	$hostsfile	 = '/etc/hosts'
 
-  # Hosts file ownership/permissions
-  $owner  = 'root'
-  $group  = 'root'
-  $mode   = '0644'
+	# Hosts file ownership/permissions
+	$owner	= 'root'
+	$group	= 'root'
+	$mode	 = '0644'
 
-  # Default options
-  $purge     = false
-  $localhost = true
-  $primary   = true
+	# Default options
+	$purge		 = false
+	$localhost = true
+	$primary	 = true
 
 }
 
