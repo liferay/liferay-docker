@@ -376,7 +376,13 @@ function get_latest_docker_hub_version {
 
 	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o '\\"org.label-schema.version\\":\\"[0-9]\.[0-9]\.[0-9]*\\"' | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
-	echo "${version}"
+	if [ -z "${version}" ]
+	then
+		version=$(docker image inspect --format '{{index .Config.Labels "org.label-schema.version"}}' "liferay/${1}:latest")
+		echo "${version}"
+	else
+		echo "${version}"
+	fi
 }
 
 function get_latest_docker_hub_zabbix_server_version {
@@ -481,7 +487,7 @@ function main {
 
 	cat "${LOGS_DIR}/results"
 
-	if [ $(cat "${LOGS_DIR}/results" | grep -c "FAILED") != 0 ]
+	if [ $(grep -c "FAILED" "${LOGS_DIR}/results") != 0 ]
 	then
 		exit 1
 	fi
