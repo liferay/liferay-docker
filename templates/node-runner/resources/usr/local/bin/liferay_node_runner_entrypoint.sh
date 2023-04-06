@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -e /opt/node/caroot/rootCA.pem ]
 then
@@ -9,8 +9,6 @@ if [ -e /usr/local/bin/liferay_node_runner_set_up.sh ]
 then
 	./usr/local/bin/liferay_node_runner_set_up.sh
 fi
-
-$LIFERAY_NODE_RUNNER_INSTALL
 
 $LIFERAY_NODE_RUNNER_START
 
