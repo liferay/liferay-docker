@@ -284,6 +284,31 @@ function build_job_runner_image {
 	fi
 }
 
+function build_node_runner_image {
+	if [[ $(get_latest_docker_hub_version "node-runner") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	then
+		echo ""
+		echo "Docker image Node Runner is up to date."
+
+		return
+	fi
+
+	echo ""
+	echo "Building Docker image Node Runner."
+	echo ""
+
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_jar_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/node_runner.log
+
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	then
+		echo "FAILED: Node Runner" >> "${LOGS_DIR}/results"
+
+		exit 1
+	else
+		echo "SUCCESS: Node Runner" >> "${LOGS_DIR}/results"
+	fi
+}
+
 function build_noop_image {
 	if [[ $(get_latest_docker_hub_version "noop") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
