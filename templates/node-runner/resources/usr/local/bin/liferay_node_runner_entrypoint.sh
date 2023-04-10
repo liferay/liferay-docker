@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -e /opt/node/caroot/rootCA.pem ]
+if [ -e /opt/liferay/caroot/rootCA.pem ]
 then
 	export NODE_EXTRA_CA_CERTS=/opt/liferay/caroot/rootCA.pem
 fi
