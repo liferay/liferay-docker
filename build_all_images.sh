@@ -405,7 +405,12 @@ function get_latest_docker_hub_version {
 	then
 		docker pull "liferay/${1}:latest"
 
-		version=$(docker image inspect --format '{{index .Config.Labels "org.label-schema.version"}}' "liferay/${1}:latest")
+		if [ $? -gt 0 ]
+		then
+			version="0"
+		else
+			version=$(docker image inspect --format '{{index .Config.Labels "org.label-schema.version"}}' "liferay/${1}:latest")
+		fi
 
 		echo "${version}"
 	else
