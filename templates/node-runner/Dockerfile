@@ -27,7 +27,6 @@ COPY resources/usr/local/bin/* /usr/local/bin/
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_node_runner_entrypoint.sh"]
 
 ENV LANG="C.UTF-8"
-ENV LIFERAY_NODE_RUNNER_INSTALL="npm install"
 ENV LIFERAY_NODE_RUNNER_START="npm start"
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
