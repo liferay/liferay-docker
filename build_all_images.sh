@@ -503,6 +503,7 @@ function main {
 	build_caddy_image
 	build_jar_runner_image
 	build_job_runner_image
+	build_node_runner_image
 	build_noop_image
 	build_zabbix_server_image
 	build_zabbix_web_image
