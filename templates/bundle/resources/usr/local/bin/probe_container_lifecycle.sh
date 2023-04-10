@@ -16,7 +16,7 @@ fi
 
 if [ "$(find /opt/liferay/container_status -mmin +2)" ]
 then
-	echo "The /opt/liferay/container_status file was not updated for more than two minutes, the container status script is not running properly."
+	echo "The file /opt/liferay/container_status file has not been updated for more than two minutes."
 
 	exit 5
 fi
