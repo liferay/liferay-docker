@@ -512,7 +512,7 @@ function main {
 	build_noop_image
 	build_zabbix_server_image
 	build_zabbix_web_image
-	 
+
 	build_bundle_images
 
 	echo ""
