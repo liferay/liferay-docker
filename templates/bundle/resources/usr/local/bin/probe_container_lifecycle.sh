@@ -9,7 +9,7 @@ fi
 
 if [ ! -e /opt/liferay/container_status ]
 then
-	echo "/opt/liferay/container_status does not exist, fail."
+	echo "The file /opt/liferay/container_status does not exist."
 
 	exit 4
 fi
