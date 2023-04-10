@@ -10,7 +10,7 @@ fi
 
 if [ -e /usr/local/bin/liferay_jar_runner_set_up.sh ]
 then
-	. /usr/local/bin/liferay_jar_runner_set_up.sh
+	/usr/local/bin/liferay_jar_runner_set_up.sh
 fi
 
 export JAVA_HOME=/usr/lib/jvm/${JAVA_VERSION}
@@ -20,5 +20,5 @@ java ${LIFERAY_JAR_RUNNER_JAVA_OPTS} -jar /opt/liferay/jar-runner.jar
 
 if [ -e /usr/local/bin/liferay_jar_runner_tear_down.sh ]
 then
-	. /usr/local/bin/liferay_jar_runner_tear_down.sh
+	/usr/local/bin/liferay_jar_runner_tear_down.sh
 fi
