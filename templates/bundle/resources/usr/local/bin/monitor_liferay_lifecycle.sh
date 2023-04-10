@@ -35,11 +35,9 @@ function kill_service {
 }
 
 function main {
-	local fail_count=0
-
-	local started=false
-
 	local curl_max_time=$((LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT + 10))
+	local fail_count=0
+	local started=false
 
 	while (true)
 	do
