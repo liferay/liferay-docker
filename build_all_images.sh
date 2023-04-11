@@ -403,7 +403,7 @@ function get_latest_docker_hub_version {
 
 	if [ -z "${version}" ]
 	then
-		docker pull "liferay/${1}:latest"
+		docker pull "liferay/${1}:latest" >/dev/null
 
 		if [ $? -gt 0 ]
 		then
