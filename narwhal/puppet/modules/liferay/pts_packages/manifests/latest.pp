@@ -1,6 +1,7 @@
 class pts_packages::latest {
 
-	package { [
+	package {
+		[
 		'acpid',
 		'augeas-lenses',
 		'base-files',
@@ -53,11 +54,12 @@ class pts_packages::latest {
 		'util-linux',
 		'virt-what',
 		]:
-		ensure	 => latest,
-		schedule => daily
+			ensure	 => latest,
+			schedule => daily
 	}
 
 	if $facts['virtual'] != 'lxc' {
+
 		package { [
 			'kpartx',
 			'linux-firmware',
@@ -65,8 +67,10 @@ class pts_packages::latest {
 			'linux-tools-common',
 			'linux-tools-generic',
 			]:
-			ensure	 => latest,
-			schedule => daily
+				ensure	 => latest,
+				schedule => daily
 		}
+
 	}
+
 }

@@ -2,7 +2,7 @@ class pts_users::users {
 
 	$hostname_uppercase = upcase($::hostname)
 
-# should be activated if we're agreed on it with local IT
+# The 'ubuntu' users should only be deleted, if we are agreed on it with the IT team
 #	accounts::user { 'ubuntu':
 #		ensure => absent
 #	}

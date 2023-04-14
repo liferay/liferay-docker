@@ -1,6 +1,7 @@
 class pts_packages::absent {
 
-	package { [
+	package {
+		[
 		'apt-xapian-index',
 		'aptitude',
 		'aptitude-common',
@@ -27,8 +28,8 @@ class pts_packages::absent {
 		'wireless-tools',
 		'wpasupplicant',
 		]:
-		ensure	 => purged,
-		schedule => daily2
+			ensure	 => purged,
+			schedule => daily2
 	}
 
 }
