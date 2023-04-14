@@ -1,7 +1,7 @@
 FROM public.ecr.aws/gravitational/teleport:12
 
-ARG DEBIAN_FRONTEND=noninteractive
-ARG TZ=Etc/UTC
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
 COPY resources/etc/teleport/teleport.yaml /etc/teleport/
 COPY resources/root/ /root/
