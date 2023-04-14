@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LANG=C
+LANG="C"
 OS=$(uname -s)
 
 if [ "$OS" == "Linux" ]
@@ -11,4 +11,4 @@ else
 	exit 255
 fi
 
-echo "$DEFAULT_IF"
+echo "${DEFAULT_IF}"

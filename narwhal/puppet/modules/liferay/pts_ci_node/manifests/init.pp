@@ -13,10 +13,9 @@ class pts_ci_node {
 		ensure => latest
 	}
 
-
 	package {
 		'yq':
-			ensure	 => installed,
+			ensure => installed,
 			provider => 'snap',
 	}
 }

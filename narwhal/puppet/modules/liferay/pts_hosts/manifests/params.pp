@@ -1,23 +1,12 @@
-################################################################################
-#
-# Class: hosts::params
-#
-# Default values for justinjl-hosts
-#
-################################################################################
 class pts_hosts::params {
 
-	$hostsfile	 = '/etc/hosts'
-
-	# Hosts file ownership/permissions
-	$owner	= 'root'
-	$group	= 'root'
-	$mode	 = '0644'
-
-	# Default options
-	$purge		 = false
+	$group = 'root'
+	$hostsfile = '/etc/hosts'
 	$localhost = true
-	$primary	 = true
+	$mode = '0644'
+	$owner = 'root'
+	$primary = true
+	$purge = false
 
 }
 

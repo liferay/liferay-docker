@@ -5,43 +5,52 @@ PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/op
 host_server=$(grep ^server /etc/puppetlabs/puppet/puppet.conf | uniq | tr -d ' ' | cut -f2 -d'=')
 
 timestamp_local_file='/var/tmp/puppet_timestamp.txt'
-if [ -f "$timestamp_local_file" ];
-	then
-		timestamp_last=$(cat $timestamp_local_file)
-	else
-		# 2000-01-01
-		timestamp_last='946681200'
+
+if [ -f "${timestamp_local_file}" ]
+then
+	timestamp_last=$(cat ${timestamp_local_file})
+else
+	timestamp_last=$(date -d 2000-01-01 "+%s")
 fi
 
-# can be enabled if timestamp.txt is served from the puppet server
-# exit silently if the server is unavailable, otherwise it will spam with a bunch of emails our mailbox
+# The following can be enabled if timestamp.txt is served from the puppet server, eg. via http.
+# It is planned to be implemented in the close future.
+
+# Exit silently if the server is unavailable, otherwise it will spam with a bunch of emails our mailbox.
+
 #timestamp_remote=$(curl "$host_server:8000/timestamp.txt") || exit 0
 
-# if the code version of the last successful run differs from the one downloaded on the server, then run puppet agent
-#if ! [ "$timestamp_last" -eq "$timestamp_remote" ];
-#	then
-		puppet agent -t --detailed-exitcodes --color=false >/dev/null 2>&1 ;
-#fi
-err="$?"
+# If the version of the last successful running differs from the one downloaded from the server, then puppet agent should run
 
-# if the puppet agent returns with success (no change or successful changes) save the timestamp and save the version of the code
-if [[ "$err" -eq 0 || "$err" -eq 2 ]];
+#if ! [ "$timestamp_last" -eq "$timestamp_remote" ]
+#	then
+		puppet agent -t --detailed-exitcodes --color=false >/dev/null 2>&1
+#fi
+
+return_code="${?}"
+
+# if the puppet agent return_codeurns with success (no change or successful changes) save the timestamp and save the version of the code
+if [[ "${return_code}" -eq 0 || "${return_code}" -eq 2 ]];
 	then
 		date "+%s" | tee /var/tmp/puppet_last_run.txt > /dev/null
-		echo "$timestamp_remote" | tee "$timestamp_local_file" > /dev/null
+		#echo "${timestamp_remote}" | tee "${timestamp_local_file}" > /dev/null
 fi
 
-# if the return code is suspicious that there was an error (repo update) on the server, run it again
-if [[ "$err" -eq 4 ]];
+# If the return_codeurn code is suspicious that there was an error (most probably an intermittent repo update job was running) on the server.
+# Run it again.
+
+if [[ "${return_code}" -eq 4 ]];
+then
+	#if ! [ "${timestamp_last}" -eq "${timestamp_remote}" ]
+	#	then
+			puppet agent -t --detailed-exitcodes --color=false >/dev/null 2>&1 ;
+	#fi
+
+	return_code="${?}"
+
+	if [[ "${return_code}" -eq 0 || "${return_code}" -eq 2 ]]
 	then
-		if ! [ "$timestamp_last" -eq "$timestamp_remote" ];
-			then
-				puppet agent -t --detailed-exitcodes --color=false >/dev/null 2>&1 ;
-		fi
-		err="$?"
-		if [[ "$err" -eq 0 || "$err" -eq 2 ]];
-			then
-				date "+%s" | tee /var/tmp/puppet_last_run.txt > /dev/null
-				echo "$timestamp_remote" | tee "$timestamp_local_file" > /dev/null
-		fi
+			date "+%s" | tee /var/tmp/puppet_last_run.txt > /dev/null
+			#echo "$timestamp_remote" | tee "$timestamp_local_file" > /dev/null
+	fi
 fi
