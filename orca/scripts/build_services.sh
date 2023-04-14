@@ -468,8 +468,8 @@ function query_configuration {
 function query_github_configuration {
 	if [ ! -e "${GITHUB_CONFIG_FILE}" ]
 	then
-		echo "No GitHub config file exists: ${GITHUB_CONFIG_FILE}."
-		echo "Use 'configs/example-github.yml' as a template"
+		echo "${GITHUB_CONFIG_FILE} does not exist. Use 'configs/example-github.yml' as a template"
+
 		exit 1
 	fi
 
