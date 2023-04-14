@@ -302,9 +302,9 @@ function build_service_teleport_proxy {
 	write 1 "${SERVICE_NAME}:"
 	write 1 "    container_name: ${SERVICE_NAME}"
 	write 1 "    environment:"
-	write 1 "        - GITHUB_ID=$(query_github_creds ".github.id")"
-	write 1 "        - GITHUB_SECRET=$(query_github_creds ".github.secret")"
-	write 1 "        - GITHUB_REDIRECT_HOST=$(query_github_creds ".github.redirect_host")"
+	write 1 "        - GITHUB_ID=$(query_github_configuration ".github.id")"
+	write 1 "        - GITHUB_SECRET=$(query_github_configuration ".github.secret")"
+	write 1 "        - GITHUB_REDIRECT_HOST=$(query_github_configuration ".github.redirect_host")"
 	write 1 "        - ORCA_DEVELOPMENT_MODE=$(query_configuration .development)"
 	write 1 "        - ORCA_VAULT_ADDRESSES=$(query_services vault host_port 8200)"
 	write 1 "        - ORCA_VAULT_SERVICE_PASSWORD=\${ORCA_VAULT_TELEPORT_PROXY_PASSWORD:-}"
@@ -465,7 +465,7 @@ function query_configuration {
 	fi
 }
 
-function query_github_creds {
+function query_github_configuration {
 	if [ ! -e "${GITHUB_CONFIG_FILE}" ]
 	then
 		echo "No GitHub config file exists: ${GITHUB_CONFIG_FILE}."
