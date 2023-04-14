@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -f /etc/teleport/server.crt ];
+if [ ! -f /etc/teleport/server.crt ]
 then
 	/usr/local/bin/generate-certificate.sh
 fi
