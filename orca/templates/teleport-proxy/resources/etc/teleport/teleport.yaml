@@ -1,38 +1,31 @@
-#
-# A Sample Teleport configuration file.
-#
-# Things to update:
-#  1. license.pem: You only need a license from https://dashboard.goteleport.com
-#     if you are an Enterprise customer.
-#
 version: v3
 teleport:
-  nodename: localhost
-  data_dir: /var/lib/teleport
-  log:
-    output: stderr
-    severity: INFO
-    format:
-      output: text
-  ca_pin: ""
-  diag_addr: ""
+    nodename: localhost
+    data_dir: /var/lib/teleport
+    log:
+        output: stderr
+        severity: INFO
+        format:
+            output: text
+    ca_pin: ""
+    diag_addr: ""
 auth_service:
-  enabled: "yes"
-  cluster_name: jumper
-  listen_addr: 0.0.0.0:3025
-  proxy_listener_mode: multiplex
-  authentication:
-    type: github
+    enabled: "yes"
+    cluster_name: jumper
+    listen_addr: 0.0.0.0:3025
+    proxy_listener_mode: multiplex
+    authentication:
+        type: github
 ssh_service:
-  enabled: "yes"
-  commands:
-  - name: hostname
-    command: [hostname]
-    period: 1m0s
+    enabled: "yes"
+    commands:
+    - name: hostname
+        command: [hostname]
+        period: 1m0s
 proxy_service:
-  enabled: "yes"
-  https_keypairs:
-    - cert_file: /etc/teleport/server.crt
-      key_file: /etc/teleport/server.key
-  https_keypairs_reload_interval: 0s
-  acme: {}
+    enabled: "yes"
+    https_keypairs:
+        - cert_file: /etc/teleport/server.crt
+            key_file: /etc/teleport/server.key
+    https_keypairs_reload_interval: 0s
+    acme: {}
