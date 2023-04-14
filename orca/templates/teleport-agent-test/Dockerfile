@@ -1,7 +1,7 @@
 FROM ubuntu:jammy
 
-ARG DEBIAN_FRONTEND=noninteractive
-ARG TZ=Etc/UTC
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
 RUN apt update && \
 	apt upgrade -y && \
