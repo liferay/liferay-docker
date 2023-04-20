@@ -5,7 +5,7 @@ RUN apt-get update && \
 	apt-get upgrade --yes && \
 	apt-get clean
 
-ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_hotfix_builder_entrypoint.sh"]
+ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_release_builder_entrypoint.sh"]
 
 ENV ANT_OPTS="-Xmx10G"
 
