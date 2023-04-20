@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CACHE_DIR="${HOME}/.release-builder-cache"
-NARWHAL_GIT_SHA="fix-pack-fix-240397335"
+NARWHAL_GIT_SHA=72licensing
 
 if [ ! -d "${CACHE_DIR}" ]
 then
@@ -35,4 +35,4 @@ fi
 
 # shellcheck disable=SC2086
 docker -l warning build . --quiet -t release-builder && \
-	docker run -it -v "${CACHE_DIR}:/opt/liferay/" -e NARWHAL_BUILD_ID=1 -e NARWHAL_GIT_SHA="${NARWHAL_GIT_SHA}" ${SSH_CONFIG} release-builder
+	docker run -it -v "${CACHE_DIR}:/opt/liferay/" -e NARWHAL_REMOTE=zsoltbalogh -e NARWHAL_BUILD_ID=1 -e NARWHAL_GIT_SHA="${NARWHAL_GIT_SHA}" ${SSH_CONFIG} release-builder

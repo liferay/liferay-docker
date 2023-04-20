@@ -11,9 +11,9 @@ function add_file {
 }
 
 function add_licensing {
-	lcd "/opt/liferay/dev/projects/liferay-portal-ee/tools/release"
+	lcd "/opt/liferay/dev/projects/liferay-portal-ee/tools/release/licensing"
 
-	ant -Dext.dir=/opt/liferay/dev/projects/liferay-release-tool-ee/ -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -f build-release-license.xml
+	ant -Dext.dir=/opt/liferay/dev/projects/liferay-portal-ee/tools/release/licensing -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -f build-release-license.xml
 }
 
 function calculate_checksums {
@@ -268,13 +268,7 @@ function git_update {
 
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
-	if (git remote | grep -q upstream)
-	then
-		git fetch upstream --tags
-	else
-		git fetch origin --tags
-	fi
-
+	git fetch origin --tags
 	git clean -df
 	git reset --hard
 	git checkout "${NARWHAL_GIT_SHA}"
@@ -307,6 +301,8 @@ function main {
 	time_run clone_repository liferay-portal-ee
 	wait
 
+	time_run setup_remote
+
 	time_run git_update
 
 	time_run pre_compile_setup
@@ -315,8 +311,6 @@ function main {
 
 	DXP_VERSION=$(get_dxp_version)
 	UPDATE_DIR=/opt/liferay/bundles/"${DXP_VERSION}"
-
-	time_run prepare_update &
 
 	time_run compile_dxp
 
@@ -380,17 +374,24 @@ function pre_compile_setup {
 	ant setup-profile-dxp
 }
 
-function prepare_update {
-	if [ -e "${UPDATE_DIR}" ]
-	then
-		echo "Bundle already exists in /opt/liferay/bundles/${DXP_VERSION}."
+function setup_remote {
+	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
-		return
+	if [ ! -n "${NARWHAL_REMOTE}" ]
+	then
+		NARWHAL_REMOTE=liferay
 	fi
 
-	echo "Download will happen here once we remove lpkgs. For now, build manually and place the buit version to the bundles folder."
+	if (git remote get-url origin | grep -q "github.com:${NARWHAL_REMOTE}/")
+	then
+		echo "Remote is already set up."
 
-	return 1
+		return ${SKIPPED}
+	fi
+
+	git remote rm origin
+
+	git remote add origin git@github.com:${NARWHAL_REMOTE}/liferay-portal-ee
 }
 
 function setup_ssh {
@@ -408,7 +409,7 @@ function time_run {
 
 	local log_file="${BUILD_DIR}/build_${start_time}_step_$(next_step)_${run_id}.txt"
 
-	echo ">>> Starting the \"${*}\" phase. Log: ${log_file}. $(date)"
+	echo "$(date) > ${*}"
 
 	"${@}" &> "${log_file}"
 
@@ -418,19 +419,20 @@ function time_run {
 
 	if [ "${exit_code}" == "${SKIPPED}" ]
 	then
-		echo ">>> Skipped \"${*}\". $(date)"
+		echo "$(date) < ${*} - skip"
 	else
 		local seconds=$((end_time - start_time))
 
-		echo ">>> Finished \"${*}\" in $(echo_time ${seconds}). Exit code ${exit_code}. $(date)"
-
+		
 		if [ "${exit_code}" -gt 0 ]
 		then
-			echo "${*} exited with error, full log file: ${log_file}. Printing the last 100 lines:"
+			echo "$(date) ! ${*} exited with error in $(echo_time ${seconds}) (exit code: ${exit_code}), full log file: ${log_file}. Printing the last 100 lines:"
 
 			tail -n 100 "${log_file}"
 
 			exit ${exit_code}
+		else 
+			echo "$(date) < ${*} - success in $(echo_time ${seconds})"
 		fi
 	fi
 }
