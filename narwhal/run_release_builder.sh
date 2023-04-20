@@ -35,4 +35,4 @@ fi
 
 # shellcheck disable=SC2086
 docker -l warning build . --quiet -t release-builder && \
-	docker run -it -v "${CACHE_DIR}:/opt/liferay/" -e NARWHAL_REMOTE=zsoltbalogh -e NARWHAL_BUILD_ID=1 -e NARWHAL_GIT_SHA="${NARWHAL_GIT_SHA}" ${SSH_CONFIG} release-builder
+	docker run -it -v "${CACHE_DIR}:/opt/liferay/" -e NARWHAL_REMOTE=zsoltbalogh -e NARWHAL_BUILD_ID=1 -e NARWHAL_GIT_SHA="${NARWHAL_GIT_SHA}" -e NARWHAL_OUTPUT=release ${SSH_CONFIG} release-builder
