@@ -102,7 +102,7 @@ function get_dxp_version {
 }
 
 function git_update {
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}" ]
+	if [ -e "${BUILD_DIR}"/checked-out-sha ] && [ $(cat "${BUILD_DIR}"/checked-out-sha) == "${NARWHAL_GIT_SHA}" ]
 	then
 		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the git checkout step."
 
@@ -115,6 +115,8 @@ function git_update {
 	git clean -df
 	git reset --hard
 	git checkout "${NARWHAL_GIT_SHA}"
+
+	echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/checked-out-sha
 }
 
 function lcd {
