@@ -46,8 +46,43 @@ function create_folders {
 	mkdir -p "${BUILD_DIR}"
 
 	echo 0 > "${BUILD_DIR}"/.step
+
+	mkdir -p /opt/liferay/download-cache
 }
 
+function download {
+	url=${1}
+	file=${2}
+
+	if [ -e "${file}" ]
+	then
+		echo "Skipping the download of ${url} as it already exists."
+
+		return
+	fi
+
+	cache_file=/opt/liferay/download-cache/${url%%.*://}
+
+	if [ -e "${cache_file}" ]
+	then
+		echo "Copying file from cache: ${cache_file}"
+
+		cp "${cache_file}" "${file}"
+	fi
+
+	echo "Downloading ${url}"
+
+	if (! curl "${url}" --output "${cache_file}_temp" --silent)
+	then
+		echo "Downloading ${url} as unsuccessful, exiting."
+
+		return 4
+	else
+		mv "${cache_file}_temp" "${cache_file}"
+
+		cp "${cache_file}" "${file}"
+	fi
+}
 
 function echo_time {
 	local seconds=${1}
