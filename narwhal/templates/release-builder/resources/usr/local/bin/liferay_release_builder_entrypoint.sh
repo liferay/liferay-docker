@@ -7,7 +7,13 @@ function add_file {
 
 	mkdir -p "${BUILD_DIR}/hotfix/binaries/${file_dir}"
 
-	cp "${PATCHED_DIR}/${1}" "${BUILD_DIR}/hotfix/binaries/${file_dir}"
+	cp "${BUNDLES_DIR}/${1}" "${BUILD_DIR}/hotfix/binaries/${file_dir}"
+}
+
+function add_licensing {
+	lcd "/opt/liferay/dev/projects/liferay-portal-ee/tools/release"
+
+	ant -Dext.dir=/opt/liferay/dev/projects/liferay-release-tool-ee/ -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -f build-release-license.xml
 }
 
 function calculate_checksums {
@@ -32,7 +38,7 @@ function clone_repository {
 }
 
 function compare_jars {
-	jar1=${PATCHED_DIR}/"${1}"
+	jar1=${BUNDLES_DIR}/"${1}"
 	jar2=${UPDATE_DIR}/"${1}"
 
 	function list_file {
@@ -80,8 +86,6 @@ function compare_jars {
 }
 
 function compile_dxp {
-	PATCHED_DIR=/opt/liferay/dev/projects/bundles
-
 	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}" ]
 	then
 		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile_dxp step."
@@ -192,7 +196,7 @@ function create_hotfix {
 	rm -fr "${BUILD_DIR}"/hotfix
 	mkdir -p "${BUILD_DIR}"/hotfix
 
-	diff -rq "${PATCHED_DIR}" "${UPDATE_DIR}" | grep -v /work/Catalina | while read -r change
+	diff -rq "${BUNDLES_DIR}" "${UPDATE_DIR}" | grep -v /work/Catalina | while read -r change
 	do
 		if (echo "${change}" | grep "^Only in ${UPDATE_DIR}" &>/dev/null)
 		then
@@ -207,10 +211,10 @@ function create_hotfix {
 
 				transform_file_name "${removed_file}" >> "${BUILD_DIR}"/hotfix/removed_files
 			fi
-		elif (echo "${change}" | grep "^Only in ${PATCHED_DIR}" &>/dev/null)
+		elif (echo "${change}" | grep "^Only in ${BUNDLES_DIR}" &>/dev/null)
 		then
 			local new_file=${change#Only in }
-			new_file=$(echo "${new_file}" | sed -e "s#: #/#" | sed -e "s#${PATCHED_DIR}##")
+			new_file=$(echo "${new_file}" | sed -e "s#: #/#" | sed -e "s#${BUNDLES_DIR}##")
 			new_file=${new_file#/}
 
 			if (in_scope "${new_file}")
@@ -221,7 +225,7 @@ function create_hotfix {
 		else
 			local changed_file=${change#Files }
 			changed_file=${changed_file%% *}
-			changed_file=$(echo "${changed_file}" | sed -e "s#${PATCHED_DIR}##")
+			changed_file=$(echo "${changed_file}" | sed -e "s#${BUNDLES_DIR}##")
 			changed_file=${changed_file#/}
 
 			if (in_scope "${changed_file}")
@@ -291,6 +295,7 @@ function lcd {
 
 function main {
 	SKIPPED=5
+	BUNDLES_DIR=/opt/liferay/dev/projects/bundles
 
 	local start_time=$(date +%s)
 
@@ -300,12 +305,13 @@ function main {
 
 	time_run clone_repository liferay-binaries-cache-2020 &
 	time_run clone_repository liferay-portal-ee
-
 	wait
 
 	time_run git_update
 
 	time_run pre_compile_setup
+
+	time_run add_licensing
 
 	DXP_VERSION=$(get_dxp_version)
 	UPDATE_DIR=/opt/liferay/bundles/"${DXP_VERSION}"
