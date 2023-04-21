@@ -70,11 +70,13 @@ function download {
 		cp "${cache_file}" "${file}"
 	fi
 
+	mkdir -p $(dirname "${cache_file}")
+
 	echo "Downloading ${url}"
 
 	if (! curl "${url}" --output "${cache_file}_temp" --silent)
 	then
-		echo "Downloading ${url} as unsuccessful, exiting."
+		echo "Downloading ${url} was unsuccessful, exiting."
 
 		return 4
 	else
@@ -102,6 +104,9 @@ function get_dxp_version {
 }
 
 function git_update {
+	git clean -df
+	git reset --hard
+
 	if [ -e "${BUILD_DIR}"/checked-out-sha ] && [ $(cat "${BUILD_DIR}"/checked-out-sha) == "${NARWHAL_GIT_SHA}" ]
 	then
 		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the git checkout step."
@@ -112,8 +117,6 @@ function git_update {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
 	git fetch origin --tags
-	git clean -df
-	git reset --hard
 	git checkout "${NARWHAL_GIT_SHA}"
 
 	echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/checked-out-sha
@@ -148,7 +151,7 @@ function main {
 	DXP_VERSION=$(get_dxp_version)
 	UPDATE_DIR=/opt/liferay/bundles/"${DXP_VERSION}"
 
-	#time_run compile_dxp
+	time_run compile_dxp
 
 	if [ "${NARWHAL_OUTPUT}" == "release" ]
 	then

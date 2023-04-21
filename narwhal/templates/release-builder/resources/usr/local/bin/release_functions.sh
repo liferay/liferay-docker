@@ -11,7 +11,11 @@ function download_released_files {
 		url=${url##artifact.url=}
 
 		local file_name=$(basename "${url}")
+		if (! download "${url}" "${BUNDLES_DIR}/osgi/modules/${file_name}")
+		then
+			echo "Failed to download ${url}."
 
-		download "${url}" "${BUNDLES_DIR}/osgi/modules/${file_name}"
+			exit 1
+		fi
 	done
 }
