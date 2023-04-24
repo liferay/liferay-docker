@@ -477,11 +477,10 @@ function main {
 	if [[ " ${@} " =~ " --push " ]]
 	then
 		BUILD_ALL_IMAGES_PUSH="push"
-	fi
 
-	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && ! ./release_notes.sh fail-on-change
-	then
-		exit 1
+		./release_notes.sh commit
+
+		git push
 	fi
 
 	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && [ -z "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" ]
