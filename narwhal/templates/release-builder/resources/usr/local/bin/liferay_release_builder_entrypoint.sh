@@ -5,6 +5,7 @@ function add_licensing {
 
 	lcd "$(read_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
 
+
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
 }
 
@@ -284,6 +285,13 @@ function update_release_tool_git {
 	git reset --hard
 
 	local release_tool_sha=$(read_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.sha")
+
+	if [ ! -n "${release_tool_sha}" ]
+	then
+		echo "The release.tool.sha property is missing from the release.properties file in the liferay-portal-ee repository. Use a SHA which is compatible with this builder and includes both release.tool.dir and release.tool.sha properties."
+
+		return 1
+	fi
 
 	git fetch origin master || return 1
 	git checkout origin/"${release_tool_sha}" || return 1
