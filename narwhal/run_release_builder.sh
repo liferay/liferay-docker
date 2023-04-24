@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CACHE_DIR="${HOME}/.release-builder-cache"
-NARWHAL_GIT_SHA=72licensing
+NARWHAL_GIT_SHA=72licensing-1
 
 if [ ! -d "${CACHE_DIR}" ]
 then
