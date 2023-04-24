@@ -265,17 +265,29 @@ function update_portal_git {
 	git clean -df
 	git reset --hard
 
-	if [ -e "${BUILD_DIR}"/checked-out-sha ] && [ $(cat "${BUILD_DIR}"/checked-out-sha) == "${NARWHAL_GIT_SHA}" ]
+	if [ -e "${BUILD_DIR}"/sha-liferay-portal-ee ] && [ $(cat "${BUILD_DIR}"/sha-liferay-portal-ee) == "${NARWHAL_GIT_SHA}" ]
 	then
 		echo "${NARWHAL_GIT_SHA} is already checked out, skipping the git checkout step."
 
 		return "${SKIPPED}"
 	fi
 
-	git fetch origin --tags || return 1
-	git checkout origin/"${NARWHAL_GIT_SHA}" || return 1
+	if [ -n "$(git ls-remote origin refs/tags/"${NARWHAL_GIT_SHA}")" ]
+	then
+		echo "${NARWHAL_GIT_SHA} tag exists on remote."
 
-	echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/checked-out-sha
+		git fetch origin tag "${NARWHAL_GIT_SHA}" || return 1
+		git checkout "${NARWHAL_GIT_SHA}" || return 1
+	elif [ -n "$(git ls-remote origin refs/heads/"${NARWHAL_GIT_SHA}")" ]
+	then
+		echo "${NARWHAL_GIT_SHA} branch exists on remote."
+
+		git fetch origin "${NARWHAL_GIT_SHA}" || return 1
+		git checkout "${NARWHAL_GIT_SHA}" || return 1
+		git reset origin/"${NARWHAL_GIT_SHA}" || return 1
+	fi
+
+	echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/sha-liferay-portal-ee
 }
 
 function update_release_tool_git {
@@ -293,8 +305,17 @@ function update_release_tool_git {
 		return 1
 	fi
 
-	git fetch origin master || return 1
+	if [ -e "${BUILD_DIR}"/sha-relesae-tool-ee ] && [ $(cat "${BUILD_DIR}"/sha-release-tool-ee) == "${release_tool_sha}" ]
+	then
+		echo "${release_tool_sha} is already checked out, skipping the git checkout step."
+
+		return "${SKIPPED}"
+	fi
+
+	git fetch --all --tags --prune || return 1
 	git checkout origin/"${release_tool_sha}" || return 1
+
+	echo "${release_tool_sha}" > "${BUILD_DIR}"/sha-liferay-release-tool-ee
 }
 
 main
