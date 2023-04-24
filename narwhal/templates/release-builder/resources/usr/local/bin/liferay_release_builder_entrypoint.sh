@@ -9,6 +9,14 @@ function add_licensing {
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
 }
 
+function clean_portal_git {
+	lcd /opt/liferay/dev/projects/liferay-portal-ee
+
+	git clean -df
+	git reset --hard
+
+}
+
 function clone_repository {
 	if [ -e /opt/liferay/dev/projects/"${1}" ]
 	then
@@ -127,6 +135,8 @@ function main {
 	wait
 
 	time_run setup_remote
+
+	time_run clean_portal_git
 
 	time_run update_portal_git
 
@@ -262,9 +272,6 @@ function time_run {
 function update_portal_git {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
-	git clean -df
-	git reset --hard
-
 	if [ -e "${BUILD_DIR}"/sha-liferay-portal-ee ] && [ $(cat "${BUILD_DIR}"/sha-liferay-portal-ee) == "${NARWHAL_GIT_SHA}" ]
 	then
 		echo "${NARWHAL_GIT_SHA} is already checked out, skipping the git checkout step."
@@ -305,7 +312,7 @@ function update_release_tool_git {
 		return 1
 	fi
 
-	if [ -e "${BUILD_DIR}"/sha-relesae-tool-ee ] && [ $(cat "${BUILD_DIR}"/sha-release-tool-ee) == "${release_tool_sha}" ]
+	if [ -e "${BUILD_DIR}"/sha-liferay-release-tool-ee ] && [ $(cat "${BUILD_DIR}"/sha-liferay-release-tool-ee) == "${release_tool_sha}" ]
 	then
 		echo "${release_tool_sha} is already checked out, skipping the git checkout step."
 
