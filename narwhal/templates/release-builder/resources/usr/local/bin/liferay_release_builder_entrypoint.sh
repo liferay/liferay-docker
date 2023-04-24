@@ -1,9 +1,11 @@
 #!/bin/bash
 
 function add_licensing {
-	lcd "/opt/liferay/dev/projects/liferay-portal-ee/tools/release/licensing"
+	lcd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
 
-	ant -Dext.dir=/opt/liferay/dev/projects/liferay-portal-ee/tools/release/licensing -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -f build-release-license.xml
+	lcd "$(read_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
+
+	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
 }
 
 function clone_repository {
@@ -95,31 +97,12 @@ function echo_time {
 function get_dxp_version {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
-	local major=$(grep -F "release.info.version.major[master-private]=" release.properties)
-	local minor=$(grep -F "release.info.version.minor[master-private]=" release.properties)
-	local bug_fix=$(grep -F "release.info.version.bug.fix[master-private]=" release.properties)
-	local trivial=$(grep -F "release.info.version.trivial=" release.properties)
+	local major=$(read_property release.properties "release.info.version.major[master-private]")
+	local minor=$(read_property release.properties "release.info.version.minor[master-private]")
+	local bug_fix=$(read_property release.properties "release.info.version.bug.fix[master-private]=")
+	local trivial=$(read_property release.properties "release.info.version.trivial=")
 
-	echo "${major##*=}.${minor##*=}.${bug_fix##*=}-u${trivial##*=}"
-}
-
-function git_update {
-	git clean -df
-	git reset --hard
-
-	if [ -e "${BUILD_DIR}"/checked-out-sha ] && [ $(cat "${BUILD_DIR}"/checked-out-sha) == "${NARWHAL_GIT_SHA}" ]
-	then
-		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the git checkout step."
-
-		return "${SKIPPED}"
-	fi
-
-	lcd /opt/liferay/dev/projects/liferay-portal-ee
-
-	git fetch origin --tags
-	git checkout "${NARWHAL_GIT_SHA}"
-
-	echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/checked-out-sha
+	echo "${major}.${minor}.${bug_fix}-u${trivial}"
 }
 
 function lcd {
@@ -137,12 +120,16 @@ function main {
 	time_run setup_ssh
 
 	time_run clone_repository liferay-binaries-cache-2020 &
-	time_run clone_repository liferay-portal-ee
+	time_run clone_repository liferay-portal-ee &
+	time_run clone_repository liferay-release-tool-ee
+
 	wait
 
 	time_run setup_remote
 
-	time_run git_update
+	time_run update_portal_git
+
+	time_run update_release_tool_git
 
 	time_run pre_compile_setup
 
@@ -197,6 +184,15 @@ function pre_compile_setup {
 	fi
 
 	ant setup-profile-dxp
+}
+
+function read_property {
+	file=${1}
+	property=${2}
+
+	local value=$(grep -F "${2}=" "${1}")
+
+	echo "${value##*=}"
 }
 
 function setup_remote {
@@ -260,6 +256,37 @@ function time_run {
 			echo "$(date) < ${*} - success in $(echo_time ${seconds})"
 		fi
 	fi
+}
+
+function update_portal_git {
+	lcd /opt/liferay/dev/projects/liferay-portal-ee
+
+	git clean -df
+	git reset --hard
+
+	if [ -e "${BUILD_DIR}"/checked-out-sha ] && [ $(cat "${BUILD_DIR}"/checked-out-sha) == "${NARWHAL_GIT_SHA}" ]
+	then
+		echo "${NARWHAL_GIT_SHA} is already checked out, skipping the git checkout step."
+
+		return "${SKIPPED}"
+	fi
+
+	git fetch origin --tags || return 1
+	git checkout origin/"${NARWHAL_GIT_SHA}" || return 1
+
+	echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/checked-out-sha
+}
+
+function update_release_tool_git {
+	lcd /opt/liferay/dev/projects/liferay-release-tool-ee
+
+	git clean -df
+	git reset --hard
+
+	local release_tool_sha=$(read_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.sha")
+
+	git fetch origin master || return 1
+	git checkout origin/"${release_tool_sha}" || return 1
 }
 
 main
