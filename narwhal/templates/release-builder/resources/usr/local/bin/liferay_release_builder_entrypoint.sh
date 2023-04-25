@@ -249,7 +249,12 @@ function time_run {
 
 	echo "$(date) > ${*}"
 
-	"${@}" &> "${log_file}"
+	if [ ! -n "${NARWHAL_DEBUG}" ]
+	then
+		"${@}" &> "${log_file}"
+	else
+		"${@}"
+	fi
 
 	local exit_code=${?}
 
@@ -261,12 +266,16 @@ function time_run {
 	else
 		local seconds=$((end_time - start_time))
 
-		
 		if [ "${exit_code}" -gt 0 ]
 		then
-			echo "$(date) ! ${*} exited with error in $(echo_time ${seconds}) (exit code: ${exit_code}), full log file: ${log_file}. Printing the last 100 lines:"
+			echo "$(date) ! ${*} exited with error in $(echo_time ${seconds}) (exit code: ${exit_code})."
 
-			tail -n 100 "${log_file}"
+			if [ ! -n "${NARWHAL_DEBUG}" ]
+			then
+				echo "Full log file: ${log_file}. Printing the last 100 lines:"
+
+				tail -n 100 "${log_file}"
+			fi
 
 			exit ${exit_code}
 		else 

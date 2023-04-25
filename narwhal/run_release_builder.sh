@@ -32,6 +32,5 @@ else
 	SSH_CONFIG="-e NARWHAL_GITHUB_SSH_KEY=\"$(cat "${HOME}"/"${SSH_PUBKEY_FILE}")\""
 fi
 
-# shellcheck disable=SC2086
-docker -l warning build . --quiet -t release-builder && \
-	docker run -it -v "${CACHE_DIR}:/opt/liferay/" ${SSH_CONFIG} release-builder
+# shellcheck disable=SC2086,SC2068
+docker run -it -v "${CACHE_DIR}:/opt/liferay/" ${SSH_CONFIG} ${@} $(docker -l warning build . --quiet -t release-builder)
