@@ -79,6 +79,8 @@ function download {
 		echo "Copying file from cache: ${cache_file}"
 
 		cp "${cache_file}" "${file}"
+
+		return
 	fi
 
 	mkdir -p $(dirname "${cache_file}")
@@ -154,6 +156,8 @@ function main {
 	if [ "${NARWHAL_OUTPUT}" == "release" ]
 	then
 		source /usr/local/bin/release_functions.sh
+
+		time_run copy_build
 
 		time_run download_released_files
 

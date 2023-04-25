@@ -1,5 +1,13 @@
 #!/bin/bash
 
+function copy_build {
+	rm -fr "${BUILD_DIR}/bundles"
+
+	cp -a "${BUNDLES_DIR}" "${BUILD_DIR}"
+
+	BUNDLES_DIR="${BUILD_DIR}/bundles"
+}
+
 function download_released_files {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules/.releng
 
@@ -7,6 +15,7 @@ function download_released_files {
 
 	find . -name artifact.properties -print0 | while IFS= read -r -d '' artifact_properties
 	do
+		echo "Processing ${artifact_properties}"
 		if [ ! -e ../$(dirname "${artifact_properties}")/.lfrbuild-portal ]
 		then
 			echo "Skipping $(dirname) as it doesn't have .lfrbuild-portal"
@@ -33,23 +42,20 @@ function remove_built_jars {
 	find . -name "*.jar" -print0 | while IFS= read -r -d '' marketplace_jar
 	do
 		local built_name=$(echo "${marketplace_jar}" | sed -e s/-[0-9]*[.][0-9]*[.][0-9]*.jar/.jar/)
+		built_name=${built_name#./}
 
-		if [ -e "${BUNDLES_DIR}/osgi/modules/${built_name}" ]
+		local built_file=$(find "${BUNDLES_DIR}/osgi" -name "${built_name}")
+
+		if [ -n "${built_file}" ]
 		then
-			echo "Deleting ${BUNDLES_DIR}/osgi/modules/${built_name}"
+			echo "Deleting ${built_file}"
 
-			rm -f "${BUNDLES_DIR}/osgi/modules/${built_name}"
+			rm -f "${built_file}"
 		else
-			if [ -e "${BUNDLES_DIR}/osgi/test/${built_name}" ]
-			then
-				echo "Deleting ${BUNDLES_DIR}/osgi/test/${built_name}"
+			echo "Couldn't find ${built_name}"
 
-				rm -f "${BUNDLES_DIR}/osgi/test/${built_name}"
-			else
-				echo "Module ${built_name} was not built."
-
-				return 1
-			fi
+			return 1
 		fi
+
 	done
 }
