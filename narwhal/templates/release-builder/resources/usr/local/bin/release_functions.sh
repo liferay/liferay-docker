@@ -16,9 +16,18 @@ function download_released_files {
 	find . -name artifact.properties -print0 | while IFS= read -r -d '' artifact_properties
 	do
 		echo "Processing ${artifact_properties}"
-		if [ ! -e ../$(dirname "${artifact_properties}")/.lfrbuild-portal ]
+		local app_dir=../$(dirname "${artifact_properties}")
+
+		if [ ! -e "${app_dir}/.lfrbuild-portal" ]
 		then
 			echo "Skipping $(dirname) as it doesn't have .lfrbuild-portal"
+
+			continue
+		fi
+
+		if [ -e "${app_dir}/.lfrbuild-app-server-lib" ]
+		then
+			echo "Skipping $(dirname) as it has .lfrbuild-app-server-lib"
 
 			continue
 		fi
