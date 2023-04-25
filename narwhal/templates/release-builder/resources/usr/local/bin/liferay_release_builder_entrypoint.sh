@@ -156,6 +156,8 @@ function main {
 		source /usr/local/bin/release_functions.sh
 
 		time_run download_released_files
+
+		time_run remove_built_jars
 	else
 		source /usr/local/bin/hotfix_functions.sh
 

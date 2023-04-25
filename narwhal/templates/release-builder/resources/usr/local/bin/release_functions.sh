@@ -26,3 +26,30 @@ function download_released_files {
 		fi
 	done
 }
+
+function remove_built_jars {
+	lcd "${BUNDLES_DIR}/osgi/marketplace"
+
+	find . -name "*.jar" -print0 | while IFS= read -r -d '' marketplace_jar
+	do
+		local built_name=$(echo "${marketplace_jar}" | sed -e s/-[0-9]*[.][0-9]*[.][0-9]*.jar/.jar/)
+
+		if [ -e "${BUNDLES_DIR}/osgi/modules/${built_name}" ]
+		then
+			echo "Deleting ${BUNDLES_DIR}/osgi/modules/${built_name}"
+
+			rm -f "${BUNDLES_DIR}/osgi/modules/${built_name}"
+		else
+			if [ -e "${BUNDLES_DIR}/osgi/test/${built_name}" ]
+			then
+				echo "Deleting ${BUNDLES_DIR}/osgi/test/${built_name}"
+
+				rm -f "${BUNDLES_DIR}/osgi/test/${built_name}"
+			else
+				echo "Module ${built_name} was not built."
+
+				return 1
+			fi
+		fi
+	done
+}
