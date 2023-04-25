@@ -1,4 +1,5 @@
 require 'facter'
+
 Facter.add(:ipdefault) do
 	setcode do
 		# Load all default facts

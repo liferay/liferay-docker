@@ -8,28 +8,28 @@ class pts_ssh {
 				'AuthorizedKeysFile' => '.ssh/authorized_keys /etc/ssh/auths/%u.pub',
 				'PasswordAuthentication' => 'no',
 				'PermitRootLogin' => 'no',
-				'PrintMotd'	=> 'yes',
+				'PrintMotd' => 'yes',
 				'UseDNS' => 'no',
-				'X11Forwarding'	=> 'yes',
+				'X11Forwarding' => 'yes',
 			},
 			storeconfigs_enabled => false,
-			validate_sshd_file	 => true,
+			validate_sshd_file => true,
 	}
 
 	file {
 		'/etc/ssh/auths':
 			ensure => directory,
-			group	=> 'root',
-			mode	 => '0755',
-			owner	=> 'root',
+			group => 'root',
+			mode => '0755',
+			owner => 'root',
 	}
 
 	file {
 		'/etc/systemd/system/sshd.service.d':
 			ensure => directory,
-			group	=> 'root',
-			mode	 => '0755',
-			owner	=> 'root',
+			group => 'root',
+			mode => '0755',
+			owner => 'root',
 	}
 
 	file {

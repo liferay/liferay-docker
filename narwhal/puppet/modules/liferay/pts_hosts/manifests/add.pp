@@ -1,7 +1,7 @@
 define pts_hosts::add (
+		$aliases = undef,
 		$fqdn,
 		$ipaddr = $name,
-		$aliases = undef,
 ){
 		unless ( is_string( $ipaddr ) ) {
 

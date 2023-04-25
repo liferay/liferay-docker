@@ -7,7 +7,7 @@ A puppet module to manage the contents of hosts files.
 ## Module Description
 
 This module can be used to manage the contents of the hosts file. In addition
-to user supplies entries, it can also automatically create entries for the 
+to user supplies entries, it can also automatically create entries for the
 loopback interfaces (ipv4 and ipv6) as well.
 
 ## Setup
@@ -22,11 +22,12 @@ loopback interfaces (ipv4 and ipv6) as well.
 Declare the class and add entries as follows:
 
 ```
-class { '::hosts' : }
+class { '::hosts': }
 
-::hosts::add { '192.168.0.1' :
-		fqdn		=> 'router.mydomain.com',
-		aliases => [ 'router' ]
+::hosts::add {
+	'192.168.0.1':
+		aliases => [ 'router' ],
+		fqdn => 'router.mydomain.com',
 }
 ```
 
@@ -37,23 +38,24 @@ class { '::hosts' : }
 Declare the class. There are a number of optional parameters whose defaults
 are listed below:
 ```
-class { '::hosts' :
-		file				=> '/etc/hosts',
-		owner			 => 'root',
-		group			 => 'root',
-		mode				=> '0644',
-		localhost	 => true,
-		primary		 => true,
-		purge			 => false,
+class {
+	'::hosts':
+		file => '/etc/hosts',
+		group => 'root',
+		localhost => true,
+		mode => '0644',
+		owner => 'root',
+		primary => true,
+		purge => false,
 }
 ```
 
 #### Parameters within `hosts`:
 * `file`: Optional. Path to hosts file. Default value varies depedning on Operating System.
-* `owner`: Optional. User that has ownership of the hosts file. Defaults to root.
 * `group`: Optional. Group that has group ownership of the hosts file. Defaults to root.
-* `mode`: Optional. File permissions mode for the hosts file. Defaults to 0644.
 * `localhost`: Optional. Add hosts file entries for localhost/loopback interfaces. Defaults to true.
+* `mode`: Optional. File permissions mode for the hosts file. Defaults to 0644.
+* `owner`: Optional. User that has ownership of the hosts file. Defaults to root.
 * `primary`: Optional. Add host file entries for primary fqdn & hostname to primary IP Address. Defaults to true.
 * `purge`: Optional. Remove unmanaged entries from the hosts file. Defaults to false.
 
@@ -61,9 +63,12 @@ class { '::hosts' :
 
 Create hosts file entries as follows:
 ```
-::hosts::add { '192.168.0.1' :
-		fqdn		=> 'router.mydomain.com',
+::hosts::add {
+
+	'192.168.0.1':
+		fqdn => 'router.mydomain.com',
 		aliases => [ 'router' ],
+
 }
 ```
 
@@ -96,4 +101,3 @@ This module has been made for (osfamily) Debian and RedHat (and their derivative
 ## Development
 
 Appreciate any suggestions on feature or code changes. Let me know if you want to contribute or collaborate.
-

@@ -54,8 +54,8 @@ class pts_packages::latest {
 		'util-linux',
 		'virt-what',
 		]:
-			ensure	 => latest,
-			schedule => daily
+			ensure => latest,
+			schedule => daily,
 	}
 
 	if $facts['virtual'] != 'lxc' {
@@ -67,8 +67,8 @@ class pts_packages::latest {
 			'linux-tools-common',
 			'linux-tools-generic',
 			]:
-				ensure	 => latest,
-				schedule => daily
+				ensure => latest,
+				schedule => daily,
 		}
 
 	}

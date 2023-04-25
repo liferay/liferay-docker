@@ -8,7 +8,7 @@ class pts_ci_node {
 		[
 			'jq',
 			'openjdk-11-jdk',
-			'p7zip-full'
+			'p7zip-full',
 		]:
 		ensure => latest
 	}

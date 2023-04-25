@@ -5,7 +5,7 @@ class pts_users::users::brian_chan {
 
 	accounts::user {
 		$user:
-			comment	=> "${real_name} (${pts_users::users::hostname_uppercase})",
+			comment => "${real_name} (${pts_users::users::hostname_uppercase})",
 			groups => [
 				'ptsaccess',
 				'sudo',

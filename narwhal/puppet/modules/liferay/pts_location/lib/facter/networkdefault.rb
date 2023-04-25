@@ -1,4 +1,5 @@
 require 'facter'
+
 Facter.add(:networkdefault) do
 	setcode do
 		# Load all default facts

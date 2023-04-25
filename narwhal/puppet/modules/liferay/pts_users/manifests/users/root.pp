@@ -3,6 +3,6 @@ class pts_users::users::root {
 
 	accounts::user {
 		$user:
-			comment	=> "${pts_users::users::hostname_uppercase} root",
+			comment => "${pts_users::users::hostname_uppercase} root",
 	}
 }
