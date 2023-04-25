@@ -72,7 +72,7 @@ function download {
 		return
 	fi
 
-	cache_file=/opt/liferay/download-cache/${url%%.*://}
+	cache_file=/opt/liferay/download-cache/${url##*://}
 
 	if [ -e "${cache_file}" ]
 	then

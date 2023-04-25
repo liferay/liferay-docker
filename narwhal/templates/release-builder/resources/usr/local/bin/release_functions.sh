@@ -7,11 +7,18 @@ function download_released_files {
 
 	find . -name artifact.properties -print0 | while IFS= read -r -d '' artifact_properties
 	do
-		local url=$(grep "artifact.url=" "${artifact_properties}")
-		url=${url##artifact.url=}
+		if [ ! -e ../$(dirname "${artifact_properties}")/.lfrbuild-portal ]
+		then
+			echo "Skipping $(dirname) as it doesn't have .lfrbuild-portal"
+
+			continue
+		fi
+
+		local url=$(read_property "${artifact_properties}" "artifact.url")
 
 		local file_name=$(basename "${url}")
-		if (! download "${url}" "${BUNDLES_DIR}/osgi/modules/${file_name}")
+
+		if (! download "${url}" "${BUNDLES_DIR}/osgi/marketplace/${file_name}")
 		then
 			echo "Failed to download ${url}."
 
