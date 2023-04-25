@@ -20,14 +20,21 @@ function download_released_files {
 
 		if [ ! -e "${app_dir}/.lfrbuild-portal" ]
 		then
-			echo "Skipping $(dirname) as it doesn't have .lfrbuild-portal"
+			echo "Skipping ${app_dir} as it doesn't have .lfrbuild-portal"
 
 			continue
 		fi
 
 		if [ -e "${app_dir}/.lfrbuild-app-server-lib" ]
 		then
-			echo "Skipping $(dirname) as it has .lfrbuild-app-server-lib"
+			echo "Skipping ${app_dir} as it has .lfrbuild-app-server-lib"
+
+			continue
+		fi
+
+		if ( grep -q "deployDir.*=.*appServerLibGlobalDir" "${app_dir}/build.gradle" )
+		then
+			echo "Skipping ${app_dir} as it's deployed to app server lib global dir."
 
 			continue
 		fi
