@@ -17,14 +17,14 @@ class pts_system {
 
 	class {
 		'sudo':
-			suffix => '_puppet',
-			purge_ignore => '*[!_puppet]',
 			package_ensure => latest,
+			purge_ignore => '*[!_puppet]',
+			suffix => '_puppet',
 	}
 
 	exec {
 		'systemd_reload':
-			command	=> '/bin/systemctl daemon-reload',
+			command => '/bin/systemctl daemon-reload',
 			refreshonly => true,
 	}
 
@@ -45,20 +45,20 @@ class pts_system {
 
 	sudo::conf {
 		'git_env':
+			content => 'Defaults	env_keep = "PATH XAUTHORITY SSH_AUTH_SOCK GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL"',
 			priority => 20,
-			content	=> 'Defaults	env_keep = "PATH XAUTHORITY SSH_AUTH_SOCK GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL"',
 	}
 
 	sudo::conf {
 		'admins':
-			ensure	=> present,
 			content => '%admins ALL=(ALL) NOPASSWD:ALL',
+			ensure => present,
 	}
 
 	sudo::conf {
 		'sudo':
-			ensure	=> present,
 			content => '%sudo ALL=(ALL) NOPASSWD:ALL',
+			ensure => present,
 	}
 
 }

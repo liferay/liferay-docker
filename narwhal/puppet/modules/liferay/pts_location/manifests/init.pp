@@ -5,7 +5,7 @@ class pts_location {
 			group => 'root',
 			mode => '0755',
 			owner => 'root',
-			source => "puppet:///modules/${module_name}/usr/local/sbin/ifdefault.sh"
+			source => "puppet:///modules/${module_name}/usr/local/sbin/ifdefault.sh",
 	}
 
 	case $::networkdefault {
@@ -29,9 +29,7 @@ class pts_location {
 		}
 
 		default: {
-
 			fail("\n\nCannot identify location, unknown default network: ${::networkdefault}!\n\n")
-
 		}
 	}
 

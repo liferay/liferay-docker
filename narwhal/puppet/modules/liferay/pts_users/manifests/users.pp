@@ -13,4 +13,5 @@ class pts_users::users {
 	include pts_users::users::root
 	include pts_users::users::tamas_papp
 	include pts_users::users::zsolt_balogh
+
 }

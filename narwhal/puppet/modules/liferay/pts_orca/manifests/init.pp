@@ -5,12 +5,12 @@ class pts_orca {
 
 	package {
 		'pwgen':
-			ensure => latest,
+			ensure => latest
 	}
 
 	package {
 		'yq':
-			ensure	 => installed,
+			ensure => installed,
 			provider => 'snap',
 	}
 

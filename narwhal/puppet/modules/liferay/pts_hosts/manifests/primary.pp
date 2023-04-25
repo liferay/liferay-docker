@@ -4,8 +4,8 @@ class pts_hosts::primary {
 
 		pts_hosts::add {
 			$::ipdefault:
-				fqdn		=> $::fqdn,
 				aliases => $::hostname,
+				fqdn => $::fqdn,
 		}
 
 	}

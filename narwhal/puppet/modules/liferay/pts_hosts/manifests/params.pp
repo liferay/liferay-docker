@@ -9,4 +9,3 @@ class pts_hosts::params {
 	$purge = false
 
 }
-

@@ -20,22 +20,22 @@ class pts_hosts::localhost {
 
 		pts_hosts::add {
 			'fe00::0':
-				fqdn => 'ip6-localnet',
+				fqdn => 'ip6-localnet'
 		}
 
 		pts_hosts::add {
 			'ff00::0':
-				fqdn => 'ip6-mcastprefix',
+				fqdn => 'ip6-mcastprefix'
 		}
 
 		pts_hosts::add {
 			'ff02::1':
-				fqdn => 'ip6-allnodes',
+				fqdn => 'ip6-allnodes'
 		}
 
 		pts_hosts::add {
 			'ff02::2' :
-				fqdn => 'ip6-allrouters',
+				fqdn => 'ip6-allrouters'
 		}
 
 	}
