@@ -123,10 +123,19 @@ function build_bundle_images {
 	if [[ "${search_output}" != "null" ]]
 	then
 		local versions=$(echo "${search_output}" | grep '^.*:$' | sed 's/://')
+		local latest_7413_version=$(yq '."7.4.13"' bundles.yml | grep '^.*:$' | sed 's/://' | sed 's/.*-u//' | sed 's/7.4.13.nightly//' | sort -nr | head -n1)
 
 		for version in ${versions}
 		do
-			local query=.\"$(get_main_key "${main_keys}" "${version}")\".\"${version}\"
+			local main_key=$(get_main_key "${main_keys}" "${version}")
+
+			if [[ "${specified_version}" == "*" ]] && [[ "${main_key}" == "7.4.13" ]] && [[ "7.4.13-u${latest_7413_version}" != "${version}" ]]
+			then
+				echo "Not building: ${version}"
+				continue
+			fi
+
+			local query=.\"${main_key}\".\"${version}\"
 
 			build_bundle_image "${query}" "${version}"
 		done
