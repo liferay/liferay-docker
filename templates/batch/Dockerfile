@@ -2,12 +2,9 @@ FROM liferay/base:latest
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
-ARG LABEL_PRERENDER_VERSION
 ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
-ARG TARGETARCH
-ARG TARGETPLATFORM
 
 COPY resources/etc/created-date /etc/created-date
 COPY resources/usr/local/bin/* /usr/local/bin/
