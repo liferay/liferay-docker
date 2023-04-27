@@ -40,6 +40,8 @@ function build_docker_image {
 }
 
 function main {
+	delete_local_images "${LIFERAY_DOCKER_REPOSITORY}/jar-runner"
+
 	make_temp_directory templates/jar-runner
 
 	log_in_to_docker_hub
