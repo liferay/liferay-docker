@@ -15,6 +15,9 @@ main() {
 
   replace-environment-variables.sh
 
+  chmod +x '/usr/local/bin/10-replace-environment-variables.sh'
+  10-replace-environment-variables.sh
+
   mapfile -t PIDS < <(pgrep -u nginx)
 
   for PID in "${PIDS[@]}"; do
