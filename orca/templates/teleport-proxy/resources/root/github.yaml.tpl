@@ -1,5 +1,4 @@
 kind: github
-version: v3
 metadata:
     name: github
 spec:
@@ -9,7 +8,8 @@ spec:
     redirect_url: https://__GITHUB_REDIRECT_HOST__:3080/v1/webapi/github/callback
     teams_to_roles:
         - organization: liferay-orca-test
-            team: admins
             roles:
                 - access
                 - editor
+            team: admins
+version: v3
