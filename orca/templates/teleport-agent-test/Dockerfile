@@ -21,4 +21,4 @@ RUN adduser liferay --gecos "Liferay common user" --disabled-password && \
 	chown -R liferay:liferay /home/liferay/ && \
 	chmod 600 /home/liferay/.ssh/authorized_keys
 
-CMD ["teleport","start","--roles=node","--token=/agent-test/token.txt","--auth-server=teleport-proxy"]
+CMD ["teleport", "start", "--roles=node", "--token=/agent-test/token.txt", "--auth-server=teleport-proxy"]
