@@ -1,6 +1,6 @@
 FROM ubuntu:jammy
 
-CMD ["teleport", "start", "--roles=node", "--token=/agent-test/token.txt", "--auth-server=teleport-proxy"]
+CMD ["teleport", "start", "--auth-server=teleport-proxy", "--roles=node", "--token=/agent-test/token.txt"]
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
