@@ -1,5 +1,7 @@
 FROM ubuntu:jammy
 
+CMD ["teleport", "start", "--roles=node", "--token=/agent-test/token.txt", "--auth-server=teleport-proxy"]
+
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
 
@@ -20,5 +22,3 @@ RUN adduser liferay --gecos "Liferay common user" --disabled-password && \
 	echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILOu945eSM8vlNkxMmnYrIYkoFaPO0L7+M0cWnV8/tH2 zsolt.balogh@liferay' >> /home/liferay/.ssh/authorized_keys && \
 	chown -R liferay:liferay /home/liferay/ && \
 	chmod 600 /home/liferay/.ssh/authorized_keys
-
-CMD ["teleport", "start", "--roles=node", "--token=/agent-test/token.txt", "--auth-server=teleport-proxy"]
