@@ -1,0 +1,31 @@
+auth_service:
+    authentication:
+        type: github
+    cluster_name: jumper
+    enabled: "yes"
+    listen_addr: 0.0.0.0:3025
+    proxy_listener_mode: multiplex
+proxy_service:
+    acme: {}
+    enabled: "yes"
+    https_keypairs:
+        - cert_file: /etc/teleport/server.crt
+          key_file: /etc/teleport/server.key
+    https_keypairs_reload_interval: 0s
+ssh_service:
+    commands:
+    - name: hostname
+        command: [hostname]
+        period: 1m0s
+    enabled: "yes"
+teleport:
+    ca_pin: ""
+    data_dir: /var/lib/teleport
+    diag_addr: ""
+    log:
+        format:
+            output: text
+        output: stderr
+        severity: INFO
+    nodename: localhost
+version: v3
