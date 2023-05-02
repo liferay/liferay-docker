@@ -7,7 +7,7 @@ function main {
 	if [ -e /opt/liferay/caroot/rootCA.pem ]
 	then
 		export CAROOT=/opt/liferay/caroot
-		export TRUST_STORES=java,system
+		export TRUST_STORES=java
 
 		mkcert -install
 	fi
