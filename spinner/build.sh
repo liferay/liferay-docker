@@ -209,7 +209,7 @@ function generate_configuration {
 	cp ../resources/webserver/etc/nginx/nginx.conf build/webserver/resources/etc/nginx
 
 	mkdir -p build/webserver/resources/usr/local/bin/
-	cp -f  ${LIFERAY_LXC_REPOSITORY_DIR}/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin/ && \
+	cp -a  ${LIFERAY_LXC_REPOSITORY_DIR}/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin/ && \
 	chmod +x build/webserver/resources/usr/local/bin/10-replace-environment-variables.sh
 
 	mkdir -p build/webserver/resources/etc/usr
