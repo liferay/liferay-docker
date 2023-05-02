@@ -25,11 +25,11 @@ function main {
 	echo "OAuth Token URI: ${oauth2_token_uri}"
 	echo ""
 
-	local curl_options=""
+	local curl_options="${LIFERAY_BATCH_CURL_OPTIONS}"
 
 	if [ -e /opt/liferay/caroot/rootCA.pem ]
 	then
-		curl_options="--cacert /opt/liferay/caroot/rootCA.pem"
+		curl_options="${curl_options} --cacert /opt/liferay/caroot/rootCA.pem"
 	fi
 
 	local oauth2_token_response=$(\
@@ -81,12 +81,12 @@ function main {
 		fi
 
 		echo "Parameters: ${parameters}"
-		echo ""
+		echo "Items: ${items}"
 
 		local post_response=$(\
 			curl \
 				-H "Accept: application/json" \
-				-H "Authorization: Bearer ${LIFERAY_BATCH_ACCESS_TOKEN}" \
+				-H "Authorization: Bearer ${oauth2_access_token}" \
 				-H "Content-Type: application/json" \
 				-X POST \
 				-d "${items}" \
@@ -114,11 +114,11 @@ function main {
 			local status_response=$(\
 				curl \
 					-s \
-					${LIFERAY_BATCH_CURL_FLAGS} \
+					${curl_options} \
 					-X 'GET' \
-					"${LIFERAY_BATCH_DXP_SERVER_PROTOCOL}://${LIFERAY_BATCH_DXP_MAIN_DOMAIN}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}" \
+					"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}" \
 					-H 'accept: application/json' \
-					-H "Authorization: Bearer ${LIFERAY_BATCH_ACCESS_TOKEN}" \
+					-H "Authorization: Bearer ${oauth2_access_token}" \
 				| jq -r '.')
 
 			status=$(jq -r '.executeStatus//.status' <<< "${status_response}")
