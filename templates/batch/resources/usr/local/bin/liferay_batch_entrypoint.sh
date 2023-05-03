@@ -60,6 +60,8 @@ function main {
 		echo "Processing: ${file_name}"
 		echo ""
 
+		local items=$(jq -r ".items" ${file_name})
+
 		local href=$(jq -r ".actions.createBatch.href" ${file_name})
 
 		href="${href#*://*/}"
@@ -71,10 +73,6 @@ function main {
 
 		echo "HREF: ${href}"
 
-		local items=$(jq -r ".items" ${file_name})
-
-		echo "Items: ${items}"
-
 		local parameters=$(jq -r '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' ${file_name} 2>/dev/null)
 
 		if [ "${parameters}" != "" ]
@@ -83,6 +81,7 @@ function main {
 		fi
 
 		echo "Parameters: ${parameters}"
+		echo "Items: ${items}"
 
 		local post_response=$(\
 			curl \
