@@ -323,7 +323,7 @@ function update_patching_tool {
 		echo "Updating Patching Tool to version ${latest_patching_tool_version}."
 		echo ""
 
-		download "downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip" "files.liferay.com/private/ee/fix-packs/patching-tool/patching-tool-${latest_patching_tool_version}.zip"
+		download "downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip" "releases-cdn.liferay.com/tools/patching-tool/patching-tool-${latest_patching_tool_version}.zip"
 
 		unzip -d "${TEMP_DIR}/liferay" -q "downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip"
 
