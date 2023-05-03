@@ -467,7 +467,21 @@ function get_latest_docker_hub_zulu_version {
 
 	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o "\\\\\"org.label-schema.zulu${2}_${3}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
-	echo "${version}"
+	if [ -z "${version}" ]
+	then
+		docker pull "liferay/${1}:latest" >/dev/null
+
+		if [ $? -gt 0 ]
+		then
+			version="0"
+		else
+			version=$(docker image inspect --format '{{index .Config.Labels }}' "liferay/${1}:latest" | grep -o "org.label-schema.zulu${2}_${3}_version:[0-9]*.[0-9]*.[0-9]*" | sed s/.*://g)
+		fi
+
+		echo "${version}"
+	else
+		echo "${version}"
+	fi
 }
 
 function get_main_key {
