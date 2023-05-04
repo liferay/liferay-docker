@@ -52,7 +52,7 @@ function load_secrets {
 
 		while true;
 		do
-			if [ "${round}" -le 120 ]
+			if [ "${round}" -le 40 ]
 				then
 					echo "Fetching secret '${secret}'...round #$((round=round+1))."
 				else
@@ -67,6 +67,7 @@ function load_secrets {
 			if [ "${ret}" -gt 0 ]
 			then
 				echo "Fetching secret '${secret}' failed with error ${ret}."
+				sleep 3
 			fi
 
 			if [ -n "${password}" ]
