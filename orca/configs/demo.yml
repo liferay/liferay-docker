@@ -1,3 +1,4 @@
+development: true
 hosts:
     db1:
         ip: 10.111.111.111
@@ -26,6 +27,7 @@ hosts:
             - log-server
             - monitoring-gateway
             - monitoring-proxy
+            - vault
     search1:
         ip: 10.111.111.121
         services:
