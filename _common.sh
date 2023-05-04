@@ -133,15 +133,20 @@ function get_docker_image_tags_args {
 }
 
 function get_tomcat_version {
-	for temp_file_name in "${1}"/tomcat-*
-	do
-		if [ -e  "${temp_file_name}" ]
-		then
-			local tomcat_folder=${temp_file_name##*/}
-			local liferay_tomcat_version=${tomcat_folder#*-}
-		fi
-		break
-	done
+	if [ -e "${1}"/tomcat ]
+	then
+		local liferay_tomcat_version=$(grep -Eo "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${1}/tomcat/RELEASE-NOTES" | sed -r "s/Apache Tomcat Version //")
+	else
+		for temp_file_name in "${1}"/tomcat-*
+		do
+			if [ -e  "${temp_file_name}" ]
+			then
+				local tomcat_folder=${temp_file_name##*/}
+				local liferay_tomcat_version=${tomcat_folder#*-}
+			fi
+			break
+		done
+	fi
 
 	if [ -z ${liferay_tomcat_version+x} ]
 	then
@@ -199,9 +204,12 @@ function pid_8080 {
 function prepare_tomcat {
 	local liferay_tomcat_version=$(get_tomcat_version "${TEMP_DIR}/liferay")
 
-	mv "${TEMP_DIR}/liferay/tomcat-${liferay_tomcat_version}" "${TEMP_DIR}/liferay/tomcat"
+	if [ ! -e "${TEMP_DIR}/liferay/tomcat" ]
+	then
+		mv "${TEMP_DIR}/liferay/tomcat-${liferay_tomcat_version}" "${TEMP_DIR}/liferay/tomcat"
 
-	ln -s tomcat "${TEMP_DIR}/liferay/tomcat-${liferay_tomcat_version}"
+		ln -s tomcat "${TEMP_DIR}/liferay/tomcat-${liferay_tomcat_version}"
+	fi
 
 	configure_tomcat
 
