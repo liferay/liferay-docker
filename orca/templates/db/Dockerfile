@@ -1,7 +1,10 @@
 # ubuntu:jammy-20230308
 FROM ubuntu:jammy@sha256:7a57c69fe1e9d5b97c5fe649849e79f2cfc3bf11d10bbd5218b4eb61716aebe6
 
-# original source: https://github.com/percona/percona-docker/blob/master/percona-server-8.0/Dockerfile
+COPY resources/etc/mysql/mysql.conf.d/ /etc/mysql/mysql.conf.d/
+COPY resources/usr/local/bin/ /usr/local/bin/
+
+ENTRYPOINT ["/usr/local/bin/liferay_entrypoint.sh"]
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV PS_VERSION 8.0.32-24
@@ -26,11 +29,6 @@ RUN install -d /var/lib/mysql /var/run/mysqld -g root -m 0700 -o mysql && \
 	find /etc/mysql/conf.d/ /etc/mysql/mysql.cnf /etc/mysql/mysql.conf.d/ -name '*.cnf' -print0 \
 		| xargs -0 grep -lZE '^(bind-address|log|user)' \
 		| xargs -rt -0 sed -Ei 's/^(bind-address|log|user)/#&/'
-
-COPY resources/etc/mysql/mysql.conf.d/ /etc/mysql/mysql.conf.d/
-COPY resources/usr/local/bin/ /usr/local/bin/
-
-ENTRYPOINT ["/usr/local/bin/liferay_entrypoint.sh"]
 
 USER mysql
 CMD ["mysqld"]
