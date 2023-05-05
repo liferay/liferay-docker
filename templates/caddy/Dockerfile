@@ -1,5 +1,7 @@
 FROM caddy:2.5.0
 
+RUN apk add --no-cache bash tini
+
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
 ARG LABEL_VCS_REF
