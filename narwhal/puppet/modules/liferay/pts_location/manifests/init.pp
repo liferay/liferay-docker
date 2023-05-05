@@ -24,7 +24,7 @@ class pts_location {
 			$prompt_host_color = 'cyan'
 			$puppet_server_alias = 'pts-bpo.bud.liferay.com'
 			$puppet_server_hostname = 'bob1.bud.liferay.com'
-			$puppet_server_ip = '192.168.233.201'
+			$puppet_server_ip = '192.168.238.11'
 			$timezone = 'Europe/Budapest'
 		}
 
