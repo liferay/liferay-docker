@@ -1,7 +1,5 @@
 FROM caddy:2.5.0
 
-RUN apk add --no-cache bash tini
-
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
 ARG LABEL_VCS_REF
@@ -24,4 +22,6 @@ LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
 
-RUN mkdir -p /etc/caddy.d /public_html
+RUN apk add --no-cache bash tini && \
+	\
+	mkdir -p /etc/caddy.d /public_html

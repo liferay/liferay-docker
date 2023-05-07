@@ -39,10 +39,10 @@ LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
 
 RUN apt-get update && \
-    apt-get upgrade --yes && \
-    apt-get clean && \
-    curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - && \
-    apt-get install --yes nodejs
+	apt-get upgrade --yes && \
+	apt-get clean && \
+	curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - && \
+	apt-get install --yes nodejs
 
 USER liferay:liferay
 
