@@ -435,21 +435,9 @@ function get_latest_docker_hub_version {
 
 	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o '\\"org.label-schema.version\\":\\"[0-9]\.[0-9]\.[0-9]*\\"' | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
-	if [ -z "${version}" ]
-	then
-		docker pull "liferay/${1}:latest" >/dev/null
+	version=$(get_tag_from_image "${version}" "liferay/${1}" "org.label-schema.version:[0-9]*.[0-9]*.[0-9]*")
 
-		if [ $? -gt 0 ]
-		then
-			version="0"
-		else
-			version=$(docker image inspect --format '{{index .Config.Labels "org.label-schema.version"}}' "liferay/${1}:latest")
-		fi
-
-		echo "${version}"
-	else
-		echo "${version}"
-	fi
+	echo "${version}"
 }
 
 function get_latest_docker_hub_zabbix_server_version {
@@ -468,6 +456,8 @@ function get_latest_docker_hub_zabbix_server_version {
 
 	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/${image_tag}/manifests/${tag}" | grep -o "\\\\\"${label_name}\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
+	version=$(get_tag_from_image "${version}" "${image_tag}" "${label_name}:[0-9]*.[0-9]*.[0-9]*")
+
 	echo "${version}"
 }
 
@@ -476,21 +466,9 @@ function get_latest_docker_hub_zulu_version {
 
 	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o "\\\\\"org.label-schema.zulu${2}_${3}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
-	if [ -z "${version}" ]
-	then
-		docker pull "liferay/${1}:latest" >/dev/null
+	version=$(get_tag_from_image "${version}" "liferay/${1}" "org.label-schema.zulu${2}_${3}_version:[0-9]*.[0-9]*.[0-9]*")
 
-		if [ $? -gt 0 ]
-		then
-			version="0"
-		else
-			version=$(docker image inspect --format '{{index .Config.Labels }}' "liferay/${1}:latest" | grep -o "org.label-schema.zulu${2}_${3}_version:[0-9]*.[0-9]*.[0-9]*" | sed s/.*://g)
-		fi
-
-		echo "${version}"
-	else
-		echo "${version}"
-	fi
+	echo "${version}"
 }
 
 function get_main_key {
@@ -516,6 +494,28 @@ function get_string {
 		echo ""
 	else
 		echo "${1}"
+	fi
+}
+
+function get_tag_from_image {
+	local image_name="${2}"
+	local filter="${3}"
+	local version="${1}"
+
+	if [ -z "${version}" ]
+	then
+		docker pull "${image_name}:latest" >/dev/null
+
+		if [ $? -gt 0 ]
+		then
+			version="0"
+		else
+			version=$(docker image inspect --format '{{index .Config.Labels }}' "${image_name}:latest" | grep -o "${filter}" | sed s/.*://g)
+		fi
+
+		echo "${version}"
+	else
+		echo "${version}"
 	fi
 }
 
