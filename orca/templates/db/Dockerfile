@@ -25,7 +25,7 @@ RUN set -ex; \
 	rm -rf /var/lib/mysql
 
 RUN install -d /var/lib/mysql /var/run/mysqld -g root -m 0700 -o mysql && \
-	echo "$TZ" > /etc/localtime && dpkg-reconfigure tzdata && \
+	echo "${TZ}" > /etc/localtime && dpkg-reconfigure tzdata && \
 	find /etc/mysql/conf.d/ /etc/mysql/mysql.cnf /etc/mysql/mysql.conf.d/ -name '*.cnf' -print0 \
 		| xargs -0 grep -lZE '^(bind-address|log|user)' \
 		| xargs -rt -0 sed -Ei 's/^(bind-address|log|user)/#&/'

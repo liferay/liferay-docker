@@ -11,21 +11,17 @@ function block_finish {
 }
 
 function fail {
-	local ts=$(date "+%Y-%m-%d %T.%6N")
-
 	lecho >&2 "!!! ERROR: ${1}"
-
-	echo
 
 	exit 1
 }
 
 function msg {
-	lecho "--- MSG: ${1}"
+	lecho "--- ${1}"
 }
 
 function lecho {
 	local ts=$(date "+%Y-%m-%d %T.%6N")
 
-	echo "${ts} [orca][$0] ${1}"
+	echo "${ts} [orca] ${1}"
 }

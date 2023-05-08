@@ -10,13 +10,13 @@ set -e
 function check_setup {
 	block_begin "Check if MySQL set up."
 
-	if [ -d /var/lib/mysql/data/mysql ];
+	if [ -d /var/lib/mysql/data/mysql ]
 	then
-		block_finish "Check if MySQL is set up: DONE."
+		block_finish "Check if MySQL is set up: DONE"
 
 		exit 0
 	else
-		block_finish "Check if MySQL is set up: NOT DONE."
+		block_finish "Check if MySQL is set up: NOT DONE"
 	fi
 }
 
@@ -31,7 +31,7 @@ function init_datadir {
 }
 
 function init_liferay_db {
-	block_begin "Initialize 'lportal' database."
+	block_begin "Initialize 'lportal' database"
 
 	mysql <<-EOSQL
 		CREATE DATABASE lportal;
@@ -48,7 +48,7 @@ function get_vault_mysql_liferay_password {
 
 	if [ -z "${MYSQL_LIFERAY_PASSWORD}" ]
 	then
-		fail "MYSQL_LIFERAY_PASSWORD is not set. Exiting."
+		fail "MYSQL_LIFERAY_PASSWORD is not set"
 
 		exit 1
 	fi
@@ -59,7 +59,7 @@ function get_vault_mysql_root_password {
 
 	if [ -z "${MYSQL_ROOT_PASSWORD}" ]
 	then
-		fail "MYSQL_ROOT_PASSWORD is not set. Exiting."
+		fail "MYSQL_ROOT_PASSWORD is not set"
 
 		exit 1
 	fi
@@ -84,7 +84,7 @@ function main {
 
 	init_datadir
 
-	start_first_run
+	start_temporary
 
 	load_timezones
 
@@ -92,7 +92,7 @@ function main {
 
 	init_liferay_db
 
-	stop_first_run
+	shut_down_temporary
 }
 
 function set_basics {
@@ -118,16 +118,17 @@ function set_basics {
 	block_finish "Set the basics of the 'mysql' database."
 }
 
-function start_first_run {
+function start_temporary {
 	block_begin "Initialize the 'mysql' database, temporary first run."
 
 	mysqld --skip-networking &
 	pid="$!"
 
-	for second in {120..0}; do
+	for second in {120..0}
+	do
 		msg "MySQL init process in progress... ${second} seconds left."
 
-		if echo 'SELECT 1' | mysql &> /dev/null;
+		if (echo 'SELECT 1' | mysql &>/dev/null)
 		then
 			break
 		fi
@@ -135,26 +136,29 @@ function start_first_run {
 		sleep 1
 	done
 
-	if [ "${second}" = 0 ];
+	if [ "${second}" = 0 ]
 	then
-		fail "MySQL init process failed."
+		fail "MySQL init process failed"
+
 		exit 1
 	fi
-	block_finish "Initialize the 'mysql' database, temporary first run."
+
+	block_finish "Initialize the 'mysql' database, temporary first run"
 }
 
-function stop_first_run {
-	block_begin "Shut down the temporary mysqld instance."
+function shut_down_temporary {
+	block_begin "Shutting down the temporary mysqld instance"
 
 	msg "kill -s TERM ${pid}"
 
-	if ! (kill -s TERM "${pid}" || wait "${pid}")
+	if (! kill -s TERM "${pid}" || wait "${pid}")
 	then
-		fail "Temporary mysql instance cannot be shut down."
+		fail "Temporary mysql instance cannot be shut down"
+
 		exit 1
 	fi
 
-	block_finish "Shut down the temporary mysqld instance."
+	block_finish "Shutting down the temporary mysqld instance"
 }
 
 main
