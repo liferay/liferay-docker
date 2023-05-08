@@ -3,11 +3,11 @@ define pts_hosts::add($aliases = undef, $fqdn, $ipaddr = $name) {
 		fail("Error: IP Address ${ipaddr} does not look like an IP Address")
 	}
 
-	unless (is_string($fqdn)) {
+	unless ($fqdn =~ String) {
 		fail('Error: fqdn must be a string')
 	}
 
-	if (is_array($aliases) or is_string($aliases)) {
+	if ($aliases =~ Array or $aliases =~ String) {
 		$host_aliases = $aliases
 	}
 	elsif ($aliases == undef) {
