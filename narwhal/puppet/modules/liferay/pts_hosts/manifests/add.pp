@@ -1,5 +1,5 @@
 define pts_hosts::add($aliases = undef, $fqdn, $ipaddr = $name) {
-	unless (is_string($ipaddr)) {
+	unless ($ipaddr =~ String) {
 		fail("Error: IP Address ${ipaddr} does not look like an IP Address")
 	}
 
