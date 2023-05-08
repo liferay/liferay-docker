@@ -133,22 +133,26 @@ function get_docker_image_tags_args {
 }
 
 function get_tomcat_version {
+	local liferay_tomcat_version
+
 	if [ -e "${1}"/tomcat ]
 	then
-		local liferay_tomcat_version=$(grep -Eo "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${1}/tomcat/RELEASE-NOTES" | sed -r "s/Apache Tomcat Version //")
+		liferay_tomcat_version=$(grep -Eo "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${1}/tomcat/RELEASE-NOTES" | sed -r "s/Apache Tomcat Version //")
 	else
-		for temp_file_name in "${1}"/tomcat-*
+		for tomcat_dir_path in "${1}"/tomcat-*
 		do
-			if [ -e  "${temp_file_name}" ]
+			if [ -e "${tomcat_dir_path}" ]
 			then
-				local tomcat_folder=${temp_file_name##*/}
-				local liferay_tomcat_version=${tomcat_folder#*-}
+				local tomcat_dir=${tomcat_dir_path##*/}
+
+				liferay_tomcat_version=${tomcat_dir#*-}
 			fi
+
 			break
 		done
 	fi
 
-	if [ -z ${liferay_tomcat_version+x} ]
+	if [ -z "${liferay_tomcat_version}" ]
 	then
 		echo "Unable to determine Tomcat version."
 
