@@ -158,6 +158,12 @@ function create_hotfix {
 	rm -fr "${BUILD_DIR}"/hotfix
 	mkdir -p "${BUILD_DIR}"/hotfix
 
+	echo "Comparing ${BUNDLES_DIR} and ${UPDATE_DIR}"
+
+	echo "Full diff:"
+
+	diff -rq "${BUNDLES_DIR}" "${UPDATE_DIR}" | grep -v /work/Catalina
+
 	diff -rq "${BUNDLES_DIR}" "${UPDATE_DIR}" | grep -v /work/Catalina | while read -r change
 	do
 		if (echo "${change}" | grep "^Only in ${UPDATE_DIR}" &>/dev/null)
@@ -264,6 +270,11 @@ function prepare_update_dir {
 	lcd "${UPDATE_DIR}"
 
 	7z x "${update7z}"
+
+	mv liferay-dxp-tomcat/* .
+	mv liferay-dxp-tomcat/.* .
+
+	rm -fr liferay-dxp-tomcat/
 }
 
 function transform_file_name {
