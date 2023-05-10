@@ -159,17 +159,21 @@ function main {
 	time_run add_licensing
 
 	DXP_VERSION=$(get_dxp_version)
-	UPDATE_DIR=/opt/liferay/bundles/"${DXP_VERSION}"
-
-	time_run compile_dxp
 
 	if [ "${NARWHAL_OUTPUT}" == "release" ]
 	then
 		source /usr/local/bin/release_functions.sh
 
+		time_run compile_dxp
+
 		time_run package_bundle
 	else
 		source /usr/local/bin/hotfix_functions.sh
+
+		time_run compile_dxp &
+		time_run prepare_update_dir
+
+		wait
 
 		time_run create_hotfix
 

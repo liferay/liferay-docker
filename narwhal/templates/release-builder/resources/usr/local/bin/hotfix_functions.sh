@@ -77,28 +77,24 @@ function create_documentation {
 		write "${1}\n"
 	}
 
-	writeln "{"
-	writeln "    \"removed\" :["
-
-	if [ -e "${BUILD_DIR}"/hotfix/removed_files ]
-	then
-		local first_line=true
-		while read -r file
-		do
-			if [ "${first_line}" = true ]
-			then
-				first_line=false
-			else
-				writeln ","
-			fi
-
-			write "        \"file\": \"${file}\""
-		done < "${BUILD_DIR}"/hotfix/removed_files
-
-		writeln ""
-	fi
-
-	writeln "    ],"
+	writeln "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
+	writeln "    \"build\": {"
+	writeln "        \"date\": \"$(date)\","
+	writeln "        \"git-revision\": \"TBD\","
+	writeln "        \"id\": \"219379428\","
+	writeln "        \"builder-revision\": \"TBD\""
+	writeln "    },"
+	writeln "    \"patch\": {"
+	writeln "        \"built-for\": \"TBD\","
+	writeln "        \"id\": \"hotfix-1-7413\","
+	writeln "        \"name\": \"hotfix-1\","
+	writeln "        \"product\": \"7413\","
+	writeln "        \"requirements\": \"${DXP_VERSION}\""
+	writeln "    },"
+	writeln "    \"patching-tool\": {"
+	writeln "        \"incompatible-version-message\": \"Please update Patching Tool to version 4.0.2 or higher in order to use this patch.\","
+	writeln "        \"version\": \"4002\""
+	writeln "    },"
 	writeln "    \"added\" :["
 
 	local first_line=true
@@ -123,24 +119,31 @@ function create_documentation {
 	writeln ""
 
 	writeln "    ],"
-	writeln "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
-	writeln "    \"build\": {"
-	writeln "        \"date\": \"$(date)\","
-	writeln "        \"git-revision\": \"TBD\","
-	writeln "        \"id\": \"219379428\","
-	writeln "        \"builder-revision\": \"TBD\""
-	writeln "    },"
-	writeln "    \"patch\": {"
-	writeln "        \"built-for\": \"TBD\","
-	writeln "        \"id\": \"hotfix-1-7413\","
-	writeln "        \"name\": \"hotfix-1\","
-	writeln "        \"product\": \"7413\","
-	writeln "        \"requirements\": \"${DXP_VERSION}\""
-	writeln "    },"
-	writeln "    \"patching-tool\": {"
-	writeln "        \"incompatible-version-message\": \"Please update Patching Tool to version 4.0.2 or higher in order to use this patch.\","
-	writeln "        \"version\": \"4002\""
-	writeln "    }"
+
+	writeln "{"
+	writeln "    \"removed\" :["
+
+	if [ -e "${BUILD_DIR}"/hotfix/removed_files ]
+	then
+		first_line=true
+
+		while read -r file
+		do
+			if [ "${first_line}" = true ]
+			then
+				first_line=false
+			else
+				writeln ","
+			fi
+
+			write "        \"file\": \"${file}\""
+		done < "${BUILD_DIR}"/hotfix/removed_files
+
+		writeln ""
+	fi
+
+	writeln "    ]"
+
 	writeln "}"
 }
 
@@ -221,6 +224,29 @@ function package {
 	lcd "${BUILD_DIR}"
 
 	rm -fr hotfix
+}
+
+function prepare_update_dir {
+	UPDATE_DIR=/opt/liferay/updates/"${DXP_VERSION}"
+
+	local update7z
+
+	if [ -e /opt/liferay/test_update ]
+	then
+		lcd /opt/liferay/test_update
+
+		update7z=/opt/liferay/test_update/$(ls | head -n 1)
+	else
+		echo "Update is not available, download is not yet an option."
+
+		return 1
+	fi
+
+	mkdir -p "${UPDATE_DIR}"
+
+	lcd "${UPDATE_DIR}"
+
+	7z x "${update7z}"
 }
 
 function transform_file_name {
