@@ -235,11 +235,21 @@ function prepare_update_dir {
 	then
 		lcd /opt/liferay/test_update
 
-		update7z=/opt/liferay/test_update/$(ls | head -n 1)
+		local update_file=$(ls | head -n 1)
+		UPDATE_DIR=/opt/liferay/updates/"${update_file%%.7z}"
+
+		update7z=/opt/liferay/test_update/"${update_file}"
 	else
 		echo "Update is not available, download is not yet an option."
 
 		return 1
+	fi
+
+	if [ -e ${UPDATE_DIR} ]
+	then
+		echo "${UPDATE_DIR} is already available."
+
+		return ${SKIPPED}
 	fi
 
 	mkdir -p "${UPDATE_DIR}"
