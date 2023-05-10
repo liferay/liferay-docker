@@ -278,7 +278,7 @@ function set_parent_image {
 function update_patching_tool {
 	if [ -e "${TEMP_DIR}/liferay/tomcat" ]
 	then
-		sed -i'' "s,tomcat-[0-9]*.[0-9]*.[0-9]*/,tomcat/,g" "${TEMP_DIR}/liferay/patching-tool/default.properties"
+		sed -i "s@tomcat-[0-9]*.[0-9]*.[0-9]*/@tomcat/@g" "${TEMP_DIR}/liferay/patching-tool/default.properties"
 	fi
 
 	if [ -e "${TEMP_DIR}/liferay/patching-tool" ]
