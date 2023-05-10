@@ -11,6 +11,13 @@ function add_file {
 }
 
 function calculate_checksums {
+	if [ ! -e "${BUILD_DIR}/hotfix/binaries/" ]
+	then
+		echo "There are no added files."
+
+		return
+	fi
+
 	lcd "${BUILD_DIR}/hotfix/binaries/"
 
 	find . -print0 | while IFS= read -r -d '' file
@@ -77,6 +84,8 @@ function create_documentation {
 		write "${1}\n"
 	}
 
+	writeln "{"
+
 	writeln "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
 	writeln "    \"build\": {"
 	writeln "        \"date\": \"$(date)\","
@@ -97,30 +106,32 @@ function create_documentation {
 	writeln "    },"
 	writeln "    \"added\" :["
 
+
 	local first_line=true
 
-	while read -r line
-	do
-		local checksum=${line%% *}
-		local file=${line##* ./}
-		if [ "${first_line}" = true ]
-		then
-			first_line=false
-		else
-			writeln ","
-		fi
+	if [ -e "${BUILD_DIR}"/hotfix/checksums ]
+	then
+		while read -r line
+		do
+			local checksum=${line%% *}
+			local file=${line##* ./}
+			if [ "${first_line}" = true ]
+			then
+				first_line=false
+			else
+				writeln ","
+			fi
 
-		writeln "        {"
-		writeln "            \"path\": \"${file}\","
-		writeln "            \"checksum\": \"${checksum}\""
-		write "        }"
-	done < "${BUILD_DIR}"/hotfix/checksums
-
-	writeln ""
+			writeln "        {"
+			writeln "            \"path\": \"${file}\","
+			writeln "            \"checksum\": \"${checksum}\""
+			write "        }"
+		done < "${BUILD_DIR}"/hotfix/checksums
+		writeln ""
+	fi
 
 	writeln "    ],"
 
-	writeln "{"
 	writeln "    \"removed\" :["
 
 	if [ -e "${BUILD_DIR}"/hotfix/removed_files ]
