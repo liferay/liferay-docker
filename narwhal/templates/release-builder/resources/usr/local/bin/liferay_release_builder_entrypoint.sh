@@ -15,6 +15,8 @@ function clean_portal_git {
 	git clean -df
 	git reset --hard
 
+	GIT_SHA=$(git rev-parse HEAD)
+	GIT_SHA_SHORT=$(git rev-parse --short HEAD)
 }
 
 function clone_repository {
@@ -108,10 +110,18 @@ function echo_time {
 function get_dxp_version {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
-	local major=$(read_property release.properties "release.info.version.major[master-private]")
-	local minor=$(read_property release.properties "release.info.version.minor[master-private]")
-	local bug_fix=$(read_property release.properties "release.info.version.bug.fix[master-private]=")
-	local trivial=$(read_property release.properties "release.info.version.trivial=")
+	local major=$(read_property release.properties "release.info.version.major")
+	local minor=$(read_property release.properties "release.info.version.minor")
+
+	local branch="${major}.${minor}.x"
+
+	if [ "${branch}" == "7.4.x" ]
+	then
+		branch=master
+	fi
+
+	local bug_fix=$(read_property release.properties "release.info.version.bug.fix[${branch}-private]")
+	local trivial=$(read_property release.properties "release.info.version.trivial")
 
 	echo "${major}.${minor}.${bug_fix}-u${trivial}"
 }
@@ -157,11 +167,7 @@ function main {
 	then
 		source /usr/local/bin/release_functions.sh
 
-		time_run copy_build
-
-		time_run download_released_files
-
-		time_run remove_built_jars
+		time_run package_bundle
 	else
 		source /usr/local/bin/hotfix_functions.sh
 
