@@ -76,7 +76,7 @@ function compare_jars {
 
 function create_documentation {
 	function write {
-		echo -en "${1}" >> "${BUILD_DIR}/hotfix/hotfix_documentation.json"
+		echo -en "${1}" >> "${BUILD_DIR}/hotfix/hotfix.json"
 		echo -en "${1}"
 	}
 
