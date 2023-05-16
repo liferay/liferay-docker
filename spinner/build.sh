@@ -19,6 +19,12 @@ function check_usage {
 				print_help
 
 				;;
+			-o)
+				shift
+
+				STACK_NAME=${1}
+
+				;;
 			*)
 				ENVIRONMENT=${1}
 
@@ -61,7 +67,11 @@ function check_usage {
 		exit 1
 	fi
 
-	STACK_NAME="env-${ENVIRONMENT}-"$(date +%s)
+	if [ ! -n "${STACK_NAME}" ]
+	then
+		STACK_NAME="env-${ENVIRONMENT}-"$(date +%s)
+	fi
+
 	STACK_DIR=$(pwd)/${STACK_NAME}
 
 	mkdir -p "${STACK_DIR}"
@@ -280,8 +290,8 @@ function generate_configuration {
 	write "            - xpack.sql.enabled=false"
 	write "            - xpack.watcher.enabled=false"
 
-	write "        webserver:"
-	write "            build: ./build/webserver"
+	write "    webserver:"
+	write "        build: ./build/webserver"
 
 	write_deploy 1G
 
@@ -340,10 +350,11 @@ function print_help {
 	echo "The script can be configured with the following arguments:"
 	echo ""
 	echo "    -d (optional): Database dump file, .gz is supported. After importing the virtual hosts will be renamed *.local."
+	echo "    -o (optional): The name of the directory where the configuration will be created"
 	echo ""
 	echo "By default the x1e4prd environment configuration is used."
 	echo ""
-	echo "Example: ${0} x1e4prd"
+	echo "Example: ${0} x1e4prd -d sql.gz -o test"
 
 	exit 1
 }
