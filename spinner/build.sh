@@ -3,7 +3,30 @@
 function check_usage {
 	check_utils docker
 
-	ENVIRONMENT=${1}
+	ENVIRONMENT=
+	DATABASE_IMPORT=
+
+	while [ "${1}" != "" ]
+	do
+		case ${1} in
+			-d)
+				shift
+
+				DATABASE_IMPORT=${1}
+
+				;;
+			-h)
+				print_help
+
+				;;
+			*)
+				ENVIRONMENT=${1}
+
+				;;
+		esac
+
+		shift
+	done
 
 	if [ ! -n "${ENVIRONMENT}" ]
 	then
@@ -28,13 +51,7 @@ function check_usage {
 
 	if [ ! -e "${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${ENVIRONMENT}" ]
 	then
-		echo "Usage: ${0} <environment>"
-		echo ""
-		echo "By default the x1e4prd environment configuration is used."
-		echo ""
-		echo "Example: ${0} x1e4prd"
-
-		exit 1
+		print_help
 	fi
 
 	if [[ $(find dxp-activation-key -name "*.xml" | wc -l ) -eq 0 ]]
@@ -263,17 +280,17 @@ function generate_configuration {
 	write "            - xpack.sql.enabled=false"
 	write "            - xpack.watcher.enabled=false"
 
-	write "    webserver:"
-	write "        build: ./build/webserver"
+	write "        webserver:"
+	write "            build: ./build/webserver"
 
 	write_deploy 1G
 
 	write "        ports:"
 	write "            - 127.0.0.1:80:80"
 
-	write "volumes:"
-	write "     liferay-document-library:"
-	write "     mysql-db:"
+	write "        volumes:"
+	write "            liferay-document-library:"
+	write "            mysql-db:"
 }
 
 function lcd {
@@ -283,9 +300,29 @@ function lcd {
 function main {
 	check_usage "${@}"
 
+	prepare_database_files
+
 	generate_configuration | tee -a "${STACK_DIR}/build.out"
 
 	print_image_usage | tee -a "${STACK_DIR}/build.out"
+}
+
+function prepare_database_files {
+	echo "Preparing ${DATABASE_IMPORT} to be imported."
+}
+
+function print_help {
+	echo "Usage: ${0} <environment> -d <database dump to import>"
+	echo ""
+	echo "The script can be configured with the following arguments:"
+	echo ""
+	echo "    -d (optional): Database dump file, .gz is supported. After importing the virtual hosts will be renamed *.local."
+	echo ""
+	echo "By default the x1e4prd environment configuration is used."
+	echo ""
+	echo "Example: ${0} x1e4prd"
+
+	exit 1
 }
 
 function print_image_usage {
