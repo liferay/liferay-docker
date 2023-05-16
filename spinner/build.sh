@@ -5,6 +5,7 @@ function check_usage {
 
 	ENVIRONMENT=
 	DATABASE_IMPORT=
+	DATABASE_PORT=13306
 
 	while [ "${1}" != "" ]
 	do
@@ -22,7 +23,13 @@ function check_usage {
 			-o)
 				shift
 
-				STACK_NAME=${1}
+				STACK_NAME=env-${1}
+
+				;;
+			-r)
+				DATABASE_PORT=$((RANDOM%100 + 13300))
+
+				echo "Database port: ${DATABASE_PORT}"
 
 				;;
 			*)
@@ -73,6 +80,13 @@ function check_usage {
 	fi
 
 	STACK_DIR=$(pwd)/${STACK_NAME}
+
+	if [ -e "${STACK_DIR}" ]
+	then
+		echo "Stack directory already exists."
+
+		exit 1
+	fi
 
 	mkdir -p "${STACK_DIR}"
 }
@@ -236,8 +250,12 @@ function generate_configuration {
 	cp ../resources/webserver/etc/nginx/nginx.conf build/webserver/resources/etc/nginx
 
 	mkdir -p build/webserver/resources/usr/local/bin/
-	cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin/
-	chmod +x build/webserver/resources/usr/local/bin/10-replace-environment-variables.sh
+
+	if [ -e "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh ]
+	then
+		cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin/
+		chmod +x build/webserver/resources/usr/local/bin/10-replace-environment-variables.sh
+	fi
 
 	mkdir -p build/webserver/resources/etc/usr
 	cp -a ../resources/webserver/usr/ build/webserver/resources/
@@ -269,7 +287,7 @@ function generate_configuration {
 	write "            - MYSQL_USER=dxpcloud"
 	write "        image: mysql:8.0.32"
 	write "        ports:"
-	write "            - 127.0.0.1:13306:3306"
+	write "            - 127.0.0.1:${DATABASE_PORT}:3306"
 	write "        volumes:"
 	write "            - ./database_import:/docker-entrypoint-initdb.d"
 	write "            - mysql-db:/var/lib/mysql"
@@ -298,9 +316,9 @@ function generate_configuration {
 	write "        ports:"
 	write "            - 127.0.0.1:80:80"
 
-	write "        volumes:"
-	write "            liferay-document-library:"
-	write "            mysql-db:"
+	write "volumes:"
+	write "    liferay-document-library:"
+	write "    mysql-db:"
 }
 
 function lcd {
@@ -337,7 +355,7 @@ function prepare_database_files {
 		gzip -d $(find . -type f -name "*.gz") 
 	fi
 
-	mv $(find . -type -f) 01_database.sql
+	mv $(find . -type f) 01_database.sql
 
 	echo "Adding 10_after_import.sql to make some changes in the database to work locally. Please review them before starting the container."
 
@@ -350,13 +368,14 @@ function print_help {
 	echo "The script can be configured with the following arguments:"
 	echo ""
 	echo "    -d (optional): Database dump file, .gz is supported. After importing the virtual hosts will be renamed *.local."
-	echo "    -o (optional): The name of the directory where the configuration will be created"
+	echo "    -o (optional): The name of the directory where the configuration will be created. It will be prefixed with 'env-'."
+	echo "    -r (optional): Randomize the mysql port opened on localhost to enable multiple database servers run at the same time"
 	echo ""
 	echo "By default the x1e4prd environment configuration is used."
 	echo ""
 	echo "Example: ${0} x1e4prd -d sql.gz -o test"
 
-	exit 1
+	exit 2
 }
 
 function print_image_usage {
