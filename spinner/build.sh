@@ -300,15 +300,38 @@ function lcd {
 function main {
 	check_usage "${@}"
 
+	generate_configuration | tee -a "${STACK_DIR}/build.out"
+
 	prepare_database_files
 
-	generate_configuration | tee -a "${STACK_DIR}/build.out"
 
 	print_image_usage | tee -a "${STACK_DIR}/build.out"
 }
 
 function prepare_database_files {
+	if [ ! -n "${DATABASE_IMPORT}" ]
+	then
+		return
+	fi
+
 	echo "Preparing ${DATABASE_IMPORT} to be imported."
+
+	lcd "${STACK_DIR}"/database_import
+
+	cp "${DATABASE_IMPORT}" .
+
+	if [ $(find . -type f -name "*.gz" | wc -l) -gt 0 ]
+	then
+		echo "Extracting the database import file."
+
+		gzip -d $(find . -type f -name "*.gz") 
+	fi
+
+	mv $(find . -type -f) 01_database.sql
+
+	echo "Adding 10_after_import.sql to make some changes in the database to work locally. Please review them before starting the container."
+
+	echo 'UPDATE VirtualHost SET hostname=concat(hostname, ".local");' > 10_after_import.sql
 }
 
 function print_help {
