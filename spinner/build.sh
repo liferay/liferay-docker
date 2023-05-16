@@ -32,6 +32,12 @@ function check_usage {
 				echo "Database port: ${DATABASE_PORT}"
 
 				;;
+			-s)
+				shift
+
+				DATABASE_SKIP_TABLE=${1}
+
+				;;
 			*)
 				ENVIRONMENT=${1}
 
@@ -357,6 +363,17 @@ function prepare_database_files {
 
 	mv $(find . -type f) 01_database.sql
 
+	if [ -n "${DATABASE_SKIP_TABLE}" ]
+	then
+		echo "Removing database import for ${DATABASE_SKIP_TABLE}"
+
+		grep -v "^INSERT INTO .${DATABASE_SKIP_TABLE}. VALUES (" < 01_database.sql > 01_database_removed.sql
+
+		rm 01_database.sql
+
+		mv 01_database_removed.sql 01_database.sql
+	fi
+
 	echo "Adding 10_after_import.sql to make some changes in the database to work locally. Please review them before starting the container."
 
 	echo 'UPDATE VirtualHost SET hostname=concat(hostname, ".local");' > 10_after_import.sql
@@ -370,6 +387,7 @@ function print_help {
 	echo "    -d (optional): Database dump file, .gz is supported. After importing the virtual hosts will be renamed *.local."
 	echo "    -o (optional): The name of the directory where the configuration will be created. It will be prefixed with 'env-'."
 	echo "    -r (optional): Randomize the mysql port opened on localhost to enable multiple database servers run at the same time"
+	echo "    -s (optional): Skipping importing the specified table name"
 	echo ""
 	echo "By default the x1e4prd environment configuration is used."
 	echo ""
