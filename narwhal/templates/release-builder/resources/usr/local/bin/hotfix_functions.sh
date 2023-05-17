@@ -115,7 +115,7 @@ function create_documentation {
 	writeln "        \"id\": \"219379428\","
 	writeln "        \"builder-revision\": \"TBD\""
 	writeln "    },"
-	writeln "    \"requirements\": {"
+	writeln "    \"requirement\": {"
 	writeln "        \"patching-tool-version\": \"4000\","
 	writeln "        \"product-version\": \"${DXP_VERSION}\""
 	writeln "    },"
