@@ -41,7 +41,7 @@ function calculate_checksums {
 
 	find . -print0 | while IFS= read -r -d '' file
 	do
-		md5sum "${file}" >> ../checksums
+		sha256sum "${file}" >> ../checksums
 	done
 }
 
@@ -267,7 +267,7 @@ function prepare_update_dir {
 	then
 		lcd /opt/liferay/test_update
 
-		local update_file=$(find . -printf "%f\n" -type f)
+		local update_file=$(find . -type f -printf "%f\n")
 
 		UPDATE_DIR=/opt/liferay/updates/"${update_file%%.7z}"
 
