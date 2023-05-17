@@ -8,9 +8,36 @@ RUN apt-get update && \
 ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_release_builder_entrypoint.sh"]
 
 ENV ANT_OPTS="-Xmx10G"
+
+#
+# The id of the hotfix
+#
+
 ENV NARWHAL_BUILD_ID=1
+
+#
+# The git tag or branch to check out from the liferay-portal-ee
+#
 ENV NARWHAL_GIT_SHA=7.2.x
+
+#
+# Either release or fix pack
+#
 ENV NARWHAL_OUTPUT=release
+
+#
+# The github username used to check out on the liferay-portal-ee repository. Should be used only for debugging purposes
+#
 ENV NARWHAL_REMOTE=liferay
+
+#
+# Tag name in the liferay-portal-ee repository which contains the hotfix testing SHA-s if you would like to build a test hotfix
+#
+ENV NARWHAL_HOTFIX_TESTING_TAG=
+
+#
+# Git SHA which would be cherry-picked on NARWHAL_GIT_SHA from the tree of NARWHAL_HOTFIX_TESTING_TAG to build a test hotfix
+#
+ENV NARWHAL_HOTFIX_TESTING_SHA=
 
 COPY resources/usr/local/bin/* /usr/local/bin/
