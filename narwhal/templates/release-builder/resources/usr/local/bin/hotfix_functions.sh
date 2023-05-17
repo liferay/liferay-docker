@@ -10,6 +10,25 @@ function add_file {
 	cp "${BUNDLES_DIR}/${1}" "${BUILD_DIR}/hotfix/binaries/${file_dir}"
 }
 
+function add_hotfix_testing_code {
+	if [ ! -n "${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	then
+		echo "NARWHAL_HOTFIX_TESTING_SHA is not set, not adding test code."
+
+		return "${SKIPPED}"
+	fi
+
+	lcd /opt/liferay/dev/projects/liferay-portal-ee
+
+	echo "Running git fetch origin tag \"${NARWHAL_HOTFIX_TESTING_TAG}\""
+
+	git fetch origin tag "${NARWHAL_HOTFIX_TESTING_TAG}" || return 1
+
+	echo "Running git cherry-pick -n \"${NARWHAL_HOTFIX_TESTING_SHA}\""
+
+	git cherry-pick -n "${NARWHAL_HOTFIX_TESTING_SHA}" || return 1
+}
+
 function calculate_checksums {
 	if [ ! -e "${BUILD_DIR}/hotfix/binaries/" ]
 	then
@@ -248,7 +267,8 @@ function prepare_update_dir {
 	then
 		lcd /opt/liferay/test_update
 
-		local update_file=$(ls | head -n 1)
+		local update_file=$(find . -printf "%f\n" -type f)
+
 		UPDATE_DIR=/opt/liferay/updates/"${update_file%%.7z}"
 
 		update7z=/opt/liferay/test_update/"${update_file}"
@@ -258,11 +278,11 @@ function prepare_update_dir {
 		return 1
 	fi
 
-	if [ -e ${UPDATE_DIR} ]
+	if [ -e "${UPDATE_DIR}" ]
 	then
 		echo "${UPDATE_DIR} is already available."
 
-		return ${SKIPPED}
+		return "${SKIPPED}"
 	fi
 
 	mkdir -p "${UPDATE_DIR}"

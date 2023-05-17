@@ -9,6 +9,15 @@ function add_licensing {
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
 }
 
+function background_run {
+	if [ -n "${NARWHAL_DEBUG}" ]
+	then
+		time_run "${@}"
+	else
+		time_run "${@}" &
+	fi
+}
+
 function clean_portal_git {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
@@ -60,7 +69,7 @@ function create_folders {
 
 	echo 0 > "${BUILD_DIR}"/.step
 
-	mkdir -p /opt/liferay/download-cache
+	mkdir -p /opt/liferay/download_cache
 }
 
 function download {
@@ -74,7 +83,7 @@ function download {
 		return
 	fi
 
-	cache_file=/opt/liferay/download-cache/${url##*://}
+	cache_file=/opt/liferay/download_cache/${url##*://}
 
 	if [ -e "${cache_file}" ]
 	then
@@ -138,10 +147,10 @@ function main {
 
 	create_folders
 
-	time_run setup_ssh
+	time_run setup_git
 
-	time_run clone_repository liferay-binaries-cache-2020 &
-	time_run clone_repository liferay-portal-ee &
+	background_run clone_repository liferay-binaries-cache-2020
+	background_run clone_repository liferay-portal-ee
 	time_run clone_repository liferay-release-tool-ee
 
 	wait
@@ -156,13 +165,13 @@ function main {
 
 	time_run pre_compile_setup
 
-	time_run add_licensing
-
 	DXP_VERSION=$(get_dxp_version)
 
 	if [ "${NARWHAL_OUTPUT}" == "release" ]
 	then
 		source /usr/local/bin/release_functions.sh
+
+		time_run add_licensing
 
 		time_run compile_dxp
 
@@ -170,8 +179,12 @@ function main {
 	else
 		source /usr/local/bin/hotfix_functions.sh
 
-		time_run compile_dxp &
-		time_run prepare_update_dir
+		time_run add_hotfix_testing_code
+
+		time_run add_licensing
+
+		background_run prepare_update_dir
+		time_run compile_dxp
 
 		wait
 
@@ -222,6 +235,18 @@ function read_property {
 	echo "${value##*=}"
 }
 
+function setup_git {
+	mkdir -p "${HOME}"/.ssh
+
+	ssh-keyscan github.com >> "${HOME}"/.ssh/known_hosts
+
+	echo "${NARWHAL_GITHUB_SSH_KEY}" > "${HOME}"/.ssh/id_rsa
+	chmod 600 "${HOME}"/.ssh/id_rsa
+
+	git config --global user.email "er-hu@liferay.com"
+	git config --global user.name "Release Builder"
+}
+
 function setup_remote {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
@@ -240,15 +265,6 @@ function setup_remote {
 	git remote rm origin
 
 	git remote add origin git@github.com:${NARWHAL_REMOTE}/liferay-portal-ee
-}
-
-function setup_ssh {
-	mkdir -p "${HOME}"/.ssh
-
-	ssh-keyscan github.com >> "${HOME}"/.ssh/known_hosts
-
-	echo "${NARWHAL_GITHUB_SSH_KEY}" > "${HOME}"/.ssh/id_rsa
-	chmod 600 "${HOME}"/.ssh/id_rsa
 }
 
 function time_run {
@@ -317,7 +333,8 @@ function update_portal_git {
 		git fetch origin "${NARWHAL_GIT_SHA}" || return 1
 		git checkout "${NARWHAL_GIT_SHA}" || return 1
 		git pull origin "${NARWHAL_GIT_SHA}" || return 1
-		git reset origin/"${NARWHAL_GIT_SHA}" || return 1
+		git reset --hard origin/"${NARWHAL_GIT_SHA}" || return 1
+		git clean -fd || return 1
 	fi
 
 	echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/sha-liferay-portal-ee
