@@ -54,4 +54,14 @@ class pts_puppet_agent {
 
 	}
 
+	service {
+		'puppet':
+			ensure => stopped
+	}
+
+	systemd::unit_file {
+		'puppet.service':
+			active => false,
+			enable => false,
+	}
 }
