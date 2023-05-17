@@ -316,6 +316,7 @@ function update_portal_git {
 
 		git fetch origin "${NARWHAL_GIT_SHA}" || return 1
 		git checkout "${NARWHAL_GIT_SHA}" || return 1
+		git pull origin "${NARWHAL_GIT_SHA}" || return 1
 		git reset origin/"${NARWHAL_GIT_SHA}" || return 1
 	fi
 
