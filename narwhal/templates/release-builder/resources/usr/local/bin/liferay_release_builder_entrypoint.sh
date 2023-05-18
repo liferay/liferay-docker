@@ -147,7 +147,14 @@ function get_dxp_version {
 }
 
 function init_gcs {
-	 gcloud auth activate-service-account --key-file /tmp/patcher-storage-temp.json
+	if [ ! -e /opt/liferay/patcher-storage-service-account.json ]
+	then
+		echo "/opt/liferay/patcher-storage-service-account.json does not exist, skipping init_gcs"
+
+		return "${SKIPPED}"
+	fi
+
+	gcloud auth activate-service-account --key-file /opt/liferay/patcher-storage-service-account.json
 }
 
 function lcd {
@@ -174,11 +181,13 @@ function main {
 
 	time_run clean_portal_git
 
-	time_run update_portal_git
-
+	background_run init_gcs
+	background_run update_portal_git
 	time_run update_release_tool_git
-
+	
 	time_run pre_compile_setup
+
+	wait
 
 	DXP_VERSION=$(get_dxp_version)
 
