@@ -146,6 +146,10 @@ function get_dxp_version {
 	echo "${major}.${minor}.${bug_fix}-u${trivial}"
 }
 
+function init_gcs {
+	 gcloud auth activate-service-account --key-file /tmp/patcher-storage-temp.json
+}
+
 function lcd {
 	cd "${1}" || exit 3
 }

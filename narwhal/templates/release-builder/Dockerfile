@@ -1,9 +1,14 @@
 FROM liferay/jdk11-jdk8:5.0.9-20230124135117
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes ant git ssh p7zip-full zip && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes ant apt-transport-https ca-certificates gnupg git ssh p7zip-full zip && \
+	echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list && \
+	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
+	apt-get update && \
+	apt-get install google-cloud-cli && \
 	apt-get upgrade --yes && \
 	apt-get clean
+
 
 ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_release_builder_entrypoint.sh"]
 
