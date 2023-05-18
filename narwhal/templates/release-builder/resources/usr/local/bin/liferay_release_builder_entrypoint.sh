@@ -216,9 +216,9 @@ function next_step {
 function pre_compile_setup {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
-	if [ -e "build.profile-dxp.properties" ]
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}" ]
 	then
-		echo "build.profile-dxp.properties exists, skipping pre_compile_setup."
+		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the pre_compile_setup step."
 
 		return "${SKIPPED}"
 	fi
