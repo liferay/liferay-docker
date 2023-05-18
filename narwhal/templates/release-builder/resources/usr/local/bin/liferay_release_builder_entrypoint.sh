@@ -54,6 +54,17 @@ function compile_dxp {
 
 	local exit_code=${?}
 
+	#
+	# Workaround until we implement LPS-182849
+	#
+
+	lcd "${BUNDLES_DIR}"
+
+	if [ ! -e tomcat ]
+	then
+		mv tomcat-* tomcat
+	fi
+
 	if [ "${exit_code}" -eq 0 ]
 	then
 		echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/built-sha

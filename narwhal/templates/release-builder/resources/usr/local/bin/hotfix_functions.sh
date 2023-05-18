@@ -292,7 +292,7 @@ function prepare_release_dir {
 	7z x "${release7z}"
 
 	mv liferay-dxp/* .
-	mv liferay-dxp/.* .
+	mv liferay-dxp/.* . &> /dev/null
 
 	rm -fr liferay-dxp/
 }
