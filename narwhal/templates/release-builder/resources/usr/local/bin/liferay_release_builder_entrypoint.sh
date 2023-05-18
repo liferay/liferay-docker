@@ -183,7 +183,7 @@ function main {
 
 		time_run add_licensing
 
-		background_run prepare_update_dir
+		background_run prepare_release_dir
 		time_run compile_dxp
 
 		wait

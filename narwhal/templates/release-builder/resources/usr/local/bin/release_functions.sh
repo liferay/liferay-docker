@@ -3,9 +3,9 @@
 function package_bundle {
 	rm -fr "${BUILD_DIR}/release"
 
-	local root_dir="${BUILD_DIR}/release/liferay-dxp-tomcat"
+	local root_dir="${BUILD_DIR}/release/liferay-dxp"
 
-	mkdir -p ${root_dir}
+	mkdir -p "${root_dir}"
 
 	cp -a "${BUNDLES_DIR}"/* "${root_dir}"
 

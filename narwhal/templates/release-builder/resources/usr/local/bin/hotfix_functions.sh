@@ -47,7 +47,7 @@ function calculate_checksums {
 
 function compare_jars {
 	jar1=${BUNDLES_DIR}/"${1}"
-	jar2=${UPDATE_DIR}/"${1}"
+	jar2=${RELEASE_DIR}/"${1}"
 
 	function list_file {
 		unzip -v "${1}" | \
@@ -177,18 +177,18 @@ function create_hotfix {
 	rm -fr "${BUILD_DIR}"/hotfix
 	mkdir -p "${BUILD_DIR}"/hotfix
 
-	echo "Comparing ${BUNDLES_DIR} and ${UPDATE_DIR}"
+	echo "Comparing ${BUNDLES_DIR} and ${RELEASE_DIR}"
 
 	echo "Full diff:"
 
-	diff -rq "${BUNDLES_DIR}" "${UPDATE_DIR}" | grep -v /work/Catalina
+	diff -rq "${BUNDLES_DIR}" "${RELEASE_DIR}" | grep -v /work/Catalina
 
-	diff -rq "${BUNDLES_DIR}" "${UPDATE_DIR}" | grep -v /work/Catalina | while read -r change
+	diff -rq "${BUNDLES_DIR}" "${RELEASE_DIR}" | grep -v /work/Catalina | while read -r change
 	do
-		if (echo "${change}" | grep "^Only in ${UPDATE_DIR}" &>/dev/null)
+		if (echo "${change}" | grep "^Only in ${RELEASE_DIR}" &>/dev/null)
 		then
 			local removed_file=${change#Only in }
-			removed_file=$(echo "${removed_file}" | sed -e "s#: #/#" | sed -e "s#${UPDATE_DIR}##")
+			removed_file=$(echo "${removed_file}" | sed -e "s#: #/#" | sed -e "s#${RELEASE_DIR}##")
 			removed_file=${removed_file#/}
 			echo "${removed_file}"
 
@@ -258,43 +258,43 @@ function package {
 	rm -fr hotfix
 }
 
-function prepare_update_dir {
-	UPDATE_DIR=/opt/liferay/updates/"${DXP_VERSION}"
+function prepare_release_dir {
+	RELEASE_DIR=/opt/liferay/releases/"${DXP_VERSION}"
 
-	local update7z
+	local release7z
 
-	if [ -e /opt/liferay/test_update ]
+	if [ -e /opt/liferay/test_release ]
 	then
-		lcd /opt/liferay/test_update
+		lcd /opt/liferay/test_release
 
-		local update_file=$(find . -type f -printf "%f\n")
+		local release_file=$(find . -type f -printf "%f\n")
 
-		UPDATE_DIR=/opt/liferay/updates/"${update_file%%.7z}"
+		RELEASE_DIR=/opt/liferay/releases/"${release_file%%.7z}"
 
-		update7z=/opt/liferay/test_update/"${update_file}"
+		release7z=/opt/liferay/test_release/"${release_file}"
 	else
-		echo "Update is not available, download is not yet an option."
+		echo "Release is not available, download is not yet an option."
 
 		return 1
 	fi
 
-	if [ -e "${UPDATE_DIR}" ]
+	if [ -e "${RELEASE_DIR}" ]
 	then
-		echo "${UPDATE_DIR} is already available."
+		echo "${RELEASE_DIR} is already available."
 
 		return "${SKIPPED}"
 	fi
 
-	mkdir -p "${UPDATE_DIR}"
+	mkdir -p "${RELEASE_DIR}"
 
-	lcd "${UPDATE_DIR}"
+	lcd "${RELEASE_DIR}"
 
-	7z x "${update7z}"
+	7z x "${release7z}"
 
-	mv liferay-dxp-tomcat/* .
-	mv liferay-dxp-tomcat/.* .
+	mv liferay-dxp/* .
+	mv liferay-dxp/.* .
 
-	rm -fr liferay-dxp-tomcat/
+	rm -fr liferay-dxp/
 }
 
 function transform_file_name {
