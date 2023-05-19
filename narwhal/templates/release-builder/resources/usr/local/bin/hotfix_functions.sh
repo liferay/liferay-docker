@@ -304,3 +304,14 @@ function transform_file_name {
 
 	echo "${file_name}"
 }
+
+function upload_hotfix {
+	if [ ! -n "${NARWHAL_UPLOAD}" ]
+	then
+		echo "Skipping upload_hotfix as NARWHAL_UPLOAD is not set."
+
+		return "${SKIPPED}"
+	fi
+
+	gsutil cp "${BUILD_DIR}"/hotfix/* "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
+}
