@@ -218,6 +218,8 @@ function main {
 		time_run create_documentation
 
 		time_run package
+
+		time_run upload_hotfix
 	fi
 
 	local end_time=$(date +%s)

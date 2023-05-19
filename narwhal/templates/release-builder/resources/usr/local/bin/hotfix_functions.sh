@@ -313,5 +313,5 @@ function upload_hotfix {
 		return "${SKIPPED}"
 	fi
 
-	gsutil cp "${BUILD_DIR}"/hotfix/* "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
+	gsutil cp "${BUILD_DIR}"/liferay-hotfix-"${NARWHAL_BUILD_ID}".zip "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
 }
