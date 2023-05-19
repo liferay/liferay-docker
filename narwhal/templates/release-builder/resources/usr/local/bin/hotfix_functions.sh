@@ -39,7 +39,7 @@ function calculate_checksums {
 
 	lcd "${BUILD_DIR}/hotfix/binaries/"
 
-	find . -print0 | while IFS= read -r -d '' file
+	find . -type f -print0 | while IFS= read -r -d '' file
 	do
 		sha256sum "${file}" >> ../checksums
 	done
