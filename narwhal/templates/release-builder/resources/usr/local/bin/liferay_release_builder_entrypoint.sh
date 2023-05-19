@@ -187,7 +187,6 @@ function main {
 
 	time_run pre_compile_setup
 
-
 	DXP_VERSION=$(get_dxp_version)
 
 	if [ "${NARWHAL_OUTPUT}" == "release" ]
@@ -199,6 +198,8 @@ function main {
 		time_run compile_dxp
 
 		time_run package_bundle
+
+		time_run upload_bundle
 	else
 		source /usr/local/bin/hotfix_functions.sh
 

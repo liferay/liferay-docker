@@ -45,4 +45,15 @@ ENV NARWHAL_HOTFIX_TESTING_TAG=
 #
 ENV NARWHAL_HOTFIX_TESTING_SHA=
 
+#
+# If this is set, the files will be uploaded to the designated buckets
+#
+ENV NARWHAL_UPLOAD=
+
+#
+# The name of the GCS bucket where the internal files should be copied
+#
+ENV NARWHAL_GCS_INTERNAL_BUCKET=patcher-storage
+
+
 COPY resources/usr/local/bin/* /usr/local/bin/
