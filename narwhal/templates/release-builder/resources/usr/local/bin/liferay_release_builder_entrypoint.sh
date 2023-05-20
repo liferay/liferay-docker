@@ -1,6 +1,11 @@
 #!/bin/bash
 
-source /usr/local/bin/_*.sh
+source /usr/local/bin/_dxp_util.sh
+source /usr/local/bin/_git_util.sh
+source /usr/local/bin/_hotfix_util.sh
+source /usr/local/bin/_liferay_common.sh
+source /usr/local/bin/_publishing_util.sh
+source /usr/local/bin/_release_util.sh
 
 function create_folders {
 	BUILD_DIR=/opt/liferay/build

@@ -55,6 +55,8 @@ function setup_remote {
 }
 
 function update_portal_git {
+	trap "return 1" ERR
+
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
 	if [ -e "${BUILD_DIR}"/sha-liferay-portal-ee ] && [ $(cat "${BUILD_DIR}"/sha-liferay-portal-ee) == "${NARWHAL_GIT_SHA}" ]
@@ -68,17 +70,19 @@ function update_portal_git {
 	then
 		echo "${NARWHAL_GIT_SHA} tag exists on remote."
 
-		git fetch origin tag "${NARWHAL_GIT_SHA}" || return 1
-		git checkout "${NARWHAL_GIT_SHA}" || return 1
+		git fetch origin tag "${NARWHAL_GIT_SHA}"
+		git checkout "${NARWHAL_GIT_SHA}"
 	elif [ -n "$(git ls-remote origin refs/heads/"${NARWHAL_GIT_SHA}")" ]
 	then
 		echo "${NARWHAL_GIT_SHA} branch exists on remote."
 
-		git fetch origin "${NARWHAL_GIT_SHA}" || return 1
-		git checkout "${NARWHAL_GIT_SHA}" || return 1
-		git pull origin "${NARWHAL_GIT_SHA}" || return 1
-		git reset --hard origin/"${NARWHAL_GIT_SHA}" || return 1
-		git clean -fd || return 1
+		git fetch origin "${NARWHAL_GIT_SHA}"
+		git checkout "${NARWHAL_GIT_SHA}"
+		git reset --hard
+		git clean -fd
+		git pull origin "${NARWHAL_GIT_SHA}"
+		git reset --hard origin/"${NARWHAL_GIT_SHA}"
+		git clean -fd
 	fi
 
 	echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/sha-liferay-portal-ee
