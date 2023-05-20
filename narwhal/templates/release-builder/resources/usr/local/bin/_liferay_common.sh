@@ -69,6 +69,15 @@ function next_step {
 	printf '%02d' ${step}
 }
 
+function read_bnd_property {
+	file=${1}
+	property=${2}
+
+	local value=$(grep -F "${2}: " "${1}")
+
+	echo "${value##*: }"
+}
+
 function read_property {
 	file=${1}
 	property=${2}

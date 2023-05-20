@@ -43,6 +43,8 @@ function main {
 
 	time_run pre_compile_setup
 
+	time_run decrement_module_versions
+
 	DXP_VERSION=$(get_dxp_version)
 
 	if [ "${NARWHAL_OUTPUT}" == "release" ]

@@ -41,6 +41,29 @@ function compile_dxp {
 	return ${exit_code}
 }
 
+function decrement_module_versions {
+	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules
+
+	find apps dxp/apps -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd
+	do
+		local module_path=$(dirname "${bnd}")
+
+		if [ ! -e ".releng/${module_path}/artifact.properties" ]
+		then
+			continue
+		fi
+
+		local bundle_version=$(read_bnd_property "${bnd}" "Bundle-Version")
+
+		local major_minor_version=${bundle_version%.*}
+		local micro_version=${bundle_version##*.}
+
+		micro_version=$((micro_version - 1))
+
+		sed -i -e "s/Bundle-Version: ${bundle_version}/Bundle-Version: ${major_minor_version}.${micro_version}/" "${bnd}"
+	done
+}
+
 function get_dxp_version {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
