@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function add_file {
+function add_file_to_hofix {
 	local file_name=$(transform_file_name "${1}")
 
 	local file_dir=$(dirname "${file_name}")
@@ -192,7 +192,7 @@ function create_hotfix {
 			removed_file=${removed_file#/}
 			echo "${removed_file}"
 
-			if (in_scope "${removed_file}")
+			if (in_hotfix_scope "${removed_file}")
 			then
 				echo "Removed ${removed_file}"
 
@@ -204,10 +204,10 @@ function create_hotfix {
 			new_file=$(echo "${new_file}" | sed -e "s#: #/#" | sed -e "s#${BUNDLES_DIR}##")
 			new_file=${new_file#/}
 
-			if (in_scope "${new_file}")
+			if (in_hotfix_scope "${new_file}")
 			then
 				echo "New file ${new_file}"
-				add_file "${new_file}"
+				add_file_to_hotfix "${new_file}"
 			fi
 		else
 			local changed_file=${change#Files }
@@ -215,20 +215,20 @@ function create_hotfix {
 			changed_file=$(echo "${changed_file}" | sed -e "s#${BUNDLES_DIR}##")
 			changed_file=${changed_file#/}
 
-			if (in_scope "${changed_file}")
+			if (in_hotfix_scope "${changed_file}")
 			then
 				if (echo "${changed_file}" | grep -q ".[jw]ar$")
 				then
 					manage_jar "${changed_file}" &
 				else
-					add_file "${changed_file}"
+					add_file_to_hotfix "${changed_file}"
 				fi
 			fi
 		fi
 	done
 }
 
-function in_scope {
+function in_hotfix_scope {
 	if (echo "${1}" | grep -q "^osgi/") || (echo "${1}" | grep -q "^tomcat-.*/webapps/ROOT/")
 	then
 		return 0
@@ -303,15 +303,4 @@ function transform_file_name {
 	file_name=$(echo "${file_name}" | sed -e s#tomcat.*/webapps/ROOT#WAR_PATH#)
 
 	echo "${file_name}"
-}
-
-function upload_hotfix {
-	if [ ! -n "${NARWHAL_UPLOAD}" ]
-	then
-		echo "Skipping upload_hotfix as NARWHAL_UPLOAD is not set."
-
-		return "${SKIPPED}"
-	fi
-
-	gsutil cp "${BUILD_DIR}"/liferay-hotfix-"${NARWHAL_BUILD_ID}".zip "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
 }
