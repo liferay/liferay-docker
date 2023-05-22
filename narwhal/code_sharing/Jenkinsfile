@@ -1,0 +1,16 @@
+pipeline {
+	agent any
+	stages {
+		stage('Preparing git') {
+			steps {
+				echo 'eeeeeeeee'
+			}
+		}
+
+		stage('Deploy DXP from scratch') {
+			steps {
+				echo '22222222222'
+			}
+		}
+	}
+}
