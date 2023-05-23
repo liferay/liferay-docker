@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 source ./_common.sh
