@@ -10,6 +10,18 @@ function lc_cd {
 	cd "${3}" || exit 3
 }
 
+function lc_check_utils {
+	for util in "${@}"
+	do
+		if (! command -v "${util}" &>/dev/null)
+		then
+			lc_log ERROR "The utility ${util} is not installed."
+
+			exit 1
+		fi
+	done
+}
+
 function lc_download {
 	url=${1}
 	file=${2}
