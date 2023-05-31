@@ -108,13 +108,13 @@ function time_run {
 
 	if [ "${exit_code}" == "${SKIPPED}" ]
 	then
-		echo "$(date) < ${*} - skip"
+		echo -e "$(date) < ${*} - \e[1;34mskip\e[0m"
 	else
 		local seconds=$((end_time - start_time))
 
 		if [ "${exit_code}" -gt 0 ]
 		then
-			echo "$(date) ! ${*} exited with error in $(echo_time ${seconds}) (exit code: ${exit_code})."
+			echo -e "$(date) ! ${*} exited with \e[1;31merror\e[0m in $(echo_time ${seconds}) (exit code: ${exit_code})."
 
 			if [ ! -n "${NARWHAL_DEBUG}" ]
 			then
@@ -125,7 +125,7 @@ function time_run {
 
 			exit ${exit_code}
 		else 
-			echo "$(date) < ${*} - success in $(echo_time ${seconds})"
+			echo -e "$(date) < ${*} - \e[1;32msuccess\e[0m in $(echo_time ${seconds})"
 		fi
 	fi
 }
