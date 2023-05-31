@@ -229,12 +229,17 @@ function create_hotfix {
 }
 
 function in_hotfix_scope {
-	if (echo "${1}" | grep -q "^osgi/") || (echo "${1}" | grep -q "^tomcat-.*/webapps/ROOT/")
+	if (echo "${1}" | grep -q "^tomcat/webapps/ROOT/")
 	then
 		return 0
-	else
-		return 1
 	fi
+
+	if (echo "${1}" | grep -q "^osgi/") && (! echo "${1}" | grep -q "^osgi/state" )&& (! echo "${1}" | grep -q "^osgi/war")
+	then
+		return 0
+	fi
+
+	return 1
 }
 
 function manage_jar {
