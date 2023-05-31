@@ -263,7 +263,7 @@ function prepare_release_dir {
 
 	local release7z
 
-	if [ -e /opt/liferay/test_release ]
+	if [ -e /opt/liferay/test_release ] && [ $(find /opt/liferay/test_release -type f -printf "%f\n" | wc -l) -eq 1 ]
 	then
 		lcd /opt/liferay/test_release
 
