@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function add_file_to_hofix {
+function add_file_to_hotfix {
 	local file_name=$(transform_file_name "${1}")
 
 	local file_dir=$(dirname "${file_name}")
@@ -242,7 +242,7 @@ function manage_jar {
 	then
 		echo "Changed .jar file: ${1}"
 
-		add_file "${1}"
+		add_file_to_hotfix "${1}"
 	fi
 }
 
