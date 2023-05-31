@@ -9,8 +9,6 @@ function package_bundle {
 
 	cp -a "${BUNDLES_DIR}"/* "${root_dir}"
 
-	rm -f "${root_dir}"/apache-tomcat*
-
 	echo "${GIT_SHA}" > "${root_dir}"/.githash
 	echo "${DXP_VERSION}" > "${root_dir}"/.liferay-version
 

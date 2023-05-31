@@ -33,6 +33,8 @@ function compile_dxp {
 		mv tomcat-* tomcat
 	fi
 
+	rm -f apache-tomcat*
+
 	if [ "${exit_code}" -eq 0 ]
 	then
 		echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/built-sha
@@ -94,4 +96,66 @@ function pre_compile_setup {
 	fi
 
 	ant setup-profile-dxp
+}
+
+function warm_up_tomcat {
+	if [ -e "${BUNDLES_DIR}/data/hypersonic/lportal.script" ]
+	then
+		echo "Hypersonic files are already generated. Not warming up tomcat."
+
+		return "${SKIPPED}"
+	fi
+
+	lcd "${BUNDLES_DIR}/tomcat/bin"
+
+	LIFERAY_JVM_OPTS="-Xmx3G"
+
+	./catalina.sh start
+
+	echo "Waiting for tomcat to start up"
+
+	for count in {0..30}
+	do
+		if (curl --fail --head --output /dev/null --silent http://localhost:8080)
+		then
+			break
+		fi
+
+		sleep 3
+	done
+
+	if (! curl --fail --head --output /dev/null --silent http://localhost:8080)
+	then
+		echo "Failed to start tomcat in 90 seconds"
+
+		cat ../logs/catalina.out
+
+		return 1
+	fi
+
+	./catalina.sh stop
+
+	local pid=$(lsof -Fp -i 4tcp:8080 -sTCP:LISTEN | head -n 1)
+
+	pid=${pid##p}
+
+	for count in {0..30}
+	do
+		if (! kill -0 "${pid}" &>/dev/null)
+		then
+			break
+		fi
+
+		sleep 1
+	done
+
+	if (kill -0 "${pid}" &>/dev/null)
+	then
+		echo "Killing tomcat was unsuccessful in 30 seconds"
+
+		exit 1
+	fi
+
+	rm -fr ../logs/*
+	rm -fr ../../logs/*
 }
