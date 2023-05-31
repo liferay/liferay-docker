@@ -298,9 +298,9 @@ function prepare_release_dir {
 }
 
 function transform_file_name {
-	local file_name=$(echo "${1}" | sed -e s#osgi/modules#MODULES_BASE_PATH#)
+	local file_name=$(echo "${1}" | sed -e s#osgi/#OSGI_BASE_PATH/#)
 
-	file_name=$(echo "${file_name}" | sed -e s#tomcat.*/webapps/ROOT#WAR_PATH#)
+	file_name=$(echo "${file_name}" | sed -e s#tomcat/webapps/ROOT#WAR_PATH#)
 
 	echo "${file_name}"
 }
