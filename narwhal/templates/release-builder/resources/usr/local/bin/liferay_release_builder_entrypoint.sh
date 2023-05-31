@@ -23,6 +23,8 @@ function main {
 
 	local start_time=$(date +%s)
 
+	HOTFIX_ID=${start_time}
+
 	create_folders
 
 	time_run setup_git
@@ -61,6 +63,8 @@ function main {
 	else
 		time_run add_hotfix_testing_code
 
+		time_run set_hotfix_id
+
 		#time_run add_licensing
 
 		background_run prepare_release_dir
@@ -73,7 +77,7 @@ function main {
 
 		time_run create_documentation
 
-		time_run package
+		time_run package_hotfix
 
 		time_run upload_hotfix
 	fi

@@ -16,14 +16,3 @@ function package_bundle {
 
 	7z a "${BUILD_DIR}/release/liferay-dxp-tomcat-${DXP_VERSION}-${GIT_SHA_SHORT}.7z" "${root_dir}"
 }
-
-function upload_bundle {
-	if [ ! -n "${NARWHAL_UPLOAD}" ]
-	then
-		echo "Skipping upload_bundle as NARWHAL_UPLOAD is not set."
-
-		return "${SKIPPED}"
-	fi
-
-	gsutil cp "${BUILD_DIR}"/release/* "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/dxp/${DXP_VERSION}/"
-}

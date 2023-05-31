@@ -251,12 +251,12 @@ function manage_jar {
 	fi
 }
 
-function package {
+function package_hotfix {
 	lcd "${BUILD_DIR}"/hotfix
 
-	rm -f ../liferay-hotfix-"${NARWHAL_BUILD_ID}".zip checksums removed_files
+	rm -f ../liferay-hotfix-"${HOTFIX_ID}-${DXP_VERSION}".zip checksums removed_files
 
-	zip -r ../liferay-hotfix-"${NARWHAL_BUILD_ID}".zip ./*
+	zip -r ../liferay-hotfix-"${HOTFIX_ID}-${DXP_VERSION}".zip ./*
 
 	lcd "${BUILD_DIR}"
 
@@ -300,6 +300,13 @@ function prepare_release_dir {
 	mv liferay-dxp/.* . &> /dev/null
 
 	rm -fr liferay-dxp/
+}
+
+function set_hotfix_id {
+	if [ ! -n "${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	then
+		HOTFIX_ID=${NARWHAL_BUILD_ID}
+	fi
 }
 
 function transform_file_name {
