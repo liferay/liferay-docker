@@ -16,6 +16,8 @@ function compile_dxp {
 		return "${SKIPPED}"
 	fi
 
+	rm -fr "${BUNDLES_DIR}"
+
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
 	ant all
