@@ -30,5 +30,5 @@ function upload_hotfix {
 		return "${SKIPPED}"
 	fi
 
-	gsutil cp "${BUILD_DIR}"/liferay-hotfix-"${HOTFIX_ID}-${DXP_VERSION}".zip "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
+	gsutil cp "${BUILD_DIR}"/${HOTFIX_NAME} "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
 }

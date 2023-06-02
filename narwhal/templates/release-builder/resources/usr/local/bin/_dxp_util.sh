@@ -101,9 +101,9 @@ function pre_compile_setup {
 }
 
 function warm_up_tomcat {
-	if [ -e "${BUNDLES_DIR}/data/hypersonic/lportal.script" ]
+	if [ -e "${BUNDLES_DIR}/data/document_library" ]
 	then
-		echo "Hypersonic files are already generated. Not warming up tomcat."
+		echo "The data/document_library directory was already created. Not warming up tomcat."
 
 		return "${SKIPPED}"
 	fi

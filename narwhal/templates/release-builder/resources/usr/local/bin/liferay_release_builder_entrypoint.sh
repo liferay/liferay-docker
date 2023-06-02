@@ -21,9 +21,7 @@ function create_folders {
 function main {
 	BUNDLES_DIR=/opt/liferay/dev/projects/bundles
 
-	local start_time=$(date +%s)
-
-	HOTFIX_ID=${start_time}
+	local BUILD_TIMESTAMP=$(date +%s)
 
 	create_folders
 
@@ -63,7 +61,7 @@ function main {
 	else
 		time_run add_hotfix_testing_code
 
-		time_run set_hotfix_id
+		time_run set_hotfix_name
 
 		#time_run add_licensing
 
@@ -83,7 +81,7 @@ function main {
 	fi
 
 	local end_time=$(date +%s)
-	local seconds=$((end_time - start_time))
+	local seconds=$((end_time - ${BUILD_TIMESTAMP}))
 
 	echo ">>> Completed hotfix building process in $(echo_time ${seconds}). $(date)"
 }

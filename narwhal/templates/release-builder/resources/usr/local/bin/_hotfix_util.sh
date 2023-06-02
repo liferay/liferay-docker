@@ -254,9 +254,9 @@ function manage_jar {
 function package_hotfix {
 	lcd "${BUILD_DIR}"/hotfix
 
-	rm -f ../liferay-hotfix-"${HOTFIX_ID}-${DXP_VERSION}".zip checksums removed_files
+	rm -f "../${HOTFIX_NAME}" checksums removed_files
 
-	zip -r ../liferay-hotfix-"${HOTFIX_ID}-${DXP_VERSION}".zip ./*
+	zip -r "../${HOTFIX_NAME}" ./*
 
 	lcd "${BUILD_DIR}"
 
@@ -302,11 +302,15 @@ function prepare_release_dir {
 	rm -fr liferay-dxp/
 }
 
-function set_hotfix_id {
+function set_hotfix_name {
+	local hotfix_id=${BUILD_TIMESTAMP}
+
 	if [ ! -n "${NARWHAL_HOTFIX_TESTING_SHA}" ]
 	then
-		HOTFIX_ID=${NARWHAL_BUILD_ID}
+		hotfix_id=${NARWHAL_BUILD_ID}
 	fi
+
+	HOTFIX_NAME=liferay-dxp-${DXP_VERSION}-hotfix-"${hotfix_id}".zip
 }
 
 function transform_file_name {
