@@ -29,7 +29,7 @@ function main {
 
 	background_run clone_repository liferay-binaries-cache-2020
 	background_run clone_repository liferay-portal-ee
-	#time_run clone_repository liferay-release-tool-ee
+	time_run clone_repository liferay-release-tool-ee
 	wait
 
 	time_run setup_remote
@@ -38,7 +38,7 @@ function main {
 
 	background_run init_gcs
 	background_run update_portal_git
-	#time_run update_release_tool_git
+	time_run update_release_tool_git
 	wait
 
 	time_run pre_compile_setup
@@ -49,7 +49,7 @@ function main {
 
 	if [ "${NARWHAL_OUTPUT}" == "release" ]
 	then
-		#time_run add_licensing
+		time_run add_licensing
 
 		time_run compile_dxp
 
@@ -63,7 +63,7 @@ function main {
 
 		time_run set_hotfix_name
 
-		#time_run add_licensing
+		time_run add_licensing
 
 		background_run prepare_release_dir
 		time_run compile_dxp
@@ -81,7 +81,7 @@ function main {
 	fi
 
 	local end_time=$(date +%s)
-	local seconds=$((end_time - ${BUILD_TIMESTAMP}))
+	local seconds=$((end_time - BUILD_TIMESTAMP))
 
 	echo ">>> Completed hotfix building process in $(echo_time ${seconds}). $(date)"
 }
