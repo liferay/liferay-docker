@@ -9,7 +9,7 @@ function add_licensing {
 }
 
 function compile_dxp {
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}" ]
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
 	then
 		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile_dxp step."
 
@@ -39,7 +39,7 @@ function compile_dxp {
 
 	if [ "${exit_code}" -eq 0 ]
 	then
-		echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/built-sha
+		echo "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" > "${BUILD_DIR}"/built-sha
 	fi
 
 	return ${exit_code}
@@ -90,7 +90,7 @@ function get_dxp_version {
 function pre_compile_setup {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}" ]
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
 	then
 		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the pre_compile_setup step."
 
