@@ -3,7 +3,7 @@
 function clean_portal_git {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
-	git clean -df
+	git clean -dfX
 	git reset --hard
 
 	GIT_SHA=$(git rev-parse HEAD)
@@ -79,10 +79,10 @@ function update_portal_git {
 		git fetch origin "${NARWHAL_GIT_SHA}"
 		git checkout "${NARWHAL_GIT_SHA}"
 		git reset --hard
-		git clean -fd
+		git clean -fdX
 		git pull origin "${NARWHAL_GIT_SHA}"
 		git reset --hard origin/"${NARWHAL_GIT_SHA}"
-		git clean -fd
+		git clean -fdX
 	fi
 
 	echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/sha-liferay-portal-ee
