@@ -113,6 +113,12 @@ function lc_download {
 	fi
 }
 
+function lc_echo_time {
+	local seconds=${1}
+
+	printf '%02dh:%02dm:%02ds' $((seconds/3600)) $((seconds%3600/60)) $((seconds%60))
+}
+
 function lc_log {
 	local level=${1}
 	local message=${2}
@@ -123,7 +129,70 @@ function lc_log {
 	fi
 }
 
+function lc_next_step {
+	if [ -z "${LIFERAY_COMMON_STEP_FILE}" ]
+	then
+		LIFERAY_COMMON_STEP_FILE=$(mktemp)
+	fi
+
+	local step=$(cat "${LIFERAY_COMMON_STEP_FILE}")
+
+	step=$((step + 1))
+
+	echo ${step} > "${LIFERAY_COMMON_STEP_FILE}"
+
+	printf '%02d' ${step}
+}
+
+function lc_time_run {
+	local run_id=$(echo "${@}" | tr " " "_")
+	local start_time=$(date +%s)
+
+	if [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
+	then
+		local log_file="${LIFERAY_COMMON_LOG_DIR}/log_${LIFERAY_COMMON_START_TIME}_step_$(lc_next_step)_${run_id}.txt"
+	fi
+
+	echo "$(lc_date) > ${*}"
+
+	if [ -z "${LIFERAY_COMMON_DEBUG_ENABLED}" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
+	then
+		"${@}" &> "${log_file}"
+	else
+		"${@}"
+	fi
+
+	local exit_code=${?}
+
+	local end_time=$(date +%s)
+
+	if [ "${exit_code}" == "${SKIPPED}" ]
+	then
+		echo -e "$(lc_date) < ${*} - \e[1;34mskip\e[0m"
+	else
+		local seconds=$((end_time - start_time))
+
+		if [ "${exit_code}" -gt 0 ]
+		then
+			echo -e "$(lc_date) ! ${*} exited with \e[1;31merror\e[0m in $(lc_echo_time ${seconds}) (exit code: ${exit_code})."
+
+			if [ -z "${LIFERAY_COMMON_DEBUG_ENABLED}" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
+			then
+				echo "Full log file: ${log_file}. Printing the last 100 lines:"
+
+				tail -n 100 "${log_file}"
+			fi
+
+			exit ${exit_code}
+		else
+			echo -e "$(lc_date) < ${*} - \e[1;32msuccess\e[0m in $(lc_echo_time ${seconds})"
+		fi
+	fi
+}
+
 function _lc_init {
+	LIFERAY_COMMON_START_TIME=$(date +%s)
+
 	if [ -z "${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}" ]
 	then
 		LIFERAY_COMMON_DOWNLOAD_CACHE_DIR=${HOME}/.liferay-common-cache
@@ -133,7 +202,8 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_CD=3
 	LIFERAY_COMMON_EXIT_CODE_HELP=2
 	LIFERAY_COMMON_EXIT_CODE_OK=0
-
+	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
+	
 	export LC_ALL=en_US.UTF-8
 	export TZ=UTC
 }
