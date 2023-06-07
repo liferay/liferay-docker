@@ -18,15 +18,19 @@ function lc_cd {
 }
 
 function lc_check_utils {
+	local exit_code=${LIFERAY_COMMON_EXIT_CODE_OK}
+
 	for util in "${@}"
 	do
 		if (! command -v "${util}" &>/dev/null)
 		then
 			lc_log ERROR "The utility ${util} is not installed."
 
-			exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+			exit_code="${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 	done
+
+	return "${exit_code}"
 }
 
 function lc_date {
