@@ -7,7 +7,7 @@
 #
 
 function lc_cd {
-	cd "${3}" || exit ${LIFERAY_COMMON_EXIT_CODE_CD}
+	cd "${1}" || exit "${LIFERAY_COMMON_EXIT_CODE_CD}"
 }
 
 function lc_check_utils {
@@ -17,7 +17,7 @@ function lc_check_utils {
 		then
 			lc_log ERROR "The utility ${util} is not installed."
 
-			exit ${LIFERAY_COMMON_EXIT_CODE_BAD}
+			exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 	done
 }
@@ -57,7 +57,7 @@ function lc_download {
 	then
 		lc_log ERROR "File URL is not set."
 
-		return ${LIFERAY_COMMON_EXIT_CODE_BAD}
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	local file_name=${2}
@@ -97,7 +97,7 @@ function lc_download {
 	then
 		lc_log ERROR "Unable to download ${file_url}."
 
-		return ${LIFERAY_COMMON_EXIT_CODE_BAD}
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	else
 		mv "${cache_file}.temp${timestamp}" "${cache_file}"
 
