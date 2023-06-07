@@ -109,6 +109,10 @@ function pre_compile_setup {
 		return "${SKIPPED}"
 	fi
 
+	rm -fr /root/.liferay
+	mkdir -p /opt/liferay/build_cache
+	ln -s /opt/liferay/build_cache /root/.liferay
+
 	ant setup-profile-dxp
 }
 
