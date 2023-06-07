@@ -7,7 +7,7 @@
 #
 
 function lc_cd {
-	cd "${3}" || exit 3
+	cd "${3}" || exit ${LIFERAY_COMMON_EXIT_CODE_CD}
 }
 
 function lc_check_utils {
@@ -17,53 +17,91 @@ function lc_check_utils {
 		then
 			lc_log ERROR "The utility ${util} is not installed."
 
-			exit 1
+			exit ${LIFERAY_COMMON_EXIT_CODE_BAD}
 		fi
 	done
 }
 
-function lc_download {
-	url=${1}
-	file=${2}
+function lc_date {
+	export LC_ALL=en_US.UTF-8
+	export TZ=America/Los_Angeles
 
-	if [ -z "${url}" ] || [ -z "${file}" ]
+	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
-		lc_log ERROR "Invalid parameters for lc_download, it requires url and file"
+		if [ "$(uname)" == "Darwin" ]
+		then
+			/bin/date
+		elif [ -e /bin/date ]
+		then
+			/bin/date --iso-8601=seconds
+		else
+			/usr/bin/date --iso-8601=seconds
+		fi
+	else
+		if [ "$(uname)" == "Darwin" ]
+		then
+			/bin/date -jf "%a %b %e %H:%M:%S %Z %Y" "${1}" "${2}"
+		elif [ -e /bin/date ]
+		then
+			/bin/date -d "${1}" "${2}"
+		else
+			/usr/bin/date -d "${1}" "${2}"
+		fi
+	fi
+}
 
-		return 1
+function lc_download {
+	local file_url=${1}
+
+	if [ -z "${file_url}" ]
+	then
+		lc_log ERROR "File URL is not set."
+
+		return ${LIFERAY_COMMON_EXIT_CODE_BAD}
 	fi
 
-	if [ -e "${file}" ]
+	local file_name=${2}
+
+	if [ -z "${file_name}" ]
 	then
-		lc_log DEBUG "Skipping the download of ${url} as it already exists"
+		file_name=${file_url##*/}
+	fi
+
+	if [ -e "${file_name}" ]
+	then
+		lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
 
 		return
 	fi
 
-	cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${url##*://}"
+	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
 	if [ -e "${cache_file}" ]
 	then
-		lc_log DEBUG "Copying file from cache: ${cache_file}"
+		lc_log DEBUG "Copying file from cache: ${cache_file}."
 
-		cp "${cache_file}" "${file}"
+		cp "${cache_file}" "${file_name}"
 
 		return
 	fi
 
 	mkdir -p $(dirname "${cache_file}")
 
-	lc_log DEBUG "Downloading ${url}"
+	lc_log DEBUG "Downloading ${file_url}."
 
-	if (! curl "${url}" --fail --output "${cache_file}_temp" --silent)
+	local current_date=$(lc_date)
+
+	local timestamp=$(lc_date "${current_date}" "+%Y%m%d%H%M%S")
+
+	if (! curl "${file_url}" --fail --output "${cache_file}.temp${timestamp}" --silent)
 	then
-		lc_log ERROR "Downloading ${url} was unsuccessful, exiting"
+		lc_log ERROR "Unable to download ${file_url}."
 
-		return 4
+		return ${LIFERAY_COMMON_EXIT_CODE_BAD}
 	else
-		mv "${cache_file}_temp" "${cache_file}"
+		mv "${cache_file}.temp${timestamp}" "${cache_file}"
 
-		cp "${cache_file}" "${file}"
+		cp "${cache_file}" "${file_name}"
 	fi
 }
 
@@ -73,15 +111,20 @@ function lc_log {
 
 	if [ "${level}" != "DEBUG" ] || [ "${LIFERAY_COMMON_LOG_LEVEL}" == "DEBUG" ]
 	then
-		echo "$(date) [${level}] ${message}"
+		echo "$(lc_date) [${level}] ${message}"
 	fi
 }
 
 function _lc_init {
 	if [ -z "${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}" ]
 	then
-		LIFERAY_COMMON_DOWNLOAD_CACHE_DIR=${HOME}/.liferay-download-cache
+		LIFERAY_COMMON_DOWNLOAD_CACHE_DIR=${HOME}/.liferay-common-cache
 	fi
+
+	LIFERAY_COMMON_EXIT_CODE_BAD=1
+	LIFERAY_COMMON_EXIT_CODE_CD=3
+	LIFERAY_COMMON_EXIT_CODE_HELP=2
+	LIFERAY_COMMON_EXIT_CODE_OK=0
 }
 
 _lc_init
