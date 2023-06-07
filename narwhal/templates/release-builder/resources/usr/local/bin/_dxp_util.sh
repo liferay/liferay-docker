@@ -68,6 +68,13 @@ function decrement_module_versions {
 	done
 }
 
+function deploy_elasticsearch_sidecar {
+	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
+
+	/opt/liferay/dev/projects/liferay-portal-ee/gradlew deploySidecar
+
+}
+
 function get_dxp_version {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
