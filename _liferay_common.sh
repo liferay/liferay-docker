@@ -7,7 +7,14 @@
 #
 
 function lc_cd {
-	cd "${1}" || exit "${LIFERAY_COMMON_EXIT_CODE_CD}"
+	if [ -d "${1}" ]
+	then
+		cd "${1}" || exit "${LIFERAY_COMMON_EXIT_CODE_CD}"
+	else
+		lc_log ERROR "${1} directory does not exist."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_CD}"
+	fi
 }
 
 function lc_check_utils {
