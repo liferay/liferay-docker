@@ -91,7 +91,7 @@ function main {
 	local end_time=$(date +%s)
 	local seconds=$((end_time - BUILD_TIMESTAMP))
 
-	echo ">>> Completed hotfix building process in $(echo_time ${seconds}). $(date)"
+	echo ">>> Completed ${NARWHAL_OUTPUT} building process in $(echo_time ${seconds}). $(date)"
 }
 
 main

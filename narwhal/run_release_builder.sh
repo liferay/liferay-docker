@@ -33,4 +33,4 @@ else
 fi
 
 # shellcheck disable=SC2086,SC2068
-docker run -it -v "${CACHE_DIR}:/opt/liferay/" ${SSH_CONFIG} ${@} $(docker -l warning build . --quiet -t release-builder)
+docker run --cpus=8 -it -m 10g -v "${CACHE_DIR}:/opt/liferay/" ${SSH_CONFIG} ${@} $(docker -l warning build . --quiet -t release-builder)
