@@ -9,6 +9,8 @@ function add_licensing {
 }
 
 function compile_dxp {
+	trap "return 1" ERR
+
 	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
 	then
 		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile_dxp step."
@@ -22,7 +24,11 @@ function compile_dxp {
 
 	ant deploy
 
-	local exit_code=${?}
+	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules/apps
+	../../gradlew deploy '-Dbuild.profile=dxp' '-Dliferay.releng.bundle=true' '--parallel'
+
+	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules/dxp
+	../../gradlew deploy '-Dbuild.profile=dxp' '-Dliferay.releng.bundle=true' '--parallel'
 
 	#
 	# Workaround until we implement LPS-182849
@@ -37,12 +43,7 @@ function compile_dxp {
 
 	rm -f apache-tomcat*
 
-	if [ "${exit_code}" -eq 0 ]
-	then
-		echo "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" > "${BUILD_DIR}"/built-sha
-	fi
-
-	return ${exit_code}
+	echo "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" > "${BUILD_DIR}"/built-sha
 }
 
 function decrement_module_versions {
@@ -124,10 +125,8 @@ function pre_compile_setup {
 }
 
 function warm_up_tomcat {
-	if [ -e "${BUNDLES_DIR}/data/document_library" ]
+	if [ -e "${BUILD_DIR}/tomcat-warmup-complete" ]
 	then
-		echo "The data/document_library directory was already created. Not warming up tomcat."
-
 		return "${SKIPPED}"
 	fi
 
@@ -183,4 +182,6 @@ function warm_up_tomcat {
 
 	rm -fr ../logs/*
 	rm -fr ../../logs/*
+
+	touch "${BUILD_DIR}/tomcat-warmup-complete"
 }

@@ -59,7 +59,7 @@ function main {
 
 		time_run deploy_elasticsearch_sidecar
 
-		time_run warm_up_tomcat
+		#time_run warm_up_tomcat
 
 		time_run package_bundle
 
