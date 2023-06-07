@@ -20,7 +20,7 @@ function compile_dxp {
 
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
-	ant all
+	ant deploy
 
 	local exit_code=${?}
 
@@ -85,6 +85,18 @@ function get_dxp_version {
 	local trivial=$(read_property release.properties "release.info.version.trivial")
 
 	echo "${major}.${minor}.${bug_fix}-u${trivial}"
+}
+
+function obfuscate_licensing {
+	lcd "/opt/liferay/dev/projects/liferay-portal-ee"
+
+	ant clean compile
+
+	lcd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
+
+	lcd "$(read_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
+
+	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.kernel.dir=/opt/liferay/dev/projects/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal
 }
 
 function pre_compile_setup {

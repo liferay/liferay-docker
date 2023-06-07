@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /usr/local/bin/set_java_version.sh
+
 source /usr/local/bin/_dxp_util.sh
 source /usr/local/bin/_git_util.sh
 source /usr/local/bin/_hotfix_util.sh
@@ -51,6 +53,8 @@ function main {
 	then
 		time_run add_licensing
 
+		time_run obfuscate_licensing
+
 		time_run compile_dxp
 
 		time_run warm_up_tomcat
@@ -64,6 +68,8 @@ function main {
 		time_run set_hotfix_name
 
 		time_run add_licensing
+
+		time_run obfuscate_licensing
 
 		background_run prepare_release_dir
 		time_run compile_dxp
