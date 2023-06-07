@@ -34,9 +34,6 @@ function lc_check_utils {
 }
 
 function lc_date {
-	export LC_ALL=en_US.UTF-8
-	export TZ=America/Los_Angeles
-
 	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
 		if [ "$(uname)" == "Darwin" ]
@@ -136,6 +133,9 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_CD=3
 	LIFERAY_COMMON_EXIT_CODE_HELP=2
 	LIFERAY_COMMON_EXIT_CODE_OK=0
+
+	export LC_ALL=en_US.UTF-8
+	export TZ=UTC
 }
 
 _lc_init
