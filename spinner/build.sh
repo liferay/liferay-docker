@@ -109,11 +109,9 @@ function create_webserver_dockerfile {
 	) > build/webserver/Dockerfile
 }
 
-function generate_configuration {
+function build_compose_file {
 	lc_cd "${STACK_DIR}"
 
-	mkdir -p build/search/
-	grep -v "^FROM" ../../orca/templates/search/Dockerfile | sed -e "s/#FROM/FROM/" > build/search/Dockerfile
 
 	mkdir -p database_import
 
@@ -167,19 +165,8 @@ function generate_configuration {
 
 	build_service_liferay
 
-	write "    search:"
-	write "        build: ./build/search"
-
-	write_deploy_section 2G
-
-	write "        environment:"
-	write "            - discovery.type=single-node"
-	write "            - xpack.ml.enabled=false"
-	write "            - xpack.monitoring.enabled=false"
-	write "            - xpack.security.enabled=false"
-	write "            - xpack.sql.enabled=false"
-	write "            - xpack.watcher.enabled=false"
-
+	build_service_search
+	
 	write "    webserver:"
 	write "        build: ./build/webserver"
 
@@ -291,10 +278,29 @@ function build_service_liferay {
 	done
 }
 
+function build_service_search {
+	mkdir -p build/search/
+	grep -v "^FROM" ../../orca/templates/search/Dockerfile | sed -e "s/#FROM/FROM/" > build/search/Dockerfile
+
+	write "    search:"
+	write "        build: ./build/search"
+
+	write_deploy_section 2G
+
+	write "        environment:"
+	write "            - discovery.type=single-node"
+	write "            - xpack.ml.enabled=false"
+	write "            - xpack.monitoring.enabled=false"
+	write "            - xpack.security.enabled=false"
+	write "            - xpack.sql.enabled=false"
+	write "            - xpack.watcher.enabled=false"
+
+}
+
 function main {
 	check_usage "${@}"
 
-	generate_configuration | tee -a "${STACK_DIR}/build.out"
+	build_compose_file | tee -a "${STACK_DIR}/build.out"
 
 	prepare_database_files
 
