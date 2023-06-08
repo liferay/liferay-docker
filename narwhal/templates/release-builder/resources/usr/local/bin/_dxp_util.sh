@@ -24,11 +24,9 @@ function compile_dxp {
 
 	ant deploy
 
-	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules/apps
-	../../gradlew deploy '-Dbuild.profile=dxp' '-Dliferay.releng.bundle=true' '--parallel'
+	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules
 
-	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules/dxp
-	../../gradlew deploy '-Dbuild.profile=dxp' '-Dliferay.releng.bundle=true' '--parallel'
+	ant build-app-jar-release
 
 	#
 	# Workaround until we implement LPS-182849
