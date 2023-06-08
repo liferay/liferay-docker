@@ -1,7 +1,9 @@
 #!/bin/bash
 
+source ./_liferay_common.sh
+
 function check_usage {
-	check_utils docker
+	lc_check_utils docker
 
 	ENVIRONMENT=
 	DATABASE_IMPORT=
@@ -54,7 +56,7 @@ function check_usage {
 		echo "Environment was not set, using x1e4prd."
 	fi
 
-	lcd "$(dirname "$0")"
+	lc_cd "$(dirname "$0")"
 
 	if [ ! -n "${LIFERAY_LXC_REPOSITORY_DIR}" ]
 	then
@@ -65,7 +67,7 @@ function check_usage {
 	then
 		echo "The ${LIFERAY_LXC_REPOSITORY_DIR} directory does not exist. Clone the liferay-lxc repository to this directory or set LIFERAY_LXC_REPOSITORY_DIR to point to an existing clone."
 
-		exit 1
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	if [ ! -e "${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${ENVIRONMENT}" ]
@@ -77,7 +79,7 @@ function check_usage {
 	then
 		echo "Copy a valid DXP license to the dxp-activation-key directory before running this script."
 
-		exit 1
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	if [ ! -n "${STACK_NAME}" ]
@@ -91,22 +93,10 @@ function check_usage {
 	then
 		echo "Stack directory already exists."
 
-		exit 1
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	mkdir -p "${STACK_DIR}"
-}
-
-function check_utils {
-	for util in "${@}"
-	do
-		if (! command -v "${util}" &>/dev/null)
-		then
-			echo "The utility ${util} is not installed."
-
-			exit 1
-		fi
-	done
 }
 
 function create_liferay_configuration {
@@ -230,7 +220,7 @@ function generate_configuration {
 	}
 
 
-	lcd "${STACK_DIR}"
+	lc_cd "${STACK_DIR}"
 
 	mkdir -p build/liferay/resources/opt/liferay
 	cp ../../orca/templates/liferay/resources/opt/liferay/cluster-link-tcp.xml build/liferay/resources/opt/liferay
@@ -327,17 +317,12 @@ function generate_configuration {
 	write "    mysql-db:"
 }
 
-function lcd {
-	cd "${1}" || exit 3
-}
-
 function main {
 	check_usage "${@}"
 
 	generate_configuration | tee -a "${STACK_DIR}/build.out"
 
 	prepare_database_files
-
 
 	print_image_usage | tee -a "${STACK_DIR}/build.out"
 }
@@ -350,7 +335,7 @@ function prepare_database_files {
 
 	echo "Preparing ${DATABASE_IMPORT} to be imported."
 
-	lcd "${STACK_DIR}"/database_import
+	lc_cd "${STACK_DIR}"/database_import
 
 	cp "${DATABASE_IMPORT}" .
 
@@ -393,7 +378,7 @@ function print_help {
 	echo ""
 	echo "Example: ${0} x1e4prd -d sql.gz -o test"
 
-	exit 2
+	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
 
 function print_image_usage {
