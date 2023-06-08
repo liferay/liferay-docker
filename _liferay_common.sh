@@ -116,7 +116,7 @@ function lc_download {
 function lc_echo_time {
 	local seconds=${1}
 
-	printf '%02dh:%02dm:%02ds' $((seconds/3600)) $((seconds%3600/60)) $((seconds%60))
+	printf "%02dh:%02dm:%02ds" $((seconds / 3600)) $((seconds % 3600 / 60)) $((seconds % 60))
 }
 
 function lc_log {
@@ -141,7 +141,7 @@ function lc_next_step {
 
 	echo ${step} > "${LIFERAY_COMMON_STEP_FILE}"
 
-	printf '%02d' ${step}
+	printf "%02d" ${step}
 }
 
 function lc_time_run {
@@ -178,7 +178,7 @@ function lc_time_run {
 
 			if [ -z "${LIFERAY_COMMON_DEBUG_ENABLED}" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
 			then
-				echo "Full log file: ${log_file}. Printing the last 100 lines:"
+				echo "Full log file is at ${log_file}. Printing the last 100 lines:"
 
 				tail -n 100 "${log_file}"
 			fi
