@@ -438,7 +438,7 @@
         bundle_url: files.liferay.com/private/ee/portal/7.3.10-u26/liferay-dxp-tomcat-7.3.10.u26-20230519104220360.7z
         test_installed_patch: hotfix-7496-7310
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-7496-7310.zip
-   7.3.10-u27:
+    7.3.10-u27:
         bundle_url: files.liferay.com/private/ee/portal/7.3.10-u27/liferay-dxp-tomcat-7.3.10.u27-20230605145854053.7z
         test_installed_patch: hotfix-7565-7310
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-7565-7310.zip
