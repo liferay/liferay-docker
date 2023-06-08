@@ -168,7 +168,7 @@ function lc_time_run {
 
 	if [ "${exit_code}" == "${SKIPPED}" ]
 	then
-		echo -e "$(lc_date) < ${*} - \e[1;34mskip\e[0m"
+		echo -e "$(lc_date) < ${*}: \e[1;34mSkip\e[0m"
 	else
 		local seconds=$((end_time - start_time))
 
@@ -185,7 +185,7 @@ function lc_time_run {
 
 			exit ${exit_code}
 		else
-			echo -e "$(lc_date) < ${*} - \e[1;32msuccess\e[0m in $(lc_echo_time ${seconds})"
+			echo -e "$(lc_date) < ${*}: \e[1;32mSuccess\e[0m in $(lc_echo_time ${seconds})"
 		fi
 	fi
 }
