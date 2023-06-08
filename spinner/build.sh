@@ -99,43 +99,11 @@ function check_usage {
 	mkdir -p "${STACK_DIR}"
 }
 
-function create_webserver_dockerfile {
-	(
-		head -n 1 "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/Dockerfile
-
-		echo "COPY resources/etc/nginx /etc/nginx"
-		echo "COPY resources/usr/local /usr/local"
-
-	) > build/webserver/Dockerfile
-}
 
 function build_compose_file {
 	lc_cd "${STACK_DIR}"
 
-
 	mkdir -p database_import
-
-	mkdir -p build/webserver/resources/etc/nginx
-	cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/blocks.d/ build/webserver/resources/etc/nginx
-	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_pass.conf
-	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_protection.conf
-
-	cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/conf.d/ build/webserver/resources/etc/nginx
-	cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/public/ build/webserver/resources/etc/nginx
-	cp ../resources/webserver/etc/nginx/nginx.conf build/webserver/resources/etc/nginx
-
-	mkdir -p build/webserver/resources/usr/local/bin/
-
-	if [ -e "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh ]
-	then
-		cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin/
-		chmod +x build/webserver/resources/usr/local/bin/10-replace-environment-variables.sh
-	fi
-
-	mkdir -p build/webserver/resources/etc/usr
-	cp -a ../resources/webserver/usr/ build/webserver/resources/
-
-	create_webserver_dockerfile
 
 	write "services:"
 	write "    antivirus:"
@@ -167,13 +135,7 @@ function build_compose_file {
 
 	build_service_search
 	
-	write "    webserver:"
-	write "        build: ./build/webserver"
-
-	write_deploy_section 1G
-
-	write "        ports:"
-	write "            - 127.0.0.1:80:80"
+	build_service_webserver
 
 	write "volumes:"
 	write "    liferay-document-library:"
@@ -295,6 +257,44 @@ function build_service_search {
 	write "            - xpack.sql.enabled=false"
 	write "            - xpack.watcher.enabled=false"
 
+}
+
+function build_service_webserver {
+	mkdir -p build/webserver/resources/etc/nginx
+	cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/blocks.d/ build/webserver/resources/etc/nginx
+	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_pass.conf
+	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_protection.conf
+
+	cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/conf.d/ build/webserver/resources/etc/nginx
+	cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/public/ build/webserver/resources/etc/nginx
+	cp ../resources/webserver/etc/nginx/nginx.conf build/webserver/resources/etc/nginx
+
+	mkdir -p build/webserver/resources/usr/local/bin/
+
+	if [ -e "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh ]
+	then
+		cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin/
+		chmod +x build/webserver/resources/usr/local/bin/10-replace-environment-variables.sh
+	fi
+
+	mkdir -p build/webserver/resources/etc/usr
+	cp -a ../resources/webserver/usr/ build/webserver/resources/
+
+	(
+		head -n 1 "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/Dockerfile
+
+		echo "COPY resources/etc/nginx /etc/nginx"
+		echo "COPY resources/usr/local /usr/local"
+
+	) > build/webserver/Dockerfile
+
+	write "    webserver:"
+	write "        build: ./build/webserver"
+
+	write_deploy_section 1G
+
+	write "        ports:"
+	write "            - 127.0.0.1:80:80"
 }
 
 function main {
