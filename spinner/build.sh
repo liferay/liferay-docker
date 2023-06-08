@@ -100,12 +100,8 @@ function check_usage {
 }
 
 
-function build_compose_file {
-	lc_cd "${STACK_DIR}"
+function build_service_antivirus {
 
-	mkdir -p database_import
-
-	write "services:"
 	write "    antivirus:"
 
 	write_deploy_section 1G
@@ -113,6 +109,9 @@ function build_compose_file {
 	write "        image: clamav/clamav:1.0.1-1"
 	write "        ports:"
 	write "            - \"3310:3310\""
+}
+
+function build_service_database {
 	write "    database:"
 	write "        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --character-set-filesystem=utf8mb4 --default-authentication-plugin=mysql_native_password --max_allowed_packet=256M --tls-version=''"
 
@@ -130,16 +129,6 @@ function build_compose_file {
 	write "        volumes:"
 	write "            - ./database_import:/docker-entrypoint-initdb.d"
 	write "            - mysql-db:/var/lib/mysql"
-
-	build_service_liferay
-
-	build_service_search
-	
-	build_service_webserver
-
-	write "volumes:"
-	write "    liferay-document-library:"
-	write "    mysql-db:"
 }
 
 function build_service_liferay {
@@ -169,7 +158,7 @@ function build_service_liferay {
 	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/common/* liferay_mount/files
 	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/"${ENVIRONMENT}"/* liferay_mount/files
 
-	echo "Deleting the following files from configuration to ensure DXP can run locally:"
+	echo "Deleting the following files from DXP configuration to ensure it can run locally:"
 
 	for file in osgi/configs/com.liferay.portal.k8s.agent.configuration.PortalK8sAgentConfiguration.config osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config osgi/configs/com.liferay.portal.security.sso.openid.connect.configuration.OpenIdConnectConfiguration.config osgi/configs/com.liferay.portal.security.sso.openid.connect.internal.configuration.OpenIdConnectProviderConfiguration_liferayokta.config tomcat/webapps/ROOT/WEB-INF/classes/META-INF/portal-log4j-ext.xml
 	do
@@ -297,17 +286,41 @@ function build_service_webserver {
 	write "            - 127.0.0.1:80:80"
 }
 
-function main {
-	check_usage "${@}"
+function build_services {
+	lc_cd "${STACK_DIR}"
 
-	build_compose_file | tee -a "${STACK_DIR}/build.out"
+	write "services:"
 
-	prepare_database_files
+	build_service_antivirus
 
-	print_image_usage | tee -a "${STACK_DIR}/build.out"
+	build_service_database
+
+	build_service_liferay
+
+	build_service_search
+
+	build_service_webserver
+
+	write "volumes:"
+	write "    liferay-document-library:"
+	write "    mysql-db:"
 }
 
-function prepare_database_files {
+function main {
+	(
+		check_usage "${@}"
+
+		build_services
+
+		prepare_database_import_files
+
+		print_compose_usage
+	) | tee -a "${STACK_DIR}/README.txt"
+}
+
+function prepare_database_import_files {
+	mkdir -p database_import
+
 	if [ ! -n "${DATABASE_IMPORT}" ]
 	then
 		return
@@ -361,7 +374,7 @@ function print_help {
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
 
-function print_image_usage {
+function print_compose_usage {
 	local docker_compose="docker compose"
 
 	if (command -v docker-compose &>/dev/null)
