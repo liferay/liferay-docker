@@ -58,19 +58,19 @@ function check_usage {
 
 	lc_cd "$(dirname "$0")"
 
-	if [ ! -n "${LIFERAY_LXC_REPOSITORY_DIR}" ]
+	if [ ! -n "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" ]
 	then
-		LIFERAY_LXC_REPOSITORY_DIR=$(pwd)"/../../liferay-lxc"
+		SPINNER_LIFERAY_LXC_REPOSITORY_DIR=$(pwd)"/../../liferay-lxc"
 	fi
 
-	if [ ! -e "${LIFERAY_LXC_REPOSITORY_DIR}" ]
+	if [ ! -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" ]
 	then
-		echo "The ${LIFERAY_LXC_REPOSITORY_DIR} directory does not exist. Clone the liferay-lxc repository to this directory or set LIFERAY_LXC_REPOSITORY_DIR to point to an existing clone."
+		echo "The ${SPINNER_LIFERAY_LXC_REPOSITORY_DIR} directory does not exist. Clone the liferay-lxc repository to this directory or set SPINNER_LIFERAY_LXC_REPOSITORY_DIR to point to an existing clone."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	if [ ! -e "${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${LXC_ENVIRONMENT}" ]
+	if [ ! -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${LXC_ENVIRONMENT}" ]
 	then
 		print_help
 	fi
@@ -143,21 +143,21 @@ function build_service_liferay {
 	cp ../../orca/templates/liferay/resources/usr/local/liferay/scripts/pre-startup/10_wait_for_dependencies.sh build/liferay/resources/usr/local/liferay/scripts/pre-startup
 
 	(
-		echo "FROM $(grep -e '^liferay.workspace.docker.image.liferay=' "${LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties" | cut -d'=' -f2)"
+		echo "FROM $(grep -e '^liferay.workspace.docker.image.liferay=' "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties" | cut -d'=' -f2)"
 
 		echo "COPY resources/opt/liferay /opt/liferay/"
 		echo "COPY resources/usr/local/bin /usr/local/bin/"
 		echo "COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/"
 
-		cat "${LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
+		cat "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
 	) > build/liferay/Dockerfile
 
 	mkdir -p liferay_mount/files/deploy
 
 	cp -r ../dxp-activation-key/*.xml liferay_mount/files/deploy
 
-	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/common/* liferay_mount/files
-	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/"${LXC_ENVIRONMENT}"/* liferay_mount/files
+	cp -r "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/common/* liferay_mount/files
+	cp -r "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/"${LXC_ENVIRONMENT}"/* liferay_mount/files
 
 	echo "Deleting the following files from DXP configuration to ensure it can run locally:"
 
@@ -251,19 +251,19 @@ function build_service_search {
 
 function build_service_webserver {
 	mkdir -p build/webserver/resources/etc/nginx
-	cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/blocks.d/ build/webserver/resources/etc/nginx
+	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/blocks.d/ build/webserver/resources/etc/nginx
 	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_pass.conf
 	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_protection.conf
 
-	cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/conf.d/ build/webserver/resources/etc/nginx
-	cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/public/ build/webserver/resources/etc/nginx
+	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/conf.d/ build/webserver/resources/etc/nginx
+	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/public/ build/webserver/resources/etc/nginx
 	cp ../resources/webserver/etc/nginx/nginx.conf build/webserver/resources/etc/nginx
 
 	mkdir -p build/webserver/resources/usr/local/bin/
 
-	if [ -e "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh ]
+	if [ -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh ]
 	then
-		cp -a "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin/
+		cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin/
 		chmod +x build/webserver/resources/usr/local/bin/10-replace-environment-variables.sh
 	fi
 
@@ -271,7 +271,7 @@ function build_service_webserver {
 	cp -a ../resources/webserver/usr/ build/webserver/resources/
 
 	(
-		head -n 1 "${LIFERAY_LXC_REPOSITORY_DIR}"/webserver/Dockerfile
+		head -n 1 "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/Dockerfile
 
 		echo "COPY resources/etc/nginx /etc/nginx"
 		echo "COPY resources/usr/local /usr/local"
