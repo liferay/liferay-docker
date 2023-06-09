@@ -365,21 +365,14 @@ function prepare_database_import_files {
 }
 
 function print_docker_compose_usage {
-	local docker_compose="docker compose"
-
-	if (command -v docker-compose &>/dev/null)
-	then
-		docker_compose="docker-compose"
-	fi
-
 	echo ""
 	echo "The configuration is ready to use. It is available in the ${STACK_NAME} directory. Use the following commands to start all services:"
 	echo ""
 	echo "cd ${STACK_NAME}"
 	echo ""
-	echo "${docker_compose} up -d antivirus database search webserver && ${docker_compose} up liferay-1"
+	echo "$(lc_docker_compose) up -d antivirus database search webserver && $(lc_docker_compose) up liferay-1"
 	echo ""
-	echo "Start the second liferay node to test clustering: ${docker_compose} up liferay-2"
+	echo "Start the second liferay node to test clustering: $(lc_docker_compose) up liferay-2"
 	echo ""
 	echo "For more information visit https://liferay.atlassian.net/l/cp/eUNW1Dsx."
 }
