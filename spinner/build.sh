@@ -65,7 +65,7 @@ function check_usage {
 
 	if [ ! -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" ]
 	then
-		echo "The ${SPINNER_LIFERAY_LXC_REPOSITORY_DIR} directory does not exist. Clone the liferay-lxc repository to this directory or set SPINNER_LIFERAY_LXC_REPOSITORY_DIR to point to an existing clone."
+		echo "The ${SPINNER_LIFERAY_LXC_REPOSITORY_DIR} directory does not exist. Clone the liferay-lxc repository to this directory or set the environment variable \"SPINNER_LIFERAY_LXC_REPOSITORY_DIR\" to point to an existing clone."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
