@@ -2,6 +2,16 @@
 
 source ../_liferay_common.sh
 
+function clean_up {
+	echo "Cleaning up ${1}."
+
+	lc_cd "${1}"
+
+	$(lc_docker_compose) down --rmi local -v
+
+	rm -fr "${1}"
+}
+
 function main {
 	if [[ $(find . -name "env-*" -type d | wc -l) -eq 0 ]]
 	then
@@ -10,15 +20,11 @@ function main {
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
+	LIFERAY_COMMON_LOG_DIR="/tmp/spinner-clean.${$}"
+
 	for lxc_environment in "$(pwd)"/env-*
 	do
-		echo "Cleaning up ${lxc_environment}."
-
-		lcd "${lxc_environment}"
-
-		$(lc_docker_compose) down --rmi local -v
-
-		rm -fr "${lxc_environment}"
+		lc_time_run clean_up "${lxc_environment}"
 	done
 }
 
