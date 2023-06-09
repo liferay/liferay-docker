@@ -385,14 +385,14 @@ function print_compose_usage {
 }
 
 function print_help {
-	echo "Usage: ${0} <environment> -d <database-dump>"
+	echo "Usage: ${0} <environment> -d <database-import>"
 	echo ""
 	echo "The script can be configured with the following arguments:"
 	echo ""
-	echo "    -d (optional): Database dump file (.gz is supported). After importing the virtual hosts will be renamed *.local."
-	echo "    -o (optional): The name of the directory where the configuration will be created. It will be prefixed with 'env-'."
+	echo "    -d (optional): Set the database import file (raw or with a .gz suffix). Virtual hosts will be suffixed with .local (e.g. abc.liferay.com becomes abc.liferay.com.local)."
+	echo "    -o (optional): Set the name of the directory where the configuration will be created. It will be prefixed with \"env-\"."
 	echo "    -r (optional): Randomize the MySQL port opened on localhost to enable multiple database servers run at the same time"
-	echo "    -s (optional): Skipping importing the specified table name"
+	echo "    -s (optional): Skip importing the specified table name"
 	echo ""
 	echo "By default, the LXC environment x1e4prd is used."
 	echo ""
