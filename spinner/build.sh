@@ -187,11 +187,11 @@ function build_service_liferay {
 		echo "virtualHostname=\"spinner-test.com\""
 	) >> "liferay_mount/files/osgi/configs/com.liferay.portal.instances.internal.configuration.PortalInstancesConfiguration~spinner-test.com.config"
 
-	for liferay_id in {1..2}
+	for liferay_node_id in {1..2}
 	do
-		local port_last_digit=$((liferay_id - 1))
+		local port_last_digit=$((liferay_node_id - 1))
 
-		write "    liferay-${liferay_id}:"
+		write "    liferay-${liferay_node_id}:"
 		write "        build: ./build/liferay"
 
 		write_deploy_section 6G
@@ -202,8 +202,8 @@ function build_service_liferay {
 		write "            - LCP_SECRET_DATABASE_PASSWORD=password"
 		write "            - LCP_SECRET_DATABASE_USER=root"
 		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_AUTODETECT_PERIOD_ADDRESS="
-		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_CONTROL=control-channel-liferay-${liferay_id}"
-		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_TRANSPORT_PERIOD_NUMBER0=transport-channel-logic-${liferay_id}"
+		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_CONTROL=control-channel-liferay-${liferay_node_id}"
+		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_LOGIC_PERIOD_NAME_PERIOD_TRANSPORT_PERIOD_NUMBER0=transport-channel-logic-${liferay_node_id}"
 		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_CONTROL=/opt/liferay/cluster-link-tcp.xml"
 		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_CHANNEL_PERIOD_PROPERTIES_PERIOD_TRANSPORT_PERIOD__NUMBER0_=/opt/liferay/cluster-link-tcp.xml"
 		write "            - LIFERAY_CLUSTER_PERIOD_LINK_PERIOD_ENABLED=true"
@@ -225,7 +225,7 @@ function build_service_liferay {
 		write "            - LIFERAY_WORKSPACE_ENVIRONMENT=${LXC_ENVIRONMENT}"
 		write "            - LOCAL_STACK=true"
 		write "            - ORCA_LIFERAY_SEARCH_ADDRESSES=search:9200"
-		write "        hostname: liferay-${liferay_id}"
+		write "        hostname: liferay-${liferay_node_id}"
 		write "        ports:"
 		write "            - 127.0.0.1:1800${port_last_digit}:8000"
 		write "            - 127.0.0.1:1808${port_last_digit}:8080"
