@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./_liferay_common.sh
+source ../_liferay_common.sh
 
 function check_usage {
 	lc_check_utils docker

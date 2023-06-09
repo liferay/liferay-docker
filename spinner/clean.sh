@@ -1,33 +1,24 @@
 #!/bin/bash
 
-function lcd {
-	cd "${1}" || exit 3
-}
+source ../_liferay_common.sh
 
 function main {
 	if [[ $(find . -name "env-*" -type d | wc -l) -eq 0 ]]
 	then
 		echo "There are no environments to clean."
 
-		exit 2
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local docker_compose="docker compose"
-
-	if (command -v docker-compose &>/dev/null)
-	then
-		docker_compose="docker-compose"
-	fi
-
-	for environment in "$(pwd)"/env*
+	for lxc_environment in "$(pwd)"/env-*
 	do
-		echo "Cleaning up ${environment}."
+		echo "Cleaning up ${lxc_environment}."
 
-		lcd "${environment}"
+		lcd "${lxc_environment}"
 
-		${docker_compose} down --rmi local -v
+		$(lc_docker_compose) down --rmi local -v
 
-		rm -fr "${environment}"
+		rm -fr "${lxc_environment}"
 	done
 }
 
