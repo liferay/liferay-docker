@@ -236,7 +236,8 @@ function build_service_liferay {
 }
 
 function build_service_search {
-	mkdir -p build/search/
+	mkdir -p build/search
+
 	grep -v "^FROM" ../../orca/templates/search/Dockerfile | sed -e "s/#FROM/FROM/" > build/search/Dockerfile
 
 	write "    search:"
@@ -251,29 +252,33 @@ function build_service_search {
 	write "            - xpack.security.enabled=false"
 	write "            - xpack.sql.enabled=false"
 	write "            - xpack.watcher.enabled=false"
-
 }
 
 function build_service_webserver {
 	mkdir -p build/webserver/resources/etc/nginx
+
 	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/blocks.d/ build/webserver/resources/etc/nginx
+
 	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_pass.conf
 	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_protection.conf
 
 	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/conf.d/ build/webserver/resources/etc/nginx
 	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/public/ build/webserver/resources/etc/nginx
+
 	cp ../resources/webserver/etc/nginx/nginx.conf build/webserver/resources/etc/nginx
 
-	mkdir -p build/webserver/resources/usr/local/bin/
+	mkdir -p build/webserver/resources/usr/local/bin
 
 	if [ -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh ]
 	then
-		cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin/
+		cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin
+
 		chmod +x build/webserver/resources/usr/local/bin/10-replace-environment-variables.sh
 	fi
 
 	mkdir -p build/webserver/resources/etc/usr
-	cp -a ../resources/webserver/usr/ build/webserver/resources/
+
+	cp -a ../resources/webserver/usr build/webserver/resources
 
 	(
 		head -n 1 "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/Dockerfile
@@ -298,13 +303,9 @@ function build_services {
 	write "services:"
 
 	build_service_antivirus
-
 	build_service_database
-
 	build_service_liferay
-
 	build_service_search
-
 	build_service_webserver
 
 	write "volumes:"
