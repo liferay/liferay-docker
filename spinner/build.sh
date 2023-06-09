@@ -350,7 +350,7 @@ function prepare_database_import_files {
 
 	if [ -n "${DATABASE_SKIP_TABLE}" ]
 	then
-		echo "Removing database import for ${DATABASE_SKIP_TABLE}"
+		echo "Removing database import for ${DATABASE_SKIP_TABLE}."
 
 		grep -v "^INSERT INTO .${DATABASE_SKIP_TABLE}. VALUES (" < 01_database.sql > 01_database_removed.sql
 
@@ -359,9 +359,9 @@ function prepare_database_import_files {
 		mv 01_database_removed.sql 01_database.sql
 	fi
 
-	echo "Adding 10_after_import.sql to make some changes in the database to work locally. Please review them before starting the container."
+	echo "Adding 10_after_import.sql to make some changes to the database. Please review them before starting the container."
 
-	echo 'UPDATE VirtualHost SET hostname=concat(hostname, ".local");' > 10_after_import.sql
+	echo "update VirtualHost SET hostname=concat(hostname, \".local\");" > 10_after_import.sql
 }
 
 function print_compose_usage {
@@ -373,27 +373,28 @@ function print_compose_usage {
 	fi
 
 	echo ""
-	echo "The configuration is ready to use. It's available in the ${STACK_NAME} folder. To start all services up, use the following commands:"
+	echo "The configuration is ready to use. It is available in the ${STACK_NAME} directory. Use the following commands to start all services:"
 	echo ""
 	echo "cd ${STACK_NAME}"
+	echo ""
 	echo "${docker_compose} up -d antivirus database search webserver && ${docker_compose} up liferay-1"
 	echo ""
-	echo "If you would like to test with clustering, start the second liferay node too: ${docker_compose} up liferay-2"
+	echo "Start the second liferay node to test clustering: ${docker_compose} up liferay-2"
 	echo ""
-	echo "For more information visit https://liferay.atlassian.net/l/cp/eUNW1Dsx"
+	echo "For more information visit https://liferay.atlassian.net/l/cp/eUNW1Dsx."
 }
 
 function print_help {
-	echo "Usage: ${0} <environment> -d <database dump to import>"
+	echo "Usage: ${0} <environment> -d <database-dump>"
 	echo ""
 	echo "The script can be configured with the following arguments:"
 	echo ""
-	echo "    -d (optional): Database dump file, .gz is supported. After importing the virtual hosts will be renamed *.local."
+	echo "    -d (optional): Database dump file (.gz is supported). After importing the virtual hosts will be renamed *.local."
 	echo "    -o (optional): The name of the directory where the configuration will be created. It will be prefixed with 'env-'."
-	echo "    -r (optional): Randomize the mysql port opened on localhost to enable multiple database servers run at the same time"
+	echo "    -r (optional): Randomize the MySQL port opened on localhost to enable multiple database servers run at the same time"
 	echo "    -s (optional): Skipping importing the specified table name"
 	echo ""
-	echo "By default the x1e4prd environment configuration is used."
+	echo "By default, the LXC environment x1e4prd is used."
 	echo ""
 	echo "Example: ${0} x1e4prd -d sql.gz -o test"
 
