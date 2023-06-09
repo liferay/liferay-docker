@@ -58,6 +58,24 @@ function lc_date {
 	fi
 }
 
+function lc_docker_compose {
+	if [ -n "${LIFERAY_COMMON_DOCKER_COMPOSE}" ]
+	then
+		echo "${LIFERAY_COMMON_DOCKER_COMPOSE}"
+
+		return
+	fi
+
+	local LIFERAY_COMMON_DOCKER_COMPOSE="docker compose"
+
+	if (command -v docker-compose &>/dev/null)
+	then
+		LIFERAY_COMMON_DOCKER_COMPOSE="docker-compose"
+	fi
+
+	echo "${LIFERAY_COMMON_DOCKER_COMPOSE}"
+}
+
 function lc_download {
 	local file_url=${1}
 
