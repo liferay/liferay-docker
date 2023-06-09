@@ -321,7 +321,7 @@ function main {
 
 		prepare_database_import_files
 
-		print_compose_usage
+		print_docker_compose_usage
 	) | tee -a "${STACK_DIR}/README.txt"
 }
 
@@ -333,7 +333,7 @@ function prepare_database_import_files {
 		return
 	fi
 
-	echo "Preparing ${DATABASE_IMPORT} to be imported."
+	echo "Preparing to import ${DATABASE_IMPORT}."
 
 	lc_cd "${STACK_DIR}"/database_import
 
@@ -350,7 +350,7 @@ function prepare_database_import_files {
 
 	if [ -n "${DATABASE_SKIP_TABLE}" ]
 	then
-		echo "Removing database import for ${DATABASE_SKIP_TABLE}."
+		echo "Removing ${DATABASE_SKIP_TABLE} from the database import."
 
 		grep -v "^INSERT INTO .${DATABASE_SKIP_TABLE}. VALUES (" < 01_database.sql > 01_database_removed.sql
 
@@ -359,12 +359,12 @@ function prepare_database_import_files {
 		mv 01_database_removed.sql 01_database.sql
 	fi
 
-	echo "Adding 10_after_import.sql to make some changes to the database. Please review them before starting the container."
+	echo "Adding 10_after_import.sql to make changes to the database. Review them before starting the container."
 
 	echo "update VirtualHost SET hostname=concat(hostname, \".local\");" > 10_after_import.sql
 }
 
-function print_compose_usage {
+function print_docker_compose_usage {
 	local docker_compose="docker compose"
 
 	if (command -v docker-compose &>/dev/null)
@@ -385,16 +385,16 @@ function print_compose_usage {
 }
 
 function print_help {
-	echo "Usage: ${0} <environment> -d <database-import>"
+	echo "Usage: ${0} <lxc-environment> -d <database-import>"
 	echo ""
 	echo "The script can be configured with the following arguments:"
 	echo ""
 	echo "    -d (optional): Set the database import file (raw or with a .gz suffix). Virtual hosts will be suffixed with .local (e.g. abc.liferay.com becomes abc.liferay.com.local)."
-	echo "    -o (optional): Set the name of the directory where the configuration will be created. It will be prefixed with \"env-\"."
-	echo "    -r (optional): Randomize the MySQL port opened on localhost to enable multiple database servers run at the same time"
-	echo "    -s (optional): Skip importing the specified table name"
+	echo "    -o (optional): Set directory name where the configuration will be created. It will be prefixed with \"env-\"."
+	echo "    -r (optional): Randomize the MySQL port opened on localhost to enable multiple database servers at the same time"
+	echo "    -s (optional): Do not import the specified table name"
 	echo ""
-	echo "By default, the LXC environment x1e4prd is used."
+	echo "By default, the LXC environment \"x1e4prd\" is used."
 	echo ""
 	echo "Example: ${0} x1e4prd -d sql.gz -o test"
 
