@@ -170,7 +170,7 @@ function build_service_liferay {
 	do
 		rm -f ${file}
 
-		echo " - ${file}"
+		echo "    ${file}"
 	done
 
 	mkdir -p liferay_mount/files/patching
