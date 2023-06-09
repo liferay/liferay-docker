@@ -5,9 +5,9 @@ source ./_liferay_common.sh
 function check_usage {
 	lc_check_utils docker
 
-	ENVIRONMENT=
 	DATABASE_IMPORT=
 	DATABASE_PORT=13306
+	LXC_ENVIRONMENT=
 
 	while [ "${1}" != "" ]
 	do
@@ -29,7 +29,7 @@ function check_usage {
 
 				;;
 			-r)
-				DATABASE_PORT=$((RANDOM%100 + 13300))
+				DATABASE_PORT=$((RANDOM % 100 + 13300))
 
 				echo "Database port: ${DATABASE_PORT}"
 
@@ -41,7 +41,7 @@ function check_usage {
 
 				;;
 			*)
-				ENVIRONMENT=${1}
+				LXC_ENVIRONMENT=${1}
 
 				;;
 		esac
@@ -49,11 +49,11 @@ function check_usage {
 		shift
 	done
 
-	if [ ! -n "${ENVIRONMENT}" ]
+	if [ ! -n "${LXC_ENVIRONMENT}" ]
 	then
-		ENVIRONMENT=x1e4prd
+		LXC_ENVIRONMENT=x1e4prd
 
-		echo "Environment was not set, using x1e4prd."
+		echo "Using LXC environment \"x1e4prd\" because the LXC environment was not set."
 	fi
 
 	lc_cd "$(dirname "$0")"
@@ -70,7 +70,7 @@ function check_usage {
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	if [ ! -e "${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${ENVIRONMENT}" ]
+	if [ ! -e "${LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${LXC_ENVIRONMENT}" ]
 	then
 		print_help
 	fi
@@ -84,7 +84,7 @@ function check_usage {
 
 	if [ ! -n "${STACK_NAME}" ]
 	then
-		STACK_NAME="env-${ENVIRONMENT}-"$(date +%s)
+		STACK_NAME="env-${LXC_ENVIRONMENT}-"$(date +%s)
 	fi
 
 	STACK_DIR=$(pwd)/${STACK_NAME}
@@ -99,9 +99,7 @@ function check_usage {
 	mkdir -p "${STACK_DIR}"
 }
 
-
 function build_service_antivirus {
-
 	write "    antivirus:"
 
 	write_deploy_section 1G
@@ -133,12 +131,15 @@ function build_service_database {
 
 function build_service_liferay {
 	mkdir -p build/liferay/resources/opt/liferay
+
 	cp ../../orca/templates/liferay/resources/opt/liferay/cluster-link-tcp.xml build/liferay/resources/opt/liferay
 
 	mkdir -p build/liferay/resources/usr/local/bin
+
 	cp ../../orca/templates/liferay/resources/usr/local/bin/remove_lock_on_startup.sh build/liferay/resources/usr/local/bin
 
 	mkdir -p build/liferay/resources/usr/local/liferay/scripts/pre-startup
+
 	cp ../../orca/templates/liferay/resources/usr/local/liferay/scripts/pre-startup/10_wait_for_dependencies.sh build/liferay/resources/usr/local/liferay/scripts/pre-startup
 
 	(
@@ -156,7 +157,7 @@ function build_service_liferay {
 	cp -r ../dxp-activation-key/*.xml liferay_mount/files/deploy
 
 	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/common/* liferay_mount/files
-	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/"${ENVIRONMENT}"/* liferay_mount/files
+	cp -r "${LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/"${LXC_ENVIRONMENT}"/* liferay_mount/files
 
 	echo "Deleting the following files from DXP configuration to ensure it can run locally:"
 
@@ -216,7 +217,7 @@ function build_service_liferay {
 		write "            - LIFERAY_UPGRADE_ENABLED=false"
 		write "            - LIFERAY_USERS_PERIOD_REMINDER_PERIOD_QUERIES_PERIOD_ENABLED=false"
 		write "            - LIFERAY_WEB_PERIOD_SERVER_PERIOD_PROTOCOL=http"
-		write "            - LIFERAY_WORKSPACE_ENVIRONMENT=${ENVIRONMENT}"
+		write "            - LIFERAY_WORKSPACE_ENVIRONMENT=${LXC_ENVIRONMENT}"
 		write "            - LOCAL_STACK=true"
 		write "            - ORCA_LIFERAY_SEARCH_ADDRESSES=search:9200"
 		write "        hostname: liferay-${liferay_id}"
@@ -357,23 +358,6 @@ function prepare_database_import_files {
 	echo 'UPDATE VirtualHost SET hostname=concat(hostname, ".local");' > 10_after_import.sql
 }
 
-function print_help {
-	echo "Usage: ${0} <environment> -d <database dump to import>"
-	echo ""
-	echo "The script can be configured with the following arguments:"
-	echo ""
-	echo "    -d (optional): Database dump file, .gz is supported. After importing the virtual hosts will be renamed *.local."
-	echo "    -o (optional): The name of the directory where the configuration will be created. It will be prefixed with 'env-'."
-	echo "    -r (optional): Randomize the mysql port opened on localhost to enable multiple database servers run at the same time"
-	echo "    -s (optional): Skipping importing the specified table name"
-	echo ""
-	echo "By default the x1e4prd environment configuration is used."
-	echo ""
-	echo "Example: ${0} x1e4prd -d sql.gz -o test"
-
-	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
-}
-
 function print_compose_usage {
 	local docker_compose="docker compose"
 
@@ -391,6 +375,23 @@ function print_compose_usage {
 	echo "If you would like to test with clustering, start the second liferay node too: ${docker_compose} up liferay-2"
 	echo ""
 	echo "For more information visit https://liferay.atlassian.net/l/cp/eUNW1Dsx"
+}
+
+function print_help {
+	echo "Usage: ${0} <environment> -d <database dump to import>"
+	echo ""
+	echo "The script can be configured with the following arguments:"
+	echo ""
+	echo "    -d (optional): Database dump file, .gz is supported. After importing the virtual hosts will be renamed *.local."
+	echo "    -o (optional): The name of the directory where the configuration will be created. It will be prefixed with 'env-'."
+	echo "    -r (optional): Randomize the mysql port opened on localhost to enable multiple database servers run at the same time"
+	echo "    -s (optional): Skipping importing the specified table name"
+	echo ""
+	echo "By default the x1e4prd environment configuration is used."
+	echo ""
+	echo "Example: ${0} x1e4prd -d sql.gz -o test"
+
+	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
 
 function write {
