@@ -191,8 +191,8 @@ function build_service_web_server {
 
 	) > build/web-server/Dockerfile
 
-	write "    webserver:"
-	write "        build: ./build/webserver"
+	write "    web-server:"
+	write "        build: ./build/web-server"
 
 	write_deploy_section 1G
 
@@ -370,7 +370,7 @@ function print_docker_compose_usage {
 	echo ""
 	echo "cd ${STACK_NAME}"
 	echo ""
-	echo "$(lc_docker_compose) up -d antivirus database search webserver && $(lc_docker_compose) up liferay-1"
+	echo "$(lc_docker_compose) up -d antivirus database search web-server && $(lc_docker_compose) up liferay-1"
 	echo ""
 	echo "Start the second liferay node to test clustering: $(lc_docker_compose) up liferay-2"
 	echo ""
