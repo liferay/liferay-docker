@@ -22,9 +22,9 @@ function main {
 
 	LIFERAY_COMMON_LOG_DIR="/tmp/spinner-clean.${$}"
 
-	for lxc_environment in "$(pwd)"/env-*
+	for stack_dir in "$(pwd)"/env-*
 	do
-		lc_time_run clean_up "${lxc_environment}"
+		lc_time_run clean_up "${stack_dir}"
 	done
 }
 
