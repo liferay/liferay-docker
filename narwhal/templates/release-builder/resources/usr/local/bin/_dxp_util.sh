@@ -9,13 +9,13 @@ function add_licensing {
 }
 
 function compile_dxp {
-	trap "return 1" ERR
+	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
 	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
 	then
 		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile_dxp step."
 
-		return "${SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	rm -fr "${BUNDLES_DIR}"
@@ -112,7 +112,7 @@ function pre_compile_setup {
 	then
 		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the pre_compile_setup step."
 
-		return "${SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	rm -fr /root/.liferay
@@ -125,7 +125,7 @@ function pre_compile_setup {
 function warm_up_tomcat {
 	if [ -e "${BUILD_DIR}/tomcat-warmup-complete" ]
 	then
-		return "${SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	lcd "${BUNDLES_DIR}/tomcat/bin"

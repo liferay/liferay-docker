@@ -15,7 +15,7 @@ function add_hotfix_testing_code {
 	then
 		echo "NARWHAL_HOTFIX_TESTING_SHA is not set, not adding test code."
 
-		return "${SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
@@ -287,7 +287,7 @@ function prepare_release_dir {
 	then
 		echo "${RELEASE_DIR} is already available."
 
-		return "${SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	mkdir -p "${RELEASE_DIR}"

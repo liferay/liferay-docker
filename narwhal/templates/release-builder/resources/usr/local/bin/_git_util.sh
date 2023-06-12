@@ -13,7 +13,7 @@ function clean_portal_git {
 function clone_repository {
 	if [ -e /opt/liferay/dev/projects/"${1}" ]
 	then
-		return "${SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	mkdir -p /opt/liferay/dev/projects/
@@ -46,7 +46,7 @@ function setup_remote {
 	then
 		echo "Remote is already set up."
 
-		return "${SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	git remote rm origin
@@ -55,7 +55,7 @@ function setup_remote {
 }
 
 function update_portal_git {
-	trap "return 1" ERR
+	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
@@ -63,7 +63,7 @@ function update_portal_git {
 	then
 		echo "${NARWHAL_GIT_SHA} is already checked out, skipping the git checkout step."
 
-		return "${SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	if [ -n "$(git ls-remote origin refs/tags/"${NARWHAL_GIT_SHA}")" ]
@@ -110,7 +110,7 @@ function update_release_tool_git {
 	then
 		echo "${release_tool_sha} is already checked out, skipping the git checkout step."
 
-		return "${SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	git fetch --all --tags --prune || return 1
