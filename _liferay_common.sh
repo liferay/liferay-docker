@@ -133,17 +133,17 @@ function lc_download {
 
 function lc_get_property {
 	file=${1}
-	property=${2}
+	property_key=${2}
 
 	if [ "${file##*.}" == "bnd" ]
 	then
-		local value=$(grep -F "${property}: " "${file}")
+		local property_value=$(grep -F "${property_key}: " "${file}")
 
-		echo "${value##*: }"
+		echo "${property_value##*: }"
 	else
-		local value=$(grep -F "${property}=" "${file}")
+		local property_value=$(grep -F "${property_key}=" "${file}")
 
-		echo "${value##*=}"
+		echo "${property_value##*=}"
 	fi
 }
 
