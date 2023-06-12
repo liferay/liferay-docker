@@ -292,7 +292,7 @@ function check_usage {
 
 	if [ ! -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${LXC_ENVIRONMENT}" ]
 	then
-		echo "The directory ${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${LXC_ENVIRONMENT} does not exist."
+		echo "The ${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${LXC_ENVIRONMENT} directory does not exist."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -315,7 +315,7 @@ function check_usage {
 	if [ -e "${STACK_DIR}" ]
 	then
 		echo ""
-		echo "Stack directory already exists."
+		echo "The directory ${STACK_DIR} already exists."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
