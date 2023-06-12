@@ -5,6 +5,8 @@
 set -e
 set -o pipefail
 
+source $(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_liferay_common.sh
+
 BASE_DIR="${PWD}"
 
 GITHUB_ADDRESS="git@github.com:tomposmiko"
