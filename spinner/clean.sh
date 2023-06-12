@@ -7,7 +7,7 @@ function clean_up {
 
 	lc_cd "${1}"
 
-	$(lc_docker_compose) down --rmi local -v
+	$(lc_docker_compose) down --rmi local --volumes
 
 	rm -fr "${1}"
 }
