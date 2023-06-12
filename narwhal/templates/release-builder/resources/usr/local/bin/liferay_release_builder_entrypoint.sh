@@ -22,8 +22,9 @@ function background_run {
 function main {
 	BUILD_DIR=/opt/liferay/build
 	BUNDLES_DIR=/opt/liferay/dev/projects/bundles
-
 	BUILD_TIMESTAMP=$(date +%s)
+
+	LIFERAY_COMMON_LOG_DIR=${BUILD_DIR}
 
 	lc_time_run setup_git
 

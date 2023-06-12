@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CACHE_DIR="${HOME}/.release-builder-cache"
+CACHE_DIR="${HOME}/.liferay/release-builder"
 
 if [ ! -d "${CACHE_DIR}" ]
 then
