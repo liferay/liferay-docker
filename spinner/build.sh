@@ -63,6 +63,7 @@ function build_service_liferay {
 	cp -r "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/"${LXC_ENVIRONMENT}"/* liferay_mount/files
 
 	echo "Deleting the following files from DXP configuration to ensure it can run locally:"
+	echo ""
 
 	for file in \
 		osgi/configs/com.liferay.portal.k8s.agent.configuration.PortalK8sAgentConfiguration.config \
@@ -75,6 +76,8 @@ function build_service_liferay {
 
 		echo "    ${file}"
 	done
+
+	echo ""
 
 	mkdir -p liferay_mount/files/patching
 	mkdir -p liferay_mount/files/scripts
@@ -283,6 +286,7 @@ function check_usage {
 	if [ ! -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" ]
 	then
 		echo "The ${SPINNER_LIFERAY_LXC_REPOSITORY_DIR} directory does not exist. Clone the liferay-lxc repository to this directory or set the environment variable \"SPINNER_LIFERAY_LXC_REPOSITORY_DIR\" to point to an existing clone."
+		echo ""
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -295,6 +299,7 @@ function check_usage {
 	if [[ $(find dxp-activation-key -name "*.xml" | wc -l ) -eq 0 ]]
 	then
 		echo "Copy a valid DXP license to the dxp-activation-key directory before running this script."
+		echo ""
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -309,6 +314,7 @@ function check_usage {
 	if [ -e "${STACK_DIR}" ]
 	then
 		echo "Stack directory already exists."
+		echo ""
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -337,6 +343,7 @@ function prepare_database_import {
 	fi
 
 	echo "Preparing to import ${DATABASE_IMPORT}."
+	echo ""
 
 	lc_cd "${STACK_DIR}"/database_import
 
@@ -345,6 +352,7 @@ function prepare_database_import {
 	if [ $(find . -type f -name "*.gz" | wc -l) -gt 0 ]
 	then
 		echo "Extracting the database import file."
+		echo ""
 
 		gzip -d $(find . -type f -name "*.gz") 
 	fi
@@ -354,6 +362,7 @@ function prepare_database_import {
 	if [ -n "${DATABASE_SKIP_TABLE}" ]
 	then
 		echo "Removing ${DATABASE_SKIP_TABLE} from the database import."
+		echo ""
 
 		grep -v "^INSERT INTO .${DATABASE_SKIP_TABLE}. VALUES (" < 01_database.sql > 01_database_removed.sql
 
@@ -363,12 +372,12 @@ function prepare_database_import {
 	fi
 
 	echo "Adding 10_after_import.sql to make changes to the database. Review them before starting the container."
+	echo ""
 
 	echo "update VirtualHost SET hostname=concat(hostname, \".local\");" > 10_after_import.sql
 }
 
 function print_docker_compose_usage {
-	echo ""
 	echo "The stack configuration is ready to use. It is available in the ${STACK_NAME} directory. Use the following commands to start all services:"
 	echo ""
 	echo "    cd ${STACK_NAME}"
