@@ -10,7 +10,7 @@ source /usr/local/bin/_publishing_util.sh
 source /usr/local/bin/_release_util.sh
 
 function background_run {
-	if [ -n "${NARWHAL_DEBUG}" ]
+	if [ -n "${LIFERAY_COMMON_DEBUG_ENABLED}" ]
 	then
 		lc_time_run "${@}"
 	else
@@ -18,23 +18,12 @@ function background_run {
 	fi
 }
 
-function create_folders {
-	BUILD_DIR=/opt/liferay/build
-
-	mkdir -p "${BUILD_DIR}"
-
-	echo 0 > "${BUILD_DIR}"/.step
-
-	mkdir -p /opt/liferay/download_cache
-}
-
 
 function main {
+	BUILD_DIR=/opt/liferay/build
 	BUNDLES_DIR=/opt/liferay/dev/projects/bundles
 
-	local BUILD_TIMESTAMP=$(date +%s)
-
-	create_folders
+	BUILD_TIMESTAMP=$(date +%s)
 
 	lc_time_run setup_git
 
