@@ -160,21 +160,23 @@ function build_service_search {
 function build_service_web_server {
 	mkdir -p build/web-server/resources/etc/nginx
 
-	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/configs/common/blocks.d/ build/web-server/resources/etc/nginx
+	local web_server_dir="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver
+
+	cp -a "${web_server_dir}"/configs/common/blocks.d build/web-server/resources/etc/nginx
 
 	rm -f build/web-server/resources/etc/nginx/blocks.d/oauth2_proxy_pass.conf
 	rm -f build/web-server/resources/etc/nginx/blocks.d/oauth2_proxy_protection.conf
 
-	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/configs/common/conf.d/ build/web-server/resources/etc/nginx
-	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/configs/common/public/ build/web-server/resources/etc/nginx
+	cp -a "${web_server_dir}"/configs/common/conf.d build/web-server/resources/etc/nginx
+	cp -a "${web_server_dir}"/configs/common/public build/web-server/resources/etc/nginx
 
 	cp ../resources/web-server/etc/nginx/nginx.conf build/web-server/resources/etc/nginx
 
 	mkdir -p build/web-server/resources/usr/local/bin
 
-	if [ -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/configs/common/scripts/10-replace-environment-variables.sh ]
+	if [ -e "${web_server_dir}"/configs/common/scripts/10-replace-environment-variables.sh ]
 	then
-		cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/configs/common/scripts/10-replace-environment-variables.sh build/web-server/resources/usr/local/bin
+		cp -a "${web_server_dir}"/configs/common/scripts/10-replace-environment-variables.sh build/web-server/resources/usr/local/bin
 
 		chmod +x build/web-server/resources/usr/local/bin/10-replace-environment-variables.sh
 	fi
@@ -184,7 +186,7 @@ function build_service_web_server {
 	cp -a ../resources/web-server/usr build/web-server/resources
 
 	(
-		head -n 1 "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/Dockerfile
+		head -n 1 "${web_server_dir}"/Dockerfile
 
 		echo "COPY resources/etc/nginx /etc/nginx"
 		echo "COPY resources/usr/local /usr/local"
@@ -268,6 +270,7 @@ function check_usage {
 		LXC_ENVIRONMENT=x1e4prd
 
 		echo "Using LXC environment \"x1e4prd\" because the LXC environment was not set."
+		echo ""
 	fi
 
 	lc_cd "$(dirname "$0")"
@@ -314,9 +317,9 @@ function check_usage {
 }
 
 function main {
-	(
-		check_usage "${@}"
+	check_usage "${@}"
 
+	(
 		build_services
 
 		prepare_database_import

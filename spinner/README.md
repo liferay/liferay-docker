@@ -1,4 +1,5 @@
 # Spinner
+
 A tool to start simple Liferay DXP installations on MariaDB.
 
 ## Requirements
