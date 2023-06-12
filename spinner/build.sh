@@ -369,15 +369,15 @@ function prepare_database_import {
 
 function print_docker_compose_usage {
 	echo ""
-	echo "The configuration is ready to use. It is available in the ${STACK_NAME} directory. Use the following commands to start all services:"
+	echo "The stack configuration is ready to use. It is available in the ${STACK_NAME} directory. Use the following commands to start all services:"
 	echo ""
-	echo "cd ${STACK_NAME}"
+	echo "    cd ${STACK_NAME}"
 	echo ""
-	echo "$(lc_docker_compose) up -d antivirus database search web-server && $(lc_docker_compose) up liferay-1"
+	echo "    $(lc_docker_compose) up -d antivirus database search web-server && $(lc_docker_compose) up liferay-1"
 	echo ""
 	echo "Use the following command to start the second liferay node to test clustering:"
 	echo ""
-	echo "$(lc_docker_compose) up liferay-2"
+	echo "    $(lc_docker_compose) up liferay-2"
 	echo ""
 	echo "For more information visit https://liferay.atlassian.net/l/cp/SD571mFA."
 }
