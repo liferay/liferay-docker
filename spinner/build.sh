@@ -48,9 +48,9 @@ function build_service_liferay {
 	(
 		echo "FROM $(grep -e '^liferay.workspace.docker.image.liferay=' "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties" | cut -d'=' -f2)"
 
-		echo "COPY resources/opt/liferay /opt/liferay/"
-		echo "COPY resources/usr/local/bin /usr/local/bin/"
-		echo "COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/"
+		echo "COPY resources/opt/liferay /opt/liferay"
+		echo "COPY resources/usr/local/bin /usr/local/bin"
+		echo "COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts"
 
 		cat "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
 	) > build/liferay/Dockerfile
