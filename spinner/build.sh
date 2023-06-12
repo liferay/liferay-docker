@@ -319,13 +319,13 @@ function main {
 
 		build_services
 
-		prepare_database_import_files
+		prepare_database_import
 
 		print_docker_compose_usage
 	) | tee -a "${STACK_DIR}/README.txt"
 }
 
-function prepare_database_import_files {
+function prepare_database_import {
 	mkdir -p database_import
 
 	if [ ! -n "${DATABASE_IMPORT}" ]
