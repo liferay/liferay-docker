@@ -131,6 +131,22 @@ function lc_download {
 	fi
 }
 
+function lc_get_property {
+	file=${1}
+	property=${2}
+
+	if [ "${file##*.}" == "bnd" ]
+	then
+		local value=$(grep -F "${property}: " "${file}")
+
+		echo "${value##*: }"
+	else
+		local value=$(grep -F "${property}=" "${file}")
+
+		echo "${value##*=}"
+	fi
+}
+
 function lc_echo_time {
 	local seconds=${1}
 
