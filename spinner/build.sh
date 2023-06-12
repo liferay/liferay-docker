@@ -2,103 +2,6 @@
 
 source ../_liferay_common.sh
 
-function check_usage {
-	lc_check_utils docker
-
-	DATABASE_IMPORT=
-	DATABASE_PORT=13306
-	LXC_ENVIRONMENT=
-
-	while [ "${1}" != "" ]
-	do
-		case ${1} in
-			-d)
-				shift
-
-				DATABASE_IMPORT=${1}
-
-				;;
-			-h)
-				print_help
-
-				;;
-			-o)
-				shift
-
-				STACK_NAME=env-${1}
-
-				;;
-			-r)
-				DATABASE_PORT=$((RANDOM % 100 + 13300))
-
-				echo "Database port: ${DATABASE_PORT}"
-
-				;;
-			-s)
-				shift
-
-				DATABASE_SKIP_TABLE=${1}
-
-				;;
-			*)
-				LXC_ENVIRONMENT=${1}
-
-				;;
-		esac
-
-		shift
-	done
-
-	if [ ! -n "${LXC_ENVIRONMENT}" ]
-	then
-		LXC_ENVIRONMENT=x1e4prd
-
-		echo "Using LXC environment \"x1e4prd\" because the LXC environment was not set."
-	fi
-
-	lc_cd "$(dirname "$0")"
-
-	if [ ! -n "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" ]
-	then
-		SPINNER_LIFERAY_LXC_REPOSITORY_DIR=$(pwd)"/../../liferay-lxc"
-	fi
-
-	if [ ! -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" ]
-	then
-		echo "The ${SPINNER_LIFERAY_LXC_REPOSITORY_DIR} directory does not exist. Clone the liferay-lxc repository to this directory or set the environment variable \"SPINNER_LIFERAY_LXC_REPOSITORY_DIR\" to point to an existing clone."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	if [ ! -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${LXC_ENVIRONMENT}" ]
-	then
-		print_help
-	fi
-
-	if [[ $(find dxp-activation-key -name "*.xml" | wc -l ) -eq 0 ]]
-	then
-		echo "Copy a valid DXP license to the dxp-activation-key directory before running this script."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	if [ ! -n "${STACK_NAME}" ]
-	then
-		STACK_NAME="env-${LXC_ENVIRONMENT}-"$(date +%s)
-	fi
-
-	STACK_DIR=$(pwd)/${STACK_NAME}
-
-	if [ -e "${STACK_DIR}" ]
-	then
-		echo "Stack directory already exists."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	mkdir -p "${STACK_DIR}"
-}
-
 function build_service_antivirus {
 	write "    antivirus:"
 
@@ -311,6 +214,103 @@ function build_services {
 	write "volumes:"
 	write "    liferay-document-library:"
 	write "    mysql-db:"
+}
+
+function check_usage {
+	lc_check_utils docker
+
+	DATABASE_IMPORT=
+	DATABASE_PORT=13306
+	LXC_ENVIRONMENT=
+
+	while [ "${1}" != "" ]
+	do
+		case ${1} in
+			-d)
+				shift
+
+				DATABASE_IMPORT=${1}
+
+				;;
+			-h)
+				print_help
+
+				;;
+			-o)
+				shift
+
+				STACK_NAME=env-${1}
+
+				;;
+			-r)
+				DATABASE_PORT=$((RANDOM % 100 + 13300))
+
+				echo "Database port: ${DATABASE_PORT}"
+
+				;;
+			-s)
+				shift
+
+				DATABASE_SKIP_TABLE=${1}
+
+				;;
+			*)
+				LXC_ENVIRONMENT=${1}
+
+				;;
+		esac
+
+		shift
+	done
+
+	if [ ! -n "${LXC_ENVIRONMENT}" ]
+	then
+		LXC_ENVIRONMENT=x1e4prd
+
+		echo "Using LXC environment \"x1e4prd\" because the LXC environment was not set."
+	fi
+
+	lc_cd "$(dirname "$0")"
+
+	if [ ! -n "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" ]
+	then
+		SPINNER_LIFERAY_LXC_REPOSITORY_DIR=$(pwd)"/../../liferay-lxc"
+	fi
+
+	if [ ! -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" ]
+	then
+		echo "The ${SPINNER_LIFERAY_LXC_REPOSITORY_DIR} directory does not exist. Clone the liferay-lxc repository to this directory or set the environment variable \"SPINNER_LIFERAY_LXC_REPOSITORY_DIR\" to point to an existing clone."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	if [ ! -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/configs/${LXC_ENVIRONMENT}" ]
+	then
+		print_help
+	fi
+
+	if [[ $(find dxp-activation-key -name "*.xml" | wc -l ) -eq 0 ]]
+	then
+		echo "Copy a valid DXP license to the dxp-activation-key directory before running this script."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	if [ ! -n "${STACK_NAME}" ]
+	then
+		STACK_NAME="env-${LXC_ENVIRONMENT}-"$(date +%s)
+	fi
+
+	STACK_DIR=$(pwd)/${STACK_NAME}
+
+	if [ -e "${STACK_DIR}" ]
+	then
+		echo "Stack directory already exists."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	mkdir -p "${STACK_DIR}"
 }
 
 function main {
