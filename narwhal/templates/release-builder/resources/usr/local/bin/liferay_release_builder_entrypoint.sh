@@ -9,6 +9,15 @@ source /usr/local/bin/_liferay_common.sh
 source /usr/local/bin/_publishing_util.sh
 source /usr/local/bin/_release_util.sh
 
+function background_run {
+	if [ -n "${NARWHAL_DEBUG}" ]
+	then
+		lc_time_run "${@}"
+	else
+		lc_time_run "${@}" &
+	fi
+}
+
 function create_folders {
 	BUILD_DIR=/opt/liferay/build
 
@@ -27,65 +36,65 @@ function main {
 
 	create_folders
 
-	time_run setup_git
+	lc_time_run setup_git
 
 	background_run clone_repository liferay-binaries-cache-2020
 	background_run clone_repository liferay-portal-ee
-	time_run clone_repository liferay-release-tool-ee
+	lc_time_run clone_repository liferay-release-tool-ee
 	wait
 
-	time_run setup_remote
+	lc_time_run setup_remote
 
-	time_run clean_portal_git
+	lc_time_run clean_portal_git
 
 	background_run init_gcs
 	background_run update_portal_git
-	time_run update_release_tool_git
+	lc_time_run update_release_tool_git
 	wait
 
-	time_run pre_compile_setup
+	lc_time_run pre_compile_setup
 
-	time_run decrement_module_versions
+	lc_time_run decrement_module_versions
 
 	DXP_VERSION=$(get_dxp_version)
 
 	if [ "${NARWHAL_OUTPUT}" == "release" ]
 	then
-		time_run add_licensing
+		lc_time_run add_licensing
 
-		time_run obfuscate_licensing
+		lc_time_run obfuscate_licensing
 
-		time_run compile_dxp
+		lc_time_run compile_dxp
 
-		time_run deploy_elasticsearch_sidecar
+		lc_time_run deploy_elasticsearch_sidecar
 
-		#time_run warm_up_tomcat
+		#lc_time_run warm_up_tomcat
 
-		time_run package_bundle
+		lc_time_run package_bundle
 
-		time_run upload_bundle
+		lc_time_run upload_bundle
 	else
-		time_run add_hotfix_testing_code
+		lc_time_run add_hotfix_testing_code
 
-		time_run set_hotfix_name
+		lc_time_run set_hotfix_name
 
-		time_run add_licensing
+		lc_time_run add_licensing
 
-		time_run obfuscate_licensing
+		lc_time_run obfuscate_licensing
 
 		background_run prepare_release_dir
-		time_run compile_dxp
+		lc_time_run compile_dxp
 		wait
 
-		time_run create_hotfix
+		lc_time_run create_hotfix
 
-		time_run calculate_checksums
+		lc_time_run calculate_checksums
 
-		time_run create_documentation
+		lc_time_run create_documentation
 
-		time_run package_hotfix
+		lc_time_run package_hotfix
 
-		time_run upload_hotfix
+		lc_time_run upload_hotfix
 	fi
 
 	local end_time=$(date +%s)

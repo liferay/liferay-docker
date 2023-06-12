@@ -97,7 +97,7 @@ function update_release_tool_git {
 	git clean -df
 	git reset --hard
 
-	local release_tool_sha=$(read_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.sha")
+	local release_tool_sha=$(get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.sha")
 
 	if [ ! -n "${release_tool_sha}" ]
 	then

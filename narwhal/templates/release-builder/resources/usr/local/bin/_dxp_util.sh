@@ -3,7 +3,7 @@
 function add_licensing {
 	lcd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
 
-	lcd "$(read_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
+	lcd "$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
 
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
 }
@@ -56,7 +56,7 @@ function decrement_module_versions {
 			continue
 		fi
 
-		local bundle_version=$(read_bnd_property "${bnd}" "Bundle-Version")
+		local bundle_version=$(get_property "${bnd}" "Bundle-Version")
 
 		local major_minor_version=${bundle_version%.*}
 		local micro_version=${bundle_version##*.}
@@ -77,8 +77,8 @@ function deploy_elasticsearch_sidecar {
 function get_dxp_version {
 	lcd /opt/liferay/dev/projects/liferay-portal-ee
 
-	local major=$(read_property release.properties "release.info.version.major")
-	local minor=$(read_property release.properties "release.info.version.minor")
+	local major=$(lc_get_property release.properties "release.info.version.major")
+	local minor=$(lc_get_property release.properties "release.info.version.minor")
 
 	local branch="${major}.${minor}.x"
 
@@ -87,8 +87,8 @@ function get_dxp_version {
 		branch=master
 	fi
 
-	local bug_fix=$(read_property release.properties "release.info.version.bug.fix[${branch}-private]")
-	local trivial=$(read_property release.properties "release.info.version.trivial")
+	local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
+	local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
 	echo "${major}.${minor}.${bug_fix}-u${trivial}"
 }
@@ -100,7 +100,7 @@ function obfuscate_licensing {
 
 	lcd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
 
-	lcd "$(read_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
+	lcd "$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
 
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.kernel.dir=/opt/liferay/dev/projects/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal
 }
