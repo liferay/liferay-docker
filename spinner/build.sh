@@ -72,7 +72,7 @@ function build_service_liferay {
 		osgi/configs/com.liferay.portal.security.sso.openid.connect.internal.configuration.OpenIdConnectProviderConfiguration_liferayokta.config \
 		tomcat/webapps/ROOT/WEB-INF/classes/META-INF/portal-log4j-ext.xml
 	do
-		rm -f ${file}
+		rm -f "liferay_mount/files/${file}"
 
 		echo "    ${file}"
 	done
