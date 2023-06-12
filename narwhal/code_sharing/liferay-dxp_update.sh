@@ -36,7 +36,7 @@ function checkout_branch {
 
 	check_param "${branch_name}" "Missing branch name"
 
-	lcd "${REPO_PATH_DXP}"
+	lc_cd "${REPO_PATH_DXP}"
 
 	if (git show-ref --quiet "${branch_name}")
 	then
@@ -57,12 +57,12 @@ function fetch_repo {
 
 	check_param "${repo_name}" "Missing repo name"
 
-	lcd "${BASE_DIR}"
+	lc_cd "${BASE_DIR}"
 
 	if [ -d "${repo_name}" ]
 	then
 		echo -n "Repository '${repo_name}' exists, refreshing..."
-		lcd "${repo_name}"
+		lc_cd "${repo_name}"
 		git fetch --all
 		echo "done."
 
@@ -77,24 +77,14 @@ function get_all_tags {
 	git tag -l --sort=creatordate --format='%(refname:short)' "${VERSION}*"
 }
 
-function get_epoch_date {
-	if [ -z "${EPOCH_START}" ]
-	then
-		EPOCH_START=$(date +%s)
-	else
-		EPOCH_FINISH=$(date +%s)
-	fi
-
-}
-
 function get_new_tags {
 	echo "Getting new tags... "
 
-	lcd "${REPO_PATH_EE}"
+	lc_cd "${REPO_PATH_EE}"
 
 	get_all_tags > "${TAGS_FILE_EE}"
 
-	lcd "${REPO_PATH_DXP}"
+	lc_cd "${REPO_PATH_DXP}"
 
 	get_all_tags > "${TAGS_FILE_DXP}"
 
@@ -110,29 +100,6 @@ function get_new_tags {
 	done
 
 	echo "done."
-}
-function lcd {
-	check_param "${1}" "Missing directory name to enter"
-
-	cd "${1}" || exit 3
-}
-
-function print_date {
-	if [ -z "${EPOCH_FINISH}" ]
-	then
-		EPOCH_DATE="${EPOCH_START}"
-	else
-		EPOCH_DATE="${EPOCH_FINISH}"
-	fi
-
-	date "+%Y-%m-%d %H:%M:%S %Z" -d "@${EPOCH_DATE}" -u
-}
-
-function print_spent_time {
-	time_diff_sec=$((EPOCH_FINISH - EPOCH_START))
-	time_diff_human=$(date "+%H:%M:%S" -d "@${time_diff_sec}" -u)
-
-	echo "Time spent: ${time_diff_human}."
 }
 
 function pull_and_push_all_tags {
@@ -173,13 +140,13 @@ function pull_tag {
 		exit 1
 	fi
 
-	lcd "${REPO_PATH_EE}"
+	lc_cd "${REPO_PATH_EE}"
 
 	echo -n ">>>> Checking out tag '${tag_name}'..."
 	git checkout -q "${tag_name}"
 	echo "done."
 
-	lcd "${REPO_PATH_DXP}"
+	lc_cd "${REPO_PATH_DXP}"
 
 	echo -n ">>>> Running 'git gc'..."
 
@@ -254,7 +221,7 @@ function push_git_in_batches {
 }
 
 function push_repo {
-	lcd "${REPO_PATH_DXP}"
+	lc_cd "${REPO_PATH_DXP}"
 
 	echo -n "Pushing all branches..."
 
@@ -279,10 +246,6 @@ function push_repo {
 
 check_param "${VERSION}" "Missing version"
 
-get_epoch_date
-
-echo "Start date: $(print_date)"
-
 fetch_repo "${REPO_NAME_DXP}"
 
 fetch_repo "${REPO_NAME_EE}"
@@ -290,9 +253,3 @@ fetch_repo "${REPO_NAME_EE}"
 pull_and_push_all_tags
 
 push_repo
-
-get_epoch_date
-
-echo "Finish date: $(print_date)"
-
-print_spent_time
