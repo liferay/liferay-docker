@@ -374,7 +374,7 @@ function print_docker_compose_usage {
 	echo ""
 	echo "Start the second liferay node to test clustering: $(lc_docker_compose) up liferay-2"
 	echo ""
-	echo "For more information visit https://liferay.atlassian.net/l/cp/eUNW1Dsx."
+	echo "For more information visit https://liferay.atlassian.net/l/cp/SD571mFA."
 }
 
 function print_help {
