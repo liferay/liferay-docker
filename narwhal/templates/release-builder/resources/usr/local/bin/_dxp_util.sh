@@ -56,7 +56,7 @@ function decrement_module_versions {
 			continue
 		fi
 
-		local bundle_version=$(get_property "${bnd}" "Bundle-Version")
+		local bundle_version=$(lc_get_property "${bnd}" "Bundle-Version")
 
 		local major_minor_version=${bundle_version%.*}
 		local micro_version=${bundle_version##*.}
@@ -98,9 +98,7 @@ function obfuscate_licensing {
 
 	ant clean compile
 
-	lc_cd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
-
-	lc_cd "$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
+	lc_cd "/opt/liferay/dev/projects/liferay-release-tool-ee/$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
 
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.kernel.dir=/opt/liferay/dev/projects/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal
 }
