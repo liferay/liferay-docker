@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function clean_portal_git {
-	lcd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
 
 	git clean -dfX
 	git reset --hard
@@ -17,7 +17,7 @@ function clone_repository {
 	fi
 
 	mkdir -p /opt/liferay/dev/projects/
-	lcd /opt/liferay/dev/projects/
+	lc_cd /opt/liferay/dev/projects/
 
 	git clone git@github.com:liferay/"${1}".git
 }
@@ -35,7 +35,7 @@ function setup_git {
 }
 
 function setup_remote {
-	lcd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
 
 	if [ ! -n "${NARWHAL_REMOTE}" ]
 	then
@@ -57,7 +57,7 @@ function setup_remote {
 function update_portal_git {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	lcd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
 
 	if [ -e "${BUILD_DIR}"/sha-liferay-portal-ee ] && [ $(cat "${BUILD_DIR}"/sha-liferay-portal-ee) == "${NARWHAL_GIT_SHA}" ]
 	then
@@ -92,7 +92,7 @@ function update_portal_git {
 }
 
 function update_release_tool_git {
-	lcd /opt/liferay/dev/projects/liferay-release-tool-ee
+	lc_cd /opt/liferay/dev/projects/liferay-release-tool-ee
 
 	git clean -df
 	git reset --hard

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 function add_licensing {
-	lcd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
+	lc_cd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
 
-	lcd "$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
+	lc_cd "$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
 
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
 }
@@ -20,11 +20,11 @@ function compile_dxp {
 
 	rm -fr "${BUNDLES_DIR}"
 
-	lcd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
 
 	ant deploy
 
-	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules
 
 	ant build-app-jar-release
 
@@ -32,7 +32,7 @@ function compile_dxp {
 	# Workaround until we implement LPS-182849
 	#
 
-	lcd "${BUNDLES_DIR}"
+	lc_cd "${BUNDLES_DIR}"
 
 	if [ ! -e tomcat ]
 	then
@@ -45,7 +45,7 @@ function compile_dxp {
 }
 
 function decrement_module_versions {
-	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules
 
 	find apps dxp/apps -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd
 	do
@@ -68,14 +68,14 @@ function decrement_module_versions {
 }
 
 function deploy_elasticsearch_sidecar {
-	lcd /opt/liferay/dev/projects/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
 
 	/opt/liferay/dev/projects/liferay-portal-ee/gradlew deploySidecar
 
 }
 
 function get_dxp_version {
-	lcd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
 
 	local major=$(lc_get_property release.properties "release.info.version.major")
 	local minor=$(lc_get_property release.properties "release.info.version.minor")
@@ -94,19 +94,19 @@ function get_dxp_version {
 }
 
 function obfuscate_licensing {
-	lcd "/opt/liferay/dev/projects/liferay-portal-ee"
+	lc_cd "/opt/liferay/dev/projects/liferay-portal-ee"
 
 	ant clean compile
 
-	lcd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
+	lc_cd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
 
-	lcd "$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
+	lc_cd "$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
 
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.kernel.dir=/opt/liferay/dev/projects/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal
 }
 
 function pre_compile_setup {
-	lcd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
 
 	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
 	then
@@ -128,7 +128,7 @@ function warm_up_tomcat {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lcd "${BUNDLES_DIR}/tomcat/bin"
+	lc_cd "${BUNDLES_DIR}/tomcat/bin"
 
 	LIFERAY_JVM_OPTS="-Xmx3G"
 

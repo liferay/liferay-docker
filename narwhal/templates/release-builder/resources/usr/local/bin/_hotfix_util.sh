@@ -18,7 +18,7 @@ function add_hotfix_testing_code {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lcd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
 
 	echo "Running git fetch origin tag \"${NARWHAL_HOTFIX_TESTING_TAG}\""
 
@@ -37,7 +37,7 @@ function calculate_checksums {
 		return
 	fi
 
-	lcd "${BUILD_DIR}/hotfix/binaries/"
+	lc_cd "${BUILD_DIR}/hotfix/binaries/"
 
 	find . -type f -print0 | while IFS= read -r -d '' file
 	do
@@ -252,13 +252,13 @@ function manage_jar {
 }
 
 function package_hotfix {
-	lcd "${BUILD_DIR}"/hotfix
+	lc_cd "${BUILD_DIR}"/hotfix
 
 	rm -f "../${HOTFIX_NAME}" checksums removed_files
 
 	zip -r "../${HOTFIX_NAME}" ./*
 
-	lcd "${BUILD_DIR}"
+	lc_cd "${BUILD_DIR}"
 
 	rm -fr hotfix
 }
@@ -270,7 +270,7 @@ function prepare_release_dir {
 
 	if [ -e /opt/liferay/test_release ] && [ $(find /opt/liferay/test_release -type f -printf "%f\n" | wc -l) -eq 1 ]
 	then
-		lcd /opt/liferay/test_release
+		lc_cd /opt/liferay/test_release
 
 		local release_file=$(find . -type f -printf "%f\n")
 
@@ -292,7 +292,7 @@ function prepare_release_dir {
 
 	mkdir -p "${RELEASE_DIR}"
 
-	lcd "${RELEASE_DIR}"
+	lc_cd "${RELEASE_DIR}"
 
 	7z x "${release7z}"
 
