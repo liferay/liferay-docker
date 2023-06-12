@@ -8,7 +8,7 @@ function add_licensing {
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
 }
 
-function compile_dxp {
+function build_dxp {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
 	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
@@ -42,6 +42,12 @@ function compile_dxp {
 	rm -f apache-tomcat*
 
 	echo "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" > "${BUILD_DIR}"/built-sha
+}
+
+function compile_dxp {
+	lc_cd "/opt/liferay/dev/projects/liferay-portal-ee"
+
+	ant clean compile
 }
 
 function decrement_module_versions {
@@ -94,10 +100,6 @@ function get_dxp_version {
 }
 
 function obfuscate_licensing {
-	lc_cd "/opt/liferay/dev/projects/liferay-portal-ee"
-
-	ant clean compile
-
 	lc_cd "/opt/liferay/dev/projects/liferay-release-tool-ee/$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
 
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.kernel.dir=/opt/liferay/dev/projects/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal

@@ -52,9 +52,11 @@ function main {
 	then
 		lc_time_run add_licensing
 
+		lc_time_run compile_dxp
+
 		lc_time_run obfuscate_licensing
 
-		lc_time_run compile_dxp
+		lc_time_run build_dxp
 
 		lc_time_run deploy_elasticsearch_sidecar
 
@@ -70,10 +72,12 @@ function main {
 
 		lc_time_run add_licensing
 
+		lc_time_run compile_dxp
+
 		lc_time_run obfuscate_licensing
 
 		background_run prepare_release_dir
-		lc_time_run compile_dxp
+		lc_time_run build_dxp
 		wait
 
 		lc_time_run create_hotfix
