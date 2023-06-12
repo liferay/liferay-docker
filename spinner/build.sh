@@ -162,8 +162,29 @@ function build_service_search {
 
 function build_service_web_server {
 	mkdir -p build/web-server/resources/etc/nginx
+	mkdir -p build/web-server/resources/usr/local/bin
+	mkdir -p build/web-server/resources/usr/local/etc/haproxy
 
 	local web_server_dir="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver
+
+	local web_server_image=$(head -n 1 "${web_server_dir}"/Dockerfile)
+
+	web_server_image=${web_server_image##* }
+
+	docker pull --quiet "${web_server_image}" >/dev/null
+
+	web_server_container=$(docker create "${web_server_image}")
+
+	docker cp "${web_server_container}":/etc/nginx/nginx.conf build/web-server/resources/etc/nginx/nginx.conf.orig
+
+	grep -v Strict-Transport-Security < build/web-server/resources/etc/nginx/nginx.conf.orig > build/web-server/resources/etc/nginx/nginx.conf
+
+	rm -f build/web-server/resources/etc/nginx/nginx.conf.orig
+
+	docker cp "${web_server_container}":/usr/local/bin/entrypoint.sh build/web-server/resources/usr/local/bin/entrypoint.sh
+	docker cp "${web_server_container}":/usr/local/bin/start-haproxy.sh build/web-server/resources/usr/local/bin/start-haproxy.sh
+	docker cp "${web_server_container}":/usr/local/bin/start-nginx.sh build/web-server/resources/usr/local/bin/start-nginx.sh
+	docker cp "${web_server_container}":/usr/local/etc/haproxy/haproxy.cfg build/web-server/resources/usr/local/etc/haproxy/haproxy.cfg
 
 	cp -a "${web_server_dir}"/configs/common/blocks.d build/web-server/resources/etc/nginx
 
@@ -172,8 +193,6 @@ function build_service_web_server {
 
 	cp -a "${web_server_dir}"/configs/common/conf.d build/web-server/resources/etc/nginx
 	cp -a "${web_server_dir}"/configs/common/public build/web-server/resources/etc/nginx
-
-	cp ../resources/web-server/etc/nginx/nginx.conf build/web-server/resources/etc/nginx
 
 	mkdir -p build/web-server/resources/usr/local/bin
 
@@ -184,15 +203,16 @@ function build_service_web_server {
 		chmod +x build/web-server/resources/usr/local/bin/10-replace-environment-variables.sh
 	fi
 
-	mkdir -p build/web-server/resources/etc/usr
-
-	cp -a ../resources/web-server/usr build/web-server/resources
-
 	(
 		head -n 1 "${web_server_dir}"/Dockerfile
 
-		echo "COPY resources/etc/nginx /etc/nginx"
-		echo "COPY resources/usr/local /usr/local"
+		echo ""
+		echo "ENV ERROR_LOG_LEVEL=warn"
+		echo "ENV LCP_PROJECT_ENVIRONMENT=local"
+		echo "ENV LCP_WEBSERVER_GLOBAL_TIMEOUT=1h"
+		echo "ENV LCP_WEBSERVER_PROXY_MAX_TEMP_FILE_SIZE=0"
+		echo "ENV NGINX_MODSECURITY_MODE=off"
+		echo "ENV PROXY_ADDRESS=127.0.0.1:81"
 
 	) > build/web-server/Dockerfile
 
