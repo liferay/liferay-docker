@@ -15,7 +15,7 @@ function clean_up {
 function main {
 	if [[ $(find . -name "env-*" -type d | wc -l) -eq 0 ]]
 	then
-		echo "There are no environments to clean."
+		echo "There are no stack directories to clean."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
