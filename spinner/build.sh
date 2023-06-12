@@ -372,7 +372,9 @@ function print_docker_compose_usage {
 	echo ""
 	echo "$(lc_docker_compose) up -d antivirus database search web-server && $(lc_docker_compose) up liferay-1"
 	echo ""
-	echo "Start the second liferay node to test clustering: $(lc_docker_compose) up liferay-2"
+	echo "Use the following command to start the second liferay node to test clustering:"
+	echo ""
+	echo "$(lc_docker_compose) up liferay-2"
 	echo ""
 	echo "For more information visit https://liferay.atlassian.net/l/cp/SD571mFA."
 }
