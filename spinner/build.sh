@@ -157,39 +157,39 @@ function build_service_search {
 	write "            - xpack.watcher.enabled=false"
 }
 
-function build_service_webserver {
-	mkdir -p build/webserver/resources/etc/nginx
+function build_service_web_server {
+	mkdir -p build/web-server/resources/etc/nginx
 
-	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/blocks.d/ build/webserver/resources/etc/nginx
+	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/configs/common/blocks.d/ build/web-server/resources/etc/nginx
 
-	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_pass.conf
-	rm -f build/webserver/resources/etc/nginx/blocks.d/oauth2_proxy_protection.conf
+	rm -f build/web-server/resources/etc/nginx/blocks.d/oauth2_proxy_pass.conf
+	rm -f build/web-server/resources/etc/nginx/blocks.d/oauth2_proxy_protection.conf
 
-	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/conf.d/ build/webserver/resources/etc/nginx
-	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/public/ build/webserver/resources/etc/nginx
+	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/configs/common/conf.d/ build/web-server/resources/etc/nginx
+	cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/configs/common/public/ build/web-server/resources/etc/nginx
 
-	cp ../resources/webserver/etc/nginx/nginx.conf build/webserver/resources/etc/nginx
+	cp ../resources/web-server/etc/nginx/nginx.conf build/web-server/resources/etc/nginx
 
-	mkdir -p build/webserver/resources/usr/local/bin
+	mkdir -p build/web-server/resources/usr/local/bin
 
-	if [ -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh ]
+	if [ -e "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/configs/common/scripts/10-replace-environment-variables.sh ]
 	then
-		cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/configs/common/scripts/10-replace-environment-variables.sh build/webserver/resources/usr/local/bin
+		cp -a "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/configs/common/scripts/10-replace-environment-variables.sh build/web-server/resources/usr/local/bin
 
-		chmod +x build/webserver/resources/usr/local/bin/10-replace-environment-variables.sh
+		chmod +x build/web-server/resources/usr/local/bin/10-replace-environment-variables.sh
 	fi
 
-	mkdir -p build/webserver/resources/etc/usr
+	mkdir -p build/web-server/resources/etc/usr
 
-	cp -a ../resources/webserver/usr build/webserver/resources
+	cp -a ../resources/web-server/usr build/web-server/resources
 
 	(
-		head -n 1 "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver/Dockerfile
+		head -n 1 "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/web-server/Dockerfile
 
 		echo "COPY resources/etc/nginx /etc/nginx"
 		echo "COPY resources/usr/local /usr/local"
 
-	) > build/webserver/Dockerfile
+	) > build/web-server/Dockerfile
 
 	write "    webserver:"
 	write "        build: ./build/webserver"
@@ -209,7 +209,7 @@ function build_services {
 	build_service_database
 	build_service_liferay
 	build_service_search
-	build_service_webserver
+	build_service_web_server
 
 	write "volumes:"
 	write "    liferay-document-library:"
