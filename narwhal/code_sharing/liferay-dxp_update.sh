@@ -61,6 +61,8 @@ function git_checkout_branch {
 function git_checkout_tag {
 	local tag_name="${1}"
 
+	check_param "${tag_name}" "Missing tag name"
+
 	echo -n ">>>> Checking out tag '${tag_name}'..."
 	git checkout -q "${tag_name}"
 	echo "done."
@@ -68,6 +70,8 @@ function git_checkout_tag {
 
 function git_commit {
 	local commit_msg="${1}"
+
+	check_param "${commit_msg}" "Missing commit message"
 
 	echo -n ">>>> Running 'git commit'..."
 	git commit -a -m "${commit_msg}" -q
@@ -229,9 +233,12 @@ function git_pull_tag {
 }
 
 function git_push_in_batches {
-	local remote="${1}"
-	local branch_name="${2}"
 	local batch_size=100
+	local branch_name="${2}"
+	local remote="${1}"
+
+	check_param "${branch_name}" "Missing branch name"
+	check_param "${remote}" "Missing git remote name"
 
 	if git show-ref --quiet --verify "refs/remotes/${remote}/${branch_name}"
 	then
@@ -282,6 +289,8 @@ function git_push_repo {
 
 function git_tag {
 	local tag_name="${1}"
+
+	check_param "${tag_name}" "Missing tag name"
 
 	local commit_hash
 	commit_hash=$(git rev-parse HEAD)
