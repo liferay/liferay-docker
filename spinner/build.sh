@@ -175,11 +175,9 @@ function build_service_web_server {
 
 	web_server_container=$(docker create "${web_server_image}")
 
-	docker cp "${web_server_container}":/etc/nginx/nginx.conf build/web-server/resources/etc/nginx/nginx.conf.orig
+	docker cp "${web_server_container}":/etc/nginx/nginx.conf build/web-server/resources/etc/nginx/nginx.conf
 
-	grep -v Strict-Transport-Security < build/web-server/resources/etc/nginx/nginx.conf.orig > build/web-server/resources/etc/nginx/nginx.conf
-
-	rm -f build/web-server/resources/etc/nginx/nginx.conf.orig
+	sed -i build/web-server/resources/etc/nginx/nginx.conf -e "s/add_header Strict-Transport-Security/# add_header Strict-Transport-Security/"
 
 	docker cp "${web_server_container}":/usr/local/etc/haproxy/haproxy.cfg build/web-server/resources/usr/local/etc/haproxy/haproxy.cfg
 
