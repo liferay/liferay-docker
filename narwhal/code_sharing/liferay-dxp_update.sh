@@ -9,9 +9,10 @@ source $(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_liferay_common.sh
 
 BASE_DIR="${PWD}"
 
-GITHUB_ADDRESS="git@github.com:tomposmiko"
+GITHUB_ADDRESS="git@github.com:${GITHUB_PROJECT}"
+GITHUB_PROJECT="${GITHUB_PROJECT:-liferay}"
 
-REPO_NAME_DXP="liferay-dxp-new"
+REPO_NAME_DXP="${REPO_NAME_DXP:-liferay-dxp}"
 REPO_NAME_EE="liferay-portal-ee"
 
 REPO_PATH_DXP="${BASE_DIR}/${REPO_NAME_DXP}"
@@ -133,12 +134,6 @@ function pull_tag {
 
 	echo
 	echo "Pulling tag: ${tag_name} ..."
-
-	if [ -z "${tag_name}" ]
-	then
-		echo "Missing tag"
-		exit 1
-	fi
 
 	lc_cd "${REPO_PATH_EE}"
 
