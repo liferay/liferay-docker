@@ -67,10 +67,10 @@ function git_checkout_tag {
 }
 
 function git_commit {
-	local tag_name="${1}"
+	local commit_msg="${1}"
 
 	echo -n ">>>> Running 'git commit'..."
-	git commit -a -m "${tag_name}" -q
+	git commit -a -m "${commit_msg}" -q
 	echo "done."
 }
 
@@ -146,6 +146,30 @@ function git_get_new_tags {
 			echo "${tag_name}"
 		fi
 	done
+
+	echo "done."
+}
+
+function git_init_repo {
+	if [ -d "${REPO_PATH_DXP}" ]
+	then
+		echo "DXP repo already exists: '${REPO_PATH_DXP}'"
+		exit 1
+	fi
+
+	echo -n "Initializing repo ..."
+
+	git init -q "${REPO_PATH_DXP}"
+
+	lc_cd "${REPO_PATH_DXP}"
+
+	touch README.md
+
+	git_add
+
+	git_commit "Initial commit"
+
+	git remote add origin "${GITHUB_ADDRESS}/${REPO_NAME_DXP}"
 
 	echo "done."
 }
@@ -275,7 +299,12 @@ function run_rsync {
 
 check_param "${VERSION}" "Missing version"
 
-lc_time_run git_fetch_repo "${REPO_NAME_DXP}"
+if [ "${RUN_FROM_SCRATCH}" == "true" ]
+then
+	lc_time_run git_init_repo "${REPO_NAME_DXP}"
+else
+	lc_time_run git_fetch_repo "${REPO_NAME_DXP}"
+fi
 
 lc_time_run git_fetch_repo "${REPO_NAME_EE}"
 
