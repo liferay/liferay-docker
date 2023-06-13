@@ -181,10 +181,13 @@ function build_service_web_server {
 
 	rm -f build/web-server/resources/etc/nginx/nginx.conf.orig
 
+	docker cp "${web_server_container}":/usr/local/etc/haproxy/haproxy.cfg build/web-server/resources/usr/local/etc/haproxy/haproxy.cfg
+
+	sed -i build/web-server/resources/usr/local/etc/haproxy/haproxy.cfg -e 's/server-template.*/balance roundrobin\n\toption httpchk\n\tserver s1 gateway.docker.internal:18080 check\n\tserver s2 gateway.docker.internal:18081 check/'
+
 	docker cp "${web_server_container}":/usr/local/bin/entrypoint.sh build/web-server/resources/usr/local/bin/entrypoint.sh
 	docker cp "${web_server_container}":/usr/local/bin/start-haproxy.sh build/web-server/resources/usr/local/bin/start-haproxy.sh
 	docker cp "${web_server_container}":/usr/local/bin/start-nginx.sh build/web-server/resources/usr/local/bin/start-nginx.sh
-	docker cp "${web_server_container}":/usr/local/etc/haproxy/haproxy.cfg build/web-server/resources/usr/local/etc/haproxy/haproxy.cfg
 
 	cp -a "${web_server_dir}"/configs/common/blocks.d build/web-server/resources/etc/nginx
 
