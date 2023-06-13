@@ -161,9 +161,10 @@ function build_service_search {
 }
 
 function build_service_web_server {
-	mkdir -p build/web-server/resources/etc/nginx
-	mkdir -p build/web-server/resources/usr/local/bin
-	mkdir -p build/web-server/resources/usr/local/etc/haproxy
+
+	#
+	# Copy from Docker image
+	#
 
 	local web_server_dir="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver
 
@@ -173,19 +174,29 @@ function build_service_web_server {
 
 	docker pull --quiet "${web_server_image}" >/dev/null
 
-	web_server_container=$(docker create "${web_server_image}")
+	local web_server_container=$(docker create "${web_server_image}")
+
+	mkdir -p build/web-server/resources/etc/nginx
 
 	docker cp "${web_server_container}":/etc/nginx/nginx.conf build/web-server/resources/etc/nginx/nginx.conf
 
-	sed -i build/web-server/resources/etc/nginx/nginx.conf -e "s/add_header Strict-Transport-Security/# add_header Strict-Transport-Security/"
+	sed -i build/web-server/resources/etc/nginx/nginx.conf -e "s/add_header Strict-Transport-Security/#add_header Strict-Transport-Security/"
+
+	mkdir -p build/web-server/resources/usr/local/bin
+
+	docker cp "${web_server_container}":/usr/local/bin/entrypoint.sh build/web-server/resources/usr/local/bin/entrypoint.sh
+	docker cp "${web_server_container}":/usr/local/bin/start-haproxy.sh build/web-server/resources/usr/local/bin/start-haproxy.sh
+	docker cp "${web_server_container}":/usr/local/bin/start-nginx.sh build/web-server/resources/usr/local/bin/start-nginx.sh
+
+	mkdir -p build/web-server/resources/usr/local/etc/haproxy
 
 	docker cp "${web_server_container}":/usr/local/etc/haproxy/haproxy.cfg build/web-server/resources/usr/local/etc/haproxy/haproxy.cfg
 
 	sed -i build/web-server/resources/usr/local/etc/haproxy/haproxy.cfg -e "s/server-template.*/balance roundrobin\n\toption httpchk\n\tserver s1 liferay-1:8080 check/"
 
-	docker cp "${web_server_container}":/usr/local/bin/entrypoint.sh build/web-server/resources/usr/local/bin/entrypoint.sh
-	docker cp "${web_server_container}":/usr/local/bin/start-haproxy.sh build/web-server/resources/usr/local/bin/start-haproxy.sh
-	docker cp "${web_server_container}":/usr/local/bin/start-nginx.sh build/web-server/resources/usr/local/bin/start-nginx.sh
+	#
+	# Copy from liferay-lxc
+	#
 
 	cp -a "${web_server_dir}"/configs/common/blocks.d build/web-server/resources/etc/nginx
 
