@@ -32,7 +32,13 @@ function check_param {
 	fi
 }
 
-function checkout_branch {
+function git_add {
+	echo -n ">>>> Running 'git add'..."
+	git add .
+	echo "done."
+}
+
+function git_checkout_branch {
 	local branch_name="${1}"
 
 	check_param "${branch_name}" "Missing branch name"
@@ -41,7 +47,6 @@ function checkout_branch {
 
 	if (git show-ref --quiet "${branch_name}")
 	then
-
 		echo -n "Checking out branch '${branch_name}'..."
 		git checkout -f -q "${branch_name}"
 		echo "done."
@@ -53,7 +58,23 @@ function checkout_branch {
 	fi
 }
 
-function fetch_repo {
+function git_checkout_tag {
+	local tag_name="${1}"
+
+	echo -n ">>>> Checking out tag '${tag_name}'..."
+	git checkout -q "${tag_name}"
+	echo "done."
+}
+
+function git_commit {
+	local tag_name="${1}"
+
+	echo -n ">>>> Running 'git commit'..."
+	git commit -a -m "${tag_name}" -q
+	echo "done."
+}
+
+function git_fetch_repo {
 	local repo_name="${1}"
 
 	check_param "${repo_name}" "Missing repo name"
@@ -74,20 +95,46 @@ function fetch_repo {
 	fi
 }
 
-function get_all_tags {
+function git_fsck {
+	echo -n ">>>> Running 'git fsck'..."
+
+	if (! git fsck --full >/dev/null 2>&1)
+	then
+		echo "Running of 'git fsck' has failed."
+		exit 1
+	fi
+
+	echo "done."
+}
+
+function git_gc {
+	echo -n ">>>> Running 'git gc'..."
+
+	while (pgrep -f "git gc" >/dev/null)
+	do
+		sleep 1
+	done
+
+	rm -f .git/gc.log
+
+	git gc --quiet
+	echo "done."
+}
+
+function git_get_all_tags {
 	git tag -l --sort=creatordate --format='%(refname:short)' "${VERSION}*"
 }
 
-function get_new_tags {
+function git_get_new_tags {
 	echo "Getting new tags... "
 
 	lc_cd "${REPO_PATH_EE}"
 
-	get_all_tags > "${TAGS_FILE_EE}"
+	git_get_all_tags > "${TAGS_FILE_EE}"
 
 	lc_cd "${REPO_PATH_DXP}"
 
-	get_all_tags > "${TAGS_FILE_DXP}"
+	git_get_all_tags > "${TAGS_FILE_DXP}"
 
 	local tag_name
 
@@ -103,8 +150,8 @@ function get_new_tags {
 	echo "done."
 }
 
-function pull_and_push_all_tags {
-	get_new_tags > "${TAGS_FILE_NEW}"
+function git_pull_and_push_all_tags {
+	git_get_new_tags > "${TAGS_FILE_NEW}"
 
 	for version_minor in $(cat "${TAGS_FILE_NEW}" | cut -d "." -f2 | sort -nu)
 	do
@@ -115,79 +162,49 @@ function pull_and_push_all_tags {
 			local version_semver
 			version_semver="7.${version_minor}.${version_patch}"
 
-			checkout_branch "${version_semver}"
+			git_checkout_branch "${version_semver}"
 
 			local version_full
 
 			for version_full in $(cat "${TAGS_FILE_NEW}" | grep "${version_semver}")
 			do
-				pull_tag "${version_full}"
+				git_pull_tag "${version_full}"
 			done
 		done
 	done
 }
 
-function pull_tag {
+function git_pull_tag {
 	local tag_name="${1}"
 
 	check_param "${tag_name}" "Missing tag name"
 
 	echo
+
 	echo "Pulling tag: ${tag_name} ..."
 
 	lc_cd "${REPO_PATH_EE}"
 
-	echo -n ">>>> Checking out tag '${tag_name}'..."
-	git checkout -q "${tag_name}"
-	echo "done."
+	git_checkout_tag "${tag_name}"
 
 	lc_cd "${REPO_PATH_DXP}"
 
-	echo -n ">>>> Running 'git gc'..."
+	git_gc
 
-	while (pgrep -f "git gc" >/dev/null)
-	do
-		sleep 1
-	done
+	git_fsck
 
-	git gc --quiet
-	echo "done."
+	run_rsync
 
-	rm -f .git/gc.log
+	git_add
 
-	echo -n ">>>> Running 'git fsck'..."
+	git_commit "${tag_name}"
 
-	if (! git fsck --full >/dev/null 2>&1)
-	then
-		echo "The operation of 'git fsck' has failed."
-		exit 1
-	fi
-
-	echo "done."
-
-	echo -n ">>>> Running 'rsync'..."
-	rsync -ar --delete --exclude '.git' "${REPO_PATH_EE}/" "${REPO_PATH_DXP}/"
-	echo "done."
-
-	echo -n ">>>> Running 'git add'..."
-	git add .
-	echo "done."
-
-	echo -n ">>>> Running 'git commit'..."
-	git commit -a -m "${tag_name}" -q
-	echo "done."
-
-	local commit_hash
-	commit_hash=$(git rev-parse HEAD)
-
-	echo -n ">>>> Running 'git tag'..."
-	git tag "${tag_name}" "${commit_hash}"
-	echo "done."
+	git_tag "${tag_name}"
 
 	echo "done."
 }
 
-function push_git_in_batches {
+function git_push_in_batches {
 	local remote="${1}"
 	local branch_name="${2}"
 	local batch_size=100
@@ -215,7 +232,7 @@ function push_git_in_batches {
 	git push -q "${remote}" "HEAD:refs/heads/${branch_name}"
 }
 
-function push_repo {
+function git_push_repo {
 	lc_cd "${REPO_PATH_DXP}"
 
 	echo -n "Pushing all branches..."
@@ -227,9 +244,9 @@ function push_repo {
 
 	for branch_name in ${branch_list}
 	do
-		checkout_branch "${branch_name}"
+		git_checkout_branch "${branch_name}"
 
-		push_git_in_batches origin "${branch_name}"
+		git_push_in_batches origin "${branch_name}"
 	done
 
 	echo "done."
@@ -239,12 +256,29 @@ function push_repo {
 	echo "done."
 }
 
+function git_tag {
+	local tag_name="${1}"
+
+	local commit_hash
+	commit_hash=$(git rev-parse HEAD)
+
+	echo -n ">>>> Running 'git tag'..."
+	git tag "${tag_name}" "${commit_hash}"
+	echo "done."
+}
+
+function run_rsync {
+	echo -n ">>>> Running 'rsync'..."
+	rsync -ar --delete --exclude '.git' "${REPO_PATH_EE}/" "${REPO_PATH_DXP}/"
+	echo "done."
+}
+
 check_param "${VERSION}" "Missing version"
 
-fetch_repo "${REPO_NAME_DXP}"
+lc_time_run git_fetch_repo "${REPO_NAME_DXP}"
 
-fetch_repo "${REPO_NAME_EE}"
+lc_time_run git_fetch_repo "${REPO_NAME_EE}"
 
-pull_and_push_all_tags
+lc_time_run git_pull_and_push_all_tags
 
-push_repo
+lc_time_run git_push_repo
