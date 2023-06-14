@@ -131,6 +131,22 @@ function lc_download {
 	fi
 }
 
+function lc_get_property {
+	file=${1}
+	property_key=${2}
+
+	if [ "${file##*.}" == "bnd" ]
+	then
+		local property_value=$(grep -F "${property_key}: " "${file}")
+
+		echo "${property_value##*: }"
+	else
+		local property_value=$(grep -F "${property_key}=" "${file}")
+
+		echo "${property_value##*=}"
+	fi
+}
+
 function lc_echo_time {
 	local seconds=${1}
 
@@ -186,7 +202,7 @@ function lc_time_run {
 
 	local end_time=$(date +%s)
 
-	if [ "${exit_code}" == "${SKIPPED}" ]
+	if [ "${exit_code}" == "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 	then
 		echo -e "$(lc_date) < ${*}: \e[1;34mSkip\e[0m"
 	else
@@ -223,7 +239,7 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_HELP=2
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
-	
+
 	export LC_ALL=en_US.UTF-8
 	export TZ=UTC
 }
