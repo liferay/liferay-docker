@@ -444,7 +444,7 @@
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.3.10/hotfix/liferay-hotfix-7565-7310.zip
 7.4.3.81:
     7.4.3.81-ga81:
-        bundle_url: releases-cdn.liferay.com/portal/7.4.3.81-ga81/liferay-ce-portal-tomcat-7.4.3.81-ga81-20230612134331068.tar.gz
+        bundle_url: releases-cdn.liferay.com/portal/7.4.3.81-ga81/liferay-ce-portal-tomcat-7.4.3.81-ga81-20230612134331068.7z
         latest: true
 7.4.13:
     7.4.13-u1:
@@ -598,7 +598,7 @@
     7.4.13-u80:
         bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u80/liferay-dxp-tomcat-7.4.13.u80-20230605104714785.7z
     7.4.13-u81:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u81/liferay-dxp-tomcat-7.4.13.u81-20230612121643224.tar.gz
+        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u81/liferay-dxp-tomcat-7.4.13.u81-20230612121643224.7z
         latest: true
     7.4.13.nightly:
         bundle_url: files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
