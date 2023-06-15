@@ -62,7 +62,7 @@ function build_service_liferay {
 	cp -r "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/common/* liferay_mount/files
 	cp -r "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/liferay/configs/"${LXC_ENVIRONMENT}"/* liferay_mount/files
 
-	echo "Deleting the following files from DXP configuration to ensure it can run locally:"
+	echo "Deleting the following files from the DXP configuration so it can run locally:"
 	echo ""
 
 	for file in \
@@ -196,7 +196,7 @@ function build_service_web_server {
 
 	cp -a "${web_server_dir}"/configs/* web-server_mount/configs
 
-	echo "Deleting the following files from web server configuration to ensure it can run locally:"
+	echo "Deleting the following files from the web server configuration so it can run locally:"
 	echo ""
 
 	for file in \
