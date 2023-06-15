@@ -202,7 +202,7 @@ function build_service_web_server {
 	for file in \
 		blocks.d/oauth2_proxy_pass.conf \
 		blocks.d/oauth2_proxy_protection.conf \
-		common/http.conf.d/admin.conf \
+		http.conf.d/admin.conf \
 		scripts/01-whitelist_github_ips.sh
 	do
 		rm -f "web-server_mount/configs/common/${file}"
