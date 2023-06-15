@@ -182,13 +182,6 @@ function build_service_web_server {
 
 	sed -i build/web-server/resources/etc/nginx/nginx.conf -e "s/add_header Strict-Transport-Security/#add_header Strict-Transport-Security/"
 
-	mkdir -p build/web-server/resources/usr/local/bin
-
-	docker cp "${web_server_container}":/usr/local/bin/entrypoint.sh build/web-server/resources/usr/local/bin/entrypoint.sh
-	docker cp "${web_server_container}":/usr/local/bin/start-haproxy.sh build/web-server/resources/usr/local/bin/start-haproxy.sh
-	docker cp "${web_server_container}":/usr/local/bin/start-nginx.sh build/web-server/resources/usr/local/bin/start-nginx.sh
-	docker cp "${web_server_container}":/usr/local/bin/process-script-directory.sh build/web-server/resources/usr/local/bin/process-script-directory.sh
-
 	mkdir -p build/web-server/resources/usr/local/etc/haproxy
 
 	docker cp "${web_server_container}":/usr/local/etc/haproxy/haproxy.cfg build/web-server/resources/usr/local/etc/haproxy/haproxy.cfg
