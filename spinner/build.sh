@@ -187,6 +187,7 @@ function build_service_web_server {
 	docker cp "${web_server_container}":/usr/local/bin/entrypoint.sh build/web-server/resources/usr/local/bin/entrypoint.sh
 	docker cp "${web_server_container}":/usr/local/bin/start-haproxy.sh build/web-server/resources/usr/local/bin/start-haproxy.sh
 	docker cp "${web_server_container}":/usr/local/bin/start-nginx.sh build/web-server/resources/usr/local/bin/start-nginx.sh
+	docker cp "${web_server_container}":/usr/local/bin/process-script-directory.sh build/web-server/resources/usr/local/bin/process-script-directory.sh
 
 	mkdir -p build/web-server/resources/usr/local/etc/haproxy
 
@@ -198,22 +199,25 @@ function build_service_web_server {
 	# Copy from liferay-lxc
 	#
 
-	cp -a "${web_server_dir}"/configs/common/blocks.d build/web-server/resources/etc/nginx
+	mkdir -p web-server_mount/configs
 
-	rm -f build/web-server/resources/etc/nginx/blocks.d/oauth2_proxy_pass.conf
-	rm -f build/web-server/resources/etc/nginx/blocks.d/oauth2_proxy_protection.conf
+	cp -a "${web_server_dir}"/configs/* web-server_mount/configs
 
-	cp -a "${web_server_dir}"/configs/common/conf.d build/web-server/resources/etc/nginx
-	cp -a "${web_server_dir}"/configs/common/public build/web-server/resources/etc/nginx
+	echo "Deleting the following files from web server configuration to ensure it can run locally:"
+	echo ""
 
-	mkdir -p build/web-server/resources/usr/local/bin
+	for file in \
+		blocks.d/oauth2_proxy_pass.conf \
+		blocks.d/oauth2_proxy_protection.conf \
+		common/http.conf.d/admin.conf \
+		scripts/01-whitelist_github_ips.sh
+	do
+		rm -f "web-server_mount/configs/common/${file}"
 
-	if [ -e "${web_server_dir}"/configs/common/scripts/10-replace-environment-variables.sh ]
-	then
-		cp -a "${web_server_dir}"/configs/common/scripts/10-replace-environment-variables.sh build/web-server/resources/usr/local/bin
+		echo "    ${file}"
+	done
 
-		chmod +x build/web-server/resources/usr/local/bin/10-replace-environment-variables.sh
-	fi
+	echo ""
 
 	(
 		head -n 1 "${web_server_dir}"/Dockerfile
@@ -237,6 +241,8 @@ function build_service_web_server {
 
 	write "        ports:"
 	write "            - 127.0.0.1:80:80"
+	write "        volumes:"
+	write "            - ./web-server_mount:/lcp-container"
 }
 
 function build_services {
