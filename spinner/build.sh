@@ -213,6 +213,8 @@ function build_service_web_server {
 
 	cp -a "${web_server_dir}"/configs/* web-server_mount/configs
 
+	sed -i web-server_mount/configs/common/nginx.conf -e "s/access_log.*/access_log off;/"
+
 	echo "Deleting the following files from the web server configuration so it can run locally:"
 	echo ""
 
