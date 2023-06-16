@@ -179,12 +179,6 @@ function build_service_web_server {
 
 	local web_server_container=$(docker create "${web_server_image}")
 
-	mkdir -p build/web-server/resources/etc/nginx
-
-	docker cp "${web_server_container}":/etc/nginx/nginx.conf build/web-server/resources/etc/nginx/nginx.conf
-
-	sed -i build/web-server/resources/etc/nginx/nginx.conf -e "s/add_header Strict-Transport-Security/#add_header Strict-Transport-Security/"
-
 	mkdir -p build/web-server/resources/usr/local/etc/haproxy
 
 	docker cp "${web_server_container}":/usr/local/etc/haproxy/haproxy.cfg build/web-server/resources/usr/local/etc/haproxy/haproxy.cfg
@@ -238,7 +232,6 @@ function build_service_web_server {
 	(
 		head -n 1 "${web_server_dir}"/Dockerfile
 		echo ""
-		echo "COPY resources/etc/nginx /etc/nginx"
 		echo "COPY resources/usr/local /usr/local"
 		echo ""
 		echo "ENV ERROR_LOG_LEVEL=warn"
