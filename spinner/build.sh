@@ -197,14 +197,19 @@ function build_service_web_server {
 	# Copy from OWASP Docker image
 	#
 
-	docker pull --quiet owasp/modsecurity-crs:nginx >/dev/null
+	if [ -n "${MOD_SECURITY_ENABLED}" ]
+	then
+		docker pull --quiet owasp/modsecurity-crs:nginx >/dev/null
 
-	local owasp_container=$(docker create owasp/modsecurity-crs:nginx)
+		local owasp_container=$(docker create owasp/modsecurity-crs:nginx)
 
-	mkdir -p build/web-server/resources/etc/nginx/modsec
+		mkdir -p build/web-server/resources/etc/nginx/modsec
 
-	docker cp "${owasp_container}":/etc/modsecurity.d/owasp-crs/crs-setup.conf build/web-server/resources/etc/nginx/modsec
-	docker cp "${owasp_container}":/etc/modsecurity.d/owasp-crs/rules build/web-server/resources/etc/nginx/modsec
+		docker cp "${owasp_container}":/etc/modsecurity.d/owasp-crs/crs-setup.conf build/web-server/resources/etc/nginx/modsec
+		docker cp "${owasp_container}":/etc/modsecurity.d/owasp-crs/rules build/web-server/resources/etc/nginx/modsec
+
+		echo "Include /etc/nginx/modsec/rules/*.conf" > build/web-server/resources/etc/nginx/modsec/owasp-crs-rules.conf
+	fi
 
 	#
 	# Copy from liferay-lxc
