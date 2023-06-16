@@ -5,7 +5,7 @@ source ../_liferay_common.sh
 function build_service_antivirus {
 	write "    antivirus:"
 
-	write_deploy_section 1G
+	write_deploy_section 4G
 
 	write "        image: clamav/clamav:1.0.1-1"
 	write "        ports:"
