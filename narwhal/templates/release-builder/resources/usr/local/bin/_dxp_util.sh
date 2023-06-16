@@ -45,6 +45,13 @@ function build_dxp {
 }
 
 function compile_dxp {
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	then
+		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile step."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	lc_cd "/opt/liferay/dev/projects/liferay-portal-ee"
 
 	ant clean compile
@@ -100,6 +107,13 @@ function get_dxp_version {
 }
 
 function obfuscate_licensing {
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	then
+		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the obfuscate_licensing step."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	lc_cd "/opt/liferay/dev/projects/liferay-release-tool-ee/$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
 
 	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.kernel.dir=/opt/liferay/dev/projects/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal
