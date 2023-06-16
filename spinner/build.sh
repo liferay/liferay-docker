@@ -227,7 +227,15 @@ function build_service_web_server {
 		echo "ENV LCP_PROJECT_ENVIRONMENT=local"
 		echo "ENV LCP_WEBSERVER_GLOBAL_TIMEOUT=1h"
 		echo "ENV LCP_WEBSERVER_PROXY_MAX_TEMP_FILE_SIZE=0"
-		echo "ENV NGINX_MODSECURITY_MODE=off"
+
+		if [ -n "${MOD_SECURITY_ENABLED}" ]
+		then
+			echo "ENV LCP_WEBSERVER_MODSECURITY=On"
+			echo "ENV NGINX_MODSECURITY_MODE=on"
+		else
+			echo "ENV NGINX_MODSECURITY_MODE=off"
+		fi
+
 		echo "ENV PROXY_ADDRESS=127.0.0.1:81"
 
 	) > build/web-server/Dockerfile
@@ -277,6 +285,10 @@ function check_usage {
 				;;
 			-h)
 				print_help
+
+				;;
+			-m)
+				MOD_SECURITY_ENABLED=true
 
 				;;
 			-o)
@@ -438,6 +450,7 @@ function print_help {
 	echo "The script can be configured with the following arguments:"
 	echo ""
 	echo "    -d (optional): Set the database import file (raw or with a .gz suffix). Virtual hosts will be suffixed with .local (e.g. abc.liferay.com becomes abc.liferay.com.local)."
+	echo "    -m (optional): Enable mod_security on the web server with OWASP Top 10 rules."
 	echo "    -o (optional): Set directory name where the stack configuration will be created. It will be prefixed with \"env-\"."
 	echo "    -r (optional): Randomize the MySQL port opened on localhost to enable multiple database servers at the same time"
 	echo "    -s (optional): Skip the specified table name in the database import"
