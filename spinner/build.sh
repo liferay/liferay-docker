@@ -3,13 +3,14 @@
 source ../_liferay_common.sh
 
 function build_service_antivirus {
-	local antivirus_image=$(grep "\"image\": " "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/antivirus/LCP.json | sed -e "s/.*image\": \""// | sed -e "s/\",$//")
-
 	write "    antivirus:"
 
 	write_deploy_section 4G
 
+	local antivirus_image=$(grep "\"image\": " "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/antivirus/LCP.json | sed -e "s/.*image\": \""// | sed -e "s/\",$//")
+
 	write "        image: ${antivirus_image}"
+
 	write "        ports:"
 	write "            - \"3310:3310\""
 }
