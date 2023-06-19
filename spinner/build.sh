@@ -191,7 +191,7 @@ function build_service_web_server {
 
 	sed -i build/web-server/resources/usr/local/etc/haproxy/haproxy.cfg -e "s/server-template.*/balance roundrobin\n\toption httpchk\n\tserver s1 liferay-1:8080 check/"
 
-	docker rm "${web_server_container}" > /dev/null
+	docker rm "${web_server_container}" >/dev/null
 
 	#
 	# Copy from liferay-lxc
