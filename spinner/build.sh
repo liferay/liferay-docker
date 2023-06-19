@@ -202,6 +202,8 @@ function build_service_web_server {
 		docker cp "${owasp_container}":/etc/modsecurity.d/owasp-crs/crs-setup.conf build/web-server/resources/etc/nginx/modsec
 		docker cp "${owasp_container}":/etc/modsecurity.d/owasp-crs/rules build/web-server/resources/etc/nginx/modsec
 
+		docker rm "${owasp_container}" >/dev/null
+
 		echo "Include /etc/nginx/modsec/rules/*.conf" > build/web-server/resources/etc/nginx/modsec/owasp-crs-rules.conf
 	fi
 
