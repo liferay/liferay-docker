@@ -30,5 +30,5 @@ function upload_hotfix {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gsutil cp "${BUILD_DIR}/${HOTFIX_NAME}" "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
+	gsutil cp "${BUILD_DIR}/${HOTFIX_FILE_NAME}" "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
 }

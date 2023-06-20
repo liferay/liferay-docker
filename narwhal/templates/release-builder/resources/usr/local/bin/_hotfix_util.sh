@@ -10,6 +10,30 @@ function add_file_to_hotfix {
 	cp "${BUNDLES_DIR}/${1}" "${BUILD_DIR}/hotfix/binaries/${file_dir}"
 }
 
+function add_portal_patcher_properties_jar {
+	lc_cd "${BUILD_DIR}"
+
+	mkdir portal-patcher-properties
+
+	lc_cd "${BUILD_DIR}/portal-patcher-properties"
+
+	touch manifest
+
+	(
+		echo "fixed.issues=${NARWHAL_FIXED_ISSUES}"
+		echo "installed.patches=${HOTFIX_NAME}"
+	)  > portal-patcher.properties
+
+	jar cfm portal-patcher-properties.jar manifest portal-patcher.properties
+
+	if [ -e "${BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/" ]
+	then
+		cp portal-patcher-properties.jar "${BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/"
+	else
+		cp portal-patcher-properties.jar "${BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib/"
+	fi
+}
+
 function add_hotfix_testing_code {
 	if [ ! -n "${NARWHAL_HOTFIX_TESTING_SHA}" ]
 	then
@@ -22,7 +46,7 @@ function add_hotfix_testing_code {
 
 	echo "Running git fetch origin tag \"${NARWHAL_HOTFIX_TESTING_TAG}\""
 
-	git fetch origin tag "${NARWHAL_HOTFIX_TESTING_TAG}" || return 1
+	git fetch -v origin tag "${NARWHAL_HOTFIX_TESTING_TAG}" || return 1
 
 	echo "Running git cherry-pick -n \"${NARWHAL_HOTFIX_TESTING_SHA}\""
 
@@ -254,9 +278,9 @@ function manage_jar {
 function package_hotfix {
 	lc_cd "${BUILD_DIR}"/hotfix
 
-	rm -f "../${HOTFIX_NAME}" checksums removed_files
+	rm -f "../${HOTFIX_FILE_NAME}" checksums removed_files
 
-	zip -r "../${HOTFIX_NAME}" ./*
+	zip -r "../${HOTFIX_FILE_NAME}" ./*
 
 	lc_cd "${BUILD_DIR}"
 
@@ -310,7 +334,8 @@ function set_hotfix_name {
 		hotfix_id=${NARWHAL_BUILD_ID}
 	fi
 
-	HOTFIX_NAME=liferay-dxp-${DXP_VERSION}-hotfix-"${hotfix_id}".zip
+	HOTFIX_FILE_NAME=liferay-dxp-${DXP_VERSION}-hotfix-"${hotfix_id}".zip
+	HOTFIX_NAME=hotfix-"${hotfix_id}"
 }
 
 function transform_file_name {
