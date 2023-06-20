@@ -240,7 +240,7 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
 	
-	export LC_ALL=en_US.UTF-8
+	export LC_ALL=C.UTF-8
 	export TZ=UTC
 }
 
