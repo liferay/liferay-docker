@@ -166,7 +166,7 @@ function build_service_search {
 function build_service_web_server {
 
 	#
-	# Copy from Docker image
+	# Copy from the web server Docker image
 	#
 
 	local web_server_dir="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}"/webserver
@@ -188,7 +188,7 @@ function build_service_web_server {
 	docker rm "${web_server_container}" >/dev/null
 
 	#
-	# Copy from OWASP Docker image
+	# Copy from the OWASP Docker image
 	#
 
 	if [ -n "${MOD_SECURITY_ENABLED}" ]
@@ -235,6 +235,7 @@ function build_service_web_server {
 
 	(
 		head -n 1 "${web_server_dir}"/Dockerfile
+
 		echo ""
 		echo "COPY resources/usr/local /usr/local"
 		echo ""
@@ -465,7 +466,7 @@ function print_help {
 	echo "The script can be configured with the following arguments:"
 	echo ""
 	echo "    -d (optional): Set the database import file (raw or with a .gz suffix). Virtual hosts will be suffixed with .local (e.g. abc.liferay.com becomes abc.liferay.com.local)."
-	echo "    -m (optional): Enable mod_security on the web server with OWASP Top 10 rules."
+	echo "    -m (optional): Enable mod_security on the web server with the rules from OWASP Top 10."
 	echo "    -o (optional): Set directory name where the stack configuration will be created. It will be prefixed with \"env-\"."
 	echo "    -r (optional): Randomize the MySQL port opened on localhost to enable multiple database servers at the same time"
 	echo "    -s (optional): Skip the specified table name in the database import"
