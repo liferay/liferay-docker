@@ -11,7 +11,7 @@ function build {
 function clean {
 	./clean.sh
 
-	rm -fr test_logs
+	rm -fr "${LIFERAY_COMMON_LOG_DIR}"
 }
 
 function main {
