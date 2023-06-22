@@ -11,7 +11,7 @@ class pts_puppet_agent {
 			key_val_separator => ' = ',
 			path => '/etc/puppetlabs/puppet/puppet.conf',
 			require => Package['puppet-agent'],
-			section => '',
+			section => 'main',
 			setting => 'server',
 			value => $pts_location::puppet_server_hostname,
 	}
@@ -22,7 +22,7 @@ class pts_puppet_agent {
 			key_val_separator => ' = ',
 			path => '/etc/puppetlabs/puppet/puppet.conf',
 			require => Package['puppet-agent'],
-			section => '',
+			section => 'main',
 			setting => 'number_of_facts_soft_limit',
 			value => '4096',
 	}

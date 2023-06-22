@@ -13,8 +13,8 @@ class pts_location {
 			$location = 'lfr-bpo-intra'
 			$prompt_host_color = 'blue'
 			$puppet_server_alias = 'pts-bpo.bud.liferay.com'
-			$puppet_server_hostname = 'bob1.bud.liferay.com'
-			$puppet_server_ip = '192.168.238.11'
+			$puppet_server_hostname = 'puppet.dso.lfr'
+			$puppet_server_ip = '192.168.238.3'
 			$puppet_server_alias = 'pts-bpo.bud.liferay.com'
 			$timezone = 'Europe/Budapest'
 		}
@@ -23,8 +23,8 @@ class pts_location {
 			$location = 'bpo-ci'
 			$prompt_host_color = 'cyan'
 			$puppet_server_alias = 'pts-bpo.bud.liferay.com'
-			$puppet_server_hostname = 'bob1.bud.liferay.com'
-			$puppet_server_ip = '192.168.238.11'
+			$puppet_server_hostname = 'puppet.dso.lfr'
+			$puppet_server_ip = '192.168.238.3'
 			$timezone = 'Europe/Budapest'
 		}
 
