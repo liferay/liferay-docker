@@ -27,6 +27,7 @@ class pts_packages::latest {
 		'gawk',
 		'git',
 		'haveged',
+		'host',
 		'htop',
 		'iotop',
 		'iptables',
