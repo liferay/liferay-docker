@@ -7,6 +7,7 @@ class pts_system {
 	include pts_puppet_agent
 	include pts_schedule
 	include pts_ssh
+	include pts_system::root
 	include pts_timezone
 	include pts_users
 
