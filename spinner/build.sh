@@ -12,7 +12,7 @@ function build_service_antivirus {
 	write "        image: ${antivirus_image}"
 
 	write "        ports:"
-	write "            - \"3310:3310\""
+	write "            - \"${ANTIVIRUS_PORT}:3310\""
 }
 
 function build_service_database {
@@ -262,7 +262,7 @@ function build_service_web_server {
 	write_deploy_section 1G
 
 	write "        ports:"
-	write "            - 127.0.0.1:80:80"
+	write "            - 127.0.0.1:${WEBSERVER_PORT}:80"
 	write "        volumes:"
 	write "            - ./web-server_mount:/lcp-container"
 }
@@ -286,9 +286,11 @@ function build_services {
 function check_usage {
 	lc_check_utils docker
 
+	ANTIVIRUS_PORT=3310
 	DATABASE_IMPORT=
 	DATABASE_PORT=13306
 	LXC_ENVIRONMENT=
+	WEBSERVER_PORT=80
 
 	while [ "${1}" != "" ]
 	do
@@ -314,9 +316,13 @@ function check_usage {
 
 				;;
 			-r)
+				ANTIVIRUS_PORT=$((RANDOM % 100 + 3300))
 				DATABASE_PORT=$((RANDOM % 100 + 13300))
+				WEBSERVER_PORT=$((RANDOM % 100 + 80))
 
+				echo "Antivirus port: ${ANTIVIRUS_PORT}"
 				echo "Database port: ${DATABASE_PORT}"
+				echo "Web Server port: ${WEBSERVER_PORT}"
 
 				;;
 			-s)
@@ -468,7 +474,7 @@ function print_help {
 	echo "    -d (optional): Set the database import file (raw or with a .gz suffix). Virtual hosts will be suffixed with .local (e.g. abc.liferay.com becomes abc.liferay.com.local)."
 	echo "    -m (optional): Enable mod_security on the web server with the rules from OWASP Top 10."
 	echo "    -o (optional): Set directory name where the stack configuration will be created. It will be prefixed with \"env-\"."
-	echo "    -r (optional): Randomize the MySQL port opened on localhost to enable multiple database servers at the same time"
+	echo "    -r (optional): Randomize the MySQL, antivirus and web server ports opened on localhost to enable multiple servers at the same time."
 	echo "    -s (optional): Skip the specified table name in the database import"
 	echo ""
 	echo "The default LXC environment is \"x1e4prd\"."
