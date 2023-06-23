@@ -96,7 +96,7 @@ function build_service_liferay {
 		echo "virtualHostname=\"spinner-test.com\""
 	) >> "liferay_mount/files/osgi/configs/com.liferay.portal.instances.internal.configuration.PortalInstancesConfiguration~spinner-test.com.config"
 
-	for index in {1..2}
+	for index in $(seq 1 $NUM_MAX_CLUSTERS)
 	do
 		local port_last_digit=$((index - 1))
 
@@ -290,6 +290,7 @@ function check_usage {
 	DATABASE_IMPORT=
 	DATABASE_PORT=13306
 	LXC_ENVIRONMENT=
+	NUM_MAX_CLUSTERS=2
 	WEBSERVER_PORT=80
 
 	while [ "${1}" != "" ]
@@ -307,6 +308,12 @@ function check_usage {
 				;;
 			-m)
 				MOD_SECURITY_ENABLED=true
+
+				;;
+			-n)
+				shift
+
+				NUM_MAX_CLUSTERS=${1}
 
 				;;
 			-o)
@@ -473,6 +480,7 @@ function print_help {
 	echo ""
 	echo "    -d (optional): Set the database import file (raw or with a .gz suffix). Virtual hosts will be suffixed with .local (e.g. abc.liferay.com becomes abc.liferay.com.local)."
 	echo "    -m (optional): Enable mod_security on the web server with the rules from OWASP Top 10."
+	echo "    -n (optional): Max number of clusters."
 	echo "    -o (optional): Set directory name where the stack configuration will be created. It will be prefixed with \"env-\"."
 	echo "    -r (optional): Randomize the MySQL, antivirus and web server ports opened on localhost to enable multiple servers at the same time."
 	echo "    -s (optional): Skip the specified table name in the database import"
