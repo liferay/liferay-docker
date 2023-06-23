@@ -1,4 +1,4 @@
-pts_system::root {
+class pts_system::root {
 	file {
 		'/root/.bash_profile':
 			group => root,
