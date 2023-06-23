@@ -21,7 +21,7 @@ export HISTFILESIZE=100000
 export HISTSIZE=100000
 export HISTTIMEFORMAT="%y-%m-%d %T "
 export LC_ALL=en_US.UTF-8
-export PS1="\[${CYAN}\]\h\[${BLUE}\] \w # \[${NOCOLOR}\]"
+export PS1="\[${COLOR_CYAN}\]\h\[${COLOR_BLUE}\] \w # \[${COLOR_NOCOLOR}\]"
 export VISUAL=vim
 
 if [ -f ~/.bash_local ]
