@@ -1,0 +1,16 @@
+services:
+    jenkins:
+        image: ci:latest
+        restart: on-failure
+        volumes:
+            - /opt/docker/jenkins:/var/lib/jenkins
+    proxy:
+        image: nginx:latest
+        ports:
+            - 80:80
+            - 443:443
+        restart: on-failure
+        volumes:
+            - ./narwhalci.orca.liferay.com.conf:/etc/nginx/conf.d/narwhalci.orca.liferay.com.conf
+            - /opt/docker/acme.sh:/acme.sh
+version: '3'
