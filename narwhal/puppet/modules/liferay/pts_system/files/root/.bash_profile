@@ -4,7 +4,7 @@
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias grep='grep --color=auto'
-alias ls='ls --color=auto'
+alias ls='ls --color=auto --show-control-chars -A -F'
 alias pat='puppet agent -t'
 alias pat='puppet agent -t'
 alias pate='puppet agent -t --environment'
