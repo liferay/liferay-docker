@@ -1,9 +1,9 @@
 #!/bin/bash
 
 function generate_reports {
-	
-	mkdir -p "${LIFERAY_HOME}/data/reports"
 	LIFERAY_REPORTS_DIRECTORY="${LIFERAY_HOME}/data/reports"
+
+	mkdir -p "${LIFERAY_REPORTS_DIRECTORY}"
 
 	if (! mysql -V | grep mysql &>/dev/null)
 	then
