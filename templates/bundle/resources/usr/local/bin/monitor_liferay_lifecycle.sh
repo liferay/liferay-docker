@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /usr/local/bin/_liferay_common.sh
+source /usr/local/bin/_liferay_bundle_image_common.sh
 
 function generate_thread_dump {
 	local thread_dump=$(jattach $(cat "${LIFERAY_PID}") threaddump)

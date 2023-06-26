@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /usr/local/bin/_liferay_common.sh
+source /usr/local/bin/_liferay_bundle_image_common.sh
 
 function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."

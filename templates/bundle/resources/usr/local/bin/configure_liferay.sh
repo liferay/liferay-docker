@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /usr/local/bin/_liferay_common.sh
+source /usr/local/bin/_liferay_bundle_image_common.sh
 
 function main {
 	if [ "${LIFERAY_DISABLE_TRIAL_LICENSE}" == "true" ]
