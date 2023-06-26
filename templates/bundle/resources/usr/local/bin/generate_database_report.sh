@@ -11,31 +11,30 @@ function generate_reports {
 	else
 		echo "Generating database status and query reports to ${LIFERAY_REPORTS_DIRECTORY}"
 
-		mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -u ${LCP_SECRET_DATABASE_USER} -p${LCP_SECRET_DATABASE_PASSWORD} -E -e "SHOW ENGINE INNODB STATUS;" > database_status
+		mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -u ${LCP_SECRET_DATABASE_USER} -p${LCP_SECRET_DATABASE_PASSWORD} -E -e "SHOW ENGINE INNODB STATUS;" > ${LIFERAY_REPORTS_DIRECTORY}/database_status_$(date +'%Y-%m-%d_%H-%M-%S').txt
 
-		mv database_status ${LIFERAY_REPORTS_DIRECTORY}/database_status_$(date +'%Y-%m-%d_%H-%M-%S').text
+		(
+			echo "<h1>INNODB_LOCK_WAITS</h1>" > outputfile
+			mysql -D INFORMATION_SCHEMA --connect-timeout=10 -u ${LCP_SECRET_DATABASE_USER} -p${LCP_SECRET_DATABASE_PASSWORD} -H -e "SELECT * FROM INNODB_LOCK_WAITS;"
 
-		echo "<br> <br> <b>INNODB_LOCK_WAITS<b> <br> <br>" > outputfile
-		mysql -D INFORMATION_SCHEMA --connect-timeout=10 -u ${LCP_SECRET_DATABASE_USER} -p${LCP_SECRET_DATABASE_PASSWORD} -H -e "SELECT * FROM INNODB_LOCK_WAITS;" >> outputfile
+			mysql -D INFORMATION_SCHEMA --connect-timeout=10 -u ${LCP_SECRET_DATABASE_USER} -p${LCP_SECRET_DATABASE_PASSWORD} -H -e "SELECT * FROM INNODB_LOCKS WHERE LOCK_TRX_ID IN (SELECT BLOCKING_TRX_ID FROM INNODB_LOCK_WAITS);"
 
-		mysql -D INFORMATION_SCHEMA --connect-timeout=10 -u ${LCP_SECRET_DATABASE_USER} -p${LCP_SECRET_DATABASE_PASSWORD} -H -e "SELECT * FROM INNODB_LOCKS WHERE LOCK_TRX_ID IN (SELECT BLOCKING_TRX_ID FROM INNODB_LOCK_WAITS);" >> outputfile
+			echo "<h1>AVAILABLE VIRTUAL INSTANCES</h1>"
+			mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -H -e "SELECT * FROM VirtualHost;"
 
-		echo "<br> <br> <b>AVAILABLE VIRTUAL INSTANCES<b> <br> <br>" >> outputfile
-		mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -H -e "SELECT * FROM VirtualHost;" >> outputfile
+			echo "<h1>COUNT OF RECORDS ON EACH TABLE</h1>"
+			mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -H -e "SELECT TABLE_NAME, TABLE_ROWS from information_schema.TABLES;"
 
-		echo "<br> <br> <b>COUNT OF RECORDS ON EACH TABLE<b> <br> <br>" >> outputfile
-		mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -H -e "SELECT TABLE_NAME, TABLE_ROWS from information_schema.TABLES;" >> outputfile
+			echo "<h1>DDMTEMPLATE CONTENTS</h1>"
+			mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -H -e "SELECT * FROM DDMTemplate;"
 
-		echo "<br> <br> <b>DDMTEMPLATE CONTENTS<b> <br> <br>" >> outputfile
-		mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -H -e "SELECT * FROM DDMTemplate;" >> outputfile
+			echo "<h1>FRAGMENT SOURCES(HTML, CSS ..)</h1>"
+			mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -H -e "SELECT * FROM FragmentEntryLink;"
 
-		echo "<br> <br> <b>FRAGMENT SOURCES(HTML, CSS ..)<b> <br> <br>" >> outputfile
-		mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -H -e "SELECT * FROM FragmentEntryLink;" >> outputfile
+			echo "<h1>QUARTZ TRIGGERS</h1>"
+			mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -H -e "SELECT * FROM QUARTZ_TRIGGERS;"
 
-		echo "<br> <br> <b>QUARTZ TRIGGERS<b> <br> <br>" >> outputfile
-		mysql -D "$LCP_SECRET_DATABASE_NAME" --connect-timeout=10 -H -e "SELECT * FROM QUARTZ_TRIGGERS;" >> outputfile
-
-		mv outputfile ${LIFERAY_REPORTS_DIRECTORY}/query_report_$(date +'%Y-%m-%d_%H-%M-%S').html
+		) > ${LIFERAY_REPORTS_DIRECTORY}/query_report_$(date +'%Y-%m-%d_%H-%M-%S').html
 
 		echo "Generated database status and query reports to ${LIFERAY_REPORTS_DIRECTORY}"
 	fi
