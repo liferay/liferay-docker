@@ -3,7 +3,7 @@
 source ./_common.sh
 
 function check_usage {
-	if [ ! -n "${LIFERAY_DOCKER_IMAGE_ID}" ] || [ ! -n "${LIFERAY_LOGS_DIR}" ]
+	if [ ! -n "${LIFERAY_DOCKER_IMAGE_ID}" ] || [ ! -n "${LIFERAY_DOCKER_LOGS_DIR}" ]
 	then
 		echo "Usage: ${0}"
 		echo ""
@@ -14,9 +14,9 @@ function check_usage {
 		echo "    LIFERAY_DOCKER_TEST_HOTFIX_URL: URL of the test hotfix to install"
 		echo "    LIFERAY_DOCKER_TEST_INSTALLED_PATCHES: Comma separated list of installed patches (e.g. dxp-4-7210,hotfix-1072-7210)"
 		echo "    LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL: URL of the test Patching Tool to install"
-		echo "    LIFERAY_LOGS_DIR: The path to the logs directory"
+		echo "    LIFERAY_DOCKER_LOGS_DIR: The path to the logs directory"
 		echo ""
-		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2.10.1-sp1-202001171544 LIFERAY_LOGS_DIR=logs-202306270130 ${0}"
+		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2.10.1-sp1-202001171544 LIFERAY_DOCKER_LOGS_DIR=logs-202306270130 ${0}"
 
 		exit 1
 	fi
@@ -135,7 +135,7 @@ function start_container {
 	CONTAINER_HOSTNAME="localhost"
 
 	local network_parameters
-	local logs_dir="${PWD}/${LIFERAY_LOGS_DIR}"
+	local logs_dir="${PWD}/${LIFERAY_DOCKER_LOGS_DIR}"
 	local test_dir="${PWD}/${TEST_DIR}"
 
 	if [ -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
