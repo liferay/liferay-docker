@@ -17,15 +17,15 @@ function build_base_image {
 	echo "Building Docker image Base."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/base.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/base.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Base" >> "${LOGS_DIR}/results"
+		echo "FAILED: Base" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Base" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Base" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -42,15 +42,15 @@ function build_batch_image {
 	echo "Building Docker image Batch."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_batch_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/batch.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_batch_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/batch.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Batch" >> "${LOGS_DIR}/results"
+		echo "FAILED: Batch" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Batch" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Batch" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -81,24 +81,24 @@ function build_bundle_image {
 	echo "Building Docker image ${build_id} based on ${bundle_url}."
 	echo ""
 
-	LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_LATEST=${latest} LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LOGS_DIR}/${build_id}.log"
+	LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_LATEST=${latest} LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LIFERAY_DOCKER_LOGS_DIR}/${build_id}.log"
 
 	local build_bundle_image_exit_code=${PIPESTATUS[0]}
 
 	if [ "${build_bundle_image_exit_code}" -gt 0 ]
 	then
-		echo "FAILED: ${build_id}" >> "${LOGS_DIR}/results"
+		echo "FAILED: ${build_id}" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		if [ "${build_bundle_image_exit_code}" -eq 4 ]
 		then
-			echo "Detected a license failure while building image ${build_id}." > "${LOGS_DIR}/license-failure"
+			echo "Detected a license failure while building image ${build_id}." > "${LIFERAY_DOCKER_LOGS_DIR}/license-failure"
 
 			echo "There is an existing license failure."
 
 			exit 4
 		fi
 	else
-		echo "SUCCESS: ${build_id}" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: ${build_id}" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -175,15 +175,15 @@ function build_caddy_image {
 	echo "Building Docker image Caddy resources."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_caddy_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/caddy.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_caddy_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/caddy.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Caddy" >> "${LOGS_DIR}/results"
+		echo "FAILED: Caddy" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Caddy" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Caddy" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -200,15 +200,15 @@ function build_dynamic_rendering_image {
 	echo "Building Docker image Dynamic Rendering."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/dynamic_rendering.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/dynamic_rendering.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Dynamic Rendering" >> "${LOGS_DIR}/results"
+		echo "FAILED: Dynamic Rendering" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Dynamic Rendering" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Dynamic Rendering" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -225,15 +225,15 @@ function build_jar_runner_image {
 	echo "Building Docker image JAR Runner."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_jar_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jar_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_jar_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/jar_runner.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: JAR Runner" >> "${LOGS_DIR}/results"
+		echo "FAILED: JAR Runner" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: JAR Runner" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: JAR Runner" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -253,15 +253,15 @@ function build_jdk11_image {
 	echo "Building Docker image JDK 11."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_11_AMD64_VERSION=${latest_available_zulu11_amd64_version} LIFERAY_DOCKER_ZULU_11_ARM64_VERSION=${latest_available_zulu11_arm64_version} time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_11_AMD64_VERSION=${latest_available_zulu11_amd64_version} LIFERAY_DOCKER_ZULU_11_ARM64_VERSION=${latest_available_zulu11_arm64_version} time ./build_jdk11_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/jdk11.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: JDK 11" >> "${LOGS_DIR}/results"
+		echo "FAILED: JDK 11" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: JDK 11" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: JDK 11" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -281,15 +281,15 @@ function build_jdk11_jdk8_image {
 	echo "Building Docker image JDK 11/JDK 8."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_8_AMD64_VERSION=${latest_available_zulu8_amd64_version} LIFERAY_DOCKER_ZULU_8_ARM64_VERSION=${latest_available_zulu8_arm64_version} time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/jdk11_jdk8.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_8_AMD64_VERSION=${latest_available_zulu8_amd64_version} LIFERAY_DOCKER_ZULU_8_ARM64_VERSION=${latest_available_zulu8_arm64_version} time ./build_jdk11_jdk8_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/jdk11_jdk8.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: JDK 11/JDK 8" >> "${LOGS_DIR}/results"
+		echo "FAILED: JDK 11/JDK 8" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: JDK 11/JDK 8" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: JDK 11/JDK 8" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -306,15 +306,15 @@ function build_job_runner_image {
 	echo "Building Docker image Job Runner."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/job_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/job_runner.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Job Runner" >> "${LOGS_DIR}/results"
+		echo "FAILED: Job Runner" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Job Runner" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Job Runner" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -331,15 +331,15 @@ function build_node_runner_image {
 	echo "Building Docker image Node Runner."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_node_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/node_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_node_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/node_runner.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Node Runner" >> "${LOGS_DIR}/results"
+		echo "FAILED: Node Runner" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Node Runner" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Node Runner" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -356,15 +356,15 @@ function build_noop_image {
 	echo "Building Docker image NOOP."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_noop_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/noop.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_noop_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/noop.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: NOOP" >> "${LOGS_DIR}/results"
+		echo "FAILED: NOOP" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: NOOP" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: NOOP" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -384,15 +384,15 @@ function build_zabbix_server_image {
 	echo "Building Docker image Zabbix Server."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/zabbix_server.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Zabbix Server" >> "${LOGS_DIR}/results"
+		echo "FAILED: Zabbix Server" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Zabbix Server" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Zabbix Server" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -412,15 +412,15 @@ function build_zabbix_web_image {
 	echo "Building Docker image Zabbix Web."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LOGS_DIR}"/zabbix_server_web_interface.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/zabbix_server_web_interface.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
-		echo "FAILED: Zabbix Web" >> "${LOGS_DIR}/results"
+		echo "FAILED: Zabbix Web" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		exit 1
 	else
-		echo "SUCCESS: Zabbix Web" >> "${LOGS_DIR}/results"
+		echo "SUCCESS: Zabbix Web" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -543,11 +543,11 @@ function main {
 
 	validate_bundles_yml
 
-	LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
+	LIFERAY_DOCKER_LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
 
-	export LIFERAY_DOCKER_LOGS_DIR="${LOGS_DIR}"
+	export LIFERAY_DOCKER_LOGS_DIR="${LIFERAY_DOCKER_LOGS_DIR}"
 
-	mkdir -p "${LOGS_DIR}"
+	mkdir -p "${LIFERAY_DOCKER_LOGS_DIR}"
 
 	build_base_image
 
@@ -569,9 +569,9 @@ function main {
 	echo "Results: "
 	echo ""
 
-	cat "${LOGS_DIR}/results"
+	cat "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
-	if [ $(grep -c "FAILED" "${LOGS_DIR}/results") != 0 ]
+	if [ $(grep -c "FAILED" "${LIFERAY_DOCKER_LOGS_DIR}/results") != 0 ]
 	then
 		exit 1
 	fi
