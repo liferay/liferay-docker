@@ -30,6 +30,14 @@ function clean_up_test_directory {
 	fi
 }
 
+function generate_thread_dump {
+	if [ "${TEST_RESULT}" -eq 1 ]
+	then
+		docker exec -it "${CONTAINER_ID}" /usr/local/bin/generate_thread_dump.sh
+		docker exec -it "${CONTAINER_ID}" cp -r /opt/liferay/data/sre/thread_dumps /mnt/
+	fi
+}
+
 function log_test_failure {
 	TEST_RESULT=1
 
@@ -65,6 +73,8 @@ function main {
 	test_docker_image_patching_tool_updated
 	test_docker_image_scripts_1
 	test_docker_image_scripts_2
+
+	generate_thread_dump
 
 	stop_container
 
