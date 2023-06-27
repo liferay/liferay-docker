@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /usr/local/bin/_liferay_common.sh
+
 function check_usage {
 	lc_check_utils mysql
 
@@ -18,15 +20,15 @@ function generate_reports {
 
 		run_query INFORMATION_SCHEMA "SELECT * FROM INNODB_LOCKS WHERE LOCK_TRX_ID IN (SELECT BLOCKING_TRX_ID FROM INNODB_LOCK_WAITS);"
 
-		run_query "$LCP_SECRET_DATABASE_NAME" "SELECT * FROM VirtualHost;"
+		run_query "${LCP_SECRET_DATABASE_NAME}" "SELECT * FROM VirtualHost;"
 
-		run_query "$LCP_SECRET_DATABASE_NAME" "SELECT TABLE_NAME, TABLE_ROWS from information_schema.TABLES;"
+		run_query "${LCP_SECRET_DATABASE_NAME}" "SELECT TABLE_NAME, TABLE_ROWS from information_schema.TABLES;"
 
-		run_query "$LCP_SECRET_DATABASE_NAME" "SELECT * FROM DDMTemplate;"
+		run_query "${LCP_SECRET_DATABASE_NAME}" "SELECT * FROM DDMTemplate;"
 
-		run_query "$LCP_SECRET_DATABASE_NAME" "SELECT * FROM FragmentEntryLink;"
+		run_query "${LCP_SECRET_DATABASE_NAME}" "SELECT * FROM FragmentEntryLink;"
 
-		run_query "$LCP_SECRET_DATABASE_NAME" "SELECT * FROM QUARTZ_TRIGGERS;"
+		run_query "${LCP_SECRET_DATABASE_NAME}" "SELECT * FROM QUARTZ_TRIGGERS;"
 
 	) > ${LIFERAY_REPORTS_DIRECTORY}/query_report_$(date +'%Y-%m-%d_%H-%M-%S').html
 
