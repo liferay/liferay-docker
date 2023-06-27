@@ -544,6 +544,7 @@ function main {
 	validate_bundles_yml
 
 	LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
+	export LIFERAY_LOGS_DIR="${LOGS_DIR}"
 
 	mkdir -p "${LOGS_DIR}"
 
