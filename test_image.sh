@@ -147,7 +147,7 @@ function start_container {
 		network_parameters="--hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME}"
 	fi
 
-	CONTAINER_ID=$(docker run -d -p 8080 -v "${test_dir}/mnt:/mnt:rw" -v "${logs_dir}:/logs:rw" ${network_parameters} "${LIFERAY_DOCKER_IMAGE_ID}")
+	CONTAINER_ID=$(docker run -d -p 8080 -v "${logs_dir}:/logs:rw" -v "${test_dir}/mnt:/mnt:rw" ${network_parameters} "${LIFERAY_DOCKER_IMAGE_ID}")
 
 	if [ ! -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
