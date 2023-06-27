@@ -35,7 +35,8 @@ function generate_thread_dump {
 	if [ "${TEST_RESULT}" -eq 1 ]
 	then
 		docker exec -it "${CONTAINER_ID}" /usr/local/bin/generate_thread_dump.sh
-		docker exec -it "${CONTAINER_ID}" cp -r /opt/liferay/data/sre/thread_dumps /logs/
+
+		docker exec -it "${CONTAINER_ID}" cp -r /opt/liferay/data/sre/thread_dumps /logs
 	fi
 }
 
