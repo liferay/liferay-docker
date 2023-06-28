@@ -34,9 +34,11 @@ function clean_up_test_directory {
 function generate_thread_dump {
 	if [ "${TEST_RESULT}" -eq 1 ]
 	then
+		local logs_dir="${PWD}/${LIFERAY_DOCKER_LOGS_DIR}"
+
 		docker exec -it "${CONTAINER_ID}" /usr/local/bin/generate_thread_dump.sh
 
-		docker exec -it "${CONTAINER_ID}" cp -r /opt/liferay/data/sre/thread_dumps /logs
+		docker cp "${CONTAINER_ID}":/opt/liferay/data/sre/thread_dumps "${logs_dir}"
 	fi
 }
 
@@ -135,7 +137,6 @@ function start_container {
 
 	CONTAINER_HOSTNAME="localhost"
 
-	local logs_dir="${PWD}/${LIFERAY_DOCKER_LOGS_DIR}"
 	local network_parameters
 	local test_dir="${PWD}/${TEST_DIR}"
 
@@ -149,7 +150,7 @@ function start_container {
 		test_dir="/data/${LIFERAY_DOCKER_NETWORK_NAME}/liferay/liferay-docker/${TEST_DIR}"
 	fi
 
-	CONTAINER_ID=$(docker run -d -p 8080 -v "${logs_dir}:/logs:rw" -v "${test_dir}/mnt:/mnt:rw" ${network_parameters} "${LIFERAY_DOCKER_IMAGE_ID}")
+	CONTAINER_ID=$(docker run -d -p 8080 -v "${test_dir}/mnt:/mnt:rw" ${network_parameters} "${LIFERAY_DOCKER_IMAGE_ID}")
 
 	if [ ! -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
