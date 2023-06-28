@@ -29,14 +29,7 @@ function build_service_database {
 	write "            - MYSQL_USER=dxpcloud"
 	write "        image: mysql:8.0.32"
 	write "        ports:"
-
-	if [ -n "${LOCAL_NETWORK_ENABLED}" ]
-	then
-		write "            - ${DATABASE_PORT}:3306"
-	else
-		write "            - 127.0.0.1:${DATABASE_PORT}:3306"
-	fi
-
+	write "            - ${OPEN_PORT_ON}${DATABASE_PORT}:3306"
 	write "        volumes:"
 	write "            - ./database_import:/docker-entrypoint-initdb.d"
 	write "            - mysql-db:/var/lib/mysql"
@@ -103,7 +96,7 @@ function build_service_liferay {
 		echo "virtualHostname=\"spinner-test.com\""
 	) >> "liferay_mount/files/osgi/configs/com.liferay.portal.instances.internal.configuration.PortalInstancesConfiguration~spinner-test.com.config"
 
-	for index in $(seq 1 $NUMBER_OF_LIFERAY_NODES)
+	for index in {1..${NUMBER_OF_LIFERAY_NODES}}
 	do
 		local port_last_digit=$((index - 1))
 
@@ -141,7 +134,7 @@ function build_service_liferay {
 		write "            - LIFERAY_WORKSPACE_ENVIRONMENT=${LXC_ENVIRONMENT}"
 		write "            - LOCAL_STACK=true"
 		write "            - ORCA_LIFERAY_SEARCH_ADDRESSES=search:9200"
-		
+
 		if [ -n "${LOCAL_NETWORK_ENABLED}" ]
 		then
 			write "            - LIFERAY_VIRTUAL_PERIOD_HOSTS_PERIOD_VALID_PERIOD_HOSTS=*"
@@ -149,16 +142,8 @@ function build_service_liferay {
 
 		write "        hostname: liferay-${index}"
 		write "        ports:"
-
-		if [ -n "${LOCAL_NETWORK_ENABLED}" ]
-		then
-			write "            - 1800${port_last_digit}:8000"
-			write "            - 1808${port_last_digit}:8080"
-		else
-			write "            - 127.0.0.1:1800${port_last_digit}:8000"
-			write "            - 127.0.0.1:1808${port_last_digit}:8080"
-		fi
-
+		write "            - ${OPEN_PORT_ON}1800${port_last_digit}:8000"
+		write "            - ${OPEN_PORT_ON}1808${port_last_digit}:8080"
 		write "        volumes:"
 		write "            - liferay-document-library:/opt/liferay/data"
 		write "            - ./liferay_mount:/mnt/liferay"
@@ -283,14 +268,7 @@ function build_service_web_server {
 	write_deploy_section 1G
 
 	write "        ports:"
-	
-	if [ -n "${LOCAL_NETWORK_ENABLED}" ]
-	then
-		write "            - ${WEB_SERVER_PORT}:80"
-	else
-		write "            - 127.0.0.1:${WEB_SERVER_PORT}:80"
-	fi
-
+	write "            - ${OPEN_PORT_ON}${WEB_SERVER_PORT}:80"
 	write "        volumes:"
 	write "            - ./web-server_mount:/lcp-container"
 }
@@ -319,6 +297,7 @@ function check_usage {
 	DATABASE_PORT=13306
 	LXC_ENVIRONMENT=
 	NUMBER_OF_LIFERAY_NODES=2
+	OPEN_PORT_ON=127.0.0.1:
 	WEB_SERVER_PORT=80
 
 	while [ "${1}" != "" ]
@@ -336,6 +315,7 @@ function check_usage {
 				;;
 			-l)
 				LOCAL_NETWORK_ENABLED=true
+				OPEN_PORT_ON=""
 
 				;;
 			-m)
@@ -511,7 +491,7 @@ function print_help {
 	echo "The script can be configured with the following arguments:"
 	echo ""
 	echo "    -d (optional): Set the database import file (raw or with a .gz suffix). Virtual hosts will be suffixed with .local (e.g. abc.liferay.com becomes abc.liferay.com.local)."
-	echo "    -l (optional): Open it up Liferay for the local network."
+	echo "    -l (optional): Exported ports listen on all network interfaces."
 	echo "    -m (optional): Enable mod_security on the web server with the rules from OWASP Top 10."
 	echo "    -n (optional): Max number of clusters."
 	echo "    -o (optional): Set directory name where the stack configuration will be created. It will be prefixed with \"env-\"."
