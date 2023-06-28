@@ -32,13 +32,11 @@ function clean_up_test_directory {
 }
 
 function generate_thread_dump {
-	if [ "${TEST_RESULT}" -eq 1 ]
+	if [ "${TEST_RESULT}" -gt 0 ]
 	then
-		local logs_dir="${PWD}/${LIFERAY_DOCKER_LOGS_DIR}"
-
 		docker exec -it "${CONTAINER_ID}" /usr/local/bin/generate_thread_dump.sh
 
-		docker cp "${CONTAINER_ID}":/opt/liferay/data/sre/thread_dumps "${logs_dir}"
+		docker cp "${CONTAINER_ID}":/opt/liferay/data/sre/thread_dumps "${PWD}/${LIFERAY_DOCKER_LOGS_DIR}"
 	fi
 }
 
