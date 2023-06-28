@@ -103,7 +103,7 @@ function build_service_liferay {
 		echo "virtualHostname=\"spinner-test.com\""
 	) >> "liferay_mount/files/osgi/configs/com.liferay.portal.instances.internal.configuration.PortalInstancesConfiguration~spinner-test.com.config"
 
-	for index in $(seq 1 $NUM_MAX_CLUSTERS)
+	for index in $(seq 1 $NUMBER_OF_LIFERAY_NODES)
 	do
 		local port_last_digit=$((index - 1))
 
@@ -286,9 +286,9 @@ function build_service_web_server {
 	
 	if [ -n "${LOCAL_NETWORK_ENABLED}" ]
 	then
-		write "            - ${WEBSERVER_PORT}:80"
+		write "            - ${WEB_SERVER_PORT}:80"
 	else
-		write "            - 127.0.0.1:${WEBSERVER_PORT}:80"
+		write "            - 127.0.0.1:${WEB_SERVER_PORT}:80"
 	fi
 
 	write "        volumes:"
@@ -318,8 +318,8 @@ function check_usage {
 	DATABASE_IMPORT=
 	DATABASE_PORT=13306
 	LXC_ENVIRONMENT=
-	NUM_MAX_CLUSTERS=2
-	WEBSERVER_PORT=80
+	NUMBER_OF_LIFERAY_NODES=2
+	WEB_SERVER_PORT=80
 
 	while [ "${1}" != "" ]
 	do
@@ -345,7 +345,7 @@ function check_usage {
 			-n)
 				shift
 
-				NUM_MAX_CLUSTERS=${1}
+				NUMBER_OF_LIFERAY_NODES=${1}
 
 				;;
 			-o)
@@ -357,11 +357,11 @@ function check_usage {
 			-r)
 				ANTIVIRUS_PORT=$((RANDOM % 100 + 3300))
 				DATABASE_PORT=$((RANDOM % 100 + 13300))
-				WEBSERVER_PORT=$((RANDOM % 100 + 80))
+				WEB_SERVER_PORT=$((RANDOM % 100 + 80))
 
 				echo "Antivirus port: ${ANTIVIRUS_PORT}"
 				echo "Database port: ${DATABASE_PORT}"
-				echo "Web Server port: ${WEBSERVER_PORT}"
+				echo "Web Server port: ${WEB_SERVER_PORT}"
 
 				;;
 			-s)
