@@ -96,7 +96,7 @@ function build_service_liferay {
 		echo "virtualHostname=\"spinner-test.com\""
 	) >> "liferay_mount/files/osgi/configs/com.liferay.portal.instances.internal.configuration.PortalInstancesConfiguration~spinner-test.com.config"
 
-	for index in {1..${NUMBER_OF_LIFERAY_NODES}}
+	for index in $(seq 1 ${NUMBER_OF_LIFERAY_NODES})
 	do
 		local port_last_digit=$((index - 1))
 
