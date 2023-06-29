@@ -130,12 +130,7 @@ function build_service_liferay {
 		write "            - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.7.4/mariadb-java-client-2.7.4.jar"
 		write "            - LIFERAY_UPGRADE_ENABLED=false"
 		write "            - LIFERAY_USERS_PERIOD_REMINDER_PERIOD_QUERIES_PERIOD_ENABLED=false"
-
-		if [ -n "${LOCAL_NETWORK_ENABLED}" ]
-		then
-			write "            - LIFERAY_VIRTUAL_PERIOD_HOSTS_PERIOD_VALID_PERIOD_HOSTS=*"
-		fi
-
+		write "            - LIFERAY_VIRTUAL_PERIOD_HOSTS_PERIOD_VALID_PERIOD_HOSTS=*"
 		write "            - LIFERAY_WEB_PERIOD_SERVER_PERIOD_PROTOCOL=http"
 		write "            - LIFERAY_WORKSPACE_ENVIRONMENT=${LXC_ENVIRONMENT}"
 		write "            - LOCAL_STACK=true"
@@ -314,7 +309,6 @@ function check_usage {
 
 				;;
 			-l)
-				LOCAL_NETWORK_ENABLED=true
 				OPEN_PORT_ON=""
 
 				;;
