@@ -129,8 +129,7 @@ function create_documentation {
 
 	writeln "{"
 	writeln "    \"patch\": {"
-	writeln "        \"built-for\": \"TBD\","
-	writeln "        \"id\": \"${NARWHAL_BUILD_ID}\","
+	writeln "        \"id\": \"${NARWHAL_BUILD_ID}\""
 	writeln "    },"
 	writeln "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
 	writeln "    \"build\": {"
@@ -185,8 +184,9 @@ function create_documentation {
 			else
 				writeln ","
 			fi
-
-			write "        \"file\": \"${file}\""
+			writeln "        {"
+			writeln "            \"path\": \"${file}\""
+			write "        }"
 		done < "${BUILD_DIR}"/hotfix/removed_files
 
 		writeln ""
