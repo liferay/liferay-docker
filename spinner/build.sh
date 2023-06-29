@@ -29,7 +29,7 @@ function build_service_database {
 	write "            - MYSQL_USER=dxpcloud"
 	write "        image: mysql:8.0.32"
 	write "        ports:"
-	write "            - ${OPEN_PORT_ON}${DATABASE_PORT}:3306"
+	write "            - ${CONTAINER_PORT_IP}${DATABASE_PORT}:3306"
 	write "        volumes:"
 	write "            - ./database_import:/docker-entrypoint-initdb.d"
 	write "            - mysql-db:/var/lib/mysql"
@@ -137,8 +137,8 @@ function build_service_liferay {
 		write "            - ORCA_LIFERAY_SEARCH_ADDRESSES=search:9200"
 		write "        hostname: liferay-${index}"
 		write "        ports:"
-		write "            - ${OPEN_PORT_ON}1800${port_last_digit}:8000"
-		write "            - ${OPEN_PORT_ON}1808${port_last_digit}:8080"
+		write "            - ${CONTAINER_PORT_IP}1800${port_last_digit}:8000"
+		write "            - ${CONTAINER_PORT_IP}1808${port_last_digit}:8080"
 		write "        volumes:"
 		write "            - liferay-document-library:/opt/liferay/data"
 		write "            - ./liferay_mount:/mnt/liferay"
@@ -263,7 +263,7 @@ function build_service_web_server {
 	write_deploy_section 1G
 
 	write "        ports:"
-	write "            - ${OPEN_PORT_ON}${WEB_SERVER_PORT}:80"
+	write "            - ${CONTAINER_PORT_IP}${WEB_SERVER_PORT}:80"
 	write "        volumes:"
 	write "            - ./web-server_mount:/lcp-container"
 }
@@ -288,11 +288,11 @@ function check_usage {
 	lc_check_utils docker
 
 	ANTIVIRUS_PORT=3310
+	CONTAINER_PORT_IP=127.0.0.1:
 	DATABASE_IMPORT=
 	DATABASE_PORT=13306
 	LXC_ENVIRONMENT=
 	NUMBER_OF_LIFERAY_NODES=2
-	OPEN_PORT_ON=127.0.0.1:
 	WEB_SERVER_PORT=80
 
 	while [ "${1}" != "" ]
@@ -309,7 +309,7 @@ function check_usage {
 
 				;;
 			-l)
-				OPEN_PORT_ON=""
+				CONTAINER_PORT_IP=""
 
 				;;
 			-m)
