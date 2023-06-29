@@ -485,7 +485,7 @@ function print_help {
 	echo "The script can be configured with the following arguments:"
 	echo ""
 	echo "    -d (optional): Set the database import file (raw or with a .gz suffix). Virtual hosts will be suffixed with .local (e.g. abc.liferay.com becomes abc.liferay.com.local)."
-	echo "    -l (optional): Exported ports listen on all network interfaces."
+	echo "    -l (optional): Exported ports listen on all network interfaces"
 	echo "    -m (optional): Enable mod_security on the web server with the rules from OWASP Top 10"
 	echo "    -n (optional): Number of Liferay nodes"
 	echo "    -o (optional): Set directory name where the stack configuration will be created. It will be prefixed with \"env-\"."
