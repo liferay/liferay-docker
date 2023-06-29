@@ -130,16 +130,16 @@ function build_service_liferay {
 		write "            - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.7.4/mariadb-java-client-2.7.4.jar"
 		write "            - LIFERAY_UPGRADE_ENABLED=false"
 		write "            - LIFERAY_USERS_PERIOD_REMINDER_PERIOD_QUERIES_PERIOD_ENABLED=false"
-		write "            - LIFERAY_WEB_PERIOD_SERVER_PERIOD_PROTOCOL=http"
-		write "            - LIFERAY_WORKSPACE_ENVIRONMENT=${LXC_ENVIRONMENT}"
-		write "            - LOCAL_STACK=true"
-		write "            - ORCA_LIFERAY_SEARCH_ADDRESSES=search:9200"
 
 		if [ -n "${LOCAL_NETWORK_ENABLED}" ]
 		then
 			write "            - LIFERAY_VIRTUAL_PERIOD_HOSTS_PERIOD_VALID_PERIOD_HOSTS=*"
 		fi
 
+		write "            - LIFERAY_WEB_PERIOD_SERVER_PERIOD_PROTOCOL=http"
+		write "            - LIFERAY_WORKSPACE_ENVIRONMENT=${LXC_ENVIRONMENT}"
+		write "            - LOCAL_STACK=true"
+		write "            - ORCA_LIFERAY_SEARCH_ADDRESSES=search:9200"
 		write "        hostname: liferay-${index}"
 		write "        ports:"
 		write "            - ${OPEN_PORT_ON}1800${port_last_digit}:8000"
