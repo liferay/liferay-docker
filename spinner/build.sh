@@ -29,7 +29,7 @@ function build_service_database {
 	write "            - MYSQL_USER=dxpcloud"
 	write "        image: mysql:8.0.32"
 	write "        ports:"
-	write "            - ${DATABASE_PORT}:3306"
+	write "            - ${OPEN_PORT_ON}${DATABASE_PORT}:3306"
 	write "        volumes:"
 	write "            - ./database_import:/docker-entrypoint-initdb.d"
 	write "            - mysql-db:/var/lib/mysql"
@@ -130,15 +130,20 @@ function build_service_liferay {
 		write "            - LIFERAY_SETUP_PERIOD_DATABASE_PERIOD_JAR_PERIOD_URL_OPENBRACKET_COM_PERIOD_MYSQL_PERIOD_CJ_PERIOD_JDBC_PERIOD__UPPERCASED_RIVER_CLOSEBRACKET_=https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.7.4/mariadb-java-client-2.7.4.jar"
 		write "            - LIFERAY_UPGRADE_ENABLED=false"
 		write "            - LIFERAY_USERS_PERIOD_REMINDER_PERIOD_QUERIES_PERIOD_ENABLED=false"
-		write "            - LIFERAY_VIRTUAL_PERIOD_HOSTS_PERIOD_VALID_PERIOD_HOSTS=*"
+
+		if [ -n "${LOCAL_NETWORK_ENABLED}" ]
+		then
+			write "            - LIFERAY_VIRTUAL_PERIOD_HOSTS_PERIOD_VALID_PERIOD_HOSTS=*"
+		fi
+
 		write "            - LIFERAY_WEB_PERIOD_SERVER_PERIOD_PROTOCOL=http"
 		write "            - LIFERAY_WORKSPACE_ENVIRONMENT=${LXC_ENVIRONMENT}"
 		write "            - LOCAL_STACK=true"
 		write "            - ORCA_LIFERAY_SEARCH_ADDRESSES=search:9200"
 		write "        hostname: liferay-${index}"
 		write "        ports:"
-		write "            - 1800${port_last_digit}:8000"
-		write "            - 1808${port_last_digit}:8080"
+		write "            - ${OPEN_PORT_ON}1800${port_last_digit}:8000"
+		write "            - ${OPEN_PORT_ON}1808${port_last_digit}:8080"
 		write "        volumes:"
 		write "            - liferay-document-library:/opt/liferay/data"
 		write "            - ./liferay_mount:/mnt/liferay"
@@ -263,7 +268,7 @@ function build_service_web_server {
 	write_deploy_section 1G
 
 	write "        ports:"
-	write "            - ${WEB_SERVER_PORT}:80"
+	write "            - ${OPEN_PORT_ON}${WEB_SERVER_PORT}:80"
 	write "        volumes:"
 	write "            - ./web-server_mount:/lcp-container"
 }
@@ -292,6 +297,7 @@ function check_usage {
 	DATABASE_PORT=13306
 	LXC_ENVIRONMENT=
 	NUMBER_OF_LIFERAY_NODES=2
+	OPEN_PORT_ON=127.0.0.1:
 	WEB_SERVER_PORT=80
 
 	while [ "${1}" != "" ]
@@ -305,6 +311,11 @@ function check_usage {
 				;;
 			-h)
 				print_help
+
+				;;
+			-l)
+				LOCAL_NETWORK_ENABLED=true
+				OPEN_PORT_ON=""
 
 				;;
 			-m)
@@ -480,6 +491,7 @@ function print_help {
 	echo "The script can be configured with the following arguments:"
 	echo ""
 	echo "    -d (optional): Set the database import file (raw or with a .gz suffix). Virtual hosts will be suffixed with .local (e.g. abc.liferay.com becomes abc.liferay.com.local)."
+	echo "    -l (optional): Exported ports listen on all network interfaces."
 	echo "    -m (optional): Enable mod_security on the web server with the rules from OWASP Top 10"
 	echo "    -n (optional): Number of Liferay nodes"
 	echo "    -o (optional): Set directory name where the stack configuration will be created. It will be prefixed with \"env-\"."
