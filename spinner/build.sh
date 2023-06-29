@@ -495,7 +495,7 @@ function print_help {
 	echo "    -m (optional): Enable mod_security on the web server with the rules from OWASP Top 10."
 	echo "    -n (optional): Max number of clusters."
 	echo "    -o (optional): Set directory name where the stack configuration will be created. It will be prefixed with \"env-\"."
-	echo "    -r (optional): Randomize the MySQL, antivirus and web server ports opened on localhost to enable multiple servers at the same time."
+	echo "    -r (optional): Randomize the antivirus, MySQL, and web server ports opened on localhost to enable multiple servers at the same time."
 	echo "    -s (optional): Skip the specified table name in the database import"
 	echo ""
 	echo "The default LXC environment is \"x1e4prd\"."
