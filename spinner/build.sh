@@ -341,7 +341,7 @@ function check_usage {
 
 				echo "Antivirus port: ${ANTIVIRUS_PORT}"
 				echo "Database port: ${DATABASE_PORT}"
-				echo "Web Server port: ${WEB_SERVER_PORT}"
+				echo "Web server port: ${WEB_SERVER_PORT}"
 
 				;;
 			-s)
