@@ -135,6 +135,8 @@ function build_service_liferay {
 		write "            - LIFERAY_WORKSPACE_ENVIRONMENT=${LXC_ENVIRONMENT}"
 		write "            - LOCAL_STACK=true"
 		write "            - ORCA_LIFERAY_SEARCH_ADDRESSES=search:9200"
+		write "        extra_hosts:"
+		write "            - host.docker.internal:host-gateway"
 		write "        hostname: liferay-${index}"
 		write "        ports:"
 		write "            - ${CONTAINER_PORT_IP}1800${port_last_digit}:8000"
