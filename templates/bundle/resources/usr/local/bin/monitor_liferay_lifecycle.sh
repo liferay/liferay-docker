@@ -11,6 +11,8 @@ function generate_thread_dump {
 
 	echo -e "${thread_dump}" > "${file_name}"
 
+	echo '"{'$(cat "${file_name}")'"}' > /proc/1/fd/1
+
 	lecho "Generated a thread dump at ${file_name}."
 }
 
