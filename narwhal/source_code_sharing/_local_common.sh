@@ -11,12 +11,6 @@ BASE_DIR="${PWD}"
 REPO_PATH_DXP="${BASE_DIR}/liferay-dxp"
 REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
 
-TAGS_FILE_DXP="/tmp/tags_file_dxp.txt"
-TAGS_FILE_EE="/tmp/tags_file_ee.txt"
-TAGS_FILE_NEW="/tmp/tags_file_new.txt"
-
-VERSION="${1}"
-
 function checkout_branch {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
@@ -37,7 +31,7 @@ function checkout_branch {
 	fi
 }
 
-function checkout_tag {
+function checkout_tag_simple {
 	lc_cd "${BASE_DIR}/${1}"
 
 	git checkout "${2}"
@@ -62,7 +56,61 @@ function clone_repository {
 	git clone "git@github.com:liferay/${1}"
 }
 
+function download_to_cache {
+	local file_url=${1}
+
+	if [ -z "${file_url}" ]
+	then
+		lc_log ERROR "File URL is not set."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local file_name=${2}
+
+	if [ -z "${file_name}" ]
+	then
+		file_name=${file_url##*/}
+	fi
+
+	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
+
+	if [ -e "${cache_file}" ]
+	then
+		lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
+
+		return
+	fi
+
+	local dir_cache_file
+	dir_cache_file=$(dirname "${cache_file}")
+
+	mkdir -p "${dir_cache_file}"
+
+	lc_log DEBUG "Downloading ${file_url}."
+
+	local current_date
+	current_date=$(lc_date)
+
+	local timestamp
+	timestamp=$(lc_date "${current_date}" "+%Y%m%d%H%M%S")
+
+	if (! curl "${file_url}" --fail --output "${cache_file}.temp${timestamp}" --silent)
+	then
+		lc_log ERROR "Unable to download ${file_url}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	else
+		mv "${cache_file}.temp${timestamp}" "${cache_file}"
+	fi
+}
+
 function fetch_repository {
+	if [ "${RUN_FETCH_REPOSITORY}" != "yes" ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	lc_cd "${BASE_DIR}/${1}"
 
 	git fetch --all
@@ -87,7 +135,7 @@ function run_git_maintenance {
 }
 
 function get_all_tags {
-	git tag -l --sort=creatordate --format='%(refname:short)' "7.[0-9].1[03]-u[0-9]*"
+	git tag -l --sort=creatordate --format='%(refname:short)' "${VERSION}"
 }
 
 function get_new_tags {
@@ -137,33 +185,3 @@ function push_to_origin {
 function run_rsync {
 	rsync -ar --delete --exclude '.git' "${REPO_PATH_EE}/" "${REPO_PATH_DXP}/"
 }
-
-function main {
-	LIFERAY_COMMON_LOG_DIR=logs
-
-	lc_time_run clone_repository liferay-dxp
-
-	lc_time_run clone_repository liferay-portal-ee
-
-	lc_time_run fetch_repository liferay-dxp
-
-	lc_time_run fetch_repository liferay-portal-ee
-
-	lc_time_run get_new_tags
-
-	for branch in $(cat "${TAGS_FILE_NEW}" | sed -e "s/-u.*//" | sort -nu)
-	do
-		for update in $(cat "${TAGS_FILE_NEW}" | grep "^${branch}" | sed -e "s/.*-u//" | sort -n)
-		do
-			lc_time_run checkout_branch liferay-dxp "${branch}"
-
-			copy_tag "${branch}-u${update}"
-
-			lc_time_run push_to_origin "${branch}-u${update}"
-
-			lc_time_run push_to_origin "${branch}"
-		done
-	done
-}
-
-main "${@}"
