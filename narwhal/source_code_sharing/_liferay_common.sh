@@ -111,7 +111,10 @@ function lc_download {
 		return
 	fi
 
-	mkdir -p $(dirname "${cache_file}")
+	local cache_file_dir
+	cache_file_dir="$(dirname "${cache_file}")"
+
+	mkdir -p "${cache_file_dir}"
 
 	lc_log DEBUG "Downloading ${file_url}."
 
