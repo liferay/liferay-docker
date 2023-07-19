@@ -92,12 +92,6 @@ function checkout_tag_dxp {
 	git checkout -f -q "${tag_name_base}"
 }
 
-function checkout_tag_ee {
-	lc_cd "${BASE_DIR}/${1}"
-
-	git checkout -f -q "${2}"
-}
-
 function copy_hotfix_commit {
 	local commit_hash="${1}"
 	local tag_name_base="${2}"
@@ -112,7 +106,7 @@ function copy_hotfix_commit {
 		lc_log DEBUG "No '${tag_name_new}' tag exists in 'liferay-dxp'"
 	fi
 
-	lc_time_run checkout_tag_ee liferay-portal-ee "${commit_hash}"
+	lc_time_run checkout_tag_simple liferay-portal-ee "${commit_hash}"
 
 	lc_time_run checkout_tag_dxp liferay-dxp "${tag_name_base}"
 
@@ -188,7 +182,7 @@ function get_hotfix_properties {
 	local tmp_json
 	tmp_json=$(mktemp "/tmp/json.XXX")
 
-	unzip -p "${1}" fixpack_documentation.json | tee "${tmp_json}" > /dev/null
+	unzip -p "${1}" fixpack_documentation.json > "${tmp_json}"
 
 	GIT_REVISION=$(jq -r '.build."git-revision"' "${tmp_json}")
 	PATCH_NAME=$(jq -r '.patch."name"' "${tmp_json}")
@@ -228,7 +222,7 @@ function get_hotfix_zip_list_file {
 	else
 		lc_log DEBUG "Downloading the zip list file: '${zip_list_file}'"
 
-		curl --fail --show-error --silent "${ZIP_LIST_URL}/${release_version}/hotfix/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq | tee "${zip_list_file}" > /dev/null
+		curl --fail --show-error --silent "${ZIP_LIST_URL}/${release_version}/hotfix/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq > "${zip_list_file}"
 	fi
 }
 
