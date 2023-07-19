@@ -462,7 +462,28 @@ function prepare_database_import {
 	echo ""
 	echo "Adding 10_after_import.sql to make changes to the database. Review them before starting the container."
 
-	echo "update VirtualHost SET hostname=concat(hostname, \".local\");" > 10_after_import.sql
+	(
+		echo "USE lportal;"
+		echo "UPDATE VirtualHost SET hostname=concat(hostname, \".local\");"
+		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.ldap.%';"
+		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.saml.%';"
+		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.sso.openid.%';"
+
+		grep "^CREATE DATABASE" 01_database.sql | sed -e 's/.*`\(.*\)`.*/\1/' | while IFS= read -r schema
+		do
+			echo "USE ${schema};"
+			echo "UPDATE User_ set password_ ='liferaydevsecops', passwordEncrypted=0;"
+			echo "TRUNCATE TABLE OpenIdConnectSession;"
+			echo "TRUNCATE TABLE SamlIdpSpConnection;"
+			echo "TRUNCATE TABLE SamlIdpSpSession;"
+			echo "TRUNCATE TABLE SamlIdpSsoSession;"
+			echo "TRUNCATE TABLE SamlPeerBinding;"
+			echo "TRUNCATE TABLE SamlSpAuthRequest;"
+			echo "TRUNCATE TABLE SamlSpIdpConnection;"
+			echo "TRUNCATE TABLE SamlSpMessage;"
+			echo "TRUNCATE TABLE SamlSpSession;"
+		done
+	) > 10_after_import.sql
 }
 
 function print_docker_compose_usage {
