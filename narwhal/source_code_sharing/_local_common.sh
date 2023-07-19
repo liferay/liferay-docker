@@ -57,6 +57,8 @@ function clone_repository {
 }
 
 function download_to_cache {
+	# FIXME: lc_download should be devided to this one and a copy function
+
 	local file_url=${1}
 
 	if [ -z "${file_url}" ]
@@ -134,33 +136,6 @@ function run_git_maintenance {
 	fi
 }
 
-function get_all_tags {
-	git tag -l --sort=creatordate --format='%(refname:short)' "${VERSION}"
-}
-
-function get_new_tags {
-	lc_cd "${REPO_PATH_EE}"
-
-	get_all_tags > "${TAGS_FILE_EE}"
-
-	lc_cd "${REPO_PATH_DXP}"
-
-	get_all_tags > "${TAGS_FILE_DXP}"
-
-	local tag_name
-
-	rm -f "${TAGS_FILE_NEW}"
-
-	# shellcheck disable=SC2013
-	for tag_name in $(cat "${TAGS_FILE_EE}")
-	do
-		if (! grep -qw "${tag_name}" "${TAGS_FILE_DXP}")
-		then
-			echo "${tag_name}" >> "${TAGS_FILE_NEW}"
-		fi
-	done
-}
-
 function copy_tag {
 	local tag_name="${1}"
 
@@ -177,6 +152,11 @@ function copy_tag {
 
 
 function push_to_origin {
+	if [ "${RUN_PUSH_TO_ORIGIN}" != "yes" ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	lc_cd "${REPO_PATH_DXP}"
 
 	git push -q origin "${1}"
