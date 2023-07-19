@@ -40,30 +40,26 @@ function check_usage {
 				;;
 
 			-l|--logdir)
-				LIFERAY_COMMON_LOG_DIR="${1}"
+				LIFERAY_COMMON_LOG_DIR="${2}"
 
-				shift 2
+				shift 1
 
 				;;
 
 			-v|--version)
-				VERSION_INPUT="${1}"
+				VERSION_INPUT="${2}"
 
-				shift 2
+				shift 1
 
 				;;
 
 			--no-fetch)
 				RUN_FETCH_REPOSITORY="no"
 
-				shift 1
-
 				;;
 
 			--no-push)
 				RUN_PUSH_TO_ORIGIN="no"
-
-				shift 1
 
 				;;
 
@@ -131,7 +127,7 @@ function get_new_tags {
 function copy_tag {
 	local tag_name="${1}"
 
-	lc_time_run checkout_tag liferay-portal-ee "${tag_name}"
+	lc_time_run checkout_tag_simple liferay-portal-ee "${tag_name}"
 
 	lc_cd "${REPO_PATH_DXP}"
 
@@ -187,7 +183,7 @@ function main {
 
 	check_new_tags
 
-	for branch in $(cat "${TAGS_FILE_NEW}" | sed -e "s/-.*//")
+	for branch in $(cat "${TAGS_FILE_NEW}" | sed -e "s/-.*//" | sort -nu)
 	do
 		for update in $(cat "${TAGS_FILE_NEW}" | grep "^${branch}" | sed -e "s/.*-//")
 		do
