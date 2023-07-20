@@ -5,7 +5,7 @@ services:
         volumes:
             - /opt/docker/jenkins:/var/lib/jenkins
     proxy:
-        image: nginx:latest
+        image: nginx:stable
         ports:
             - 80:80
             - 443:443
