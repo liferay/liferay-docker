@@ -466,8 +466,8 @@ function prepare_database_import {
 		echo "USE lportal;"
 		echo "UPDATE VirtualHost SET hostname=concat(hostname, \".local\");"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.ldap.%';"
-		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.saml.%';"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.sso.openid.%';"
+		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.saml.%';"
 
 		grep "^CREATE DATABASE" 01_database.sql | sed -e 's/.*`\(.*\)`.*/\1/' | while IFS= read -r schema
 		do
