@@ -464,15 +464,17 @@ function prepare_database_import {
 
 	(
 		echo "USE lportal;"
-		echo "UPDATE VirtualHost SET hostname=concat(hostname, \".local\");"
+		echo ""
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.ldap.%';"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.sso.openid.%';"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.saml.%';"
+		echo ""
+		echo "UPDATE VirtualHost SET hostname=concat(hostname, \".local\");"
 
 		grep "^CREATE DATABASE" 01_database.sql | sed -e 's/.*`\(.*\)`.*/\1/' | while IFS= read -r schema
 		do
 			echo "USE ${schema};"
-			echo "UPDATE User_ set password_ ='liferaydevsecops', passwordEncrypted=0;"
+			echo ""
 			echo "TRUNCATE TABLE OpenIdConnectSession;"
 			echo "TRUNCATE TABLE SamlIdpSpConnection;"
 			echo "TRUNCATE TABLE SamlIdpSpSession;"
@@ -482,6 +484,8 @@ function prepare_database_import {
 			echo "TRUNCATE TABLE SamlSpIdpConnection;"
 			echo "TRUNCATE TABLE SamlSpMessage;"
 			echo "TRUNCATE TABLE SamlSpSession;"
+			echo ""
+			echo "UPDATE User_ set password_ ='liferaydevsecops', passwordEncrypted=0;"
 		done
 	) > 10_after_import.sql
 }
