@@ -115,6 +115,8 @@ function copy_hotfix_commit {
 	lc_time_run run_rsync
 
 	lc_time_run commit_and_tag "${tag_name_new}"
+
+	lc_time_run push_to_origin "${tag_name_new}"
 }
 
 function download_to_cache {
