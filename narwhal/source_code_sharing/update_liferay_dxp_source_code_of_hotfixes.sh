@@ -106,6 +106,8 @@ function copy_hotfix_commit {
 		lc_log DEBUG "No '${tag_name_new}' tag exists in 'liferay-dxp'"
 	fi
 
+	echo ""
+
 	lc_time_run checkout_tag_simple liferay-portal-ee "${commit_hash}"
 
 	lc_time_run checkout_tag_dxp liferay-dxp "${tag_name_base}"
