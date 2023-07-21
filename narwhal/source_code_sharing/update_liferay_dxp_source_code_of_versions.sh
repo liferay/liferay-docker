@@ -187,8 +187,10 @@ function main {
 	do
 		for update in $(cat "${TAGS_FILE_NEW}" | grep "^${branch}" | sed -e "s/.*-//")
 		do
-			echo ""
-			echo "Processing: ${branch}-${update}"
+			lc_log DEBUG ""
+
+			lc_log DEBUG "Processing: ${branch}-${update}"
+
 			lc_time_run checkout_branch liferay-dxp "${branch}"
 
 			copy_tag "${branch}-${update}"
