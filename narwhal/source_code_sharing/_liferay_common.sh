@@ -194,7 +194,7 @@ function lc_time_run {
 
 	echo "$(lc_date) > ${*}"
 
-	if [ -z "${LIFERAY_COMMON_DEBUG_ENABLED}" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
+	if [ "${LIFERAY_COMMON_DEBUG_ENABLED}" != "yes" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
 	then
 		"${@}" &> "${log_file}"
 	else
@@ -215,7 +215,7 @@ function lc_time_run {
 		then
 			echo -e "$(lc_date) ! ${*} exited with \e[1;31merror\e[0m in $(lc_echo_time ${seconds}) (exit code: ${exit_code})."
 
-			if [ -z "${LIFERAY_COMMON_DEBUG_ENABLED}" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
+			if [ "${LIFERAY_COMMON_DEBUG_ENABLED}" != "yes" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
 			then
 				echo "Full log file is at ${log_file}. Printing the last 100 lines:"
 
