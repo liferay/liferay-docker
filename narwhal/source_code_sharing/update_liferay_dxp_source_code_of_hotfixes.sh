@@ -106,8 +106,6 @@ function copy_hotfix_commit {
 		lc_log DEBUG "No '${tag_name_new}' tag exists in 'liferay-dxp'"
 	fi
 
-	echo ""
-
 	lc_time_run checkout_tag_simple liferay-portal-ee "${commit_hash}"
 
 	lc_time_run checkout_tag_dxp liferay-dxp "${tag_name_base}"
@@ -119,6 +117,8 @@ function copy_hotfix_commit {
 	lc_time_run commit_and_tag "${tag_name_new}"
 
 	lc_time_run push_to_origin "${tag_name_new}"
+
+	echo ""
 }
 
 function download_to_cache {
@@ -310,7 +310,7 @@ function process_zip_list_file {
 	do
 		lc_log DEBUG "Processing ${hotfix_zip_file}"
 
-		get_file_hotfix_zip "${release_version}" "${hotfix_zip_file}"
+		lc_time_run get_file_hotfix_zip "${release_version}" "${hotfix_zip_file}"
 
 		if get_hotfix_properties "${cache_file}"
 		then
