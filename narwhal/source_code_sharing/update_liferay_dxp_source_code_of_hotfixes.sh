@@ -106,7 +106,17 @@ function copy_hotfix_commit {
 		lc_log DEBUG "No '${tag_name_new}' tag exists in 'liferay-dxp'"
 	fi
 
-	lc_time_run checkout_tag_simple liferay-portal-ee "${commit_hash}"
+	lc_time_run checkout_commit liferay-portal-ee "${commit_hash}"
+
+	return_code="${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+
+	if [ "${return_code}" == "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+	then
+		echo "The commit '${commit_hash}' is missing in the repository 'liferay-portal-ee'."
+		echo ""
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 
 	lc_time_run checkout_tag_dxp liferay-dxp "${tag_name_base}"
 

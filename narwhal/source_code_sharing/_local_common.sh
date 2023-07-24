@@ -31,10 +31,27 @@ function checkout_branch {
 	fi
 }
 
-function checkout_tag_simple {
+function checkout_commit {
+	repository="${1}"
+	commit_hash="${2}"
+
 	lc_cd "${BASE_DIR}/${1}"
 
-	git checkout "${2}"
+	if git cat-file -e "${commit_hash}"
+	then
+		git checkout "${2}"
+	else
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+}
+
+function checkout_tag_simple {
+	repository="${1}"
+	tag_name="${2}"
+
+	lc_cd "${BASE_DIR}/${repository}"
+
+	git checkout "${tag_name}"
 }
 
 function commit_and_tag {
