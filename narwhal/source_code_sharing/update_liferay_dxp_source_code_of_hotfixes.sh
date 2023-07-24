@@ -108,11 +108,9 @@ function copy_hotfix_commit {
 
 	lc_time_run checkout_commit liferay-portal-ee "${commit_hash}"
 
-	return_code="${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-
 	if [ "${return_code}" == "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 	then
-		echo "The commit '${commit_hash}' is missing in the repository 'liferay-portal-ee'."
+		lc_log INFO "The commit '${commit_hash}' is missing in the repository 'liferay-portal-ee'."
 		echo ""
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
@@ -320,7 +318,7 @@ function process_zip_list_file {
 	do
 		lc_log DEBUG "Processing ${hotfix_zip_file}"
 
-		lc_time_run get_file_hotfix_zip "${release_version}" "${hotfix_zip_file}"
+		get_file_hotfix_zip "${release_version}" "${hotfix_zip_file}"
 
 		if get_hotfix_properties "${cache_file}"
 		then
