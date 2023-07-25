@@ -330,7 +330,9 @@ function process_zip_list_file {
 		then
 			copy_hotfix_commit "${GIT_REVISION}" "${release_version}-${PATCH_REQUIREMENTS}" "${release_version}-${PATCH_NAME}"
 		else
-			lc_log DEBUG "Properties of ${cache_file} does not meet the requirements."
+			lc_log DEBUG "The properties of ${cache_file} does not meet the requirements."
+
+			exit 0
 		fi
 	done
 }
