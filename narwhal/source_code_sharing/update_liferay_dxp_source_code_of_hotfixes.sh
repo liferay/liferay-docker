@@ -197,6 +197,10 @@ function get_hotfix_properties {
 			PATCH_REQUIREMENTS="ga1"
 	fi
 
+	lc_log DEBUG "GIT_REVISION: ${GIT_REVISION}"
+	lc_log DEBUG "PATCH_NAME: ${PATCH_NAME}"
+	lc_log DEBUG "PATCH_REQUIREMENTS: ${PATCH_REQUIREMENTS}"
+
 	if [[ "${PATCH_REQUIREMENTS}" != +(ga1|u[1-9]*) ]]
 	then
 		lc_log DEBUG "Not copying, patch.requirements: ${PATCH_REQUIREMENTS}"
@@ -316,7 +320,7 @@ function process_zip_list_file {
 
 		local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
-		if (lc_time_run get_hotfix_properties "${cache_file}")
+		if get_hotfix_properties "${cache_file}"
 		then
 			copy_hotfix_commit "${GIT_REVISION}" "${release_version}-${PATCH_REQUIREMENTS}" "${release_version}-${PATCH_NAME}"
 		else
