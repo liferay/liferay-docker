@@ -18,8 +18,8 @@ function checkout_branch {
 
 	lc_cd "${BASE_DIR}/${1}"
 
-	git reset --hard
-	git clean -fdX
+	git reset --hard -q
+	git clean -fdqX
 
 	if (git show-ref --quiet "${branch_name}")
 	then
@@ -39,7 +39,10 @@ function checkout_commit {
 
 	if git cat-file -e "${commit_hash}"
 	then
-		git checkout "${2}"
+		git reset --hard
+		git clean -fdX
+
+		git checkout -f "${2}"
 	else
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
