@@ -108,6 +108,8 @@ function copy_hotfix_commit {
 
 	lc_time_run checkout_commit liferay-portal-ee "${commit_hash}"
 
+	local return_code="${?}"
+
 	if [ "${return_code}" == "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 	then
 		lc_log INFO "The commit '${commit_hash}' is missing in the repository 'liferay-portal-ee'."
@@ -129,7 +131,7 @@ function copy_hotfix_commit {
 	echo ""
 }
 
-function download_to_cache {
+function download_file_to_cache {
 	local file_url=${1}
 
 	if [ -z "${file_url}" ]
@@ -147,6 +149,8 @@ function download_to_cache {
 	fi
 
 	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
+
+	lc_log DEBUG "Cache file: ${cache_file}."
 
 	if [ -e "${cache_file}" ]
 	then
@@ -176,18 +180,6 @@ function download_to_cache {
 	else
 		mv "${cache_file}.temp${timestamp}" "${cache_file}"
 	fi
-}
-
-function get_file_hotfix_zip {
-	local release_version="${1}"
-	local hotfix_zip_file="${2}"
-	local file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
-
-	download_to_cache "${file_url}"
-
-	cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
-
-	lc_log DEBUG "Cached file: ${cache_file}"
 }
 
 function get_hotfix_properties {
@@ -318,9 +310,13 @@ function process_zip_list_file {
 	do
 		lc_log DEBUG "Processing ${hotfix_zip_file}"
 
-		get_file_hotfix_zip "${release_version}" "${hotfix_zip_file}"
+		local file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
 
-		if get_hotfix_properties "${cache_file}"
+		lc_time_run download_file_to_cache "${file_url}"
+
+		local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
+
+		if (lc_time_run get_hotfix_properties "${cache_file}")
 		then
 			copy_hotfix_commit "${GIT_REVISION}" "${release_version}-${PATCH_REQUIREMENTS}" "${release_version}-${PATCH_NAME}"
 		else
