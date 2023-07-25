@@ -18,14 +18,24 @@ ZIP_LIST_URL="https://files.liferay.com/private/ee/fix-packs"
 
 function check_if_tag_exists {
 	local repository="${1}"
-	local tag_name="${2}"
+	local release_version="${2}"
+	local hotfix_zip_file="${3}"
+
+	tag_name_new="${hotfix_zip_file%-*}"
+	tag_name_new="${tag_name_new#*-}"
+	tag_name_new="${release_version}-${tag_name_new}"
+
 
 	lc_cd "${BASE_DIR}/${repository}"
 
-	if (git -P tag -l "${tag_name}" | grep -q "[[:alnum:]]")
+	if (git -P tag -l "${tag_name_new}" | grep -q "[[:alnum:]]")
 	then
+		lc_log DEBUG "The tag '${tag_name_new}' already exists in the ${repository} repository."
+
 		return 0
 	else
+		lc_log DEBUG "The tag '${tag_name_new}' does not exist in the ${repository} repository."
+
 		return 1
 	fi
 }
@@ -96,15 +106,6 @@ function copy_hotfix_commit {
 	local commit_hash="${1}"
 	local tag_name_base="${2}"
 	local tag_name_new="${3}"
-
-	if (check_if_tag_exists liferay-dxp "${tag_name_new}")
-	then
-		lc_log DEBUG "Tag '${tag_name_new}' already exists"
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	else
-		lc_log DEBUG "No '${tag_name_new}' tag exists in 'liferay-dxp'"
-	fi
 
 	lc_time_run checkout_commit liferay-portal-ee "${commit_hash}"
 
@@ -313,6 +314,11 @@ function process_zip_list_file {
 	for hotfix_zip_file in $(cat "${zip_list_file}")
 	do
 		lc_log DEBUG "Processing ${hotfix_zip_file}"
+
+		if (check_if_tag_exists liferay-dxp "${release_version}" "${hotfix_zip_file}")
+		then
+			continue
+		fi
 
 		local file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
 
