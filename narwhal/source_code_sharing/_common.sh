@@ -78,8 +78,8 @@ function clone_repository {
 
 function fetch_repository {
 	if [ "${RUN_FETCH_REPOSITORY}" != "yes" ]
-		then
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	lc_cd "${BASE_DIR}/${1}"
