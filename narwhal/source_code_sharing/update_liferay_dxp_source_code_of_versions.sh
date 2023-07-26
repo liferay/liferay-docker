@@ -4,7 +4,7 @@
 
 set -o pipefail
 
-source "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_local_common.sh"
+source "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_common.sh"
 
 BASE_DIR="${PWD}"
 
