@@ -197,6 +197,7 @@ function download_file_to_cache {
 
 function get_hotfix_properties {
 	local tmp_json
+
 	tmp_json=$(mktemp "/tmp/json.XXX")
 
 	unzip -p "${1}" fixpack_documentation.json > "${tmp_json}"
@@ -206,8 +207,8 @@ function get_hotfix_properties {
 	PATCH_REQUIREMENTS=$(jq -r '.patch."requirements"' "${tmp_json}")
 
 	if [[ "${PATCH_REQUIREMENTS}" == base-* ]]
-		then
-			PATCH_REQUIREMENTS="ga1"
+	then
+		PATCH_REQUIREMENTS="ga1"
 	fi
 
 	lc_log DEBUG "GIT_REVISION: ${GIT_REVISION}"
@@ -271,14 +272,10 @@ function prepare_repositories {
 	lc_time_run fetch_repository liferay-dxp
 
 	lc_time_run fetch_repository liferay-portal-ee
-	set +x
 }
 
 function print_help {
-	echo ""
-	echo "Usage:"
-	echo ""
-	echo "${0} [-l|--logdir <logdir>] [-v|--version <version>] [--no-fetch] [--no-push]"
+	echo "Usage: ${0} [-l|--logdir <logdir>] [-v|--version <version>] [--no-fetch] [--no-push]"
 	echo ""
 	echo "    -d|--debug (optional):                Enabling debug mode"
 	echo "    -l|--logdir <logdir> (optional):      Logging directory, defaults to \"\${PWD}/logs\""
@@ -286,7 +283,7 @@ function print_help {
 	echo "    --no-fetch (optional):                Do not fetch DXP repo"
 	echo "    --no-push (optional):                 Do not push to origin"
 	echo ""
-	echo "Default (equal to no arguments):"
+	echo "Example (equals to no arguments):"
 	echo ""
 	echo "${0} -l \"\$PWD/logs\" -v \"7.4.13\""
 	echo ""
@@ -340,7 +337,7 @@ function process_zip_list_file {
 		else
 			lc_time_run download_file_to_cache "${file_url}"
 
-			if [ "$?" = "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+			if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 			then
 				continue
 			fi
