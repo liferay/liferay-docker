@@ -76,59 +76,73 @@ function lc_docker_compose {
 	echo "${LIFERAY_COMMON_DOCKER_COMPOSE}"
 }
 
+# FUNCTION
+#	Downloads a file to a cache directory configured via ${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}.
+#	If the file is already in the cache then skip downloading it again.
+#	If a file name is given as an optional second parameter, it is copied from the cache.
+#
+# INVOCATION:
+#	lc_download <file url> [<destination file name>]
+#
+# EXIT CODES:
+#	$LIFERAY_COMMON_EXIT_CODE_BAD: Missing argument.
+#	$LIFERAY_COMMON_EXIT_CODE_OK: The file was downloaded and/or copied properly.
+#	$LIFERAY_COMMON_EXIT_CODE_SKIPPED: The file was already in cache, no downloading was needed.
+
 function lc_download {
-	local file_url=${1}
+	local file_url="${1}"
+	local file_name="${2}"
 
 	if [ -z "${file_url}" ]
 	then
 		lc_log ERROR "File URL is not set."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
-
-	local file_name=${2}
 
 	if [ -z "${file_name}" ]
 	then
-		file_name=${file_url##*/}
-	fi
-
-	if [ -e "${file_name}" ]
-	then
-		lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
-
-		return
+		file_name="${file_url##*/}"
 	fi
 
 	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
 	if [ -e "${cache_file}" ]
 	then
-		lc_log DEBUG "Copying file from cache: ${cache_file}."
+		lc_log DEBUG "The file is in cache: '${cache_file}'."
 
-		cp "${cache_file}" "${file_name}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	else
+		lc_log DEBUG "Download ${file_url}."
 
-		return
+		local dirname_cache_file
+
+		dirname_cache_file="$(dirname "${cache_file}")"
+
+		mkdir -p "${dirname_cache_file}"
+
+		local current_date="$(lc_date)"
+
+		local temp_timestamp="$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
+
+		if (curl "${file_url}" --fail --max-time 120 --output "${cache_file}.${temp_timestamp}" --show-error --silent)
+		then
+			mv "${cache_file}.${temp_timestamp}" "${cache_file}"
+
+			lc_log DEBUG "Full path of the cached file: ${cache_file}."
+		else
+			lc_log INFO "Unable to download ${file_url}."
+
+			rm -f "${cache_file}.${temp_timestamp}"
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
 	fi
 
-	local cache_file_dir
-	cache_file_dir="$(dirname "${cache_file}")"
-
-	mkdir -p "${cache_file_dir}"
-
-	lc_log DEBUG "Downloading ${file_url}."
-
-	local current_date=$(lc_date)
-
-	local timestamp=$(lc_date "${current_date}" "+%Y%m%d%H%M%S")
-
-	if (! curl "${file_url}" --fail --output "${cache_file}.temp${timestamp}" --silent)
+	# FIXME: will not run if the file is cached but not copied yet
+	if [ -n "${2}" ] && [ ! -e "${file_name}" ]
 	then
-		lc_log ERROR "Unable to download ${file_url}."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	else
-		mv "${cache_file}.temp${timestamp}" "${cache_file}"
+		lc_log DEBUG "Copy file from cache."
 
 		cp "${cache_file}" "${file_name}"
 	fi
@@ -182,7 +196,7 @@ function lc_next_step {
 }
 
 function lc_time_run {
-	local run_id=$(echo "${@}" | tr " /" "_")
+	local run_id=$(echo "${@}" | tr " /:" "_")
 	local start_time=$(date +%s)
 
 	if [ -n "${LIFERAY_COMMON_LOG_DIR}" ]

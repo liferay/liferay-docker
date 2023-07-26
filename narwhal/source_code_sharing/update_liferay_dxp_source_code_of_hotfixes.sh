@@ -16,32 +16,6 @@ REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
 
 ZIP_LIST_URL="https://files.liferay.com/private/ee/fix-packs"
 
-function check_if_file_is_cached {
-	# FIXME: should be added to download() too
-
-	local file_url="${1}"
-
-	if [ -z "${file_url}" ]
-	then
-		lc_log ERROR "File URL is not set."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
-
-	lc_log DEBUG "Cache file: ${cache_file}."
-
-	if [ -e "${cache_file}" ]
-	then
-		lc_log DEBUG "The file of ${file_url} is already in cache."
-	else
-		lc_log DEBUG "The file of ${file_url} is not in cache."
-
-		return 1
-	fi
-}
-
 function check_if_tag_exists {
 	local repository="${1}"
 	local release_version="${2}"
@@ -158,43 +132,6 @@ function copy_hotfix_commit {
 	echo ""
 }
 
-function download_file_to_cache {
-	# FIXME: should be added to download() too
-
-	local file_url="${1}"
-
-	if [ -z "${file_url}" ]
-	then
-		lc_log ERROR "File URL is not set."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	local dir_of_cache_file
-	dir_of_cache_file=$(dirname "${cache_file}")
-
-	mkdir -p "${dir_of_cache_file}"
-
-	lc_log DEBUG "Downloading ${file_url}."
-
-	local current_date
-	current_date=$(lc_date)
-
-	local temp_timestamp
-	temp_timestamp="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
-
-	if (curl "${file_url}" --fail --max-time 120 --output "${cache_file}.${temp_timestamp}" --show-error --silent)
-	then
-		mv "${cache_file}.${temp_timestamp}" "${cache_file}"
-	else
-		lc_log INFO "Unable to download ${file_url}. It needs to be reported to the IT team."
-
-		rm -f "${cache_file}.${temp_timestamp}"
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-}
-
 function get_hotfix_properties {
 	local tmp_json
 
@@ -205,6 +142,8 @@ function get_hotfix_properties {
 	GIT_REVISION=$(jq -r '.build."git-revision"' "${tmp_json}")
 	PATCH_NAME=$(jq -r '.patch."name"' "${tmp_json}")
 	PATCH_REQUIREMENTS=$(jq -r '.patch."requirements"' "${tmp_json}")
+
+	rm -f "${tmp_json}"
 
 	if [[ "${PATCH_REQUIREMENTS}" == base-* ]]
 	then
@@ -217,7 +156,7 @@ function get_hotfix_properties {
 
 	if [[ "${PATCH_REQUIREMENTS}" != +(ga1|u[1-9]*) ]]
 	then
-		lc_log DEBUG "Not copying, patch.requirements: ${PATCH_REQUIREMENTS}"
+		lc_log DEBUG "Not copying, inappropriate patch.requirements attribute: '${PATCH_REQUIREMENTS}'"
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -233,7 +172,7 @@ function get_hotfix_zip_list_file {
 
 	if [ -f "${zip_list_file}" ]
 	then
-		is_new_file=$(find "${zip_list_file}" -newermt "1 day ago" 2>/dev/null)
+		is_new_file=$(find "${zip_list_file}" -newermt "1 day ago")
 	fi
 
 	if [ -n "${is_new_file}" ]
@@ -318,8 +257,6 @@ function process_zip_list_file {
 	local zip_list_file="${1}"
 	local release_version="${2}"
 
-	local cache_file="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
-
 	for hotfix_zip_file in $(cat "${zip_list_file}")
 	do
 		lc_log DEBUG "Processing ${hotfix_zip_file}"
@@ -331,16 +268,11 @@ function process_zip_list_file {
 
 		local file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
 
-		if (check_if_file_is_cached "${file_url}")
-		then
-			lc_log DEBUG "The file on ${file_url} is already in cache, skipping downloading."
-		else
-			lc_time_run download_file_to_cache "${file_url}"
+		lc_time_run lc_download "${file_url}"
 
-			if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-			then
-				continue
-			fi
+		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		then
+			continue
 		fi
 
 		local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
