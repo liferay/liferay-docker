@@ -67,6 +67,20 @@ function commit_and_tag {
 	git tag "${tag_name}"
 }
 
+function copy_tag {
+	local tag_name="${1}"
+
+	lc_time_run checkout_tag liferay-portal-ee "${tag_name}"
+
+	lc_cd "${REPO_PATH_DXP}"
+
+	lc_time_run run_git_maintenance
+
+	lc_time_run run_rsync "${tag_name}"
+
+	lc_time_run commit_and_tag "${tag_name}"
+}
+
 function clone_repository {
 	if [ -d "${1}" ]
 	then
@@ -105,21 +119,6 @@ function run_git_maintenance {
 	fi
 }
 
-function copy_tag {
-	local tag_name="${1}"
-
-	lc_time_run checkout_tag liferay-portal-ee "${tag_name}"
-
-	lc_cd "${REPO_PATH_DXP}"
-
-	lc_time_run run_git_maintenance
-
-	lc_time_run run_rsync "${tag_name}"
-
-	lc_time_run commit_and_tag "${tag_name}"
-}
-
-
 function push_to_origin {
 	if [ "${RUN_PUSH_TO_ORIGIN}" != "yes" ]
 		then
@@ -128,7 +127,7 @@ function push_to_origin {
 
 	lc_cd "${REPO_PATH_DXP}"
 
-	git push -q origin "${1}"
+	git push --tags -q origin "${1}"
 }
 
 function run_rsync {
