@@ -111,7 +111,10 @@ function lc_download {
 		return
 	fi
 
-	mkdir -p $(dirname "${cache_file}")
+	local cache_file_dir
+	cache_file_dir="$(dirname "${cache_file}")"
+
+	mkdir -p "${cache_file_dir}"
 
 	lc_log DEBUG "Downloading ${file_url}."
 
@@ -191,7 +194,7 @@ function lc_time_run {
 
 	echo "$(lc_date) > ${*}"
 
-	if [ -z "${LIFERAY_COMMON_DEBUG_ENABLED}" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
+	if [ "${LIFERAY_COMMON_DEBUG_ENABLED}" != "true" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
 	then
 		"${@}" &> "${log_file}"
 	else
@@ -212,7 +215,7 @@ function lc_time_run {
 		then
 			echo -e "$(lc_date) ! ${*} exited with \e[1;31merror\e[0m in $(lc_echo_time ${seconds}) (exit code: ${exit_code})."
 
-			if [ -z "${LIFERAY_COMMON_DEBUG_ENABLED}" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
+			if [ "${LIFERAY_COMMON_DEBUG_ENABLED}" != "true" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
 			then
 				echo "Full log file is at ${log_file}. Printing the last 100 lines:"
 
@@ -240,7 +243,7 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
 
-	export LC_ALL=C.UTF-8
+	export LC_ALL=en_US.UTF-8
 	export TZ=UTC
 }
 
