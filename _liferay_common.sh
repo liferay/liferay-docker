@@ -208,6 +208,8 @@ function lc_time_run {
 	if [ "${exit_code}" == "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 	then
 		echo -e "$(lc_date) < ${*}: \e[1;34mSkip\e[0m"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
 		local seconds=$((end_time - start_time))
 
