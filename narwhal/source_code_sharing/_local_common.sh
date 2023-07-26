@@ -76,57 +76,6 @@ function clone_repository {
 	git clone "git@github.com:liferay/${1}"
 }
 
-function download_to_cache {
-	# FIXME: lc_download should be devided to this one and a copy function
-
-	local file_url=${1}
-
-	if [ -z "${file_url}" ]
-	then
-		lc_log ERROR "File URL is not set."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	local file_name=${2}
-
-	if [ -z "${file_name}" ]
-	then
-		file_name=${file_url##*/}
-	fi
-
-	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
-
-	if [ -e "${cache_file}" ]
-	then
-		lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
-
-		return
-	fi
-
-	local dir_cache_file
-	dir_cache_file=$(dirname "${cache_file}")
-
-	mkdir -p "${dir_cache_file}"
-
-	lc_log DEBUG "Downloading ${file_url}."
-
-	local current_date
-	current_date=$(lc_date)
-
-	local timestamp
-	timestamp=$(lc_date "${current_date}" "+%Y%m%d%H%M%S")
-
-	if (! curl "${file_url}" --fail --output "${cache_file}.temp${timestamp}" --silent)
-	then
-		lc_log ERROR "Unable to download ${file_url}."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	else
-		mv "${cache_file}.temp${timestamp}" "${cache_file}"
-	fi
-}
-
 function fetch_repository {
 	if [ "${RUN_FETCH_REPOSITORY}" != "yes" ]
 		then
