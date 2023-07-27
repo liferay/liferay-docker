@@ -14,7 +14,7 @@ LIFERAY_COMMON_LOG_DIR="${PWD}/logs"
 REPO_PATH_DXP="${BASE_DIR}/liferay-dxp"
 REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
 
-ZIP_LIST_URL="https://files.liferay.com/private/ee/fix-packs"
+ZIP_LIST_URL="http://storage.bud.liferay.com/public/files.liferay.com/private/ee/fix-packs"
 
 function check_if_tag_exists {
 	local repository="${1}"
@@ -158,10 +158,8 @@ function get_hotfix_properties {
 	then
 		lc_log DEBUG "Not copying, inappropriate patch.requirements attribute: '${PATCH_REQUIREMENTS}'"
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
-
-	rm -f "${tmp_json}"
 }
 
 function get_hotfix_zip_list_file {
@@ -277,14 +275,7 @@ function process_zip_list_file {
 
 		local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
-		if get_hotfix_properties "${cache_file}"
-		then
-			copy_hotfix_commit "${GIT_REVISION}" "${release_version}-${PATCH_REQUIREMENTS}" "${release_version}-${PATCH_NAME}"
-		else
-			lc_log DEBUG "The properties of ${cache_file} does not meet the requirements."
-
-			exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		fi
+		get_hotfix_properties "${cache_file}"
 	done
 }
 
