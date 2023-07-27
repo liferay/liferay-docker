@@ -97,55 +97,54 @@ function lc_download {
 	then
 		lc_log ERROR "File URL is not set."
 
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	if [ -z "${file_name}" ]
 	then
-		file_name="${file_url##*/}"
+		file_name=${file_url##*/}
+	fi
+
+	if [ -e "${file_name}" ]
+	then
+		lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
+
+		return
 	fi
 
 	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
-	if [ -e "${cache_file}" ]
+	if [ -e "${cache_file}" ] && [ -n "${2}" ]
 	then
-		lc_log DEBUG "The file is in cache: '${cache_file}'."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	else
-		lc_log DEBUG "Download ${file_url}."
-
-		local dirname_cache_file
-
-		dirname_cache_file="$(dirname "${cache_file}")"
-
-		mkdir -p "${dirname_cache_file}"
-
-		local current_date="$(lc_date)"
-
-		local temp_timestamp="$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
-
-		if (curl "${file_url}" --fail --max-time 120 --output "${cache_file}.${temp_timestamp}" --show-error --silent)
-		then
-			mv "${cache_file}.${temp_timestamp}" "${cache_file}"
-
-			lc_log DEBUG "Downloaded cache file: ${cache_file}."
-		else
-			lc_log INFO "Unable to download ${file_url}."
-
-			rm -f "${cache_file}.${temp_timestamp}"
-
-			exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		fi
-	fi
-
-	# FIXME: will not run if the file is cached but not copied yet
-	if [ -n "${2}" ] && [ ! -e "${file_name}" ]
-	then
-		lc_log DEBUG "Copy file from cache."
+		lc_log DEBUG "Copying file from cache: ${cache_file}."
 
 		cp "${cache_file}" "${file_name}"
+
+		return
 	fi
+
+	mkdir -p "$(dirname "${cache_file}")"
+
+	lc_log DEBUG "Downloading ${file_url}."
+
+	local current_date=$(lc_date)
+
+	local temp_timestamp="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
+
+	if (! curl "${file_url}" --fail --max-time 120 --output "${cache_file}.${temp_timestamp}" --show-error --silent)
+	then
+		lc_log ERROR "Unable to download ${file_url}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	mv "${cache_file}.${temp_timestamp}" "${cache_file}"
+
+	if [ -n "${2}" ]
+	then
+		cp "${cache_file}" "${file_name}"
+	fi
+
 }
 
 function lc_get_property {

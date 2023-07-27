@@ -46,6 +46,7 @@ function check_usage {
 	IGNORE_ZIP_FILES=""
 	RUN_FETCH_REPOSITORY="yes"
 	RUN_PUSH_TO_ORIGIN="yes"
+	ZIP_LIST_RETENTION_TIME="1 min"
 	VERSION_INPUT="7.4.13"
 
 	while [ "$#" -gt "0" ]
@@ -65,6 +66,13 @@ function check_usage {
 
 			-l|--logdir)
 				LIFERAY_COMMON_LOG_DIR="${2}"
+
+				shift 1
+
+				;;
+
+			-r|--zip-list-retention-time)
+				ZIP_LIST_RETENTION_TIME="${2}"
 
 				shift 1
 
@@ -97,17 +105,21 @@ function check_usage {
 	done
 }
 
-function checkout_tag_dxp {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
-	local tag_name_base="${2}"
+function checkout_commit {
+	repository="${1}"
+	commit_hash="${2}"
 
 	lc_cd "${BASE_DIR}/${1}"
 
-	git reset --hard -q
-	git clean -fdqX
+	if git cat-file -e "${commit_hash}"
+	then
+		git reset --hard
+		git clean -fdX
 
-	git checkout -f -q "${tag_name_base}"
+		git checkout -f "${2}"
+	else
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 }
 
 function copy_hotfix_commit {
@@ -127,7 +139,7 @@ function copy_hotfix_commit {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_time_run checkout_tag_dxp liferay-dxp "${tag_name_base}"
+	lc_time_run checkout_tag liferay-dxp "${tag_name_base}"
 
 	lc_time_run run_git_maintenance
 
@@ -158,13 +170,13 @@ function get_hotfix_properties {
 		PATCH_REQUIREMENTS="ga1"
 	fi
 
-	lc_log DEBUG "GIT_REVISION: ${GIT_REVISION}"
-	lc_log DEBUG "PATCH_NAME: ${PATCH_NAME}"
-	lc_log DEBUG "PATCH_REQUIREMENTS: ${PATCH_REQUIREMENTS}"
+	lc_log DEBUG "GIT_REVISION: '${GIT_REVISION}'."
+	lc_log DEBUG "PATCH_NAME: '${PATCH_NAME}'."
+	lc_log DEBUG "PATCH_REQUIREMENTS: '${PATCH_REQUIREMENTS}'."
 
 	if [[ "${PATCH_REQUIREMENTS}" != +(ga1|u[1-9]*) ]]
 	then
-		lc_log DEBUG "Not copying, inappropriate patch.requirements attribute: '${PATCH_REQUIREMENTS}'"
+		lc_log DEBUG "Inappropriate patch.requirements attribute: '${PATCH_REQUIREMENTS}'."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -178,7 +190,7 @@ function get_hotfix_zip_list_file {
 
 	if [ -f "${zip_list_file}" ]
 	then
-		is_new_file=$(find "${zip_list_file}" -newermt "1 day ago")
+		is_new_file=$(find "${zip_list_file}" -newermt "${ZIP_LIST_RETENTION_TIME} ago")
 	fi
 
 	if [ -n "${is_new_file}" ]
@@ -187,14 +199,16 @@ function get_hotfix_zip_list_file {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
-		lc_log DEBUG "Downloading the zip list file: '${zip_list_file}'"
+		lc_log DEBUG "Downloading the zip list file: '${zip_list_file}'."
 
-		curl --fail --show-error --silent "${ZIP_LIST_URL}/${release_version}/hotfix/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq > "${zip_list_file}"
+		curl --fail --show-error --silent "${ZIP_LIST_URL}/${release_version}/hotfix/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq - "${zip_list_file}"
 	fi
 }
 
 function main {
 	check_usage "${@}"
+
+	process_argument_version
 
 	prepare_cache_dir
 
@@ -209,29 +223,20 @@ function prepare_cache_dir {
 	install -d -m 0700 "${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}"
 }
 
-function prepare_repositories {
-	lc_time_run clone_repository liferay-dxp
-
-	lc_time_run clone_repository liferay-portal-ee
-
-	lc_time_run fetch_repository liferay-dxp
-
-	lc_time_run fetch_repository liferay-portal-ee
-}
-
 function print_help {
-	echo "Usage: ${0} [-d|--debug] [-i|--ignore-zip-files <file1,...,fileN>] [-l|--logdir <logdir>] [-v|--version <version>] [--no-fetch] [--no-push]"
+	echo "Usage: ${0} [-d|--debug] [-i|--ignore-zip-files <file1,...,fileN>] [-l|--logdir <logdir>] [-u|--zip-list-retention-time '<time>'] [-v|--version <version>] [--no-fetch] [--no-push]"
 	echo ""
 	echo "    -d|--debug (optional):                                  Enabling debug mode"
-	echo "    -i|--ignore-zip-files <file1,...,fileN> (optional):     List of files separated by comma that are not processed (useful if file is corrupted on the server)"
+	echo "    -i|--ignore-zip-files <file1,...,fileN> (optional):     Comma-separated list of files to be not processed (useful if a file is corrupted on the remote server)"
 	echo "    -l|--logdir <logdir> (optional):                        Logging directory, defaults to \"\${PWD}/logs\""
+	echo "    -r|--zip-list-retention-time '<time>' (optinal):        Retention time after the update of the zip list is enforced, defaults to '1 min'"
 	echo "    -v|--version <version> (optional):                      Version to handle, defaults to \"7.4.13\""
 	echo "    --no-fetch (optional):                                  Do not fetch DXP repo"
 	echo "    --no-push (optional):                                   Do not push to origin"
 	echo ""
 	echo "Example (equals to no arguments):"
 	echo ""
-	echo "${0} -l \"\$PWD/logs\" -v \"7.4.13\""
+	echo "${0} -l \"\$PWD/logs\" -r '1 min' -v \"7.4.13\""
 	echo ""
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
@@ -252,7 +257,7 @@ function process_version_list {
 	do
 		local zip_list_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/list-of-${release_version}.txt"
 
-		lc_log DEBUG "Processing version: ${release_version}"
+		lc_log DEBUG "Processing version: ${release_version}."
 
 		lc_time_run get_hotfix_zip_list_file "${release_version}" "${zip_list_file}"
 
@@ -266,18 +271,18 @@ function process_zip_list_file {
 
 	for hotfix_zip_file in $(cat "${zip_list_file}")
 	do
+		lc_log DEBUG "Processing ${hotfix_zip_file}."
+
 		local file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
+
+		check_if_tag_exists liferay-dxp "${release_version}" "${hotfix_zip_file}" && continue
 
 		if [[ "x${IGNORE_ZIP_FILES}" =~ x*${hotfix_zip_file}* ]]
 		then
-			lc_log WARNING "Ignoring the file of '${file_url}'."
+			lc_log WARNING "Ignoring '${file_url}'."
 
 			continue
 		fi
-
-		lc_log DEBUG "Processing ${hotfix_zip_file}"
-
-		check_if_tag_exists liferay-dxp "${release_version}" "${hotfix_zip_file}" && continue
 
 		lc_time_run lc_download "${file_url}"
 

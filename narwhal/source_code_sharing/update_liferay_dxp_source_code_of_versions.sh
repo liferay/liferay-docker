@@ -97,6 +97,20 @@ function checkout_branch {
 	fi
 }
 
+function copy_tag {
+	local tag_name="${1}"
+
+	lc_time_run checkout_tag liferay-portal-ee "${tag_name}"
+
+	lc_cd "${REPO_PATH_DXP}"
+
+	lc_time_run run_git_maintenance
+
+	lc_time_run run_rsync "${tag_name}"
+
+	lc_time_run commit_and_tag "${tag_name}"
+}
+
 function get_all_tags {
 	git tag -l --sort=creatordate --format='%(refname:short)' "${VERSION_LIST[@]}"
 }
@@ -122,20 +136,6 @@ function get_new_tags {
 			echo "${tag_name}" >> "${TAGS_FILE_NEW}"
 		fi
 	done
-}
-
-function copy_tag {
-	local tag_name="${1}"
-
-	lc_time_run checkout_tag_simple liferay-portal-ee "${tag_name}"
-
-	lc_cd "${REPO_PATH_DXP}"
-
-	lc_time_run run_git_maintenance
-
-	lc_time_run run_rsync "${tag_name}"
-
-	lc_time_run commit_and_tag "${tag_name}"
 }
 
 function print_help {
@@ -171,13 +171,7 @@ function main {
 
 	process_argument_version
 
-	lc_time_run clone_repository liferay-dxp
-
-	lc_time_run clone_repository liferay-portal-ee
-
-	lc_time_run fetch_repository liferay-dxp
-
-	lc_time_run fetch_repository liferay-portal-ee
+	prepare_repositories
 
 	lc_time_run get_new_tags
 
@@ -187,7 +181,7 @@ function main {
 	do
 		for update in $(cat "${TAGS_FILE_NEW}" | grep "^${branch}" | sed -e "s/.*-//")
 		do
-			lc_log DEBUG ""
+			echo ""
 
 			lc_log DEBUG "Processing: ${branch}-${update}"
 
