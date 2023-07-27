@@ -43,6 +43,7 @@ function check_if_tag_exists {
 function check_usage {
 	LIFERAY_COMMON_DEBUG_ENABLED="no"
 	LIFERAY_COMMON_LOG_DIR="${PWD}/logs"
+	IGNORE_ZIP_FILES=""
 	RUN_FETCH_REPOSITORY="yes"
 	RUN_PUSH_TO_ORIGIN="yes"
 	VERSION_INPUT="7.4.13"
@@ -52,6 +53,13 @@ function check_usage {
 		case "${1}" in
 			-d|--debug)
 				LIFERAY_COMMON_LOG_LEVEL="DEBUG"
+
+				;;
+
+			-i|--ignore-zip-files)
+				IGNORE_ZIP_FILES="${2}"
+
+				shift 1
 
 				;;
 
@@ -212,13 +220,14 @@ function prepare_repositories {
 }
 
 function print_help {
-	echo "Usage: ${0} [-l|--logdir <logdir>] [-v|--version <version>] [--no-fetch] [--no-push]"
+	echo "Usage: ${0} [-d|--debug] [-i|--ignore-zip-files <file1,...,fileN>] [-l|--logdir <logdir>] [-v|--version <version>] [--no-fetch] [--no-push]"
 	echo ""
-	echo "    -d|--debug (optional):                Enabling debug mode"
-	echo "    -l|--logdir <logdir> (optional):      Logging directory, defaults to \"\${PWD}/logs\""
-	echo "    -v|--version <version> (optional):    Version to handle, defaults to \"7.4.13\""
-	echo "    --no-fetch (optional):                Do not fetch DXP repo"
-	echo "    --no-push (optional):                 Do not push to origin"
+	echo "    -d|--debug (optional):                                  Enabling debug mode"
+	echo "    -i|--ignore-zip-files <file1,...,fileN> (optional):     List of files separated by comma that are not processed (useful if file is corrupted on the server)"
+	echo "    -l|--logdir <logdir> (optional):                        Logging directory, defaults to \"\${PWD}/logs\""
+	echo "    -v|--version <version> (optional):                      Version to handle, defaults to \"7.4.13\""
+	echo "    --no-fetch (optional):                                  Do not fetch DXP repo"
+	echo "    --no-push (optional):                                   Do not push to origin"
 	echo ""
 	echo "Example (equals to no arguments):"
 	echo ""
@@ -257,25 +266,26 @@ function process_zip_list_file {
 
 	for hotfix_zip_file in $(cat "${zip_list_file}")
 	do
-		lc_log DEBUG "Processing ${hotfix_zip_file}"
+		local file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
 
-		if (check_if_tag_exists liferay-dxp "${release_version}" "${hotfix_zip_file}")
+		if [[ "x${IGNORE_ZIP_FILES}" =~ x*${hotfix_zip_file}* ]]
 		then
+			lc_log WARNING "Ignoring the file of '${file_url}'."
+
 			continue
 		fi
 
-		local file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
+		lc_log DEBUG "Processing ${hotfix_zip_file}"
+
+		check_if_tag_exists liferay-dxp "${release_version}" "${hotfix_zip_file}" && continue
 
 		lc_time_run lc_download "${file_url}"
 
-		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-		then
-			continue
-		fi
-
 		local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
-		get_hotfix_properties "${cache_file}"
+		lc_time_run get_hotfix_properties "${cache_file}"
+
+		copy_hotfix_commit "${GIT_REVISION}" "${release_version}-${PATCH_REQUIREMENTS}" "${release_version}-${PATCH_NAME}"
 	done
 }
 
