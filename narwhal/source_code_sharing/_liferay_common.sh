@@ -85,7 +85,7 @@ function lc_docker_compose {
 #	lc_download <file url> [<destination file name>]
 #
 # EXIT CODES:
-#	$LIFERAY_COMMON_EXIT_CODE_BAD: Missing argument.
+#	$LIFERAY_COMMON_EXIT_CODE_BAD: Missing argument or download failed.
 #	$LIFERAY_COMMON_EXIT_CODE_OK: The file was downloaded and/or copied properly.
 #	$LIFERAY_COMMON_EXIT_CODE_SKIPPED: The file was already in cache, no downloading was needed.
 
@@ -129,13 +129,13 @@ function lc_download {
 		then
 			mv "${cache_file}.${temp_timestamp}" "${cache_file}"
 
-			lc_log DEBUG "Full path of the cached file: ${cache_file}."
+			lc_log DEBUG "Downloaded cache file: ${cache_file}."
 		else
 			lc_log INFO "Unable to download ${file_url}."
 
 			rm -f "${cache_file}.${temp_timestamp}"
 
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+			exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 	fi
 
