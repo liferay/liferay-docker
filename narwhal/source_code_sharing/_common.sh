@@ -11,50 +11,18 @@ BASE_DIR="${PWD}"
 REPO_PATH_DXP="${BASE_DIR}/liferay-dxp"
 REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
 
-function checkout_branch {
+function checkout_tag {
+	local repository="${1}"
+	local tag_name="${2}"
+
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	local branch_name="${2}"
-
-	lc_cd "${BASE_DIR}/${1}"
+	lc_cd "${BASE_DIR}/${repository}"
 
 	git reset --hard -q
 	git clean -fdqX
 
-	if (git show-ref --quiet "${branch_name}")
-	then
-		git checkout -f -q "${branch_name}"
-		git pull origin "${branch_name}"
-	else
-		git branch "${branch_name}"
-		git checkout -f -q "${branch_name}"
-	fi
-}
-
-function checkout_commit {
-	repository="${1}"
-	commit_hash="${2}"
-
-	lc_cd "${BASE_DIR}/${1}"
-
-	if git cat-file -e "${commit_hash}"
-	then
-		git reset --hard
-		git clean -fdX
-
-		git checkout -f "${2}"
-	else
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-}
-
-function checkout_tag_simple {
-	repository="${1}"
-	tag_name="${2}"
-
-	lc_cd "${BASE_DIR}/${repository}"
-
-	git checkout "${tag_name}"
+	git checkout -f -q "${tag_name}"
 }
 
 function commit_and_tag {
@@ -65,20 +33,6 @@ function commit_and_tag {
 	git commit -a -m "${tag_name}" -q
 
 	git tag "${tag_name}"
-}
-
-function copy_tag {
-	local tag_name="${1}"
-
-	lc_time_run checkout_tag liferay-portal-ee "${tag_name}"
-
-	lc_cd "${REPO_PATH_DXP}"
-
-	lc_time_run run_git_maintenance
-
-	lc_time_run run_rsync "${tag_name}"
-
-	lc_time_run commit_and_tag "${tag_name}"
 }
 
 function clone_repository {
@@ -117,6 +71,16 @@ function run_git_maintenance {
 
 		exit 1
 	fi
+}
+
+function prepare_repositories {
+	lc_time_run clone_repository liferay-dxp
+
+	lc_time_run clone_repository liferay-portal-ee
+
+	lc_time_run fetch_repository liferay-dxp
+
+	lc_time_run fetch_repository liferay-portal-ee
 }
 
 function push_to_origin {
