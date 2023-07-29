@@ -133,10 +133,10 @@ function copy_hotfix_commit {
 
 	if [ "${return_code}" == "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 	then
-		lc_log INFO "The commit '${commit_hash}' is missing in the repository 'liferay-portal-ee'."
+		lc_log ERROR "The commit '${commit_hash}' is missing in the repository 'liferay-portal-ee'."
 		echo ""
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	lc_time_run checkout_tag liferay-dxp "${tag_name_base}"
