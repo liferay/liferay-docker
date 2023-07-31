@@ -6,13 +6,15 @@ set -o pipefail
 
 source "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_liferay_common.sh"
 
-BASE_DIR="${PWD}"
+export BASE_DIR="${PWD}"
 
-GIT_COMMITTER_NAME="Enterprise release"
-GIT_COMMITTER_EMAIL="er-hu@liferay.com"
+export GIT_AUTHOR_EMAIL="er-hu@liferay.com"
+export GIT_AUTHOR_NAME="Enterprise release"
+export GIT_COMMITTER_EMAIL="er-hu@liferay.com"
+export GIT_COMMITTER_NAME="Enterprise release"
 
-REPO_PATH_DXP="${BASE_DIR}/liferay-dxp"
-REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
+export REPO_PATH_DXP="${BASE_DIR}/liferay-dxp"
+export REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
 
 function checkout_tag {
 	local repository="${1}"
