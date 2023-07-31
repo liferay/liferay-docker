@@ -18,27 +18,40 @@ ZIP_LIST_URL="http://storage.bud.liferay.com/public/files.liferay.com/private/ee
 
 function check_if_tag_exists {
 	local repository="${1}"
-	local release_version="${2}"
-	local hotfix_zip_file="${3}"
-
-	tag_name_new="${hotfix_zip_file%-*}"
-	tag_name_new="${tag_name_new#*-}"
-	tag_name_new="${release_version}-${tag_name_new}"
-
+	local tag_name="${2}"
 
 	lc_cd "${BASE_DIR}/${repository}"
 
-	if (git -P tag -l "${tag_name_new}" | grep -q "[[:alnum:]]")
+	if (git -P tag -l "${tag_name}" | grep -q "[[:alnum:]]")
 	then
-		lc_log DEBUG "The tag '${tag_name_new}' already exists in the ${repository} repository."
+		lc_log DEBUG "The tag '${tag_name}' already exists in the ${repository} repository."
 
 		return 0
 	else
-		lc_log DEBUG "The tag '${tag_name_new}' does not exist in the ${repository} repository."
+		lc_log DEBUG "The tag '${tag_name}' does not exist in the ${repository} repository."
 
 		return 1
 	fi
 }
+
+function check_ignore_zip_file {
+	local hotfix_zip_file="${1}"
+	local release_version="${2}"
+
+	local file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
+
+	if [[ "x${IGNORE_ZIP_FILES}" =~ x*${hotfix_zip_file}* ]]
+	then
+		lc_log WARNING "Ignoring '${file_url}'."
+
+		return 0
+	else
+		lc_log DEBUG "The file on '${file_url}' is not on the ignore list."
+
+		return 1
+	fi
+}
+
 
 function check_usage {
 	LIFERAY_COMMON_DEBUG_ENABLED="no"
@@ -160,7 +173,7 @@ function get_hotfix_properties {
 	unzip -p "${1}" fixpack_documentation.json > "${tmp_json}"
 
 	GIT_REVISION=$(jq -r '.build."git-revision"' "${tmp_json}")
-	PATCH_NAME=$(jq -r '.patch."name"' "${tmp_json}")
+	PATCH_ID=$(jq -r '.patch."id"' "${tmp_json}")
 	PATCH_REQUIREMENTS=$(jq -r '.patch."requirements"' "${tmp_json}")
 
 	rm -f "${tmp_json}"
@@ -171,7 +184,7 @@ function get_hotfix_properties {
 	fi
 
 	lc_log DEBUG "GIT_REVISION: '${GIT_REVISION}'."
-	lc_log DEBUG "PATCH_NAME: '${PATCH_NAME}'."
+	lc_log DEBUG "PATCH_ID: '${PATCH_ID}'."
 	lc_log DEBUG "PATCH_REQUIREMENTS: '${PATCH_REQUIREMENTS}'."
 
 	if [[ "${PATCH_REQUIREMENTS}" != +(ga1|u[1-9]*) ]]
@@ -273,16 +286,14 @@ function process_zip_list_file {
 	do
 		lc_log DEBUG "Processing ${hotfix_zip_file}."
 
-		local file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
+		tag_name_new="${hotfix_zip_file%.zip}"
+		tag_name_new="${tag_name_new#liferay-}"
 
-		check_if_tag_exists liferay-dxp "${release_version}" "${hotfix_zip_file}" && continue
+		check_if_tag_exists liferay-dxp "${tag_name_new}" && continue
 
-		if [[ "x${IGNORE_ZIP_FILES}" =~ x*${hotfix_zip_file}* ]]
-		then
-			lc_log WARNING "Ignoring '${file_url}'."
+		check_ignore_zip_file "${hotfix_zip_file}" "${release_version}" && continue
 
-			continue
-		fi
+		file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
 
 		lc_time_run lc_download "${file_url}"
 
@@ -290,7 +301,7 @@ function process_zip_list_file {
 
 		lc_time_run get_hotfix_properties "${cache_file}"
 
-		copy_hotfix_commit "${GIT_REVISION}" "${release_version}-${PATCH_REQUIREMENTS}" "${release_version}-${PATCH_NAME}"
+		copy_hotfix_commit "${GIT_REVISION}" "${release_version}-${PATCH_REQUIREMENTS}" "${tag_name_new}"
 	done
 }
 
