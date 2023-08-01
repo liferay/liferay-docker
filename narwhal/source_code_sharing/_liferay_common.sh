@@ -87,7 +87,6 @@ function lc_docker_compose {
 # EXIT CODES:
 #	$LIFERAY_COMMON_EXIT_CODE_BAD: Missing argument or download failed.
 #	$LIFERAY_COMMON_EXIT_CODE_OK: The file was downloaded and/or copied properly.
-#	$LIFERAY_COMMON_EXIT_CODE_SKIPPED: The file was already in cache, no downloading was needed.
 
 function lc_download {
 	local file_url="${1}"
