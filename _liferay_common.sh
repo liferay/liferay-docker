@@ -93,6 +93,7 @@ function lc_docker_compose {
 #	Downloads a file to a cache directory configured via ${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}.
 #	If the file is already in the cache then skip downloading it again.
 #	If a file name is given as an optional second parameter, it is copied from the cache.
+#	If the file cannot be downloaded in ${LIFERAY_COMMON_DOWNLOAD_MAX_TIME} seconds, the process is cancelled.
 #
 # INVOCATION:
 #	lc_download <file url> [<destination file name>]
@@ -100,7 +101,6 @@ function lc_docker_compose {
 # EXIT CODES:
 #	$LIFERAY_COMMON_EXIT_CODE_BAD: Missing argument or download failed.
 #	$LIFERAY_COMMON_EXIT_CODE_OK: The file was downloaded and/or copied properly.
-#	$LIFERAY_COMMON_EXIT_CODE_SKIPPED: The file was already in cache, no downloading was needed.
 
 function lc_download {
 	local file_url="${1}"
@@ -116,6 +116,7 @@ function lc_download {
 	if [ -z "${file_name}" ]
 	then
 		file_name=${file_url##*/}
+		skip_copy="true"
 	fi
 
 	if [ -e "${file_name}" ]
@@ -127,7 +128,7 @@ function lc_download {
 
 	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
-	if [ -e "${cache_file}" ] && [ -n "${2}" ]
+	if [ -e "${cache_file}" ] && [ "${skip_copy}" = "true" ]
 	then
 		if [ -n "${LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE}" ]
 		then
@@ -154,7 +155,7 @@ function lc_download {
 
 	local temp_timestamp="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
 
-	if (! curl "${file_url}" --fail --max-time 120 --output "${cache_file}.${temp_timestamp}" --show-error --silent)
+	if (! curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_timestamp}" --show-error --silent)
 	then
 		lc_log ERROR "Unable to download ${file_url}."
 
@@ -163,13 +164,12 @@ function lc_download {
 
 	mv "${cache_file}.${temp_timestamp}" "${cache_file}"
 
-	if [ -n "${2}" ]
+	if [ "${skip_copy}" != "true" ]
 	then
 		lc_log DEBUG "Copying file from cache: ${cache_file}."
 
 		cp "${cache_file}" "${file_name}"
 	fi
-
 }
 
 function lc_get_property {
@@ -195,12 +195,12 @@ function lc_echo_time {
 }
 
 function lc_log {
-	local level=${1}
-	local message=${2}
+	local level="${1}"
+	local message="${2}"
 
 	if [ "${level}" != "DEBUG" ] || [ "${LIFERAY_COMMON_LOG_LEVEL}" == "DEBUG" ]
 	then
-		echo "$(lc_date) [${level}] ${message}"
+		echo "$(lc_date) [${level}] ${message}" >&2
 	fi
 }
 
