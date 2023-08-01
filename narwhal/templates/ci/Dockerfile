@@ -10,7 +10,7 @@ ENV TZ=Etc/UTC
 
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/sbin/jenkins.sh"]
 
-RUN curl -fsSL https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.12.11/jenkins-plugin-manager-2.12.11.jar -o /opt/jenkins-plugin-manager.jar
+RUN curl -fsSL https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.12.13/jenkins-plugin-manager-2.12.13.jar -o /opt/jenkins-plugin-manager.jar
 
 RUN curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key > /usr/share/keyrings/jenkins-keyring.asc && \
 	echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list && \
