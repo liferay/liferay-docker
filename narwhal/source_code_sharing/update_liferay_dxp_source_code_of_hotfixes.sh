@@ -314,6 +314,8 @@ function process_zip_list_file {
 	do
 		lc_log DEBUG "Processing ${hotfix_zip_file}."
 
+		local tag_name_new
+
 		tag_name_new="${hotfix_zip_file%.zip}"
 		tag_name_new="${tag_name_new#liferay-}"
 
