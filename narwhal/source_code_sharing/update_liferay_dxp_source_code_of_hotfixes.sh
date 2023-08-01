@@ -243,20 +243,20 @@ function prepare_cache_dir {
 }
 
 function print_help {
-	echo "Usage: ${0} [-d|--debug] [-i|--ignore-zip-files <file1,...,fileN>] [-l|--logdir <logdir>] [-r|--zip-list-retention-time '<time>'] [-s|--storage-location <hu|us>] [-v|--version <version>] [--no-fetch] [--no-push]"
+	echo "Usage: ${0} [-d|--debug] [-i|--ignore-zip-files <file1,...,fileN>] [-l|--logdir <logdir>] [-r|--zip-list-retention-time '<time>'] [-s|--storage-location <BUD|LAX>] [-v|--version <version>] [--no-fetch] [--no-push]"
 	echo ""
 	echo "    -d|--debug (optional):                                  Enabling debug mode"
 	echo "    -i|--ignore-zip-files <file1,...,fileN> (optional):     Comma-separated list of files to be not processed (useful if a file is corrupted on the remote server)"
 	echo "    -l|--logdir <logdir> (optional):                        Logging directory, defaults to \"\${PWD}/logs\""
 	echo "    -r|--zip-list-retention-time '<time>' (optinal):        Retention time after the update of the zip list is enforced, defaults to '1 min'"
-	echo "    -s|--storage-location <hu|us> (optinal):                Location of the zip files, defaults to 'us'"
+	echo "    -s|--storage-location <BUD|LAX> (optinal):              Location of the zip files, defaults to 'LAX'"
 	echo "    -v|--version <version> (optional):                      Version to handle, defaults to \"7.4.13\""
 	echo "    --no-fetch (optional):                                  Do not fetch DXP repo"
 	echo "    --no-push (optional):                                   Do not push to origin"
 	echo ""
 	echo "Example (equals to no arguments):"
 	echo ""
-	echo "${0} -l \"\${PWD}/logs\" -r '1 min' -s us -v '7.4.13'"
+	echo "${0} -l \"\${PWD}/logs\" -r '1 min' -s LAX -v '7.4.13'"
 	echo ""
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
@@ -264,12 +264,12 @@ function print_help {
 
 function process_argument_storage_location {
 	case "${STORAGE_LOCATION}" in
-		hu)
+		BUD)
 			STORAGE_URL="http://storage.bud.liferay.com/public/files.liferay.com/private/ee/fix-packs"
 
 			;;
 
-		us)
+		LAX)
 			STORAGE_URL="https://files.liferay.com/private/ee/fix-packs"
 
 			;;
