@@ -9,12 +9,8 @@ source "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_common.sh"
 
 BASE_DIR="${PWD}"
 
-LIFERAY_COMMON_LOG_DIR="${PWD}/logs"
-
 REPO_PATH_DXP="${BASE_DIR}/liferay-dxp"
 REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
-
-ZIP_LIST_URL="http://storage.bud.liferay.com/public/files.liferay.com/private/ee/fix-packs"
 
 function check_if_tag_exists {
 	local repository="${1}"
@@ -38,7 +34,7 @@ function check_ignore_zip_file {
 	local hotfix_zip_file="${1}"
 	local release_version="${2}"
 
-	local file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
+	local file_url="${STORAGE_URL}/${release_version}/hotfix/${hotfix_zip_file}"
 
 	if [[ "x${IGNORE_ZIP_FILES}" =~ x*${hotfix_zip_file}* ]]
 	then
@@ -59,6 +55,7 @@ function check_usage {
 	IGNORE_ZIP_FILES=""
 	RUN_FETCH_REPOSITORY="yes"
 	RUN_PUSH_TO_ORIGIN="yes"
+	STORAGE_LOCATION="us"
 	ZIP_LIST_RETENTION_TIME="1 min"
 	VERSION_INPUT="7.4.13"
 
@@ -91,6 +88,13 @@ function check_usage {
 
 				;;
 
+			-s|--storage-location)
+				STORAGE_LOCATION="${2}"
+
+				shift 1
+
+				;;
+
 			-v|--version)
 				VERSION_INPUT="${2}"
 
@@ -116,6 +120,10 @@ function check_usage {
 
 		shift 1
 	done
+
+	process_argument_storage_location
+
+	process_argument_version
 }
 
 function checkout_commit {
@@ -214,20 +222,16 @@ function get_hotfix_zip_list_file {
 	else
 		lc_log DEBUG "Downloading the zip list file: '${zip_list_file}'."
 
-		curl --fail --show-error --silent "${ZIP_LIST_URL}/${release_version}/hotfix/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq - "${zip_list_file}"
+		curl --fail --show-error --silent "${STORAGE_URL}/${release_version}/hotfix/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq - "${zip_list_file}"
 	fi
 }
 
 function main {
 	check_usage "${@}"
 
-	process_argument_version
-
 	prepare_cache_dir
 
 	prepare_repositories
-
-	process_argument_version
 
 	process_version_list "${VERSION_LIST[@]}"
 }
@@ -237,22 +241,44 @@ function prepare_cache_dir {
 }
 
 function print_help {
-	echo "Usage: ${0} [-d|--debug] [-i|--ignore-zip-files <file1,...,fileN>] [-l|--logdir <logdir>] [-u|--zip-list-retention-time '<time>'] [-v|--version <version>] [--no-fetch] [--no-push]"
+	echo "Usage: ${0} [-d|--debug] [-i|--ignore-zip-files <file1,...,fileN>] [-l|--logdir <logdir>] [-r|--zip-list-retention-time '<time>'] [-s|--storage-location <hu|us>] [-v|--version <version>] [--no-fetch] [--no-push]"
 	echo ""
 	echo "    -d|--debug (optional):                                  Enabling debug mode"
 	echo "    -i|--ignore-zip-files <file1,...,fileN> (optional):     Comma-separated list of files to be not processed (useful if a file is corrupted on the remote server)"
 	echo "    -l|--logdir <logdir> (optional):                        Logging directory, defaults to \"\${PWD}/logs\""
 	echo "    -r|--zip-list-retention-time '<time>' (optinal):        Retention time after the update of the zip list is enforced, defaults to '1 min'"
+	echo "    -s|--storage-location <hu|us> (optinal):                Location of the zip files, defaults to 'us'"
 	echo "    -v|--version <version> (optional):                      Version to handle, defaults to \"7.4.13\""
 	echo "    --no-fetch (optional):                                  Do not fetch DXP repo"
 	echo "    --no-push (optional):                                   Do not push to origin"
 	echo ""
 	echo "Example (equals to no arguments):"
 	echo ""
-	echo "${0} -l \"\$PWD/logs\" -r '1 min' -v \"7.4.13\""
+	echo "${0} -l \"\${PWD}/logs\" -r '1 min' -s us -v '7.4.13'"
 	echo ""
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
+}
+
+function process_argument_storage_location {
+	case "${STORAGE_LOCATION}" in
+		hu)
+			STORAGE_URL="http://storage.bud.liferay.com/public/files.liferay.com/private/ee/fix-packs"
+
+			;;
+
+		us)
+			STORAGE_URL="https://files.liferay.com/private/ee/fix-packs"
+
+			;;
+
+		*)
+			lc_log ERROR "Unknown location: ${STORAGE_LOCATION}".
+
+			exit 1
+
+			;;
+	esac
 }
 
 function process_argument_version {
@@ -293,7 +319,7 @@ function process_zip_list_file {
 
 		check_ignore_zip_file "${hotfix_zip_file}" "${release_version}" && continue
 
-		file_url="${ZIP_LIST_URL}/${release_version}/hotfix/${hotfix_zip_file}"
+		file_url="${STORAGE_URL}/${release_version}/hotfix/${hotfix_zip_file}"
 
 		lc_time_run lc_download "${file_url}"
 
