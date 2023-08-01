@@ -9,6 +9,8 @@ source "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_common.sh"
 
 BASE_DIR="${PWD}"
 
+LIFERAY_COMMON_DOWNLOAD_MAX_TIME="120"
+
 REPO_PATH_DXP="${BASE_DIR}/liferay-dxp"
 REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
 
