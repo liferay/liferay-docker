@@ -173,7 +173,7 @@ function get_hotfix_properties {
 	unzip -p "${1}" fixpack_documentation.json > "${tmp_json}"
 
 	GIT_REVISION=$(jq -r '.build."git-revision"' "${tmp_json}")
-	PATCH_ID=$(jq -r '.patch."id"' "${tmp_json}")
+	PATCH_PRODUCT=$(jq -r '.patch."product"' "${tmp_json}")
 	PATCH_REQUIREMENTS=$(jq -r '.patch."requirements"' "${tmp_json}")
 
 	rm -f "${tmp_json}"
@@ -184,14 +184,14 @@ function get_hotfix_properties {
 	fi
 
 	lc_log DEBUG "GIT_REVISION: '${GIT_REVISION}'."
-	lc_log DEBUG "PATCH_ID: '${PATCH_ID}'."
+	lc_log DEBUG "PATCH_PRODUCT: '${PATCH_PRODUCT}'."
 	lc_log DEBUG "PATCH_REQUIREMENTS: '${PATCH_REQUIREMENTS}'."
 
-	if [[ "${PATCH_REQUIREMENTS}" != +(ga1|u[1-9]*) ]]
+	if [[ "${PATCH_PRODUCT}" == "7413" ]] && [[ "${PATCH_REQUIREMENTS}" != +(ga1|u[1-9]*) ]]
 	then
 		lc_log DEBUG "Inappropriate patch.requirements attribute: '${PATCH_REQUIREMENTS}'."
 
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 }
 
@@ -300,6 +300,11 @@ function process_zip_list_file {
 		local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
 		lc_time_run get_hotfix_properties "${cache_file}"
+
+		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		then
+			continue
+		fi
 
 		copy_hotfix_commit "${GIT_REVISION}" "${release_version}-${PATCH_REQUIREMENTS}" "${tag_name_new}"
 	done
