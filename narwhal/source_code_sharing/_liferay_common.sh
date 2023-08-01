@@ -102,6 +102,7 @@ function lc_download {
 	if [ -z "${file_name}" ]
 	then
 		file_name=${file_url##*/}
+		skip_copy="true"
 	fi
 
 	if [ -e "${file_name}" ]
@@ -113,7 +114,7 @@ function lc_download {
 
 	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
-	if [ -e "${cache_file}" ] && [ -n "${2}" ]
+	if [ -e "${cache_file}" ] && [ "${skip_copy}" = "true" ]
 	then
 		lc_log DEBUG "Copying file from cache: ${cache_file}."
 
@@ -139,11 +140,10 @@ function lc_download {
 
 	mv "${cache_file}.${temp_timestamp}" "${cache_file}"
 
-	if [ -n "${2}" ]
+	if [ "${skip_copy}" != "true" ]
 	then
 		cp "${cache_file}" "${file_name}"
 	fi
-
 }
 
 function lc_get_property {
