@@ -170,12 +170,12 @@ function lc_echo_time {
 }
 
 function lc_log {
-	local level=${1}
-	local message=${2}
+	local level="${1}"
+	local message="${2}"
 
 	if [ "${level}" != "DEBUG" ] || [ "${LIFERAY_COMMON_LOG_LEVEL}" == "DEBUG" ]
 	then
-		echo "$(lc_date) [${level}] ${message}"
+		echo "$(lc_date) [${level}] ${message}" >&2
 	fi
 }
 
