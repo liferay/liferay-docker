@@ -80,6 +80,7 @@ function lc_docker_compose {
 #	Downloads a file to a cache directory configured via ${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}.
 #	If the file is already in the cache then skip downloading it again.
 #	If a file name is given as an optional second parameter, it is copied from the cache.
+#	If the file cannot be downloaded in ${LIFERAY_COMMON_DOWNLOAD_MAX_TIME} seconds, the process is cancelled.
 #
 # INVOCATION:
 #	lc_download <file url> [<destination file name>]
@@ -131,7 +132,7 @@ function lc_download {
 
 	local temp_timestamp="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
 
-	if (! curl "${file_url}" --fail --max-time 120 --output "${cache_file}.${temp_timestamp}" --show-error --silent)
+	if (! curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_timestamp}" --show-error --silent)
 	then
 		lc_log ERROR "Unable to download ${file_url}."
 
