@@ -9,9 +9,9 @@ source "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_liferay_common.sh"
 export BASE_DIR="${PWD}"
 
 export GIT_AUTHOR_EMAIL="er-hu@liferay.com"
-export GIT_AUTHOR_NAME="Enterprise release"
-export GIT_COMMITTER_EMAIL="er-hu@liferay.com"
-export GIT_COMMITTER_NAME="Enterprise release"
+export GIT_AUTHOR_NAME="Enterprise Release"
+export GIT_COMMITTER_EMAIL="${GIT_AUTHOR_EMAIL}"
+export GIT_COMMITTER_NAME="${GIT_AUTHOR_NAME}"
 
 export REPO_PATH_DXP="${BASE_DIR}/liferay-dxp"
 export REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
