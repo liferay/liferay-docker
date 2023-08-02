@@ -96,9 +96,9 @@ function push_to_origin {
 
 	lc_cd "${REPO_PATH_DXP}"
 
-	git push --tags -q origin "${1}"
+	git push -q origin "${1}"
 }
 
 function run_rsync {
-	rsync -ar --delete --exclude '.git' "${REPO_PATH_EE}/" "${REPO_PATH_DXP}/"
+	rsync -ar --inplace --delete --exclude '.git' --times "${REPO_PATH_EE}/" "${REPO_PATH_DXP}/"
 }
