@@ -224,7 +224,12 @@ function get_hotfix_zip_list_file {
 	else
 		lc_log DEBUG "Downloading the zip list file: '${zip_list_file}'."
 
-		curl --fail --show-error --silent "${STORAGE_URL}/${release_version}/hotfix/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq - "${zip_list_file}"
+		if (! curl --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --show-error --silent "${STORAGE_URL}/${release_version}/hotfix/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq - "${zip_list_file}")
+			then
+				lc_log ERROR "The '${zip_list_file}' cannot be downloaded."
+
+				exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
 	fi
 }
 
