@@ -139,9 +139,11 @@ function checkout_commit {
 		git reset --hard
 		git clean -fdX
 
-		git checkout -f "${2}"
+		git checkout -f "${commit_hash}"
 	else
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		lc_log ERROR "The commit '${commit_hash}' is missing in the repository 'liferay-portal-ee'."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 }
 
@@ -151,16 +153,6 @@ function copy_hotfix_commit {
 	local tag_name_new="${3}"
 
 	lc_time_run checkout_commit liferay-portal-ee "${commit_hash}"
-
-	local return_code="${?}"
-
-	if [ "${return_code}" == "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-	then
-		lc_log ERROR "The commit '${commit_hash}' is missing in the repository 'liferay-portal-ee'."
-		echo ""
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
 
 	lc_time_run checkout_tag liferay-dxp "${tag_name_base}"
 
