@@ -130,16 +130,16 @@ function lc_download {
 
 	local current_date=$(lc_date)
 
-	local temp_timestamp="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
+	local temp_suffix="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
 
-	if (! curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_timestamp}" --show-error --silent)
+	if (! curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_suffix}" --show-error --silent)
 	then
 		lc_log ERROR "Unable to download ${file_url}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	mv "${cache_file}.${temp_timestamp}" "${cache_file}"
+	mv "${cache_file}.${temp_suffix}" "${cache_file}"
 
 	if [ "${skip_copy}" != "true" ]
 	then
