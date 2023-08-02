@@ -152,7 +152,7 @@ function warm_up_tomcat {
 
 	for count in {0..30}
 	do
-		if (curl --fail --head --output /dev/null --silent http://localhost:8080)
+		if (curl --fail --head --location --output /dev/null --silent --show-error http://localhost:8080)
 		then
 			break
 		fi
@@ -160,7 +160,7 @@ function warm_up_tomcat {
 		sleep 3
 	done
 
-	if (! curl --fail --head --output /dev/null --silent http://localhost:8080)
+	if (! curl --fail --head --location --output /dev/null --silent --show-error http://localhost:8080)
 	then
 		echo "Failed to start tomcat in 90 seconds"
 

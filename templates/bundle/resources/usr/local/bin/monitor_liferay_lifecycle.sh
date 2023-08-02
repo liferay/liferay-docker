@@ -52,7 +52,7 @@ function main {
 
 		local curl_content
 
-		curl_content=$(curl --connect-timeout "${LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT}" --fail --max-time "${curl_max_time}" --show-error --silent --url "localhost:8080" "${LIFERAY_CONTAINER_STATUS_REQUEST_URL}" 2>/dev/null)
+		curl_content=$(curl --connect-timeout "${LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT}" --fail --location --max-time "${curl_max_time}" --show-error --silent --url "localhost:8080" "${LIFERAY_CONTAINER_STATUS_REQUEST_URL}" 2>/dev/null)
 
 		local exit_code=$?
 

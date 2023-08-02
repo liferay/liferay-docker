@@ -425,15 +425,15 @@ function build_zabbix_web_image {
 }
 
 function get_latest_available_zulu_version {
-	local version=$(curl -H 'accept: */*' -L -s "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
+	local version=$(curl --fail -H 'accept: */*' --location -L --silent --show-error -s "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
 
 	echo "${version}"
 }
 
 function get_latest_docker_hub_version {
-	local token=$(curl -s "https://auth.docker.io/token?scope=repository:liferay/${1}:pull&service=registry.docker.io" | jq -r '.token')
+	local token=$(curl --fail --location --silent --show-error -s "https://auth.docker.io/token?scope=repository:liferay/${1}:pull&service=registry.docker.io" | jq -r '.token')
 
-	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o '\\"org.label-schema.version\\":\\"[0-9]\.[0-9]\.[0-9]*\\"' | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
+	local version=$(curl --fail --location --silent --show-error -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o '\\"org.label-schema.version\\":\\"[0-9]\.[0-9]\.[0-9]*\\"' | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
 	version=$(get_tag_from_image "${version}" "liferay/${1}" "org.label-schema.version:[0-9]*.[0-9]*.[0-9]*")
 
@@ -443,7 +443,7 @@ function get_latest_docker_hub_version {
 function get_latest_docker_hub_zabbix_server_version {
 	local image_tag="${1}"
 
-	local token=$(curl -s "https://auth.docker.io/token?scope=repository:${image_tag}:pull&service=registry.docker.io" | jq -r '.token')
+	local token=$(curl --fail --location --silent --show-error -s "https://auth.docker.io/token?scope=repository:${image_tag}:pull&service=registry.docker.io" | jq -r '.token')
 
 	local label_name="org.opencontainers.image.version"
 	local tag="ubuntu-latest"
@@ -454,7 +454,7 @@ function get_latest_docker_hub_zabbix_server_version {
 		tag="latest"
 	fi
 
-	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/${image_tag}/manifests/${tag}" | grep -o "\\\\\"${label_name}\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
+	local version=$(curl --fail --location --silent --show-error -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/${image_tag}/manifests/${tag}" | grep -o "\\\\\"${label_name}\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
 	version=$(get_tag_from_image "${version}" "${image_tag}" "${label_name}:[0-9]*.[0-9]*.[0-9]*")
 
@@ -462,9 +462,9 @@ function get_latest_docker_hub_zabbix_server_version {
 }
 
 function get_latest_docker_hub_zulu_version {
-	local token=$(curl -s "https://auth.docker.io/token?scope=repository:liferay/${1}:pull&service=registry.docker.io" | jq -r '.token')
+	local token=$(curl --fail --location --silent --show-error -s "https://auth.docker.io/token?scope=repository:liferay/${1}:pull&service=registry.docker.io" | jq -r '.token')
 
-	local version=$(curl -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o "\\\\\"org.label-schema.zulu${2}_${3}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
+	local version=$(curl --fail --location --silent --show-error -s -H "Authorization: Bearer $token" "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep -o "\\\\\"org.label-schema.zulu${2}_${3}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
 
 	version=$(get_tag_from_image "${version}" "liferay/${1}" "org.label-schema.zulu${2}_${3}_version:[0-9]*.[0-9]*.[0-9]*")
 

@@ -119,7 +119,7 @@ function lc_download {
 
 	local timestamp=$(lc_date "${current_date}" "+%Y%m%d%H%M%S")
 
-	if (! curl "${file_url}" --fail --output "${cache_file}.temp${timestamp}" --silent)
+	if (! curl "${file_url}" --fail --location --output "${cache_file}.temp${timestamp}" --silent --show-error )
 	then
 		lc_log ERROR "Unable to download ${file_url}."
 

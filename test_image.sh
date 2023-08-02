@@ -256,7 +256,7 @@ function test_health_status {
 function test_page {
 	local content
 
-	content=$(curl --fail --max-time 60 -s --show-error -L "${1}")
+	content=$(curl --fail --location --max-time 60 -s --silent --show-error -L "${1}")
 
 	local exit_code=$?
 

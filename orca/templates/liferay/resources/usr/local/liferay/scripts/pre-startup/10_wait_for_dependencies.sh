@@ -49,7 +49,7 @@ function wait_for_search {
 	do
 		for search_address in ${ORCA_LIFERAY_SEARCH_ADDRESSES//,/ }
 		do
-			if ( curl --max-time 3 --silent "${search_address}/_cat/health" | grep "green" &>/dev/null)
+			if ( curl --fail --location --max-time 3 --silent --show-error "${search_address}/_cat/health" | grep "green" &>/dev/null)
 			then
 				echo "Search server ${search_address} is available."
 

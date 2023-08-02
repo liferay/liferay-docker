@@ -19,7 +19,7 @@ function main {
 
 		local license_file_name="trial-dxp-license-${license_start_date}.xml"
 
-		curl --header "${LIFERAY_DOCKER_LICENSE_API_HEADER}" --silent "${LIFERAY_DOCKER_LICENSE_API_URL}?licenseLifetime=$((1000 *60 * 60 * 24 * 90))&startDate=${license_start_date}&owner=docker%40liferay.com" > "${license_dir}/deploy/${license_file_name}.json"
+		curl --fail --header "${LIFERAY_DOCKER_LICENSE_API_HEADER}" --location --show-error --silent "${LIFERAY_DOCKER_LICENSE_API_URL}?licenseLifetime=$((1000 *60 * 60 * 24 * 90))&startDate=${license_start_date}&owner=docker%40liferay.com" > "${license_dir}/deploy/${license_file_name}.json"
 
 		sed "s/\\\n//g" "${license_dir}/deploy/${license_file_name}.json" |
 		sed "s/\\\t//g" |

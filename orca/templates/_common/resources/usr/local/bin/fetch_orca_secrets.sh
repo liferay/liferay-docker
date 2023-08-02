@@ -15,7 +15,7 @@ function check_usage {
 }
 
 function get_token {
-	local token=$(curl --fail --request POST --silent "http://${ORCA_VAULT_ADDRESSES}/v1/auth/userpass-${1}/login/${1}" --data '{"password": "'${ORCA_VAULT_SERVICE_PASSWORD}'"}')
+	local token=$(curl --fail --location --request POST --silent --show-error "http://${ORCA_VAULT_ADDRESSES}/v1/auth/userpass-${1}/login/${1}" --data '{"password": "'${ORCA_VAULT_SERVICE_PASSWORD}'"}')
 
 	token=${token##*client_token\":\"}
 	token=${token%%\"*}
@@ -33,7 +33,7 @@ function load_secrets {
 	do
 		echo "Fetching secret ${secret}."
 
-		local password=$(curl --fail --header "X-Vault-Token: ${token}" --request GET --silent "http://${ORCA_VAULT_ADDRESSES}/v1/secret/data/${secret}")
+		local password=$(curl --fail --header --location "X-Vault-Token: ${token}" --request GET --silent --show-error "http://${ORCA_VAULT_ADDRESSES}/v1/secret/data/${secret}")
 
 		if [ "${?}" -gt 0 ]
 		then
@@ -69,7 +69,7 @@ function wait_for_vault {
 	do
 		for ORCA_VAULT_ADDRESSES in ${ORCA_VAULT_ADDRESSES//,/ }
 		do
-			if ( curl --max-time 3 --silent "http://${ORCA_VAULT_ADDRESSES}/v1/sys/health" | grep "\"sealed\":false" &>/dev/null)
+			if ( curl --fail --location --max-time 3 --silent --show-error "http://${ORCA_VAULT_ADDRESSES}/v1/sys/health" | grep "\"sealed\":false" &>/dev/null)
 			then
 				echo "Vault ${ORCA_VAULT_ADDRESSES} is available."
 

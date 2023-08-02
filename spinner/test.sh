@@ -39,7 +39,7 @@ function up {
 function wait_for_startup {
 	for count in {1..1000}
 	do
-		if (curl --fail --max-time 3 http://localhost | grep -q "Liferay Digital Experience Platform")
+		if (curl --fail --location --max-time 3 --silent --show-error http://localhost | grep -q "Liferay Digital Experience Platform")
 		then
 			return 0
 		fi

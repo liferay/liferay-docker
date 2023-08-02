@@ -109,7 +109,7 @@ function download {
 
 	mkdir -p $(dirname "${file_name}")
 
-	curl $(echo "${LIFERAY_DOCKER_CURL_OPTIONS}") --fail --location --output "${file_name}" "${file_url}" || exit 2
+	curl $(echo "${LIFERAY_DOCKER_CURL_OPTIONS}") --fail --location --output --silent --show-error "${file_name}" "${file_url}" || exit 2
 }
 
 function get_current_arch {
@@ -254,7 +254,7 @@ function start_tomcat {
 
 	"./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh" start
 
-	until curl --fail --head --output /dev/null --silent http://localhost:8080
+	until curl --fail --head --location --output /dev/null --silent --show-error http://localhost:8080
 	do
 		sleep 3
 	done
