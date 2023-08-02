@@ -91,7 +91,6 @@ function lc_docker_compose {
 
 function lc_download {
 	local file_url="${1}"
-	local file_name="${2}"
 
 	if [ -z "${file_url}" ]
 	then
@@ -99,6 +98,8 @@ function lc_download {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
+
+	local file_name="${2}"
 
 	if [ -z "${file_name}" ]
 	then
