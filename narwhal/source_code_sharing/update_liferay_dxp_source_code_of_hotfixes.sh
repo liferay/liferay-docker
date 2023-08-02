@@ -52,11 +52,11 @@ function check_ignore_zip_file {
 
 
 function check_usage {
-	LIFERAY_COMMON_DEBUG_ENABLED="no"
+	LIFERAY_COMMON_DEBUG_ENABLED="false"
 	LIFERAY_COMMON_LOG_DIR="${PWD}/logs"
 	IGNORE_ZIP_FILES=""
-	RUN_FETCH_REPOSITORY="yes"
-	RUN_PUSH_TO_ORIGIN="yes"
+	RUN_FETCH_REPOSITORY="true"
+	RUN_PUSH_TO_ORIGIN="true"
 	STORAGE_LOCATION="us"
 	ZIP_LIST_RETENTION_TIME="1 min"
 	VERSION_INPUT="7.4.13"
@@ -105,12 +105,12 @@ function check_usage {
 				;;
 
 			--no-fetch)
-				RUN_FETCH_REPOSITORY="no"
+				RUN_FETCH_REPOSITORY="false"
 
 				;;
 
 			--no-push)
-				RUN_PUSH_TO_ORIGIN="no"
+				RUN_PUSH_TO_ORIGIN="false"
 
 				;;
 

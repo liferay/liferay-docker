@@ -50,7 +50,7 @@ function clone_repository {
 }
 
 function fetch_repository {
-	if [ "${RUN_FETCH_REPOSITORY}" != "yes" ]
+	if [ "${RUN_FETCH_REPOSITORY}" != "true" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -89,7 +89,7 @@ function prepare_repositories {
 }
 
 function push_to_origin {
-	if [ "${RUN_PUSH_TO_ORIGIN}" != "yes" ]
+	if [ "${RUN_PUSH_TO_ORIGIN}" != "true" ]
 		then
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

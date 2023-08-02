@@ -25,10 +25,10 @@ function check_new_tags {
 }
 
 function check_usage {
-	LIFERAY_COMMON_DEBUG_ENABLED="no"
+	LIFERAY_COMMON_DEBUG_ENABLED="false"
 	LIFERAY_COMMON_LOG_DIR="${PWD}/logs"
-	RUN_FETCH_REPOSITORY="yes"
-	RUN_PUSH_TO_ORIGIN="yes"
+	RUN_FETCH_REPOSITORY="true"
+	RUN_PUSH_TO_ORIGIN="true"
 	VERSION_INPUT="7.[0-9].[0-9] 7.[0-9].1[0-9]"
 
 	while [ "$#" -gt "0" ]
@@ -54,12 +54,12 @@ function check_usage {
 				;;
 
 			--no-fetch)
-				RUN_FETCH_REPOSITORY="no"
+				RUN_FETCH_REPOSITORY="false"
 
 				;;
 
 			--no-push)
-				RUN_PUSH_TO_ORIGIN="no"
+				RUN_PUSH_TO_ORIGIN="false"
 
 				;;
 
@@ -87,7 +87,7 @@ function checkout_branch {
 	then
 		git checkout -f -q "${branch_name}"
 
-		if [ "${RUN_FETCH_REPOSITORY}" == "yes" ]
+		if [ "${RUN_FETCH_REPOSITORY}" == "true" ]
 		then
 			git pull origin "${branch_name}"
 		fi
