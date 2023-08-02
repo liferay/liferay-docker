@@ -111,16 +111,23 @@ function lc_download {
 	then
 		lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
 
+		echo "${file_name}"
+
 		return
 	fi
 
 	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
 	if [ -e "${cache_file}" ] && [ "${skip_copy}" = "true" ]
+		lc_log DEBUG "Not copying file from cache: ${cache_file}."
+
+		echo "${cache_file}"
 	then
 		lc_log DEBUG "Copying file from cache: ${cache_file}."
 
 		cp "${cache_file}" "${file_name}"
+
+		echo "${file_name}"
 
 		return
 	fi
@@ -142,9 +149,13 @@ function lc_download {
 
 	mv "${cache_file}.${temp_suffix}" "${cache_file}"
 
-	if [ "${skip_copy}" != "true" ]
+	if [ "${skip_copy}" = "true" ]
 	then
+		echo "${cache_file}"
+	else
 		cp "${cache_file}" "${file_name}"
+
+		echo "${file_name}"
 	fi
 }
 
