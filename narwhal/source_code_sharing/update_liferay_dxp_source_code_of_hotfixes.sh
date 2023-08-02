@@ -176,17 +176,17 @@ function copy_hotfix_commit {
 }
 
 function get_hotfix_properties {
-	local tmp_json
+	local cache_file="${1}"
 
-	tmp_json=$(mktemp "/tmp/json.XXX")
+	local tmp_fix_pack_documentation="/tmp/${cache_file##*/}"
 
-	unzip -p "${1}" fixpack_documentation.json > "${tmp_json}"
+	unzip -p "${cache_file}" fixpack_documentation.json > "${tmp_fix_pack_documentation}"
 
-	GIT_REVISION=$(jq -r '.build."git-revision"' "${tmp_json}")
-	PATCH_PRODUCT=$(jq -r '.patch."product"' "${tmp_json}")
-	PATCH_REQUIREMENTS=$(jq -r '.patch."requirements"' "${tmp_json}")
+	GIT_REVISION=$(jq -r '.build."git-revision"' "${tmp_fix_pack_documentation}")
+	PATCH_PRODUCT=$(jq -r '.patch."product"' "${tmp_fix_pack_documentation}")
+	PATCH_REQUIREMENTS=$(jq -r '.patch."requirements"' "${tmp_fix_pack_documentation}")
 
-	rm -f "${tmp_json}"
+	rm -f "${tmp_fix_pack_documentation}"
 
 	if [[ "${PATCH_REQUIREMENTS}" == base-* ]]
 	then
