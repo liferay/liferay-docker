@@ -168,7 +168,6 @@ function copy_hotfix_commit {
 }
 
 function get_hotfix_properties {
-	set -xv
 	local cache_file="${1}"
 
 	if [ ! -f "${cache_file}" ]
@@ -193,7 +192,7 @@ function get_hotfix_properties {
 
 	rm -f "${tmp_fix_pack_documentation}"
 
-	if [[ "${PATCH_REQUIREMENTS}" == base-* ]]
+	if [[ "${PATCH_PRODUCT}" == "7413" ]] && [[ "${PATCH_REQUIREMENTS}" == base-* ]]
 	then
 		PATCH_REQUIREMENTS="ga1"
 	fi
@@ -202,13 +201,12 @@ function get_hotfix_properties {
 	lc_log DEBUG "PATCH_PRODUCT: '${PATCH_PRODUCT}'."
 	lc_log DEBUG "PATCH_REQUIREMENTS: '${PATCH_REQUIREMENTS}'."
 
-	if [[ "${PATCH_PRODUCT}" == "7413" ]] && [[ "${PATCH_REQUIREMENTS}" != +(ga1|u[1-9]*) ]]
+	if [[ "${PATCH_REQUIREMENTS}" != +(ga1|u[1-9]*) ]]
 	then
-		lc_log DEBUG "Inappropriate patch.requirements attribute: '${PATCH_REQUIREMENTS}'."
+		lc_log DEBUG "No match of patch.requirements attribute: '${PATCH_REQUIREMENTS}'."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
-	set +xv
 }
 
 function get_hotfix_zip_list_file {
