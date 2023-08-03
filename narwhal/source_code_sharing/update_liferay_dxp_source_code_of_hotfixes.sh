@@ -123,6 +123,8 @@ function check_usage {
 		shift 1
 	done
 
+	process_argument_ignore_zip_files
+
 	process_argument_storage_location
 
 	process_argument_version
@@ -226,7 +228,7 @@ function get_hotfix_zip_list_file {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
-		lc_log DEBUG "Downloading the zip list file: '${zip_list_file}'."
+		lc_log DEBUG "Downloading the zip list file: '${zip_list_file}' from '${STORAGE_URL}/${release_version}/hotfix/' ."
 
 		if (! curl --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --show-error --silent "${STORAGE_URL}/${release_version}/hotfix/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq - "${zip_list_file}")
 			then
@@ -269,6 +271,14 @@ function print_help {
 	echo ""
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
+}
+
+function process_argument_ignore_zip_files {
+
+	local ignore_zip_files_persistent_file="$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/ignore_zip_files_persistent.txt"
+	local ignore_zip_files_persistent_list=$(tr '\n' ',' < "${ignore_zip_files_persistent_file}")
+
+	IGNORE_ZIP_FILES="${IGNORE_ZIP_FILES},${ignore_zip_files_persistent_list}"
 }
 
 function process_argument_storage_location {
@@ -321,6 +331,8 @@ function process_zip_list_file {
 
 	for hotfix_zip_file in $(cat "${zip_list_file}")
 	do
+		lc_log DEBUG ""
+
 		lc_log DEBUG "Processing ${hotfix_zip_file}."
 
 		local tag_name_new

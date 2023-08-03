@@ -112,17 +112,17 @@ function copy_tag {
 }
 
 function get_all_tags {
+	local repository="${1}"
+
+	lc_cd "${BASE_DIR}/${repository}"
+
 	git tag -l --sort=creatordate --format='%(refname:short)' "${VERSION_LIST[@]}"
 }
 
 function get_new_tags {
-	lc_cd "${REPO_PATH_EE}"
+	get_all_tags liferay-portal-ee > "${TAGS_FILE_EE}"
 
-	get_all_tags > "${TAGS_FILE_EE}"
-
-	lc_cd "${REPO_PATH_DXP}"
-
-	get_all_tags > "${TAGS_FILE_DXP}"
+	get_all_tags liferay-dxp > "${TAGS_FILE_DXP}"
 
 	local tag_name
 
@@ -173,7 +173,7 @@ function main {
 
 	prepare_repositories
 
-	lc_time_run get_new_tags
+	get_new_tags
 
 	check_new_tags
 
