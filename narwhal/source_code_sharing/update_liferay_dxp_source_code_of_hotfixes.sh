@@ -40,7 +40,7 @@ function check_ignore_zip_file {
 
 	if [[ "x${IGNORE_ZIP_FILES}" =~ x*${hotfix_zip_file}* ]]
 	then
-		lc_log WARNING "Ignoring '${file_url}'."
+		lc_log DEBUG "Ignoring '${file_url}'."
 
 		return 0
 	else
