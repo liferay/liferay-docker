@@ -170,9 +170,21 @@ function copy_hotfix_commit {
 function get_hotfix_properties {
 	local cache_file="${1}"
 
+	if [ ! -f "${cache_file}" ]
+	then
+		lc_log ERROR "Cache file '${cache_file}' not found."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
 	local tmp_fix_pack_documentation="/tmp/${cache_file##*/}"
 
-	unzip -p "${cache_file}" fixpack_documentation.json > "${tmp_fix_pack_documentation}"
+	if (! unzip -p "${cache_file}" fixpack_documentation.json > "${tmp_fix_pack_documentation}")
+	then
+		lc_log ERROR "No fixpack_documentation.json file found in '${cache_file}'."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 
 	GIT_REVISION=$(jq -r '.build."git-revision"' "${tmp_fix_pack_documentation}")
 	PATCH_PRODUCT=$(jq -r '.patch."product"' "${tmp_fix_pack_documentation}")
