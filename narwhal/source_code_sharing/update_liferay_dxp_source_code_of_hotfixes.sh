@@ -168,6 +168,7 @@ function copy_hotfix_commit {
 }
 
 function get_hotfix_properties {
+	set -xv
 	local cache_file="${1}"
 
 	if [ ! -f "${cache_file}" ]
@@ -207,6 +208,7 @@ function get_hotfix_properties {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
+	set +xv
 }
 
 function get_hotfix_zip_list_file {
