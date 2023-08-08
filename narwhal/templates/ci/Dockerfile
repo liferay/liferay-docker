@@ -14,6 +14,8 @@ RUN curl -fsSL https://github.com/jenkinsci/plugin-installation-manager-tool/rel
 
 RUN curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key > /usr/share/keyrings/jenkins-keyring.asc && \
 	echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list && \
+	groupadd -g 1001 jenkins && \
+	useradd -d /var/lib/jenkins -g 1001 -u 1001 -s /bin/false jenkins && \
 	apt-get update && \
 	apt-get install --no-install-recommends -y fontconfig git jenkins tini && \
 	mkdir -p /var/cache/jenkins/war && \
