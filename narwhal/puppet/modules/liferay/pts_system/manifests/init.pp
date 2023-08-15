@@ -12,6 +12,14 @@ class pts_system {
 	include pts_users
 
 	class {
+		'locales':
+			default_locale => 'C.UTF-8',
+			locales => [
+				'en_US.UTF-8 UTF-8',
+			],
+	}
+
+	class {
 		'pts_hosts':
 			purge => true
 	}
