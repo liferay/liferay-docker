@@ -1,4 +1,4 @@
-node 'bob5.bud.liferay.com' {
+node 'bob6.dso.lfr' {
 	include pts_ci_node
 	include pts_system
 }
