@@ -1,0 +1,228 @@
+#cloud-config
+# ABOVE LINE REQUIRED BY AUTOINSTALL, DO NOT REMOVE
+
+interactive-sections:
+  - network
+autoinstall:
+  apt:
+    disable_components: []
+    geoip: true
+    preserve_sources_list: false
+    mirror-selection:
+      primary:
+        - uri: http://hu.archive.ubuntu.com/ubuntu
+        - uri: http://ports.ubuntu.com/ubuntu-ports
+  packages:
+    - clevis
+    - clevis-luks
+    - clevis-systemd
+    - cryptsetup-bin
+    - host
+    - iputils-ping
+    - lxd-agent-loader
+    - vim
+    - wget
+  drivers:
+    install: false
+  identity:
+    hostname: __HOSTNAME__
+    password:
+    realname: Tamas Papp
+    username: tompos
+  kernel:
+    package: linux-generic
+  keyboard:
+    layout: us
+    toggle: null
+    variant: ''
+  locale: en_US.UTF-8
+#  network:
+#    ethernets:
+#      enp5s0:
+#        dhcp4: true
+#    version: 2
+  source:
+    id: ubuntu-server-minimal
+    search_drivers: false
+  ssh:
+    allow-pw: true
+    authorized-keys: ['ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK9cRilRehhA3bBKZfd8OITMFVyzQBUvCjvbejLsJavD tompos@private']
+    install-server: true
+  storage:
+    config:
+    - ptable: gpt
+      #serial: 0QEMU_QEMU_HARDDISK_lxd_root
+      #path: /dev/sda
+      wipe: superblock-recursive
+      type: disk
+      id: disc0
+
+    - device: disc0
+      wipe: superblock
+      type: partition
+      id: partition-0
+      size: 1G
+      flag: boot
+      grub_device: true
+
+    - fstype: fat32
+      volume: partition-0
+      preserve: false
+      type: format
+      id: format-0
+
+    - device: disc0
+      wipe: superblock
+      type: partition
+      id: partition-1
+      size: 20G
+
+    - name: vg0
+      devices:
+      - partition-1
+      type: lvm_volgroup
+      id: lvm_volgroup-0
+
+    - name: root
+      volgroup: lvm_volgroup-0
+      size: 15G
+      wipe: superblock
+      preserve: false
+      type: lvm_partition
+      id: lvm_partition-0
+
+    - fstype: ext4
+      volume: lvm_partition-0
+      preserve: false
+      type: format
+      id: format-1
+
+    - path: /
+      device: format-1
+      type: mount
+      id: mount-1
+
+    - path: /boot/efi
+      device: format-0
+      type: mount
+      id: mount-0
+
+  updates: all
+  late-commands:
+    - curtin in-target --target=/target -- wget -O /tmp/puppet-release.deb https://apt.puppetlabs.com/pool/jammy/puppet7/p/puppet7-release/puppet7-release_7.0.0-14jammy_all.deb
+    - curtin in-target --target=/target -- dpkg -i /tmp/puppet-release.deb
+  version: 1
+#cloud-config
+# DO NOT REMOVE THE ABOVE LINE, IT IS REQUIRED BY AUTOINSTALL
+
+interactive-sections:
+  - network
+autoinstall:
+  apt:
+    disable_components: []
+    geoip: true
+    preserve_sources_list: false
+    mirror-selection:
+      primary:
+        - uri: http://hu.archive.ubuntu.com/ubuntu
+        - uri: http://ports.ubuntu.com/ubuntu-ports
+  packages:
+    - clevis
+    - clevis-luks
+    - clevis-systemd
+    - cryptsetup-bin
+    - host
+    - iputils-ping
+    - lxd-agent-loader
+    - vim
+    - wget
+  drivers:
+    install: false
+  identity:
+    hostname: __HOSTNAME__
+    password: $6$FWPJEhH0FDcEuKqn$//VkbRLk4TisV8VYJZEi0WoJUp51tFqYdnhM4LX9moCegWKsvs7c/LlXDViQNVAlv8..vTUETj7FIMKFLic2d1
+    realname: Tamas Papp
+    username: tompos
+  kernel:
+    package: linux-generic
+  keyboard:
+    layout: us
+    toggle: null
+    variant: ''
+  locale: en_US.UTF-8
+#  network:
+#    ethernets:
+#      enp5s0:
+#        dhcp4: true
+#    version: 2
+  source:
+    id: ubuntu-server-minimal
+    search_drivers: false
+  ssh:
+    allow-pw: true
+    authorized-keys: ['ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK9cRilRehhA3bBKZfd8OITMFVyzQBUvCjvbejLsJavD tompos@private']
+    install-server: true
+  storage:
+    config:
+    - ptable: gpt
+      #serial: 0QEMU_QEMU_HARDDISK_lxd_root
+      #path: /dev/sda
+      wipe: superblock-recursive
+      type: disk
+      id: disc0
+
+    - device: disc0
+      wipe: superblock
+      type: partition
+      id: partition-0
+      size: 1G
+      flag: boot
+      grub_device: true
+
+    - fstype: fat32
+      volume: partition-0
+      preserve: false
+      type: format
+      id: format-0
+
+    - device: disc0
+      wipe: superblock
+      type: partition
+      id: partition-1
+      size: 20G
+
+    - name: vg0
+      devices:
+      - partition-1
+      type: lvm_volgroup
+      id: lvm_volgroup-0
+
+    - name: root
+      volgroup: lvm_volgroup-0
+      size: 15G
+      wipe: superblock
+      preserve: false
+      type: lvm_partition
+      id: lvm_partition-0
+
+    - fstype: ext4
+      volume: lvm_partition-0
+      preserve: false
+      type: format
+      id: format-1
+
+    - path: /
+      device: format-1
+      type: mount
+      id: mount-1
+
+    - path: /boot/efi
+      device: format-0
+      type: mount
+      id: mount-0
+
+  updates: all
+  late-commands:
+    - curtin in-target --target=/target -- wget -O /tmp/puppet-release.deb https://apt.puppetlabs.com/pool/jammy/puppet7/p/puppet7-release/puppet7-release_7.0.0-14jammy_all.deb
+    - curtin in-target --target=/target -- dpkg -i /tmp/puppet-release.deb
+  version: 1
