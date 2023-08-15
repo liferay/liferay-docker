@@ -23,6 +23,9 @@ mod 'inifle',
 	:git => 'https://github.com/puppetlabs/puppetlabs-inifile.git',
 	:ref => 'main'
 
+mod 'locales',
+	:git => 'https://github.com/saz/puppet-locales.git'
+
 mod 'snap',
 	:git => 'https://github.com/root-expert/puppet-snap.git'
 

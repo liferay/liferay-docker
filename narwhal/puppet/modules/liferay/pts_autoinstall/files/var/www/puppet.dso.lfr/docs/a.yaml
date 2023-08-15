@@ -19,6 +19,7 @@ autoinstall:
     - cryptsetup-bin
     - host
     - iputils-ping
+    - locales
     - lxd-agent-loader
     - rsyslog
     - vim
