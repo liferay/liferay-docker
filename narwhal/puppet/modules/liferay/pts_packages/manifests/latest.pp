@@ -43,6 +43,7 @@ class pts_packages::latest {
 		'passwd',
 		'procps',
 		'rsync',
+		'rsyslog',
 		'strace',
 		'sysstat',
 		'systemd',

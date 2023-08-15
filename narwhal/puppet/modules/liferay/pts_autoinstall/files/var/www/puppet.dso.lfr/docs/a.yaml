@@ -20,6 +20,7 @@ autoinstall:
     - host
     - iputils-ping
     - lxd-agent-loader
+    - rsyslog
     - vim
     - wget
   drivers:
