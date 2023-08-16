@@ -3549,3 +3549,13 @@ liferay-hotfix-7670-7310.zip
 liferay-hotfix-7674-7310.zip
 liferay-hotfix-7679-7310.zip
 liferay-hotfix-7680-7310.zip
+liferay-hotfix-7685-7310.zip
+liferay-hotfix-7697-7310.zip
+liferay-hotfix-7699-7310.zip
+liferay-hotfix-7707-7310.zip
+liferay-hotfix-7711-7310.zip
+liferay-hotfix-7714-7310.zip
+liferay-hotfix-7715-7310.zip
+liferay-hotfix-7718-7310.zip
+liferay-hotfix-7719-7310.zip
+liferay-hotfix-7725-7310.zip
