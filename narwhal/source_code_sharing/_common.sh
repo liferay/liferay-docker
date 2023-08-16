@@ -57,7 +57,7 @@ function fetch_repository {
 
 	lc_cd "${BASE_DIR}/${1}"
 
-	git fetch --all
+	git fetch --all --tags
 }
 
 function run_git_maintenance {
