@@ -24,11 +24,11 @@ function check_if_tag_exists {
 	then
 		lc_log DEBUG "The tag '${tag_name}' already exists in the ${repository} repository."
 
-		return 0
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	else
 		lc_log DEBUG "The tag '${tag_name}' does not exist in the ${repository} repository."
 
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
@@ -42,14 +42,28 @@ function check_ignore_zip_file {
 	then
 		lc_log DEBUG "Ignoring '${file_url}'."
 
-		return 0
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	else
 		lc_log DEBUG "The file on '${file_url}' is not on the ignore list."
 
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
+function check_patch_requirements {
+	local patch_requirements="${1}"
+
+	if [[ "${patch_requirements}" == +(ga1|u[1-9]*) ]]
+	then
+		lc_log DEBUG "The .patch.requirements property is suitable: '${patch_requirements}'."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	else
+		lc_log DEBUG "The .patch.requirements property is unsuitable: '${patch_requirements}'. Skipping it."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
 
 function check_usage {
 	LIFERAY_COMMON_DEBUG_ENABLED="false"
@@ -203,13 +217,6 @@ function get_hotfix_properties {
 	lc_log DEBUG "GIT_REVISION: '${GIT_REVISION}'."
 	lc_log DEBUG "PATCH_PRODUCT: '${PATCH_PRODUCT}'."
 	lc_log DEBUG "PATCH_REQUIREMENTS: '${PATCH_REQUIREMENTS}'."
-
-	if [[ "${PATCH_REQUIREMENTS}" != +(ga1|u[1-9]*) ]]
-	then
-		lc_log DEBUG "No match of patch.requirements attribute: '${PATCH_REQUIREMENTS}'."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
 }
 
 function get_hotfix_zip_list_file {
@@ -353,10 +360,7 @@ function process_zip_list_file {
 
 		lc_time_run get_hotfix_properties "${cache_file}"
 
-		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-		then
-			continue
-		fi
+		check_patch_requirements "${PATCH_REQUIREMENTS}" || continue
 
 		copy_hotfix_commit "${GIT_REVISION}" "${release_version}-${PATCH_REQUIREMENTS}" "${tag_name_new}"
 	done
