@@ -19,6 +19,7 @@ class pts_packages::latest {
 		'curl',
 		'dbus',
 		'debconf',
+		'dialog',
 		'distro-info-data',
 		'dpkg',
 		'dstat',
