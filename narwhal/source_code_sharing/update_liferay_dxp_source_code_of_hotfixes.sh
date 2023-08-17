@@ -66,6 +66,7 @@ function check_usage {
 		case "${1}" in
 			-d|--debug)
 				LIFERAY_COMMON_LOG_LEVEL="DEBUG"
+				LIFERAY_COMMON_DEBUG_ENABLED="true"
 
 				;;
 
