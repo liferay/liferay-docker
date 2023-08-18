@@ -1,0 +1,9 @@
+services:
+    tang-server:
+        image: tang:latest
+        ports:
+            - 80:9090
+        restart: on-failure
+        volumes:
+            - /opt/docker/tang:/db
+version: '3'
