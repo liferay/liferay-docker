@@ -8,14 +8,30 @@ function main {
 		exit 1
 	fi
 
+	if [ ! -n "${LIFERAY_ROUTES_CLIENT_EXTENSION}" ]
+	then
+		local LIFERAY_ROUTES_CLIENT_EXTENSION="/etc/liferay/lxc/ext-init-metadata"
+	fi
+
+	if [ ! -n "${LIFERAY_ROUTES_DXP}" ]
+	then
+		local LIFERAY_ROUTES_DXP="/etc/liferay/lxc/dxp-metadata"
+	fi
+
 	echo "OAuth Application ERC: ${LIFERAY_BATCH_OAUTH_APP_ERC}"
 	echo ""
 
-	local lxc_dxp_main_domain=$(cat /etc/liferay/lxc/dxp-metadata/com.liferay.lxc.dxp.mainDomain)
-	local lxc_dxp_server_protocol=$(cat /etc/liferay/lxc/dxp-metadata/com.liferay.lxc.dxp.server.protocol)
-	local oauth2_client_id=$(cat /etc/liferay/lxc/ext-init-metadata/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.headless.server.client.id)
-	local oauth2_client_secret=$(cat /etc/liferay/lxc/ext-init-metadata/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.headless.server.client.secret)
-	local oauth2_token_uri=$(cat /etc/liferay/lxc/ext-init-metadata/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.token.uri)
+	local lxc_dxp_main_domain=$(cat ${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.main.domain)
+
+	if [ ! -n "${lxc_dxp_main_domain}" ]
+	then
+		lxc_dxp_main_domain=$(cat ${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.mainDomain)
+	fi
+
+	local lxc_dxp_server_protocol=$(cat ${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.server.protocol)
+	local oauth2_client_id=$(cat ${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.headless.server.client.id)
+	local oauth2_client_secret=$(cat ${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.headless.server.client.secret)
+	local oauth2_token_uri=$(cat ${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.token.uri)
 
 	echo "LXC DXP Main Domain: ${lxc_dxp_main_domain}"
 	echo "LXC DXP Server Protocol: ${lxc_dxp_server_protocol}"

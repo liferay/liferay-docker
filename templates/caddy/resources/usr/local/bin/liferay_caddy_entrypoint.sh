@@ -1,7 +1,12 @@
 #!/bin/bash
 
 function main {
-	for i in $(cat /etc/liferay/lxc/dxp-metadata/com.liferay.lxc.dxp.domains 2>/dev/null)
+	if [ ! -n "${LIFERAY_ROUTES_DXP}" ]
+	then
+		local LIFERAY_ROUTES_DXP="/etc/liferay/lxc/dxp-metadata"
+	fi
+
+	for i in $(cat ${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.domains 2>/dev/null)
 	do
 		local url="https://${i}"
 
