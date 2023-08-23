@@ -450,6 +450,8 @@
         bundle_url: releases-cdn.liferay.com/dxp/7.3.10-u29/liferay-dxp-tomcat-7.3.10.u29-20230630000044146.7z
     7.3.10-u30:
         bundle_url: https://releases-cdn.liferay.com/dxp/7.3.10-u30/liferay-dxp-tomcat-7.3.10.u30-20230807074510030.7z
+    7.3.10-u31:
+        bundle_url: files.liferay.com/private/ee/portal/7.3.10-u31/liferay-dxp-tomcat-7.3.10.u31-20230816125836261.7z
 7.4.3.90:
     7.4.3.90-ga90:
         bundle_url: releases-cdn.liferay.com/portal/7.4.3.90-ga90/liferay-ce-portal-tomcat-7.4.3.90-ga90-20230816115455869.7z
