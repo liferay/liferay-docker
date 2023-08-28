@@ -40,6 +40,8 @@ function main {
 
 	start_monitor_liferay_lifecycle
 
+	start_interval_thread_dump &
+
 	update_container_status pre-configure-scripts
 
 	execute_scripts /usr/local/liferay/scripts/pre-configure
@@ -81,6 +83,21 @@ function start_monitor_liferay_lifecycle {
 	then
 		/usr/local/bin/monitor_liferay_lifecycle.sh &
 	fi
+}
+
+function start_interval_thread_dump {
+	while [ ! -z "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}" ]
+	do
+		generate_thread_dumps_now
+	done
+}
+
+function generate_thread_dumps_now {
+	while [ -s "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}" ]
+	do
+		/usr/local/bin/generate_thread_dump.sh -s $(cat "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}")
+	done
+	sleep 60
 }
 
 main
