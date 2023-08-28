@@ -33,7 +33,7 @@ function checkout_tag {
 function commit_and_tag {
 	local tag_name="${1}"
 
-	git add .
+	git add -f .
 
 	git commit -a -m "${tag_name}" -q
 
