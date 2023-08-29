@@ -1,4 +1,4 @@
-FROM liferay/jdk11-jdk8
+FROM liferay/jdk11
 
 CMD ["bash"]
 
@@ -9,6 +9,9 @@ ENV JAVA_VERSION=zulu11
 ENV TZ=Etc/UTC
 
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/sbin/jenkins.sh"]
+
+RUN groupadd -g 1001 jenkins && \
+	useradd -d /var/lib/jenkins -g 1001 -u 1001 jenkins
 
 RUN curl -fsSL https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/2.12.11/jenkins-plugin-manager-2.12.11.jar -o /opt/jenkins-plugin-manager.jar
 
