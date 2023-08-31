@@ -39,5 +39,8 @@ mod 'stdlib',
 mod 'sudo',
 	:git => 'https://github.com/saz/puppet-sudo.git'
 
+mod 'systemd',
+	:git => 'https://github.com/voxpupuli/puppet-systemd.git',
+
 mod 'timezone',
 	:git => 'https://github.com/saz/puppet-timezone.git'
