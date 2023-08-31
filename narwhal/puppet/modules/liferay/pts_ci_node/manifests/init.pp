@@ -1,6 +1,7 @@
 class pts_ci_node {
 	Class['docker'] -> Class['pts_users::users::jenkins']
 	include docker
+	include pts_threatstack
 	include pts_users::users::jenkins
 	include snap
 
