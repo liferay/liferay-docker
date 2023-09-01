@@ -452,9 +452,9 @@
         bundle_url: https://releases-cdn.liferay.com/dxp/7.3.10-u30/liferay-dxp-tomcat-7.3.10.u30-20230807074510030.7z
     7.3.10-u31:
         bundle_url: files.liferay.com/private/ee/portal/7.3.10-u31/liferay-dxp-tomcat-7.3.10.u31-20230816125836261.7z
-7.4.3.91:
-    7.4.3.91-ga91:
-        bundle_url: releases-cdn.liferay.com/portal/7.4.3.91-ga91/liferay-ce-portal-tomcat-7.4.3.91-ga91-20230823121425150.7z
+7.4.3.92:
+    7.4.3.92-ga92:
+        bundle_url: releases-cdn.liferay.com/portal/7.4.3.92-ga92/liferay-ce-portal-tomcat-7.4.3.92-ga92-20230831132112456.7z
         latest: true
 7.4.13:
     7.4.13-u1:
@@ -629,6 +629,8 @@
         bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u90/liferay-dxp-tomcat-7.4.13.u90-20230816105706384.7z
     7.4.13-u91:
         bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u91/liferay-dxp-tomcat-7.4.13.u91-20230823111925501.7z
+    7.4.13-u92:
+        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u92/liferay-dxp-tomcat-7.4.13.u92-20230831122532583.7z
         latest: true
     7.4.13.nightly:
         bundle_url: files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
