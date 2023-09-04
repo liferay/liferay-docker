@@ -78,13 +78,6 @@ function start_liferay {
 	wait ${START_LIFERAY_PID}
 }
 
-function start_monitor_liferay_lifecycle {
-	if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" == "true" ]]
-	then
-		/usr/local/bin/monitor_liferay_lifecycle.sh &
-	fi
-}
-
 function start_interval_thread_dump {
 	if [ ! -n "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}" ]
 	then
@@ -100,6 +93,13 @@ function start_interval_thread_dump {
 			sleep 60
 		fi
 	done
+}
+
+function start_monitor_liferay_lifecycle {
+	if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" == "true" ]]
+	then
+		/usr/local/bin/monitor_liferay_lifecycle.sh &
+	fi
 }
 
 main
