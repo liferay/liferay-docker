@@ -64,8 +64,6 @@ function main {
 
 		sleep "${SLEEP}"
 	done
-
-	echo "[Liferay] Generated thread dumps"
 }
 
 function print_help {
