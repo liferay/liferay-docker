@@ -88,7 +88,15 @@ function start_interval_thread_dump {
 	do
 		if [ -s "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}" ]
 		then
-			/usr/local/bin/generate_thread_dump.sh -n 1 -s $(cat "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}")
+			local sleep=$(cat "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}")
+
+			if ! [ "${sleep}" -gt 3 ] &>/dev/null
+			then
+				sleep=3
+			fi
+
+
+			/usr/local/bin/generate_thread_dump.sh -n 1 -s "${sleep}"
 		else
 			sleep 60
 		fi
