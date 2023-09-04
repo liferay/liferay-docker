@@ -86,17 +86,16 @@ function start_monitor_liferay_lifecycle {
 }
 
 function start_interval_thread_dump {
-	while [ ! -z "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}" ]
-	do
-		generate_thread_dumps_now
-	done
-}
+	if [ ! -n "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}" ]
+	then
+		return
+	fi
 
-function generate_thread_dumps_now {
 	while [ -s "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}" ]
 	do
-		/usr/local/bin/generate_thread_dump.sh -s $(cat "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}")
+		/usr/local/bin/generate_thread_dump.sh -n 1 -s $(cat "${LIFERAY_DOCKER_AUTO_THREAD_DUMP_SLEEP_FILE}")
 	done
+
 	sleep 60
 }
 
