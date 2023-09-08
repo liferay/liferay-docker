@@ -91,7 +91,6 @@ function lc_docker_compose {
 
 function lc_download {
 	local file_url="${1}"
-	local file_name="${2}"
 
 	if [ -z "${file_url}" ]
 	then
@@ -99,6 +98,8 @@ function lc_download {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
+
+	local file_name="${2}"
 
 	if [ -z "${file_name}" ]
 	then
@@ -108,42 +109,61 @@ function lc_download {
 
 	if [ -e "${file_name}" ]
 	then
-		lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
+		lc_log DEBUG "Not downloading '${file_url}' because it is already copied."
+
+		echo "${file_name}"
 
 		return
 	fi
 
 	local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
-	if [ -e "${cache_file}" ] && [ "${skip_copy}" = "true" ]
+	if [ -e "${cache_file}" ]
 	then
-		lc_log DEBUG "Copying file from cache: ${cache_file}."
+		lc_log DEBUG "Not downloading the file because it already exists in the cache: '${cache_file}'."
 
-		cp "${cache_file}" "${file_name}"
+		if [ "${skip_copy}" = "true" ]
+		then
+			lc_log DEBUG "Skipping copy."
+
+			echo "${cache_file}"
+		else
+			lc_log DEBUG "Copying from cache: '${cache_file}'."
+
+			cp "${cache_file}" "${file_name}"
+
+			echo "${file_name}"
+		fi
 
 		return
 	fi
 
 	mkdir -p "$(dirname "${cache_file}")"
 
-	lc_log DEBUG "Downloading ${file_url}."
+	lc_log DEBUG "Downloading '${file_url}'."
 
 	local current_date=$(lc_date)
 
-	local temp_timestamp="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
+	local temp_suffix="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
 
-	if (! curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_timestamp}" --show-error --silent)
+	if (! curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_suffix}" --show-error --silent)
 	then
-		lc_log ERROR "Unable to download ${file_url}."
+		lc_log ERROR "Unable to download '${file_url}'."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	mv "${cache_file}.${temp_timestamp}" "${cache_file}"
+	mv "${cache_file}.${temp_suffix}" "${cache_file}"
 
-	if [ "${skip_copy}" != "true" ]
+	if [ "${skip_copy}" = "true" ]
 	then
+		echo "${cache_file}"
+	else
+		lc_log DEBUG "Copying from cache: '${cache_file}'."
+
 		cp "${cache_file}" "${file_name}"
+
+		echo "${file_name}"
 	fi
 }
 
@@ -257,6 +277,7 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_HELP=2
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
+	LIFERAY_COMMON_DOWNLOAD_MAX_TIME=1200
 
 	export LC_ALL=C
 	export TZ=UTC
