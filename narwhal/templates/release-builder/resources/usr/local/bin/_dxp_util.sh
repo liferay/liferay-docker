@@ -1,6 +1,13 @@
 #!/bin/bash
 
 function add_licensing {
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	then
+		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	lc_cd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
 
 	lc_cd "$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
@@ -62,6 +69,13 @@ function compile_dxp {
 }
 
 function decrement_module_versions {
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	then
+		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules
 
 	find apps dxp/apps -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd
@@ -113,7 +127,7 @@ function get_dxp_version {
 function obfuscate_licensing {
 	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the obfuscate_licensing step."
+		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

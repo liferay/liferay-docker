@@ -3,11 +3,18 @@
 function clean_portal_git {
 	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
 
-	git clean -dfX
-	git reset --hard
-
 	GIT_SHA=$(git rev-parse HEAD)
 	GIT_SHA_SHORT=$(git rev-parse --short HEAD)
+
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	then
+		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	git clean -dfX
+	git reset --hard
 }
 
 function clone_repository {
