@@ -61,9 +61,9 @@ function cleanup_ignored_dxp_modules {
 	(	
 		git grep "Liferay-Releng-Bundle: false" | sed -e s/app.bnd:.*//
 		git ls-files "*/.lfrbuild-releng-ignore" | sed -e s#/.lfrbuild-releng-ignore##
-	) | while IFS= read -r -d '' not_bundled_dir
+	) | while IFS= read -r not_bundled_dir
 	do
-		find "${not_bundled_dir}" -name bnd.bnd | while IFS= read -r -d '' module_to_delete_bnd
+		find "${not_bundled_dir}" -name bnd.bnd | while IFS= read -r module_to_delete_bnd
 		do
 			local module_to_delete=$(lc_get_property "${module_to_delete_bnd}" Bundle-SymbolicName)
 
