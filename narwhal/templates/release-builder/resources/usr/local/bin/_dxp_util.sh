@@ -31,9 +31,12 @@ function build_dxp {
 
 	ant deploy
 
+	ant deploy-portal-license-enterprise-app
+
 	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules
 
 	ant build-app-jar-release
+
 
 	#
 	# Workaround until we implement LPS-182849
