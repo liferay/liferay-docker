@@ -157,6 +157,13 @@ function pre_compile_setup {
 function prepare_legal_files {
 	lc_cd "${BUNDLES_DIR}"
 
+	if [ -e license ]
+	then
+		echo "license directory exists, skipping."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	mkdir license
 
 	cp /opt/liferay/dev/projects/liferay-portal-ee/copyright.txt license
