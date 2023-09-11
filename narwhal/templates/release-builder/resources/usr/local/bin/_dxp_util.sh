@@ -41,6 +41,10 @@ function build_dxp {
 
 	rm -f apache-tomcat*
 
+	mv deploy/*.war osgi/war
+
+	rm -fr osgi/test
+
 	echo "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" > "${BUILD_DIR}"/built-sha
 }
 
