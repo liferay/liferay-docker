@@ -62,9 +62,11 @@ function main {
 
 		lc_time_run deploy_elasticsearch_sidecar
 
+		lc_time_run cleanup_ignored_dxp_modules
+
 		#lc_time_run warm_up_tomcat
 
-		lc_time_run package_bundle
+		#lc_time_run package_bundle
 
 		lc_time_run upload_bundle
 	else
@@ -81,6 +83,8 @@ function main {
 		background_run prepare_release_dir
 		lc_time_run build_dxp
 		wait
+
+		lc_time_run cleanup_ignored_dxp_modules
 
 		lc_time_run add_portal_patcher_properties_jar
 

@@ -55,6 +55,30 @@ function build_dxp {
 	echo "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" > "${BUILD_DIR}"/built-sha
 }
 
+function cleanup_ignored_dxp_modules {
+	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules
+
+	(	
+		git grep "Liferay-Releng-Bundle: false" | sed -e s/app.bnd:.*//
+		git ls-files "*/.lfrbuild-releng-ignore" | sed -e s#/.lfrbuild-releng-ignore##
+	) | while IFS= read -r -d '' not_bundled_dir
+	do
+		find "${not_bundled_dir}" -name bnd.bnd | while IFS= read -r -d '' module_to_delete_bnd
+		do
+			local module_to_delete=$(lc_get_property "${module_to_delete_bnd}" Bundle-SymbolicName)
+
+			if [ -e "${BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar" ]
+			then
+				echo "Deleting ${BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar as it was not supposed to be bundled."
+
+				rm -f "${BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar"
+			else
+				echo "Couldn't find ${BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar (this can be a good thing)."
+			fi
+		done
+	done
+}
+
 function compile_dxp {
 	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
 	then
@@ -99,6 +123,13 @@ function decrement_module_versions {
 }
 
 function deploy_elasticsearch_sidecar {
+	if [ -e "${BUNDLES_DIR}"/elasticsearch-sidecar ]
+	then
+		echo "elasticsearch-sidecar already exists in the bundle, skipping."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
 
 	/opt/liferay/dev/projects/liferay-portal-ee/gradlew deploySidecar
