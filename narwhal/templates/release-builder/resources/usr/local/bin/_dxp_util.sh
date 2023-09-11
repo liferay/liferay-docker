@@ -140,6 +140,15 @@ function pre_compile_setup {
 	ant setup-profile-dxp
 }
 
+function prepare_legal_files {
+	lc_cd "${BUNDLES_DIR}"
+
+	mkdir license
+
+	cp /opt/liferay/dev/projects/liferay-portal-ee/copyright.txt license
+	cp /opt/liferay/dev/projects/liferay-portal-ee/lib/versions.html license
+}
+
 function warm_up_tomcat {
 	if [ -e "${BUILD_DIR}/tomcat-warmup-complete" ]
 	then
