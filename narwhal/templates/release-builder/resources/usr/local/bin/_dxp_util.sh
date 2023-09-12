@@ -70,13 +70,16 @@ function cleanup_ignored_dxp_modules {
 		do
 			local module_to_delete=$(lc_get_property "${module_to_delete_bnd}" Bundle-SymbolicName)
 
+			echo "Deleting ${module_to_delete}.jar as it was not supposed to be bundled."
+
 			if [ -e "${BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar" ]
 			then
-				echo "Deleting ${BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar as it was not supposed to be bundled."
-
 				rm -f "${BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar"
+			elif [ -e "${BUNDLES_DIR}/osgi/portal/${module_to_delete}.jar" ]
+			then
+				rm -f "${BUNDLES_DIR}/osgi/portal/${module_to_delete}.jar"
 			else
-				echo "Couldn't find ${BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar (this can be a good thing)."
+				echo "Couldn't find ${module_to_delete}.jar to delete."
 			fi
 		done
 	done
