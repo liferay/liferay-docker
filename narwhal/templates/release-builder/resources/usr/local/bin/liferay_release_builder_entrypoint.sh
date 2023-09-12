@@ -66,7 +66,7 @@ function main {
 
 		#lc_time_run warm_up_tomcat
 
-		#lc_time_run package_bundle
+		lc_time_run package_bundle
 
 		lc_time_run upload_bundle
 	else
