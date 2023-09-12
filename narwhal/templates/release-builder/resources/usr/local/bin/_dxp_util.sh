@@ -215,7 +215,8 @@ function warm_up_tomcat {
 
 	lc_cd "${BUNDLES_DIR}/tomcat/bin"
 
-	LIFERAY_JVM_OPTS="-Xmx3G"
+	export LIFERAY_CLEAN_OSGI_STATE=true
+	export LIFERAY_JVM_OPTS="-Xmx3G"
 
 	./catalina.sh start
 

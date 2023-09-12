@@ -64,7 +64,7 @@ function main {
 
 		lc_time_run cleanup_ignored_dxp_modules
 
-		#lc_time_run warm_up_tomcat
+		lc_time_run warm_up_tomcat
 
 		lc_time_run package_bundle
 
