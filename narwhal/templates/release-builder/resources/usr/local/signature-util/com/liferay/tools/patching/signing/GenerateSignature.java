@@ -15,17 +15,19 @@ public class GenerateSignature {
 
 			System.exit(1);
 		}
+
 		try {
-			KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			KeyStore keyStore = KeyStore.getInstance("PKCS12");
 			FileInputStream keyStoreFis = new FileInputStream(arguments[0]);
 			keyStore.load(keyStoreFis, arguments[1].toCharArray());
-			System.out.println(arguments[0] + " " + arguments[3]);
 
+			System.out.println(arguments[3]);
 			PrivateKey privateKey = (PrivateKey) keyStore.getKey(
 				arguments[2], arguments[3].toCharArray());
 
-			Signature dsa = Signature.getInstance("SHA256withRSA");
-			dsa.initSign(privateKey);
+			Signature signature = Signature.getInstance("SHA256withRSA");
+
+			signature.initSign(privateKey);
 
 			FileInputStream fis = new FileInputStream(arguments[4]);
 			BufferedInputStream bufin = new BufferedInputStream(fis);
@@ -34,12 +36,12 @@ public class GenerateSignature {
 			int len;
 
 			while ((len = bufin.read(buffer)) >= 0) {
-				dsa.update(buffer, 0, len);
+				signature.update(buffer, 0, len);
 			}
 
 			bufin.close();
 
-			byte[] realSig = dsa.sign();
+			byte[] realSig = signature.sign();
 
 			System.out.println(_toHex(realSig));
 		}
