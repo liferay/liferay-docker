@@ -267,5 +267,7 @@ function warm_up_tomcat {
 	rm -fr ../logs/*
 	rm -fr ../../logs/*
 
+	rm -fr ../../osgi/state/*
+
 	touch "${BUILD_DIR}/tomcat-warmup-complete"
 }
