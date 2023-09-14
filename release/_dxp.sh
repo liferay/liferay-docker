@@ -22,7 +22,7 @@ function build_dxp {
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} was already built ${_BUILD_DIR}."
+		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already built in ${_BUILD_DIR}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -87,9 +87,10 @@ function clean_up_ignored_dxp_modules {
 }
 
 function compile_dxp {
-	if [ -e "${_BUILD_DIR}"/built.sha ] && [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built.sha ] &&
+	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping the compile step."
+		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already built in ${_BUILD_DIR}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -100,7 +101,8 @@ function compile_dxp {
 }
 
 function decrement_module_versions {
-	if [ -e "${_BUILD_DIR}"/built.sha ] && [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built.sha ] &&
+	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
 		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping this step."
 
