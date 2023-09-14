@@ -30,11 +30,12 @@ function check_usage {
 
 function main {
 	ANT_OPTS="-Xmx10G"
-	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
-	_BUILD_DIR="${HOME}"/.liferay/release-builder/build
+	_BUILD_DIR="${HOME}"/.liferay-release/build
 	_BUILD_TIMESTAMP=$(date +%s)
-	_BUNDLES_DIR="${HOME}"/.liferay/release-builder/dev/projects/bundles
-	_PROJECTS_DIR="${HOME}"/.liferay/release-builder/dev/projects
+	_BUNDLES_DIR="${HOME}"/.liferay-release/dev/projects/bundles
+	_PROJECTS_DIR="${HOME}"/.liferay-release/dev/projects
+
+	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
 
 	check_usage
 
