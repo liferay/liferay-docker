@@ -38,7 +38,7 @@ function update_portal_git {
 	if [ -e "${_BUILD_DIR}"/liferay-portal-ee.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/liferay-portal-ee.sha) == "${LIFERAY_RELEASE_GIT_SHA}" ]
 	then
-		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already checked out."
+		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already checked out in ${_PROJECTS_DIR}/liferay-portal-ee."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -77,19 +77,21 @@ function update_release_tool_git {
 
 	if [ ! -n "${release_tool_sha}" ]
 	then
-		echo "The release.tool.sha property is missing from the release.properties file in the liferay-portal-ee repository. Use a SHA which is compatible with this builder and includes both release.tool.dir and release.tool.sha properties."
+		lc_log ERROR "The property \"release.tool.sha\" is missing from liferay-portal-ee/release.properties."
 
 		return 1
 	fi
 
-	if [ -e "${_BUILD_DIR}"/liferay-release-tool-ee.sha ] && [ $(cat "${_BUILD_DIR}"/liferay-release-tool-ee.sha) == "${release_tool_sha}" ]
+	if [ -e "${_BUILD_DIR}"/liferay-release-tool-ee.sha ] &&
+	   [ $(cat "${_BUILD_DIR}"/liferay-release-tool-ee.sha) == "${release_tool_sha}" ]
 	then
-		echo "${release_tool_sha} is already checked out, skipping the git checkout step."
+		lc_log INFO "${release_tool_sha} was already checked out in ${_PROJECTS_DIR}/liferay-release-tool-ee."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	git fetch --all --tags --prune || return 1
+	git fetch --all --prune --tags || return 1
+
 	git checkout origin/"${release_tool_sha}" || return 1
 
 	echo "${release_tool_sha}" > "${_BUILD_DIR}"/liferay-release-tool-ee.sha
