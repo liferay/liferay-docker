@@ -24,6 +24,49 @@ function main {
 	BUNDLES_DIR=/opt/liferay/dev/projects/bundles
 	BUILD_TIMESTAMP=$(date +%s)
 
+	ENV ANT_OPTS="-Xmx10G"
+
+	#
+	# The id of the hotfix
+	#
+
+	NARWHAL_BUILD_ID=1
+
+	#
+	# The git tag or branch to check out from the liferay-portal-ee
+	#
+	NARWHAL_GIT_SHA=7.2.x
+
+	#
+	# Either release or fix pack
+	#
+	NARWHAL_OUTPUT=release
+
+	#
+	# The github username used to check out on the liferay-portal-ee repository. Should be used only for debugging purposes
+	#
+	NARWHAL_REMOTE=liferay
+
+	#
+	# Tag name in the liferay-portal-ee repository which contains the hotfix testing SHA-s if you would like to build a test hotfix
+	#
+	NARWHAL_HOTFIX_TESTING_TAG=
+
+	#
+	# Git SHA which would be cherry-picked on NARWHAL_GIT_SHA from the tree of NARWHAL_HOTFIX_TESTING_TAG to build a test hotfix
+	#
+	NARWHAL_HOTFIX_TESTING_SHA=
+
+	#
+	# If this is set, the files will be uploaded to the designated buckets
+	#
+	NARWHAL_UPLOAD=
+
+	#
+	# The name of the GCS bucket where the internal files should be copied
+	#
+	NARWHAL_GCS_INTERNAL_BUCKET=patcher-storage
+
 	LIFERAY_COMMON_LOG_DIR=${BUILD_DIR}
 
 	lc_time_run setup_git
