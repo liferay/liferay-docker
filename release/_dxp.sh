@@ -13,7 +13,12 @@ function add_licensing {
 
 	lc_cd "$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
 
-	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
+	ant \
+		-Dext.dir=. \
+		-Djava.lib.dir="${JAVA_HOME}/jre/lib" \
+		-Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee \
+		-Dportal.release.edition.private=true \
+		-f build-release-license.xml
 }
 
 function build_dxp {
@@ -133,7 +138,7 @@ function decrement_module_versions {
 function deploy_elasticsearch_sidecar {
 	if [ -e "${_BUNDLES_DIR}"/elasticsearch-sidecar ]
 	then
-		echo "elasticsearch-sidecar already exists in the bundle, skipping."
+		lc_log "Elasticsearch sidecar already exists in the bundle."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -141,16 +146,15 @@ function deploy_elasticsearch_sidecar {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
 
 	"${_PROJECTS_DIR}"/liferay-portal-ee/gradlew deploySidecar
-
 }
 
 function get_dxp_version {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	local major=$(lc_get_property release.properties "release.info.version.major")
-	local minor=$(lc_get_property release.properties "release.info.version.minor")
+	local major_version=$(lc_get_property release.properties "release.info.version.major")
+	local minor_version=$(lc_get_property release.properties "release.info.version.minor")
 
-	local branch="${major}.${minor}.x"
+	local branch="${major_version}.${minor_version}.x"
 
 	if [ "${branch}" == "7.4.x" ]
 	then
@@ -160,20 +164,27 @@ function get_dxp_version {
 	local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
 	local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
-	echo "${major}.${minor}.${bug_fix}-u${trivial}"
+	echo "${major_version}.${minor_version}.${bug_fix}-u${trivial}"
 }
 
 function obfuscate_licensing {
-	if [ -e "${_BUILD_DIR}"/built.sha ] && [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built.sha ] &&
+	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping this step."
+		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already built in ${_BUILD_DIR}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	lc_cd "${_PROJECTS_DIR}/liferay-release-tool-ee/$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
 
-	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee -Dportal.kernel.dir="${_PROJECTS_DIR}"/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal
+	ant \
+		-Dext.dir=. \
+		-Djava.lib.dir="${JAVA_HOME}/jre/lib" \
+		-Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee \
+		-Dportal.kernel.dir="${_PROJECTS_DIR}"/liferay-portal-ee/portal-kernel \
+		-Dportal.release.edition.private=true \
+		-f build-release-license.xml obfuscate-portal
 }
 
 function pre_compile_setup {
