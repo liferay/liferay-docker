@@ -8,11 +8,11 @@ function add_licensing {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "/opt/liferay/dev/projects/liferay-release-tool-ee/"
+	lc_cd "${PROJECTS_DIR}/liferay-release-tool-ee/"
 
-	lc_cd "$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
+	lc_cd "$(lc_get_property "${PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
 
-	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
+	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir="${PROJECTS_DIR}"/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
 }
 
 function build_dxp {
@@ -27,13 +27,13 @@ function build_dxp {
 
 	rm -fr "${BUNDLES_DIR}"
 
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
 	ant deploy
 
 	ant deploy-portal-license-enterprise-app
 
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee/modules
 
 	ant build-app-jar-release
 
@@ -59,7 +59,7 @@ function build_dxp {
 }
 
 function cleanup_ignored_dxp_modules {
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee/modules
 
 	(	
 		git grep "Liferay-Releng-Bundle: false" | sed -e s/app.bnd:.*//
@@ -93,7 +93,7 @@ function compile_dxp {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "/opt/liferay/dev/projects/liferay-portal-ee"
+	lc_cd "${PROJECTS_DIR}/liferay-portal-ee"
 
 	ant clean compile
 }
@@ -106,7 +106,7 @@ function decrement_module_versions {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee/modules
 
 	find apps dxp/apps -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd
 	do
@@ -136,14 +136,14 @@ function deploy_elasticsearch_sidecar {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
 
-	/opt/liferay/dev/projects/liferay-portal-ee/gradlew deploySidecar
+	"${PROJECTS_DIR}"/liferay-portal-ee/gradlew deploySidecar
 
 }
 
 function get_dxp_version {
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
 	local major=$(lc_get_property release.properties "release.info.version.major")
 	local minor=$(lc_get_property release.properties "release.info.version.minor")
@@ -169,13 +169,13 @@ function obfuscate_licensing {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "/opt/liferay/dev/projects/liferay-release-tool-ee/$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.dir")"
+	lc_cd "${PROJECTS_DIR}/liferay-release-tool-ee/$(lc_get_property "${PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
 
-	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir=/opt/liferay/dev/projects/liferay-portal-ee -Dportal.kernel.dir=/opt/liferay/dev/projects/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal
+	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir="${PROJECTS_DIR}"/liferay-portal-ee -Dportal.kernel.dir="${PROJECTS_DIR}"/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal
 }
 
 function pre_compile_setup {
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
 	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
 	then
@@ -203,8 +203,8 @@ function prepare_legal_files {
 
 	mkdir license
 
-	cp /opt/liferay/dev/projects/liferay-portal-ee/copyright.txt license
-	cp /opt/liferay/dev/projects/liferay-portal-ee/lib/versions.html license
+	cp "${PROJECTS_DIR}"/liferay-portal-ee/copyright.txt license
+	cp "${PROJECTS_DIR}"/liferay-portal-ee/lib/versions.html license
 }
 
 function warm_up_tomcat {

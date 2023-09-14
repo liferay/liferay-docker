@@ -42,7 +42,7 @@ function add_hotfix_testing_code {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
 	echo "Running git fetch origin tag \"${NARWHAL_HOTFIX_TESTING_TAG}\""
 

@@ -20,9 +20,10 @@ function background_run {
 
 
 function main {
-	BUILD_DIR=/opt/liferay/build
-	BUNDLES_DIR=/opt/liferay/dev/projects/bundles
+	BUILD_DIR="${HOME}"/.liferay/release-builder/build
+	BUNDLES_DIR="${HOME}"/.liferay/dev/projects/bundles
 	BUILD_TIMESTAMP=$(date +%s)
+	PROJECTS_DIR="${HOME}"/.liferay/dev/projects
 
 	ENV ANT_OPTS="-Xmx10G"
 

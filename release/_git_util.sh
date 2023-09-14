@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function clean_portal_git {
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
 	GIT_SHA=$(git rev-parse HEAD)
 	GIT_SHA_SHORT=$(git rev-parse --short HEAD)
@@ -18,13 +18,13 @@ function clean_portal_git {
 }
 
 function clone_repository {
-	if [ -e /opt/liferay/dev/projects/"${1}" ]
+	if [ -e "${PROJECTS_DIR}/${1}" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	mkdir -p /opt/liferay/dev/projects/
-	lc_cd /opt/liferay/dev/projects/
+	mkdir -p "${PROJECTS_DIR}"
+	lc_cd "${PROJECTS_DIR}"
 
 	git clone git@github.com:liferay/"${1}".git
 }
@@ -42,7 +42,7 @@ function setup_git {
 }
 
 function setup_remote {
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
 	if [ ! -n "${NARWHAL_REMOTE}" ]
 	then
@@ -58,13 +58,13 @@ function setup_remote {
 
 	git remote rm origin
 
-	git remote add origin git@github.com:${NARWHAL_REMOTE}/liferay-portal-ee
+	git remote add origin git@github.com:"${NARWHAL_REMOTE}"/liferay-portal-ee
 }
 
 function update_portal_git {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	lc_cd /opt/liferay/dev/projects/liferay-portal-ee
+	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
 	if [ -e "${BUILD_DIR}"/sha-liferay-portal-ee ] && [ $(cat "${BUILD_DIR}"/sha-liferay-portal-ee) == "${NARWHAL_GIT_SHA}" ]
 	then
@@ -99,12 +99,12 @@ function update_portal_git {
 }
 
 function update_release_tool_git {
-	lc_cd /opt/liferay/dev/projects/liferay-release-tool-ee
+	lc_cd "${PROJECTS_DIR}"/liferay-release-tool-ee
 
 	git clean -df
 	git reset --hard
 
-	local release_tool_sha=$(lc_get_property /opt/liferay/dev/projects/liferay-portal-ee/release.properties "release.tool.sha")
+	local release_tool_sha=$(lc_get_property "${PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.sha")
 
 	if [ ! -n "${release_tool_sha}" ]
 	then
