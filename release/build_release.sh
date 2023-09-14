@@ -73,7 +73,7 @@ function main {
 
 		lc_time_run deploy_elasticsearch_sidecar
 
-		lc_time_run cleanup_ignored_dxp_modules
+		lc_time_run clean_up_ignored_dxp_modules
 
 		lc_time_run warm_up_tomcat
 
@@ -92,10 +92,11 @@ function main {
 		lc_time_run obfuscate_licensing
 
 		background_run prepare_release_dir
-		lc_time_run build_dxp
+		background_run build_dxp
+
 		wait
 
-		lc_time_run cleanup_ignored_dxp_modules
+		lc_time_run clean_up_ignored_dxp_modules
 
 		lc_time_run add_portal_patcher_properties_jar
 
@@ -111,9 +112,10 @@ function main {
 	fi
 
 	local end_time=$(date +%s)
+
 	local seconds=$((end_time - _BUILD_TIMESTAMP))
 
-	echo ">>> Completed ${LIFERAY_RELEASE_OUTPUT} building process in $(lc_echo_time ${seconds}). $(date)"
+	lc_log INFO "Completed ${LIFERAY_RELEASE_OUTPUT} building in $(lc_echo_time ${seconds}) on $(date)."
 }
 
 function print_help {
@@ -123,10 +125,10 @@ function print_help {
 	echo ""
 	echo "    LIFERAY_RELEASE_BUILD_ID (optional): The ID of the hotfix to build"
 	echo "    LIFERAY_RELEASE_GIT_SHA: Git SHA to build from"
-	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set this to 'hotfix' to build hotfix instead of general release"
-	echo "    LIFERAY_RELEASE_HOTFIX_TESTING_TAG (optional): Tag name of the hotfix testing code in the liferay-portal-ee repository"
 	echo "    LIFERAY_RELEASE_HOTFIX_TESTING_SHA (optional): Git commit to cherry pick to build a test hotfix"
-	echo "    LIFERAY_RELEASE_UPLOAD (optional): Setting this would upload the built files"
+	echo "    LIFERAY_RELEASE_HOTFIX_TESTING_TAG (optional): Tag name of the hotfix testing code in the liferay-portal-ee repository"
+	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set this to \"hotfix\" to build a hotfix instead of a release"
+	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to upload the build files"
 	echo ""
 	echo "Example: LIFERAY_RELEASE_GIT_SHA=7.4.13-u92 ${0}"
 

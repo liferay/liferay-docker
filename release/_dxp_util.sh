@@ -57,7 +57,7 @@ function build_dxp {
 	echo "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" > "${_BUILD_DIR}"/built-sha
 }
 
-function cleanup_ignored_dxp_modules {
+function clean_up_ignored_dxp_modules {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
 
 	(	
