@@ -69,7 +69,7 @@ function main {
 
 		lc_time_run build_dxp
 
-		lc_time_run prepare_legal_files
+		lc_time_run copy_copyright
 
 		lc_time_run deploy_elasticsearch_sidecar
 

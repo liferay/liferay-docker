@@ -190,26 +190,23 @@ function obfuscate_licensing {
 function pre_compile_setup {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	if [ -e "${_BUILD_DIR}"/built.sha ] && [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built.sha ] &&
+	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping the pre_compile_setup step."
+		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already built in ${_BUILD_DIR}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	rm -fr /root/.liferay
-	mkdir -p /opt/liferay/build_cache
-	ln -s /opt/liferay/build_cache /root/.liferay
-
 	ant setup-profile-dxp
 }
 
-function prepare_legal_files {
+function copy_copyright {
 	lc_cd "${_BUNDLES_DIR}"
 
 	if [ -e license ]
 	then
-		echo "The license directory exists, skipping."
+		echo "The license already directory exists."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
