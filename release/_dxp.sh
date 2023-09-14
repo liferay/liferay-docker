@@ -104,30 +104,29 @@ function decrement_module_versions {
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping this step."
+		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already built in ${_BUILD_DIR}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
 
-	find apps dxp/apps -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd
+	find apps dxp/apps -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd_bnd_file
 	do
-		local module_path=$(dirname "${bnd}")
-
-		if [ ! -e ".releng/${module_path}/artifact.properties" ]
+		if [ ! -e ".releng/$(dirname "${bnd_bnd_file}")/artifact.properties" ]
 		then
 			continue
 		fi
 
-		local bundle_version=$(lc_get_property "${bnd}" "Bundle-Version")
+		local bundle_version=$(lc_get_property "${bnd_bnd_file}" "Bundle-Version")
 
 		local major_minor_version=${bundle_version%.*}
+
 		local micro_version=${bundle_version##*.}
 
 		micro_version=$((micro_version - 1))
 
-		sed -i -e "s/Bundle-Version: ${bundle_version}/Bundle-Version: ${major_minor_version}.${micro_version}/" "${bnd}"
+		sed -i -e "s/Bundle-Version: ${bundle_version}/Bundle-Version: ${major_minor_version}.${micro_version}/" "${bnd_bnd_file}"
 	done
 }
 
