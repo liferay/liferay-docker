@@ -6,15 +6,17 @@ function clean_portal_git {
 	GIT_SHA=$(git rev-parse HEAD)
 	GIT_SHA_SHORT=$(git rev-parse --short HEAD)
 
-	if [ -e "${_BUILD_DIR}"/built-sha ] && [ $(cat "${_BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built-sha ] &&
+	   [ $(cat "${_BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping this step."
+		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already built in ${_BUILD_DIR}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	git clean -dfX
 	git reset --hard
+
+	git clean -dfx
 }
 
 function clone_repository {
@@ -24,6 +26,7 @@ function clone_repository {
 	fi
 
 	mkdir -p "${_PROJECTS_DIR}"
+
 	lc_cd "${_PROJECTS_DIR}"
 
 	git clone git@github.com:liferay/"${1}".git
@@ -34,34 +37,35 @@ function update_portal_git {
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	if [ -e "${_BUILD_DIR}"/sha-liferay-portal-ee ] && [ $(cat "${_BUILD_DIR}"/sha-liferay-portal-ee) == "${LIFERAY_RELEASE_GIT_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/sha-liferay-portal-ee ] &&
+	   [ $(cat "${_BUILD_DIR}"/sha-liferay-portal-ee) == "${LIFERAY_RELEASE_GIT_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already checked out, skipping the git checkout step."
+		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already checked out."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	if [ -n "$(git ls-remote origin refs/tags/"${LIFERAY_RELEASE_GIT_SHA}")" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} tag exists on remote."
-
-		git fetch origin tag "${LIFERAY_RELEASE_GIT_SHA}"
-		git checkout "${LIFERAY_RELEASE_GIT_SHA}"
+		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} tag exists on remote."
 	elif [ -n "$(git ls-remote origin refs/heads/"${LIFERAY_RELEASE_GIT_SHA}")" ]
 	then
 		echo "${LIFERAY_RELEASE_GIT_SHA} branch exists on remote."
 
-		git fetch origin "${LIFERAY_RELEASE_GIT_SHA}"
-		git checkout "${LIFERAY_RELEASE_GIT_SHA}"
-		git reset --hard
-		git clean -fd
+		git fetch -f origin "${LIFERAY_RELEASE_GIT_SHA}:${LIFERAY_RELEASE_GIT_SHA}"
+	else
+		lc_log ERROR "${LIFERAY_RELEASE_GIT_SHA} does not exist." 
 
-		git pull origin "${LIFERAY_RELEASE_GIT_SHA}"
-		git reset --hard origin/"${LIFERAY_RELEASE_GIT_SHA}"
-		git clean -fd
-
-		git status
+		#
+		# TODO Exit.
+		#
 	fi
+
+	git clean -dfx
+
+	git checkout "${LIFERAY_RELEASE_GIT_SHA}"
+
+	git status
 
 	echo "${LIFERAY_RELEASE_GIT_SHA}" > "${_BUILD_DIR}"/sha-liferay-portal-ee
 }
