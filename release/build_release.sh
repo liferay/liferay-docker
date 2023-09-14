@@ -1,13 +1,13 @@
 #!/bin/bash
 
-source /usr/local/bin/set_java_version.sh
+source set_java_version.sh
 
-source /usr/local/bin/_dxp_util.sh
-source /usr/local/bin/_git_util.sh
-source /usr/local/bin/_hotfix_util.sh
-source /usr/local/bin/_liferay_common.sh
-source /usr/local/bin/_publishing_util.sh
-source /usr/local/bin/_release_util.sh
+source _dxp_util.sh
+source _git_util.sh
+source _hotfix_util.sh
+source _liferay_common.sh
+source _publishing_util.sh
+source _release_util.sh
 
 function background_run {
 	if [ -n "${LIFERAY_COMMON_DEBUG_ENABLED}" ]
@@ -25,7 +25,7 @@ function main {
 	BUILD_TIMESTAMP=$(date +%s)
 	PROJECTS_DIR="${HOME}"/.liferay/dev/projects
 
-	ENV ANT_OPTS="-Xmx10G"
+	ANT_OPTS="-Xmx10G"
 
 	#
 	# The id of the hotfix
@@ -36,7 +36,7 @@ function main {
 	#
 	# The git tag or branch to check out from the liferay-portal-ee
 	#
-	NARWHAL_GIT_SHA=7.2.x
+	NARWHAL_GIT_SHA=7.4.13-u92
 
 	#
 	# Either release or fix pack
