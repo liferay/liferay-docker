@@ -35,22 +35,22 @@ function add_portal_patcher_properties_jar {
 }
 
 function add_hotfix_testing_code {
-	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
+	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
-		echo "LIFERAY_RELEASE_HOTFIX_TESTING_SHA is not set, not adding test code."
+		echo "LIFERAY_RELEASE_HOTFIX_TEST_SHA is not set, not adding test code."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	echo "Running git fetch origin tag \"${LIFERAY_RELEASE_HOTFIX_TESTING_TAG}\""
+	echo "Running git fetch origin tag \"${LIFERAY_RELEASE_HOTFIX_TEST_TAG}\""
 
-	git fetch -v origin tag "${LIFERAY_RELEASE_HOTFIX_TESTING_TAG}" || return 1
+	git fetch -v origin tag "${LIFERAY_RELEASE_HOTFIX_TEST_TAG}" || return 1
 
-	echo "Running git cherry-pick -n \"${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}\""
+	echo "Running git cherry-pick -n \"${LIFERAY_RELEASE_HOTFIX_TEST_SHA}\""
 
-	git cherry-pick -n "${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" || return 1
+	git cherry-pick -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" || return 1
 }
 
 function calculate_checksums {
@@ -330,7 +330,7 @@ function prepare_release_dir {
 function set_hotfix_name {
 	local hotfix_id=${_BUILD_TIMESTAMP}
 
-	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
+	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
 		hotfix_id=${LIFERAY_RELEASE_HOTFIX_ID}
 	fi
