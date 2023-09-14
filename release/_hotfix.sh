@@ -279,9 +279,9 @@ function manage_jar {
 function package_hotfix {
 	lc_cd "${_BUILD_DIR}"/hotfix
 
-	rm -f "../${HOTFIX_FILE_NAME}" checksums removed_files
+	rm -f "../${_HOTFIX_FILE_NAME}" checksums removed_files
 
-	zip -r "../${HOTFIX_FILE_NAME}" ./*
+	zip -r "../${_HOTFIX_FILE_NAME}" ./*
 
 	lc_cd "${_BUILD_DIR}"
 
@@ -335,7 +335,7 @@ function set_hotfix_name {
 		hotfix_id=${LIFERAY_RELEASE_HOTFIX_ID}
 	fi
 
-	HOTFIX_FILE_NAME=liferay-dxp-${_DXP_VERSION}-hotfix-"${hotfix_id}".zip
+	_HOTFIX_FILE_NAME=liferay-dxp-${_DXP_VERSION}-hotfix-"${hotfix_id}".zip
 	HOTFIX_NAME=hotfix-"${hotfix_id}"
 }
 
