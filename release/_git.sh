@@ -6,8 +6,8 @@ function clean_portal_git {
 	GIT_SHA=$(git rev-parse HEAD)
 	GIT_SHA_SHORT=$(git rev-parse --short HEAD)
 
-	if [ -e "${_BUILD_DIR}"/built-sha ] &&
-	   [ $(cat "${_BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built.sha ] &&
+	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already built in ${_BUILD_DIR}."
 
