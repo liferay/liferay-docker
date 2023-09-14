@@ -1,11 +1,11 @@
 #!/bin/bash
 
-source _dxp_util.sh
-source _git_util.sh
-source _hotfix_util.sh
+source _dxp.sh
+source _git.sh
+source _hotfix.sh
 source _liferay_common.sh
-source _publishing_util.sh
-source _release_util.sh
+source _package.sh
+source _publishing.sh
 
 function background_run {
 	if [ -n "${LIFERAY_COMMON_DEBUG_ENABLED}" ]
