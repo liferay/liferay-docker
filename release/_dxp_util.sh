@@ -1,9 +1,9 @@
 #!/bin/bash
 
 function add_licensing {
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -18,9 +18,9 @@ function add_licensing {
 function build_dxp {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile_dxp step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile_dxp step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -55,7 +55,7 @@ function build_dxp {
 
 	rm -fr osgi/test
 
-	echo "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" > "${BUILD_DIR}"/built-sha
+	echo "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" > "${BUILD_DIR}"/built-sha
 }
 
 function cleanup_ignored_dxp_modules {
@@ -86,9 +86,9 @@ function cleanup_ignored_dxp_modules {
 }
 
 function compile_dxp {
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -99,9 +99,9 @@ function compile_dxp {
 }
 
 function decrement_module_versions {
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -162,9 +162,9 @@ function get_dxp_version {
 }
 
 function obfuscate_licensing {
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -177,9 +177,9 @@ function obfuscate_licensing {
 function pre_compile_setup {
 	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the pre_compile_setup step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the pre_compile_setup step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

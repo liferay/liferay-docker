@@ -29,42 +29,42 @@ function main {
 	# The id of the hotfix
 	#
 
-	NARWHAL_BUILD_ID=1
+	LIFERAY_RELEASE_BUILD_ID=1
 
 	#
 	# The git tag or branch to check out from the liferay-portal-ee
 	#
-	NARWHAL_GIT_SHA=7.4.13-u92
+	LIFERAY_RELEASE_GIT_SHA=7.4.13-u92
 
 	#
 	# Either release or fix pack
 	#
-	NARWHAL_OUTPUT=release
+	LIFERAY_RELEASE_OUTPUT=release
 
 	#
 	# The github username used to check out on the liferay-portal-ee repository. Should be used only for debugging purposes
 	#
-	NARWHAL_REMOTE=liferay
+	LIFERAY_RELEASE_REMOTE=liferay
 
 	#
 	# Tag name in the liferay-portal-ee repository which contains the hotfix testing SHA-s if you would like to build a test hotfix
 	#
-	NARWHAL_HOTFIX_TESTING_TAG=
+	LIFERAY_RELEASE_HOTFIX_TESTING_TAG=
 
 	#
-	# Git SHA which would be cherry-picked on NARWHAL_GIT_SHA from the tree of NARWHAL_HOTFIX_TESTING_TAG to build a test hotfix
+	# Git SHA which would be cherry-picked on LIFERAY_RELEASE_GIT_SHA from the tree of LIFERAY_RELEASE_HOTFIX_TESTING_TAG to build a test hotfix
 	#
-	NARWHAL_HOTFIX_TESTING_SHA=
+	LIFERAY_RELEASE_HOTFIX_TESTING_SHA=
 
 	#
 	# If this is set, the files will be uploaded to the designated buckets
 	#
-	NARWHAL_UPLOAD=
+	LIFERAY_RELEASE_UPLOAD=
 
 	#
 	# The name of the GCS bucket where the internal files should be copied
 	#
-	NARWHAL_GCS_INTERNAL_BUCKET=patcher-storage
+	LIFERAY_RELEASE_GCS_INTERNAL_BUCKET=patcher-storage
 
 	LIFERAY_COMMON_LOG_DIR=${BUILD_DIR}
 
@@ -90,7 +90,7 @@ function main {
 
 	DXP_VERSION=$(get_dxp_version)
 
-	if [ "${NARWHAL_OUTPUT}" == "release" ]
+	if [ "${LIFERAY_RELEASE_OUTPUT}" == "release" ]
 	then
 		lc_time_run add_licensing
 
@@ -144,7 +144,7 @@ function main {
 	local end_time=$(date +%s)
 	local seconds=$((end_time - BUILD_TIMESTAMP))
 
-	echo ">>> Completed ${NARWHAL_OUTPUT} building process in $(lc_echo_time ${seconds}). $(date)"
+	echo ">>> Completed ${LIFERAY_RELEASE_OUTPUT} building process in $(lc_echo_time ${seconds}). $(date)"
 }
 
 main

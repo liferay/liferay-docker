@@ -12,23 +12,23 @@ function init_gcs {
 }
 
 function upload_bundle {
-	if [ ! -n "${NARWHAL_UPLOAD}" ]
+	if [ ! -n "${LIFERAY_RELEASE_UPLOAD}" ]
 	then
-		echo "Skipping upload_bundle as NARWHAL_UPLOAD is not set."
+		echo "Skipping upload_bundle as LIFERAY_RELEASE_UPLOAD is not set."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gsutil cp "${BUILD_DIR}"/release/* "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/dxp/${DXP_VERSION}/"
+	gsutil cp "${BUILD_DIR}"/release/* "gs://${LIFERAY_RELEASE_GCS_INTERNAL_BUCKET}/dxp/${DXP_VERSION}/"
 }
 
 function upload_hotfix {
-	if [ ! -n "${NARWHAL_UPLOAD}" ]
+	if [ ! -n "${LIFERAY_RELEASE_UPLOAD}" ]
 	then
-		echo "Skipping upload_hotfix as NARWHAL_UPLOAD is not set."
+		echo "Skipping upload_hotfix as LIFERAY_RELEASE_UPLOAD is not set."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gsutil cp "${BUILD_DIR}/${HOTFIX_FILE_NAME}" "gs://${NARWHAL_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
+	gsutil cp "${BUILD_DIR}/${HOTFIX_FILE_NAME}" "gs://${LIFERAY_RELEASE_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
 }

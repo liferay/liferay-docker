@@ -20,7 +20,7 @@ function add_portal_patcher_properties_jar {
 	touch manifest
 
 	(
-		echo "fixed.issues=${NARWHAL_FIXED_ISSUES}"
+		echo "fixed.issues=${LIFERAY_RELEASE_FIXED_ISSUES}"
 		echo "installed.patches=${HOTFIX_NAME}"
 	)  > portal-patcher.properties
 
@@ -35,22 +35,22 @@ function add_portal_patcher_properties_jar {
 }
 
 function add_hotfix_testing_code {
-	if [ ! -n "${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "NARWHAL_HOTFIX_TESTING_SHA is not set, not adding test code."
+		echo "LIFERAY_RELEASE_HOTFIX_TESTING_SHA is not set, not adding test code."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
-	echo "Running git fetch origin tag \"${NARWHAL_HOTFIX_TESTING_TAG}\""
+	echo "Running git fetch origin tag \"${LIFERAY_RELEASE_HOTFIX_TESTING_TAG}\""
 
-	git fetch -v origin tag "${NARWHAL_HOTFIX_TESTING_TAG}" || return 1
+	git fetch -v origin tag "${LIFERAY_RELEASE_HOTFIX_TESTING_TAG}" || return 1
 
-	echo "Running git cherry-pick -n \"${NARWHAL_HOTFIX_TESTING_SHA}\""
+	echo "Running git cherry-pick -n \"${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}\""
 
-	git cherry-pick -n "${NARWHAL_HOTFIX_TESTING_SHA}" || return 1
+	git cherry-pick -n "${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" || return 1
 }
 
 function calculate_checksums {
@@ -129,7 +129,7 @@ function create_documentation {
 
 	writeln "{"
 	writeln "    \"patch\": {"
-	writeln "        \"id\": \"${NARWHAL_BUILD_ID}\""
+	writeln "        \"id\": \"${LIFERAY_RELEASE_BUILD_ID}\""
 	writeln "    },"
 	writeln "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
 	writeln "    \"build\": {"
@@ -329,9 +329,9 @@ function prepare_release_dir {
 function set_hotfix_name {
 	local hotfix_id=${BUILD_TIMESTAMP}
 
-	if [ ! -n "${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		hotfix_id=${NARWHAL_BUILD_ID}
+		hotfix_id=${LIFERAY_RELEASE_BUILD_ID}
 	fi
 
 	HOTFIX_FILE_NAME=liferay-dxp-${DXP_VERSION}-hotfix-"${hotfix_id}".zip

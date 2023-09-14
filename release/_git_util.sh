@@ -6,9 +6,9 @@ function clean_portal_git {
 	GIT_SHA=$(git rev-parse HEAD)
 	GIT_SHA_SHORT=$(git rev-parse --short HEAD)
 
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${NARWHAL_GIT_SHA}${NARWHAL_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${NARWHAL_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -34,7 +34,7 @@ function setup_git {
 
 	ssh-keyscan github.com >> "${HOME}"/.ssh/known_hosts
 
-	echo "${NARWHAL_GITHUB_SSH_KEY}" > "${HOME}"/.ssh/id_rsa
+	echo "${LIFERAY_RELEASE_GITHUB_SSH_KEY}" > "${HOME}"/.ssh/id_rsa
 	chmod 600 "${HOME}"/.ssh/id_rsa
 
 	git config --global user.email "er-hu@liferay.com"
@@ -44,12 +44,12 @@ function setup_git {
 function setup_remote {
 	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
-	if [ ! -n "${NARWHAL_REMOTE}" ]
+	if [ ! -n "${LIFERAY_RELEASE_REMOTE}" ]
 	then
-		NARWHAL_REMOTE=liferay
+		LIFERAY_RELEASE_REMOTE=liferay
 	fi
 
-	if (git remote get-url origin | grep -q "github.com:${NARWHAL_REMOTE}/")
+	if (git remote get-url origin | grep -q "github.com:${LIFERAY_RELEASE_REMOTE}/")
 	then
 		echo "Remote is already set up."
 
@@ -58,7 +58,7 @@ function setup_remote {
 
 	git remote rm origin
 
-	git remote add origin git@github.com:"${NARWHAL_REMOTE}"/liferay-portal-ee
+	git remote add origin git@github.com:"${LIFERAY_RELEASE_REMOTE}"/liferay-portal-ee
 }
 
 function update_portal_git {
@@ -66,36 +66,36 @@ function update_portal_git {
 
 	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
 
-	if [ -e "${BUILD_DIR}"/sha-liferay-portal-ee ] && [ $(cat "${BUILD_DIR}"/sha-liferay-portal-ee) == "${NARWHAL_GIT_SHA}" ]
+	if [ -e "${BUILD_DIR}"/sha-liferay-portal-ee ] && [ $(cat "${BUILD_DIR}"/sha-liferay-portal-ee) == "${LIFERAY_RELEASE_GIT_SHA}" ]
 	then
-		echo "${NARWHAL_GIT_SHA} is already checked out, skipping the git checkout step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already checked out, skipping the git checkout step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [ -n "$(git ls-remote origin refs/tags/"${NARWHAL_GIT_SHA}")" ]
+	if [ -n "$(git ls-remote origin refs/tags/"${LIFERAY_RELEASE_GIT_SHA}")" ]
 	then
-		echo "${NARWHAL_GIT_SHA} tag exists on remote."
+		echo "${LIFERAY_RELEASE_GIT_SHA} tag exists on remote."
 
-		git fetch origin tag "${NARWHAL_GIT_SHA}"
-		git checkout "${NARWHAL_GIT_SHA}"
-	elif [ -n "$(git ls-remote origin refs/heads/"${NARWHAL_GIT_SHA}")" ]
+		git fetch origin tag "${LIFERAY_RELEASE_GIT_SHA}"
+		git checkout "${LIFERAY_RELEASE_GIT_SHA}"
+	elif [ -n "$(git ls-remote origin refs/heads/"${LIFERAY_RELEASE_GIT_SHA}")" ]
 	then
-		echo "${NARWHAL_GIT_SHA} branch exists on remote."
+		echo "${LIFERAY_RELEASE_GIT_SHA} branch exists on remote."
 
-		git fetch origin "${NARWHAL_GIT_SHA}"
-		git checkout "${NARWHAL_GIT_SHA}"
+		git fetch origin "${LIFERAY_RELEASE_GIT_SHA}"
+		git checkout "${LIFERAY_RELEASE_GIT_SHA}"
 		git reset --hard
 		git clean -fd
 
-		git pull origin "${NARWHAL_GIT_SHA}"
-		git reset --hard origin/"${NARWHAL_GIT_SHA}"
+		git pull origin "${LIFERAY_RELEASE_GIT_SHA}"
+		git reset --hard origin/"${LIFERAY_RELEASE_GIT_SHA}"
 		git clean -fd
 
 		git status
 	fi
 
-	echo "${NARWHAL_GIT_SHA}" > "${BUILD_DIR}"/sha-liferay-portal-ee
+	echo "${LIFERAY_RELEASE_GIT_SHA}" > "${BUILD_DIR}"/sha-liferay-portal-ee
 }
 
 function update_release_tool_git {
