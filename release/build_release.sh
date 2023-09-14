@@ -16,51 +16,27 @@ function background_run {
 	fi
 }
 
+function check_usage {
+	if [ ! -n "${LIFERAY_RELEASE_GIT_SHA}" ]
+	then
+		print_help
+	fi
+
+	if [ ! -n "${LIFERAY_RELEASE_BUILD_ID}" ]
+	then
+		LIFERAY_RELEASE_BUILD_ID=1
+	fi
+}
+
 function main {
+	ANT_OPTS="-Xmx10G"
 	BUILD_DIR="${HOME}"/.liferay/release-builder/build
-	BUNDLES_DIR="${HOME}"/.liferay/release-builder/dev/projects/bundles
 	BUILD_TIMESTAMP=$(date +%s)
+	BUNDLES_DIR="${HOME}"/.liferay/release-builder/dev/projects/bundles
+	LIFERAY_COMMON_LOG_DIR="${BUILD_DIR}"
 	PROJECTS_DIR="${HOME}"/.liferay/release-builder/dev/projects
 
-	ANT_OPTS="-Xmx10G"
-
-	#
-	# The id of the hotfix
-	#
-
-	LIFERAY_RELEASE_BUILD_ID=1
-
-	#
-	# The git tag or branch to check out from the liferay-portal-ee
-	#
-	LIFERAY_RELEASE_GIT_SHA=7.4.13-u92
-
-	#
-	# Either release or fix pack
-	#
-	LIFERAY_RELEASE_OUTPUT=release
-
-	#
-	# Tag name in the liferay-portal-ee repository which contains the hotfix testing SHA-s if you would like to build a test hotfix
-	#
-	LIFERAY_RELEASE_HOTFIX_TESTING_TAG=
-
-	#
-	# Git SHA which would be cherry-picked on LIFERAY_RELEASE_GIT_SHA from the tree of LIFERAY_RELEASE_HOTFIX_TESTING_TAG to build a test hotfix
-	#
-	LIFERAY_RELEASE_HOTFIX_TESTING_SHA=
-
-	#
-	# If this is set, the files will be uploaded to the designated buckets
-	#
-	LIFERAY_RELEASE_UPLOAD=
-
-	#
-	# The name of the GCS bucket where the internal files should be copied
-	#
-	LIFERAY_RELEASE_GCS_INTERNAL_BUCKET=patcher-storage
-
-	LIFERAY_COMMON_LOG_DIR=${BUILD_DIR}
+	check_usage
 
 	background_run clone_repository liferay-binaries-cache-2020
 	background_run clone_repository liferay-portal-ee
@@ -80,7 +56,7 @@ function main {
 
 	DXP_VERSION=$(get_dxp_version)
 
-	if [ "${LIFERAY_RELEASE_OUTPUT}" == "release" ]
+	if [ "${LIFERAY_RELEASE_OUTPUT}" != "hotfix" ]
 	then
 		lc_time_run add_licensing
 
@@ -135,6 +111,23 @@ function main {
 	local seconds=$((end_time - BUILD_TIMESTAMP))
 
 	echo ">>> Completed ${LIFERAY_RELEASE_OUTPUT} building process in $(lc_echo_time ${seconds}). $(date)"
+}
+
+function print_help {
+	echo "Usage: LIFERAY_RELEASE_GIT_SHA=<git sha> ${0}"
+	echo ""
+	echo "The script reads the following environment variables:"
+	echo ""
+	echo "    LIFERAY_RELEASE_BUILD_ID (optional): The ID of the hotfix to build"
+	echo "    LIFERAY_RELEASE_GIT_SHA: Git SHA to build from"
+	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set this to 'hotfix' to build hotfix instead of general release"
+	echo "    LIFERAY_RELEASE_HOTFIX_TESTING_TAG (optional): Tag name of the hotfix testing code in the liferay-portal-ee repository"
+	echo "    LIFERAY_RELEASE_HOTFIX_TESTING_SHA (optional): Git commit to cherry pick to build a test hotfix"
+	echo "    LIFERAY_RELEASE_UPLOAD (optional): Setting this would upload the built files"
+	echo ""
+	echo "Example: LIFERAY_RELEASE_GIT_SHA=7.4.13-u92 ${0}"
+
+	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
 
 main

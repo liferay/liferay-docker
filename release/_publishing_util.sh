@@ -19,7 +19,7 @@ function upload_bundle {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gsutil cp "${BUILD_DIR}"/release/* "gs://${LIFERAY_RELEASE_GCS_INTERNAL_BUCKET}/dxp/${DXP_VERSION}/"
+	gsutil cp "${BUILD_DIR}"/release/* "gs://patcher-storage/dxp/${DXP_VERSION}/"
 }
 
 function upload_hotfix {
@@ -30,5 +30,5 @@ function upload_hotfix {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gsutil cp "${BUILD_DIR}/${HOTFIX_FILE_NAME}" "gs://${LIFERAY_RELEASE_GCS_INTERNAL_BUCKET}/hotfix/${DXP_VERSION}/"
+	gsutil cp "${BUILD_DIR}/${HOTFIX_FILE_NAME}" "gs://patcher-storage/hotfix/${DXP_VERSION}/"
 }
