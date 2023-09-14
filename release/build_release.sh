@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source set_java_version.sh
-
 source _dxp_util.sh
 source _git_util.sh
 source _hotfix_util.sh
@@ -21,9 +19,9 @@ function background_run {
 
 function main {
 	BUILD_DIR="${HOME}"/.liferay/release-builder/build
-	BUNDLES_DIR="${HOME}"/.liferay/dev/projects/bundles
+	BUNDLES_DIR="${HOME}"/.liferay/release-builder/dev/projects/bundles
 	BUILD_TIMESTAMP=$(date +%s)
-	PROJECTS_DIR="${HOME}"/.liferay/dev/projects
+	PROJECTS_DIR="${HOME}"/.liferay/release-builder/dev/projects
 
 	ANT_OPTS="-Xmx10G"
 
