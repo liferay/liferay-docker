@@ -1,39 +1,39 @@
 #!/bin/bash
 
 function add_licensing {
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built-sha ] && [ $(cat "${_BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping this step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${PROJECTS_DIR}/liferay-release-tool-ee/"
+	lc_cd "${_PROJECTS_DIR}/liferay-release-tool-ee/"
 
-	lc_cd "$(lc_get_property "${PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
+	lc_cd "$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
 
-	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir="${PROJECTS_DIR}"/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
+	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee -Dportal.release.edition.private=true -f build-release-license.xml
 }
 
 function build_dxp {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built-sha ] && [ $(cat "${_BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile_dxp step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping the compile_dxp step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	rm -fr "${BUNDLES_DIR}"
+	rm -fr "${_BUNDLES_DIR}"
 
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	ant deploy
 
 	ant deploy-portal-license-enterprise-app
 
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee/modules
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
 
 	ant build-app-jar-release
 
@@ -41,7 +41,7 @@ function build_dxp {
 	# Workaround until we implement LPS-182849
 	#
 
-	lc_cd "${BUNDLES_DIR}"
+	lc_cd "${_BUNDLES_DIR}"
 
 	if [ ! -e tomcat ]
 	then
@@ -54,11 +54,11 @@ function build_dxp {
 
 	rm -fr osgi/test
 
-	echo "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" > "${BUILD_DIR}"/built-sha
+	echo "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" > "${_BUILD_DIR}"/built-sha
 }
 
 function cleanup_ignored_dxp_modules {
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee/modules
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
 
 	(	
 		git grep "Liferay-Releng-Bundle: false" | sed -e s/app.bnd:.*//
@@ -71,12 +71,12 @@ function cleanup_ignored_dxp_modules {
 
 			echo "Deleting ${module_to_delete}.jar as it was not supposed to be bundled."
 
-			if [ -e "${BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar" ]
+			if [ -e "${_BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar" ]
 			then
-				rm -f "${BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar"
-			elif [ -e "${BUNDLES_DIR}/osgi/portal/${module_to_delete}.jar" ]
+				rm -f "${_BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar"
+			elif [ -e "${_BUNDLES_DIR}/osgi/portal/${module_to_delete}.jar" ]
 			then
-				rm -f "${BUNDLES_DIR}/osgi/portal/${module_to_delete}.jar"
+				rm -f "${_BUNDLES_DIR}/osgi/portal/${module_to_delete}.jar"
 			else
 				echo "Couldn't find ${module_to_delete}.jar to delete."
 			fi
@@ -85,27 +85,27 @@ function cleanup_ignored_dxp_modules {
 }
 
 function compile_dxp {
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built-sha ] && [ $(cat "${_BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the compile step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping the compile step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${PROJECTS_DIR}/liferay-portal-ee"
+	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
 	ant clean compile
 }
 
 function decrement_module_versions {
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built-sha ] && [ $(cat "${_BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping this step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee/modules
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
 
 	find apps dxp/apps -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd
 	do
@@ -128,21 +128,21 @@ function decrement_module_versions {
 }
 
 function deploy_elasticsearch_sidecar {
-	if [ -e "${BUNDLES_DIR}"/elasticsearch-sidecar ]
+	if [ -e "${_BUNDLES_DIR}"/elasticsearch-sidecar ]
 	then
 		echo "elasticsearch-sidecar already exists in the bundle, skipping."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
 
-	"${PROJECTS_DIR}"/liferay-portal-ee/gradlew deploySidecar
+	"${_PROJECTS_DIR}"/liferay-portal-ee/gradlew deploySidecar
 
 }
 
 function get_dxp_version {
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	local major=$(lc_get_property release.properties "release.info.version.major")
 	local minor=$(lc_get_property release.properties "release.info.version.minor")
@@ -161,24 +161,24 @@ function get_dxp_version {
 }
 
 function obfuscate_licensing {
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built-sha ] && [ $(cat "${_BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping this step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${PROJECTS_DIR}/liferay-release-tool-ee/$(lc_get_property "${PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
+	lc_cd "${_PROJECTS_DIR}/liferay-release-tool-ee/$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
 
-	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir="${PROJECTS_DIR}"/liferay-portal-ee -Dportal.kernel.dir="${PROJECTS_DIR}"/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal
+	ant -Dext.dir=. -Djava.lib.dir="${JAVA_HOME}/jre/lib" -Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee -Dportal.kernel.dir="${_PROJECTS_DIR}"/liferay-portal-ee/portal-kernel -Dportal.release.edition.private=true -f build-release-license.xml obfuscate-portal
 }
 
 function pre_compile_setup {
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built-sha ] && [ $(cat "${_BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping the pre_compile_setup step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping the pre_compile_setup step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -191,7 +191,7 @@ function pre_compile_setup {
 }
 
 function prepare_legal_files {
-	lc_cd "${BUNDLES_DIR}"
+	lc_cd "${_BUNDLES_DIR}"
 
 	if [ -e license ]
 	then
@@ -202,17 +202,17 @@ function prepare_legal_files {
 
 	mkdir license
 
-	cp "${PROJECTS_DIR}"/liferay-portal-ee/copyright.txt license
-	cp "${PROJECTS_DIR}"/liferay-portal-ee/lib/versions.html license
+	cp "${_PROJECTS_DIR}"/liferay-portal-ee/copyright.txt license
+	cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/versions.html license
 }
 
 function warm_up_tomcat {
-	if [ -e "${BUILD_DIR}/tomcat-warmup-complete" ]
+	if [ -e "${_BUILD_DIR}/tomcat-warmup-complete" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${BUNDLES_DIR}/tomcat/bin"
+	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
 
 	export LIFERAY_CLEAN_OSGI_STATE=true
 	export LIFERAY_JVM_OPTS="-Xmx3G"
@@ -266,5 +266,5 @@ function warm_up_tomcat {
 	rm -fr ../logs/*
 	rm -fr ../../logs/*
 
-	touch "${BUILD_DIR}/tomcat-warmup-complete"
+	touch "${_BUILD_DIR}/tomcat-warmup-complete"
 }

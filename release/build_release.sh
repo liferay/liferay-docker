@@ -30,11 +30,11 @@ function check_usage {
 
 function main {
 	ANT_OPTS="-Xmx10G"
-	BUILD_DIR="${HOME}"/.liferay/release-builder/build
-	BUILD_TIMESTAMP=$(date +%s)
-	BUNDLES_DIR="${HOME}"/.liferay/release-builder/dev/projects/bundles
-	LIFERAY_COMMON_LOG_DIR="${BUILD_DIR}"
-	PROJECTS_DIR="${HOME}"/.liferay/release-builder/dev/projects
+	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
+	_BUILD_DIR="${HOME}"/.liferay/release-builder/build
+	_BUILD_TIMESTAMP=$(date +%s)
+	_BUNDLES_DIR="${HOME}"/.liferay/release-builder/dev/projects/bundles
+	_PROJECTS_DIR="${HOME}"/.liferay/release-builder/dev/projects
 
 	check_usage
 
@@ -108,7 +108,7 @@ function main {
 	fi
 
 	local end_time=$(date +%s)
-	local seconds=$((end_time - BUILD_TIMESTAMP))
+	local seconds=$((end_time - _BUILD_TIMESTAMP))
 
 	echo ">>> Completed ${LIFERAY_RELEASE_OUTPUT} building process in $(lc_echo_time ${seconds}). $(date)"
 }

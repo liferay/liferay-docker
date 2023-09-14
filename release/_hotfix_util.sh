@@ -5,17 +5,17 @@ function add_file_to_hotfix {
 
 	local file_dir=$(dirname "${file_name}")
 
-	mkdir -p "${BUILD_DIR}/hotfix/binaries/${file_dir}"
+	mkdir -p "${_BUILD_DIR}/hotfix/binaries/${file_dir}"
 
-	cp "${BUNDLES_DIR}/${1}" "${BUILD_DIR}/hotfix/binaries/${file_dir}"
+	cp "${_BUNDLES_DIR}/${1}" "${_BUILD_DIR}/hotfix/binaries/${file_dir}"
 }
 
 function add_portal_patcher_properties_jar {
-	lc_cd "${BUILD_DIR}"
+	lc_cd "${_BUILD_DIR}"
 
 	mkdir portal-patcher-properties
 
-	lc_cd "${BUILD_DIR}/portal-patcher-properties"
+	lc_cd "${_BUILD_DIR}/portal-patcher-properties"
 
 	touch manifest
 
@@ -26,11 +26,11 @@ function add_portal_patcher_properties_jar {
 
 	jar cfm portal-patcher-properties.jar manifest portal-patcher.properties
 
-	if [ -e "${BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/" ]
+	if [ -e "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/" ]
 	then
-		cp portal-patcher-properties.jar "${BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/"
+		cp portal-patcher-properties.jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/"
 	else
-		cp portal-patcher-properties.jar "${BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib/"
+		cp portal-patcher-properties.jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib/"
 	fi
 }
 
@@ -42,7 +42,7 @@ function add_hotfix_testing_code {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	echo "Running git fetch origin tag \"${LIFERAY_RELEASE_HOTFIX_TESTING_TAG}\""
 
@@ -54,14 +54,14 @@ function add_hotfix_testing_code {
 }
 
 function calculate_checksums {
-	if [ ! -e "${BUILD_DIR}/hotfix/binaries/" ]
+	if [ ! -e "${_BUILD_DIR}/hotfix/binaries/" ]
 	then
 		echo "There are no added files."
 
 		return
 	fi
 
-	lc_cd "${BUILD_DIR}/hotfix/binaries/"
+	lc_cd "${_BUILD_DIR}/hotfix/binaries/"
 
 	find . -type f -print0 | while IFS= read -r -d '' file
 	do
@@ -70,7 +70,7 @@ function calculate_checksums {
 }
 
 function compare_jars {
-	jar1=${BUNDLES_DIR}/"${1}"
+	jar1=${_BUNDLES_DIR}/"${1}"
 	jar2=${RELEASE_DIR}/"${1}"
 
 	function list_file {
@@ -119,7 +119,7 @@ function compare_jars {
 
 function create_documentation {
 	function write {
-		echo -en "${1}" >> "${BUILD_DIR}/hotfix/hotfix.json"
+		echo -en "${1}" >> "${_BUILD_DIR}/hotfix/hotfix.json"
 		echo -en "${1}"
 	}
 
@@ -147,7 +147,7 @@ function create_documentation {
 
 	local first_line=true
 
-	if [ -e "${BUILD_DIR}"/hotfix/checksums ]
+	if [ -e "${_BUILD_DIR}"/hotfix/checksums ]
 	then
 		while read -r line
 		do
@@ -164,7 +164,7 @@ function create_documentation {
 			writeln "            \"path\": \"${file}\","
 			writeln "            \"checksum\": \"${checksum}\""
 			write "        }"
-		done < "${BUILD_DIR}"/hotfix/checksums
+		done < "${_BUILD_DIR}"/hotfix/checksums
 		writeln ""
 	fi
 
@@ -172,7 +172,7 @@ function create_documentation {
 
 	writeln "    \"removed\" :["
 
-	if [ -e "${BUILD_DIR}"/hotfix/removed_files ]
+	if [ -e "${_BUILD_DIR}"/hotfix/removed_files ]
 	then
 		first_line=true
 
@@ -187,7 +187,7 @@ function create_documentation {
 			writeln "        {"
 			writeln "            \"path\": \"${file}\""
 			write "        }"
-		done < "${BUILD_DIR}"/hotfix/removed_files
+		done < "${_BUILD_DIR}"/hotfix/removed_files
 
 		writeln ""
 	fi
@@ -198,16 +198,16 @@ function create_documentation {
 }
 
 function create_hotfix {
-	rm -fr "${BUILD_DIR}"/hotfix
-	mkdir -p "${BUILD_DIR}"/hotfix
+	rm -fr "${_BUILD_DIR}"/hotfix
+	mkdir -p "${_BUILD_DIR}"/hotfix
 
-	echo "Comparing ${BUNDLES_DIR} and ${RELEASE_DIR}"
+	echo "Comparing ${_BUNDLES_DIR} and ${RELEASE_DIR}"
 
 	echo "Full diff:"
 
-	diff -rq "${BUNDLES_DIR}" "${RELEASE_DIR}" | grep -v /work/Catalina
+	diff -rq "${_BUNDLES_DIR}" "${RELEASE_DIR}" | grep -v /work/Catalina
 
-	diff -rq "${BUNDLES_DIR}" "${RELEASE_DIR}" | grep -v /work/Catalina | while read -r change
+	diff -rq "${_BUNDLES_DIR}" "${RELEASE_DIR}" | grep -v /work/Catalina | while read -r change
 	do
 		if (echo "${change}" | grep "^Only in ${RELEASE_DIR}" &>/dev/null)
 		then
@@ -220,12 +220,12 @@ function create_hotfix {
 			then
 				echo "Removed ${removed_file}"
 
-				transform_file_name "${removed_file}" >> "${BUILD_DIR}"/hotfix/removed_files
+				transform_file_name "${removed_file}" >> "${_BUILD_DIR}"/hotfix/removed_files
 			fi
-		elif (echo "${change}" | grep "^Only in ${BUNDLES_DIR}" &>/dev/null)
+		elif (echo "${change}" | grep "^Only in ${_BUNDLES_DIR}" &>/dev/null)
 		then
 			local new_file=${change#Only in }
-			new_file=$(echo "${new_file}" | sed -e "s#: #/#" | sed -e "s#${BUNDLES_DIR}##")
+			new_file=$(echo "${new_file}" | sed -e "s#: #/#" | sed -e "s#${_BUNDLES_DIR}##")
 			new_file=${new_file#/}
 
 			if (in_hotfix_scope "${new_file}")
@@ -237,7 +237,7 @@ function create_hotfix {
 		else
 			local changed_file=${change#Files }
 			changed_file=${changed_file%% *}
-			changed_file=$(echo "${changed_file}" | sed -e "s#${BUNDLES_DIR}##")
+			changed_file=$(echo "${changed_file}" | sed -e "s#${_BUNDLES_DIR}##")
 			changed_file=${changed_file#/}
 
 			if (in_hotfix_scope "${changed_file}")
@@ -277,13 +277,13 @@ function manage_jar {
 }
 
 function package_hotfix {
-	lc_cd "${BUILD_DIR}"/hotfix
+	lc_cd "${_BUILD_DIR}"/hotfix
 
 	rm -f "../${HOTFIX_FILE_NAME}" checksums removed_files
 
 	zip -r "../${HOTFIX_FILE_NAME}" ./*
 
-	lc_cd "${BUILD_DIR}"
+	lc_cd "${_BUILD_DIR}"
 
 	rm -fr hotfix
 }
@@ -328,7 +328,7 @@ function prepare_release_dir {
 }
 
 function set_hotfix_name {
-	local hotfix_id=${BUILD_TIMESTAMP}
+	local hotfix_id=${_BUILD_TIMESTAMP}
 
 	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then

@@ -1,14 +1,14 @@
 #!/bin/bash
 
 function clean_portal_git {
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	GIT_SHA=$(git rev-parse HEAD)
 	GIT_SHA_SHORT=$(git rev-parse --short HEAD)
 
-	if [ -e "${BUILD_DIR}"/built-sha ] && [ $(cat "${BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built-sha ] && [ $(cat "${_BUILD_DIR}"/built-sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${BUILD_DIR}, skipping this step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping this step."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -18,13 +18,13 @@ function clean_portal_git {
 }
 
 function clone_repository {
-	if [ -e "${PROJECTS_DIR}/${1}" ]
+	if [ -e "${_PROJECTS_DIR}/${1}" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	mkdir -p "${PROJECTS_DIR}"
-	lc_cd "${PROJECTS_DIR}"
+	mkdir -p "${_PROJECTS_DIR}"
+	lc_cd "${_PROJECTS_DIR}"
 
 	git clone git@github.com:liferay/"${1}".git
 }
@@ -32,9 +32,9 @@ function clone_repository {
 function update_portal_git {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	if [ -e "${BUILD_DIR}"/sha-liferay-portal-ee ] && [ $(cat "${BUILD_DIR}"/sha-liferay-portal-ee) == "${LIFERAY_RELEASE_GIT_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/sha-liferay-portal-ee ] && [ $(cat "${_BUILD_DIR}"/sha-liferay-portal-ee) == "${LIFERAY_RELEASE_GIT_SHA}" ]
 	then
 		echo "${LIFERAY_RELEASE_GIT_SHA} is already checked out, skipping the git checkout step."
 
@@ -63,16 +63,16 @@ function update_portal_git {
 		git status
 	fi
 
-	echo "${LIFERAY_RELEASE_GIT_SHA}" > "${BUILD_DIR}"/sha-liferay-portal-ee
+	echo "${LIFERAY_RELEASE_GIT_SHA}" > "${_BUILD_DIR}"/sha-liferay-portal-ee
 }
 
 function update_release_tool_git {
-	lc_cd "${PROJECTS_DIR}"/liferay-release-tool-ee
+	lc_cd "${_PROJECTS_DIR}"/liferay-release-tool-ee
 
 	git clean -df
 	git reset --hard
 
-	local release_tool_sha=$(lc_get_property "${PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.sha")
+	local release_tool_sha=$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.sha")
 
 	if [ ! -n "${release_tool_sha}" ]
 	then
@@ -81,7 +81,7 @@ function update_release_tool_git {
 		return 1
 	fi
 
-	if [ -e "${BUILD_DIR}"/sha-liferay-release-tool-ee ] && [ $(cat "${BUILD_DIR}"/sha-liferay-release-tool-ee) == "${release_tool_sha}" ]
+	if [ -e "${_BUILD_DIR}"/sha-liferay-release-tool-ee ] && [ $(cat "${_BUILD_DIR}"/sha-liferay-release-tool-ee) == "${release_tool_sha}" ]
 	then
 		echo "${release_tool_sha} is already checked out, skipping the git checkout step."
 
@@ -91,5 +91,5 @@ function update_release_tool_git {
 	git fetch --all --tags --prune || return 1
 	git checkout origin/"${release_tool_sha}" || return 1
 
-	echo "${release_tool_sha}" > "${BUILD_DIR}"/sha-liferay-release-tool-ee
+	echo "${release_tool_sha}" > "${_BUILD_DIR}"/sha-liferay-release-tool-ee
 }
