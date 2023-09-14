@@ -37,7 +37,6 @@ function build_dxp {
 
 	ant build-app-jar-release
 
-
 	#
 	# Workaround until we implement LPS-182849
 	#
@@ -196,7 +195,7 @@ function prepare_legal_files {
 
 	if [ -e license ]
 	then
-		echo "license directory exists, skipping."
+		echo "The license directory exists, skipping."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -266,8 +265,6 @@ function warm_up_tomcat {
 
 	rm -fr ../logs/*
 	rm -fr ../../logs/*
-
-	rm -fr ../../osgi/state/*
 
 	touch "${BUILD_DIR}/tomcat-warmup-complete"
 }
