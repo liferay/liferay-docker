@@ -105,6 +105,22 @@ function compile_dxp {
 	ant clean compile
 }
 
+function copy_copyright {
+	lc_cd "${_BUNDLES_DIR}"
+
+	if [ -e license ]
+	then
+		echo "The license already directory exists."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	mkdir license
+
+	cp "${_PROJECTS_DIR}"/liferay-portal-ee/copyright.txt license
+	cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/versions.html license
+}
+
 function decrement_module_versions {
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
@@ -199,22 +215,6 @@ function pre_compile_setup {
 	fi
 
 	ant setup-profile-dxp
-}
-
-function copy_copyright {
-	lc_cd "${_BUNDLES_DIR}"
-
-	if [ -e license ]
-	then
-		echo "The license already directory exists."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	mkdir license
-
-	cp "${_PROJECTS_DIR}"/liferay-portal-ee/copyright.txt license
-	cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/versions.html license
 }
 
 function warm_up_tomcat {
