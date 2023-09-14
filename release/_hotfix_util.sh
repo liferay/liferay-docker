@@ -231,6 +231,7 @@ function create_hotfix {
 			if (in_hotfix_scope "${new_file}")
 			then
 				echo "New file ${new_file}"
+
 				add_file_to_hotfix "${new_file}"
 			fi
 		else
