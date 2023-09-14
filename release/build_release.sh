@@ -22,9 +22,9 @@ function check_usage {
 		print_help
 	fi
 
-	if [ ! -n "${LIFERAY_RELEASE_BUILD_ID}" ]
+	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_ID}" ]
 	then
-		LIFERAY_RELEASE_BUILD_ID=1
+		LIFERAY_RELEASE_HOTFIX_ID=1
 	fi
 }
 
@@ -123,8 +123,8 @@ function print_help {
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
-	echo "    LIFERAY_RELEASE_BUILD_ID (optional): The ID of the hotfix to build"
 	echo "    LIFERAY_RELEASE_GIT_SHA: Git SHA to build from"
+	echo "    LIFERAY_RELEASE_HOTFIX_ID (optional): The ID of the hotfix to build"
 	echo "    LIFERAY_RELEASE_HOTFIX_TESTING_SHA (optional): Git commit to cherry pick to build a test hotfix"
 	echo "    LIFERAY_RELEASE_HOTFIX_TESTING_TAG (optional): Tag name of the hotfix testing code in the liferay-portal-ee repository"
 	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set this to \"hotfix\" to build a hotfix instead of a release"

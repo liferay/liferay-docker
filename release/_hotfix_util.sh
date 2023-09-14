@@ -129,7 +129,7 @@ function create_documentation {
 
 	writeln "{"
 	writeln "    \"patch\": {"
-	writeln "        \"id\": \"${LIFERAY_RELEASE_BUILD_ID}\""
+	writeln "        \"id\": \"${LIFERAY_RELEASE_HOTFIX_ID}\""
 	writeln "    },"
 	writeln "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
 	writeln "    \"build\": {"
@@ -332,7 +332,7 @@ function set_hotfix_name {
 
 	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TESTING_SHA}" ]
 	then
-		hotfix_id=${LIFERAY_RELEASE_BUILD_ID}
+		hotfix_id=${LIFERAY_RELEASE_HOTFIX_ID}
 	fi
 
 	HOTFIX_FILE_NAME=liferay-dxp-${_DXP_VERSION}-hotfix-"${hotfix_id}".zip
