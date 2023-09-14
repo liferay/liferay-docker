@@ -14,5 +14,5 @@ function package_bundle {
 
 	touch "${root_dir}"/.liferay-home
 
-	7z a "${BUILD_DIR}/release/liferay-dxp-tomcat-${DXP_VERSION}-${GIT_SHA_SHORT}.7z" "${root_dir}"
+	7z a "${BUILD_DIR}/release/liferay-dxp-tomcat-${DXP_VERSION}-${BUILD_TIMESTAMP}.7z" "${root_dir}"
 }
