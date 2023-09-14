@@ -128,7 +128,7 @@ function print_help {
 	echo "    LIFERAY_RELEASE_HOTFIX_TEST_SHA (optional): Git commit to cherry pick to build a test hotfix"
 	echo "    LIFERAY_RELEASE_HOTFIX_TEST_TAG (optional): Tag name of the hotfix testing code in the liferay-portal-ee repository"
 	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set this to \"hotfix\" to build a hotfix instead of a release"
-	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to upload the build files"
+	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to upload artifacts"
 	echo ""
 	echo "Example: LIFERAY_RELEASE_GIT_SHA=7.4.13-u92 ${0}"
 

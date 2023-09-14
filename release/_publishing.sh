@@ -3,7 +3,7 @@
 function init_gcs {
 	if [ ! -e /opt/liferay/patcher-storage-service-account.json ]
 	then
-		echo "/opt/liferay/patcher-storage-service-account.json does not exist, skipping init_gcs"
+		lc_log INFO "Skip initializing GCS because /opt/liferay/patcher-storage-service-account.json does not exist."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -14,7 +14,7 @@ function init_gcs {
 function upload_bundle {
 	if [ "${LIFERAY_RELEASE_UPLOAD}" == "true" ]
 	then
-		echo "Skipping upload_bundle as LIFERAY_RELEASE_UPLOAD is not set."
+		lc_log INFO "Do not upload artifacts because the environment variable LIFERAY_RELEASE_UPLOAD was not set to \"true\"."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -25,7 +25,7 @@ function upload_bundle {
 function upload_hotfix {
 	if [ "${LIFERAY_RELEASE_UPLOAD}" == "true" ]
 	then
-		echo "Skipping upload_hotfix as LIFERAY_RELEASE_UPLOAD is not set."
+		lc_log INFO "Do not upload artifacts because the environment variable LIFERAY_RELEASE_UPLOAD was not set to \"true\"."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
