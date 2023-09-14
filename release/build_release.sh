@@ -41,21 +41,23 @@ function main {
 
 	background_run clone_repository liferay-binaries-cache-2020
 	background_run clone_repository liferay-portal-ee
-	lc_time_run clone_repository liferay-release-tool-ee
+	background_run clone_repository liferay-release-tool-ee
+
 	wait
 
 	lc_time_run clean_portal_git
 
 	background_run init_gcs
 	background_run update_portal_git
-	lc_time_run update_release_tool_git
+	background_run update_release_tool_git
+
 	wait
 
 	lc_time_run pre_compile_setup
 
 	lc_time_run decrement_module_versions
 
-	DXP_VERSION=$(get_dxp_version)
+	_DXP_VERSION=$(get_dxp_version)
 
 	if [ "${LIFERAY_RELEASE_OUTPUT}" != "hotfix" ]
 	then

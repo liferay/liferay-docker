@@ -140,7 +140,7 @@ function create_documentation {
 	writeln "    },"
 	writeln "    \"requirement\": {"
 	writeln "        \"patching-tool-version\": \"4000\","
-	writeln "        \"product-version\": \"${DXP_VERSION}\""
+	writeln "        \"product-version\": \"${_DXP_VERSION}\""
 	writeln "    },"
 	writeln "    \"added\" :["
 
@@ -289,7 +289,7 @@ function package_hotfix {
 }
 
 function prepare_release_dir {
-	RELEASE_DIR=/opt/liferay/releases/"${DXP_VERSION}"
+	RELEASE_DIR=/opt/liferay/releases/"${_DXP_VERSION}"
 
 	local release7z
 
@@ -335,7 +335,7 @@ function set_hotfix_name {
 		hotfix_id=${LIFERAY_RELEASE_BUILD_ID}
 	fi
 
-	HOTFIX_FILE_NAME=liferay-dxp-${DXP_VERSION}-hotfix-"${hotfix_id}".zip
+	HOTFIX_FILE_NAME=liferay-dxp-${_DXP_VERSION}-hotfix-"${hotfix_id}".zip
 	HOTFIX_NAME=hotfix-"${hotfix_id}"
 }
 
