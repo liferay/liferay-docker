@@ -16,7 +16,6 @@ function background_run {
 	fi
 }
 
-
 function main {
 	BUILD_DIR="${HOME}"/.liferay/release-builder/build
 	BUNDLES_DIR="${HOME}"/.liferay/release-builder/dev/projects/bundles
@@ -42,11 +41,6 @@ function main {
 	LIFERAY_RELEASE_OUTPUT=release
 
 	#
-	# The github username used to check out on the liferay-portal-ee repository. Should be used only for debugging purposes
-	#
-	LIFERAY_RELEASE_REMOTE=liferay
-
-	#
 	# Tag name in the liferay-portal-ee repository which contains the hotfix testing SHA-s if you would like to build a test hotfix
 	#
 	LIFERAY_RELEASE_HOTFIX_TESTING_TAG=
@@ -68,14 +62,10 @@ function main {
 
 	LIFERAY_COMMON_LOG_DIR=${BUILD_DIR}
 
-	lc_time_run setup_git
-
 	background_run clone_repository liferay-binaries-cache-2020
 	background_run clone_repository liferay-portal-ee
 	lc_time_run clone_repository liferay-release-tool-ee
 	wait
-
-	lc_time_run setup_remote
 
 	lc_time_run clean_portal_git
 

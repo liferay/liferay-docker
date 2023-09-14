@@ -29,38 +29,6 @@ function clone_repository {
 	git clone git@github.com:liferay/"${1}".git
 }
 
-function setup_git {
-	mkdir -p "${HOME}"/.ssh
-
-	ssh-keyscan github.com >> "${HOME}"/.ssh/known_hosts
-
-	echo "${LIFERAY_RELEASE_GITHUB_SSH_KEY}" > "${HOME}"/.ssh/id_rsa
-	chmod 600 "${HOME}"/.ssh/id_rsa
-
-	git config --global user.email "er-hu@liferay.com"
-	git config --global user.name "Release Builder"
-}
-
-function setup_remote {
-	lc_cd "${PROJECTS_DIR}"/liferay-portal-ee
-
-	if [ ! -n "${LIFERAY_RELEASE_REMOTE}" ]
-	then
-		LIFERAY_RELEASE_REMOTE=liferay
-	fi
-
-	if (git remote get-url origin | grep -q "github.com:${LIFERAY_RELEASE_REMOTE}/")
-	then
-		echo "Remote is already set up."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	git remote rm origin
-
-	git remote add origin git@github.com:"${LIFERAY_RELEASE_REMOTE}"/liferay-portal-ee
-}
-
 function update_portal_git {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
