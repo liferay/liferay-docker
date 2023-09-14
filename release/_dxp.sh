@@ -230,7 +230,7 @@ function warm_up_tomcat {
 
 	./catalina.sh start
 
-	echo "Waiting for tomcat to start up"
+	lc_log INFO "Waiting for Tomcat to start up"
 
 	for count in {0..30}
 	do
@@ -244,7 +244,7 @@ function warm_up_tomcat {
 
 	if (! curl --fail --head --output /dev/null --silent http://localhost:8080)
 	then
-		echo "Failed to start tomcat in 90 seconds"
+		lc_log ERROR "Unable to start Tomcat in 90 seconds."
 
 		cat ../logs/catalina.out
 
@@ -269,9 +269,9 @@ function warm_up_tomcat {
 
 	if (kill -0 "${pid}" &>/dev/null)
 	then
-		echo "Killing tomcat was unsuccessful in 30 seconds"
+		lc_log ERROR "Unable to kill Tomcat after 30 seconds."
 
-		exit 1
+		return 1
 	fi
 
 	rm -fr ../logs/*
