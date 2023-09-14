@@ -4,12 +4,12 @@ function add_licensing {
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping this step."
+		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} was already built in ${_BUILD_DIR}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_PROJECTS_DIR}/liferay-release-tool-ee/"
+	lc_cd "${_PROJECTS_DIR}/liferay-release-tool-ee"
 
 	lc_cd "$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
 
@@ -19,9 +19,10 @@ function add_licensing {
 function build_dxp {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	if [ -e "${_BUILD_DIR}"/built.sha ] && [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}"/built.sha ] &&
+	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_SHA} is already built in the ${_BUILD_DIR}, skipping the compile_dxp step."
+		echo "${LIFERAY_RELEASE_GIT_SHA} was already built ${_BUILD_DIR}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -39,7 +40,7 @@ function build_dxp {
 	ant build-app-jar-release
 
 	#
-	# Workaround until we implement LPS-182849
+	# Workaround until we implement LPS-182849.
 	#
 
 	lc_cd "${_BUNDLES_DIR}"
@@ -64,22 +65,22 @@ function clean_up_ignored_dxp_modules {
 	(	
 		git grep "Liferay-Releng-Bundle: false" | sed -e s/app.bnd:.*//
 		git ls-files "*/.lfrbuild-releng-ignore" | sed -e s#/.lfrbuild-releng-ignore##
-	) | while IFS= read -r not_bundled_dir
+	) | while IFS= read -r ignored_dir
 	do
-		find "${not_bundled_dir}" -name bnd.bnd | while IFS= read -r module_to_delete_bnd
-		do
-			local module_to_delete=$(lc_get_property "${module_to_delete_bnd}" Bundle-SymbolicName)
+		find "${ignored_dir}" -name bnd.bnd | while IFS= read -r ignored_bnd_bnd_file
+		doA
+			local ignored_file=$(lc_get_property "${ignored_bnd_bnd_file}" Bundle-SymbolicName)
 
-			echo "Deleting ${module_to_delete}.jar as it was not supposed to be bundled."
+			lc_log INFO "Deleting ignored ${ignored_file}.jar."
 
-			if [ -e "${_BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar" ]
+			if [ -e "${_BUNDLES_DIR}/osgi/modules/${ignored_file}.jar" ]
 			then
-				rm -f "${_BUNDLES_DIR}/osgi/modules/${module_to_delete}.jar"
-			elif [ -e "${_BUNDLES_DIR}/osgi/portal/${module_to_delete}.jar" ]
+				rm -f "${_BUNDLES_DIR}/osgi/modules/${ignored_file}.jar"
+			elif [ -e "${_BUNDLES_DIR}/osgi/portal/${ignored_file}.jar" ]
 			then
-				rm -f "${_BUNDLES_DIR}/osgi/portal/${module_to_delete}.jar"
+				rm -f "${_BUNDLES_DIR}/osgi/portal/${ignored_file}.jar"
 			else
-				echo "Couldn't find ${module_to_delete}.jar to delete."
+				lc_log INFO "Unable to delete ${ignored_file}.jar."
 			fi
 		done
 	done
