@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function package_bundle {
+function package_release {
 	rm -fr "${_BUILD_DIR}/release"
 
 	local package_dir="${_BUILD_DIR}/release/liferay-dxp"

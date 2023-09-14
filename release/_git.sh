@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function clean_portal_git {
+function clean_portal_repository {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	GIT_SHA=$(git rev-parse HEAD)
@@ -30,7 +30,7 @@ function clone_repository {
 	git clone git@github.com:liferay/"${1}".git
 }
 
-function update_portal_git {
+function update_portal_repository {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
@@ -68,7 +68,7 @@ function update_portal_git {
 	echo "${LIFERAY_RELEASE_GIT_SHA}" > "${_BUILD_DIR}"/liferay-portal-ee.sha
 }
 
-function update_release_tool_git {
+function update_release_tool_repository {
 	lc_cd "${_PROJECTS_DIR}"/liferay-release-tool-ee
 
 	git reset --hard && git clean -dfx

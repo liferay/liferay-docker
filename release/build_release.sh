@@ -45,15 +45,15 @@ function main {
 
 	wait
 
-	lc_time_run clean_portal_git
+	lc_time_run clean_portal_repository
 
 	background_run init_gcs
-	background_run update_portal_git
-	background_run update_release_tool_git
+	background_run update_portal_repository
+	background_run update_release_tool_repository
 
 	wait
 
-	lc_time_run pre_compile_setup
+	lc_time_run set_up_profile_dxp
 
 	lc_time_run decrement_module_versions
 
@@ -77,9 +77,9 @@ function main {
 
 		lc_time_run warm_up_tomcat
 
-		lc_time_run package_bundle
+		lc_time_run package_release
 
-		lc_time_run upload_bundle
+		lc_time_run upload_release
 	else
 		lc_time_run add_hotfix_testing_code
 
@@ -91,8 +91,8 @@ function main {
 
 		lc_time_run obfuscate_licensing
 
-		background_run prepare_release_dir
 		background_run build_dxp
+		background_run prepare_release_dir
 
 		wait
 

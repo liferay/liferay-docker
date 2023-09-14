@@ -110,7 +110,7 @@ function copy_copyright {
 
 	if [ -e license ]
 	then
-		echo "The license already directory exists."
+		lc_log INFO "The license directory already exists."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -154,7 +154,7 @@ function decrement_module_versions {
 function deploy_elasticsearch_sidecar {
 	if [ -e "${_BUNDLES_DIR}"/elasticsearch-sidecar ]
 	then
-		lc_log "Elasticsearch sidecar already exists in the bundle."
+		lc_log INFO "Elasticsearch sidecar already exists in the bundle."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -203,7 +203,7 @@ function obfuscate_licensing {
 		-f build-release-license.xml obfuscate-portal
 }
 
-function pre_compile_setup {
+function set_up_profile_dxp {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
@@ -218,7 +218,7 @@ function pre_compile_setup {
 }
 
 function warm_up_tomcat {
-	if [ -e "${_BUILD_DIR}/tomcat-warmup-complete" ]
+	if [ -e "${_BUILD_DIR}/warm-up-tomcat" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -230,7 +230,7 @@ function warm_up_tomcat {
 
 	./catalina.sh start
 
-	lc_log INFO "Waiting for Tomcat to start up"
+	lc_log INFO "Waiting for Tomcat to start up..."
 
 	for count in {0..30}
 	do
@@ -277,5 +277,5 @@ function warm_up_tomcat {
 	rm -fr ../logs/*
 	rm -fr ../../logs/*
 
-	touch "${_BUILD_DIR}/tomcat-warmup-complete"
+	touch "${_BUILD_DIR}/warm-up-tomcat"
 }
