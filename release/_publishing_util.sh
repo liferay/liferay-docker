@@ -12,7 +12,7 @@ function init_gcs {
 }
 
 function upload_bundle {
-	if [ ! -n "${LIFERAY_RELEASE_UPLOAD}" ]
+	if [ "${LIFERAY_RELEASE_UPLOAD}" == "true" ]
 	then
 		echo "Skipping upload_bundle as LIFERAY_RELEASE_UPLOAD is not set."
 
@@ -23,7 +23,7 @@ function upload_bundle {
 }
 
 function upload_hotfix {
-	if [ ! -n "${LIFERAY_RELEASE_UPLOAD}" ]
+	if [ "${LIFERAY_RELEASE_UPLOAD}" == "true" ]
 	then
 		echo "Skipping upload_hotfix as LIFERAY_RELEASE_UPLOAD is not set."
 
