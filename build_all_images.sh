@@ -475,6 +475,13 @@ function get_main_key {
 	local main_keys=${1}
 	local version=${2}
 
+	if (echo "${version}" | grep -q "q")
+	then
+		echo quarterly
+
+		return
+	fi
+
 	for main_key in ${main_keys}
 	do
 		local count=$(echo "${version}" | grep -c -E "${main_key}-|${main_key}\.")

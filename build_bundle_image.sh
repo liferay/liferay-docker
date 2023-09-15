@@ -269,6 +269,11 @@ function push_docker_image {
 }
 
 function set_parent_image {
+	if (echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | grep -q "q")
+	then
+		return
+	fi
+
 	if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION%-*}" | cut -f1,2,3 -d'.' | cut -f1 -d '-' | sed 's/\.//g' )" -le 7310 ]
 	then
 		sed -i 's/liferay\/jdk11:latest/liferay\/jdk11-jdk8:latest/g' "${TEMP_DIR}"/Dockerfile
