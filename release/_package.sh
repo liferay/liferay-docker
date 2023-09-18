@@ -38,6 +38,10 @@ function package_release {
 
 	zip -qr "${_BUILD_DIR}/release/liferay-dxp-osgi-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" osgi
 
+	lc_cd tomcat/webapps/ROOT
+
+	zip -qr "${_BUILD_DIR}/release/liferay-dxp-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.war" ./*
+
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/sql
 
 	zip -qr "${_BUILD_DIR}/release/liferay-sql-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" . -i "*.sql"
