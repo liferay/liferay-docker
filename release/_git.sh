@@ -50,7 +50,7 @@ function update_portal_repository {
 	then
 		echo "${LIFERAY_RELEASE_GIT_SHA} branch exists on remote."
 
-		git fetch -f origin "${LIFERAY_RELEASE_GIT_SHA}:${LIFERAY_RELEASE_GIT_SHA}"
+		git fetch -fu origin "${LIFERAY_RELEASE_GIT_SHA}:${LIFERAY_RELEASE_GIT_SHA}"
 	else
 		lc_log ERROR "${LIFERAY_RELEASE_GIT_SHA} does not exist." 
 

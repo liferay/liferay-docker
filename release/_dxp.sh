@@ -64,6 +64,19 @@ function build_dxp {
 	echo "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" > "${_BUILD_DIR}"/built.sha
 }
 
+function build_sql {
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/sql
+
+	if [ -e "create/create-mariadb.sql" ]
+	then
+		lc_log INFO "SQL files were already build."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	ant build-db
+}
+
 function clean_up_ignored_dxp_modules {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
 

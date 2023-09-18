@@ -33,4 +33,8 @@ function package_release {
 	tar czf "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.tar.gz" liferay-dxp
 
 	zip -qr "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" liferay-dxp
+
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/sql
+
+	zip -r "${_BUILD_DIR}/release/liferay-sql-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" . -i "*.sql"
 }

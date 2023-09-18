@@ -71,11 +71,12 @@ function main {
 
 		lc_time_run build_dxp
 
-		lc_time_run copy_copyright
+		background_run copy_copyright
+		background_run deploy_elasticsearch_sidecar
+		background_run clean_up_ignored_dxp_modules
+		background_run build_sql
 
-		lc_time_run deploy_elasticsearch_sidecar
-
-		lc_time_run clean_up_ignored_dxp_modules
+		wait
 
 		lc_time_run warm_up_tomcat
 
