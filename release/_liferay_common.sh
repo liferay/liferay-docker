@@ -164,11 +164,6 @@ function lc_log {
 }
 
 function lc_next_step {
-	if [ -z "${LIFERAY_COMMON_STEP_FILE}" ]
-	then
-		LIFERAY_COMMON_STEP_FILE=$(mktemp)
-	fi
-
 	local step=$(cat "${LIFERAY_COMMON_STEP_FILE}")
 
 	step=$((step + 1))
@@ -228,6 +223,7 @@ function lc_time_run {
 
 function _lc_init {
 	LIFERAY_COMMON_START_TIME=$(date +%s)
+	LIFERAY_COMMON_STEP_FILE=$(mktemp)
 
 	if [ -z "${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}" ]
 	then
