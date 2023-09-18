@@ -12,7 +12,7 @@ function init_gcs {
 }
 
 function upload_release {
-	if [ "${LIFERAY_RELEASE_UPLOAD}" == "true" ]
+	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "The environment variable LIFERAY_RELEASE_UPLOAD was not set to \"true\"."
 
@@ -23,7 +23,7 @@ function upload_release {
 }
 
 function upload_hotfix {
-	if [ "${LIFERAY_RELEASE_UPLOAD}" == "true" ]
+	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "The environment variable LIFERAY_RELEASE_UPLOAD was not set to \"true\"."
 
