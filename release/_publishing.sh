@@ -21,7 +21,7 @@ function upload_release {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_BUILD_DIR}"/release/
+	lc_cd "${_BUILD_DIR}"/release
 
 	echo "# Uploaded files" > ../release.md
 

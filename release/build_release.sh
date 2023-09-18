@@ -71,10 +71,10 @@ function main {
 
 		lc_time_run build_dxp
 
+		background_run build_sql
 		background_run copy_copyright
 		background_run deploy_elasticsearch_sidecar
 		background_run clean_up_ignored_dxp_modules
-		background_run build_sql
 
 		wait
 
@@ -128,7 +128,7 @@ function print_help {
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
-	echo "    LIFERAY_RELEASE_GCS_TOKEN (optional): The .json token file to authenticate to Google Cloud Storage"
+	echo "    LIFERAY_RELEASE_GCS_TOKEN (optional): The .json token file to authenticate with Google Cloud Storage"
 	echo "    LIFERAY_RELEASE_GIT_SHA: Git SHA to build from"
 	echo "    LIFERAY_RELEASE_HOTFIX_ID (optional): Hotfix ID"
 	echo "    LIFERAY_RELEASE_HOTFIX_TEST_SHA (optional): Git commit to cherry pick to build a test hotfix"
