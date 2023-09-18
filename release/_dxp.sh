@@ -86,7 +86,7 @@ function clean_up_ignored_dxp_modules {
 	) | while IFS= read -r ignored_dir
 	do
 		find "${ignored_dir}" -name bnd.bnd | while IFS= read -r ignored_bnd_bnd_file
-		doA
+		do
 			local ignored_file=$(lc_get_property "${ignored_bnd_bnd_file}" Bundle-SymbolicName)
 
 			lc_log INFO "Deleting ignored ${ignored_file}.jar."
