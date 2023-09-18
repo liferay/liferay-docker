@@ -69,7 +69,7 @@ function build_sql {
 
 	if [ -e "create/create-mariadb.sql" ]
 	then
-		lc_log INFO "SQL files were already build."
+		lc_log INFO "SQL files were already built."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -190,11 +190,11 @@ function get_dxp_version {
 		branch=master
 	fi
 
-	local display_name=$(lc_get_property release.properties "release.info.version.display.name[${branch}-private]")
+	local version_display_name=$(lc_get_property release.properties "release.info.version.display.name[${branch}-private]")
 
-	if (echo "${display_name}" | grep -iq "q")
+	if (echo "${version_display_name}" | grep -iq "q")
 	then
-		echo "${display_name,,}"
+		echo "${version_display_name,,}"
 
 		return
 	fi
@@ -239,7 +239,7 @@ function set_up_profile_dxp {
 	ant setup-profile-dxp
 }
 
-function update_release_date {
+function update_release_info_date {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	sed -i -e "s/release.info.date=.*/release.info.date=$(date +"%B %d, %Y")/" release.properties

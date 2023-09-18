@@ -61,7 +61,7 @@ function main {
 
 	if [ "${LIFERAY_RELEASE_OUTPUT}" != "hotfix" ]
 	then
-		lc_time_run update_release_date
+		lc_time_run update_release_info_date
 
 		lc_time_run add_licensing
 
