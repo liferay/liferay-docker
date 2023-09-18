@@ -19,7 +19,15 @@ function upload_release {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gsutil cp "${_BUILD_DIR}"/release/* "gs://patcher-storage/dxp/${_DXP_VERSION}/"
+	lc_cd "${_BUILD_DIR}"/release/
+
+	for file in *
+	do
+		if [ -f "${file}" ]
+		then
+			gsutil cp "${_BUILD_DIR}"/release/* "gs://patcher-storage/dxp/${_DXP_VERSION}/"
+		fi
+	done
 }
 
 function upload_hotfix {
