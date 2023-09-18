@@ -81,6 +81,8 @@ function main {
 
 		lc_time_run package_release
 
+		lc_time_run generate_checksum_files
+
 		lc_time_run upload_release
 	else
 		lc_time_run add_hotfix_testing_code
@@ -132,7 +134,7 @@ function print_help {
 	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set this to \"hotfix\" to build a hotfix instead of a release"
 	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to upload artifacts"
 	echo ""
-	echo "Example: LIFERAY_RELEASE_GIT_SHA=7.4.13-u92 ${0}"
+	echo "Example: LIFERAY_RELEASE_GIT_SHA=2023.q3 ${0}"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
