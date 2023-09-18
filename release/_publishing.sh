@@ -12,6 +12,8 @@ function init_gcs {
 }
 
 function upload_release {
+	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "The environment variable LIFERAY_RELEASE_UPLOAD was not set to \"true\"."
@@ -21,11 +23,15 @@ function upload_release {
 
 	lc_cd "${_BUILD_DIR}"/release/
 
+	echo "# Uploaded files" > ../release.md
+
 	for file in *
 	do
 		if [ -f "${file}" ]
 		then
-			gsutil cp "${_BUILD_DIR}"/release/* "gs://patcher-storage/dxp/${_DXP_VERSION}/"
+			gsutil cp "${_BUILD_DIR}/release/${file}" "gs://patcher-storage/dxp/${_DXP_VERSION}/"
+
+			echo " - https://storage.googleapis.com/patcher-storage/dxp/${_DXP_VERSION}/${file}" >> ../release.md
 		fi
 	done
 }
