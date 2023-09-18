@@ -5,7 +5,10 @@ function generate_checksum_files {
 
 	for file in *
 	do
-		md5sum "${file}" | sed -e "s/ .*//" > "${file}.MD5"
+		if [ -f "${file}" ]
+		then
+			md5sum "${file}" | sed -e "s/ .*//" > "${file}.MD5"
+		fi
 	done
 }
 
@@ -23,7 +26,11 @@ function package_release {
 
 	touch "${package_dir}"/.liferay-home
 
-	7z a "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.7z" "${package_dir}"
+	lc_cd "${_BUILD_DIR}/release"
 
-	tar czf "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.tar.gz" --directory "${_BUILD_DIR}/release" liferay-dxp
+	7z a "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.7z" liferay-dxp
+
+	tar czf "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.tar.gz" liferay-dxp
+
+	zip -qr "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" liferay-dxp
 }
