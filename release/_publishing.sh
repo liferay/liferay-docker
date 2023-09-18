@@ -1,14 +1,14 @@
 #!/bin/bash
 
 function init_gcs {
-	if [ ! -e /opt/liferay/patcher-storage-service-account.json ]
+	if [ ! -n "${LIFERAY_RELEASE_GCS_TOKEN}" ]
 	then
-		lc_log INFO "/opt/liferay/patcher-storage-service-account.json does not exist."
+		lc_log INFO "The LIFERAY_RELEASE_GCS_TOKEN is not set."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gcloud auth activate-service-account --key-file /opt/liferay/patcher-storage-service-account.json
+	gcloud auth activate-service-account --key-file "${LIFERAY_RELEASE_GCS_TOKEN}"
 }
 
 function upload_release {
