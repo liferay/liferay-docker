@@ -1,12 +1,17 @@
 #!/bin/bash
 
 function generate_checksum_files {
-	lc_cd "${_BUILD_DIR}"/release/
+	lc_cd "${_BUILD_DIR}"/release
 
 	for file in *
 	do
 		if [ -f "${file}" ]
 		then
+
+			#
+			# TODO Remove *.MD5 in favor of *.sha512.
+			#
+
 			md5sum "${file}" | sed -e "s/ .*//" > "${file}.MD5"
 
 			sha512sum "${file}" | sed -e "s/ .*//" > "${file}.sha512"
