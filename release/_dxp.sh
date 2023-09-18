@@ -177,6 +177,15 @@ function get_dxp_version {
 		branch=master
 	fi
 
+	local display_name=$(lc_get_property release.properties "release.info.version.display.name[${branch}-private]")
+
+	if (echo "${display_name}" | grep -iq "q")
+	then
+		echo "${display_name,,}"
+
+		return
+	fi
+
 	local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
 	local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
@@ -215,6 +224,12 @@ function set_up_profile_dxp {
 	fi
 
 	ant setup-profile-dxp
+}
+
+function update_release_date {
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+
+	sed -e "s/release.info.date=.*/release.info.date=$(date +"%B %d, %Y")/" release.properties
 }
 
 function warm_up_tomcat {
