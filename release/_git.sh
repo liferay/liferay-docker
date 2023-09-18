@@ -54,9 +54,7 @@ function update_portal_repository {
 	else
 		lc_log ERROR "${LIFERAY_RELEASE_GIT_SHA} does not exist." 
 
-		#
-		# TODO Exit.
-		#
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	git reset --hard && git clean -dfx
