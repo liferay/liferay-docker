@@ -242,7 +242,7 @@ function set_up_profile_dxp {
 function update_release_date {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	sed -e "s/release.info.date=.*/release.info.date=$(date +"%B %d, %Y")/" release.properties
+	sed -i -e "s/release.info.date=.*/release.info.date=$(date +"%B %d, %Y")/" release.properties
 }
 
 function warm_up_tomcat {
