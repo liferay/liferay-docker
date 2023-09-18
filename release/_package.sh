@@ -42,7 +42,11 @@ function package_release {
 
 	zip -qr "${_BUILD_DIR}/release/liferay-dxp-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.war" ./*
 
+	lc_cd "${_BUILD_DIR}/release/liferay-dxp"
+
+	zip -qr "${_BUILD_DIR}/release/liferay-dxp-tools-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" tools
+
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/sql
 
-	zip -qr "${_BUILD_DIR}/release/liferay-sql-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" . -i "*.sql"
+	zip -qr "${_BUILD_DIR}/release/liferay-dpx-sql-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" . -i "*.sql"
 }
