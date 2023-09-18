@@ -8,6 +8,8 @@ function generate_checksum_files {
 		if [ -f "${file}" ]
 		then
 			md5sum "${file}" | sed -e "s/ .*//" > "${file}.MD5"
+
+			sha512sum "${file}" | sed -e "s/ .*//" > "${file}.sha512"
 		fi
 	done
 }
