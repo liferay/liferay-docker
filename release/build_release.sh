@@ -115,6 +115,8 @@ function main {
 
 		lc_time_run create_documentation
 
+		lc_time_run sign_hotfix
+
 		lc_time_run package_hotfix
 
 		lc_time_run upload_hotfix
@@ -137,6 +139,8 @@ function print_help {
 	echo "    LIFERAY_RELEASE_HOTFIX_ID (optional): Hotfix ID"
 	echo "    LIFERAY_RELEASE_HOTFIX_TEST_SHA (optional): Git commit to cherry pick to build a test hotfix"
 	echo "    LIFERAY_RELEASE_HOTFIX_TEST_TAG (optional): Tag name of the hotfix testing code in the liferay-portal-ee repository"
+	echo "    LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE (optional): The .pem file containing the signing key"
+	echo "    LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_PASSWORD (optional): The password to unlock the signing key"
 	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set this to \"hotfix\" to build a hotfix instead of a release"
 	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to upload artifacts"
 	echo ""

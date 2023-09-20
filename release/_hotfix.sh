@@ -339,6 +339,26 @@ function set_hotfix_name {
 	HOTFIX_NAME=hotfix-"${hotfix_id}"
 }
 
+function sign_hotfix {
+	lc_cd "${_BUILD_DIR}"/hotfix
+
+	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE}" ]
+	then
+		lc_log INFO "LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE environment variable is not set."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	if [ ! -e "${LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE}" ]
+	then
+		lc_log ERROR "LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE does not point to a valid file."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	openssl dgst -passin env:LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_PASSWORD -out hotfix.sign -sha256 -sign "${LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE}"  hotfix.json
+}
+
 function transform_file_name {
 	local file_name=$(echo "${1}" | sed -e s#osgi/#OSGI_BASE_PATH/#)
 
