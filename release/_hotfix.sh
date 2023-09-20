@@ -219,6 +219,13 @@ function create_hotfix {
 			removed_file=${removed_file#/}
 			echo "${removed_file}"
 
+			if [ ! -f "${RELEASE_DIR}/${removed_file}" ]
+			then
+				echo "Skipping ${removed_file} as it's not a file"
+
+				continue
+			fi
+
 			if (in_hotfix_scope "${removed_file}")
 			then
 				echo "Removed ${removed_file}"
@@ -231,6 +238,13 @@ function create_hotfix {
 			new_file=$(echo "${new_file}" | sed -e "s#: #/#" | sed -e "s#${_BUNDLES_DIR}##")
 			new_file=${new_file#/}
 
+			if [ ! -f "${_BUNDLES_DIR}/${new_file}" ]
+			then
+				echo "Skipping ${new_file} as it's not a file"
+
+				continue
+			fi
+
 			if (in_hotfix_scope "${new_file}")
 			then
 				echo "New file ${new_file}"
@@ -242,6 +256,13 @@ function create_hotfix {
 			changed_file=${changed_file%% *}
 			changed_file=$(echo "${changed_file}" | sed -e "s#${_BUNDLES_DIR}##")
 			changed_file=${changed_file#/}
+
+			if [ ! -f "${_BUNDLES_DIR}/${changed_file}" ]
+			then
+				echo "Skipping ${changed_file} as it's not a file"
+
+				continue
+			fi
 
 			if (in_hotfix_scope "${changed_file}")
 			then
