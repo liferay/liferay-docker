@@ -24,7 +24,7 @@ function check_usage {
 
 	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_ID}" ]
 	then
-		LIFERAY_RELEASE_HOTFIX_ID=1
+		LIFERAY_RELEASE_HOTFIX_ID=${_BUILD_TIMESTAMP}
 	fi
 }
 
