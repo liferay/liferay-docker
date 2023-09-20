@@ -55,5 +55,5 @@ function package_release {
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/sql
 
-	zip -qr "${_BUILD_DIR}/release/liferay-dpx-sql-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" . -i "*.sql"
+	zip -qr "${_BUILD_DIR}/release/liferay-dxp-sql-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" . -i "*.sql"
 }
