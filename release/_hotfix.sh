@@ -289,6 +289,8 @@ function package_hotfix {
 }
 
 function prepare_release_dir {
+	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+
 	RELEASE_DIR="${_RELEASES_DIR}/${_DXP_VERSION}"
 
 	local release7z
@@ -301,7 +303,7 @@ function prepare_release_dir {
 
 		RELEASE_DIR="${_RELEASES_DIR}/${release_file%%.7z}"
 
-		release7z="${_RELEASES_DIR}/${release_file}"
+		release7z="${_TEST_RELEASE_DIR}/${release_file}"
 	else
 		echo "Release is not available, download is not yet an option."
 
