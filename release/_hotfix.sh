@@ -247,7 +247,7 @@ function create_hotfix {
 			then
 				if (echo "${changed_file}" | grep -q ".[jw]ar$")
 				then
-					manage_jar "${changed_file}" &
+					manage_jar "${changed_file}"
 				else
 					add_file_to_hotfix "${changed_file}"
 				fi
@@ -262,7 +262,7 @@ function in_hotfix_scope {
 		return 0
 	fi
 
-	if (echo "${1}" | grep -q "^osgi/") && (! echo "${1}" | grep -q "^osgi/state" )&& (! echo "${1}" | grep -q "^osgi/war")
+	if (echo "${1}" | grep -q "^osgi/") && (! echo "${1}" | grep -q "^osgi/state") && (! echo "${1}" | grep -q "^osgi/war")
 	then
 		return 0
 	fi
