@@ -83,9 +83,9 @@ function compare_jars {
 			# Remove 0 byte files
 			grep -v 00000000 | \
 			grep -v "META-INF/MANIFEST.MF" | \
-			# There's a date included in this file
 			grep -v "pom.properties" | \
 			grep -v "source-classes-mapping.txt" | \
+			grep -v "previous-compilation-data.bin" | \
 			# We should not include the util-*.jar changes, unless they changed
 			# TODO: method to include portal-impl.jar when the util-* jars changed.
 			grep -v "com/liferay/portal/deploy/dependencies/" | \
