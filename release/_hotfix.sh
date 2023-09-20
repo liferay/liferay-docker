@@ -354,15 +354,8 @@ function prepare_release_dir {
 }
 
 function set_hotfix_name {
-	local hotfix_id=${_BUILD_TIMESTAMP}
-
-	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
-	then
-		hotfix_id=${LIFERAY_RELEASE_HOTFIX_ID}
-	fi
-
-	_HOTFIX_FILE_NAME=liferay-dxp-${_DXP_VERSION}-hotfix-"${hotfix_id}".zip
-	HOTFIX_NAME=hotfix-"${hotfix_id}"
+	_HOTFIX_FILE_NAME=liferay-dxp-${_DXP_VERSION}-hotfix-"${LIFERAY_RELEASE_HOTFIX_ID}".zip
+	HOTFIX_NAME=hotfix-"${LIFERAY_RELEASE_HOTFIX_ID}"
 }
 
 function sign_hotfix {
