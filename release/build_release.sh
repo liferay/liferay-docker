@@ -26,18 +26,26 @@ function check_usage {
 	then
 		LIFERAY_RELEASE_HOTFIX_ID=${_BUILD_TIMESTAMP}
 	fi
+
+	if [ -n "${WORKSPACE}" ]
+	then
+		_RELEASE_ROOT_DIR="${WORKSPACE}"/release-data/
+	else
+		_RELEASE_ROOT_DIR="${HOME}"/.liferay-release
+	fi
+
+	_BUILD_DIR="${_RELEASE_ROOT_DIR}"/build
+	_BUILD_TIMESTAMP=$(date +%s)
+	_BUNDLES_DIR="${_RELEASE_ROOT_DIR}"/dev/projects/bundles
+	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/dev/projects
+	_RELEASES_DIR="${_RELEASE_ROOT_DIR}"/releases
+	_TEST_RELEASE_DIR="${_RELEASE_ROOT_DIR}"/test_release
+
+	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
 }
 
 function main {
 	ANT_OPTS="-Xmx10G"
-	_BUILD_DIR="${HOME}"/.liferay-release/build
-	_BUILD_TIMESTAMP=$(date +%s)
-	_BUNDLES_DIR="${HOME}"/.liferay-release/dev/projects/bundles
-	_PROJECTS_DIR="${HOME}"/.liferay-release/dev/projects
-	_RELEASES_DIR="${HOME}"/.liferay-release/releases
-	_TEST_RELEASE_DIR="${HOME}"/.liferay-release/test_release
-
-	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
 
 	check_usage
 
