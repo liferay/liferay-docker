@@ -19,6 +19,37 @@ function generate_checksum_files {
 	done
 }
 
+function install_patching_tool {
+	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+
+	lc_cd "${_BUNDLES_DIR}"
+
+	if [ -e "patching-tool" ]
+	then
+		lc_log INFO "Patching Tool is already installed."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	lc_download https://releases-cdn.liferay.com/tools/patching-tool/LATEST-3.0.txt
+
+	local latest_version=$(cat LATEST-3.0.txt)
+
+	rm -f LATEST-3.0.txt
+
+	lc_download https://releases-cdn.liferay.com/tools/patching-tool/patching-tool-"${latest_version}".zip
+
+	unzip -q patching-tool-"${latest_version}".zip
+
+	rm -f patching-tool-"${latest_version}".zip
+
+	lc_cd patching-tool
+
+	./patching-tool.sh auto-discovery
+
+	rm -f logs/*
+}
+
 function package_release {
 	rm -fr "${_BUILD_DIR}/release"
 
