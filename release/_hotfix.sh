@@ -94,7 +94,7 @@ function compare_jars {
 			# TODO: Figure out what to do with osgi/modules/com.liferay.sharepoint.soap.repository.jar
 			grep -v "ws.jar" | \
 			# Remove the date
-			sed -e "s/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\ [0-9][0-9]:[0-9][0-9]//"
+			sed -e "s/[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9]\ [0-9][0-9]:[0-9][0-9]//"
 	}
 
 	local file_changes=$( (
