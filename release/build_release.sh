@@ -53,8 +53,6 @@ function main {
 
 	wait
 
-	lc_time_run set_up_profile_dxp
-
 	lc_time_run decrement_module_versions
 
 	_DXP_VERSION=$(get_dxp_version)
@@ -62,6 +60,8 @@ function main {
 	if [ "${LIFERAY_RELEASE_OUTPUT}" != "hotfix" ]
 	then
 		lc_time_run update_release_info_date
+
+		lc_time_run set_up_profile_dxp
 
 		lc_time_run add_licensing
 
@@ -88,6 +88,8 @@ function main {
 
 		lc_time_run upload_release
 	else
+		lc_time_run set_up_profile_dxp
+
 		lc_time_run add_hotfix_testing_code
 
 		lc_time_run set_hotfix_name
