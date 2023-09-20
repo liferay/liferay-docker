@@ -34,6 +34,8 @@ function main {
 	_BUILD_TIMESTAMP=$(date +%s)
 	_BUNDLES_DIR="${HOME}"/.liferay-release/dev/projects/bundles
 	_PROJECTS_DIR="${HOME}"/.liferay-release/dev/projects
+	_RELEASES_DIR="${HOME}"/.liferay-release/releases
+	_TEST_RELEASE_DIR="${HOME}"/.liferay-release/test_release
 
 	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
 

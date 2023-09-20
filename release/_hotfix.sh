@@ -289,19 +289,19 @@ function package_hotfix {
 }
 
 function prepare_release_dir {
-	RELEASE_DIR=/opt/liferay/releases/"${_DXP_VERSION}"
+	RELEASE_DIR="${_RELEASES_DIR}/${_DXP_VERSION}"
 
 	local release7z
 
-	if [ -e /opt/liferay/test_release ] && [ $(find /opt/liferay/test_release -type f -printf "%f\n" | wc -l) -eq 1 ]
+	if [ -e "${_TEST_RELEASE_DIR}" ] && [ $(find "${_TEST_RELEASE_DIR}" -type f -printf "%f\n" | wc -l) -eq 1 ]
 	then
-		lc_cd /opt/liferay/test_release
+		lc_cd "${_TEST_RELEASE_DIR}"
 
 		local release_file=$(find . -type f -printf "%f\n")
 
-		RELEASE_DIR=/opt/liferay/releases/"${release_file%%.7z}"
+		RELEASE_DIR="${_RELEASES_DIR}/${release_file%%.7z}"
 
-		release7z=/opt/liferay/test_release/"${release_file}"
+		release7z="${_RELEASES_DIR}/${release_file}"
 	else
 		echo "Release is not available, download is not yet an option."
 
