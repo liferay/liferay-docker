@@ -368,6 +368,31 @@ function build_noop_image {
 	fi
 }
 
+function build_squid_image {
+	if [[ $(get_latest_docker_hub_version "squid") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	then
+		echo ""
+		echo "Docker image Squid is up to date."
+
+		return
+	fi
+
+	echo ""
+	echo "Building Docker image Squid resources."
+	echo ""
+
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_squid_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/squid.log
+
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	then
+		echo "FAILED: Squid" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
+
+		exit 1
+	else
+		echo "SUCCESS: Squid" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
+	fi
+}
+
 function build_zabbix_server_image {
 	local latest_liferay_zabbix_server_version=$(get_latest_docker_hub_zabbix_server_version "liferay/zabbix-server")
 	local latest_official_zabbix_server_version=$(get_latest_docker_hub_zabbix_server_version "zabbix/zabbix-server-mysql")
@@ -567,6 +592,7 @@ function main {
 	build_job_runner_image
 	build_node_runner_image
 	build_noop_image
+	build_squid_image
 	build_zabbix_server_image
 	build_zabbix_web_image
 
