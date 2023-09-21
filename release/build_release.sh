@@ -17,6 +17,8 @@ function background_run {
 }
 
 function check_usage {
+	_BUILD_TIMESTAMP=$(date +%s)
+
 	if [ ! -n "${LIFERAY_RELEASE_GIT_SHA}" ]
 	then
 		print_help
