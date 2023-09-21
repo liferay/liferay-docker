@@ -71,48 +71,48 @@ function check_usage {
 	IGNORE_ZIP_FILES=""
 	RUN_FETCH_REPOSITORY="true"
 	RUN_PUSH_TO_ORIGIN="true"
-	STORAGE_LOCATION="us"
+	STORAGE_LOCATION="LAX"
 	ZIP_LIST_RETENTION_TIME="1 min"
 	VERSION_INPUT="7.4.13"
 
 	while [ "$#" -gt "0" ]
 	do
 		case "${1}" in
-			-d|--debug)
+			--debug)
 				LIFERAY_COMMON_LOG_LEVEL="DEBUG"
 				LIFERAY_COMMON_DEBUG_ENABLED="true"
 
 				;;
 
-			-i|--ignore-zip-files)
+			--ignore-zip-files)
 				IGNORE_ZIP_FILES="${2}"
 
 				shift 1
 
 				;;
 
-			-l|--logdir)
+			--logdir)
 				LIFERAY_COMMON_LOG_DIR="${2}"
 
 				shift 1
 
 				;;
 
-			-r|--zip-list-retention-time)
+			--zip-list-retention-time)
 				ZIP_LIST_RETENTION_TIME="${2}"
 
 				shift 1
 
 				;;
 
-			-s|--storage-location)
+			--storage-location)
 				STORAGE_LOCATION="${2}"
 
 				shift 1
 
 				;;
 
-			-v|--version)
+			--version)
 				VERSION_INPUT="${2}"
 
 				shift 1
@@ -262,20 +262,20 @@ function prepare_cache_dir {
 }
 
 function print_help {
-	echo "Usage: ${0} [-d|--debug] [-i|--ignore-zip-files <file1,...,fileN>] [-l|--logdir <logdir>] [-r|--zip-list-retention-time '<time>'] [-s|--storage-location <BUD|LAX>] [-v|--version <version>] [--no-fetch] [--no-push]"
+	echo "Usage: ${0} [--debug] [--ignore-zip-files <file1,...,fileN>] [--logdir <logdir>] [--zip-list-retention-time '<time>'] [--storage-location <BUD|LAX>] [--version <version>] [--no-fetch] [--no-push]"
 	echo ""
-	echo "    -d|--debug (optional):                                  Enabling debug mode"
-	echo "    -i|--ignore-zip-files <file1,...,fileN> (optional):     Comma-separated list of files to be not processed (useful if a file is corrupted on the remote server)"
-	echo "    -l|--logdir <logdir> (optional):                        Logging directory, defaults to \"\${PWD}/logs\""
-	echo "    -r|--zip-list-retention-time '<time>' (optinal):        Retention time after the update of the zip list is enforced, defaults to '1 min'"
-	echo "    -s|--storage-location <BUD|LAX> (optinal):              Location of the zip files, defaults to 'LAX'"
-	echo "    -v|--version <version> (optional):                      Version to handle, defaults to \"7.4.13\""
+	echo "    --debug (optional):                                     Enabling debug mode"
+	echo "    --ignore-zip-files <file1,...,fileN> (optional):        Comma-separated list of files to be not processed (useful if a file is corrupted on the remote server)"
+	echo "    --logdir <logdir> (optional):                           Logging directory, defaults to \"\${PWD}/logs\""
+	echo "    --zip-list-retention-time '<time>' (optinal):           Retention time after the update of the zip list is enforced, defaults to '1 min'"
+	echo "    --storage-location <BUD|LAX> (optinal):                 Location of the zip files, defaults to 'LAX'"
+	echo "    --version <version> (optional):                         Version to handle, defaults to \"7.4.13\""
 	echo "    --no-fetch (optional):                                  Do not fetch DXP repo"
 	echo "    --no-push (optional):                                   Do not push to origin"
 	echo ""
 	echo "Example (equals to no arguments):"
 	echo ""
-	echo "${0} -l \"\${PWD}/logs\" -r '1 min' -s LAX -v '7.4.13'"
+	echo "${0} --logdir \"\${PWD}/logs\" --zip-list-retention-time '1 min' --storage-location LAX --version 7.4.13"
 	echo ""
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"

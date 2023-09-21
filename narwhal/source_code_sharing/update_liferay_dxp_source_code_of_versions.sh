@@ -34,19 +34,19 @@ function check_usage {
 	while [ "$#" -gt "0" ]
 	do
 		case "${1}" in
-			-d|--debug)
+			--debug)
 				LIFERAY_COMMON_LOG_LEVEL="DEBUG"
 
 				;;
 
-			-l|--logdir)
+			--logdir)
 				LIFERAY_COMMON_LOG_DIR="${2}"
 
 				shift 1
 
 				;;
 
-			-v|--version)
+			--version)
 				VERSION_INPUT="${2}"
 
 				shift 1
@@ -142,17 +142,17 @@ function print_help {
 	echo ""
 	echo "Usage:"
 	echo ""
-	echo "${0} [-l|--logdir <logdir>] [-v|--version <version>] [--no-fetch] [--no-push]"
+	echo "${0} [--logdir <logdir>] [--version <version>] [--no-fetch] [--no-push]"
 	echo ""
-	echo "    -d|--debug (optional):                Enabling debug mode"
-	echo "    -l|--logdir <logdir> (optional):      Logging directory, defaults to \"\${PWD}/logs\""
-	echo "    -v|--version <version> (optional):    Version to handle, defaults to \"7.[0-9].1[03]\""
+	echo "    --debug (optional):                   Enabling debug mode"
+	echo "    --logdir <logdir> (optional):         Logging directory, defaults to \"\${PWD}/logs\""
+	echo "    --version <version> (optional):       Version to handle, defaults to \"7.[0-9].1[03]\""
 	echo "    --no-fetch (optional):                Do not fetch DXP repo"
 	echo "    --no-push (optional):                 Do not push to origin"
 	echo ""
-	echo "Default (equal to no arguments):"
+	echo "Default (equals to no arguments):"
 	echo ""
-	echo "${0} -l \"\$PWD/logs\" -v \"7.[0-9].[0-9] 7.[0-9].1[0-9]\""
+	echo "${0} --logdir \"\$PWD/logs\" --version \"7.[0-9].[0-9] 7.[0-9].1[0-9]\""
 	echo ""
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
