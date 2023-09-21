@@ -17,6 +17,8 @@ function background_run {
 }
 
 function check_usage {
+	_BUILD_TIMESTAMP=$(date +%s)
+
 	if [ ! -n "${LIFERAY_RELEASE_GIT_SHA}" ]
 	then
 		print_help
@@ -35,7 +37,6 @@ function check_usage {
 	fi
 
 	_BUILD_DIR="${_RELEASE_ROOT_DIR}"/build
-	_BUILD_TIMESTAMP=$(date +%s)
 	_BUNDLES_DIR="${_RELEASE_ROOT_DIR}"/dev/projects/bundles
 	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/dev/projects
 	_RELEASES_DIR="${_RELEASE_ROOT_DIR}"/releases
