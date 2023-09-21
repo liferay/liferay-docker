@@ -29,7 +29,7 @@ function check_usage {
 
 	if [ -n "${WORKSPACE}" ]
 	then
-		_RELEASE_ROOT_DIR="${WORKSPACE}"/release-data/
+		_RELEASE_ROOT_DIR="${WORKSPACE}"/release-data
 	else
 		_RELEASE_ROOT_DIR="${HOME}"/.liferay-release
 	fi
