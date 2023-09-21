@@ -31,11 +31,11 @@ function install_patching_tool {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_download https://releases-cdn.liferay.com/tools/patching-tool/LATEST-3.0.txt
+	lc_download https://releases.liferay.com/tools/patching-tool/LATEST-4.0.txt
 
-	local latest_version=$(cat LATEST-3.0.txt)
+	local latest_version=$(cat LATEST-4.0.txt)
 
-	rm -f LATEST-3.0.txt
+	rm -f LATEST-4.0.txt
 
 	lc_download https://releases-cdn.liferay.com/tools/patching-tool/patching-tool-"${latest_version}".zip
 
