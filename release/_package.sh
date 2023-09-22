@@ -37,7 +37,7 @@ function install_patching_tool {
 
 	rm -f LATEST-4.0.txt
 
-	lc_download https://releases-cdn.liferay.com/tools/patching-tool/patching-tool-"${latest_version}".zip
+	lc_download https://releases.liferay.com/tools/patching-tool/patching-tool-"${latest_version}".zip
 
 	unzip -q patching-tool-"${latest_version}".zip
 
