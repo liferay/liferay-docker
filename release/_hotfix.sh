@@ -22,9 +22,9 @@ function add_portal_patcher_properties_jar {
 	(
 		echo "fixed.issues=${LIFERAY_RELEASE_FIXED_ISSUES}"
 		echo "installed.patches=${HOTFIX_NAME}"
-	)  > portal-patcher.properties
+	)  > patcher.properties
 
-	jar cfm portal-patcher-properties.jar manifest portal-patcher.properties
+	jar cfm portal-patcher-properties.jar manifest patcher.properties
 
 	if [ -e "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/" ]
 	then
