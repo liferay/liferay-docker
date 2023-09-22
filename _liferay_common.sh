@@ -106,7 +106,7 @@ function lc_download {
 	then
 		if [ -n "${LIFERAY_COMMON_DOWNLOAD_NO_CACHE}" ]
 		then
-			lc_log DEBUG "Deleting file in the cache."
+			lc_log DEBUG "Deleting file from cache: ${cache_file}."
 
 			rm -f "${cache_file}"
 		else
