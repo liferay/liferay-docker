@@ -31,7 +31,7 @@ function install_patching_tool {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	LIFERAY_COMMON_DOWNLOAD_NO_CACHE=true lc_download https://releases.liferay.com/tools/patching-tool/LATEST-4.0.txt
+	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE=true lc_download https://releases.liferay.com/tools/patching-tool/LATEST-4.0.txt
 
 	local latest_version=$(cat LATEST-4.0.txt)
 
