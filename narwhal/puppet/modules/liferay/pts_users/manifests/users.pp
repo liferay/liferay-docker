@@ -11,6 +11,7 @@ class pts_users::users {
 	include pts_users::users::peter_mezei
 	include pts_users::users::richard_benko
 	include pts_users::users::root
+	include pts_users::users::szantina_szanto
 	include pts_users::users::tamas_papp
 	include pts_users::users::ubuntu
 	include pts_users::users::zsolt_balogh
