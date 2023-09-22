@@ -104,11 +104,18 @@ function lc_download {
 
 	if [ -e "${cache_file}" ]
 	then
-		lc_log DEBUG "Copying file from cache: ${cache_file}."
+		if [ -n "${LIFERAY_COMMON_DOWNLOAD_NO_CACHE}" ]
+		then
+			lc_log DEBUG "Deleting file in the cache."
 
-		cp "${cache_file}" "${file_name}"
+			rm -f "${cache_file}"
+		else
+			lc_log DEBUG "Copying file from cache: ${cache_file}."
 
-		return
+			cp "${cache_file}" "${file_name}"
+
+			return
+		fi
 	fi
 
 	mkdir -p $(dirname "${cache_file}")
