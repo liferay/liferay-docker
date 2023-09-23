@@ -4,7 +4,7 @@ COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_squid_entrypoint.sh"]
 
-EXPOSE 3128 4128
+EXPOSE 3128 3129
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"

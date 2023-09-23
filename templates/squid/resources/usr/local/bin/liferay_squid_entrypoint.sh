@@ -26,8 +26,8 @@ function main {
 	squid -CNYd 1
 
 	#
-	# curl --location https://dlcdn.apache.org/netbeans/netbeans/19/netbeans-19-bin.zip --output netbeans-19-bin.zip --preproxy localhost:4128
-	# curl --location https://www.bbc.com/robots.txt --preproxy localhost:4128
+	# curl --location https://dlcdn.apache.org/netbeans/netbeans/19/netbeans-19-bin.zip --output netbeans-19-bin.zip --preproxy localhost:3129
+	# curl --location https://www.bbc.com/robots.txt --preproxy localhost:3129
 	#
 }
 
