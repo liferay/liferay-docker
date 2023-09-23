@@ -1,5 +1,11 @@
 FROM debian:bullseye-slim
 
+ARG LABEL_BUILD_DATE
+ARG LABEL_NAME
+ARG LABEL_VCS_REF
+ARG LABEL_VCS_URL
+ARG LABEL_VERSION
+
 COPY resources/usr/local/bin/* /usr/local/bin/
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_squid_entrypoint.sh"]
