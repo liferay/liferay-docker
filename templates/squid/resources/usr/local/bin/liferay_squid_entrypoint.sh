@@ -23,6 +23,8 @@ function main {
 			-subj /C=US/ST=CA/L=LAX/O=Liferay/OU=IT/CN=localhost
 	fi
 
+	squid -z && rm -f /run/squid.pid
+
 	squid -CNYd 1
 
 	#
