@@ -568,11 +568,6 @@ function main {
 		LIFERAY_DOCKER_IMAGE_PLATFORMS=linux/amd64,linux/arm64
 	fi
 
-	if [ -z "${LIFERAY_DOCKER_REPOSITORY}" ]
-	then
-		LIFERAY_DOCKER_REPOSITORY=liferay
-	fi
-
 	validate_bundles_yml
 
 	LIFERAY_DOCKER_LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
