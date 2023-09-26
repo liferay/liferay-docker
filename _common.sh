@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -z "${LIFERAY_DOCKER_REPOSITORY}" ]
+then
+	LIFERAY_DOCKER_REPOSITORY=liferay
+fi
+
 function check_docker_buildx {
 	docker build buildx --help > /dev/null 2>&1
 
@@ -330,12 +335,3 @@ function warm_up_tomcat {
 		start_tomcat
 	fi
 }
-
-function _init_docker_common {
-	if [ -z "${LIFERAY_DOCKER_REPOSITORY}" ]
-	then
-		LIFERAY_DOCKER_REPOSITORY=liferay
-	fi
-}
-
-_init_docker_common
