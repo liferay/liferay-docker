@@ -70,10 +70,53 @@ function main {
 		exit 1
 	fi
 
-	find /opt/liferay/batch -type f -name "*.batch-engine-data.json" -print0 |
+	local site_initializer_json="/opt/liferay/site-initializer/site-initializer.json"
+
+	if [ -e "${site_initializer_json}" ]
+	then
+		echo "Processing Site Initializer: ${site_initializer_json}"
+		echo ""
+
+		local href="/o/headless-site/v1.0/sites/by-external-reference-code/"
+
+		echo "HREF: ${href}"
+
+		local site=$(jq -r '.' ${site_initializer_json})
+
+		echo "Site: ${site}"
+
+		local external_reference_code=$(jq -r ".externalReferenceCode" <<< "${site}")
+
+		local site_initializer_zip="/opt/liferay/site-initializer/site-initializer.zip"
+
+		local put_response=$(\
+			curl \
+				-H "Accept: application/json" \
+				-H "Authorization: Bearer ${oauth2_access_token}" \
+				-H "Content-Type: multipart/form-data" \
+				-X PUT \
+				-F "file=@${site_initializer_zip};type=application/zip" \
+				-F "site=${site}" \
+				-s \
+				${curl_options} \
+				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}" \
+			| jq -r ".")
+
+		echo "PUT Response: ${put_response}"
+		echo ""
+
+		if [ ! -n "${put_response}" ]
+		then
+			echo "Received invalid PUT response."
+
+			exit 1
+		fi
+	fi
+
+	find /opt/liferay/batch -type f -name "*.batch-engine-data.json" -print0 2> /dev/null |
 	while IFS= read -r -d "" file_name
 	do
-		echo "Processing: ${file_name}"
+		echo "Processing Batch Engine Data: ${file_name}"
 		echo ""
 
 		local href=$(jq -r ".actions.createBatch.href" ${file_name})
