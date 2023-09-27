@@ -245,9 +245,9 @@ function _lc_init {
 
 	if (locale -a | grep -q en_US.utf8)
 	then
-		export LC_ALL=en_US.UTF-8
+		export LC_ALL=en_US.utf8
 	else
-		export LC_ALL=C.UTF-8
+		export LC_ALL=C.utf8
 	fi
 
 	export TZ=UTC
