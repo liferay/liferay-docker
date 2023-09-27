@@ -60,11 +60,13 @@ function main {
 
 	background_run init_gcs
 	background_run update_portal_repository
-	background_run update_release_tool_repository
 
 	wait
 
-	lc_time_run decrement_module_versions
+	background_run update_release_tool_repository
+	background_run decrement_module_versions
+
+	wait
 
 	_DXP_VERSION=$(get_dxp_version)
 
