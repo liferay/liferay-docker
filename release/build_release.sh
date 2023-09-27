@@ -63,8 +63,8 @@ function main {
 
 	wait
 
-	background_run update_release_tool_repository
 	background_run decrement_module_versions
+	background_run update_release_tool_repository
 
 	wait
 
