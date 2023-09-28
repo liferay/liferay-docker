@@ -25,6 +25,24 @@ function clone_repository {
 
 	mkdir -p "${_PROJECTS_DIR}"
 
+	if [ -e "/opt/dev/projects/github/${1}" ]
+	then
+		echo "Copying git repository from /opt/dev/projects/github/${1}."
+
+		cp -a "/opt/dev/projects/github/${1}" "${_PROJECTS_DIR}"
+
+		return
+	fi
+
+	if [ -e "/home/me/dev/projects/${1}" ]
+	then
+		echo "Copying git repository from /home/me/dev/projects/${1}."
+
+		cp -a "/home/me/dev/projects/${1}" "${_PROJECTS_DIR}"
+
+		return
+	fi
+
 	lc_cd "${_PROJECTS_DIR}"
 
 	git clone git@github.com:liferay/"${1}".git
