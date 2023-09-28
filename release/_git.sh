@@ -54,7 +54,7 @@ function update_portal_repository {
 	then
 		echo "${LIFERAY_RELEASE_GIT_SHA} branch exists on remote."
 
-		git fetch -fu upstream "${LIFERAY_RELEASE_GIT_SHA}:${LIFERAY_RELEASE_GIT_SHA}"
+		git fetch --force --update-head-ok upstream "${LIFERAY_RELEASE_GIT_SHA}:${LIFERAY_RELEASE_GIT_SHA}"
 	else
 		lc_log ERROR "${LIFERAY_RELEASE_GIT_SHA} does not exist." 
 
