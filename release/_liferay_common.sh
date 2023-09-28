@@ -6,6 +6,19 @@
 # repository where it is used.
 #
 
+function lc_background_run {
+	if [ -n "${LIFERAY_COMMON_DEBUG_ENABLED}" ]
+	then
+		lc_time_run "${@}"
+	else
+		lc_time_run "${@}" &
+
+		local pid=${!}
+
+		LIFERAY_COMMON_BACKGROUND_PIDS["${pid}"]="${@}"
+	fi
+}
+
 function lc_cd {
 	if [ -d "${1}" ]
 	then
@@ -228,9 +241,27 @@ function lc_time_run {
 	fi
 }
 
+function lc_wait {
+	for pid in ${!LIFERAY_COMMON_BACKGROUND_PIDS[@]}
+	do
+		wait "${pid}"
+
+		local exit_code=$?
+
+		if [ "${exit_code}" -ne 0 ]
+		then
+			exit "${exit_code}"
+		fi
+	done
+
+	LIFERAY_COMMON_BACKGROUND_PIDS=()
+}
+
 function _lc_init {
 	LIFERAY_COMMON_START_TIME=$(date +%s)
 	LIFERAY_COMMON_STEP_FILE=$(mktemp)
+
+	declare -A LIFERAY_COMMON_BACKGROUND_PIDS
 
 	if [ -z "${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}" ]
 	then

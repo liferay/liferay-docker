@@ -7,15 +7,6 @@ source _liferay_common.sh
 source _package.sh
 source _publishing.sh
 
-function background_run {
-	if [ -n "${LIFERAY_COMMON_DEBUG_ENABLED}" ]
-	then
-		lc_time_run "${@}"
-	else
-		lc_time_run "${@}" &
-	fi
-}
-
 function check_usage {
 	if [ ! -n "${LIFERAY_RELEASE_GIT_SHA}" ]
 	then
@@ -50,23 +41,23 @@ function main {
 
 	check_usage
 
-	background_run clone_repository liferay-binaries-cache-2020
-	background_run clone_repository liferay-portal-ee
-	background_run clone_repository liferay-release-tool-ee
+	lc_background_run clone_repository liferay-binaries-cache-2020
+	lc_background_run clone_repository liferay-portal-ee
+	lc_background_run clone_repository liferay-release-tool-ee
 
-	wait
+	lc_wait
 
 	lc_time_run clean_portal_repository
 
-	background_run init_gcs
-	background_run update_portal_repository
+	lc_background_run init_gcs
+	lc_background_run update_portal_repository
 
-	wait
+	lc_wait
 
-	background_run decrement_module_versions
-	background_run update_release_tool_repository
+	lc_background_run decrement_module_versions
+	lc_background_run update_release_tool_repository
 
-	wait
+	lc_wait
 
 	_DXP_VERSION=$(get_dxp_version)
 
@@ -84,12 +75,12 @@ function main {
 
 		lc_time_run build_dxp
 
-		background_run build_sql
-		background_run copy_copyright
-		background_run deploy_elasticsearch_sidecar
-		background_run clean_up_ignored_dxp_modules
+		lc_background_run build_sql
+		lc_background_run copy_copyright
+		lc_background_run deploy_elasticsearch_sidecar
+		lc_background_run clean_up_ignored_dxp_modules
 
-		wait
+		lc_wait
 
 		lc_time_run warm_up_tomcat
 
@@ -113,10 +104,10 @@ function main {
 
 		lc_time_run obfuscate_licensing
 
-		background_run build_dxp
-		background_run prepare_release_dir
+		lc_background_run build_dxp
+		lc_background_run prepare_release_dir
 
-		wait
+		lc_wait
 
 		lc_time_run clean_up_ignored_dxp_modules
 
