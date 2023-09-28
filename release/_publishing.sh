@@ -23,15 +23,21 @@ function upload_release {
 
 	lc_cd "${_BUILD_DIR}"/release
 
-	echo "# Uploaded files" > ../release.md
+	echo "# Uploaded files" > ../output.md
+
+	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/release-candidates/${_DXP_VERSION}-${_BUILD_TIMESTAMP}"
 
 	for file in *
 	do
 		if [ -f "${file}" ]
 		then
-			gsutil cp "${_BUILD_DIR}/release/${file}" "gs://patcher-storage/dxp/${_DXP_VERSION}/"
+			# gsutil cp "${_BUILD_DIR}/release/${file}" "gs://patcher-storage/dxp/${_DXP_VERSION}/"
 
-			echo " - https://storage.googleapis.com/patcher-storage/dxp/${_DXP_VERSION}/${file}" >> ../release.md
+			echo "Copying ${file}."
+
+			scp -i lrdcom-vm-1 "${file}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/release-candidates/${_DXP_VERSION}-${_BUILD_TIMESTAMP}"
+
+			echo " - https://releases.liferay.com/dxp/release-candidates/${_DXP_VERSION}-${_BUILD_TIMESTAMP}/${file}" >> ../output.md
 		fi
 	done
 }
