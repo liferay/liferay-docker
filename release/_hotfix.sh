@@ -46,9 +46,9 @@ function add_hotfix_testing_code {
 
 	if (! git show "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" &>/dev/null)
 	then
-		echo "Running git fetch origin tag \"${LIFERAY_RELEASE_HOTFIX_TEST_TAG}\""
+		echo "Running git fetch upstream tag \"${LIFERAY_RELEASE_HOTFIX_TEST_TAG}\""
 
-		git fetch -v origin tag "${LIFERAY_RELEASE_HOTFIX_TEST_TAG}" || return 1
+		git fetch -v upstream tag "${LIFERAY_RELEASE_HOTFIX_TEST_TAG}" || return 1
 	fi
 
 	echo "Running git cherry-pick -n \"${LIFERAY_RELEASE_HOTFIX_TEST_SHA}\""

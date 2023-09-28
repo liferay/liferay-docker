@@ -28,6 +28,10 @@ function clone_repository {
 	lc_cd "${_PROJECTS_DIR}"
 
 	git clone git@github.com:liferay/"${1}".git
+
+	cd "${1}"
+
+	git remote add upstream git@github.com:liferay/"${1}".git
 }
 
 function update_portal_repository {
@@ -43,14 +47,14 @@ function update_portal_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [ -n "$(git ls-remote origin refs/tags/"${LIFERAY_RELEASE_GIT_SHA}")" ]
+	if [ -n "$(git ls-remote upstream refs/tags/"${LIFERAY_RELEASE_GIT_SHA}")" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} tag exists on remote."
-	elif [ -n "$(git ls-remote origin refs/heads/"${LIFERAY_RELEASE_GIT_SHA}")" ]
+	elif [ -n "$(git ls-remote upstream refs/heads/"${LIFERAY_RELEASE_GIT_SHA}")" ]
 	then
 		echo "${LIFERAY_RELEASE_GIT_SHA} branch exists on remote."
 
-		git fetch -fu origin "${LIFERAY_RELEASE_GIT_SHA}:${LIFERAY_RELEASE_GIT_SHA}"
+		git fetch -fu upstream "${LIFERAY_RELEASE_GIT_SHA}:${LIFERAY_RELEASE_GIT_SHA}"
 	else
 		lc_log ERROR "${LIFERAY_RELEASE_GIT_SHA} does not exist." 
 
@@ -90,7 +94,7 @@ function update_release_tool_repository {
 
 	git fetch --all --prune --tags || return 1
 
-	git checkout origin/"${release_tool_sha}" || return 1
+	git checkout upstream/"${release_tool_sha}" || return 1
 
 	echo "${release_tool_sha}" > "${_BUILD_DIR}"/liferay-release-tool-ee.sha
 }
