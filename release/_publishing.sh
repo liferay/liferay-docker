@@ -31,9 +31,9 @@ function upload_release {
 	do
 		if [ -f "${file}" ]
 		then
-			# gsutil cp "${_BUILD_DIR}/release/${file}" "gs://patcher-storage/dxp/${_DXP_VERSION}/"
-
 			echo "Copying ${file}."
+
+			#gsutil cp "${_BUILD_DIR}/release/${file}" "gs://patcher-storage/dxp/${_DXP_VERSION}/"
 
 			scp -i lrdcom-vm-1 "${file}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/release-candidates/${_DXP_VERSION}-${_BUILD_TIMESTAMP}"
 
