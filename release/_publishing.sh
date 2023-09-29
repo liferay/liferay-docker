@@ -27,7 +27,7 @@ function upload_release {
 
 	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/release-candidates/${_DXP_VERSION}-${_BUILD_TIMESTAMP}"
 
-	for file in *
+	for file in * .*
 	do
 		if [ -f "${file}" ]
 		then
