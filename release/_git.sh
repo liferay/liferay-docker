@@ -67,6 +67,8 @@ function update_portal_repository {
 	if [ -n "$(git ls-remote upstream refs/tags/"${LIFERAY_RELEASE_GIT_SHA}")" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} tag exists on remote."
+
+		git fetch --force upstream tag "${LIFERAY_RELEASE_GIT_SHA}"
 	elif [ -n "$(git ls-remote upstream refs/heads/"${LIFERAY_RELEASE_GIT_SHA}")" ]
 	then
 		echo "${LIFERAY_RELEASE_GIT_SHA} branch exists on remote."
