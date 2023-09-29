@@ -27,7 +27,7 @@ function clone_repository {
 
 	if [ -e "/home/me/dev/projects/${1}" ]
 	then
-		echo "Copying git repository from /home/me/dev/projects/${1}."
+		echo "Copying Git repository from /home/me/dev/projects/${1}."
 
 		cp -a "/home/me/dev/projects/${1}" "${_PROJECTS_DIR}"
 
@@ -36,7 +36,7 @@ function clone_repository {
 
 	if [ -e "/opt/dev/projects/github/${1}" ]
 	then
-		echo "Copying git repository from /opt/dev/projects/github/${1}."
+		echo "Copying Git repository from /opt/dev/projects/github/${1}."
 
 		cp -a "/opt/dev/projects/github/${1}" "${_PROJECTS_DIR}"
 
