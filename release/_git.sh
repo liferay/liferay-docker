@@ -25,31 +25,30 @@ function clone_repository {
 
 	mkdir -p "${_PROJECTS_DIR}"
 
+	lc_cd "${_PROJECTS_DIR}"
+
 	if [ -e "/home/me/dev/projects/${1}" ]
 	then
 		echo "Copying Git repository from /home/me/dev/projects/${1}."
 
 		cp -a "/home/me/dev/projects/${1}" "${_PROJECTS_DIR}"
-
-		return
-	fi
-
-	if [ -e "/opt/dev/projects/github/${1}" ]
+	elif [ -e "/opt/dev/projects/github/${1}" ]
 	then
 		echo "Copying Git repository from /opt/dev/projects/github/${1}."
 
 		cp -a "/opt/dev/projects/github/${1}" "${_PROJECTS_DIR}"
-
-		return
+	else
+		git clone git@github.com:liferay/"${1}".git
 	fi
-
-	lc_cd "${_PROJECTS_DIR}"
-
-	git clone git@github.com:liferay/"${1}".git
 
 	cd "${1}"
 
-	git remote add upstream git@github.com:liferay/"${1}".git
+	if (git remote get-url upstream &>/dev/null)
+	then
+		git remote set-url upstream git@github.com:liferay/"${1}".git
+	else
+		git remote add upstream git@github.com:liferay/"${1}".git
+	fi
 }
 
 function update_portal_repository {
