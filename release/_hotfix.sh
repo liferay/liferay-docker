@@ -328,10 +328,6 @@ function prepare_release_dir {
 		_RELEASE_DIR="${_RELEASES_DIR}/${release_file%%.7z}"
 
 		release7z="${_TEST_RELEASE_DIR}/${release_file}"
-	else
-		echo "Release is not available, download is not yet an option."
-
-		return 1
 	fi
 
 	if [ -e "${_RELEASE_DIR}" ]
@@ -345,7 +341,20 @@ function prepare_release_dir {
 
 	lc_cd "${_RELEASE_DIR}"
 
-	7z x "${release7z}"
+	if [ -n "${release7z}" ]
+	then
+		7z x "${release7z}"
+	else
+		lc_download https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/.lfrrelease-tomcat-bundle
+
+		lc_download https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/$(cat .lfrrelease-tomcat-bundle)
+
+		rm .lfrrelease-tomcat-bundle
+
+		7z x *.7z
+
+		rm -f *.7z
+	fi
 
 	mv liferay-dxp/* .
 	mv liferay-dxp/.* . &> /dev/null
