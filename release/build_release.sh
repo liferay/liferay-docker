@@ -92,6 +92,8 @@ function main {
 
 		lc_time_run upload_release
 	else
+		lc_time_run prepare_release_dir
+
 		lc_time_run set_up_profile_dxp
 
 		lc_time_run add_hotfix_testing_code
@@ -104,10 +106,7 @@ function main {
 
 		lc_time_run obfuscate_licensing
 
-		lc_background_run build_dxp
-		lc_background_run prepare_release_dir
-
-		lc_wait
+		lc_time_run build_dxp
 
 		lc_time_run clean_up_ignored_dxp_modules
 
