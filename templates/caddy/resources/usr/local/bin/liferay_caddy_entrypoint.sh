@@ -3,7 +3,7 @@
 function main {
 	if [ ! -n "${LIFERAY_ROUTES_DXP}" ]
 	then
-		local LIFERAY_ROUTES_DXP="/etc/liferay/lxc/dxp-metadata"
+		LIFERAY_ROUTES_DXP="/etc/liferay/lxc/dxp-metadata"
 	fi
 
 	for i in $(cat ${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.domains 2>/dev/null)

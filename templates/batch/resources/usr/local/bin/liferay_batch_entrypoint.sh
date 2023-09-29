@@ -10,12 +10,12 @@ function main {
 
 	if [ ! -n "${LIFERAY_ROUTES_CLIENT_EXTENSION}" ]
 	then
-		local LIFERAY_ROUTES_CLIENT_EXTENSION="/etc/liferay/lxc/ext-init-metadata"
+		LIFERAY_ROUTES_CLIENT_EXTENSION="/etc/liferay/lxc/ext-init-metadata"
 	fi
 
 	if [ ! -n "${LIFERAY_ROUTES_DXP}" ]
 	then
-		local LIFERAY_ROUTES_DXP="/etc/liferay/lxc/dxp-metadata"
+		LIFERAY_ROUTES_DXP="/etc/liferay/lxc/dxp-metadata"
 	fi
 
 	echo "OAuth Application ERC: ${LIFERAY_BATCH_OAUTH_APP_ERC}"
