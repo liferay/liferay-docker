@@ -21,7 +21,7 @@ function add_portal_patcher_properties_jar {
 
 	(
 		echo "fixed.issues=${LIFERAY_RELEASE_FIXED_ISSUES}"
-		echo "installed.patches=${HOTFIX_NAME}"
+		echo "installed.patches=${_HOTFIX_NAME}"
 	)  > patcher.properties
 
 	jar cfm portal-patcher-properties.jar manifest patcher.properties
@@ -74,7 +74,7 @@ function calculate_checksums {
 
 function compare_jars {
 	jar1=${_BUNDLES_DIR}/"${1}"
-	jar2=${RELEASE_DIR}/"${1}"
+	jar2=${_RELEASE_DIR}/"${1}"
 
 	function list_file {
 		unzip -v "${1}" | \
@@ -204,22 +204,22 @@ function create_hotfix {
 	rm -fr "${_BUILD_DIR}"/hotfix
 	mkdir -p "${_BUILD_DIR}"/hotfix
 
-	echo "Comparing ${_BUNDLES_DIR} and ${RELEASE_DIR}"
+	echo "Comparing ${_BUNDLES_DIR} and ${_RELEASE_DIR}"
 
 	echo "Full diff:"
 
-	diff -rq "${_BUNDLES_DIR}" "${RELEASE_DIR}" | grep -v /work/Catalina
+	diff -rq "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep -v /work/Catalina
 
-	diff -rq "${_BUNDLES_DIR}" "${RELEASE_DIR}" | grep -v /work/Catalina | while read -r change
+	diff -rq "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep -v /work/Catalina | while read -r change
 	do
-		if (echo "${change}" | grep "^Only in ${RELEASE_DIR}" &>/dev/null)
+		if (echo "${change}" | grep "^Only in ${_RELEASE_DIR}" &>/dev/null)
 		then
 			local removed_file=${change#Only in }
-			removed_file=$(echo "${removed_file}" | sed -e "s#: #/#" | sed -e "s#${RELEASE_DIR}##")
+			removed_file=$(echo "${removed_file}" | sed -e "s#: #/#" | sed -e "s#${_RELEASE_DIR}##")
 			removed_file=${removed_file#/}
 			echo "${removed_file}"
 
-			if [ ! -f "${RELEASE_DIR}/${removed_file}" ]
+			if [ ! -f "${_RELEASE_DIR}/${removed_file}" ]
 			then
 				echo "Skipping ${removed_file} as it's not a file"
 
@@ -315,7 +315,7 @@ function package_hotfix {
 function prepare_release_dir {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	RELEASE_DIR="${_RELEASES_DIR}/${_DXP_VERSION}"
+	_RELEASE_DIR="${_RELEASES_DIR}/${_DXP_VERSION}"
 
 	local release7z
 
@@ -325,7 +325,7 @@ function prepare_release_dir {
 
 		local release_file=$(find . -type f -printf "%f\n")
 
-		RELEASE_DIR="${_RELEASES_DIR}/${release_file%%.7z}"
+		_RELEASE_DIR="${_RELEASES_DIR}/${release_file%%.7z}"
 
 		release7z="${_TEST_RELEASE_DIR}/${release_file}"
 	else
@@ -334,16 +334,16 @@ function prepare_release_dir {
 		return 1
 	fi
 
-	if [ -e "${RELEASE_DIR}" ]
+	if [ -e "${_RELEASE_DIR}" ]
 	then
-		echo "${RELEASE_DIR} is already available."
+		echo "${_RELEASE_DIR} is already available."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	mkdir -p "${RELEASE_DIR}"
+	mkdir -p "${_RELEASE_DIR}"
 
-	lc_cd "${RELEASE_DIR}"
+	lc_cd "${_RELEASE_DIR}"
 
 	7z x "${release7z}"
 
@@ -355,7 +355,7 @@ function prepare_release_dir {
 
 function set_hotfix_name {
 	_HOTFIX_FILE_NAME=liferay-dxp-${_DXP_VERSION}-hotfix-"${LIFERAY_RELEASE_HOTFIX_ID}".zip
-	HOTFIX_NAME=hotfix-"${LIFERAY_RELEASE_HOTFIX_ID}"
+	_HOTFIX_NAME=hotfix-"${LIFERAY_RELEASE_HOTFIX_ID}"
 }
 
 function sign_hotfix {
