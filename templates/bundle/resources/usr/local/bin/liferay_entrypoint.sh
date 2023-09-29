@@ -95,7 +95,6 @@ function start_interval_thread_dump {
 				sleep=3
 			fi
 
-
 			/usr/local/bin/generate_thread_dump.sh -n 1 -s "${sleep}"
 		else
 			sleep 60
