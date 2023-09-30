@@ -49,6 +49,8 @@ function clone_repository {
 	else
 		git remote add upstream git@github.com:liferay/"${1}".git
 	fi
+
+	git remote -v
 }
 
 function update_portal_repository {
@@ -111,7 +113,7 @@ function update_release_tool_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	git fetch --all --prune --tags || return 1
+	git fetch --force --prune --tags upstream || return 1
 
 	git checkout upstream/"${release_tool_sha}" || return 1
 
