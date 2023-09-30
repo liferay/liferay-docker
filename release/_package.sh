@@ -86,9 +86,13 @@ function package_release {
 
 	zip -qr "${_BUILD_DIR}/release/liferay-dxp-tools-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" tools
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/sql
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	zip -qr "${_BUILD_DIR}/release/liferay-dxp-sql-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" . -i "*.sql"
+	cp -a sql liferay-dxp-sql
+
+	zip -qr "${_BUILD_DIR}/release/liferay-dxp-sql-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" liferay-dxp-sql -i "*.sql"
+
+	rm -fr liferay-dxp-sql
 
 	rm -fr "${_BUILD_DIR}/release/liferay-dxp"
 }
