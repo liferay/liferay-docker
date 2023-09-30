@@ -356,8 +356,11 @@ function prepare_release_dir {
 		rm -f *.7z
 	fi
 
+	shopt -s dotglob
+
 	mv liferay-dxp/* .
-	mv liferay-dxp/.* . &> /dev/null
+
+	shopt -u dotglob
 
 	rm -fr liferay-dxp/
 }
