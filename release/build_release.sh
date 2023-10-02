@@ -5,6 +5,7 @@ source _git.sh
 source _hotfix.sh
 source _liferay_common.sh
 source _package.sh
+source _patcher.sh
 source _publishing.sh
 
 function check_usage {
@@ -41,6 +42,8 @@ function main {
 	ANT_OPTS="-Xmx10G"
 
 	check_usage
+
+	lc_time_run report_jenkins_url
 
 	lc_background_run clone_repository liferay-binaries-cache-2020
 	lc_background_run clone_repository liferay-portal-ee
@@ -156,6 +159,7 @@ function print_help {
 	echo "    LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_PASSWORD (optional): The password to unlock the hotfix signing key"
 	echo "    LIFERAY_RELEASE_HOTFIX_TEST_SHA (optional): Git commit to cherry pick to build a test hotfix"
 	echo "    LIFERAY_RELEASE_HOTFIX_TEST_TAG (optional): Tag name of the hotfix testing code in the liferay-portal-ee repository"
+	echo "    LIFERAY_RELEASE_PATCHER_REQUEST_KEY (optional): Request Key from Patcher, this is used to report back statuses to Patcher"
 	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set this to \"hotfix\" to build a hotfix instead of a release"
 	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to upload artifacts"
 	echo ""
