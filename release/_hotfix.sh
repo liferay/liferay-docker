@@ -125,7 +125,7 @@ function copy_release_info_date {
 
 	build_date=${build_date#Liferay-Portal-Build-Date: }
 
-	lc_cd ${_PROJECTS_DIR}/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
 	sed -i -e "s/release.info.date=.*/release.info.date=$(date -d "${build_date}" +"%B %d, %Y")/" release.properties
 }
@@ -355,15 +355,15 @@ function prepare_release_dir {
 	then
 		7z x "${release7z}"
 	else
-		lc_download https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/.lfrrelease-tomcat-bundle
+		lc_download "https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/.lfrrelease-tomcat-bundle"
 
-		lc_download https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/$(cat .lfrrelease-tomcat-bundle)
+		lc_download "https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/$(cat .lfrrelease-tomcat-bundle)"
 
 		rm .lfrrelease-tomcat-bundle
 
-		7z x *.7z
+		7z x ./*.7z
 
-		rm -f *.7z
+		rm -f ./*.7z
 	fi
 
 	shopt -s dotglob
