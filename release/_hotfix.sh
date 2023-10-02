@@ -120,6 +120,16 @@ function compare_jars {
 	fi
 }
 
+function copy_release_info_date {
+	local build_date=$(unzip -p "${_RELEASE_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/portal-impl.jar" META-INF/MANIFEST.MF | grep "Liferay-Portal-Build-Date:")
+
+	build_date=${build_date#Liferay-Portal-Build-Date: }
+
+	lc_cd ${_PROJECTS_DIR}/liferay-portal-ee
+
+	sed -i -e "s/release.info.date=.*/release.info.date=$(date -d "${build_date}" +"%B %d, %Y")/" release.properties
+}
+
 function create_documentation {
 	function write {
 		echo -en "${1}" >> "${_BUILD_DIR}/hotfix/hotfix.json"
