@@ -148,6 +148,8 @@ function print_help {
 	echo ""
 	echo "    LIFERAY_RELEASE_GCS_TOKEN (optional): The .json token file to authenticate with Google Cloud Storage"
 	echo "    LIFERAY_RELEASE_GIT_SHA: Git SHA to build from"
+	echo "    LIFERAY_RELEASE_HOTFIX_BUILD_ID (optional): The ID of the build on Patcher"
+	echo "    LIFERAY_RELEASE_HOTFIX_FIXED_ISSUES (optional): List of tickets fixed in the hotfix, comma separated"
 	echo "    LIFERAY_RELEASE_HOTFIX_ID (optional): Hotfix ID"
 	echo "    LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE (optional): The .pem file containing the hotfix signing key"
 	echo "    LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_PASSWORD (optional): The password to unlock the hotfix signing key"

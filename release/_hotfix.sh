@@ -140,15 +140,38 @@ function create_documentation {
 		write "${1}\n"
 	}
 
+	local first_line=true
+
 	writeln "{"
 	writeln "    \"patch\": {"
 	writeln "        \"id\": \"${LIFERAY_RELEASE_HOTFIX_ID}\""
 	writeln "    },"
-	writeln "    \"fixed-issues\": [\"LPS-1\", \"LPS-2\"],"
+	writeln "    \"fixed-issues\": ["
+
+	if [ -n "${LIFERAY_RELEASE_HOTFIX_FIXED_ISSUES}" ]
+	then
+		echo "${LIFERAY_RELEASE_HOTFIX_FIXED_ISSUES}" | tr ',' '\n' | while read -r line
+		do
+			if [ "${first_line}" = true ]
+			then
+				first_line=false
+
+				write "        "
+			else
+				write ","
+			fi
+
+			write "\"${line}\""
+		done 
+
+		writeln ""
+	fi
+
+	writeln "    ],"
 	writeln "    \"build\": {"
 	writeln "        \"date\": \"$(date)\","
 	writeln "        \"git-revision\": \"${GIT_SHA}\","
-	writeln "        \"id\": \"219379428\","
+	writeln "        \"id\": \"${LIFERAY_RELEASE_HOTFIX_BUILD_ID}\","
 	writeln "        \"builder-revision\": \"TBD\""
 	writeln "    },"
 	writeln "    \"requirement\": {"
@@ -157,8 +180,7 @@ function create_documentation {
 	writeln "    },"
 	writeln "    \"added\" :["
 
-
-	local first_line=true
+	first_line=true
 
 	if [ -e "${_BUILD_DIR}"/hotfix/checksums ]
 	then
