@@ -162,7 +162,7 @@ function create_documentation {
 			fi
 
 			write "\"${line}\""
-		done 
+		done
 
 		writeln ""
 	fi
