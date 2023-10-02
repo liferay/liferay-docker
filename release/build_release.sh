@@ -28,6 +28,7 @@ function check_usage {
 	fi
 
 	_BUILD_DIR="${_RELEASE_ROOT_DIR}"/build
+	_BUILDER_SHA=$(git rev-parse HEAD)
 	_BUNDLES_DIR="${_RELEASE_ROOT_DIR}"/dev/projects/bundles
 	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/dev/projects
 	_RELEASES_DIR="${_RELEASE_ROOT_DIR}"/releases

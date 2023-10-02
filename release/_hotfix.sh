@@ -169,10 +169,10 @@ function create_documentation {
 
 	writeln "    ],"
 	writeln "    \"build\": {"
+	writeln "        \"builder-revision\": \"${_BUILDER_SHA}\"",
 	writeln "        \"date\": \"$(date)\","
 	writeln "        \"git-revision\": \"${GIT_SHA}\","
-	writeln "        \"id\": \"${LIFERAY_RELEASE_HOTFIX_BUILD_ID}\","
-	writeln "        \"builder-revision\": \"TBD\""
+	writeln "        \"id\": \"${LIFERAY_RELEASE_HOTFIX_BUILD_ID}\""
 	writeln "    },"
 	writeln "    \"requirement\": {"
 	writeln "        \"patching-tool-version\": \"4000\","
