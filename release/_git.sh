@@ -115,7 +115,7 @@ function update_release_tool_repository {
 
 	git fetch --force --prune --tags upstream || return 1
 
-	git checkout upstream/"${release_tool_sha}" || return 1
+	git checkout "${release_tool_sha}" || return 1
 
 	echo "${release_tool_sha}" > "${_BUILD_DIR}"/liferay-release-tool-ee.sha
 }
