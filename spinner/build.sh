@@ -123,7 +123,7 @@ function build_service_liferay {
 		write "            - LIFERAY_DISABLE_TRIAL_LICENSE=true"
 		write "            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver"
 		write "            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=password"
-		write "            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mysql://database/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&passwordCharacterEncoding=UTF-8&permitMysqlScheme"
+		write "            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mysql://database/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&passwordCharacterEncoding=UTF-8&permitMysqlScheme&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true"
 		write "            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=root"
 		write "            - LIFERAY_JPDA_ENABLED=true"
 		write "            - LIFERAY_UPGRADE_ENABLED=false"
