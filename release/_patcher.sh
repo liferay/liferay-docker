@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function report_jenkins_url {
-	if [ -z "${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}" ] ||
-	   [ -z "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}" ]
+	if [ -z "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}" ] ||
+	   [ -z "${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}" ]
 	then
 		echo "LIFERAY_RELEASE_HOTFIX_BUILD_ID, LIFERAY_RELEASE_PATCHER_REQUEST_KEY are not set."
 
