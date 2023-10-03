@@ -68,7 +68,7 @@ function update_portal_repository {
 
 	if (echo "${LIFERAY_RELEASE_GIT_SHA}" | grep -qE "[0-9a-f]{40}")
 	then
-		LIFERAY_RELEASE_GIT_SHA=$(git ls-remote upstream | grep 257831b15d290076e681a800239ce75242df3594 | grep refs/tags/fix-pack-fix- | head -n 1 | sed -e "s#.*/##")
+		LIFERAY_RELEASE_GIT_SHA=$(git ls-remote upstream | grep "${LIFERAY_RELEASE_GIT_SHA}" | grep refs/tags/fix-pack-fix- | head -n 1 | sed -e "s#.*/##")
 	fi
 
 	if [ -n "$(git ls-remote upstream refs/tags/"${LIFERAY_RELEASE_GIT_SHA}")" ]
