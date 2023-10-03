@@ -3,7 +3,7 @@
 function init_gcs {
 	if [ ! -n "${LIFERAY_RELEASE_GCS_TOKEN}" ]
 	then
-		lc_log INFO "The LIFERAY_RELEASE_GCS_TOKEN is not set."
+		lc_log INFO "Set the environment variable LIFERAY_RELEASE_GCS_TOKEN."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -16,7 +16,7 @@ function upload_release {
 
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
-		lc_log INFO "The environment variable LIFERAY_RELEASE_UPLOAD was not set to \"true\"."
+		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -45,7 +45,7 @@ function upload_release {
 function upload_hotfix {
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
-		lc_log INFO "The environment variable LIFERAY_RELEASE_UPLOAD was not set to \"true\"."
+		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

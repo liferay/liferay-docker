@@ -31,8 +31,8 @@ function print_help {
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
-	echo "    LIFERAY_RELEASE_RC_BUILD_TIMESTAMP: The timestamp of the build to publish"
-	echo "    LIFERAY_RELEASE_VERSION: The DXP version of the release to publish"
+	echo "    LIFERAY_RELEASE_RC_BUILD_TIMESTAMP: Timestamp of the build to publish"
+	echo "    LIFERAY_RELEASE_VERSION: DXP version of the release to publish"
 	echo ""
 	echo "Example: LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964 LIFERAY_RELEASE_VERSION=2023.q3.0 ${0}"
 

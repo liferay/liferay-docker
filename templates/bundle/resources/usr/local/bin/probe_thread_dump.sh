@@ -69,7 +69,7 @@ function check_usage {
 function main {
 	if [ "${LIFERAY_THREAD_DUMP_PROBE_ENABLED}" != "true" ]
 	then
-		echo "Set the environment variable \"LIFERAY_THREAD_DUMP_PROBE_ENABLED\" to \"true\" to enable ${0}."
+		echo "Set the environment variable LIFERAY_THREAD_DUMP_PROBE_ENABLED to \"true\" to enable ${0}."
 
 		exit 1
 	fi

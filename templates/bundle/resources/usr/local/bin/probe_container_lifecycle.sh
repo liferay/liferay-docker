@@ -2,7 +2,7 @@
 
 if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" != "true" ]]
 then
-	echo "Set the environment variable \"LIFERAY_CONTAINER_STATUS_ENABLED\" to \"true\" to enable ${0}."
+	echo "Set the environment variable LIFERAY_CONTAINER_STATUS_ENABLED to \"true\" to enable ${0}."
 
 	exit 2
 fi

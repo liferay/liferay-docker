@@ -407,7 +407,7 @@ function sign_hotfix {
 
 	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE}" ]
 	then
-		lc_log INFO "LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE environment variable is not set."
+		lc_log INFO "Set the environment variable LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
