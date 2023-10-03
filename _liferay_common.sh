@@ -117,7 +117,7 @@ function lc_download {
 	if [ -z "${file_name}" ]
 	then
 		file_name=${file_url##*/}
-		skip_copy="true"
+		local skip_copy="true"
 	fi
 
 	if [ -e "${file_name}" ]
