@@ -15,9 +15,9 @@ function report_jenkins_url {
 
 	(
 		echo "{"
-		echo "    \"patcherRequestKey\": \"${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}\""
+		echo "    \"patcherRequestKey\": \"${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}\","
 		echo "    \"status\": \"pending\","
-		echo "    \"statusURL\": \"${BUILD_URL}\","
+		echo "    \"statusURL\": \"${BUILD_URL}\""
 		echo "}"
 	) > "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}"
 
