@@ -50,7 +50,7 @@ function clone_repository {
 		git remote add upstream git@github.com:liferay/"${1}".git
 	fi
 
-	git remote -v
+	git remote --verbose
 }
 
 function update_portal_repository {
