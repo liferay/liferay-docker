@@ -21,5 +21,5 @@ function report_jenkins_url {
 		echo "}"
 	) > "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}"
 
-	rsync -rlptDvz --chown=501:501 --no-perms "${_BUILD_DIR}"/patcher-status/ test-3-1::patcher/
+	rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}"/patcher-status/ test-3-1::patcher/
 }
