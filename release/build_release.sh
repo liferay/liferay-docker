@@ -41,6 +41,8 @@ function check_usage {
 function main {
 	ANT_OPTS="-Xmx10G"
 
+	print_variables
+
 	check_usage
 
 	lc_time_run report_jenkins_url
@@ -166,6 +168,15 @@ function print_help {
 	echo "Example: LIFERAY_RELEASE_GIT_SHA=release-2023.q3 ${0}"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
+}
+
+function print_variables {
+	echo "To reproduce this build locally, run the following command in the release directory of the liferay-docker repository: "
+
+	local environment=$(set | grep -e "^LIFERAY_RELEASE" | grep -v "LIFERAY_RELEASE_PATCHER_REQUEST_KEY" | grep -v "LIFERAY_RELEASE_UPLOAD" | grep -v "LIFERAY_RELEASE_GCS_TOKEN" | grep -v "LIFERAY_RELEASE_HOTFIX_SIGNATURE" | tr "\n" " ")
+
+	echo "${environment}./build_release.sh"
+	echo ""
 }
 
 main
