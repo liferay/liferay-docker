@@ -171,9 +171,15 @@ function print_help {
 }
 
 function print_variables {
-	echo "To reproduce this build locally, run the following command in the release directory of the liferay-docker repository: "
+	echo "To reproduce this build locally, run the following command in the release directory of the liferay-docker repository:"
 
-	local environment=$(set | grep -e "^LIFERAY_RELEASE" | grep -v "LIFERAY_RELEASE_PATCHER_REQUEST_KEY" | grep -v "LIFERAY_RELEASE_UPLOAD" | grep -v "LIFERAY_RELEASE_GCS_TOKEN" | grep -v "LIFERAY_RELEASE_HOTFIX_SIGNATURE" | tr "\n" " ")
+	local environment=$(set | \
+		grep -e "^LIFERAY_RELEASE" | \
+		grep -v "LIFERAY_RELEASE_GCS_TOKEN" | \
+		grep -v "LIFERAY_RELEASE_HOTFIX_SIGNATURE" | \
+		grep -v "LIFERAY_RELEASE_PATCHER_REQUEST_KEY" | \
+		grep -v "LIFERAY_RELEASE_UPLOAD" | \
+		tr "\n" " ")
 
 	echo "${environment}./build_release.sh"
 	echo ""
