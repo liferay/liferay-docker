@@ -649,8 +649,8 @@
     7.4.13.nightly:
         bundle_url: files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
 quarterly:
-    7.4.13-2023.q3.0.alpha:
-        bundle_url: https://storage.googleapis.com/patcher-storage/dxp/2023.q3.0/liferay-dxp-tomcat-2023.q3.0-1695369778.7z
+    7.4.13-2023.q3.1.rc:
+        bundle_url: releases-cdn.liferay.com/dxp/release-candidates/2023.q3.1-1696425060/liferay-dxp-tomcat-2023.q3.1-1696425060.7z
 snapshot:
     snapshot-master:
         bundle_url: releases.liferay.com/portal/snapshot-master/latest/liferay-portal-tomcat-master.7z
