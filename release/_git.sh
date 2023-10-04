@@ -3,8 +3,8 @@
 function clean_portal_repository {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	GIT_SHA=$(git rev-parse HEAD)
-	GIT_SHA_SHORT=$(git rev-parse --short HEAD)
+	_GIT_SHA=$(git rev-parse HEAD)
+	_GIT_SHA_SHORT=$(git rev-parse --short HEAD)
 
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
