@@ -171,7 +171,7 @@ function print_help {
 }
 
 function print_variables {
-	echo "To reproduce this build locally, run the following command in the release directory of the liferay-docker repository:"
+	echo "To reproduce this build locally, execute the following command in liferay-docker/release:"
 
 	local environment=$(set | \
 		grep -e "^LIFERAY_RELEASE" | \
