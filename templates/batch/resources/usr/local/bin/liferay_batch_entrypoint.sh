@@ -70,24 +70,20 @@ function main {
 		exit 1
 	fi
 
-	local site_initializer_json="/opt/liferay/site-initializer/site-initializer.json"
-
-	if [ -e "${site_initializer_json}" ]
+	if [ -e "/opt/liferay/site-initializer/site-initializer.json" ]
 	then
-		echo "Processing Site Initializer: ${site_initializer_json}"
+		echo "Processing: /opt/liferay/site-initializer/site-initializer.json"
 		echo ""
 
 		local href="/o/headless-site/v1.0/sites/by-external-reference-code/"
 
 		echo "HREF: ${href}"
 
-		local site=$(jq -r '.' ${site_initializer_json})
+		local site=$(jq -r '.' /opt/liferay/site-initializer/site-initializer.json
 
 		echo "Site: ${site}"
 
 		local external_reference_code=$(jq -r ".externalReferenceCode" <<< "${site}")
-
-		local site_initializer_zip="/opt/liferay/site-initializer/site-initializer.zip"
 
 		local put_response=$(\
 			curl \
@@ -95,7 +91,7 @@ function main {
 				-H "Authorization: Bearer ${oauth2_access_token}" \
 				-H "Content-Type: multipart/form-data" \
 				-X PUT \
-				-F "file=@${site_initializer_zip};type=application/zip" \
+				-F "file=@/opt/liferay/site-initializer/site-initializer.zip;type=application/zip" \
 				-F "site=${site}" \
 				-s \
 				${curl_options} \
@@ -116,7 +112,7 @@ function main {
 	find /opt/liferay/batch -type f -name "*.batch-engine-data.json" -print0 2> /dev/null |
 	while IFS= read -r -d "" file_name
 	do
-		echo "Processing Batch Engine Data: ${file_name}"
+		echo "Processing: ${file_name}"
 		echo ""
 
 		local href=$(jq -r ".actions.createBatch.href" ${file_name})
