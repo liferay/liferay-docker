@@ -163,7 +163,7 @@ function process_argument_version {
 
 	read -r -a VERSION_ARRAY <<< "${VERSION_INPUT}"
 
-	VERSION_LIST=("${VERSION_ARRAY[@]/%/-ga[0-9]*}" "${VERSION_ARRAY[@]/%/-u[0-9]*}")
+	VERSION_LIST=("${VERSION_ARRAY[@]/%/-ga[0-9]*}" "${VERSION_ARRAY[@]/%/-u[0-9]*}" "${VERSION_ARRAY[@]/%/.q*}")
 }
 
 function main {
@@ -177,22 +177,23 @@ function main {
 
 	check_new_tags
 
-	for branch in $(cat "${TAGS_FILE_NEW}" | sed -e "s/-.*//" | sort -nu)
+	local tag_name
+
+	for tag_name in $(cat "${TAGS_FILE_NEW}")
 	do
-		for update in $(cat "${TAGS_FILE_NEW}" | grep "^${branch}" | sed -e "s/.*-//")
-		do
-			echo ""
+		local branch_name=$(echo "${tag_name}" | sed -e "s/-.*//" -e 's@\(2023\.q[1-4]\).*@\1@')
 
-			lc_log DEBUG "Processing: ${branch}-${update}"
+		echo ""
 
-			lc_time_run checkout_branch liferay-dxp "${branch}"
+		lc_log DEBUG "Processing: ${tag_name}"
 
-			copy_tag "${branch}-${update}"
+		lc_time_run checkout_branch liferay-dxp "${branch_name}"
 
-			lc_time_run push_to_origin "${branch}-${update}"
+		copy_tag "${tag_name}"
 
-			lc_time_run push_to_origin "${branch}"
-		done
+		lc_time_run push_to_origin "${tag_name}"
+
+		lc_time_run push_to_origin "${branch_name}"
 	done
 }
 
