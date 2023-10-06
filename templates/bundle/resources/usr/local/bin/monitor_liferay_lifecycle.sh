@@ -41,7 +41,7 @@ function main {
 	local fail_count=0
 	local started=false
 
-	while (true)
+	while true
 	do
 		if [ "${started}" != true ]
 		then
