@@ -55,7 +55,7 @@ function check_patch_requirements {
 
 	if [[ "${patch_requirements}" == +(ga1|u[1-9]*) ]]
 	then
-		lc_log DEBUG "The .patch.requirements property is suitable: '${patch_requirements}'."
+		lc_log DEBUG "The '.patch.requirements' property is suitable: '${patch_requirements}'."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	else
