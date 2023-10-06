@@ -36,7 +36,7 @@ function check_ignore_zip_file {
 	local hotfix_zip_file="${1}"
 	local release_version="${2}"
 
-	local file_url="${STORAGE_URL}/${release_version}/hotfix/${hotfix_zip_file}"
+	local file_url="${zip_directory_url}/${hotfix_zip_file}"
 
 	if [[ "x${IGNORE_ZIP_FILES}" =~ x*${hotfix_zip_file}* ]]
 	then
@@ -71,7 +71,6 @@ function check_usage {
 	IGNORE_ZIP_FILES=""
 	RUN_FETCH_REPOSITORY="true"
 	RUN_PUSH_TO_ORIGIN="true"
-	STORAGE_LOCATION="LAX"
 	ZIP_LIST_RETENTION_TIME="1 min"
 	VERSION_INPUT="7.4.13"
 
@@ -105,13 +104,6 @@ function check_usage {
 
 				;;
 
-			--storage-location)
-				STORAGE_LOCATION="${2}"
-
-				shift 1
-
-				;;
-
 			--version)
 				VERSION_INPUT="${2}"
 
@@ -139,8 +131,6 @@ function check_usage {
 	done
 
 	process_argument_ignore_zip_files
-
-	process_argument_storage_location
 
 	process_argument_version
 }
@@ -236,9 +226,9 @@ function get_hotfix_zip_list_file {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
-		lc_log DEBUG "Downloading the zip list file: '${zip_list_file}' from '${STORAGE_URL}/${release_version}/hotfix/' ."
+		lc_log DEBUG "Downloading the zip list file: '${zip_list_file}' from '${zip_directory_url}/' ."
 
-		if (! curl --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --retry 10 --show-error --silent "${STORAGE_URL}/${release_version}/hotfix/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq - "${zip_list_file}")
+		if (! curl --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --retry 10 --show-error --silent "${zip_directory_url}/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq - "${zip_list_file}")
 			then
 				lc_log ERROR "The '${zip_list_file}' cannot be downloaded."
 
@@ -262,20 +252,19 @@ function prepare_cache_dir {
 }
 
 function print_help {
-	echo "Usage: ${0} [--debug] [--ignore-zip-files <file1,...,fileN>] [--logdir <logdir>] [--zip-list-retention-time '<time>'] [--storage-location <BUD|LAX>] [--version <version>] [--no-fetch] [--no-push]"
+	echo "Usage: ${0} [--debug] [--ignore-zip-files <file1,...,fileN>] [--logdir <logdir>] [--zip-list-retention-time '<time>'] [--version <version>] [--no-fetch] [--no-push]"
 	echo ""
 	echo "    --debug (optional):                                     Enabling debug mode"
 	echo "    --ignore-zip-files <file1,...,fileN> (optional):        Comma-separated list of files to be not processed (useful if a file is corrupted on the remote server)"
 	echo "    --logdir <logdir> (optional):                           Logging directory, defaults to \"\${PWD}/logs\""
 	echo "    --zip-list-retention-time '<time>' (optinal):           Retention time after the update of the zip list is enforced, defaults to '1 min'"
-	echo "    --storage-location <BUD|LAX> (optinal):                 Location of the zip files, defaults to 'LAX'"
 	echo "    --version <version> (optional):                         Version to handle, defaults to \"7.4.13\""
 	echo "    --no-fetch (optional):                                  Do not fetch DXP repo"
 	echo "    --no-push (optional):                                   Do not push to origin"
 	echo ""
 	echo "Example (equals to no arguments):"
 	echo ""
-	echo "${0} --logdir \"\${PWD}/logs\" --zip-list-retention-time '1 min' --storage-location LAX --version 7.4.13"
+	echo "${0} --logdir \"\${PWD}/logs\" --zip-list-retention-time '1 min' --version 7.4.13"
 	echo ""
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
@@ -287,27 +276,6 @@ function process_argument_ignore_zip_files {
 	local ignore_zip_files_persistent_list=$(tr '\n' ',' < "${ignore_zip_files_persistent_file}")
 
 	IGNORE_ZIP_FILES="${IGNORE_ZIP_FILES},${ignore_zip_files_persistent_list}"
-}
-
-function process_argument_storage_location {
-	case "${STORAGE_LOCATION}" in
-		BUD)
-			STORAGE_URL="http://storage.bud.liferay.com/public/files.liferay.com/private/ee/fix-packs"
-
-			;;
-
-		LAX)
-			STORAGE_URL="https://files.liferay.com/private/ee/fix-packs"
-
-			;;
-
-		*)
-			lc_log ERROR "Unknown location: ${STORAGE_LOCATION}".
-
-			exit 1
-
-			;;
-	esac
 }
 
 function process_argument_version {
@@ -327,6 +295,13 @@ function process_version_list {
 
 		lc_log DEBUG "Processing version: ${release_version}."
 
+		if [[ ${release_version} == 7* ]]
+		then
+			local zip_directory_url="https://files.liferay.com/private/ee/fix-packs/${release_version}/hotfix"
+		else
+			local zip_directory_url="https://releases-cdn.liferay.com/dxp/hotfix/${release_version}"
+		fi
+
 		lc_time_run get_hotfix_zip_list_file "${release_version}" "${zip_list_file}"
 
 		process_zip_list_file "${zip_list_file}" "${release_version}"
@@ -336,6 +311,7 @@ function process_version_list {
 function process_zip_list_file {
 	local zip_list_file="${1}"
 	local release_version="${2}"
+
 
 	for hotfix_zip_file in $(cat "${zip_list_file}")
 	do
@@ -352,7 +328,7 @@ function process_zip_list_file {
 
 		check_ignore_zip_file "${hotfix_zip_file}" "${release_version}" && continue
 
-		file_url="${STORAGE_URL}/${release_version}/hotfix/${hotfix_zip_file}"
+		file_url="${zip_directory_url}/${hotfix_zip_file}"
 
 		lc_time_run lc_download "${file_url}"
 
