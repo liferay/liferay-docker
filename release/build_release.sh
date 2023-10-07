@@ -132,6 +132,8 @@ function main {
 		lc_time_run package_hotfix
 
 		lc_time_run upload_hotfix
+
+		lc_time_run report_patcher_status
 	fi
 
 	local end_time=$(date +%s)

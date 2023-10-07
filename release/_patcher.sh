@@ -29,19 +29,26 @@ function report_jenkins_url {
 }
 
 function report_patcher_status {
-
 	lc_cd "${_BUILD_DIR}"/patcher-status/production/osbPatcherStatus/build/jenkins
 
 	(
 		echo "{"
-		echo "    \"exitValue\": 0,"
-		echo "    \"fileName\": \"${_HOTFIX_FILE_NAME}\","
-		echo "    \"output\": \"\","
-		echo "    \"patcherRequestKey\": \"${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}\","
-		echo "    \"patcherUserId\": \"20199\","
-		echo "    \"sourceName\": \"${_HOTFIX_FILE_NAME}\""
+
+		if [ -n "${LC_TIME_RUN_ERROR_EXIT_CODE}" ]
+		then
+			echo "    \"exitValue\": ${LC_TIME_RUN_ERROR_EXIT_CODE},"
+			echo "    \"output\": \"Problem during ${LC_TIME_RUN_ERROR_FUNCTION}.\","
+		else
+			echo "    \"exitValue\": 0,"
+			echo "    \"fileName\": \"${_HOTFIX_FILE_NAME}\","
+			echo "    \"sourceName\": \"${_HOTFIX_FILE_NAME}\","
+		fi
+
+		echo "    \"patcherRequestKey\": \"${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}\""
 		echo "}"
 	) > "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}"
+
+	cat "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}"
 
 	rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}"/patcher-status/ test-3-1::patcher/
 
