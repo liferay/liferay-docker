@@ -44,7 +44,8 @@ function report_patcher_status {
 			echo "    \"sourceName\": \"${_HOTFIX_FILE_NAME}\","
 		fi
 
-		echo "    \"patcherRequestKey\": \"${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}\""
+		echo "    \"patcherRequestKey\": \"${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}\","
+		echo "    \"patcherUserId\": ${LIFERAY_RELEASE_PATCHER_USER_ID}"
 		echo "}"
 	) > "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}"
 
