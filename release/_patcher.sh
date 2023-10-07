@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function lc_time_run_error {
-	report_patcher_status
+	report_patcher_status &>/dev/null
 }
 
 function report_jenkins_url {
