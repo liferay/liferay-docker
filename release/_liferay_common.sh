@@ -234,6 +234,15 @@ function lc_time_run {
 				tail -n 100 "${log_file}"
 			fi
 
+			if (declare -F lc_time_run_error &>/dev/null)
+			then
+				LC_TIME_RUN_ERROR_EXIT_CODE="${exit_code}"
+				LC_TIME_RUN_ERROR_LOG_FILE="${log_file}"
+				LC_TIME_RUN_ERROR_FUNCTION="${@}"
+
+				lc_time_run_error
+			fi
+
 			exit ${exit_code}
 		else
 			echo -e "$(lc_date) < ${*}: \e[1;32mSuccess\e[0m in $(lc_echo_time ${seconds})"
