@@ -21,12 +21,13 @@ function check_usage {
 		LIFERAY_RELEASE_HOTFIX_ID=${_BUILD_TIMESTAMP}
 	fi
 
-	if [ -n "${WORKSPACE}" ]
-	then
-		_RELEASE_ROOT_DIR="${WORKSPACE}"/release-data
-	else
-		_RELEASE_ROOT_DIR="${HOME}"/.liferay-release
-	fi
+	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/../"
+
+	mkdir -p release-data
+
+	lc_cd release-data
+
+	_RELEASE_ROOT_DIR=$(pwd)
 
 	_BUILD_DIR="${_RELEASE_ROOT_DIR}"/build
 	_BUILDER_SHA=$(git rev-parse HEAD)
