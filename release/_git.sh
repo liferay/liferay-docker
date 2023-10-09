@@ -68,11 +68,11 @@ function update_portal_repository {
 
 	if (echo "${LIFERAY_RELEASE_GIT_SHA}" | grep -qE "[0-9a-f]{40}")
 	then
-		lc_log INFO "LIFERAY_RELEASE_GIT_SHA is a git sha: ${LIFERAY_RELEASE_GIT_SHA}, looking up tag."
+		lc_log INFO "Looking for a tag that matches Git SHA ${LIFERAY_RELEASE_GIT_SHA}."
 
 		LIFERAY_RELEASE_GIT_SHA=$(git ls-remote upstream | grep "${LIFERAY_RELEASE_GIT_SHA}" | grep refs/tags/fix-pack-fix- | head -n 1 | sed -e "s#.*/##")
 
-		lc_log INFO "Tag found: ${LIFERAY_RELEASE_GIT_SHA}"
+		lc_log INFO "Found tag ${LIFERAY_RELEASE_GIT_SHA}."
 	fi
 
 	if [ -n "$(git ls-remote upstream refs/tags/"${LIFERAY_RELEASE_GIT_SHA}")" ]
