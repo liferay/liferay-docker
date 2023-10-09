@@ -37,7 +37,7 @@ function install_patching_tool {
 
 	rm -f LATEST-4.0.txt
 
-	lc_log info "Installing Patchin Tool ${latest_version}."
+	lc_log info "Installing Patching Tool ${latest_version}."
 
 	lc_download https://releases.liferay.com/tools/patching-tool/patching-tool-"${latest_version}".zip
 
