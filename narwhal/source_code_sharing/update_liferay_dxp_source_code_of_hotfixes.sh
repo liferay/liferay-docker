@@ -241,7 +241,7 @@ function get_hotfix_zip_list_file {
 
 		for zip_directory_name in $(lc_curl "${zip_directory_url}/" - | grep -E -o "20[0-9]+\.q[0-9]\.[0-9]+" | uniq)
 		do
-			lc_curl "${zip_directory_url}/${zip_directory_name}/" - | grep -E -o "liferay-dxp-20[a-z0-9\.]+-hotfix-[0-9]{10}.zip" | uniq |sed "s@^@${zip_directory_name}/@"
+			lc_curl "${zip_directory_url}/${zip_directory_name}/" - | grep -E -o "liferay-dxp-20[a-z0-9\.]+-hotfix-[0-9]{0,9}.zip" | uniq |sed "s@^@${zip_directory_name}/@"
 		done > "${zip_list_file}"
 
 		#if (! curl --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --retry 10 --show-error --silent "${zip_directory_url}/" | grep -E -o "liferay-hotfix-[0-9-]+.zip" | uniq - "${zip_list_file}")
