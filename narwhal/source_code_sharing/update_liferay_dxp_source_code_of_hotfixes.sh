@@ -337,7 +337,13 @@ function process_zip_list_file {
 		local tag_name_new
 
 		tag_name_new="${hotfix_zip_file%.zip}"
-		tag_name_new="${tag_name_new#liferay-}"
+
+		if [[ ${release_version} == 7* ]]
+		then
+			tag_name_new="${tag_name_new#liferay-}"
+		else
+			${tag_name_new#*liferay-dxp-}
+		fi
 
 		check_if_tag_exists liferay-dxp "${tag_name_new}" && continue
 
