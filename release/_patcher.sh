@@ -52,5 +52,4 @@ function report_patcher_status {
 	cat "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}"
 
 	rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}"/patcher-status/ test-3-1::patcher/
-
 }
