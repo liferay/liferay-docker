@@ -237,8 +237,8 @@ function lc_time_run {
 			if (declare -F lc_time_run_error &>/dev/null)
 			then
 				LC_TIME_RUN_ERROR_EXIT_CODE="${exit_code}"
-				LC_TIME_RUN_ERROR_LOG_FILE="${log_file}"
 				LC_TIME_RUN_ERROR_FUNCTION="${@}"
+				LC_TIME_RUN_ERROR_LOG_FILE="${log_file}"
 
 				lc_time_run_error
 			fi
