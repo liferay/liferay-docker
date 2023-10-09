@@ -175,9 +175,12 @@ function copy_hotfix_commit {
 }
 
 function lc_curl {
-	if (! curl "${1}" --fail --max-time 120 --output "${2}" --show-error --silent)
+	local url="${1}"
+	local output="${2}"
+
+	if (! curl "${url}" --fail --max-time 120 --output "${output}" --show-error --silent)
 	then
-		lc_log ERROR "The '${2}' cannot be downloaded."
+		lc_log ERROR "The '${url}' cannot be downloaded to '${output}'."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -185,6 +188,7 @@ function lc_curl {
 
 function get_hotfix_properties {
 	local cache_file="${1}"
+	local release_version="${2}"
 
 	if [ ! -f "${cache_file}" ]
 	then
@@ -193,29 +197,46 @@ function get_hotfix_properties {
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local tmp_fix_pack_documentation="/tmp/${cache_file##*/}"
+	local tmp_properties_json="/tmp/${cache_file##*/}"
 
-	if (! unzip -p "${cache_file}" fixpack_documentation.json > "${tmp_fix_pack_documentation}")
+	if [[ "${release_version}" == 7* ]]
 	then
-		lc_log ERROR "No fixpack_documentation.json file found in '${cache_file}'."
 
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
+		if (! unzip -p "${cache_file}" fixpack_documentation.json > "${tmp_properties_json}")
+		then
+			lc_log ERROR "No fixpack_documentation.json file found in '${cache_file}'."
 
-	GIT_REVISION=$(jq -r '.build."git-revision"' "${tmp_fix_pack_documentation}")
-	PATCH_PRODUCT=$(jq -r '.patch."product"' "${tmp_fix_pack_documentation}")
-	PATCH_REQUIREMENTS=$(jq -r '.patch."requirements"' "${tmp_fix_pack_documentation}")
+			exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
 
-	rm -f "${tmp_fix_pack_documentation}"
+		GIT_REVISION=$(jq -r '.build."git-revision"' "${tmp_properties_json}")
+		PATCH_PRODUCT=$(jq -r '.patch."product"' "${tmp_properties_json}")
+		PATCH_REQUIREMENTS=$(jq -r '.patch."requirements"' "${tmp_properties_json}")
 
-	if [[ "${PATCH_PRODUCT}" == "7413" ]] && [[ "${PATCH_REQUIREMENTS}" == base-* ]]
-	then
-		PATCH_REQUIREMENTS="ga1"
+		if [[ "${PATCH_PRODUCT}" == "7413" ]] && [[ "${PATCH_REQUIREMENTS}" == base-* ]]
+		then
+			PATCH_REQUIREMENTS="ga1"
+		fi
+
+		PRODUCT_VERSION="${release_version}-${PATCH_REQUIREMENTS}"
+	else
+		if (! unzip -p "${cache_file}" hotfix.json > "${tmp_properties_json}")
+		then
+			lc_log ERROR "No hotfix.json file found in '${cache_file}'."
+
+			exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+
+		GIT_REVISION=$(jq -r '.build."git-revision"' "${tmp_properties_json}")
+		REQUIREMENT_PRODUCT_VERSION=$(jq -r '.requirement."product-version"' "${tmp_properties_json}")
+
+		PRODUCT_VERSION=${REQUIREMENT_PRODUCT_VERSION%.*}
 	fi
 
 	lc_log DEBUG "GIT_REVISION: '${GIT_REVISION}'."
-	lc_log DEBUG "PATCH_PRODUCT: '${PATCH_PRODUCT}'."
-	lc_log DEBUG "PATCH_REQUIREMENTS: '${PATCH_REQUIREMENTS}'."
+	lc_log DEBUG "PRODUCT_VERSION: '${PRODUCT_VERSION}'."
+
+	rm -f "${tmp_properties_json}"
 }
 
 function get_hotfix_zip_list_file {
@@ -342,7 +363,7 @@ function process_zip_list_file {
 		then
 			tag_name_new="${tag_name_new#liferay-}"
 		else
-			${tag_name_new#*liferay-dxp-}
+			tag_name_new=${tag_name_new#*liferay-dxp-}
 		fi
 
 		check_if_tag_exists liferay-dxp "${tag_name_new}" && continue
@@ -355,11 +376,14 @@ function process_zip_list_file {
 
 		local cache_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${file_url##*://}"
 
-		lc_time_run get_hotfix_properties "${cache_file}"
+		lc_time_run get_hotfix_properties "${cache_file}" "${release_version}"
 
-		check_patch_requirements "${PATCH_REQUIREMENTS}" || continue
+		if [[ ${release_version} == 7* ]]
+		then
+			check_patch_requirements "${PATCH_REQUIREMENTS}" || continue
+		fi
 
-		copy_hotfix_commit "${GIT_REVISION}" "${release_version}-${PATCH_REQUIREMENTS}" "${tag_name_new}"
+		copy_hotfix_commit "${GIT_REVISION}" "${PRODUCT_VERSION}" "${tag_name_new}"
 	done
 }
 
