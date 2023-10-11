@@ -651,6 +651,8 @@
     7.4.13.nightly:
         bundle_url: files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
 quarterly:
+    2023.q3.0:
+        bundle_url: releases-cdn.liferay.com/dxp/2023.q3.0/liferay-dxp-tomcat-2023.q3.0-1696052683.7z
     7.4.13-2023.q3.1.rc:
         bundle_url: releases-cdn.liferay.com/dxp/release-candidates/2023.q3.1-1696576903/liferay-dxp-tomcat-2023.q3.1-1696576903.7z
 snapshot:
