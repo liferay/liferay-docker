@@ -21,7 +21,7 @@ function check_usage {
 		LIFERAY_RELEASE_HOTFIX_ID=${_BUILD_TIMESTAMP}
 	fi
 
-	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/../"
+	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
 
 	mkdir -p release-data
 
