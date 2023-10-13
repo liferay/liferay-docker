@@ -86,7 +86,8 @@
         bundle_url: files.liferay.com/private/ee/portal/7.0.10-de-101/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-101-slim-20210713081427192.7z
         test_installed_patch: de-101-7010,hotfix-8457-7010
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.0.10/hotfix/liferay-hotfix-8457-7010.zip
-    7.0.10-de-102:
+    7.0.10-sp17:
+        additional_tags: 7.0.10-de-102
         bundle_url: files.liferay.com/private/ee/portal/7.0.10.17/liferay-dxp-digital-enterprise-tomcat-7.0.10.17-sp17-slim-20211014075354439.7z
         test_installed_patch: de-102-7010,hotfix-8594-7010
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.0.10/hotfix/liferay-hotfix-8594-7010.zip
