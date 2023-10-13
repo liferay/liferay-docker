@@ -79,7 +79,7 @@ function main {
 
 		echo "HREF: ${href}"
 
-		local site=$(jq -r '.' /opt/liferay/site-initializer/site-initializer.json
+		local site=$(jq -r '.' /opt/liferay/site-initializer/site-initializer.json)
 
 		echo "Site: ${site}"
 
