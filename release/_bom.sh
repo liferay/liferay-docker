@@ -60,8 +60,14 @@ function generate_bom_compile_only {
 		echo "				<artifactId>${artifact_id}</artifactId>"
 		echo "				<version>${data##*:}</version>"
 		echo "			</dependency>"
-
 	done < "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties"
+
+	echo "			<dependency>"
+	echo "				<groupId>com.liferay.portal</groupId>"
+	echo "				<artifactId>release.dxp.api</artifactId>"
+	echo "				<version>${_DXP_VERSION}</version>"
+	echo "			</dependency>"
+
 }
 
 function generate_boms {
