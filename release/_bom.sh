@@ -1,13 +1,13 @@
 #!/bin/bash
 
-function generate_dxp_bom {
+function generate_bom {
 	mkdir -p "${_BUILD_DIR}/boms"
 	(
 		echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 		echo "<project xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\" xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
 		echo "	<modelVersion>4.0.0</modelVersion>"
 		echo "	<groupId>com.liferay.portal</groupId>"
-		echo "	<artifactId>release.dxp.bom</artifactId>"
+		echo "	<artifactId>release.dxp.bom${2}</artifactId>"
 		echo "	<version>${_DXP_VERSION}</version>"
 		echo "	<packaging>pom</packaging>"
 		echo "	<licenses>"
@@ -32,7 +32,7 @@ function generate_dxp_bom {
 		echo "	<dependencyManagement>"
 		echo "		<dependencies>"
 
-		#TODO: generate the dependencies list here
+		"generate_bom_${1}"
 
 		echo "		</dependencies>"
 		echo "	</dependencyManagement>"
@@ -44,5 +44,14 @@ function generate_dxp_bom {
 		echo "		</repository>"
 		echo "	</repositories>"
 		echo "</project>"
-	) > "${_BUILD_DIR}/boms/elease.dxp.bom-${_DXP_VERSION}.pom"
+	) > "${_BUILD_DIR}/boms/release.dxp.bom${2}-${_DXP_VERSION}.pom"
+}
+
+function generate_bom_compile_only {
+	echo "hi"
+}
+
+function generate_boms {
+	generate_bom compile_only .compile.only
+	exit 1
 }

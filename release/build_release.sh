@@ -94,7 +94,7 @@ function main {
 
 		lc_time_run install_patching_tool
 
-		lc_time_run generate_bom_xml
+		lc_time_run generate_boms
 
 		lc_time_run package_release
 
