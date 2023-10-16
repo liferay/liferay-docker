@@ -48,7 +48,20 @@ function generate_bom {
 }
 
 function generate_bom_compile_only {
-	echo "hi"
+	while IFS= read -r line
+	do
+		local data=${line#*=}
+		local artifact_id="${data#*:}"
+
+		artifact_id=${artifact_id%%:*}
+
+		echo "			<dependency>"
+		echo "				<groupId>${data%%:*}</groupId>"
+		echo "				<artifactId>${artifact_id}</artifactId>"
+		echo "				<version>${data##*:}</version>"
+		echo "			</dependency>"
+
+	done < "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties"
 }
 
 function generate_boms {
