@@ -185,7 +185,7 @@ function deploy_elasticsearch_sidecar {
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
 	else
-		echo "portal-search-elasticsearch7-impl does not exist."
+		echo "The directory portal-search-elasticsearch7-impl does not exist."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
