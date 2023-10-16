@@ -172,9 +172,23 @@ function deploy_elasticsearch_sidecar {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
+	if [ -e "${_PROJECTS_DIR}"/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl ]
+	then
+		lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
 
-	"${_PROJECTS_DIR}"/liferay-portal-ee/gradlew deploySidecar
+		if ("${_PROJECTS_DIR}"/liferay-portal-ee/gradlew tasks | grep -q deploySidecar)
+		then
+			"${_PROJECTS_DIR}"/liferay-portal-ee/gradlew deploySidecar
+		else
+			echo "deploySidecar task does not exist in portal-search-elasticsearch7-impl."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+	else
+		echo "portal-search-elasticsearch7-impl does not exist."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 }
 
 function get_dxp_version {
