@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source _bom.sh
 source _dxp.sh
 source _git.sh
 source _hotfix.sh
@@ -92,6 +93,8 @@ function main {
 		lc_time_run warm_up_tomcat
 
 		lc_time_run install_patching_tool
+
+		lc_time_run generate_bom_xml
 
 		lc_time_run package_release
 
