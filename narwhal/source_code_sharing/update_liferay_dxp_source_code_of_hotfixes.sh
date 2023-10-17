@@ -174,18 +174,6 @@ function copy_hotfix_commit {
 	echo ""
 }
 
-function lc_curl {
-	local url="${1}"
-	local output="${2}"
-
-	if (! curl "${url}" --fail --max-time 120 --output "${output}" --show-error --silent)
-	then
-		lc_log ERROR "The '${url}' cannot be downloaded to '${output}'."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-}
-
 function get_hotfix_properties {
 	local cache_file="${1}"
 	local release_version="${2}"
