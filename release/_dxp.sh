@@ -145,20 +145,20 @@ function decrement_module_versions {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	find apps dxp/apps -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd_bnd_file
+	find . -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd_bnd_file
 	do
-		if [ ! -e ".releng/$(dirname "${bnd_bnd_file}")/artifact.properties" ]
-		then
-			continue
-		fi
-
 		local bundle_version=$(lc_get_property "${bnd_bnd_file}" "Bundle-Version")
 
 		local major_minor_version=${bundle_version%.*}
 
 		local micro_version=${bundle_version##*.}
+
+		if [ "${micro_version}" -eq "0" ]
+		then
+			continue
+		fi
 
 		micro_version=$((micro_version - 1))
 
