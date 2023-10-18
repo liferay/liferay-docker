@@ -47,6 +47,7 @@ function generate_bom {
 	) > "${_BUILD_DIR}/boms/release.dxp.bom${2}-${_DXP_VERSION}.pom"
 }
 
+
 function generate_bom_compile_only {
 	while IFS= read -r line
 	do
@@ -70,7 +71,54 @@ function generate_bom_compile_only {
 
 }
 
+function generate_bom_full {
+	for jar_file in $(find "${_BUNDLES_DIR}"/osgi -name "*.jar")
+	do
+		local manifest=$(get_jar_manifest "${jar_file}")
+
+		local symbolic_name=$(echo -en "${manifest}" | get_multiline_bnd "Bundle-SymbolicName:")
+
+		#echo "${manifest}" | get_multiline_bnd "Bundle-SymbolicName:"
+		echo "${symbolic_name}"
+	done
+}
+
 function generate_boms {
 	generate_bom compile_only .compile.only
+
+	generate_bom full
 	exit 1
+}
+
+function get_multiline_bnd {
+	local in_property=0
+
+	while IFS= read -r line
+	do
+		if (echo ${line} | grep -q "^${1}")
+		then
+			in_property=1
+
+			#echo -n "${line}"
+		elif [ "${in_property}" -eq 1 ]
+		then
+			echo "in_prop"
+			if (echo "${line}" | grep -Eq "^ .*")
+			then
+				echo -n "${line}"
+			else
+				in_property=0
+
+				echo ""
+
+				return
+			fi
+		fi
+	done
+
+	echo ""
+}
+
+function get_jar_manifest {
+	unzip -p "${1}" META-INF/MANIFEST.MF
 }
