@@ -86,14 +86,12 @@ function compare_jars {
 			grep -v "pom.properties" | \
 			grep -v "source-classes-mapping.txt" | \
 			grep -v "previous-compilation-data.bin" | \
-			# We should not include the util-*.jar changes, unless they changed
-			# TODO: method to include portal-impl.jar when the util-* jars changed.
+			# TODO method to include portal-impl.jar when the util-* jars changed.
 			grep -v "com/liferay/portal/deploy/dependencies/" | \
-			# TODO: change portal not to update this file every time
+			# TODO change portal not to update this file every time
 			grep -v "META-INF/system.packages.extra.mf" | \
-			# TODO: Figure out what to do with osgi/modules/com.liferay.sharepoint.soap.repository.jar
+			# TODO Figure out what to do with osgi/modules/com.liferay.sharepoint.soap.repository.jar
 			grep -v "ws.jar" | \
-			# Remove the date
 			sed -e "s/[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9]\ [0-9][0-9]:[0-9][0-9]//"
 	}
 
