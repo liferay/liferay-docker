@@ -61,6 +61,8 @@ function build_dxp {
 
 	rm -fr osgi/test
 
+	rm -f tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/mysql.jar
+
 	echo "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" > "${_BUILD_DIR}"/built.sha
 }
 
