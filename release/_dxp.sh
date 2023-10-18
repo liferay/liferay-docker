@@ -61,7 +61,9 @@ function build_dxp {
 
 	rm -fr osgi/test
 
+	#
 	# TODO Remove in 2025
+	#
 
 	rm -f tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/mysql.jar
 
