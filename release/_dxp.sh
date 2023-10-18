@@ -147,7 +147,7 @@ function decrement_module_versions {
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	find . -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd_bnd_file
+	find . -name bnd.bnd -type f -print0 | grep -v archetype-resources | while IFS= read -r -d '' bnd_bnd_file
 	do
 		local bundle_version=$(lc_get_property "${bnd_bnd_file}" "Bundle-Version")
 
