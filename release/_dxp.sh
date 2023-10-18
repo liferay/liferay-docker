@@ -147,13 +147,25 @@ function decrement_module_versions {
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	find . -name bnd.bnd -type f -print0 | grep -v archetype-resources | while IFS= read -r -d '' bnd_bnd_file
+	find . -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd_bnd_file
 	do
+		if (echo "${bnd_bnd_file}" | grep -q archetype-resources) || (echo "${bnd_bnd_file}" | grep -q modules/third-party)
+		then
+			continue
+		fi
+
 		local bundle_version=$(lc_get_property "${bnd_bnd_file}" "Bundle-Version")
 
 		local major_minor_version=${bundle_version%.*}
 
 		local micro_version=${bundle_version##*.}
+
+		if ! [[ "${micro_version}" =~ ^[0-9]+$ ]]
+		then
+		    echo "Incorrect version number in ${bnd_bnd_file}"
+
+		    continue
+		fi
 
 		if [ "${micro_version}" -eq "0" ]
 		then
