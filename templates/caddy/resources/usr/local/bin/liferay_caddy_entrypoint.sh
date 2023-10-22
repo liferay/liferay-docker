@@ -17,6 +17,7 @@ function main {
 header @origin${url} Access-Control-Allow-Origin "${url}"
 header @origin${url} Vary Origin
 EOF
+
 	done
 
 	if [ -n "${LIFERAY_CADDY_404_URL}" ]
