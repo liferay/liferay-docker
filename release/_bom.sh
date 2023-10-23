@@ -72,15 +72,38 @@ function generate_bom_compile_only {
 }
 
 function generate_bom_full {
-	for jar_file in $(find "${_BUNDLES_DIR}"/osgi -name "*.jar")
+	rm -f /tmp/bom
+	for jar_file in $(find "${_BUNDLES_DIR}" -name "*.jar")
 	do
 		local manifest=$(get_jar_manifest "${jar_file}" | sed -r "s/\\r?\\n //g" -z)
 
-		local symbolic_name=$(echo -en "${manifest}" | grep "Bundle-SymbolicName:")
+		local bundle_symbolic_name=$(echo -en "${manifest}" | grep "Bundle-SymbolicName:" | tr -d [:space:])
 
-		#echo "${manifest}" | get_multiline_bnd "Bundle-SymbolicName:"
-		echo "${symbolic_name}"
+		bundle_symbolic_name=${bundle_symbolic_name#Bundle-SymbolicName:}
+
+		local bundle_version=$(echo -en "${manifest}" | grep "Bundle-Version:" | tr -d [:space:])
+
+		bundle_version=${bundle_version#Bundle-Version:}
+
+		if [ -z "${bundle_symbolic_name}" ] || [ -z "${bundle_version}" ]
+		then
+			continue
+		fi
+
+		local group_id=com.liferay
+
+		echo "${group_id},${bundle_symbolic_name},${bundle_version}" >> /tmp/bom
+		echo "${group_id},${jar_file},${bundle_symbolic_name},${bundle_version}" >> /tmp/bomfull
+
+
+		echo "			<dependency>"
+		echo "				<groupId>com.liferay</groupId>"
+		echo "				<artifactId>${bundle_symbolic_name}</artifactId>"
+		echo "				<version>${bundle_version}</version>"
+		echo "			</dependency>"
 	done
+
+	cat /tmp/bom | sort > /tmp/bs
 }
 
 function generate_boms {
