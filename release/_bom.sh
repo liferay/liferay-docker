@@ -72,8 +72,7 @@ function generate_bom_compile_only {
 }
 
 function generate_bom_full {
-	rm -f /tmp/bom
-	for jar_file in $(find "${_BUNDLES_DIR}" -name "*.jar")
+	for jar_file in $(find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/webapps/ROOT" -name "*.jar")
 	do
 		local manifest=$(get_jar_manifest "${jar_file}" | sed -r "s/\\r?\\n //g" -z)
 
@@ -92,9 +91,18 @@ function generate_bom_full {
 
 		local group_id=com.liferay
 
-		echo "${group_id},${bundle_symbolic_name},${bundle_version}" >> /tmp/bom
-		echo "${group_id},${jar_file},${bundle_symbolic_name},${bundle_version}" >> /tmp/bomfull
+		if (echo "${bundle_symbolic_name}" | grep -q commerce)
+		then
+			group_id=com.liferay.commerce
+		fi
 
+		if (echo "${bundle_symbolic_name}" | grep -q "com.liferay.portal.impl") ||
+		   (echo "${bundle_symbolic_name}" | grep -q "com.liferay.portal.kernel") ||
+		   (echo "${bundle_symbolic_name}" | grep -q "com.liferay.support.tomcat") ||
+		   (echo "${bundle_symbolic_name}" | grep -q "com.liferay.util")
+		then
+			group_id=com.liferay.portal
+		fi
 
 		echo "			<dependency>"
 		echo "				<groupId>com.liferay</groupId>"
@@ -102,8 +110,6 @@ function generate_bom_full {
 		echo "				<version>${bundle_version}</version>"
 		echo "			</dependency>"
 	done
-
-	cat /tmp/bom | sort > /tmp/bs
 }
 
 function generate_boms {
