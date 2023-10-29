@@ -11,6 +11,10 @@ function add_licensing {
 
 	lc_cd "${_PROJECTS_DIR}/liferay-release-tool-ee"
 
+	echo "liferay-release-tool-ee version:"
+
+	git log -1
+
 	lc_cd "$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
 
 	ant \
