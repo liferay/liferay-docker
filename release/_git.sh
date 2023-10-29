@@ -122,6 +122,8 @@ function update_release_tool_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	git fetch --force --prune upstream || return 1
+
 	git fetch --force --prune --tags upstream || return 1
 
 	git checkout "${release_tool_sha}" || return 1
