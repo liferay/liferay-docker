@@ -101,6 +101,8 @@ function update_portal_repository {
 }
 
 function update_release_tool_repository {
+	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+
 	lc_cd "${_PROJECTS_DIR}"/liferay-release-tool-ee
 
 	git reset --hard && git clean -dfx
@@ -122,11 +124,15 @@ function update_release_tool_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	git fetch --force --prune upstream || return 1
+	git fetch --force --prune upstream
 
-	git fetch --force --prune --tags upstream || return 1
+	git fetch --force --prune --tags upstream
 
-	git checkout "${release_tool_sha}" || return 1
+	git checkout master
+
+	git pull upstream master
+
+	git checkout "${release_tool_sha}"
 
 	echo "${release_tool_sha}" > "${_BUILD_DIR}"/liferay-release-tool-ee.sha
 }
