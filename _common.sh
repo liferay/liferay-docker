@@ -6,7 +6,7 @@ then
 fi
 
 function check_docker_buildx {
-	docker build buildx --help > /dev/null 2>&1
+	docker buildx inspect > /dev/null 2>&1
 
 	if [ $? -gt 0 ]
 	then
