@@ -311,12 +311,6 @@ function warm_up_tomcat {
 		return 1
 	fi
 
-	#
-	# Give time for data to write that is triggered on the first load of a page.
-	#
-
-	sleep 10
-
 	./catalina.sh stop
 
 	local pid=$(lsof -Fp -i 4tcp:8080 -sTCP:LISTEN | head -n 1)
