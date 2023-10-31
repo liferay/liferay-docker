@@ -23,6 +23,9 @@ function get_full_version {
 	elif [ "${1}" == "3.0" ]
 	then
 		echo "3.0.38"
+	elif [ "${1}" == "4.0" ]
+	then
+		echo "4.0.1"
 	else
 		echo "Unable to get full version for ${1}."
 
