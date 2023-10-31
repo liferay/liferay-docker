@@ -288,13 +288,13 @@ function update_patching_tool {
 
 	if [ -e "${TEMP_DIR}/liferay/patching-tool" ]
 	then
-		local patching_tool_minor_version=$("${TEMP_DIR}"/liferay/patching-tool/patching-tool.sh info | grep "patching-tool version")
+		local patching_tool_minor_version=$("${TEMP_DIR}"/liferay/patching-tool/patching-tool.sh version | grep "Patching-tool version")
 
 		if [ ! -n "${patching_tool_minor_version}" ]
 		then
 			patching_tool_minor_version="2.0.0"
 		else
-			patching_tool_minor_version=${patching_tool_minor_version##*patching-tool version: }
+			patching_tool_minor_version=${patching_tool_minor_version##*Patching-tool version: }
 		fi
 
 		patching_tool_minor_version=${patching_tool_minor_version%.*}
