@@ -660,12 +660,13 @@
         bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u100/liferay-dxp-tomcat-7.4.13.u100-20231028025714686.7z
     7.4.13-u101:
         bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u101/liferay-dxp-tomcat-7.4.13.u101-20231102190806754.7z
-        latest: true
     7.4.13.nightly:
         bundle_url: files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
 quarterly:
     2023.q3.1:
         bundle_url: releases-cdn.liferay.com/dxp/2023.q3.1/liferay-dxp-tomcat-2023.q3.1-1697647393.7z
+    2023.q3.2:
+        latest: true
 snapshot:
     snapshot-master:
         bundle_url: releases.liferay.com/portal/snapshot-master/latest/liferay-portal-tomcat-master.7z

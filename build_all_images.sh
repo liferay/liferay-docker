@@ -65,6 +65,11 @@ function build_bundle_image {
 	local test_hotfix_url=$(get_string $(yq "${query}".test_hotfix_url < bundles.yml))
 	local test_installed_patch=$(get_string $( yq "${query}".test_installed_patch < bundles.yml))
 
+	if [ -z "${bundle_url}" ]
+	then
+		bundle_url="releases-cdn.liferay.com/dxp/${version}/"$(curl -fsSL "https://releases-cdn.liferay.com/dxp/${version}/.lfrrelease-tomcat-bundle")
+	fi
+
 	if [ -n "${additional_tags}" ]
 	then
 		version="${version},${additional_tags}"
