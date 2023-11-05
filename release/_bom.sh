@@ -51,8 +51,6 @@ function generate_api_jars {
 
 		#TODO: Finish logic from https://github.com/liferay/liferay-portal-ee/blob/release-2023.q4/modules/releng.gradle#L1275
 	done
-
-	return 1
 }
 
 function generate_fake_api_jars {
