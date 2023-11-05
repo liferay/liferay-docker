@@ -161,7 +161,7 @@ function lc_get_property {
 
 		echo "${property_value##*: }"
 	else
-		local property_value=$(grep -F "${property_key}=" "${file}")
+		local property_value=$(sed -r "s/\\\r?\n[ \t]*//g" -z < "${file}" | grep -F "${property_key}=")
 
 		echo "${property_value##*=}"
 	fi
