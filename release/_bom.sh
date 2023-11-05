@@ -19,7 +19,7 @@ function generate_api_jars {
 		   (! echo "${artifact}" | grep -q "javax") &&
 		   (! echo "${artifact}" | grep -q "org.jsoup") &&
 		   (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
-		   (! echo "${artifact}" | grep -q "org.osgi") 
+		   (! echo "${artifact}" | grep -q "org.osgi")
 		then
 			continue
 		fi
