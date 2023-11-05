@@ -94,6 +94,8 @@ function main {
 
 		lc_time_run install_patching_tool
 
+		lc_time_run generate_api_jars
+
 		lc_time_run generate_poms
 
 		lc_time_run package_release

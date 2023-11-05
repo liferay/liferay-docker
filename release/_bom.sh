@@ -1,5 +1,41 @@
 #!/bin/bash
 
+function generate_api_jars {
+	mkdir -p "${_BUILD_DIR}/boms"
+
+	lc_cd "${_BUILD_DIR}/boms"
+
+	mkdir -p api-jar api-sources-jar
+
+	local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/modules/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed -e "s/,/\\n/g")
+
+	echo "${enforce_version_artifacts}"
+
+	for artifact in ${enforce_version_artifacts}
+	do
+		if (! echo "${artifact}" | grep -q "com.fasterxml") &&
+		   (! echo "${artifact}" | grep -q "com.liferay:biz.aQute.bnd.annotation:") &&
+		   (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
+		   (! echo "${artifact}" | grep -q "com.liferay.portletmvc4spring:com.liferay.portletmvc4spring.test:") &&
+		   (! echo "${artifact}" | grep -q "io.swagger") &&
+		   (! echo "${artifact}" | grep -q "javax") &&
+		   (! echo "${artifact}" | grep -q "org.jsoup") &&
+		   (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
+		   (! echo "${artifact}" | grep -q "org.osgi") 
+		then
+			continue
+		fi
+
+		local group=${artifact%%:*}
+		local name=$(echo ${artifact} | sed -e "s/.*:\(.*\):.*/\\1/")
+		local version=${artifact##*:}
+
+		echo "${group} ${name} ${version}"
+	done
+
+	return 1
+}
+
 function generate_poms {
 	if (! echo "${_DXP_VERSION}" | grep -q "q")
 	then
