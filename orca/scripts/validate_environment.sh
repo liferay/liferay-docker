@@ -51,6 +51,7 @@ function create_dirs {
 	create_dir "/opt/liferay/monitoring-proxy-db-data" ${db_uid}
 	create_dir "/opt/liferay/shared-volume" ${default_uid}
 	create_dir "/opt/liferay/shared-volume/document-library" ${default_uid}
+	create_dir "/opt/liferay/shared-volume/logs" ${default_uid}
 	create_dir "/opt/liferay/vault/data" ${default_uid}
 }
 
