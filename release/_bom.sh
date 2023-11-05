@@ -12,13 +12,13 @@ function generate_api_jars {
 	for artifact in ${enforce_version_artifacts}
 	do
 		if (! echo "${artifact}" | grep -q "com.fasterxml") &&
-		   (! echo "${artifact}" | grep -q "com.liferay:biz.aQute.bnd.annotation:") &&
+		   (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
 		   (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
 		   (! echo "${artifact}" | grep -q "com.liferay.portletmvc4spring:com.liferay.portletmvc4spring.test:") &&
+		   (! echo "${artifact}" | grep -q "com.liferay:biz.aQute.bnd.annotation:") &&
 		   (! echo "${artifact}" | grep -q "io.swagger") &&
 		   (! echo "${artifact}" | grep -q "javax") &&
 		   (! echo "${artifact}" | grep -q "org.jsoup") &&
-		   (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
 		   (! echo "${artifact}" | grep -q "org.osgi")
 		then
 			continue
