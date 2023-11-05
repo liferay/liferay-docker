@@ -9,8 +9,6 @@ function generate_api_jars {
 
 	local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/modules/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed -e "s/,/\\n/g")
 
-	echo "${enforce_version_artifacts}"
-
 	for artifact in ${enforce_version_artifacts}
 	do
 		if (! echo "${artifact}" | grep -q "com.fasterxml") &&
@@ -26,11 +24,20 @@ function generate_api_jars {
 			continue
 		fi
 
-		local group=${artifact%%:*}
+		local group_path=$(echo ${artifact%%:*} | sed -e "s#[.]#/#g")
 		local name=$(echo ${artifact} | sed -e "s/.*:\(.*\):.*/\\1/")
 		local version=${artifact##*:}
 
-		echo "${group} ${name} ${version}"
+		if [ "${group_path}" == "com/fasterxml/jackson-dataformat" ]
+		then
+			group_path="com/fasterxml/jackson/dataformat"
+		fi
+
+		echo "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar"
+
+		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar"
+
+		unzip -d api-sources-jar/ -o "${name}-${version}-sources.jar"
 	done
 
 	return 1
