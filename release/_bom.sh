@@ -37,10 +37,39 @@ function generate_api_jars {
 
 		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar"
 
-		unzip -d api-sources-jar/ -o "${name}-${version}-sources.jar"
+		unzip -d api-sources-jar/ -o -q "${name}-${version}-sources.jar"
+
+		rm -f "${name}-${version}-sources.jar"
+
+		echo "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar"
+
+		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar"
+
+		unzip -d api-sources-jar/ -o -q "${name}-${version}.jar"
+
+		rm -f "${name}-${version}.jar"
+
+		#TODO: Finish logic from https://github.com/liferay/liferay-portal-ee/blob/release-2023.q4/modules/releng.gradle#L1275
 	done
 
 	return 1
+}
+
+function generate_fake_api_jars {
+	local base_version=$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.profile-dxp.properties "release.info.version").u$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.trivial")
+
+	mkdir -p "${_BUILD_DIR}/boms"
+
+	lc_cd "${_BUILD_DIR}/boms"
+
+	lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/release.dxp.api/${base_version}/release.dxp.api-${base_version}.jar"
+
+	lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/release.dxp.api/${base_version}/release.dxp.api-${base_version}-sources.jar"
+
+	for jar_file in *.jar
+	do
+		mv "${jar_file}" $(echo "${jar_file}" | sed -e "s/${base_version}/${_DXP_VERSION}/g")
+	done
 }
 
 function generate_poms {
