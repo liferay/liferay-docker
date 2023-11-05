@@ -45,7 +45,7 @@ function create_dirs {
 		default_uid=166535
 	fi
 
-	create_dir "/opt/liferay/backup" ${default_uid}
+	create_dir "/opt/liferay/backups" ${default_uid}
 	create_dir "/opt/liferay/db-data" ${db_uid}
 	create_dir "/opt/liferay/jenkins-home" ${default_uid}
 	create_dir "/opt/liferay/monitoring-proxy-db-data" ${db_uid}
