@@ -25,43 +25,45 @@ function generate_api_jars {
 		fi
 
 		local group_path=$(echo ${artifact%%:*} | sed -e "s#[.]#/#g")
-		local name=$(echo ${artifact} | sed -e "s/.*:\(.*\):.*/\\1/")
-		local version=${artifact##*:}
 
 		if [ "${group_path}" == "com/fasterxml/jackson-dataformat" ]
 		then
 			group_path="com/fasterxml/jackson/dataformat"
 		fi
 
-		echo "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar"
+		local name=$(echo ${artifact} | sed -e "s/.*:\(.*\):.*/\\1/")
+		local version=${artifact##*:}
+
+		echo "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar."
 
 		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar"
 
-		unzip -d api-sources-jar/ -o -q "${name}-${version}-sources.jar"
+		unzip -d api-sources-jar -o -q "${name}-${version}-sources.jar"
 
 		rm -f "${name}-${version}-sources.jar"
 
-		echo "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar"
+		echo "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar."
 
 		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar"
 
-		unzip -d api-sources-jar/ -o -q "${name}-${version}.jar"
+		unzip -d api-sources-jar -o -q "${name}-${version}.jar"
 
 		rm -f "${name}-${version}.jar"
 
-		#TODO: Finish logic from https://github.com/liferay/liferay-portal-ee/blob/release-2023.q4/modules/releng.gradle#L1275
+		#
+		# TODO Finish logic from https://github.com/liferay/liferay-portal-ee/blob/release-2023.q4/modules/releng.gradle#L1275
+		#
 	done
 }
 
 function generate_fake_api_jars {
-	local base_version=$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.profile-dxp.properties "release.info.version").u$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.trivial")
-
 	mkdir -p "${_BUILD_DIR}/boms"
 
 	lc_cd "${_BUILD_DIR}/boms"
 
-	lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/release.dxp.api/${base_version}/release.dxp.api-${base_version}.jar"
+	local base_version=$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.profile-dxp.properties "release.info.version").u$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.trivial")
 
+	lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/release.dxp.api/${base_version}/release.dxp.api-${base_version}.jar"
 	lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/release.dxp.api/${base_version}/release.dxp.api-${base_version}-sources.jar"
 
 	for jar_file in *.jar
@@ -73,7 +75,7 @@ function generate_fake_api_jars {
 function generate_poms {
 	if (! echo "${_DXP_VERSION}" | grep -q "q")
 	then
-		echo "Only generating BOMs for quarterly updates."
+		echo "BOMs are only generated for quarterly updates."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
