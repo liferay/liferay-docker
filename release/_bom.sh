@@ -34,7 +34,7 @@ function generate_api_jars {
 		local name=$(echo ${artifact} | sed -e "s/.*:\(.*\):.*/\\1/")
 		local version=${artifact##*:}
 
-		echo "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar."
+		lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar."
 
 		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar"
 
@@ -42,7 +42,7 @@ function generate_api_jars {
 
 		rm -f "${name}-${version}-sources.jar"
 
-		echo "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar."
+		lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar."
 
 		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar"
 
@@ -75,7 +75,7 @@ function generate_fake_api_jars {
 function generate_poms {
 	if (! echo "${_DXP_VERSION}" | grep -q "q")
 	then
-		echo "BOMs are only generated for quarterly updates."
+		lc_log INFO "BOMs are only generated for quarterly updates."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
