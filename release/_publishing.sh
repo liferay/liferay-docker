@@ -56,7 +56,7 @@ function upload_hotfix {
 
 	if (ssh root@lrdcom-vm-1 ls "/www/releases.liferay.com/dxp/hotfix/${_DXP_VERSION}/" | grep -q "${_HOTFIX_FILE_NAME}")
 	then
-		lc_log ERROR "Skipping upload as hotfix already exists: ${_HOTFIX_FILE_NAME}"
+		lc_log ERROR "Skipping the upload of ${_HOTFIX_FILE_NAME} because it already exists."
 
 		return 1
 	fi
