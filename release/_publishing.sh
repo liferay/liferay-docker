@@ -54,6 +54,13 @@ function upload_hotfix {
 
 	ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/hotfix/${_DXP_VERSION}/"
 
+	if (ssh root@lrdcom-vm-1 ls "/www/releases.liferay.com/dxp/hotfix/${_DXP_VERSION}/" | grep -q "${_HOTFIX_FILE_NAME}")
+	then
+		lc_log ERROR "Skipping upload as hotfix already exists: ${_HOTFIX_FILE_NAME}"
+
+		return 1
+	fi
+
 	scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_DXP_VERSION}/"
 
 	echo "# Uploaded" > ../output.md
