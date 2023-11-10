@@ -3,7 +3,7 @@
 function configure_jdk {
 	if (java -version | grep -q 1.8.0_381)
 	then
-		lc_log INFO "Java is already at 1.8.0_381."
+		lc_log INFO "JDK is already at version 1.8.0_381."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -29,7 +29,7 @@ function configure_jdk {
 
 	if (java -version | grep -q 1.8.0_381)
 	then
-		lc_log ERROR "Java version setup is unsuccessful."
+		lc_log ERROR "Unable to install JDK."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi

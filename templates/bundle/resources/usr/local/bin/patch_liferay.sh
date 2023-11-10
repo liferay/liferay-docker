@@ -68,7 +68,7 @@ function main {
 	then
 		if (! /opt/liferay/patching-tool/patching-tool.sh version | grep -q "Patching-tool version: 4.")
 		then
-			echo "[LIFERAY] LIFERAY_DOCKER_HOTFIX is only supported with Patching Tool 4+"
+			echo "[LIFERAY] The environment variable \"LIFERAY_DOCKER_HOTFIX\" requires Patching Tool 4 and above."
 		else
 			/opt/liferay/patching-tool/patching-tool.sh install "${LIFERAY_DOCKER_HOTFIX}"
 		fi

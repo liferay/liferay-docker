@@ -593,8 +593,8 @@ function main {
 	build_node_runner_image
 	build_noop_image
 	build_squid_image
-	# build_zabbix_server_image
-	# build_zabbix_web_image
+	#build_zabbix_server_image
+	#build_zabbix_web_image
 
 	build_bundle_images
 
