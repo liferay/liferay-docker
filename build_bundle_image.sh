@@ -310,7 +310,6 @@ function update_patching_tool {
 
 		rm -fr "${TEMP_DIR}/liferay/patching-tool"
 
-
 		local latest_patching_tool_version
 
 		#
