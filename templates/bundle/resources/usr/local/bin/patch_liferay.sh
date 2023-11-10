@@ -64,7 +64,15 @@ function main {
 		echo "[LIFERAY] Patching Tool updated successfully."
 	fi
 
-	if [[ $(find "${LIFERAY_PATCHING_DIR}" -maxdepth 1 -type f -name "liferay-*.zip" 2>/dev/null) ]]
+	if [ -n "${LIFERAY_DOCKER_HOTFIX}" ]
+	then
+		if (! /opt/liferay/patching-tool/patching-tool.sh version | grep -q "Patching-tool version: 4.")
+		then
+			echo "[LIFERAY] LIFERAY_DOCKER_HOTFIX is only supported with Patching Tool 4+"
+		else
+			/opt/liferay/patching-tool/patching-tool.sh install "${LIFERAY_DOCKER_HOTFIX}"
+		fi
+	elif [ -d "${LIFERAY_PATCHING_DIR}" ] && [[ $(find "${LIFERAY_PATCHING_DIR}" -maxdepth 1 -type f -name "liferay-*.zip" 2>/dev/null) ]]
 	then
 		if [ $(find "${LIFERAY_PATCHING_DIR}" -maxdepth 1 -type f -name "liferay-*.zip" | wc -l) == 1 ]
 		then

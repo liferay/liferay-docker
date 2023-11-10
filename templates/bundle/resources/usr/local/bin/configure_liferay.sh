@@ -62,7 +62,7 @@ function main {
 
 	export LIFERAY_PATCHING_DIR="${LIFERAY_MOUNT_DIR}"/patching
 
-	if [ -e "${LIFERAY_PATCHING_DIR}" ] && [ -e /opt/liferay/patching-tool ]
+	if [ -e /opt/liferay/patching-tool ]
 	then
 		patch_liferay.sh
 	fi
