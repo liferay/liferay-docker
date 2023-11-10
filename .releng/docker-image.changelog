@@ -998,3 +998,10 @@ docker.image.git.id-5.0.51=45d77301fa0d6f627b5f791af8e979920fec28a9
 
 docker.image.change.log-5.0.52=DOCKER-232
 docker.image.git.id-5.0.52=32119b653b306c96c67b977c11f01a457ebfa037
+
+#
+# Liferay Docker Image Version 5.0.53
+#
+
+docker.image.change.log-5.0.53=DOCKER-234
+docker.image.git.id-5.0.53=63affc6bf736a85f51bf9fc5e0c465601e21c9d2
