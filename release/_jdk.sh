@@ -3,7 +3,7 @@
 function configure_jdk {
 	if (java -version | grep -q 1.8.0_381)
 	then
-		echo "Java is already at 1.8.0_381."
+		lc_log INFO "Java is already at 1.8.0_381."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -12,7 +12,7 @@ function configure_jdk {
 
 	if [ ! -e jdk ]
 	then
-		echo "Installing JDK."
+		lc_log INFO "Installing JDK."
 
 		lc_download https://cdn.azul.com/zulu/bin/zulu8.72.0.17-ca-jdk8.0.382-linux_x64.tar.gz
 
@@ -24,11 +24,12 @@ function configure_jdk {
 	lc_cd jdk
 
 	export JAVA_HOME=$(pwd)
+
 	export PATH="${JAVA_HOME}/bin:${PATH}"
 
 	if (java -version | grep -q 1.8.0_381)
 	then
-		echo "Java version setup is unsuccessful."
+		lc_log ERROR "Java version setup is unsuccessful."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
