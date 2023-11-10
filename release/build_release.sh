@@ -4,6 +4,7 @@ source _bom.sh
 source _dxp.sh
 source _git.sh
 source _hotfix.sh
+source _jdk.sh
 source _liferay_common.sh
 source _package.sh
 source _patcher.sh
@@ -46,6 +47,8 @@ function main {
 	print_variables
 
 	check_usage
+
+	lc_time_run configure_jdk
 
 	lc_time_run report_jenkins_url
 
