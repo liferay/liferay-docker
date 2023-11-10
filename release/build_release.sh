@@ -62,6 +62,8 @@ function main {
 
 	lc_wait
 
+	lc_time_run set_git_sha
+
 	lc_background_run decrement_module_versions
 	lc_background_run update_release_tool_repository
 

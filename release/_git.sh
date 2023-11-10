@@ -3,9 +3,6 @@
 function clean_portal_repository {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	_GIT_SHA=$(git rev-parse HEAD)
-	_GIT_SHA_SHORT=$(git rev-parse --short HEAD)
-
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
@@ -51,6 +48,13 @@ function clone_repository {
 	fi
 
 	git remote --verbose
+}
+
+function set_git_sha {
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+
+	_GIT_SHA=$(git rev-parse HEAD)
+	_GIT_SHA_SHORT=$(git rev-parse --short HEAD)
 }
 
 function update_portal_repository {
