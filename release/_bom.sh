@@ -46,71 +46,12 @@ function generate_api_jars {
 
 		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar"
 
-		mkdir -p jar-temp
+		_manage_bom_jar "${name}-${version}.jar"
+	done
 
-		unzip -d jar-temp -o -q "${name}-${version}.jar"
-
-		#rm -f "${name}-${version}.jar"
-
-		if (echo "${name}" | grep -Eq "^com.liferay.")
-		then
-			find jar-temp -name "*.jar" -type f -print0 | while IFS= read -r -d '' jar_temp_file
-			do
-				lc_log DEBUG "Removing ${jar_temp_file}."
-
-				rm -f "${jar_temp_file}"
-			done
-
-			find jar-temp -name "java-docs-*.xml" -type f -print0 | while IFS= read -r -d '' jar_temp_file
-			do
-				lc_log DEBUG "Removing ${jar_temp_file}."
-
-				rm -f "${jar_temp_file}"
-			done
-
-			find jar-temp -name "node-modules" -type d -print0 | while IFS= read -r -d '' jar_temp_file
-			do
-				lc_log DEBUG "Removing ${jar_temp_file}."
-
-				rm -f "${jar_temp_file}"
-			done
-
-			find jar-temp -maxdepth 1 -type f -print0 | while IFS= read -r -d '' jar_temp_file
-			do
-				_copy_file "${jar_temp_file}" api-jar
-			done
-
-
-			find jar-temp -name kernel -type d | while IFS= read -r -d '' jar_temp_file
-			do
-				if (echo "${jar_temp_file}" | grep "com/liferay/portal/kernel")
-				then
-					_copy_file "${jar_temp_file}" api-jar
-				fi
-			done
-
-			find jar-temp -name taglib -type d | while IFS= read -r -d '' jar_temp_file
-			do
-				if (echo "${jar_temp_file}" | grep "com/liferay")
-				then
-					_copy_file "${jar_temp_file}" api-jar
-				fi
-			done
-
-			find jar-temp -name packageinfo -type f | while IFS= read -r -d '' jar_temp_file
-			do
-				_copy_file "$(dirname "${jar_temp_file}")" api-jar
-			done
-		else
-			rm -fr jar-temp/META-INF/custom-sql/
-			rm -fr jar-temp/META-INF/images/
-			rm -fr jar-temp/META-INF/sql/
-			rm -fr jar-temp/META-INF/versions/
-
-			cp -a jar-temp/* api-jar/
-		fi
-
-		rm -fr jar-temp
+	for portal_jar in portal-impl portal-kernel support-tomcat util-bridges util-java util-slf4j util-taglib
+	do
+		_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/${portal_jar}.jar"
 	done
 }
 
@@ -165,4 +106,74 @@ function _copy_file {
 	lc_log DEBUG "Copying ${1}."
 
 	cp -a "${1}" "${2}/${dir}"
+}
+
+function _manage_bom_jar {
+	lc_log DEBUG "Processing ${1} for api jar."
+
+	mkdir -p jar-temp
+
+	unzip -d jar-temp -o -q "${1}"
+
+	#rm -f "${name}-${version}.jar"
+
+	if (basename "${1}" | grep -Eq "^com.liferay.")
+	then
+		find jar-temp -name "*.jar" -type f -print0 | while IFS= read -r -d '' jar_temp_file
+		do
+			lc_log DEBUG "Removing ${jar_temp_file}."
+
+			rm -f "${jar_temp_file}"
+		done
+
+		find jar-temp -name "java-docs-*.xml" -type f -print0 | while IFS= read -r -d '' jar_temp_file
+		do
+			lc_log DEBUG "Removing ${jar_temp_file}."
+
+			rm -f "${jar_temp_file}"
+		done
+
+		find jar-temp -name "node-modules" -type d -print0 | while IFS= read -r -d '' jar_temp_file
+		do
+			lc_log DEBUG "Removing ${jar_temp_file}."
+
+			rm -f "${jar_temp_file}"
+		done
+
+		find jar-temp -maxdepth 1 -type f -print0 | while IFS= read -r -d '' jar_temp_file
+		do
+			_copy_file "${jar_temp_file}" api-jar
+		done
+
+
+		find jar-temp -name kernel -type d | while IFS= read -r -d '' jar_temp_file
+		do
+			if (echo "${jar_temp_file}" | grep "com/liferay/portal/kernel")
+			then
+				_copy_file "${jar_temp_file}" api-jar
+			fi
+		done
+
+		find jar-temp -name taglib -type d | while IFS= read -r -d '' jar_temp_file
+		do
+			if (echo "${jar_temp_file}" | grep "com/liferay")
+			then
+				_copy_file "${jar_temp_file}" api-jar
+			fi
+		done
+
+		find jar-temp -name packageinfo -type f | while IFS= read -r -d '' jar_temp_file
+		do
+			_copy_file "$(dirname "${jar_temp_file}")" api-jar
+		done
+	else
+		rm -fr jar-temp/META-INF/custom-sql/
+		rm -fr jar-temp/META-INF/images/
+		rm -fr jar-temp/META-INF/sql/
+		rm -fr jar-temp/META-INF/versions/
+
+		cp -a jar-temp/* api-jar/
+	fi
+
+	rm -fr jar-temp
 }
