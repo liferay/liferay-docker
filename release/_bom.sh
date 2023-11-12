@@ -53,6 +53,12 @@ function generate_api_jars {
 	do
 		_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/${portal_jar}.jar"
 	done
+
+	find "${_BUNDLES_DIR}/osgi" -name "com.liferay.*.jar" -type f -print0 | while IFS= read -r -d '' module_jar
+	do
+		_manage_bom_jar "${module_jar}"
+	done
+
 }
 
 function generate_fake_api_jars {
@@ -101,7 +107,8 @@ function generate_poms {
 
 function _copy_file {
 	local dir=$(dirname "${1}" | sed -e "s#[./]*[^/]*/##")
-	mdir -p "${2}/${dir}"
+
+	mkdir -p "${2}/${dir}"
 
 	lc_log DEBUG "Copying ${1}."
 
@@ -146,7 +153,7 @@ function _manage_bom_jar {
 		done
 
 
-		find jar-temp -name kernel -type d | while IFS= read -r -d '' jar_temp_file
+		find jar-temp -name kernel -type d -print0 | while IFS= read -r -d '' jar_temp_file
 		do
 			if (echo "${jar_temp_file}" | grep "com/liferay/portal/kernel")
 			then
@@ -154,7 +161,7 @@ function _manage_bom_jar {
 			fi
 		done
 
-		find jar-temp -name taglib -type d | while IFS= read -r -d '' jar_temp_file
+		find jar-temp -name taglib -type d -print0 | while IFS= read -r -d '' jar_temp_file
 		do
 			if (echo "${jar_temp_file}" | grep "com/liferay")
 			then
@@ -162,7 +169,7 @@ function _manage_bom_jar {
 			fi
 		done
 
-		find jar-temp -name packageinfo -type f | while IFS= read -r -d '' jar_temp_file
+		find jar-temp -name packageinfo -type f -print0 | while IFS= read -r -d '' jar_temp_file
 		do
 			_copy_file "$(dirname "${jar_temp_file}")" api-jar
 		done
