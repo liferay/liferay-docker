@@ -24,14 +24,14 @@ function generate_api_jars {
 			continue
 		fi
 
-		local group_path=$(echo ${artifact%%:*} | sed -e "s#[.]#/#g")
+		local group_path=$(echo "${artifact%%:*}" | sed -e "s#[.]#/#g")
 
 		if [ "${group_path}" == "com/fasterxml/jackson-dataformat" ]
 		then
 			group_path="com/fasterxml/jackson/dataformat"
 		fi
 
-		local name=$(echo ${artifact} | sed -e "s/.*:\(.*\):.*/\\1/")
+		local name=$(echo "${artifact}" | sed -e "s/.*:\(.*\):.*/\\1/")
 		local version=${artifact##*:}
 
 		lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar."
@@ -46,13 +46,71 @@ function generate_api_jars {
 
 		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar"
 
-		unzip -d api-sources-jar -o -q "${name}-${version}.jar"
+		mkdir -p jar-temp
 
-		rm -f "${name}-${version}.jar"
+		unzip -d jar-temp -o -q "${name}-${version}.jar"
 
-		#
-		# TODO Finish logic from https://github.com/liferay/liferay-portal-ee/blob/release-2023.q4/modules/releng.gradle#L1275
-		#
+		#rm -f "${name}-${version}.jar"
+
+		if (echo "${name}" | grep -Eq "^com.liferay.")
+		then
+			find jar-temp -name "*.jar" -type f -print0 | while IFS= read -r -d '' jar_temp_file
+			do
+				lc_log DEBUG "Removing ${jar_temp_file}."
+
+				rm -f "${jar_temp_file}"
+			done
+
+			find jar-temp -name "java-docs-*.xml" -type f -print0 | while IFS= read -r -d '' jar_temp_file
+			do
+				lc_log DEBUG "Removing ${jar_temp_file}."
+
+				rm -f "${jar_temp_file}"
+			done
+
+			find jar-temp -name "node-modules" -type d -print0 | while IFS= read -r -d '' jar_temp_file
+			do
+				lc_log DEBUG "Removing ${jar_temp_file}."
+
+				rm -f "${jar_temp_file}"
+			done
+
+			find jar-temp -maxdepth 1 -type f -print0 | while IFS= read -r -d '' jar_temp_file
+			do
+				_copy_file "${jar_temp_file}" api-jar
+			done
+
+
+			find jar-temp -name kernel -type d | while IFS= read -r -d '' jar_temp_file
+			do
+				if (echo "${jar_temp_file}" | grep "com/liferay/portal/kernel")
+				then
+					_copy_file "${jar_temp_file}" api-jar
+				fi
+			done
+
+			find jar-temp -name taglib -type d | while IFS= read -r -d '' jar_temp_file
+			do
+				if (echo "${jar_temp_file}" | grep "com/liferay")
+				then
+					_copy_file "${jar_temp_file}" api-jar
+				fi
+			done
+
+			find jar-temp -name packageinfo -type f | while IFS= read -r -d '' jar_temp_file
+			do
+				_copy_file "$(dirname "${jar_temp_file}")" api-jar
+			done
+		else
+			rm -fr jar-temp/META-INF/custom-sql/
+			rm -fr jar-temp/META-INF/images/
+			rm -fr jar-temp/META-INF/sql/
+			rm -fr jar-temp/META-INF/versions/
+
+			cp -a jar-temp/* api-jar/
+		fi
+
+		rm -fr jar-temp
 	done
 }
 
@@ -98,4 +156,13 @@ function generate_poms {
 
 		rm -f "${pom}-${base_version}.pom"
 	done
+}
+
+function _copy_file {
+	local dir=$(dirname "${1}" | sed -e "s#[./]*[^/]*/##")
+	mdir -p "${2}/${dir}"
+
+	lc_log DEBUG "Copying ${1}."
+
+	cp -a "${1}" "${2}/${dir}"
 }
