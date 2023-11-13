@@ -1,0 +1,27 @@
+services:
+    db:
+        container_name: db
+        environment:
+            - MARIADB_DATABASE=lportal
+            - MARIADB_EXTRA_FLAGS=--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+            - MARIADB_PASSWORD=123_FOOO_321
+            - MARIADB_ROOT_HOST=localhost
+            - MARIADB_ROOT_PASSWORD=789_BAAR_987
+            - MARIADB_USER=lportal
+        hostname: db-server-1
+        image: mariadb:11.1
+        ports:
+            - "3306:3306"
+        volumes:
+            - /opt/liferay/db/data:/var/lib/mysql
+
+    web-server:
+        build:
+            context: web-server
+        container_name: web-server
+        environment:
+            - ORCA_WEB_SERVER_BALANCE_MEMBERS=__SERVER_2__:8009,__SERVER_3__:8009
+        hostname: web-server-server-1
+        image: web-server
+        ports:
+            - "80:80"
