@@ -58,7 +58,6 @@ function generate_api_jars {
 	do
 		_manage_bom_jar "${module_jar}"
 	done
-
 }
 
 function generate_fake_api_jars {
@@ -152,7 +151,6 @@ function _manage_bom_jar {
 			_copy_file "${jar_temp_file}" api-jar
 		done
 
-
 		find jar-temp -name kernel -type d -print0 | while IFS= read -r -d '' jar_temp_file
 		do
 			if (echo "${jar_temp_file}" | grep "com/liferay/portal/kernel")
@@ -174,12 +172,12 @@ function _manage_bom_jar {
 			_copy_file "$(dirname "${jar_temp_file}")" api-jar
 		done
 	else
-		rm -fr jar-temp/META-INF/custom-sql/
-		rm -fr jar-temp/META-INF/images/
-		rm -fr jar-temp/META-INF/sql/
-		rm -fr jar-temp/META-INF/versions/
+		rm -fr jar-temp/META-INF/custom-sql
+		rm -fr jar-temp/META-INF/images
+		rm -fr jar-temp/META-INF/sql
+		rm -fr jar-temp/META-INF/versions
 
-		cp -a jar-temp/* api-jar/
+		cp -a jar-temp/* api-jar
 	fi
 
 	rm -fr jar-temp
