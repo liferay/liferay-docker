@@ -258,7 +258,6 @@ function get_hotfix_zip_list_file {
 
 		if [[ "${release_version}" == 20* ]]
 		then
-
 			local zip_directory_name
 
 			for zip_directory_name in $(lc_curl "${zip_directory_url}/" - | grep -E -o "20[0-9]+\.q[0-9]\.[0-9]+" | uniq)
@@ -360,7 +359,7 @@ function process_zip_list_file {
 		then
 			tag_name_new="${tag_name_new#liferay-}"
 		else
-			tag_name_new=${tag_name_new#*liferay-dxp-}
+			tag_name_new="${tag_name_new#*liferay-dxp-}"
 		fi
 
 		check_if_tag_exists liferay-dxp "${tag_name_new}" && continue
