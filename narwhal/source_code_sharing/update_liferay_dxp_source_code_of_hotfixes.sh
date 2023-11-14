@@ -15,7 +15,14 @@ function check_if_tag_exists {
 
 	if (git -P tag -l "${tag_name}" | grep -q "[[:alnum:]]")
 	then
-		lc_log DEBUG "The tag '${tag_name}' already exists in the ${repository} repository."
+		lc_log DEBUG "The tag '${tag_name}' already exists in the ${repository} repository. Updating ${IGNORE_ZIP_FILES_CACHE_FILE}."
+
+		if (! grep -q "${hotfix_zip_file}" "${IGNORE_ZIP_FILES_CACHE_FILE}")
+		then
+			lc_log DEBUG "Add ${hotfix_zip_file} to ${IGNORE_ZIP_FILES_CACHE_FILE}"
+
+			echo "${hotfix_zip_file}" >> "${IGNORE_ZIP_FILES_CACHE_FILE}"
+		fi
 
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	else
@@ -25,19 +32,31 @@ function check_if_tag_exists {
 	fi
 }
 
-function check_ignore_zip_file {
-	local hotfix_zip_file="${1}"
-	local release_version="${2}"
+function check_ignore_via_argument {
+	local ignore_zip_file="${1}"
 
-	local file_url="${zip_directory_url}/${hotfix_zip_file}"
-
-	if [[ "x${IGNORE_ZIP_FILES}" =~ x*${hotfix_zip_file}* ]]
+	if [[ "x${ignore_zip_file}" =~ x*${hotfix_zip_file}* ]]
 	then
 		lc_log DEBUG "Ignoring '${file_url}'."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	else
-		lc_log DEBUG "The file on '${file_url}' is not on the ignore list."
+		lc_log DEBUG "The file ${hotfix_zip_file} is not on the command line defined ignore list"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
+function check_ignore_via_file {
+	local ignore_zip_file="${1}"
+
+	if (grep -q "${hotfix_zip_file}" "${ignore_zip_file}")
+	then
+		lc_log DEBUG "Ignoring '${file_url}'."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	else
+		lc_log DEBUG "The file on '${file_url}' is not in the ${ignore_zip_file}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -68,6 +87,7 @@ function check_patch_requirements {
 
 function check_usage {
 	BASE_DIR="${PWD}"
+	DEDICATED_CACHE_DIR="${BASE_DIR}/cache"
 	LIFERAY_COMMON_DEBUG_ENABLED="false"
 	LIFERAY_COMMON_DOWNLOAD_MAX_TIME="120"
 	LIFERAY_COMMON_LOG_DIR="${PWD}/logs"
@@ -278,7 +298,7 @@ function main {
 }
 
 function prepare_cache_dir {
-	install -d -m 0700 "${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}"
+	install -d -m 0700 "${DEDICATED_CACHE_DIR}" "${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}"
 }
 
 function print_help {
@@ -301,11 +321,15 @@ function print_help {
 }
 
 function process_argument_ignore_zip_files {
+	IGNORE_ZIP_FILES_PRESISTENT_FILE="$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/ignore_zip_files_persistent.txt"
+	IGNORE_ZIP_FILES_CACHE_FILE="${DEDICATED_CACHE_DIR}/ignore_zip_files_cache.txt"
 
-	local ignore_zip_files_persistent_file="$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/ignore_zip_files_persistent.txt"
-	local ignore_zip_files_persistent_list=$(tr '\n' ',' < "${ignore_zip_files_persistent_file}")
+	if [ ! -e "${IGNORE_ZIP_FILES_CACHE_FILE}" ]
+	then
+		lc_log DEBUG "Creating '${IGNORE_ZIP_FILES_CACHE_FILE}'"
 
-	IGNORE_ZIP_FILES="${IGNORE_ZIP_FILES},${ignore_zip_files_persistent_list}"
+		touch "${IGNORE_ZIP_FILES_CACHE_FILE}"
+	fi
 }
 
 function process_argument_version {
@@ -321,7 +345,7 @@ function process_version_list {
 
 	for release_version in "${version_list[@]}"
 	do
-		local zip_list_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/list-of-${release_version}.txt"
+		local zip_list_file="${DEDICATED_CACHE_DIR}/list-of-${release_version}.txt"
 
 		lc_log DEBUG "Processing version: ${release_version}."
 
@@ -361,7 +385,11 @@ function process_zip_list_file {
 
 		check_if_tag_exists liferay-dxp "${tag_name_new}" && continue
 
-		check_ignore_zip_file "${hotfix_zip_file}" "${release_version}" && continue
+		check_ignore_via_argument "${IGNORE_ZIP_FILES}" && continue
+
+		check_ignore_via_file "${IGNORE_ZIP_FILES_PRESISTENT_FILE}" && continue
+		
+		check_ignore_via_file "${IGNORE_ZIP_FILES_CACHE_FILE}" && continue
 
 		file_url="${zip_directory_url}/${hotfix_zip_file}"
 
