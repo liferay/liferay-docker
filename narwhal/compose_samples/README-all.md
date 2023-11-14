@@ -1,16 +1,17 @@
 # Preperation
 
-## Copy license
+## Copy license and replace IPs
 
-Add Liferay license to the `license.xml` file and copy to their build scripts respectively:
+Add Liferay DXP license to the `license.xml` file and edit the IP addresses of the servers in the env.servers file.
 
 ```
-./copy-license.sh
+./copy_license.sh
+./replace_ips.sh
 ```
 
-## Deploy code
+## Deploy configuration
 
-Copy the server-<number> directory to the servers respectively.
+Copy the server-<number> directory to the servers respectively. Review the docker-compose files and add the missing details (e.g. passwords).
 
 ## Prepare the server environment
 
@@ -20,16 +21,9 @@ Adjust the OS requirements:
 ./pre.sh
 ```
 
-
-# Build images
-
-```
-./compose.sh build
-```
-
-# Fire up the services
+# Start services
 
 ```
-./compose.sh up
+docker compose up
 
 ```

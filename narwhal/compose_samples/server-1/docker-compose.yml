@@ -4,9 +4,9 @@ services:
         environment:
             - MARIADB_DATABASE=lportal
             - MARIADB_EXTRA_FLAGS=--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-            - MARIADB_PASSWORD=123_FOOO_321
+            - MARIADB_PASSWORD=
             - MARIADB_ROOT_HOST=localhost
-            - MARIADB_ROOT_PASSWORD=789_BAAR_987
+            - MARIADB_ROOT_PASSWORD=
             - MARIADB_USER=lportal
         hostname: db-server-1
         image: mariadb:11.1
