@@ -1,6 +1,6 @@
 # Backup volume
 
-Have the backup volume mounted on `/opt/liferay/backups` as the persistent storage of the backup data. 
+Have the backup volume mounted on `/opt/liferay/backups` as the persistent storage of the backup data.
 
 # Liferay persistent data
 

@@ -23,7 +23,7 @@ services:
             - LIFERAY_DL_PERIOD_STORE_PERIOD_ANTIVIRUS_PERIOD_ENABLED=true
             - LIFERAY_DL_PERIOD_STORE_PERIOD_IMPL=com.liferay.portal.store.file.system.AdvancedFileSystemStore
             - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=org.mariadb.jdbc.Driver
-            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=123_FOOO_321
+            - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=
             - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:mariadb://__SERVER_1__/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true&useSSL=false
             - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=lportal
             - LIFERAY_JVM_OPTS=-Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.host=0.0.0.0 -Dcom.sun.management.jmxremote.port=5000 -Dcom.sun.management.jmxremote.rmi.port=5000 -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=liferay -Djgroups.bind_addr=liferay-server-2 -Djgroups.external_addr=__SERVER_2__

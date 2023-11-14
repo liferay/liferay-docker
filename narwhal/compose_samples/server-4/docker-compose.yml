@@ -14,7 +14,7 @@ services:
         environment:
             - ORCA_BACKUP_CRON_EXPRESSION=0 */4 * * *
             - ORCA_DB_ADDRESSES=__SERVER_1__:3306
-            - ORCA_DB_PASSWORD=123_FOOO_321
+            - ORCA_DB_PASSWORD=
         hostname: backup-server-4
         image: backup
         volumes:
