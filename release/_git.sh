@@ -47,6 +47,11 @@ function clone_repository {
 		git remote add upstream git@github.com:liferay/"${1}".git
 	fi
 
+	if (! git remote get-url brianchandotcom &>/dev/null)
+	then
+		git remote add brianchandotcom git@github.com:brianchandotcom/"${1}".git
+	fi
+
 	git remote --verbose
 }
 
@@ -84,6 +89,11 @@ function update_portal_repository {
 		lc_log INFO "${LIFERAY_RELEASE_GIT_SHA} tag exists on remote."
 
 		git fetch --force upstream tag "${LIFERAY_RELEASE_GIT_SHA}"
+	elif [ -n "$(git ls-remote brianchandotcom refs/heads/"${LIFERAY_RELEASE_GIT_SHA}")" ]
+	then
+		echo "${LIFERAY_RELEASE_GIT_SHA} branch exists on brianchandotcom's remote."
+
+		git fetch --force --update-head-ok brianchandotcom "${LIFERAY_RELEASE_GIT_SHA}:${LIFERAY_RELEASE_GIT_SHA}"
 	elif [ -n "$(git ls-remote upstream refs/heads/"${LIFERAY_RELEASE_GIT_SHA}")" ]
 	then
 		echo "${LIFERAY_RELEASE_GIT_SHA} branch exists on remote."
