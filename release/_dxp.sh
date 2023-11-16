@@ -95,7 +95,23 @@ function clean_up_ignored_dxp_modules {
 		git ls-files "*/.lfrbuild-releng-ignore" | sed -e s#/.lfrbuild-releng-ignore##
 	) | while IFS= read -r ignored_dir
 	do
-		find "${ignored_dir}" -name bnd.bnd | while IFS= read -r ignored_bnd_bnd_file
+		local dxp_dir=""
+
+		if (echo "${ignored_dir}" | grep -Eq "^apps/")
+		then
+			dxp_dir=$(echo "${ignored_dir}" | sed -e "s#apps/#dxp/apps/#")
+
+			echo "Trying to exclude ${dxp_dir}"
+
+			if [ ! -e "${dxp_dir}" ]
+			then
+				dxp_dir=""
+			else
+				lc_log INFO "Excluding ${dxp_dir} as well based on ${ignored_dir}."
+			fi
+		fi
+
+		find ${ignored_dir} ${dxp_dir} -name bnd.bnd | while IFS= read -r ignored_bnd_bnd_file
 		do
 			local ignored_file=$(lc_get_property "${ignored_bnd_bnd_file}" Bundle-SymbolicName)
 
