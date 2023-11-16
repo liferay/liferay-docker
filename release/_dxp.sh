@@ -101,7 +101,7 @@ function clean_up_ignored_dxp_modules {
 		then
 			dxp_dir=$(echo "${ignored_dir}" | sed -e "s#apps/#dxp/apps/#")
 
-			echo "Trying to exclude ${dxp_dir}"
+			lc_log INFO "Exclude ${dxp_dir} if it exists."
 
 			if [ ! -e "${dxp_dir}" ]
 			then
