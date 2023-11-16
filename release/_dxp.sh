@@ -77,7 +77,7 @@ function build_dxp {
 function build_sql {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/sql
 
-	if [ -e "create/create-mariadb.sql" ]
+	if [ -e "create/create-postgresql.sql" ]
 	then
 		lc_log INFO "SQL files were already built."
 
