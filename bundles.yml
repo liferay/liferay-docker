@@ -662,6 +662,7 @@
         bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u101/liferay-dxp-tomcat-7.4.13.u101-20231102190806754.7z
     7.4.13-u102:
         bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u102/liferay-dxp-tomcat-7.4.13.u102-20231109153600206.7z
+    7.4.13-u103:
     7.4.13.nightly:
         bundle_url: files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
 quarterly:
