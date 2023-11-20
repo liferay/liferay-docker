@@ -6,6 +6,19 @@
 # repository where it is used.
 #
 
+function lc_background_run {
+	if [ -n "${LIFERAY_COMMON_DEBUG_ENABLED}" ]
+	then
+		lc_time_run "${@}"
+	else
+		lc_time_run "${@}" &
+
+		local pid=${!}
+
+		LIFERAY_COMMON_BACKGROUND_PIDS["${pid}"]="${@}"
+	fi
+}
+
 function lc_cd {
 	if [ -d "${1}" ]
 	then
@@ -31,6 +44,18 @@ function lc_check_utils {
 	done
 
 	return "${exit_code}"
+}
+
+function lc_curl {
+	local url=${1}
+	local output=${2}
+
+	if (! curl "${url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${output}" --retry 10 --retry-delay 5 --show-error --silent)
+	then
+		lc_log ERROR "The ${url} cannot be downloaded to ${output}."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 }
 
 function lc_date {
@@ -76,6 +101,19 @@ function lc_docker_compose {
 	echo "${LIFERAY_COMMON_DOCKER_COMPOSE}"
 }
 
+# FUNCTION
+#	Downloads a file to a cache directory configured via ${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}.
+#	If the file is already in the cache then skip downloading it again.
+#	If a file name is given as an optional second parameter, then it is copied from the cache.
+#	If the file cannot be downloaded in ${LIFERAY_COMMON_DOWNLOAD_MAX_TIME} seconds, the process is cancelled.
+#
+# INVOCATION:
+#	lc_download <file url> [<destination file name>]
+#
+# EXIT CODES:
+#	$LIFERAY_COMMON_EXIT_CODE_BAD: Missing argument or download failed.
+#	$LIFERAY_COMMON_EXIT_CODE_OK: The file was downloaded and/or copied properly.
+
 function lc_download {
 	local file_url=${1}
 
@@ -91,11 +129,15 @@ function lc_download {
 	if [ -z "${file_name}" ]
 	then
 		file_name=${file_url##*/}
+
+		local skip_copy="true"
 	fi
 
 	if [ -e "${file_name}" ]
 	then
 		lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
+
+		echo "${file_name}"
 
 		return
 	fi
@@ -104,30 +146,60 @@ function lc_download {
 
 	if [ -e "${cache_file}" ]
 	then
-		lc_log DEBUG "Copying file from cache: ${cache_file}."
+		if [ -n "${LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE}" ]
+		then
+			lc_log DEBUG "Deleting file from cache: ${cache_file}."
 
-		cp "${cache_file}" "${file_name}"
+			rm -f "${cache_file}"
+		else
+			lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
 
-		return
+			if [ "${skip_copy}" = "true" ]
+			then
+				lc_log DEBUG "Skipping copy."
+
+				echo "${cache_file}"
+			else
+				lc_log DEBUG "Copying from cache: ${cache_file}."
+
+				cp "${cache_file}" "${file_name}"
+
+				echo "${file_name}"
+			fi
+
+			return
+		fi
 	fi
 
-	mkdir -p $(dirname "${cache_file}")
+	local cache_file_dir
+	cache_file_dir="$(dirname "${cache_file}")"
+
+	mkdir -p "${cache_file_dir}"
 
 	lc_log DEBUG "Downloading ${file_url}."
 
 	local current_date=$(lc_date)
 
-	local timestamp=$(lc_date "${current_date}" "+%Y%m%d%H%M%S")
+	local temp_suffix="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
 
-	if (! curl "${file_url}" --fail --output "${cache_file}.temp${timestamp}" --silent)
+	if (! curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_suffix}" --show-error --silent)
 	then
 		lc_log ERROR "Unable to download ${file_url}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	mv "${cache_file}.${temp_suffix}" "${cache_file}"
+
+	if [ "${skip_copy}" = "true" ]
+	then
+		echo "${cache_file}"
 	else
-		mv "${cache_file}.temp${timestamp}" "${cache_file}"
+		lc_log DEBUG "Copying from cache: ${cache_file}."
 
 		cp "${cache_file}" "${file_name}"
+
+		echo "${file_name}"
 	fi
 }
 
@@ -159,16 +231,11 @@ function lc_log {
 
 	if [ "${level}" != "DEBUG" ] || [ "${LIFERAY_COMMON_LOG_LEVEL}" == "DEBUG" ]
 	then
-		echo "$(lc_date) [${level}] ${message}"
+		echo "$(lc_date) [${level}] ${message}" >&2
 	fi
 }
 
 function lc_next_step {
-	if [ -z "${LIFERAY_COMMON_STEP_FILE}" ]
-	then
-		LIFERAY_COMMON_STEP_FILE=$(mktemp)
-	fi
-
 	local step=$(cat "${LIFERAY_COMMON_STEP_FILE}")
 
 	step=$((step + 1))
@@ -179,7 +246,7 @@ function lc_next_step {
 }
 
 function lc_time_run {
-	local run_id=$(echo "${@}" | tr " /" "_")
+	local run_id=$(echo "${@}" | tr " /:" "_")
 	local start_time=$(date +%s)
 
 	if [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
@@ -205,6 +272,8 @@ function lc_time_run {
 	if [ "${exit_code}" == "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 	then
 		echo -e "$(lc_date) < ${*}: \e[1;34mSkip\e[0m"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
 		local seconds=$((end_time - start_time))
 
@@ -226,8 +295,29 @@ function lc_time_run {
 	fi
 }
 
+function lc_wait {
+	for pid in ${!LIFERAY_COMMON_BACKGROUND_PIDS[@]}
+	do
+		wait "${pid}"
+
+		local exit_code=$?
+
+		if [ "${exit_code}" -ne 0 ]
+		then
+			exit "${exit_code}"
+		fi
+	done
+
+	LIFERAY_COMMON_BACKGROUND_PIDS=()
+}
+
 function _lc_init {
 	LIFERAY_COMMON_START_TIME=$(date +%s)
+	LIFERAY_COMMON_STEP_FILE=$(mktemp)
+
+	trap 'rm -f "${LIFERAY_COMMON_STEP_FILE}"' EXIT ERR SIGINT SIGTERM
+
+	declare -A LIFERAY_COMMON_BACKGROUND_PIDS
 
 	if [ -z "${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}" ]
 	then
@@ -239,8 +329,15 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_HELP=2
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
+	LIFERAY_COMMON_DOWNLOAD_MAX_TIME=1200
 
-	export LC_ALL=en_US.UTF-8
+	if (locale -a | grep -q en_US.utf8)
+	then
+		export LC_ALL=en_US.utf8
+	else
+		export LC_ALL=C.utf8
+	fi
+
 	export TZ=UTC
 }
 
