@@ -86,6 +86,7 @@ function compare_jars {
 			grep -v "pom.properties" | \
 			grep -v "source-classes-mapping.txt" | \
 			grep -v "_jsp.class" | \
+			grep -v "_jsp.java" | \
 			grep -v "previous-compilation-data.bin" | \
 			# TODO method to include portal-impl.jar when the util-* jars changed.
 			grep -v "com/liferay/portal/deploy/dependencies/" | \
