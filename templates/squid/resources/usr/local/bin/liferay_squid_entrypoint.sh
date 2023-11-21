@@ -19,9 +19,10 @@ function main {
 			-keyout /etc/squid/seeder.key \
 			-new \
 			-newkey rsa:2048 \
-			-nodes -x509 \
+			-nodes \
 			-out /etc/squid/seeder.crt \
-			-subj /C=US/ST=CA/L=LAX/O=Liferay/OU=IT/CN=localhost
+			-subj /C=US/ST=CA/L=LAX/O=Liferay/OU=IT/CN=localhost \
+			-x509
 	fi
 
 	squid -z && rm -f /run/squid.pid
