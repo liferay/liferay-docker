@@ -18,7 +18,7 @@ function main {
 			-keyout /etc/squid/seeder.key \
 			-new \
 			-newkey rsa:2048 \
-			-nodes -x509 \
+			-nodes -x509 -days 365 \
 			-out /etc/squid/seeder.crt \
 			-subj /C=US/ST=CA/L=LAX/O=Liferay/OU=IT/CN=localhost
 	fi
