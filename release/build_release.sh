@@ -107,6 +107,8 @@ function main {
 
 		lc_time_run package_release
 
+		lc_time_run package_boms
+
 		lc_time_run generate_checksum_files
 
 		lc_time_run upload_release
