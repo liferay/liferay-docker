@@ -55,12 +55,11 @@ function install_patching_tool {
 function package_boms {
 	lc_cd "${_BUILD_DIR}/boms"
 
-	cp -a *.pom "${_BUILD_DIR}/release/"
+	cp -a *.pom "${_BUILD_DIR}/release"
 
 	touch empty-manifest
 
 	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}.jar" empty-manifest -C api-jar .
-
 	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}-sources.jar" empty-manifest -C api-sources-jar .
 
 	rm -f empty-manifest
