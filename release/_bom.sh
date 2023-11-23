@@ -75,7 +75,7 @@ function generate_api_source_jar {
 			continue
 		fi
 
-		lc_log DEBUG "Copying ${taglib_dir} as it's a taglib."
+		lc_log DEBUG "Copying ${taglib_dir} because it is a taglib."
 
 		_copy_source_package "${taglib_dir}"
 	done
@@ -92,7 +92,7 @@ function generate_api_source_jar {
 
 		local package_dir=$(dirname "${packageinfo_file}")
 
-		lc_log DEBUG "Copying ${package_dir} as it has a packageinfo."
+		lc_log DEBUG "Copying ${package_dir} because it has a packageinfo."
 
 		_copy_source_package "${package_dir}"
 	done
@@ -137,9 +137,13 @@ function _copy_file {
 }
 
 function _copy_source_package {
-	# TODO Exclude what's not packaged
+
+	#
+	# TODO Exclude what is not packaged
+	#
 
 	local new_dir_name=$(echo "${1}" | sed -e "s#.*/com/liferay/#com/liferay/#")
+
 	new_dir_name="${_BUILD_DIR}"/boms/api-sources-jar/$(dirname "${new_dir_name}")
 
 	mkdir -p "${new_dir_name}"
