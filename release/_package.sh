@@ -57,12 +57,12 @@ function package_boms {
 
 	cp -a *.pom "${_BUILD_DIR}/release"
 
-	touch empty-manifest
+	touch .touch
 
-	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}.jar" empty-manifest -C api-jar .
-	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}-sources.jar" empty-manifest -C api-sources-jar .
+	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}.jar" .touch -C api-jar .
+	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}-sources.jar" .touch -C api-sources-jar .
 
-	rm -f empty-manifest
+	rm -f .touch
 }
 
 function package_release {
