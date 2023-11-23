@@ -65,7 +65,7 @@ function generate_api_jars {
 function generate_api_source_jar {
 	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
-	_copy_source_package ./portal-kernel/src/com/liferay/
+	_copy_source_package ./portal-kernel/src/com/liferay
 
 	find . -name taglib -type d -print0 | while IFS= read -r -d '' taglib_dir
 	do
