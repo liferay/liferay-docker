@@ -47,6 +47,8 @@ function generate_api_jars {
 		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar"
 
 		_manage_bom_jar "${name}-${version}.jar"
+
+		rm -f "${name}-${version}.jar"
 	done
 
 	for portal_jar in portal-impl portal-kernel support-tomcat util-bridges util-java util-slf4j util-taglib
@@ -60,19 +62,39 @@ function generate_api_jars {
 	done
 }
 
-function generate_fake_api_jars {
-	mkdir -p "${_BUILD_DIR}/boms"
+function generate_api_source_jar {
+	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
-	lc_cd "${_BUILD_DIR}/boms"
+	_copy_source_package ./portal-kernel/src/com/liferay/
 
-	local base_version=$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.profile-dxp.properties "release.info.version").u$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.trivial")
-
-	lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/release.dxp.api/${base_version}/release.dxp.api-${base_version}.jar"
-	lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/release.dxp.api/${base_version}/release.dxp.api-${base_version}-sources.jar"
-
-	for jar_file in *.jar
+	find . -name taglib -type d -print0 | while IFS= read -r -d '' taglib_dir
 	do
-		mv "${jar_file}" $(echo "${jar_file}" | sed -e "s/${base_version}/${_DXP_VERSION}/g")
+		if (! echo "${taglib_dir}" | grep -q "/com/liferay/") ||
+		   (echo "${taglib_dir}" | grep -q "/classes/")
+		then
+			continue
+		fi
+
+		lc_log DEBUG "Copying ${taglib_dir} as it's a taglib."
+
+		_copy_source_package "${taglib_dir}"
+	done
+
+	find . -name packageinfo -type f -print0 | while IFS= read -r -d '' packageinfo_file
+	do
+		if (echo "${packageinfo_file}" | grep -q "/classes/") ||
+		   (echo "${packageinfo_file}" | grep -q "/portal-kernel/")
+		then
+			continue
+		fi
+
+		packageinfo_file=$(echo "${packageinfo_file}" | sed -e "s#/resources/#/java/#")
+
+		local package_dir=$(dirname "${packageinfo_file}")
+
+		lc_log DEBUG "Copying ${package_dir} as it has a packageinfo."
+
+		_copy_source_package "${package_dir}"
 	done
 }
 
@@ -112,6 +134,17 @@ function _copy_file {
 	lc_log DEBUG "Copying ${1}."
 
 	cp -a "${1}" "${2}/${dir}"
+}
+
+function _copy_source_package {
+	# TODO Exclude what's not packaged
+
+	local new_dir_name=$(echo "${1}" | sed -e "s#.*/com/liferay/#com/liferay/#")
+	new_dir_name="${_BUILD_DIR}"/boms/api-sources-jar/$(dirname "${new_dir_name}")
+
+	mkdir -p "${new_dir_name}"
+
+	cp -a "${1}" "${new_dir_name}"
 }
 
 function _manage_bom_jar {
