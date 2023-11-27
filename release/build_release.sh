@@ -42,7 +42,7 @@ function check_usage {
 }
 
 function main {
-	ANT_OPTS="-Xmx10G"
+	export ANT_OPTS="-Xmx10G"
 
 	print_variables
 
@@ -110,6 +110,8 @@ function main {
 		lc_time_run package_boms
 
 		lc_time_run generate_checksum_files
+
+		lc_time_run upload_boms_all xanadu
 
 		lc_time_run upload_release
 	else
