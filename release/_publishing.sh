@@ -117,7 +117,7 @@ function _upload_to_nexus {
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	lc_log INFO "- ${file_path} -> ${file_url}."
+	lc_log INFO "Uploading ${file_path} to ${file_url}."
 
 	curl \
 		--fail \
