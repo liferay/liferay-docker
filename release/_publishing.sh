@@ -108,15 +108,15 @@ function upload_release {
 }
 
 function _upload_to_nexus {
-	local file_path="${1}"
-	local file_url="${2}"
-
 	if [ -z "${NEXUS_REPOSITORY_USER}" ] || [ -z "${NEXUS_REPOSITORY_PASSWORD}" ]
 	then
 		 lc_log ERROR "Either \${NEXUS_REPOSITORY_USER} or \${NEXUS_REPOSITORY_PASSWORD} is undefined."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
+
+	local file_path="${1}"
+	local file_url="${2}"
 
 	lc_log INFO "Uploading ${file_path} to ${file_url}."
 
@@ -126,7 +126,7 @@ function _upload_to_nexus {
 		--retry 3 \
 		--retry-delay 10 \
 		--silent \
-		-u "${NEXUS_REPOSITORY_USER}:${NEXUS_REPOSITORY_PASSWORD}" \
+		--user "${NEXUS_REPOSITORY_USER}:${NEXUS_REPOSITORY_PASSWORD}" \
 		--upload-file "${file_path}" \
 		"${file_url}"
 }
