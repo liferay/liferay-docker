@@ -67,9 +67,13 @@ function check_patch_requirements {
 }
 
 function check_usage {
+	BASE_DIR="${PWD}"
 	LIFERAY_COMMON_DEBUG_ENABLED="false"
+	LIFERAY_COMMON_DOWNLOAD_MAX_TIME="120"
 	LIFERAY_COMMON_LOG_DIR="${PWD}/logs"
 	IGNORE_ZIP_FILES=""
+	REPO_PATH_DXP="${BASE_DIR}/liferay-dxp"
+	REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
 	RUN_FETCH_REPOSITORY="true"
 	RUN_PUSH_TO_ORIGIN="true"
 	ZIP_LIST_RETENTION_TIME="1 min"
@@ -264,13 +268,6 @@ function get_hotfix_zip_list_file {
 }
 
 function main {
-	BASE_DIR="${PWD}"
-
-	LIFERAY_COMMON_DOWNLOAD_MAX_TIME="120"
-
-	REPO_PATH_DXP="${BASE_DIR}/liferay-dxp"
-	REPO_PATH_EE="${BASE_DIR}/liferay-portal-ee"
-
 	check_usage "${@}"
 
 	prepare_cache_dir
