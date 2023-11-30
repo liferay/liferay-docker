@@ -126,7 +126,7 @@ function _upload_to_nexus {
 		--retry 3 \
 		--retry-delay 10 \
 		--silent \
-		--user "${NEXUS_REPOSITORY_USER}:${NEXUS_REPOSITORY_PASSWORD}" \
 		--upload-file "${file_path}" \
+		--user "${NEXUS_REPOSITORY_USER}:${NEXUS_REPOSITORY_PASSWORD}" \
 		"${file_url}"
 }
