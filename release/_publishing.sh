@@ -57,7 +57,10 @@ function upload_hotfix {
 
 	ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/hotfix/${_DXP_VERSION}/"
 
+	#
 	# shellcheck disable=SC2029
+	#
+
 	if (ssh root@lrdcom-vm-1 ls "/www/releases.liferay.com/dxp/hotfix/${_DXP_VERSION}/" | grep -q "${_HOTFIX_FILE_NAME}")
 	then
 		lc_log ERROR "Skipping the upload of ${_HOTFIX_FILE_NAME} because it already exists."
