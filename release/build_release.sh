@@ -111,7 +111,7 @@ function main {
 
 		lc_time_run generate_checksum_files
 
-		lc_time_run upload_boms_all xanadu
+		lc_time_run upload_boms xanadu
 
 		lc_time_run upload_release
 	else

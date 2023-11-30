@@ -29,7 +29,7 @@ function upload_bom_file {
 	_upload_to_nexus "${file_path}.sha512" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}.sha512"
 }
 
-function upload_boms_all {
+function upload_boms {
 	local nexus_repository_name="${1}"
 
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
