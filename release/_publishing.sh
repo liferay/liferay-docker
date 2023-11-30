@@ -34,14 +34,12 @@ function upload_boms {
 
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	#if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
-	#then
-	#	lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
+	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
+	then
+		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
 
-	#	return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	#fi
-
-	#lc_cd "${_BUILD_DIR}"/release
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 
 	find "${_BUILD_DIR}/release" -regextype egrep -regex '.*/*.(jar|pom)' -print0 | while IFS= read -r -d '' file_path
 	do
