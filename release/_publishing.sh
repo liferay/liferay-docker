@@ -12,18 +12,18 @@ function init_gcs {
 }
 
 function upload_bom_file {
-	local nexus_repository_name="${1}"
 	local file_path="${2}"
 
 	local file_name="${file_path##*/}"
+
 	local directory_name="${file_name/%-*}"
+
+	local nexus_repository_name="${1}"
 
 	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
 
 	_upload_to_nexus "${file_path}" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}"
-
 	_upload_to_nexus "${file_path}.MD5" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}.md5"
-
 	_upload_to_nexus "${file_path}.sha512" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}.sha512"
 }
 
