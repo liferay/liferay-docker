@@ -20,8 +20,6 @@ function upload_bom_file {
 
 	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
 
-	lc_log INFO "Uploading BOMs to the ${nexus_repository_name} repository."
-
 	_upload_to_nexus "${file_path}" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}"
 
 	_upload_to_nexus "${file_path}.MD5" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}.md5"
