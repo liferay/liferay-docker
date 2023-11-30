@@ -1,29 +1,5 @@
 #!/bin/bash
 
-function curl_upload {
-	local file_path="${1}"
-	local file_url="${2}"
-
-	if [ -z "${NEXUS_REPOSITORY_USER}" ] || [ -z "${NEXUS_REPOSITORY_PASSWORD}" ]
-	then
-		 lc_log ERROR "Either \${NEXUS_REPOSITORY_USER} or \${NEXUS_REPOSITORY_PASSWORD} is undefined."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	lc_log INFO "- ${file_path} -> ${file_url}."
-
-	curl \
-		--fail \
-		--max-time 300 \
-		--retry 3 \
-		--retry-delay 10 \
-		--silent \
-		-u "${NEXUS_REPOSITORY_USER}:${NEXUS_REPOSITORY_PASSWORD}" \
-		--upload-file "${file_path}" \
-		"${file_url}"
-}
-
 function init_gcs {
 	if [ ! -n "${LIFERAY_RELEASE_GCS_TOKEN}" ]
 	then
@@ -46,11 +22,11 @@ function upload_bom_file {
 
 	lc_log INFO "Uploading BOMs to the ${nexus_repository_name} repository."
 
-	curl_upload "${file_path}" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}"
+	_upload_to_nexus "${file_path}" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}"
 
-	curl_upload "${file_path}.MD5" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}.md5"
+	_upload_to_nexus "${file_path}.MD5" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}.md5"
 
-	curl_upload "${file_path}.sha512" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}.sha512"
+	_upload_to_nexus "${file_path}.sha512" "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${directory_name}/${_DXP_VERSION}/${file_name}.sha512"
 }
 
 function upload_boms_all {
@@ -130,4 +106,28 @@ function upload_release {
 			echo " - https://releases.liferay.com/dxp/release-candidates/${_DXP_VERSION}-${_BUILD_TIMESTAMP}/${file}" >> ../output.md
 		fi
 	done
+}
+
+function _upload_to_nexus {
+	local file_path="${1}"
+	local file_url="${2}"
+
+	if [ -z "${NEXUS_REPOSITORY_USER}" ] || [ -z "${NEXUS_REPOSITORY_PASSWORD}" ]
+	then
+		 lc_log ERROR "Either \${NEXUS_REPOSITORY_USER} or \${NEXUS_REPOSITORY_PASSWORD} is undefined."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	lc_log INFO "- ${file_path} -> ${file_url}."
+
+	curl \
+		--fail \
+		--max-time 300 \
+		--retry 3 \
+		--retry-delay 10 \
+		--silent \
+		-u "${NEXUS_REPOSITORY_USER}:${NEXUS_REPOSITORY_PASSWORD}" \
+		--upload-file "${file_path}" \
+		"${file_url}"
 }
