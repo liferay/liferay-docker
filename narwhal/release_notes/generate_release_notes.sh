@@ -14,11 +14,8 @@ function generate_release_notes {
 	if (echo "${version}" | grep -q "q")
 	then
 		ga_version=7.4.13-ga1
-	elif (echo "${version}" | grep -q "7.4")
-	then
-		ga_version=${version%%-u*}-ga1
 	else
-		ga_version=fix-pack-base-$(echo "${version%%-u*}" | sed -e s/[.]//g)
+		ga_version=${version%%-u*}-ga1
 	fi
 
 	local fixed_issues=$(git log "${ga_version}..${version}" --pretty=%s | grep -E "^[A-Z][A-Z0-9]*-[0-9]*" | sed -e "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/" | sort | uniq | grep -v POSHI | grep -v RELEASE | grep -v LRQA | grep -v LRCI | paste -sd,)
