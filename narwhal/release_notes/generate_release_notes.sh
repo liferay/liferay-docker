@@ -35,9 +35,15 @@ function main {
 
 	lc_time_run update_git
 
-	lc_time_run generate_release_notes 2023.q3.1
-
-	lc_time_run generate_release_notes 7.3.10-u35
+	if [ -n "${1}" ]
+	then
+		lc_time_run generate_release_notes "${1}"
+	else
+		for tag in $(git ls-remote --tags upstream | grep -E "([0-9][0-9][0-9][0-9].q[1-4].|7\.[0-4]\.1[03]-u[0-9]*)" | sed -e "s#.*/tags/##")
+		do
+			lc_time_run generate_release_notes "${tag}"
+		done
+	fi
 }
 
 function update_git {
