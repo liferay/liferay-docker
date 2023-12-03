@@ -20,7 +20,7 @@ function generate_release_notes {
 
 	local fixed_issues=$(git log "${ga_version}..${version}" --pretty=%s | grep -E "^[A-Z][A-Z0-9]*-[0-9]*" | sed -e "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/" | sort | uniq | grep -v POSHI | grep -v RELEASE | grep -v LRQA | grep -v LRCI | paste -sd,)
 
-	echo "UPDATE OSB_PatcherProjectVersion SET fixed_issues='${fixed_issues}' WHERE committish='${version}';" >> "${OUTPUT_FILE}"
+	echo "UPDATE OSB_PatcherProjectVersion SET fixedIssues='${fixed_issues}' WHERE committish='${version}';" >> "${OUTPUT_FILE}"
 }
 
 function main {
