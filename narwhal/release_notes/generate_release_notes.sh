@@ -18,7 +18,7 @@ function generate_release_notes {
 		ga_version=${version%%-u*}-ga1
 	fi
 
-	local fixed_issues=$(git log "${ga_version}..${version}" --pretty=%s | grep -E "^[A-Z][A-Z0-9]*-[0-9]*" | sed -e "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/" | sort | uniq | grep -v POSHI | grep -v RELEASE | grep -v LRQA | grep -v LRCI | paste -sd,)
+	local fixed_issues=$(git log "tags/${ga_version}..tags/${version}" --pretty=%s | grep -E "^[A-Z][A-Z0-9]*-[0-9]*" | sed -e "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/" | sort | uniq | grep -v POSHI | grep -v RELEASE | grep -v LRQA | grep -v LRCI | paste -sd,)
 
 	echo "UPDATE OSB_PatcherProjectVersion SET fixedIssues='${fixed_issues}' WHERE committish='${version}';" >> "${OUTPUT_FILE}"
 }
