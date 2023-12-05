@@ -22,11 +22,15 @@ ARG TARGETPLATFORM
 
 COPY --chown=liferay:liferay liferay /opt/liferay/
 COPY --chown=liferay:liferay resources/opt/liferay/* /opt/liferay/
-COPY resources/usr/local/bin/* /usr/local/bin/
+COPY resources/usr/ /usr
 
 ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_entrypoint.sh"]
 
 ENV JPDA_ADDRESS=0.0.0.0:8000
+
+ENV CIDFSUBSTFONT="DroidSansFallback.ttf"
+ENV CIDFSUBSTPATH="/usr/share/fonts-droid-fallback/truetype/"
+ENV GS_LIB="/usr/share/fonts-droid-fallback/truetype/"
 
 ENV LIFERAY_CONTAINER_KILL_ON_FAILURE=0
 ENV LIFERAY_CONTAINER_STARTUP_LOCK_ENABLED=false
