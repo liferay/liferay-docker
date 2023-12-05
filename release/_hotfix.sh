@@ -76,13 +76,27 @@ function compare_jars {
 	jar1=${_BUNDLES_DIR}/"${1}"
 	jar2=${_RELEASE_DIR}/"${1}"
 
+	function compare_property_in_packaged_file {
+		local jar1="${1}"
+		local jar2="${2}"
+		local packaged_file="${3}"
+		local property="${4}"
+
+		local value1=$(unzip -p "${jar1}" "${packaged_file}" | sed -z -r 's@\r?\n @@g' | grep -w "${property}")
+		local value2=$(unzip -p "${jar2}" "${packaged_file}" | sed -z -r 's@\r?\n @@g' | grep -w "${property}")
+
+		if [ "${value1}" == "${value2}" ]
+		then
+			echo "Matches"
+		fi
+	}
+
 	function list_file {
 		unzip -v "${1}" | \
 			# Remove heades and footers
 			grep "Defl:N" | \
 			# Remove 0 byte files
 			grep -v 00000000 | \
-			grep -v "META-INF/MANIFEST.MF" | \
 			grep -v "pom.properties" | \
 			grep -v "source-classes-mapping.txt" | \
 			grep -v "_jsp.class" | \
@@ -97,26 +111,42 @@ function compare_jars {
 			sed -e "s/[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9]\ [0-9][0-9]:[0-9][0-9]//"
 	}
 
-	local file_changes=$( (
+	local files_list=$( (
 		list_file "${jar1}"
 		list_file "${jar2}"
 	) | sort | uniq -c)
 
-	if [ $(echo "${file_changes}" | grep -c "Defl:N") -eq 0 ]
+	local files_count=$(echo "${files_list}" | grep -c "Defl:N")
+
+	if [ "${files_count}" -eq 0 ]
 	then
-		return 2
+		lc_log ERROR "No files found in the jar files, unknown error."
+
+		exit 2
 	fi
 
-	matches=$(echo "${file_changes}" | sed -e "s/\ *\([0-9][0-9]*\).*/\\1/" | sort | uniq)
+	local changed_files_list=$(echo "${files_list}" | awk '($1 == 1 ) && ($3 == "Defl:N") { print $7 }' | uniq)
 
-	if [ "${matches}" != "2" ]
+	if [ -n "${changed_files_list}" ]
 	then
-		echo "Changes in ${1}: "
-		echo "${file_changes}" | sed -e "s/\ *\([0-9][0-9]*\)/\\1/" | grep -v "^2 "
+		if (echo "${changed_files_list}" | grep -q "META-INF/MANIFEST.MF")
+		then
+			if [ $(compare_property_in_packaged_file "${jar1}" "${jar2}" "META-INF/MANIFEST.MF" "Export-Package") = "Matches" ]
+			then
+				changed_files_list=$(echo "${changed_files_list}" | sed "/META-INF\/MANIFEST.MF/d")
+			fi
+		fi
 
-		return 0
-	else
-		return 1
+		if [ -n "${changed_files_list}" ]
+		then
+			echo
+			echo "Changes in ${1}: "
+			echo "${changed_files_list}" | sed "s/^/  - /"
+
+			return 0
+		else
+			return 1
+		fi
 	fi
 }
 
