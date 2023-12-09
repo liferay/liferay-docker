@@ -130,6 +130,22 @@ function clean_up_ignored_dxp_modules {
 	done
 }
 
+function clean_up_ignored_dxp_plugins {
+	lc_cd "${_BUNDLES_DIR}/osgi/war"
+
+	rm -fv documentum-hook-*.war
+	rm -fv fjord-theme.war
+	rm -fv minium-theme.war
+	rm -fv opensocial-portlet-*.war
+	rm -fv porygon-theme.war
+	rm -fv powwow-portlet-*.war
+	rm -fv saml-hook-*.war
+	rm -fv social-bookmarks-hook-*.war
+	rm -fv speedwell-theme.war
+	rm -fv tasks-portlet-*.war
+	rm -fv westeros-bank-theme.war
+}
+
 function compile_dxp {
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]

@@ -92,6 +92,7 @@ function main {
 		lc_background_run copy_copyright
 		lc_background_run deploy_elasticsearch_sidecar
 		lc_background_run clean_up_ignored_dxp_modules
+		lc_background_run clean_up_ignored_dxp_plugins
 
 		lc_wait
 
@@ -134,6 +135,8 @@ function main {
 		lc_time_run build_dxp
 
 		lc_time_run clean_up_ignored_dxp_modules
+
+		lc_time_run clean_up_ignored_dxp_plugins
 
 		lc_time_run add_portal_patcher_properties_jar
 
