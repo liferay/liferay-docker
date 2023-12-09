@@ -140,6 +140,7 @@ function clean_up_ignored_dxp_plugins {
 	rm -fv porygon-theme.war
 	rm -fv powwow-portlet-*.war
 	rm -fv saml-hook-*.war
+	rm -fv sharepoint-hook-*.war
 	rm -fv social-bookmarks-hook-*.war
 	rm -fv speedwell-theme.war
 	rm -fv tasks-portlet-*.war
