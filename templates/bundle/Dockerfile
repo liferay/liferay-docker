@@ -3,7 +3,7 @@ FROM --platform=${TARGETPLATFORM} liferay/jdk11:latest AS liferay-jdk11
 COPY resources/etc/created-date /etc/created-date
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bc ffmpeg file fonts-dejavu fonts-droid-fallback ghostscript google-perftools imagemagick gifsicle libtcnative-1 && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bc ffmpeg file fonts-dejavu ghostscript google-perftools imagemagick gifsicle libtcnative-1 && \
 	apt-get upgrade --yes && \
 	apt-get clean
 
@@ -20,6 +20,9 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 ARG TARGETPLATFORM
 
+RUN mkdir -p /usr/share/fonts/truetype/droid && \
+	curl --fail --location --output /usr/share/fonts/truetype/droid/DroidSansFallback.ttf --show-error --silent https://raw.githubusercontent.com/ArtifexSoftware/ghostpdl/master/Resource/CIDFSubst/DroidSansFallback.ttf
+
 COPY --chown=liferay:liferay liferay /opt/liferay/
 COPY --chown=liferay:liferay resources/opt/liferay/* /opt/liferay/
 COPY resources/usr/ /usr
@@ -29,8 +32,8 @@ ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_entrypoint.sh"]
 ENV JPDA_ADDRESS=0.0.0.0:8000
 
 ENV CIDFSUBSTFONT="DroidSansFallback.ttf"
-ENV CIDFSUBSTPATH="/usr/share/fonts-droid-fallback/truetype/"
-ENV GS_LIB="/usr/share/fonts-droid-fallback/truetype/"
+ENV CIDFSUBSTPATH="/usr/share/fonts/truetype/droid/"
+ENV GS_LIB="/usr/share/fonts/truetype/droid/"
 
 ENV LIFERAY_CONTAINER_KILL_ON_FAILURE=0
 ENV LIFERAY_CONTAINER_STARTUP_LOCK_ENABLED=false
