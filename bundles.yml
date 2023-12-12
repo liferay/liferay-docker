@@ -677,6 +677,7 @@ quarterly:
         bundle_url: releases-cdn.liferay.com/dxp/2023.q3.1/liferay-dxp-tomcat-2023.q3.1-1697647393.7z
     2023.q3.2:
     2023.q3.3:
+    2023.q3.4:
         latest: true
 snapshot:
     snapshot-master:
