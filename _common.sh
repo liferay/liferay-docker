@@ -92,12 +92,12 @@ function download {
 
 	if [[ "${file_url}" != http*://* ]]
 	then
-		file_url="http://${file_url}"
+		file_url="https://${file_url}"
 	fi
 
-	if [[ "${file_url}" != http://mirrors.*.liferay.com* ]] &&
-	   [[ "${file_url}" != http://release-1* ]] &&
-	   [[ "${file_url}" != http://releases-cdn.liferay.com* ]] &&
+	if [[ "${file_url}" != https://mirrors.*.liferay.com* ]] &&
+	   [[ "${file_url}" != https://release-1* ]] &&
+	   [[ "${file_url}" != https://releases-cdn.liferay.com* ]] &&
 	   [[ "${file_url}" != https://release.liferay.com* ]] &&
 	   [[ "${file_url}" != https://storage.googleapis.com/* ]]
 	then
@@ -106,7 +106,7 @@ function download {
 			LIFERAY_DOCKER_MIRROR=lax
 		fi
 
-		file_url="http://mirrors.${LIFERAY_DOCKER_MIRROR}.liferay.com/"${file_url##*//}
+		file_url="https://mirrors.${LIFERAY_DOCKER_MIRROR}.liferay.com/"${file_url##*//}
 	fi
 
 	echo ""
