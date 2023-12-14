@@ -139,9 +139,9 @@ function compare_jars {
 
 		if [ -n "${changed_files_list}" ]
 		then
-			echo "Changes in ${1}: "
-			echo "${changed_files_list}" | sed "s/^/    /"
-			echo ""
+			lc_log INFO "Changes in ${1}: "
+			lc_log INFO "${changed_files_list}" | sed "s/^/    /"
+			lc_log INFO ""
 
 			return 0
 		else
