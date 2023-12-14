@@ -56,7 +56,7 @@ function generate_api_jars {
 		_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/${portal_jar}.jar"
 	done
 
-	find "${_BUNDLES_DIR}/osgi" -name "com.liferay.*.jar" -type f -print0 | while IFS= read -r -d '' module_jar
+	find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" -name "com.liferay.*.jar" -type f -print0 | while IFS= read -r -d '' module_jar
 	do
 		_manage_bom_jar "${module_jar}"
 	done
