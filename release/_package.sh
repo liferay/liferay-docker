@@ -55,12 +55,12 @@ function install_patching_tool {
 function package_boms {
 	lc_cd "${_BUILD_DIR}/boms"
 
-	cp -a *.pom "${_BUILD_DIR}/release"
+	cp -a ./*.pom "${_BUILD_DIR}/release"
 
 	touch .touch
 
-	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}.jar" .touch -C api-jar .
-	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}-sources.jar" .touch -C api-sources-jar .
+	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.jar" .touch -C api-jar .
+	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}-${_BUILD_TIMESTAMP}-sources.jar" .touch -C api-sources-jar .
 
 	rm -f .touch
 }
