@@ -140,7 +140,7 @@ function compare_jars {
 		if [ -n "${changed_files_list}" ]
 		then
 			echo "Changes in ${1}: "
-			echo "${changed_files_list}" | sed "s/^/  - /"
+			echo "${changed_files_list}" | sed "s/^/    /"
 			echo ""
 
 			return 0
