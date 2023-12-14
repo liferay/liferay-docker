@@ -125,7 +125,7 @@ function compare_jars {
 		exit 2
 	fi
 
-	local changed_files_list=$(echo "${files_list}" | awk '($1 == 1 ) && ($3 == "Defl:N") { print $7 }' | uniq)
+	local changed_files_list=$(echo "${files_list}" | awk '($1 == 1) && ($3 == "Defl:N") { print $7 }' | uniq)
 
 	if [ -n "${changed_files_list}" ]
 	then
@@ -139,9 +139,9 @@ function compare_jars {
 
 		if [ -n "${changed_files_list}" ]
 		then
-			echo
 			echo "Changes in ${1}: "
 			echo "${changed_files_list}" | sed "s/^/  - /"
+			echo ""
 
 			return 0
 		else
