@@ -87,8 +87,10 @@ function compare_jars {
 
 		if [ "${value1}" == "${value2}" ]
 		then
-			echo "Matches"
+			return 0
 		fi
+
+		return 1
 	}
 
 	function list_file {
@@ -131,7 +133,7 @@ function compare_jars {
 	then
 		if (echo "${changed_files_list}" | grep -q "META-INF/MANIFEST.MF")
 		then
-			if [ $(compare_property_in_packaged_file "${jar1}" "${jar2}" "META-INF/MANIFEST.MF" "Export-Package") = "Matches" ]
+			if (compare_property_in_packaged_file "${jar1}" "${jar2}" "META-INF/MANIFEST.MF" "Export-Package")
 			then
 				changed_files_list=$(echo "${changed_files_list}" | sed "/META-INF\/MANIFEST.MF/d")
 			fi
