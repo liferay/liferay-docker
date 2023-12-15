@@ -112,6 +112,8 @@ function main {
 
 		lc_time_run generate_checksum_files
 
+		lc_time_run generate_release_properties_file
+
 		lc_time_run upload_boms xanadu
 
 		lc_time_run upload_release
@@ -154,8 +156,6 @@ function main {
 
 		lc_time_run report_patcher_status
 	fi
-
-	lc_time_run create_release_properties_file
 
 	local end_time=$(date +%s)
 
@@ -208,37 +208,6 @@ function print_variables {
 
 	echo "${environment}./build_release.sh"
 	echo ""
-}
-
-function create_release_properties_file {
-	local bundle_file_name="liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.7z"
-
-	local product_version="DXP ${_DXP_VERSION^^}"
-	product_version="${product_version/-/ }"
-
-	local tomcat_version=$(grep -Eo "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${_BUNDLES_DIR}/tomcat/RELEASE-NOTES")
-	tomcat_version="${tomcat_version/Apache Tomcat Version /}"
-
-	if [ -z "${tomcat_version}" ]
-	then
-		lc_log DEBUG "Cannot determine the Tomcat version."
-
-		exit 1
-	fi
-
-	(
-		echo "app.server.tomcat.version=${tomcat_version}"
-		echo "build.timestamp=${_BUILD_TIMESTAMP}"
-		echo "bundle.checksum.sha512=$(cat "${bundle_file_name}.sha512")"
-		echo "bundle.url=https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/${bundle_file_name}"
-		echo "git.hash.liferay-docker=${_BUILDER_SHA}"
-		echo "git.hash.liferay-portal-ee=${_GIT_SHA}"
-		echo "liferay.docker.image=liferay/dxp:${_DXP_VERSION}"
-		echo "liferay.docker.tags=${_DXP_VERSION}"
-		echo "liferay.product.version=${product_version}"
-		echo "release.date=$(date +"%Y-%m-%d")"
-		echo "target.platform.version=${_DXP_VERSION}"
-	) > "${_BUILD_DIR}/release"/release.properties
 }
 
 main
