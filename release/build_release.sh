@@ -155,6 +155,8 @@ function main {
 		lc_time_run report_patcher_status
 	fi
 
+	lc_time_run create_release_properties_file
+
 	local end_time=$(date +%s)
 
 	local seconds=$((end_time - _BUILD_TIMESTAMP))
@@ -206,6 +208,24 @@ function print_variables {
 
 	echo "${environment}./build_release.sh"
 	echo ""
+}
+
+function create_release_properties_file {
+	local bundle_file_name="liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.7z"
+	local product_version=$(echo "DXP ${_DXP_VERSION}" | tr '[:lower:]' '[:upper:]' | sed 's/-/ /')
+	(
+		echo "app.server.tomcat.version=8.0.53"
+		echo "build.timestamp=${_BUILD_TIMESTAMP}"
+		echo "bundle.checksum.sha512=$(cat "${bundle_file_name}.sha512")"
+		echo "bundle.url=https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/${bundle_file_name}"
+		echo "git.hash.liferay-portal-ee=${_GIT_SHA}"
+		echo "git.hash.liferay-docker=${_BUILDER_SHA}"
+		echo "liferay.docker.image=liferay/dxp:${_DXP_VERSION}"
+		echo "liferay.docker.tags=${_DXP_VERSION}"
+		echo "liferay.product.version=${product_version}"
+		echo "release.date=$(date +"%b/%d/%Y")"
+		echo "target.platform.version=${_DXP_VERSION}"
+	) > "${_RELEASE_ROOT_DIR}"/release.properties
 }
 
 main
