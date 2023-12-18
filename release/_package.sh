@@ -4,16 +4,18 @@ function generate_release_properties_file {
 	local bundle_file_name="liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.7z"
 
 	local product_version="DXP ${_DXP_VERSION^^}"
+
 	product_version="${product_version/-/ }"
 
 	local tomcat_version=$(grep -Eo "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${_BUNDLES_DIR}/tomcat/RELEASE-NOTES")
+
 	tomcat_version="${tomcat_version/Apache Tomcat Version /}"
 
 	if [ -z "${tomcat_version}" ]
 	then
 		lc_log DEBUG "Cannot determine the Tomcat version."
 
-		exit 1
+		return 1
 	fi
 
 	(
