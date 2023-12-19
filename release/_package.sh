@@ -1,5 +1,24 @@
 #!/bin/bash
 
+function generate_checksum_files {
+	lc_cd "${_BUILD_DIR}"/release
+
+	for file in *
+	do
+		if [ -f "${file}" ]
+		then
+
+			#
+			# TODO Remove *.MD5 in favor of *.sha512.
+			#
+
+			md5sum "${file}" | sed -e "s/ .*//" > "${file}.MD5"
+
+			sha512sum "${file}" | sed -e "s/ .*//" > "${file}.sha512"
+		fi
+	done
+}
+
 function generate_release_properties_file {
 	local bundle_file_name="liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.7z"
 
@@ -31,25 +50,6 @@ function generate_release_properties_file {
 		echo "release.date=$(date +"%Y-%m-%d")"
 		echo "target.platform.version=${_DXP_VERSION}"
 	) > release.properties
-}
-
-function generate_checksum_files {
-	lc_cd "${_BUILD_DIR}"/release
-
-	for file in *
-	do
-		if [ -f "${file}" ]
-		then
-
-			#
-			# TODO Remove *.MD5 in favor of *.sha512.
-			#
-
-			md5sum "${file}" | sed -e "s/ .*//" > "${file}.MD5"
-
-			sha512sum "${file}" | sed -e "s/ .*//" > "${file}.sha512"
-		fi
-	done
 }
 
 function install_patching_tool {
