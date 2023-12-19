@@ -27,8 +27,8 @@ COPY resources/usr/ /usr
 ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_entrypoint.sh"]
 
 ENV CIDFSUBSTFONT="DroidSansFallback.ttf"
-ENV CIDFSUBSTPATH="/usr/share/fonts/truetype/droid/"
-ENV GS_LIB="/usr/share/fonts/truetype/droid/"
+ENV CIDFSUBSTPATH="/usr/share/fonts/truetype/droid"
+ENV GS_LIB="/usr/share/fonts/truetype/droid"
 
 ENV JPDA_ADDRESS=0.0.0.0:8000
 
