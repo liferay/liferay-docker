@@ -32,7 +32,7 @@ function generate_release_properties_file {
 
 	if [ -z "${tomcat_version}" ]
 	then
-		lc_log DEBUG "Cannot determine the Tomcat version."
+		lc_log DEBUG "Unable to determine the Tomcat version."
 
 		return 1
 	fi
