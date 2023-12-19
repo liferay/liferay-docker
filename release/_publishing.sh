@@ -12,15 +12,15 @@ function init_gcs {
 }
 
 function upload_bom_file {
+	local nexus_repository_name="${1}"
+
+	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
+
 	local file_path="${2}"
 
 	local file_name="${file_path##*/}"
 
 	local component_name="${file_name/%-*}"
-
-	local nexus_repository_name="${1}"
-
-	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
 
 	local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_DXP_VERSION}-${_BUILD_TIMESTAMP}/${file_name}"
 
