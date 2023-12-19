@@ -10,7 +10,6 @@ RUN apt-get update && \
 
 COPY --chown=liferay:liferay resources/opt/liferay /opt/liferay/
 COPY resources/usr/ /usr
-COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
 
 HEALTHCHECK --retries=3 \
 	CMD /usr/local/bin/probe_thread_dump.sh -d "http://localhost" -f "/c/portal/robots" -p 8080 -t 20
