@@ -1,5 +1,7 @@
 FROM --platform=${TARGETPLATFORM} liferay/jdk11:latest AS liferay-jdk11
 
+COPY resources/etc/created-date /etc/created-date
+
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bc ffmpeg file fonts-dejavu ghostscript google-perftools imagemagick gifsicle libtcnative-1 && \
 	apt-get upgrade --yes && \

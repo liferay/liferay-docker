@@ -1,6 +1,6 @@
 FROM --platform=${TARGETPLATFORM} ubuntu:jammy AS ubuntu-jammy
 
-COPY resources/ /
+COPY resources/etc/created-date /etc/created-date
 
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bash ca-certificates curl jq less libnss3 telnet tini tree unzip && \

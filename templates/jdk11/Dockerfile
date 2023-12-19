@@ -20,6 +20,7 @@ ARG LABEL_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
+COPY resources/etc/created-date /etc/created-date
 COPY --chown=liferay:liferay resources/ /
 
 ENV JAVA_VERSION=zulu11

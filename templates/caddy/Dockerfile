@@ -6,6 +6,7 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
+COPY resources/etc/created-date /etc/created-date
 COPY resources/ /
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_caddy_entrypoint.sh"]

@@ -26,7 +26,7 @@ COPY --from=zabbix-web-nginx-mysql ["/usr/bin/docker-entrypoint.sh", "/usr/bin/d
 COPY --from=zabbix-web-nginx-mysql ["/usr/share/zabbix", "/usr/share/zabbix"]
 COPY --from=zabbix-web-nginx-mysql ["/var/lib/locales/supported.d", "/var/lib/locales/supported.d"]
 COPY --from=zabbix-web-nginx-mysql ["/var/lib/php/session", "/var/lib/php/session"]
-COPY resources/ /
+COPY resources/etc/created-date /etc/created-date
 
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/bin/docker-entrypoint.sh"]
 

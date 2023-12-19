@@ -21,6 +21,7 @@ ARG NODE_VERSION=16
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
+COPY resources/etc/created-date /etc/created-date
 COPY resources/ /
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_node_runner_entrypoint.sh"]

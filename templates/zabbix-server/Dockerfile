@@ -25,7 +25,7 @@ COPY --from=zabbix-server-mysql ["/usr/lib/zabbix", "/usr/lib/zabbix"]
 COPY --from=zabbix-server-mysql ["/usr/sbin/zabbix_server", "/usr/sbin/zabbix_server"]
 COPY --from=zabbix-server-mysql ["/usr/share/doc/zabbix-server-mysql", "/usr/share/doc/zabbix-server-mysql"]
 COPY --from=zabbix-server-mysql ["/var/lib/zabbix", "/var/lib/zabbix"]
-COPY resources/ /
+COPY resources/etc/created-date /etc/created-date
 
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/bin/docker-entrypoint.sh"]
 
