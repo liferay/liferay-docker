@@ -21,7 +21,8 @@ ARG TARGETARCH
 ARG TARGETPLATFORM
 
 COPY resources/etc/created-date /etc/created-date
-COPY --chown=liferay:liferay resources/ /
+COPY --chown=liferay:liferay resources/home/liferay/.bashrc /home/liferay/
+COPY resources/usr/ /usr
 
 ENV JAVA_VERSION=zulu11
 

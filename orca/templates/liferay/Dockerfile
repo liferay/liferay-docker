@@ -8,7 +8,8 @@ RUN apt-get update && \
 	apt-get upgrade --yes && \
 	apt-get clean
 
-COPY --chown=liferay:liferay resources/ /
+COPY --chown=liferay:liferay resources/opt/liferay /opt/liferay/
+COPY resources/usr/ /usr
 
 HEALTHCHECK --retries=3 \
 	CMD /usr/local/bin/probe_thread_dump.sh -d "http://localhost" -f "/c/portal/robots" -p 8080 -t 20
