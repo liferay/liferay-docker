@@ -1,12 +1,27 @@
 #!/bin/bash
 
 source _liferay_common.sh
+source _promotion.sh
+source _publishing.sh
 
 function check_usage {
 	if [ -z "${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}" ] || [ -z "${LIFERAY_RELEASE_VERSION}" ]
 	then
 		print_help
 	fi
+
+	ARTIFACT_RC_VERSION="${LIFERAY_RELEASE_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}"
+
+    lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
+
+	_PROMOTION_DIR="${PWD}/release-data/promotion/files"
+
+    rm -rf "${_PROMOTION_DIR}"
+    mkdir -p "${_PROMOTION_DIR}"
+
+    lc_cd "${_PROMOTION_DIR}"
+
+    LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
 }
 
 function copy_rc {
@@ -23,7 +38,14 @@ function copy_rc {
 function main {
 	check_usage
 
+	lc_time_run prepare_poms xanadu
+
+	lc_time_run prepare_jars xanadu
+
+	lc_time_run upload_boms liferay-public-releases
+
 	lc_time_run copy_rc
+
 }
 
 function print_help {
@@ -33,6 +55,8 @@ function print_help {
 	echo ""
 	echo "    LIFERAY_RELEASE_RC_BUILD_TIMESTAMP: Timestamp of the build to publish"
 	echo "    LIFERAY_RELEASE_VERSION: DXP version of the release to publish"
+	echo "    NEXUS_REPOSITORY_USER: Nexus user with right to upload the BOM files"
+	echo "    NEXUS_REPOSITORY_PASSWORD: Nexus user's"
 	echo ""
 	echo "Example: LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964 LIFERAY_RELEASE_VERSION=2023.q3.0 ${0}"
 

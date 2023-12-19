@@ -22,11 +22,17 @@ function upload_bom_file {
 
 	local component_name="${file_name/%-*}"
 
-	local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_DXP_VERSION}-${_BUILD_TIMESTAMP}/${file_name}"
 
-	_upload_to_nexus "${file_path}" "${file_url}"
-	_upload_to_nexus "${file_path}.MD5" "${file_url}.md5"
-	_upload_to_nexus "${file_path}.sha512" "${file_url}.sha512"
+	if [ "${nexus_repository_name}" == "liferay-public-releases" ]
+	then
+		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_DXP_VERSION}/${file_name}"
+	else
+		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_DXP_VERSION}-${_BUILD_TIMESTAMP}/${file_name}"
+	fi
+
+	_upload_to_nexus "${file_path}" "${file_url}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	_upload_to_nexus "${file_path}.MD5" "${file_url}.md5" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	_upload_to_nexus "${file_path}.sha512" "${file_url}.sha512" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
 function upload_boms {
@@ -41,9 +47,23 @@ function upload_boms {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	find "${_BUILD_DIR}/release" -regextype egrep -regex '.*/*.(jar|pom)' -print0 | while IFS= read -r -d '' file_path
+	if [ -z "${NEXUS_REPOSITORY_USER}" ] || [ -z "${NEXUS_REPOSITORY_PASSWORD}" ]
+	then
+		 lc_log ERROR "Either \${NEXUS_REPOSITORY_USER} or \${NEXUS_REPOSITORY_PASSWORD} is undefined."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	if [ "${nexus_repository_name}" == "liferay-public-releases" ]
+	then
+		local upload_dir="${_PROMOTION_DIR}"
+	else
+		local upload_dir="${_BUILD_DIR}/release"
+	fi
+
+	find "${upload_dir}" -regextype egrep -regex '.*/*.(jar|pom)' -print0 | while IFS= read -r -d '' file_path
 	do
-		upload_bom_file "${nexus_repository_name}" "${file_path}"
+		upload_bom_file "${nexus_repository_name}" "${file_path}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	done
 }
 
@@ -110,13 +130,6 @@ function upload_release {
 }
 
 function _upload_to_nexus {
-	if [ -z "${NEXUS_REPOSITORY_USER}" ] || [ -z "${NEXUS_REPOSITORY_PASSWORD}" ]
-	then
-		 lc_log ERROR "Either \${NEXUS_REPOSITORY_USER} or \${NEXUS_REPOSITORY_PASSWORD} is undefined."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
 	local file_path="${1}"
 	local file_url="${2}"
 
