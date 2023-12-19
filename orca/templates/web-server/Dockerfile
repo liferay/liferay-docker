@@ -11,6 +11,6 @@ RUN a2enmod proxy_ajp && \
 	a2enmod proxy_balancer && \
 	a2enmod lbmethod_byrequests
 
-COPY resources/usr/ /usr
+COPY resources/ /
 
 ENTRYPOINT ["tini", "--", "/usr/local/bin/web_server_entrypoint.sh"]

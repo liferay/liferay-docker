@@ -55,4 +55,4 @@ ENV NARWHAL_UPLOAD=
 #
 ENV NARWHAL_GCS_INTERNAL_BUCKET=patcher-storage
 
-COPY resources/usr/ /usr
+COPY resources/ /

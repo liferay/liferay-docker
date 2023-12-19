@@ -2,7 +2,7 @@ FROM liferay/jdk11
 
 CMD ["bash"]
 
-COPY resources/usr/local/sbin/ /usr/local/sbin/
+COPY resources/ /
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV JAVA_VERSION=zulu11

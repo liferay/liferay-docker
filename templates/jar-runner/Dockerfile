@@ -12,8 +12,7 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 ARG TARGETPLATFORM
 
-COPY resources/etc/created-date /etc/created-date
-COPY resources/usr/ /usr
+COPY resources/ /
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_jar_runner_entrypoint.sh"]
 

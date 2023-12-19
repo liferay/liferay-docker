@@ -13,8 +13,7 @@ RUN apt-get update && \
 
 RUN setcap -r /usr/bin/vault
 
-COPY resources/opt/liferay/vault /opt/liferay/vault
-COPY resources/usr/local/bin /usr/local/bin
+COPY resources/ /
 
 ENTRYPOINT ["tini", "--", "/usr/local/bin/vault_entrypoint.sh"]
 

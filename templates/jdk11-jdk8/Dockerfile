@@ -21,7 +21,7 @@ ARG LABEL_ZULU_8_VERSION
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
-COPY resources/etc/created-date /etc/created-date
+COPY resources/ /
 
 ENV JAVA_VERSION=zulu8
 

@@ -7,5 +7,4 @@ RUN apt-get update && \
 	apt-get clean && \
 	rm -fr /var/lib/apt/lists/*
 
-COPY resources/mnt/liferay /mnt/liferay/
-COPY resources/usr/ /usr
+COPY resources/ /
