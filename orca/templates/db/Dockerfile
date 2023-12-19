@@ -11,6 +11,6 @@ RUN apt-get update && \
 
 CMD [ "/opt/bitnami/scripts/mariadb-galera/run.sh" ]
 
-COPY resources/usr/local/bin /usr/local/bin/
+COPY resources/usr/ /usr
 
 ENTRYPOINT [ "/usr/local/bin/liferay_entrypoint.sh" ]

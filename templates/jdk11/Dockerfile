@@ -22,7 +22,7 @@ ARG TARGETPLATFORM
 
 COPY resources/etc/created-date /etc/created-date
 COPY --chown=liferay:liferay resources/home/liferay/.bashrc /home/liferay/
-COPY resources/usr/local/bin/* /usr/local/bin/
+COPY resources/usr/ /usr
 
 ENV JAVA_VERSION=zulu11
 

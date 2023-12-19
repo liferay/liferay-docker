@@ -6,7 +6,7 @@ ARG LABEL_VCS_REF
 ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
-COPY resources/usr/local/bin/* /usr/local/bin/
+COPY resources/usr/ /usr
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_squid_entrypoint.sh"]
 

@@ -7,7 +7,7 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 
 COPY resources/etc/created-date /etc/created-date
-COPY resources/usr/local/bin/* /usr/local/bin/
+COPY resources/usr/ /usr
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_batch_entrypoint.sh"]
 

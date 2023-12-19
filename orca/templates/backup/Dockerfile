@@ -8,4 +8,4 @@ RUN apt-get update && \
 	rm -fr /var/lib/apt/lists/*
 
 COPY resources/mnt/liferay /mnt/liferay/
-COPY resources/usr/local/bin /usr/local/bin/
+COPY resources/usr/ /usr

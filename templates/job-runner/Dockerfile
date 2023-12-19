@@ -14,7 +14,7 @@ ARG LABEL_VERSION
 ARG TARGETPLATFORM
 
 COPY resources/etc/created-date /etc/created-date
-COPY resources/usr/local/bin/* /usr/local/bin/
+COPY resources/usr/ /usr
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_job_runner_entrypoint.sh"]
 

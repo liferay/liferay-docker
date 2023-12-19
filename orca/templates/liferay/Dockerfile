@@ -9,7 +9,7 @@ RUN apt-get update && \
 	apt-get clean
 
 COPY --chown=liferay:liferay resources/opt/liferay /opt/liferay/
-COPY resources/usr/local/bin /usr/local/bin/
+COPY resources/usr/ /usr
 COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts/
 
 HEALTHCHECK --retries=3 \

@@ -8,7 +8,7 @@ ARG LABEL_VERSION
 
 COPY resources/etc/caddy/* /etc/caddy
 COPY resources/etc/created-date /etc/created-date
-COPY resources/usr/local/bin/* /usr/local/bin/
+COPY resources/usr/ /usr
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_caddy_entrypoint.sh"]
 
