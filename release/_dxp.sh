@@ -246,34 +246,6 @@ function deploy_elasticsearch_sidecar {
 	fi
 }
 
-function get_dxp_version {
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
-
-	local major_version=$(lc_get_property release.properties "release.info.version.major")
-	local minor_version=$(lc_get_property release.properties "release.info.version.minor")
-
-	local branch="${major_version}.${minor_version}.x"
-
-	if [ "${branch}" == "7.4.x" ]
-	then
-		branch=master
-	fi
-
-	local version_display_name=$(lc_get_property release.properties "release.info.version.display.name[${branch}-private]")
-
-	if (echo "${version_display_name}" | grep -iq "q")
-	then
-		echo "${version_display_name,,}"
-
-		return
-	fi
-
-	local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
-	local trivial=$(lc_get_property release.properties "release.info.version.trivial")
-
-	echo "${major_version}.${minor_version}.${bug_fix}-u${trivial}"
-}
-
 function obfuscate_licensing {
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_SHA}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
@@ -295,7 +267,29 @@ function obfuscate_licensing {
 }
 
 function set_dxp_version {
-	_DXP_VERSION=$(get_dxp_version)
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+
+	local major_version=$(lc_get_property release.properties "release.info.version.major")
+	local minor_version=$(lc_get_property release.properties "release.info.version.minor")
+
+	local branch="${major_version}.${minor_version}.x"
+
+	if [ "${branch}" == "7.4.x" ]
+	then
+		branch=master
+	fi
+
+	local version_display_name=$(lc_get_property release.properties "release.info.version.display.name[${branch}-private]")
+
+	if (echo "${version_display_name}" | grep -iq "q")
+	then
+		_DXP_VERSION="${version_display_name,,}"
+	else
+		local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
+		local trivial=$(lc_get_property release.properties "release.info.version.trivial")
+
+		_DXP_VERSION="${major_version}.${minor_version}.${bug_fix}-u${trivial}"
+	fi
 
 	lc_log INFO "DXP Version: ${_DXP_VERSION}"
 }

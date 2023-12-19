@@ -72,7 +72,7 @@ function main {
 
 	lc_wait
 
-	set_dxp_version
+	lc_time_run set_dxp_version
 
 	if [ "${LIFERAY_RELEASE_OUTPUT}" != "hotfix" ]
 	then
