@@ -111,7 +111,7 @@ function clean_up_ignored_dxp_modules {
 			fi
 		fi
 
-		find ${ignored_dir} ${dxp_dir} -name bnd.bnd | while IFS= read -r ignored_bnd_bnd_file
+		find "${ignored_dir}" "${dxp_dir}" -name bnd.bnd | while IFS= read -r ignored_bnd_bnd_file
 		do
 			local ignored_file=$(lc_get_property "${ignored_bnd_bnd_file}" Bundle-SymbolicName)
 
@@ -292,6 +292,12 @@ function obfuscate_licensing {
 		-Dportal.kernel.dir="${_PROJECTS_DIR}"/liferay-portal-ee/portal-kernel \
 		-Dportal.release.edition.private=true \
 		-f build-release-license.xml obfuscate-portal
+}
+
+function set_dxp_version {
+	_DXP_VERSION=$(get_dxp_version)
+
+	lc_log INFO "DXP Version: ${_DXP_VERSION}"
 }
 
 function set_up_profile_dxp {
