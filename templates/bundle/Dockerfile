@@ -20,9 +20,6 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 ARG TARGETPLATFORM
 
-RUN mkdir -p /usr/share/fonts/truetype/droid && \
-	curl --fail --location --output /usr/share/fonts/truetype/droid/DroidSansFallback.ttf --show-error --silent https://raw.githubusercontent.com/ArtifexSoftware/ghostpdl/master/Resource/CIDFSubst/DroidSansFallback.ttf
-
 COPY --chown=liferay:liferay liferay /opt/liferay/
 COPY --chown=liferay:liferay resources/opt/liferay/* /opt/liferay/
 COPY resources/usr/ /usr
@@ -82,7 +79,10 @@ LABEL org.label-schema.vcs-url="${LABEL_VCS_URL}"
 LABEL org.label-schema.vendor="Liferay, Inc."
 LABEL org.label-schema.version="${LABEL_VERSION}"
 
-RUN ln -fs /opt/liferay/* /home/liferay
+RUN ln -fs /opt/liferay/* /home/liferay \
+	\
+	mkdir -p /usr/share/fonts/truetype/droid && \
+	curl --fail --location --output /usr/share/fonts/truetype/droid/DroidSansFallback.ttf --show-error --silent https://raw.githubusercontent.com/ArtifexSoftware/ghostpdl/master/Resource/CIDFSubst/DroidSansFallback.ttf
 
 USER liferay:liferay
 
