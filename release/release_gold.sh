@@ -55,8 +55,8 @@ function print_help {
 	echo ""
 	echo "    LIFERAY_RELEASE_RC_BUILD_TIMESTAMP: Timestamp of the build to publish"
 	echo "    LIFERAY_RELEASE_VERSION: DXP version of the release to publish"
-	echo "    NEXUS_REPOSITORY_USER: Nexus user with right to upload the BOM files"
-	echo "    NEXUS_REPOSITORY_PASSWORD: Nexus user's"
+	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_USER: Nexus user with right to upload the BOM files"
+	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD: Nexus user's password"
 	echo ""
 	echo "Example: LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964 LIFERAY_RELEASE_VERSION=2023.q3.0 ${0}"
 

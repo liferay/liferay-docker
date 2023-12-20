@@ -24,7 +24,7 @@ function _download_from_nexus {
 		--retry 3 \
 		--retry-delay 10 \
 		--silent \
-		--user "${NEXUS_REPOSITORY_USER}:${NEXUS_REPOSITORY_PASSWORD}" \
+		--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" \
 		"${file_url}"
 
 	if [ "${?}" -ne 0 ]
@@ -54,9 +54,9 @@ function _verify_checksum {
 function prepare_jars {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	if [ -z "${NEXUS_REPOSITORY_USER}" ] || [ -z "${NEXUS_REPOSITORY_PASSWORD}" ]
+	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ]
 	then
-		 lc_log ERROR "Either \${NEXUS_REPOSITORY_USER} or \${NEXUS_REPOSITORY_PASSWORD} is undefined."
+		 lc_log ERROR "Either \${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER} or \${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD} is undefined."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -76,9 +76,9 @@ function prepare_jars {
 function prepare_poms {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	if [ -z "${NEXUS_REPOSITORY_USER}" ] || [ -z "${NEXUS_REPOSITORY_PASSWORD}" ]
+	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ]
 	then
-		 lc_log ERROR "Either \${NEXUS_REPOSITORY_USER} or \${NEXUS_REPOSITORY_PASSWORD} is undefined."
+		 lc_log ERROR "Either \${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER} or \${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD} is undefined."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
