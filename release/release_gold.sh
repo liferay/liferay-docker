@@ -12,16 +12,16 @@ function check_usage {
 
 	ARTIFACT_RC_VERSION="${LIFERAY_RELEASE_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}"
 
-    lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
+	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
 
 	_PROMOTION_DIR="${PWD}/release-data/promotion/files"
 
-    rm -rf "${_PROMOTION_DIR}"
-    mkdir -p "${_PROMOTION_DIR}"
+	rm -rf "${_PROMOTION_DIR}"
+	mkdir -p "${_PROMOTION_DIR}"
 
-    lc_cd "${_PROMOTION_DIR}"
+	lc_cd "${_PROMOTION_DIR}"
 
-    LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
+	LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
 }
 
 function copy_rc {
