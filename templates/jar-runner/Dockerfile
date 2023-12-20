@@ -1,5 +1,7 @@
 FROM --platform=${TARGETPLATFORM} liferay/jdk11-jdk8:latest AS liferay-jdk11-jdk8
 
+COPY resources/etc/created-date /etc/created-date
+
 RUN curl -fsSL "https://dl.filippo.io/mkcert/latest?for=linux/$(dpkg --print-architecture)" -o /usr/local/bin/mkcert && \
 	chmod +x /usr/local/bin/mkcert
 
@@ -12,7 +14,6 @@ ARG LABEL_VCS_URL
 ARG LABEL_VERSION
 ARG TARGETPLATFORM
 
-COPY resources/etc/created-date /etc/created-date
 COPY resources/ /
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_jar_runner_entrypoint.sh"]
