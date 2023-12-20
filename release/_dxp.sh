@@ -368,8 +368,12 @@ function warm_up_tomcat {
 	then
 		lc_log ERROR "Unable to kill Tomcat after 30 seconds."
 
+		cat ../logs/catalina.out
+
 		return 1
 	fi
+
+	cat ../logs/catalina.out
 
 	rm -fr ../logs/*
 	rm -fr ../../logs/*
