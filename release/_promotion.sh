@@ -1,5 +1,49 @@
 #!/bin/bash
 
+function prepare_jars {
+	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+
+	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ]
+	then
+		 lc_log ERROR "Either \${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER} or \${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD} is undefined."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local nexus_repository_name="${1}"
+
+	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
+
+	for jar_rc_name in "release.dxp.api-${ARTIFACT_RC_VERSION}.jar" "release.dxp.api-${ARTIFACT_RC_VERSION}-sources.jar"
+	do
+		jar_release_name="${jar_rc_name/-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}/}"
+
+		_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/release.dxp.api/${ARTIFACT_RC_VERSION}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
+	done
+}
+
+function prepare_poms {
+	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+
+	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ]
+	then
+		 lc_log ERROR "Either \${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER} or \${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD} is undefined."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local nexus_repository_name="${1}"
+
+	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
+
+	for pom_name in release.dxp.api release.dxp.bom release.dxp.bom.compile.only release.dxp.bom.third.party
+	do
+		_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${pom_name}/${ARTIFACT_RC_VERSION}/${pom_name}-${ARTIFACT_RC_VERSION}.pom" "${_PROMOTION_DIR}/${pom_name}-${LIFERAY_RELEASE_VERSION}.pom"
+	done
+
+	sed -i "s#<version>${ARTIFACT_RC_VERSION}</version>#<version>${LIFERAY_RELEASE_VERSION}</version>#" ./*.pom
+}
+
 function _download_bom_file {
 	local file_url="${1}"
 	local file_name="${2}"
@@ -49,48 +93,4 @@ function _verify_checksum {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
-}
-
-function prepare_jars {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
-	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ]
-	then
-		 lc_log ERROR "Either \${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER} or \${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD} is undefined."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	local nexus_repository_name="${1}"
-
-	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
-
-	for jar_rc_name in "release.dxp.api-${ARTIFACT_RC_VERSION}.jar" "release.dxp.api-${ARTIFACT_RC_VERSION}-sources.jar"
-	do
-		jar_release_name="${jar_rc_name/-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}/}"
-
-		_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/release.dxp.api/${ARTIFACT_RC_VERSION}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
-	done
-}
-
-function prepare_poms {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
-	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ]
-	then
-		 lc_log ERROR "Either \${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER} or \${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD} is undefined."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	local nexus_repository_name="${1}"
-
-	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
-
-	for pom_name in release.dxp.api release.dxp.bom release.dxp.bom.compile.only release.dxp.bom.third.party
-	do
-		_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${pom_name}/${ARTIFACT_RC_VERSION}/${pom_name}-${ARTIFACT_RC_VERSION}.pom" "${_PROMOTION_DIR}/${pom_name}-${LIFERAY_RELEASE_VERSION}.pom"
-	done
-
-	sed -i "s#<version>${ARTIFACT_RC_VERSION}</version>#<version>${LIFERAY_RELEASE_VERSION}</version>#" ./*.pom
 }
