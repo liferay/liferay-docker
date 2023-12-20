@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function prepare_jars {
+function prepare_api_jars_for_pomotion {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
 	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ]
@@ -22,7 +22,7 @@ function prepare_jars {
 	done
 }
 
-function prepare_poms {
+function prepare_poms_for_promotion {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
 	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ]

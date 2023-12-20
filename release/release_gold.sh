@@ -38,9 +38,9 @@ function copy_rc {
 function main {
 	check_usage
 
-	lc_time_run prepare_poms xanadu
+	lc_time_run prepare_poms_for_promotion xanadu
 
-	lc_time_run prepare_jars xanadu
+	lc_time_run prepare_api_jars_for_promotion xanadu
 
 	lc_time_run upload_boms liferay-public-releases
 
