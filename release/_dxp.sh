@@ -131,8 +131,9 @@ function clean_up_ignored_dxp_modules {
 }
 
 function clean_up_ignored_dxp_plugins {
+
 	#
-	# TODO Some modules are needed in 7.4.
+	# TODO Some modules are needed for master.
 	#
 
 	return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
