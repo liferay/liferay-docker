@@ -8,7 +8,7 @@ function main {
 
 	if [[ "${DOCKER_TCMALLOC_ENABLED}" == "true" ]]
 	then
-		LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4"
+		LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4:${LD_PRELOAD}"
 
 		export LD_PRELOAD
 
