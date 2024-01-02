@@ -26,9 +26,9 @@ function build_docker_image {
 function check_usage {
 	if [ ! -n "${3}" ]
 	then
-		echo "Usage: ${0} path-to-bundle image-name version --no-warm-up --no-test-image --push"
+		echo "Usage: ${0} path-to-bundle/ image-name version --no-warm-up --no-test-image --push"
 		echo ""
-		echo "Example: ${0} ../bundles/master portal-snapshot demo-cbe09fb0 --no-warm-up --no-test-image"
+		echo "Example: ${0} ../bundles/master/ portal-snapshot demo-cbe09fb0 --no-warm-up --no-test-image"
 
 		exit 1
 	fi
