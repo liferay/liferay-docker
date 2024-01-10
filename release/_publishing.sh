@@ -47,9 +47,9 @@ function upload_boms {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [ -z "${NEXUS_REPOSITORY_USER}" ] || [ -z "${NEXUS_REPOSITORY_PASSWORD}" ]
+	if [ -z "${NEXUS_REPOSITORY_PASSWORD}" ] || [ -z "${NEXUS_REPOSITORY_USER}" ]
 	then
-		 lc_log ERROR "Either \${NEXUS_REPOSITORY_USER} or \${NEXUS_REPOSITORY_PASSWORD} is undefined."
+		 lc_log ERROR "Either \${NEXUS_REPOSITORY_PASSWORD} or \${NEXUS_REPOSITORY_USER} is undefined."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi

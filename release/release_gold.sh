@@ -16,7 +16,8 @@ function check_usage {
 
 	_PROMOTION_DIR="${PWD}/release-data/promotion/files"
 
-	rm -rf "${_PROMOTION_DIR}"
+	rm -fr "${_PROMOTION_DIR}"
+
 	mkdir -p "${_PROMOTION_DIR}"
 
 	lc_cd "${_PROMOTION_DIR}"
@@ -45,7 +46,6 @@ function main {
 	lc_time_run upload_boms liferay-public-releases
 
 	lc_time_run copy_rc
-
 }
 
 function print_help {
@@ -54,7 +54,7 @@ function print_help {
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD: Nexus user's password"
-	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_USER: Nexus user with right to upload the BOM files"
+	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_USER: Nexus user with right to upload BOM files"
 	echo "    LIFERAY_RELEASE_RC_BUILD_TIMESTAMP: Timestamp of the build to publish"
 	echo "    LIFERAY_RELEASE_VERSION: DXP version of the release to publish"
 	echo ""
