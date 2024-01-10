@@ -10,7 +10,7 @@ function check_usage {
 		print_help
 	fi
 
-	ARTIFACT_RC_VERSION="${LIFERAY_RELEASE_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}"
+	_ARTIFACT_RC_VERSION="${LIFERAY_RELEASE_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}"
 
 	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
 

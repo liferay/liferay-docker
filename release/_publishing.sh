@@ -47,9 +47,9 @@ function upload_boms {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [ -z "${NEXUS_REPOSITORY_PASSWORD}" ] || [ -z "${NEXUS_REPOSITORY_USER}" ]
+	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ]
 	then
-		 lc_log ERROR "Either \${NEXUS_REPOSITORY_PASSWORD} or \${NEXUS_REPOSITORY_USER} is undefined."
+		 lc_log ERROR "Either \${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD} or \${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER} is undefined."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -142,6 +142,6 @@ function _upload_to_nexus {
 		--retry-delay 10 \
 		--silent \
 		--upload-file "${file_path}" \
-		--user "${NEXUS_REPOSITORY_USER}:${NEXUS_REPOSITORY_PASSWORD}" \
+		--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" \
 		"${file_url}"
 }
