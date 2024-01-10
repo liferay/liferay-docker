@@ -71,6 +71,7 @@ function build_service_liferay {
 	for file in \
 		osgi/configs/com.liferay.portal.k8s.agent.configuration.PortalK8sAgentConfiguration.config \
 		osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config \
+		osgi/configs/com.liferay.portal.security.content.security.policy.internal.configuration.ContentSecurityPolicyConfiguration.config \
 		osgi/configs/com.liferay.portal.security.sso.openid.connect.configuration.OpenIdConnectConfiguration.config \
 		osgi/configs/com.liferay.portal.security.sso.openid.connect.internal.configuration.OpenIdConnectProviderConfiguration_liferayokta.config \
 		tomcat/webapps/ROOT/WEB-INF/classes/META-INF/portal-log4j-ext.xml
