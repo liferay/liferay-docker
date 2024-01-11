@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function prepare_api_jars_for_pomotion {
+function prepare_api_jars_for_promotion {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
 	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ]
@@ -83,7 +83,7 @@ function _verify_checksum {
 	(
 		sed -z "s/\n$//" "${file}.sha512"
 
-		echo "    ${file}"
+		echo "  ${file}"
 	) | sha512sum -c - --status
 
 	if [ "${?}" != "0" ]
