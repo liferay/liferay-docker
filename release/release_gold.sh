@@ -54,7 +54,7 @@ function print_help {
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD: Nexus user's password"
-	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_USER: Nexus user with right to upload BOM files"
+	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_USER: Nexus user with the right to upload BOM files"
 	echo "    LIFERAY_RELEASE_RC_BUILD_TIMESTAMP: Timestamp of the build to publish"
 	echo "    LIFERAY_RELEASE_VERSION: DXP version of the release to publish"
 	echo ""
