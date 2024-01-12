@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source _liferay_common.sh
+source _product_json.sh
 source _promotion.sh
 source _publishing.sh
 
@@ -16,7 +17,8 @@ function check_usage {
 
 	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
 
-	_PROMOTION_DIR="${PWD}/release-data/promotion/files"
+	_RELEASE_ROOT_DIR="${PWD}"
+	_PROMOTION_DIR="${_RELEASE_ROOT_DIR}/release-data/promotion/files"
 
 	rm -fr "${_PROMOTION_DIR}"
 
@@ -48,6 +50,14 @@ function main {
 	lc_time_run upload_boms liferay-public-releases
 
 	lc_time_run copy_rc
+
+	lc_time_run get_file_product_info_json
+
+	lc_time_run get_file_release_properties
+
+	lc_time_run generate_product_info_json
+
+	lc_time_run upload_product_json
 }
 
 function print_help {
