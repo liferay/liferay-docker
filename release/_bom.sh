@@ -7,13 +7,20 @@ function generate_api_jars {
 
 	mkdir -p api-jar api-sources-jar
 
-	# TODO: Remove the else statement when 2023-q3 support is dropped.
+	local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed -e "s/,/\\n/g")
 
-	if (grep -q -w source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts "${_PROJECTS_DIR}/liferay-portal-ee/source-formatter.properties")
+	# TODO Remove if block when 2023.q3 support is dropped.
+
+	if [ -z "${enforce_version_artifacts}" ]
 	then
-		local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed -e "s/,/\\n/g")
-	else
 		local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/modules/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed -e "s/,/\\n/g")
+	fi
+
+	if [ -z "${enforce_version_artifacts}" ]
+	then
+		lc_log ERROR "Couldn't load the version artifacts from source-formatter.properties."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	for artifact in ${enforce_version_artifacts}
