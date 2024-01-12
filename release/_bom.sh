@@ -7,7 +7,14 @@ function generate_api_jars {
 
 	mkdir -p api-jar api-sources-jar
 
-	local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/modules/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed -e "s/,/\\n/g")
+	# TODO: Remove the else statement when 2023-q3 support is dropped.
+
+	if (grep -q -w source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts "${_PROJECTS_DIR}/liferay-portal-ee/source-formatter.properties")
+	then
+		local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed -e "s/,/\\n/g")
+	else
+		local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/modules/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed -e "s/,/\\n/g")
+	fi
 
 	for artifact in ${enforce_version_artifacts}
 	do
