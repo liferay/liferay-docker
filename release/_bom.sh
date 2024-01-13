@@ -9,7 +9,9 @@ function generate_api_jars {
 
 	local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed -e "s/,/\\n/g")
 
-	# TODO Remove if block when 2023.q3 support is dropped.
+	#
+	# TODO Remove if block when 2023.q3 support is dropped
+	#
 
 	if [ -z "${enforce_version_artifacts}" ]
 	then
@@ -18,7 +20,7 @@ function generate_api_jars {
 
 	if [ -z "${enforce_version_artifacts}" ]
 	then
-		lc_log ERROR "Couldn't load the version artifacts from source-formatter.properties."
+		lc_log ERROR "Unable to load the version artifacts from source-formatter.properties."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
