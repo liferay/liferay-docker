@@ -11,7 +11,7 @@ source _patcher.sh
 source _publishing.sh
 
 function check_usage {
-	if [ ! -n "${LIFERAY_RELEASE_GIT_SHA}" ]
+	if [ ! -n "${LIFERAY_RELEASE_GIT_REF}" ]
 	then
 		print_help
 	fi
@@ -172,12 +172,12 @@ function main {
 }
 
 function print_help {
-	echo "Usage: LIFERAY_RELEASE_GIT_SHA=<git sha> ${0}"
+	echo "Usage: LIFERAY_RELEASE_GIT_REF=<git sha> ${0}"
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_RELEASE_GCS_TOKEN (optional): *.json file containing the token to authenticate with Google Cloud Storage"
-	echo "    LIFERAY_RELEASE_GIT_SHA: Git SHA to build from"
+	echo "    LIFERAY_RELEASE_GIT_REF: Git SHA to build from"
 	echo "    LIFERAY_RELEASE_HOTFIX_BUILD_ID (optional): Build ID on Patcher"
 	echo "    LIFERAY_RELEASE_HOTFIX_FIXED_ISSUES (optional): Comma delimited list of fixed issues in the hotfix"
 	echo "    LIFERAY_RELEASE_HOTFIX_ID (optional): Hotfix ID"
@@ -190,7 +190,7 @@ function print_help {
 	echo "    LIFERAY_RELEASE_PATCHER_USER_ID (optional): User ID of the patcher user who started the build"
 	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to upload artifacts"
 	echo ""
-	echo "Example: LIFERAY_RELEASE_GIT_SHA=release-2023.q3 ${0}"
+	echo "Example: LIFERAY_RELEASE_GIT_REF=release-2023.q3 ${0}"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
