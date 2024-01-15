@@ -15,7 +15,7 @@ function check_usage {
 function main {
 	check_usage
 
-	lc_time_run run_query "${LCP_SECRET_DATABASE_NAME}" "SHOW ENGINE INNODB STATUS;"
+	lc_time_run run_query INFORMATION_SCHEMA "SHOW ENGINE INNODB STATUS;"
 
 	lc_time_run run_query INFORMATION_SCHEMA "SELECT * FROM INNODB_LOCK_WAITS;"
 
