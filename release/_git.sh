@@ -67,6 +67,8 @@ function update_portal_repository {
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
+	local checkout_ref="${LIFERAY_RELEASE_GIT_REF}"
+
 	if [ -e "${_BUILD_DIR}"/liferay-portal-ee.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/liferay-portal-ee.sha) == "${LIFERAY_RELEASE_GIT_REF}" ]
 	then
@@ -75,7 +77,11 @@ function update_portal_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -qE "[0-9a-f]{40}")
+	if (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -qE "[0-9a-z]+\/[0-9a-z]+")
+	then
+		LIFERAY_RELEASE_GIT_REF="${LIFERAY_RELEASE_GIT_REF%/*}"
+		checkout_ref="${LIFERAY_RELEASE_GIT_REF#*/}"
+	elif (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -qE "[0-9a-f]{40}")
 	then
 		lc_log INFO "Looking for a tag that matches Git SHA ${LIFERAY_RELEASE_GIT_REF}."
 
@@ -107,7 +113,7 @@ function update_portal_repository {
 
 	git reset --hard && git clean -dfx
 
-	git checkout "${LIFERAY_RELEASE_GIT_REF}"
+	git checkout "${checkout_ref}"
 
 	git status
 
