@@ -340,6 +340,8 @@ function warm_up_tomcat {
 	do
 		if (curl --fail --output /dev/null --silent http://localhost:8080)
 		then
+			lc_log INFO "Startup was successful."
+
 			break
 		fi
 
@@ -354,6 +356,12 @@ function warm_up_tomcat {
 
 		return 1
 	fi
+
+	lc_log INFO "Sleeping for 20 seconds before shutting down."
+
+	sleep 20
+
+	lc_log INFO "Initiating tomcat stop."
 
 	./catalina.sh stop
 
