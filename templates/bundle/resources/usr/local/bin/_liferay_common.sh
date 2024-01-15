@@ -6,6 +6,19 @@
 # repository where it is used.
 #
 
+function lc_background_run {
+	if [ -n "${LIFERAY_COMMON_DEBUG_ENABLED}" ]
+	then
+		lc_time_run "${@}"
+	else
+		lc_time_run "${@}" &
+
+		local pid=${!}
+
+		LIFERAY_COMMON_BACKGROUND_PIDS["${pid}"]="${@}"
+	fi
+}
+
 function lc_cd {
 	if [ -d "${1}" ]
 	then
@@ -104,11 +117,18 @@ function lc_download {
 
 	if [ -e "${cache_file}" ]
 	then
-		lc_log DEBUG "Copying file from cache: ${cache_file}."
+		if [ -n "${LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE}" ]
+		then
+			lc_log DEBUG "Deleting file from cache: ${cache_file}."
 
-		cp "${cache_file}" "${file_name}"
+			rm -f "${cache_file}"
+		else
+			lc_log DEBUG "Copying file from cache: ${cache_file}."
 
-		return
+			cp "${cache_file}" "${file_name}"
+
+			return
+		fi
 	fi
 
 	mkdir -p $(dirname "${cache_file}")
@@ -141,7 +161,7 @@ function lc_get_property {
 
 		echo "${property_value##*: }"
 	else
-		local property_value=$(grep -F "${property_key}=" "${file}")
+		local property_value=$(sed -r "s/\\\r?\n[ \t]*//g" -z < "${file}" | grep -F "${property_key}=")
 
 		echo "${property_value##*=}"
 	fi
@@ -164,11 +184,6 @@ function lc_log {
 }
 
 function lc_next_step {
-	if [ -z "${LIFERAY_COMMON_STEP_FILE}" ]
-	then
-		LIFERAY_COMMON_STEP_FILE=$(mktemp)
-	fi
-
 	local step=$(cat "${LIFERAY_COMMON_STEP_FILE}")
 
 	step=$((step + 1))
@@ -219,6 +234,15 @@ function lc_time_run {
 				tail -n 100 "${log_file}"
 			fi
 
+			if (declare -F lc_time_run_error &>/dev/null)
+			then
+				LC_TIME_RUN_ERROR_EXIT_CODE="${exit_code}"
+				LC_TIME_RUN_ERROR_FUNCTION="${@}"
+				LC_TIME_RUN_ERROR_LOG_FILE="${log_file}"
+
+				lc_time_run_error
+			fi
+
 			exit ${exit_code}
 		else
 			echo -e "$(lc_date) < ${*}: \e[1;32mSuccess\e[0m in $(lc_echo_time ${seconds})"
@@ -226,8 +250,27 @@ function lc_time_run {
 	fi
 }
 
+function lc_wait {
+	for pid in ${!LIFERAY_COMMON_BACKGROUND_PIDS[@]}
+	do
+		wait "${pid}"
+
+		local exit_code=$?
+
+		if [ "${exit_code}" -ne 0 ]
+		then
+			exit "${exit_code}"
+		fi
+	done
+
+	LIFERAY_COMMON_BACKGROUND_PIDS=()
+}
+
 function _lc_init {
 	LIFERAY_COMMON_START_TIME=$(date +%s)
+	LIFERAY_COMMON_STEP_FILE=$(mktemp)
+
+	declare -A LIFERAY_COMMON_BACKGROUND_PIDS
 
 	if [ -z "${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}" ]
 	then
@@ -240,7 +283,13 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
 
-	export LC_ALL=C.UTF-8
+	if (locale -a | grep -q en_US.utf8)
+	then
+		export LC_ALL=en_US.utf8
+	else
+		export LC_ALL=C.utf8
+	fi
+
 	export TZ=UTC
 }
 
