@@ -21,9 +21,9 @@ function main {
 
 	lc_time_run run_query INFORMATION_SCHEMA "SELECT * FROM INNODB_LOCKS WHERE LOCK_TRX_ID IN (SELECT BLOCKING_TRX_ID FROM INNODB_LOCK_WAITS);"
 
-	lc_time_run run_query "${LCP_SECRET_DATABASE_NAME}" "SELECT * FROM VirtualHost;"
+	lc_time_run run_query INFORMATION_SCHEMA "SELECT * FROM TABLES;"
 
-	lc_time_run run_query "${LCP_SECRET_DATABASE_NAME}" "SELECT TABLE_NAME, TABLE_ROWS from information_schema.TABLES;"
+	lc_time_run run_query "${LCP_SECRET_DATABASE_NAME}" "SELECT * FROM VirtualHost;"
 
 	lc_time_run run_query "${LCP_SECRET_DATABASE_NAME}" "SELECT * FROM DDMTemplate;"
 
