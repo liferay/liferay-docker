@@ -34,13 +34,8 @@ function generate_product_info_json {
 
 	local product_version=$(lc_get_property "${_PROMOTION_DIR}/release.properties" liferay.product.version)
 
-	if [[ ${product_version} =~ DXP\ 7.* ]]
-	then
-		local product_key=$(echo "${product_version}" | sed "s@\([[:alnum:]]*\) \([[:alnum:]]*\)\.\([[:alnum:]]*\)\.\([[:alnum:]]*\) \([[:alnum:]]*\)@\L\1-\L\2.\L\3-\L\5@ig")
-	else
-		product_key="${product_version,,}"
-		product_key="${product_key// /-}"
-	fi
+	local product_key="${product_version,,}"
+	product_key="${product_key// /-}"
 
 	local target_platform_version_raw=$(lc_get_property "${_PROMOTION_DIR}/release.properties" target.platform.version)
 	local target_platform_version_formatted="${target_platform_version_raw/-/.}"
