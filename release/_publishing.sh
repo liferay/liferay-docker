@@ -54,7 +54,14 @@ function upload_boms {
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	if [ "${nexus_repository_name}" == "liferay-public-releases" ]
+	if [ "${nexus_repository_name}" = "liferay-public-releases" ] && [ "${LIFERAY_RELEASE_PUBLISH_BOMS}" != "true" ]
+	then
+		lc_log DEBUG "Skipping packages publishing in production."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	if [ "${nexus_repository_name}" = "liferay-public-releases" ]
 	then
 		local upload_dir="${_PROMOTION_DIR}"
 	else
