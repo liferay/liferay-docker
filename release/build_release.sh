@@ -11,6 +11,7 @@ source _patcher.sh
 source _publishing.sh
 
 function check_usage {
+
 	#
 	# TODO Remove once all systems are using LIFERAY_RELEASE_GIT_REF instead of LIFERAY_RELEASE_GIT_SHA
 	#
