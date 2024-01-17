@@ -388,7 +388,7 @@ function process_zip_list_file {
 		check_ignore_via_argument "${IGNORE_ZIP_FILES}" && continue
 
 		check_ignore_via_file "${IGNORE_ZIP_FILES_PRESISTENT_FILE}" && continue
-		
+
 		check_ignore_via_file "${IGNORE_ZIP_FILES_CACHE_FILE}" && continue
 
 		file_url="${zip_directory_url}/${hotfix_zip_file}"
