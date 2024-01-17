@@ -11,14 +11,23 @@ source _patcher.sh
 source _publishing.sh
 
 function check_usage {
-	if [ ! -n "${LIFERAY_RELEASE_GIT_REF}" ]
+	#
+	# TODO Remove once all systems are using LIFERAY_RELEASE_GIT_REF instead of LIFERAY_RELEASE_GIT_SHA
+	#
+
+	if [ -z "${LIFERAY_RELEASE_GIT_REF}" ]
+	then
+		LIFERAY_RELEASE_GIT_REF=${LIFERAY_RELEASE_GIT_SHA}
+	fi
+
+	if [ -z "${LIFERAY_RELEASE_GIT_REF}" ]
 	then
 		print_help
 	fi
 
 	_BUILD_TIMESTAMP=$(date +%s)
 
-	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_ID}" ]
+	if [ -z "${LIFERAY_RELEASE_HOTFIX_ID}" ]
 	then
 		LIFERAY_RELEASE_HOTFIX_ID=${_BUILD_TIMESTAMP}
 	fi
