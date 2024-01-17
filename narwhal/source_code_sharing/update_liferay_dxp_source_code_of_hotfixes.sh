@@ -37,7 +37,7 @@ function check_ignore_via_argument {
 
 	if [[ "x${ignore_zip_file}" =~ x*${hotfix_zip_file}* ]]
 	then
-		lc_log DEBUG "Ignoring '${file_url}'."
+		lc_log DEBUG "The file '${hotfix_zip_file}' is on the list of --ignore-zip-files argument, ignoring '${file_url}'."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	else
@@ -52,7 +52,7 @@ function check_ignore_via_file {
 
 	if (grep -q "${hotfix_zip_file}" "${ignore_zip_file}")
 	then
-		lc_log DEBUG "Ignoring '${file_url}'."
+		lc_log DEBUG "The file '${hotfix_zip_file}' is on the list of '${ignore_zip_file}', ignoring '${file_url}'."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	else
@@ -383,6 +383,8 @@ function process_zip_list_file {
 			tag_name_new="${tag_name_new#*liferay-dxp-}"
 		fi
 
+		local file_url="${zip_directory_url}/${hotfix_zip_file}"
+
 		check_if_tag_exists liferay-dxp "${tag_name_new}" && continue
 
 		check_ignore_via_argument "${IGNORE_ZIP_FILES}" && continue
@@ -390,8 +392,6 @@ function process_zip_list_file {
 		check_ignore_via_file "${IGNORE_ZIP_FILES_PRESISTENT_FILE}" && continue
 
 		check_ignore_via_file "${IGNORE_ZIP_FILES_CACHE_FILE}" && continue
-
-		file_url="${zip_directory_url}/${hotfix_zip_file}"
 
 		lc_time_run lc_download "${file_url}"
 
