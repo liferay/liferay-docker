@@ -25,7 +25,6 @@ function check_new_tags {
 }
 
 function check_usage {
-	LIFERAY_COMMON_DEBUG_ENABLED="false"
 	LIFERAY_COMMON_LOG_DIR="${PWD}/logs"
 	RUN_FETCH_REPOSITORY="true"
 	RUN_PUSH_TO_ORIGIN="true"
@@ -35,6 +34,7 @@ function check_usage {
 	do
 		case "${1}" in
 			--debug)
+				LIFERAY_COMMON_DEBUG_ENABLED="true"
 				LIFERAY_COMMON_LOG_LEVEL="DEBUG"
 
 				;;

@@ -88,7 +88,6 @@ function check_patch_requirements {
 function check_usage {
 	BASE_DIR="${PWD}"
 	DEDICATED_CACHE_DIR="${BASE_DIR}/cache"
-	LIFERAY_COMMON_DEBUG_ENABLED="false"
 	LIFERAY_COMMON_DOWNLOAD_MAX_TIME="120"
 	LIFERAY_COMMON_LOG_DIR="${PWD}/logs"
 	IGNORE_ZIP_FILES=""
