@@ -385,13 +385,13 @@ function process_zip_list_file {
 
 		local file_url="${zip_directory_url}/${hotfix_zip_file}"
 
-		check_if_tag_exists liferay-dxp "${tag_name_new}" && continue
-
 		check_ignore_via_argument "${IGNORE_ZIP_FILES}" && continue
 
 		check_ignore_via_file "${IGNORE_ZIP_FILES_PRESISTENT_FILE}" && continue
 
 		check_ignore_via_file "${IGNORE_ZIP_FILES_CACHE_FILE}" && continue
+
+		check_if_tag_exists liferay-dxp "${tag_name_new}" && continue
 
 		lc_time_run lc_download "${file_url}"
 
@@ -401,7 +401,12 @@ function process_zip_list_file {
 
 		if [[ ${release_version} == 7* ]]
 		then
-			check_patch_requirements "${PATCH_REQUIREMENTS}" "${tag_name_new}" || continue
+			if (! check_patch_requirements "${PATCH_REQUIREMENTS}" "${tag_name_new}")
+			then
+				echo "${hotfix_zip_file}" >> "${IGNORE_ZIP_FILES_CACHE_FILE}"
+
+				continue
+			fi
 		fi
 
 		copy_hotfix_commit "${GIT_REVISION}" "${PRODUCT_VERSION}" "${tag_name_new}"
