@@ -77,17 +77,25 @@ function update_portal_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -qE "[0-9a-z]+\/[0-9a-z]+")
+	if (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -q -E "^[[:alnum:]-]+/[0-9a-z]{40}$")
 	then
 		LIFERAY_RELEASE_GIT_REF="${LIFERAY_RELEASE_GIT_REF%/*}"
+
 		checkout_ref="${LIFERAY_RELEASE_GIT_REF#*/}"
-	elif (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -qE "[0-9a-f]{40}")
+	elif (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -qE "^[0-9a-f]{40}$")
 	then
 		lc_log INFO "Looking for a tag that matches Git SHA ${LIFERAY_RELEASE_GIT_REF}."
 
 		LIFERAY_RELEASE_GIT_REF=$(git ls-remote upstream | grep "${LIFERAY_RELEASE_GIT_REF}" | grep refs/tags/fix-pack-fix- | head -n 1 | sed -e "s#.*/##")
 
-		lc_log INFO "Found tag ${LIFERAY_RELEASE_GIT_REF}."
+		if [ -n "${LIFERAY_RELEASE_GIT_REF}" ]
+		then
+			lc_log INFO "Found tag ${LIFERAY_RELEASE_GIT_REF}."
+		else
+			lc_log ERROR "No tag found."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
 	fi
 
 	if [ -n "$(git ls-remote upstream refs/tags/"${LIFERAY_RELEASE_GIT_REF}")" ]
@@ -106,7 +114,7 @@ function update_portal_repository {
 
 		git fetch --force --update-head-ok upstream "${LIFERAY_RELEASE_GIT_REF}:${LIFERAY_RELEASE_GIT_REF}"
 	else
-		lc_log ERROR "${LIFERAY_RELEASE_GIT_REF} does not exist." 
+		lc_log ERROR "${LIFERAY_RELEASE_GIT_REF} does not exist."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
