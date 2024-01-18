@@ -86,6 +86,18 @@ function lc_clone_repository {
 	git remote --verbose
 }
 
+function lc_curl {
+	local url=${1}
+	local output=${2}
+
+	if (! curl "${url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${output}" --retry 10 --retry-delay 5 --show-error --silent)
+	then
+		lc_log ERROR "The ${url} cannot be downloaded to ${output}."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function lc_date {
 	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
