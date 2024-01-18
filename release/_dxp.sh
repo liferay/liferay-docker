@@ -357,9 +357,12 @@ function warm_up_tomcat {
 		return 1
 	fi
 
-	lc_log INFO "Sleeping for 20 seconds before shutting down."
+	if (echo "${_DXP_VERSION}" | grep -Eq "^7.[0123]")
+	then
+		lc_log INFO "Sleeping for 20 seconds before shutting down."
 
-	sleep 20
+		sleep 20
+	fi
 
 	lc_log INFO "Initiating tomcat stop."
 
