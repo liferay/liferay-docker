@@ -46,6 +46,46 @@ function lc_check_utils {
 	return "${exit_code}"
 }
 
+function lc_clone_repository {
+	local repository_name=${1}
+	local repository_path=${2}
+
+	if [ -z "${repository_path}" ]
+	then
+		repository_path="${repository_name}"
+	fi
+
+	if [ -e "${repository_path}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	if [ -e "/home/me/dev/projects/${repository_name}" ]
+	then
+		echo "Copying Git repository from /home/me/dev/projects/${repository_name}."
+
+		cp -a "/home/me/dev/projects/${repository_name}" "${repository_path}"
+	elif [ -e "/opt/dev/projects/github/${repository_name}" ]
+	then
+		echo "Copying Git repository from /opt/dev/projects/github/${repository_path}."
+
+		cp -a "/opt/dev/projects/github/${repository_name}" "${repository_path}"
+	else
+		git clone "git@github.com:liferay/${repository_name}.git" "${repository_path}"
+	fi
+
+	lc_cd "${repository_path}"
+
+	if (git remote get-url upstream &>/dev/null)
+	then
+		git remote set-url upstream "git@github.com:liferay/${repository_name}.git"
+	else
+		git remote add upstream "git@github.com:liferay/${repository_name}.git"
+	fi
+
+	git remote --verbose
+}
+
 function lc_date {
 	if [ -z ${1+x} ] || [ -z ${2+x} ]
 	then
