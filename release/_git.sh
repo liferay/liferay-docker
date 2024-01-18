@@ -79,9 +79,9 @@ function update_portal_repository {
 
 	if (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -q -E "^[[:alnum:]\.-]+/[0-9a-z]{40}$")
 	then
-		LIFERAY_RELEASE_GIT_REF="${LIFERAY_RELEASE_GIT_REF%/*}"
-
 		checkout_ref="${LIFERAY_RELEASE_GIT_REF#*/}"
+
+		LIFERAY_RELEASE_GIT_REF="${LIFERAY_RELEASE_GIT_REF%/*}"
 	elif (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -qE "^[0-9a-f]{40}$")
 	then
 		lc_log INFO "Looking for a tag that matches Git SHA ${LIFERAY_RELEASE_GIT_REF}."
