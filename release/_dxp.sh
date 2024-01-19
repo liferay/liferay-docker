@@ -359,12 +359,12 @@ function warm_up_tomcat {
 
 	if (echo "${_DXP_VERSION}" | grep -Eq "^7.[0123]")
 	then
-		lc_log INFO "Sleeping for 20 seconds before shutting down."
+		lc_log INFO "Sleep for 20 seconds before shutting down."
 
 		sleep 20
 	fi
 
-	lc_log INFO "Initiating tomcat stop."
+	lc_log INFO "Stopping Tomcat."
 
 	./catalina.sh stop
 
