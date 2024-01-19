@@ -65,7 +65,7 @@ function get_file_product_info_json {
 
 	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/tools/workspace/.product_info.json" "${_PROMOTION_DIR}/.product_info_tmp.json"
 
-	cp -f "${_PROMOTION_DIR}/.product_info_tmp.json" "${_PROMOTION_DIR}/../.product_info.json-BACKUP.txt"
+	cp -f "${_PROMOTION_DIR}/.product_info_tmp.json" "${LIFERAY_COMMON_LOG_DIR}/.product_info.json-BACKUP.txt"
 
 	sed -i -r -z \
 		-e 's@\r?\n        "@"@g' \
