@@ -114,6 +114,16 @@ function generate_api_source_jar {
 	done
 }
 
+function generate_pom_release_dxp_api {
+	lc_log DEBUG "Generating release.dxp.api-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.pom"
+
+	sed \
+		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__DXP_VERSION__/${_DXP_VERSION}/" \
+		-e "w release.dxp.api.${_DXP_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom" \
+		"${_RELEASE_TOOL_DIR}/templates/release.dxp.api.pom" > /dev/null
+}
+
 function generate_poms {
 	if (! echo "${_PRODUCT_VERSION}" | grep -q "q")
 	then
@@ -149,6 +159,10 @@ function generate_poms {
 
 		rm -f "${pom}-${base_version}.pom"
 	done
+}
+
+function generate_poms_from_scratch {
+	lc_time_run generate_pom_release_dxp_api
 }
 
 function _copy_file {
