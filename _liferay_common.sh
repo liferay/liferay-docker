@@ -91,7 +91,7 @@ function lc_curl {
 
 	if (! curl "${url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output - --retry 10 --retry-delay 5 --show-error --silent)
 	then
-		lc_log ERROR "Reqesting the ${url} URL failed."
+		lc_log ERROR "Requesting the ${url} URL failed."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
