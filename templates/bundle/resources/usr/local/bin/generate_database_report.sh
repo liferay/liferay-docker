@@ -5,11 +5,11 @@ source /usr/local/bin/_liferay_common.sh
 function check_usage {
 	lc_check_utils mysql || exit 1
 
-	LIFERAY_REPORTS_DIRECTORY="${LIFERAY_HOME}/data/reports"
+	_REPORTS_DIRECTORY="${LIFERAY_HOME}/data/reports"
 
-	mkdir -p "${LIFERAY_REPORTS_DIRECTORY}"
+	mkdir -p "${_REPORTS_DIRECTORY}"
 
-	REPORTS_FILE="${LIFERAY_REPORTS_DIRECTORY}"/query_report_$(date +'%Y-%m-%d_%H-%M-%S').html
+	_REPORTS_FILE="${_REPORTS_DIRECTORY}"/query_report_$(date +'%Y-%m-%d_%H-%M-%S').html
 }
 
 function main {
@@ -33,9 +33,9 @@ function main {
 }
 
 function run_query {
-	echo "<h1>${2}</h1>" >> "${REPORTS_FILE}"
+	echo "<h1>${2}</h1>" >> "${_REPORTS_FILE}"
 
-	mysql --connect-timeout=10 -D "${1}" -e "${2}" -H -u "${LCP_SECRET_DATABASE_USER}" -p"${LCP_SECRET_DATABASE_PASSWORD}" >> "${REPORTS_FILE}"
+	mysql --connect-timeout=10 -D "${1}" -e "${2}" -H -p"${LCP_SECRET_DATABASE_PASSWORD}" -u "${LCP_SECRET_DATABASE_USER}" >> "${_REPORTS_FILE}"
 }
 
 main "${@}"
