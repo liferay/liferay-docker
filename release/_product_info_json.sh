@@ -89,7 +89,7 @@ function obfuscate_url {
 	"${_RELEASE_ROOT_DIR}/url-coder-1.0.0.jar" "${url}" "${release_date}"
 }
 
-function upload_product_json {
+function upload_product_info_json {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
 	lc_log INFO "Making a backup copy to /www/releases.liferay.com/tools/workspace/.product_info.json.BACKUP on the server"
