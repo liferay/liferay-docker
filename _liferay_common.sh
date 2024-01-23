@@ -167,6 +167,28 @@ function lc_get_property {
 	fi
 }
 
+function lc_echo {
+	local level=${1}
+
+	shift
+
+	if [ "${level}" == DEBUG ]
+	then
+		if [ "${LIFERAY_COMMON_LOG_LEVEL}" == "DEBUG" ]
+		then
+			echo -e "\e[2;96m[DEBUG] ${*}\e[0m"
+		fi
+	elif [ "${level}" == ERROR ]
+	then
+		echo -e "\e[1;31m[ERROR] ${*}\e[0m"
+	elif [ "${level}" == WARN ]
+	then
+		echo -e "\e[1;33m[WARN] ${*}\e[0m"
+	else
+		echo -e "\e[2;94m${*}\e[0m"
+	fi
+}
+
 function lc_echo_time {
 	local seconds=${1}
 
