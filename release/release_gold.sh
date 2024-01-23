@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source _liferay_common.sh
-source _product_json.sh
+source _product_info_json.sh
 source _promotion.sh
 source _publishing.sh
 
