@@ -62,12 +62,12 @@ function lc_clone_repository {
 
 	if [ -e "/home/me/dev/projects/${repository_name}" ]
 	then
-		echo "Copying Git repository from /home/me/dev/projects/${repository_name}."
+		lc_log DEBUG "Copying Git repository from /home/me/dev/projects/${repository_name}."
 
 		cp -a "/home/me/dev/projects/${repository_name}" "${repository_path}"
 	elif [ -e "/opt/dev/projects/github/${repository_name}" ]
 	then
-		echo "Copying Git repository from /opt/dev/projects/github/${repository_path}."
+		lc_log DEBUG "Copying Git repository from /opt/dev/projects/github/${repository_path}."
 
 		cp -a "/opt/dev/projects/github/${repository_name}" "${repository_path}"
 	else
@@ -88,11 +88,10 @@ function lc_clone_repository {
 
 function lc_curl {
 	local url=${1}
-	local output=${2}
 
-	if (! curl "${url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${output}" --retry 10 --retry-delay 5 --show-error --silent)
+	if (! curl "${url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output - --retry 10 --retry-delay 5 --show-error --silent)
 	then
-		lc_log ERROR "The ${url} cannot be downloaded to ${output}."
+		lc_log ERROR "Reqesting the ${url} URL failed."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -212,6 +211,7 @@ function lc_download {
 	fi
 
 	local cache_file_dir
+
 	cache_file_dir="$(dirname "${cache_file}")"
 
 	mkdir -p "${cache_file_dir}"
@@ -395,12 +395,12 @@ function _lc_init {
 		LIFERAY_COMMON_DOWNLOAD_CACHE_DIR=${HOME}/.liferay-common-cache
 	fi
 
+	LIFERAY_COMMON_DOWNLOAD_MAX_TIME=1200
 	LIFERAY_COMMON_EXIT_CODE_BAD=1
 	LIFERAY_COMMON_EXIT_CODE_CD=3
 	LIFERAY_COMMON_EXIT_CODE_HELP=2
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
-	LIFERAY_COMMON_DOWNLOAD_MAX_TIME=1200
 
 	if (locale -a | grep -q en_US.utf8)
 	then
