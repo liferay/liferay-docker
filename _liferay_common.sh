@@ -151,22 +151,6 @@ function lc_download {
 	fi
 }
 
-function lc_get_property {
-	file=${1}
-	property_key=${2}
-
-	if [ "${file##*.}" == "bnd" ]
-	then
-		local property_value=$(grep -F "${property_key}: " "${file}")
-
-		echo "${property_value##*: }"
-	else
-		local property_value=$(sed -r "s/\\\r?\n[ \t]*//g" -z < "${file}" | grep -F "${property_key}=")
-
-		echo "${property_value##*=}"
-	fi
-}
-
 function lc_echo {
 	local level=${1}
 
@@ -193,6 +177,22 @@ function lc_echo_time {
 	local seconds=${1}
 
 	printf "%02dh:%02dm:%02ds" $((seconds / 3600)) $((seconds % 3600 / 60)) $((seconds % 60))
+}
+
+function lc_get_property {
+	file=${1}
+	property_key=${2}
+
+	if [ "${file##*.}" == "bnd" ]
+	then
+		local property_value=$(grep -F "${property_key}: " "${file}")
+
+		echo "${property_value##*: }"
+	else
+		local property_value=$(sed -r "s/\\\r?\n[ \t]*//g" -z < "${file}" | grep -F "${property_key}=")
+
+		echo "${property_value##*=}"
+	fi
 }
 
 function lc_log {
