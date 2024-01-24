@@ -5,6 +5,16 @@ source _product_info_json.sh
 source _promotion.sh
 source _publishing.sh
 
+function adjust_product_info_json {
+	lc_time_run get_file_product_info_json
+
+	lc_time_run get_file_release_properties
+
+	lc_time_run generate_product_info_json
+
+	lc_time_run upload_product_info_json
+}
+
 function check_usage {
 	if [ -z "${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}" ] || [ -z "${LIFERAY_RELEASE_VERSION}" ]
 	then
@@ -30,35 +40,14 @@ function check_usage {
 	LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
 }
 
-function copy_rc {
-	if (ssh -i lrdcom-vm-1 root@lrdcom-vm-1 ls -d "/www/releases.liferay.com/dxp/${_DXP_VERSION}" | grep -q "${_DXP_VERSION}" &>/dev/null)
-	then
-		lc_log ERROR "Release was already published."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 cp -a "/www/releases.liferay.com/dxp/release-candidates/${_ARTIFACT_RC_VERSION}" "/www/releases.liferay.com/dxp/${_DXP_VERSION}"
-}
-
 function main {
 	check_usage
 
-	lc_time_run prepare_poms_for_promotion xanadu
+	lc_time_run promote_packages
 
-	lc_time_run prepare_api_jars_for_promotion xanadu
+	promote_boms
 
-	lc_time_run upload_boms liferay-public-releases
-
-	lc_time_run copy_rc
-
-	lc_time_run get_file_product_info_json
-
-	lc_time_run get_file_release_properties
-
-	lc_time_run generate_product_info_json
-
-	lc_time_run upload_product_info_json
+	adjust_product_info_json
 }
 
 function print_help {
@@ -74,6 +63,25 @@ function print_help {
 	echo "Example: LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964 LIFERAY_RELEASE_VERSION=2023.q3.0 ${0}"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
+}
+
+function promote_boms {
+	lc_time_run prepare_poms_for_promotion xanadu
+
+	lc_time_run prepare_api_jars_for_promotion xanadu
+
+	lc_time_run upload_boms liferay-public-releases
+}
+
+function promote_packages {
+	if (ssh -i lrdcom-vm-1 root@lrdcom-vm-1 ls -d "/www/releases.liferay.com/dxp/${_DXP_VERSION}" | grep -q "${_DXP_VERSION}" &>/dev/null)
+	then
+		lc_log ERROR "Release was already published."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 cp -a "/www/releases.liferay.com/dxp/release-candidates/${_ARTIFACT_RC_VERSION}" "/www/releases.liferay.com/dxp/${_DXP_VERSION}"
 }
 
 main
