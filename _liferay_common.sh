@@ -91,7 +91,7 @@ function lc_curl {
 
 	if (! curl "${url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output - --retry 10 --retry-delay 5 --show-error --silent)
 	then
-		lc_log ERROR "Requesting the ${url} URL failed."
+		lc_log ERROR "Unable to curl ${url}."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -210,9 +210,7 @@ function lc_download {
 		fi
 	fi
 
-	local cache_file_dir
-
-	cache_file_dir="$(dirname "${cache_file}")"
+	local cache_file_dir="$(dirname "${cache_file}")"
 
 	mkdir -p "${cache_file_dir}"
 
