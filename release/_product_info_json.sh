@@ -55,7 +55,7 @@ function generate_product_info_json {
 	writeln "}"
 	echo "}" >> "${_PROMOTION_DIR}/.product_info.json.tmp"
 
-	jq '.' "${_PROMOTION_DIR}/.product_info.json.tmp" > "${_PROMOTION_DIR}/.product_info.json"
+	jq "." "${_PROMOTION_DIR}/.product_info.json.tmp" > "${_PROMOTION_DIR}/.product_info.json"
 }
 
 function get_file_product_info_json {
