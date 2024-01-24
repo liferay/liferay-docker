@@ -85,7 +85,7 @@ function obfuscate_url {
 	local release_date="${2}"
 	local url="${1}"
 
-	"${_RELEASE_ROOT_DIR}/url-coder-1.0.0.jar" "${url}" "${release_date}"
+	"${_RELEASE_ROOT_DIR}/com.liferay.workspace.bundle.url.codec.jar" "${url}" "${release_date}"
 }
 
 function upload_product_info_json {
