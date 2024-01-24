@@ -140,20 +140,27 @@ function lc_docker_compose {
 	echo "${LIFERAY_COMMON_DOCKER_COMPOSE}"
 }
 
-# FUNCTION
-#	Downloads a file to a cache directory configured via ${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}.
-#	If the file is already in the cache then skip downloading it again.
-#	If a file name is given as an optional second parameter, then it is copied from the cache.
-#	If the file cannot be downloaded in ${LIFERAY_COMMON_DOWNLOAD_MAX_TIME} seconds, the process is cancelled.
-#
-# INVOCATION:
-#	lc_download <file url> [<destination file name>]
-#
-# EXIT CODES:
-#	$LIFERAY_COMMON_EXIT_CODE_BAD: Missing argument or download failed.
-#	$LIFERAY_COMMON_EXIT_CODE_OK: The file was downloaded and/or copied properly.
-
 function lc_download {
+
+	#
+	# Usage:
+	#
+	#    lc_download https://www.google.com/logo.png
+	#
+	# Result:
+	#
+	#    ${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/www.google.com/logo.png
+	#
+	# Usage:
+	#
+	#    lc_download https://www.google.com/logo.png /tmp/hello.png
+	#
+	# Result:
+	#
+	#    ${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/www.google.com/logo.png
+	#    /tmp/hello.png
+	#
+
 	local file_url=${1}
 
 	if [ -z "${file_url}" ]
