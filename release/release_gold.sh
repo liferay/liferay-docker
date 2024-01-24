@@ -18,6 +18,7 @@ function check_usage {
 	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
 
 	_RELEASE_ROOT_DIR="${PWD}"
+
 	_PROMOTION_DIR="${_RELEASE_ROOT_DIR}/release-data/promotion/files"
 
 	rm -fr "${_PROMOTION_DIR}"
