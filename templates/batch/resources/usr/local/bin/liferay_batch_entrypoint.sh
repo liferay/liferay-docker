@@ -117,6 +117,20 @@ function main {
 
 		local href=$(jq -r ".actions.createBatch.href" ${file_name})
 
+		if [[ "$href" == "null" ]]
+		then
+			local class_name=$(jq -r ".configuration.className" ${file_name})
+
+			if [[ "$class_name" == "null" ]]
+			then
+				echo "Batch data file missing configuration.className"
+
+				exit 1
+			fi
+
+			href="/o/headless-batch-engine/v1.0/import-task/${class_name}"
+		fi
+
 		href="${href#*://*/}"
 
 		if [[ ! $href =~ ^/.* ]]
