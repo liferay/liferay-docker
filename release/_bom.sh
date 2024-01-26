@@ -121,7 +121,7 @@ function generate_pom_release_dxp_api {
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
 		-e "s/__DXP_VERSION__/${_DXP_VERSION}/" \
 		-e "w release.dxp.api.${_DXP_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom" \
-		"${_RELEASE_TOOL_DIR}/templates/release.dxp.api.pom" > /dev/null
+		"${_RELEASE_TOOL_DIR}/templates/release.dxp.api.pom.tpl" > /dev/null
 }
 
 function generate_pom_release_dxp_bom {
@@ -188,6 +188,34 @@ function generate_pom_release_dxp_bom {
 	) >> "${pom_file_name}"
 }
 
+function generate_pom_release_dxp_bom_compile_only {
+	local pom_file_name="release.dxp.bom.compile.only-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+
+	lc_log DEBUG "Generating ${pom_file_name}."
+
+	sed \
+		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__DXP_VERSION__/${_DXP_VERSION}/" \
+		-e "w ${pom_file_name}" \
+		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.compile.only.pom.tpl" > /dev/null
+
+	cut -f2 -d= "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties" | \
+		while IFS=: read -r group_id artifact_id version
+		do
+			echo "            <dependency>"
+			echo "                <groupId>${group_id}</groupId>"
+			echo "                <artifactId>${artifact_id}</artifactId>"
+			echo "                <version>${version}</version>"
+			echo "            </dependency>"
+		done >> "${pom_file_name}"
+
+	(
+		echo "        </dependencies>"
+		echo "    </dependencyManagement>"
+		echo "</project>"
+	) >> "${pom_file_name}"
+}
+
 function generate_poms {
 	if (! echo "${_PRODUCT_VERSION}" | grep -q "q")
 	then
@@ -229,6 +257,8 @@ function generate_poms_from_scratch {
 	lc_time_run generate_pom_release_dxp_api
 
 	lc_time_run generate_pom_release_dxp_bom
+
+	lc_time_run generate_pom_release_dxp_bom_compile_only
 }
 
 function _copy_file {
