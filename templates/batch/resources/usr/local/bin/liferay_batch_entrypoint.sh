@@ -123,7 +123,7 @@ function main {
 
 			if [[ "$class_name" == "null" ]]
 			then
-				echo "Batch data file missing configuration.className"
+				echo "Batch data file is missing configuration class name."
 
 				exit 1
 			fi
