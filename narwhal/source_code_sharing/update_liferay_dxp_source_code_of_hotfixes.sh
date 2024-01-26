@@ -352,7 +352,7 @@ function process_version_list {
 		then
 			local zip_directory_url="https://files.liferay.com/private/ee/fix-packs/${release_version}/hotfix"
 		else
-			local zip_directory_url="https://releases-cdn.liferay.com/dxp/hotfix"
+			local zip_directory_url="https://releases.liferay.com/dxp/hotfix"
 		fi
 
 		lc_time_run get_hotfix_zip_list_file "${release_version}" "${zip_list_file}"
