@@ -216,6 +216,77 @@ function generate_pom_release_dxp_bom_compile_only {
 	) >> "${pom_file_name}"
 }
 
+function generate_pom_release_dxp_bom_third_party {
+	local pom_file_name="release.dxp.bom.third.party-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+
+	lc_log DEBUG "Generating ${pom_file_name}."
+
+	sed \
+		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__DXP_VERSION__/${_DXP_VERSION}/" \
+		-e "w ${pom_file_name}" \
+		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.third.party.pom.tpl" > /dev/null
+
+	local jar_list=$(find "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" -name "*.jar")
+
+	local property_files=(
+		"${_PROJECTS_DIR}/liferay-portal-ee/lib/development/dependencies.properties"
+		"${_PROJECTS_DIR}/liferay-portal-ee/lib/portal/dependencies.properties"
+	)
+
+	local jar_file
+
+	find "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" -name "*.jar" -print0 | \
+		while IFS= read -r -d '' jar_file
+		do
+			if (unzip -l "${jar_file}" | grep -q "pom.xml$")
+			then
+				local artifact_name="${jar_file##*/}"
+				artifact_name="${artifact_name/%\.jar}"
+
+				if [[ "${artifact_name}" == com.liferay.* ]]
+				then
+					continue
+				fi
+
+				artifact_name="${artifact_name##*.}"
+
+				local artifact_properties=$(grep -w "^$artifact_name" "${property_files[@]}")
+
+				if [ -z "${artifact_properties}" ]
+				then
+					continue
+				fi
+
+				if [[ "${artifact_properties}" == *development/dependencies.properties* ]] && [[ "${artifact_properties}" == *portal/dependencies.properties* ]]
+				then
+					artifact_properties=$(echo "${artifact_properties}" | grep "portal/dependencies.properties" | cut -f2 -d=)
+				else
+
+					artifact_properties=$(echo "$artifact_properties" | cut -f2 -d=)
+				fi
+
+				local group_id artifact_id version
+
+				echo "$artifact_properties" | \
+					while IFS=: read -r group_id artifact_id version
+					do
+						echo "            <dependency>"
+						echo "                <groupId>${group_id}</groupId>"
+						echo "                <artifactId>${artifact_id}</artifactId>"
+						echo "                <version>${version}</version>"
+						echo "            </dependency>"
+					done >> "${pom_file_name}"
+			fi
+		done
+
+		(
+			echo "        </dependencies>"
+			echo "    </dependencyManagement>"
+			echo "</project>"
+		) >> "${pom_file_name}"
+}
+
 function generate_poms {
 	if (! echo "${_PRODUCT_VERSION}" | grep -q "q")
 	then
@@ -259,6 +330,8 @@ function generate_poms_from_scratch {
 	lc_time_run generate_pom_release_dxp_bom
 
 	lc_time_run generate_pom_release_dxp_bom_compile_only
+
+	lc_time_run generate_pom_release_dxp_bom_third_party
 }
 
 function _copy_file {
