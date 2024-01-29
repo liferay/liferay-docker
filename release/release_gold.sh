@@ -5,16 +5,6 @@ source _product_info_json.sh
 source _promotion.sh
 source _publishing.sh
 
-function adjust_product_info_json {
-	lc_time_run get_file_product_info_json
-
-	lc_time_run get_file_release_properties
-
-	lc_time_run generate_product_info_json
-
-	lc_time_run upload_product_info_json
-}
-
 function check_usage {
 	if [ -z "${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}" ] || [ -z "${LIFERAY_RELEASE_VERSION}" ]
 	then
@@ -47,7 +37,7 @@ function main {
 
 	promote_boms
 
-	adjust_product_info_json
+	update_product_info_json
 }
 
 function print_help {
@@ -82,6 +72,16 @@ function promote_packages {
 	fi
 
 	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 cp -a "/www/releases.liferay.com/dxp/release-candidates/${_ARTIFACT_RC_VERSION}" "/www/releases.liferay.com/dxp/${_DXP_VERSION}"
+}
+
+function update_product_info_json {
+	lc_time_run get_file_product_info_json
+
+	lc_time_run get_file_release_properties
+
+	lc_time_run generate_product_info_json
+
+	lc_time_run upload_product_info_json
 }
 
 main
