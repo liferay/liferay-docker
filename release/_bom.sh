@@ -122,9 +122,12 @@ function generate_poms {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	#
-	# TODO We will remove this once LRP-4752 is implemented
-	#
+	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	then
+		lc_log INFO "The product is set to portal and building boms is not supported yet. Will be removed with LRP-4752."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 
 	local base_version=$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.profile-dxp.properties "release.info.version").u$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.trivial")
 
