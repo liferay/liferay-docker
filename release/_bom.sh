@@ -124,7 +124,7 @@ function generate_poms {
 
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
-		lc_log INFO "The product is set to portal and building boms is not supported yet. Will be removed with LRP-4752."
+		lc_log INFO "The product is set to \"portal\" and building BOMs will not be supported until LRP-4752 is completed."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
