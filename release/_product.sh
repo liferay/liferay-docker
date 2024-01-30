@@ -3,7 +3,7 @@
 function add_licensing {
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
-		lc_log INFO "The product is set to portal."
+		lc_log INFO "The product is set to \"portal.\""
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -97,7 +97,7 @@ function build_sql {
 function clean_up_ignored_dxp_modules {
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
-		lc_log INFO "The product is set to portal."
+		lc_log INFO "The product is set to \"portal.\""
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -270,7 +270,7 @@ function deploy_elasticsearch_sidecar {
 function obfuscate_licensing {
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
-		lc_log INFO "The product is set to portal."
+		lc_log INFO "The product is set to \"portal.\""
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

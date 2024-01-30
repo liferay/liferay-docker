@@ -133,7 +133,7 @@ function update_release_tool_repository {
 
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
-		lc_log INFO "The product is set to portal."
+		lc_log INFO "The product is set to \"portal.\""
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
