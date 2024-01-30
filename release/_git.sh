@@ -55,6 +55,30 @@ function clone_repository {
 	git remote --verbose
 }
 
+function generate_release_notes {
+	local ga_version
+
+	if (echo "${_DXP_VERSION}" | grep -q "q")
+	then
+		ga_version=7.4.13-ga1
+	else
+		ga_version=${_DXP_VERSION%%-u*}-ga1
+	fi
+
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+
+	git log "tags/${ga_version}..HEAD" --pretty=%s | \
+		grep -E "^[A-Z][A-Z0-9]*-[0-9]*" | \
+		sed -e "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/" | \
+		sort | \
+		uniq | \
+		grep -v LRCI | \
+		grep -v LRQA | \
+		grep -v POSHI | \
+		grep -v RELEASE | \
+		paste -sd, > "${_BUILD_DIR}/release/release_notes.txt"
+}
+
 function set_git_sha {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 

@@ -129,6 +129,8 @@ function main {
 
 		lc_time_run generate_release_properties_file
 
+		lc_time_run generate_release_notes
+
 		lc_time_run upload_boms xanadu
 
 		lc_time_run upload_release
