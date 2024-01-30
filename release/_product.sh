@@ -168,7 +168,7 @@ function clean_up_ignored_dxp_plugins {
 	rm -fv westeros-bank-theme.war
 }
 
-function compile_dxp {
+function compile_product {
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then

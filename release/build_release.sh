@@ -97,7 +97,7 @@ function main {
 
 		lc_time_run add_licensing
 
-		lc_time_run compile_dxp
+		lc_time_run compile_product
 
 		lc_time_run obfuscate_licensing
 
@@ -145,7 +145,7 @@ function main {
 
 		lc_time_run add_licensing
 
-		lc_time_run compile_dxp
+		lc_time_run compile_product
 
 		lc_time_run obfuscate_licensing
 
