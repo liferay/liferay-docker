@@ -115,7 +115,7 @@ function generate_api_source_jar {
 }
 
 function generate_poms {
-	if (! echo "${_DXP_VERSION}" | grep -q "q")
+	if (! echo "${_PRODUCT_VERSION}" | grep -q "q")
 	then
 		lc_log INFO "BOMs are only generated for quarterly updates."
 
@@ -134,11 +134,11 @@ function generate_poms {
 	do
 		lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/${pom}/${base_version}/${pom}-${base_version}.pom"
 
-		sed -e "s#<version>${base_version}</version>#<version>${_DXP_VERSION}-${_BUILD_TIMESTAMP}</version>#" < "${pom}-${base_version}.pom" | \
+		sed -e "s#<version>${base_version}</version>#<version>${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}</version>#" < "${pom}-${base_version}.pom" | \
 		sed -e "s#<connection>scm:git:git@github.com:liferay/liferay-portal.git</connection>#<connection>scm:git:git@github.com:liferay/liferay-dxp.git</connection>#" | \
 		sed -e "s#<developerConnection>scm:git:git@github.com:liferay/liferay-portal.git</developerConnection>#<developerConnection>scm:git:git@github.com:liferay/liferay-dxp.git</developerConnection>#" | \
-		sed -e "s#<tag>.*</tag>#<tag>${_DXP_VERSION}</tag>#" | \
-		sed -e "s#<url>https://github.com/liferay/liferay-portal</url>#<url>https://github.com/liferay/liferay-dxp</url>#" > "${pom}-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.pom"
+		sed -e "s#<tag>.*</tag>#<tag>${_PRODUCT_VERSION}</tag>#" | \
+		sed -e "s#<url>https://github.com/liferay/liferay-portal</url>#<url>https://github.com/liferay/liferay-dxp</url>#" > "${pom}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
 
 		rm -f "${pom}-${base_version}.pom"
 	done

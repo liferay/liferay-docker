@@ -25,9 +25,9 @@ function upload_bom_file {
 
 	if [ "${nexus_repository_name}" == "liferay-public-releases" ]
 	then
-		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_DXP_VERSION}/${file_name}"
+		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_PRODUCT_VERSION}/${file_name}"
 	else
-		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_DXP_VERSION}-${_BUILD_TIMESTAMP}/${file_name}"
+		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/${file_name}"
 	fi
 
 	_upload_to_nexus "${file_path}" "${file_url}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
@@ -77,25 +77,25 @@ function upload_hotfix {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/hotfix/${_DXP_VERSION}/"
+	ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
 
 	#
 	# shellcheck disable=SC2029
 	#
 
-	if (ssh root@lrdcom-vm-1 ls "/www/releases.liferay.com/dxp/hotfix/${_DXP_VERSION}/" | grep -q "${_HOTFIX_FILE_NAME}")
+	if (ssh root@lrdcom-vm-1 ls "/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/" | grep -q "${_HOTFIX_FILE_NAME}")
 	then
 		lc_log ERROR "Skipping the upload of ${_HOTFIX_FILE_NAME} because it already exists."
 
 		return 1
 	fi
 
-	scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_DXP_VERSION}/"
+	scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
 
 	echo "# Uploaded" > ../output.md
-	echo " - https://releases.liferay.com/dxp/hotfix/${_DXP_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
+	echo " - https://releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
 
-	#gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://patcher-storage/hotfix/${_DXP_VERSION}"
+	#gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://patcher-storage/hotfix/${_PRODUCT_VERSION}"
 }
 
 function upload_release {
@@ -112,7 +112,7 @@ function upload_release {
 
 	echo "# Uploaded" > ../output.md
 
-	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/release-candidates/${_DXP_VERSION}-${_BUILD_TIMESTAMP}"
+	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	for file in * .*
 	do
@@ -120,11 +120,11 @@ function upload_release {
 		then
 			echo "Copying ${file}."
 
-			#gsutil cp "${_BUILD_DIR}/release/${file}" "gs://patcher-storage/dxp/${_DXP_VERSION}"
+			#gsutil cp "${_BUILD_DIR}/release/${file}" "gs://patcher-storage/dxp/${_PRODUCT_VERSION}"
 
-			scp "${file}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/release-candidates/${_DXP_VERSION}-${_BUILD_TIMESTAMP}"
+			scp "${file}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
-			echo " - https://releases.liferay.com/dxp/release-candidates/${_DXP_VERSION}-${_BUILD_TIMESTAMP}/${file}" >> ../output.md
+			echo " - https://releases.liferay.com/dxp/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/${file}" >> ../output.md
 		fi
 	done
 }

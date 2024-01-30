@@ -36,10 +36,10 @@ function prepare_poms_for_promotion {
 
 	for pom_name in release.dxp.api release.dxp.bom release.dxp.bom.compile.only release.dxp.bom.third.party
 	do
-		_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${pom_name}/${_ARTIFACT_RC_VERSION}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom" "${_PROMOTION_DIR}/${pom_name}-${_DXP_VERSION}.pom"
+		_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${pom_name}/${_ARTIFACT_RC_VERSION}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom" "${_PROMOTION_DIR}/${pom_name}-${_PRODUCT_VERSION}.pom"
 	done
 
-	sed -i "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_DXP_VERSION}</version>#" ./*.pom
+	sed -i "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_PRODUCT_VERSION}</version>#" ./*.pom
 }
 
 function _download_bom_file {

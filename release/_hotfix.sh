@@ -208,7 +208,7 @@ function create_documentation {
 	writeln "    },"
 	writeln "    \"requirement\": {"
 	writeln "        \"patching-tool-version\": \"4000\","
-	writeln "        \"product-version\": \"${_DXP_VERSION}\""
+	writeln "        \"product-version\": \"${_PRODUCT_VERSION}\""
 	writeln "    },"
 	writeln "    \"added\" :["
 
@@ -379,7 +379,7 @@ function package_hotfix {
 function prepare_release_dir {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	_RELEASE_DIR="${_RELEASES_DIR}/${_DXP_VERSION}"
+	_RELEASE_DIR="${_RELEASES_DIR}/${_PRODUCT_VERSION}"
 
 	local release7z
 
@@ -409,9 +409,9 @@ function prepare_release_dir {
 	then
 		7z x "${release7z}"
 	else
-		lc_download "https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/.lfrrelease-tomcat-bundle"
+		lc_download "https://releases-cdn.liferay.com/dxp/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle"
 
-		lc_download "https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/$(cat .lfrrelease-tomcat-bundle)"
+		lc_download "https://releases-cdn.liferay.com/dxp/${_PRODUCT_VERSION}/$(cat .lfrrelease-tomcat-bundle)"
 
 		rm .lfrrelease-tomcat-bundle
 
@@ -430,7 +430,7 @@ function prepare_release_dir {
 }
 
 function set_hotfix_name {
-	_HOTFIX_FILE_NAME=liferay-dxp-${_DXP_VERSION}-hotfix-"${LIFERAY_RELEASE_HOTFIX_ID}".zip
+	_HOTFIX_FILE_NAME=liferay-dxp-${_PRODUCT_VERSION}-hotfix-"${LIFERAY_RELEASE_HOTFIX_ID}".zip
 	_HOTFIX_NAME=hotfix-"${LIFERAY_RELEASE_HOTFIX_ID}"
 }
 

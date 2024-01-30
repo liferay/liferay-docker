@@ -40,7 +40,7 @@ function report_patcher_status {
 			echo "    \"output\": \"Problem during ${LC_TIME_RUN_ERROR_FUNCTION}.\","
 		else
 			echo "    \"exitValue\": 0,"
-			echo "    \"fileName\": \"${_DXP_VERSION}/${_HOTFIX_FILE_NAME}\","
+			echo "    \"fileName\": \"${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}\","
 		fi
 
 		echo "    \"patcherRequestKey\": \"${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}\","

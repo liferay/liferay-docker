@@ -31,9 +31,9 @@ function generate_release_properties_file {
 		return 1
 	fi
 
-	local bundle_file_name="liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.7z"
+	local bundle_file_name="liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z"
 
-	local product_version="DXP ${_DXP_VERSION^^}"
+	local product_version="DXP ${_PRODUCT_VERSION^^}"
 
 	product_version="${product_version/-/ }"
 
@@ -41,14 +41,14 @@ function generate_release_properties_file {
 		echo "app.server.tomcat.version=${tomcat_version}"
 		echo "build.timestamp=${_BUILD_TIMESTAMP}"
 		echo "bundle.checksum.sha512=$(cat "${bundle_file_name}.sha512")"
-		echo "bundle.url=https://releases-cdn.liferay.com/dxp/${_DXP_VERSION}/${bundle_file_name}"
+		echo "bundle.url=https://releases-cdn.liferay.com/dxp/${_PRODUCT_VERSION}/${bundle_file_name}"
 		echo "git.hash.liferay-docker=${_BUILDER_SHA}"
 		echo "git.hash.liferay-portal-ee=${_GIT_SHA}"
-		echo "liferay.docker.image=liferay/dxp:${_DXP_VERSION}"
-		echo "liferay.docker.tags=${_DXP_VERSION}"
+		echo "liferay.docker.image=liferay/dxp:${_PRODUCT_VERSION}"
+		echo "liferay.docker.tags=${_PRODUCT_VERSION}"
 		echo "liferay.product.version=${product_version}"
 		echo "release.date=$(date +"%Y-%m-%d")"
-		echo "target.platform.version=${_DXP_VERSION}"
+		echo "target.platform.version=${_PRODUCT_VERSION}"
 	) > release.properties
 }
 
@@ -92,8 +92,8 @@ function package_boms {
 
 	touch .touch
 
-	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.jar" .touch -C api-jar .
-	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_DXP_VERSION}-${_BUILD_TIMESTAMP}-sources.jar" .touch -C api-sources-jar .
+	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.jar" .touch -C api-jar .
+	jar cvfm "${_BUILD_DIR}/release/release.dxp.api-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}-sources.jar" .touch -C api-sources-jar .
 
 	rm -f .touch
 }
@@ -108,37 +108,37 @@ function package_release {
 	cp -a "${_BUNDLES_DIR}"/* "${package_dir}"
 
 	echo "${_GIT_SHA}" > "${package_dir}"/.githash
-	echo "${_DXP_VERSION}" > "${package_dir}"/.liferay-version
+	echo "${_PRODUCT_VERSION}" > "${package_dir}"/.liferay-version
 
 	touch "${package_dir}"/.liferay-home
 
 	lc_cd "${_BUILD_DIR}/release"
 
-	7z a "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.7z" liferay-dxp
+	7z a "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" liferay-dxp
 
-	echo "liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.7z" > "${_BUILD_DIR}"/release/.lfrrelease-tomcat-bundle
+	echo "liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" > "${_BUILD_DIR}"/release/.lfrrelease-tomcat-bundle
 
-	tar czf "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.tar.gz" liferay-dxp
+	tar czf "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.tar.gz" liferay-dxp
 
-	zip -qr "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" liferay-dxp
+	zip -qr "${_BUILD_DIR}/release/liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" liferay-dxp
 
 	lc_cd liferay-dxp
 
-	zip -qr "${_BUILD_DIR}/release/liferay-dxp-osgi-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" osgi
+	zip -qr "${_BUILD_DIR}/release/liferay-dxp-osgi-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" osgi
 
 	lc_cd tomcat/webapps/ROOT
 
-	zip -qr "${_BUILD_DIR}/release/liferay-dxp-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.war" ./*
+	zip -qr "${_BUILD_DIR}/release/liferay-dxp-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.war" ./*
 
 	lc_cd "${_BUILD_DIR}/release/liferay-dxp"
 
-	zip -qr "${_BUILD_DIR}/release/liferay-dxp-tools-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" tools
+	zip -qr "${_BUILD_DIR}/release/liferay-dxp-tools-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" tools
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	cp -a sql liferay-dxp-sql
 
-	zip -qr "${_BUILD_DIR}/release/liferay-dxp-sql-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.zip" liferay-dxp-sql -i "*.sql"
+	zip -qr "${_BUILD_DIR}/release/liferay-dxp-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" liferay-dxp-sql -i "*.sql"
 
 	rm -fr liferay-dxp-sql
 

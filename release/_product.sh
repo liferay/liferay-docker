@@ -1,6 +1,13 @@
 #!/bin/bash
 
 function add_licensing {
+	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	then
+		lc_log INFO "The product is set to portal."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
@@ -254,6 +261,13 @@ function deploy_elasticsearch_sidecar {
 }
 
 function obfuscate_licensing {
+	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	then
+		lc_log INFO "The product is set to portal."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
@@ -273,7 +287,7 @@ function obfuscate_licensing {
 		-f build-release-license.xml obfuscate-portal
 }
 
-function set_dxp_version {
+function set_product_version {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	local major_version=$(lc_get_property release.properties "release.info.version.major")
@@ -290,18 +304,18 @@ function set_dxp_version {
 
 	if (echo "${version_display_name}" | grep -iq "q")
 	then
-		_DXP_VERSION="${version_display_name,,}"
+		_PRODUCT_VERSION="${version_display_name,,}"
 	else
 		local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
 		local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
-		_DXP_VERSION="${major_version}.${minor_version}.${bug_fix}-u${trivial}"
+		_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}-u${trivial}"
 	fi
 
-	lc_log INFO "DXP Version: ${_DXP_VERSION}"
+	lc_log INFO "Product Version: ${_PRODUCT_VERSION}"
 }
 
-function set_up_profile_dxp {
+function set_up_profile {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
@@ -312,7 +326,7 @@ function set_up_profile_dxp {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	ant setup-profile-dxp
+	ant "setup-profile-${LIFERAY_RELEASE_PRODUCT_NAME}"
 }
 
 function update_release_info_date {
@@ -357,7 +371,7 @@ function warm_up_tomcat {
 		return 1
 	fi
 
-	if (echo "${_DXP_VERSION}" | grep -Eq "^7.[0123]")
+	if (echo "${_PRODUCT_VERSION}" | grep -Eq "^7.[0123]")
 	then
 		lc_log INFO "Sleep for 20 seconds before shutting down."
 
