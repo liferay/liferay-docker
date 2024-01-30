@@ -76,7 +76,7 @@ function get_file_product_info_json {
 function get_file_release_properties {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/dxp/${LIFERAY_RELEASE_VERSION}/release.properties"
+	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${LIFERAY_RELEASE_VERSION}/release.properties"
 }
 
 function obfuscate_url {

@@ -122,6 +122,10 @@ function generate_poms {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	#
+	# TODO We will remove this once LRP-4752 is implemented
+	#
+
 	local base_version=$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.profile-dxp.properties "release.info.version").u$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.trivial")
 
 	mkdir -p "${_BUILD_DIR}/boms"
@@ -130,15 +134,15 @@ function generate_poms {
 
 	rm -f ./*.pom
 
-	for pom in release.dxp.api release.dxp.bom release.dxp.bom.compile.only release.dxp.bom.third.party
+	for pom in "release.${LIFERAY_RELEASE_PRODUCT_NAME}.api" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party"
 	do
 		lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/${pom}/${base_version}/${pom}-${base_version}.pom"
 
 		sed -e "s#<version>${base_version}</version>#<version>${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}</version>#" < "${pom}-${base_version}.pom" | \
-		sed -e "s#<connection>scm:git:git@github.com:liferay/liferay-portal.git</connection>#<connection>scm:git:git@github.com:liferay/liferay-dxp.git</connection>#" | \
-		sed -e "s#<developerConnection>scm:git:git@github.com:liferay/liferay-portal.git</developerConnection>#<developerConnection>scm:git:git@github.com:liferay/liferay-dxp.git</developerConnection>#" | \
+		sed -e "s#<connection>scm:git:git@github.com:liferay/liferay-portal.git</connection>#<connection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</connection>#" | \
+		sed -e "s#<developerConnection>scm:git:git@github.com:liferay/liferay-portal.git</developerConnection>#<developerConnection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</developerConnection>#" | \
 		sed -e "s#<tag>.*</tag>#<tag>${_PRODUCT_VERSION}</tag>#" | \
-		sed -e "s#<url>https://github.com/liferay/liferay-portal</url>#<url>https://github.com/liferay/liferay-dxp</url>#" > "${pom}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+		sed -e "s#<url>https://github.com/liferay/liferay-portal</url>#<url>https://github.com/liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}</url>#" > "${pom}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
 
 		rm -f "${pom}-${base_version}.pom"
 	done

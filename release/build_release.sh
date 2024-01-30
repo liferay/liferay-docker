@@ -101,7 +101,7 @@ function main {
 
 		lc_time_run obfuscate_licensing
 
-		lc_time_run build_dxp
+		lc_time_run build_product
 
 		lc_background_run build_sql
 		lc_background_run copy_copyright
@@ -149,7 +149,7 @@ function main {
 
 		lc_time_run obfuscate_licensing
 
-		lc_time_run build_dxp
+		lc_time_run build_product
 
 		lc_time_run clean_up_ignored_dxp_modules
 

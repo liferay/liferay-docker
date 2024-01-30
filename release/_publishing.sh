@@ -112,7 +112,7 @@ function upload_release {
 
 	echo "# Uploaded" > ../output.md
 
-	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	for file in * .*
 	do
@@ -122,9 +122,9 @@ function upload_release {
 
 			#gsutil cp "${_BUILD_DIR}/release/${file}" "gs://patcher-storage/dxp/${_PRODUCT_VERSION}"
 
-			scp "${file}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+			scp "${file}" root@lrdcom-vm-1:"/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
-			echo " - https://releases.liferay.com/dxp/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/${file}" >> ../output.md
+			echo " - https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/${file}" >> ../output.md
 		fi
 	done
 }
