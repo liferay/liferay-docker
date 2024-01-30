@@ -115,12 +115,14 @@ function generate_api_source_jar {
 }
 
 function generate_pom_release_dxp_api {
-	lc_log DEBUG "Generating release.dxp.api-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.pom"
+	local pom_file_name="release.dxp.api-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+
+	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
 		-e "s/__DXP_VERSION__/${_DXP_VERSION}/" \
-		-e "w release.dxp.api.${_DXP_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom" \
+		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.dxp.api.pom.tpl" > /dev/null
 }
 
