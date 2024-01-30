@@ -100,3 +100,12 @@ function upload_product_info_json {
 
 	scp -i lrdcom-vm-1 "${_PROMOTION_DIR}/.product_info.json" root@lrdcom-vm-1:/www/releases.liferay.com/tools/workspace/.product_info.json
 }
+
+function validate_version_for_product_info_json {
+	if [[ "${_DXP_VERSION}" == 20* ]]
+	then
+		lc_log INFO "The product version does not match, not updating the .product_info.json file."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+}
