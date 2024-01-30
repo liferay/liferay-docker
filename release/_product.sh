@@ -169,13 +169,6 @@ function clean_up_ignored_dxp_plugins {
 }
 
 function compile_dxp {
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
-	then
-		lc_log INFO "Portal does not need separate compile step."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
