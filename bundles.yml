@@ -684,10 +684,12 @@ quarterly:
     2023.q3.4:
     2023.q3.5:
     2023.q3.6:
+    2023.q3.7:
     2023.q4.0:
     2023.q4.1:
     2023.q4.2:
     2023.q4.3:
+    2023.q4.4:
         latest: true
 snapshot:
     snapshot-master:
