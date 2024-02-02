@@ -12,6 +12,20 @@ function generate_product_info_json {
 
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
+	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/tools/workspace/.product_info.json" "${_PROMOTION_DIR}/.product_info.json.tmp"
+
+	cp -f "${_PROMOTION_DIR}/.product_info.json.tmp" "${LIFERAY_COMMON_LOG_DIR}/.product_info.json-BACKUP.txt"
+
+	sed \
+		-r \
+		-e 's@\r?\n        "@"@g' \
+		-e 's@\r?\n    \}(,)?@\}\1@g' \
+		-e 's@[ ]+"@"@g' \
+		-i -z \
+		"${_PROMOTION_DIR}/.product_info.json.tmp"
+
+	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${LIFERAY_RELEASE_VERSION}/release.properties"
+
 	lc_log DEBUG "Updating ${_PROMOTION_DIR}/.product_info.json."
 
 	sed \
@@ -56,28 +70,6 @@ function generate_product_info_json {
 	echo "}" >> "${_PROMOTION_DIR}/.product_info.json.tmp"
 
 	jq "." "${_PROMOTION_DIR}/.product_info.json.tmp" > "${_PROMOTION_DIR}/.product_info.json"
-}
-
-function get_file_product_info_json {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
-	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/tools/workspace/.product_info.json" "${_PROMOTION_DIR}/.product_info.json.tmp"
-
-	cp -f "${_PROMOTION_DIR}/.product_info.json.tmp" "${LIFERAY_COMMON_LOG_DIR}/.product_info.json-BACKUP.txt"
-
-	sed \
-		-r \
-		-e 's@\r?\n        "@"@g' \
-		-e 's@\r?\n    \}(,)?@\}\1@g' \
-		-e 's@[ ]+"@"@g' \
-		-i -z \
-		"${_PROMOTION_DIR}/.product_info.json.tmp"
-}
-
-function get_file_release_properties {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
-	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${LIFERAY_RELEASE_VERSION}/release.properties"
 }
 
 function obfuscate_url {
