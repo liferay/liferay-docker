@@ -93,7 +93,7 @@ function upload_product_info_json {
 
 	if [ -e "${_PROMOTION_DIR}/.product_info.json" ]
 	then
-		lc_log INFO "product_info.json was not generated."
+		lc_log INFO "The file product_info.json was not generated."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
