@@ -42,7 +42,9 @@ function main {
 
 	promote_boms
 
-	update_product_info_json
+	lc_time_run generate_product_info_json
+
+	lc_time_run upload_product_info_json
 }
 
 function print_help {
@@ -78,14 +80,6 @@ function promote_packages {
 	fi
 
 	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 cp -a "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_ARTIFACT_RC_VERSION}" "/www/releases.liferay.com/dxp/${_DXP_VERSION}"
-}
-
-function update_product_info_json {
-	lc_time_run validate_version_for_product_info_json || return 0
-
-	lc_time_run generate_product_info_json
-
-	lc_time_run upload_product_info_json
 }
 
 main
