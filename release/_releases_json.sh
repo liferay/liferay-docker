@@ -2,38 +2,40 @@
 
 function add_version_snippet {
 	local minor_version="${1}"
-	local product_version="${2}"
-	local promoted_status="${3}"
-	local release_properties_file="${4}"
+	local product_name="${2}"
+	local product_version="${3}"
+	local promoted_status="${4}"
+	local release_properties_file="${5}"
 
-	lc_log INFO "Adding json snippet to ${_RELEASES_TMP_JSON_FILE}."
+	lc_log INFO "Create ${product_name}-${product_version}.json"
 
 	(
 		echo "{"
 		echo "    \"${product_version}\": {"
 		echo "        \"liferayProductVersion\": \"$(lc_get_property "${release_properties_file}" liferay.product.version)\","
 		echo "        \"group\":\"${minor_version}\","
-		echo "        \"product\": \"${LIFERAY_RELEASE_PRODUCT_NAME}\","
+		echo "        \"product\": \"${product_name}\","
 		echo "        \"promoted\": \"${promoted_status}\""
 		echo "    }"
 		echo "}"
-	) >> "${_RELEASES_TMP_JSON_FILE}"
+	) >> "${product_name}-${product_version}.json"
 }
 
 function generate_product_version_list_file {
-	local release_directory_url="https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}"
-	local version_filter=$(tr '\n' '|' < "${_RELEASE_ROOT_DIR}/supported-${LIFERAY_RELEASE_PRODUCT_NAME}-versions.txt")
+	local product_name="${1}"
+	local release_directory_url="https://releases.liferay.com/${product_name}"
+	local version_filter=$(tr '\n' '|' < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt")
 
 
-	lc_log INFO "Generating product version list from ${release_directory_url}/ to ${_PRODUCT_VERSION_LIST_FILE}"
+	lc_log INFO "Generating product version list from ${release_directory_url}/ to ${_PRODUCT_VERSION_LIST_FILE}-${product_name}"
 
 	set -o pipefail
 
 	lc_curl "${release_directory_url}/" - | \
-		grep -E -o "(20[0-9]+\.q[0-9]\.[0-9]+|[0-9]\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
+		grep -E -o "(20[0-9]+\.q[0-9]\.[0-9]+|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
 		grep -E "^(${version_filter})\." | \
 		tr -d "/" | \
-		uniq - "${_PRODUCT_VERSION_LIST_FILE}"
+		uniq - "${_PRODUCT_VERSION_LIST_FILE}-${product_name}"
 
 	if [ "${?}" -ne 0 ]
 	then
@@ -44,9 +46,10 @@ function generate_product_version_list_file {
 }
 
 function get_file_release_properties {
-	local product_version="${1}"
+	local product_name="${1}"
+	local product_version="${2}"
 
-	local release_properties_url="https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${product_version}/release.properties"
+	local release_properties_url="https://releases.liferay.com/${product_name}/${product_version}/release.properties"
 
 	local http_code=$(curl "${release_properties_url}" --fail --head --max-time 10 -o /dev/null --retry 3 --retry-delay 5 --silent --write-out "%{http_code}")
 
@@ -75,7 +78,7 @@ function get_file_release_properties {
 }
 
 function merge_json_snippets {
-	if (! jq -s add "${_RELEASES_TMP_JSON_FILE}" > releases.json)
+	if (! jq -s add ./*.json > releases.json)
 	then
 		lc_log ERROR "Invalid JSON detected."
 
@@ -84,11 +87,12 @@ function merge_json_snippets {
 }
 
 function process_product_version {
+	local product_name="${1}"
+	local product_version="${2}"
+
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	local product_version="${1}"
-
-	local release_properties_url="https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${product_version}/release.properties"
+	local release_properties_url="https://releases.liferay.com/${product_name}/${product_version}/release.properties"
 	local release_properties_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${release_properties_url##*://}"
 
 	if [ -f "${release_properties_file}" ]
@@ -97,7 +101,7 @@ function process_product_version {
 	else
 		lc_log INFO "Downloading ${release_properties_url} to the cache."
 
-		get_file_release_properties "${product_version}" || return "${?}"
+		get_file_release_properties "${product_name}" "${product_version}" || return "${?}"
 	fi
 
 	local minor_version=$(echo "${product_version}" | sed -r "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")
@@ -112,13 +116,13 @@ function process_product_version {
 		promoted_status="false"
 	fi
 
-	add_version_snippet "${minor_version}" "${product_version}" "${promoted_status}" "${release_properties_file}"
+	add_version_snippet "${minor_version}" "${product_name}" "${product_version}" "${promoted_status}" "${release_properties_file}"
 }
 
 function upload_releases_json {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	lc_log INFO "Backing up to /www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/releases.json.BACKUP."
+	lc_log INFO "Backing up to /www/releases.liferay.com/releases.json.BACKUP."
 
 	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/releases.json" "/www/releases.liferay.com/releases.json.BACKUP"
 
