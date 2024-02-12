@@ -1,9 +1,10 @@
 #!/bin/bash
 
 function add_version_snippet {
-	local product_version="${1}"
-	local promoted_status="${2}"
-	local release_properties_file="${3}"
+	local minor_version="${1}"
+	local product_version="${2}"
+	local promoted_status="${3}"
+	local release_properties_file="${4}"
 
 	lc_log INFO "Adding json snippet to ${_RELEASES_TMP_JSON_FILE}."
 
@@ -11,6 +12,8 @@ function add_version_snippet {
 		echo "{"
 		echo "    \"${product_version}\": {"
 		echo "        \"liferayProductVersion\": \"$(lc_get_property "${release_properties_file}" liferay.product.version)\","
+		echo "        \"group\":\"${minor_version}\","
+		echo "        \"product\": \"${LIFERAY_RELEASE_PRODUCT_NAME}\","
 		echo "        \"promoted\": \"${promoted_status}\""
 		echo "    }"
 		echo "}"
@@ -109,7 +112,7 @@ function process_product_version {
 		promoted_status="false"
 	fi
 
-	add_version_snippet "${product_version}" "${promoted_status}" "${release_properties_file}"
+	add_version_snippet "${minor_version}" "${product_version}" "${promoted_status}" "${release_properties_file}"
 }
 
 function upload_releases_json {
@@ -117,9 +120,9 @@ function upload_releases_json {
 
 	lc_log INFO "Backing up to /www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/releases.json.BACKUP."
 
-	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/releases.json" "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/releases.json.BACKUP"
+	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/releases.json" "/www/releases.liferay.com/releases.json.BACKUP"
 
-	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to /www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/releases.json"
+	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to /www/releases.liferay.com/releases.json"
 
-	scp "${_PROMOTION_DIR}/releases.json" "root@lrdcom-vm-1:/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/releases.json"
+	scp "${_PROMOTION_DIR}/releases.json" "root@lrdcom-vm-1:/www/releases.liferay.com/releases.json"
 }
