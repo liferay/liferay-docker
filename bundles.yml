@@ -691,6 +691,7 @@ quarterly:
     2023.q4.2:
     2023.q4.3:
     2023.q4.4:
+    2023.q4.5:
         latest: true
 snapshot:
     snapshot-master:
