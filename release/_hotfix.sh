@@ -401,6 +401,13 @@ function prepare_release_dir {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	if [ ! -e "${_RELEASE_DIR}/tomcat" ]
+	then
+		echo "${_RELEASE_DIR} does not have a tomcat directory, deleting."
+
+		rm -fr "${_RELEASE_DIR}"
+	fi
+
 	mkdir -p "${_RELEASE_DIR}.tmp"
 
 	lc_cd "${_RELEASE_DIR}"
