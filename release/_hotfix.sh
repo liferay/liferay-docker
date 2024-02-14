@@ -396,21 +396,23 @@ function prepare_release_dir {
 
 	if [ -e "${_RELEASE_DIR}" ]
 	then
-		echo "${_RELEASE_DIR} is already available."
+		if [ ! -e "${_RELEASE_DIR}/tomcat" ]
+		then
+			echo "${_RELEASE_DIR} does not have a tomcat directory, deleting."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+			rm -fr "${_RELEASE_DIR}"
+		else
+			echo "${_RELEASE_DIR} is already available."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
 	fi
 
-	if [ ! -e "${_RELEASE_DIR}/tomcat" ]
-	then
-		echo "${_RELEASE_DIR} does not have a tomcat directory, deleting."
-
-		rm -fr "${_RELEASE_DIR}"
-	fi
+	rm -fr "${_RELEASE_DIR}.tmp"
 
 	mkdir -p "${_RELEASE_DIR}.tmp"
 
-	lc_cd "${_RELEASE_DIR}"
+	lc_cd "${_RELEASE_DIR}.tmp"
 
 	if [ -n "${release7z}" ]
 	then
