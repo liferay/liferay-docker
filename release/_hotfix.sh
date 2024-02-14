@@ -401,7 +401,7 @@ function prepare_release_dir {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	mkdir -p "${_RELEASE_DIR}"
+	mkdir -p "${_RELEASE_DIR}.tmp"
 
 	lc_cd "${_RELEASE_DIR}"
 
@@ -427,6 +427,8 @@ function prepare_release_dir {
 	shopt -u dotglob
 
 	rm -fr liferay-dxp/
+
+	mv "${_RELEASE_DIR}.tmp" "${_RELEASE_DIR}"
 }
 
 function set_hotfix_name {
