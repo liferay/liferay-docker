@@ -88,7 +88,7 @@ function promote_packages {
 function tag_release {
 	if [ -z "${LIFERAY_RELEASE_GITHUB_PAT}" ]
 	then
-		lc_log INFO "LIFERAY_RELEASE_GITHUB_PAT was not set."
+		lc_log INFO "LIFERAY_RELEASE_GITHUB_PAT is not set."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
