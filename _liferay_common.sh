@@ -91,9 +91,10 @@ function lc_curl {
 
 	if (! curl "${url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output - --retry 10 --retry-delay 5 --show-error --silent)
 	then
+
 		lc_log ERROR "Unable to curl ${url}."
 
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
@@ -227,9 +228,22 @@ function lc_download {
 
 	local temp_suffix="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
 
-	if (! curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_suffix}" --show-error --silent)
+	#
+	# Must stay separate line, otherwise we would not get back the error code of curl
+	#
+
+	local http_code
+
+	http_code=$(curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_suffix}" --show-error --silent --write-out "%{http_code}")
+
+	if [ "${?}" -gt 0 ]
 	then
-		lc_log ERROR "Unable to download ${file_url}."
+		lc_log DEBUG "Unable to download ${file_url}. HTTP response code was ${http_code}."
+
+		if [ "${http_code}" == "404" ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_MISSING_RESOURCE}"
+		fi
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -404,6 +418,7 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_BAD=1
 	LIFERAY_COMMON_EXIT_CODE_CD=3
 	LIFERAY_COMMON_EXIT_CODE_HELP=2
+	LIFERAY_COMMON_EXIT_CODE_MISSING_RESOURCE=5
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
 
