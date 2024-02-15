@@ -10,14 +10,16 @@ function add_version_snippet {
 	lc_log INFO "Create ${product_name}-${product_version}.json"
 
 	(
+		echo "["
 		echo "{"
-		echo "    \"${product_version}\": {"
-		echo "        \"liferayProductVersion\": \"$(lc_get_property "${release_properties_file}" liferay.product.version)\","
-		echo "        \"group\":\"${minor_version}\","
-		echo "        \"product\": \"${product_name}\","
-		echo "        \"promoted\": \"${promoted_status}\""
-		echo "    }"
+		echo "    \"liferayProductVersion\": \"$(lc_get_property "${release_properties_file}" liferay.product.version)\","
+		echo "    \"group\":\"${minor_version}\","
+		echo "    \"product\": \"${product_name}\","
+		echo "    \"releaseKey\":\"${product_name}-${product_version}\","
+		echo "    \"promoted\": \"${promoted_status}\","
+		echo "    \"url\": \"https://releases-cdn.liferay.com/${product_name}/${product_version}\""
 		echo "}"
+		echo "]"
 	) >> "${product_name}-${product_version}.json"
 }
 
@@ -25,7 +27,6 @@ function generate_product_version_list_file {
 	local product_name="${1}"
 	local release_directory_url="https://releases.liferay.com/${product_name}"
 	local version_filter=$(tr '\n' '|' < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt")
-
 
 	lc_log INFO "Generating product version list from ${release_directory_url}/ to ${_PRODUCT_VERSION_LIST_FILE}-${product_name}"
 
@@ -105,9 +106,16 @@ function process_product_version {
 	fi
 
 	local minor_version=$(echo "${product_version}" | sed -r "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")
-	local last_version=$(grep "^${minor_version}" "${_PRODUCT_VERSION_LIST_FILE}" | tail -1)
+	local last_version=$(grep "^${minor_version}" "${_PRODUCT_VERSION_LIST_FILE}-${product_name}" | tail -1)
 
-	lc_log DEBUG "Defining promoted status of the version ${product_version}"
+	if [ -z "${last_version}" ]
+	then
+		lc_log ERROR "Unable to set the \${last_version} variable."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	lc_log INFO "Set promoted status of version ${product_version} based on the last version: '${last_version}'"
 
 	if [ "${product_version}" == "${last_version}" ]
 	then
