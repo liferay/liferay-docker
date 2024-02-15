@@ -117,7 +117,7 @@ function tag_release {
 		--silent
 		)
 	then
-		lc_log ERROR "Unable to access the requested URL."
+		lc_log ERROR "Unable to tag release using GitHub API."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
