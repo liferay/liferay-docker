@@ -179,6 +179,8 @@ function compile_product {
 
 	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
+	echo "baseline.jar.report.level=off" > "build.${USER}.properties"
+
 	ant clean compile
 }
 
