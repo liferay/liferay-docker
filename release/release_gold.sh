@@ -86,6 +86,13 @@ function promote_packages {
 }
 
 function tag_release {
+	if [ -z "${LIFERAY_RELEASE_GITHUB_PAT}" ]
+	then
+		lc_log INFO "LIFERAY_RELEASE_GITHUB_PAT was not set."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local repository=liferay-portal-ee
 
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
@@ -93,33 +100,26 @@ function tag_release {
 		repository=liferay-portal
 	fi
 
-	if [ -n "${LIFERAY_RELEASE_GITHUB_PAT}" ]
+	if (! curl --data "{
+			\"message\":\"\",
+			\"object\":\"$(lc_get_property release-data/release.properties git.hash.liferay-portal-ee)\",
+			\"tag\":\"${LIFERAY_RELEASE_VERSION}\",
+			\"type\":\"commit\"
+			}" \
+		--fail \
+		--header "Accept: application/vnd.github+json" \
+		--header "Authorization: Bearer ${LIFERAY_RELEASE_GITHUB_PAT}" \
+		--header "X-GitHub-Api-Version: 2022-11-28" \
+		--location https://api.github.com/repos/liferay/${repository}/git/tags \
+		--retry 3 \
+		--request POST \
+		--max-time 10 \
+		--silent
+		)
 	then
-		if (! curl --data "{
-				\"message\":\"\",
-				\"object\":\"$(lc_get_property release-data/release.properties git.hash.liferay-portal-ee)\",
-				\"tag\":\"${LIFERAY_RELEASE_VERSION}\",
-				\"type\":\"commit\"
-				}" \
-			--fail \
-			--header "Accept: application/vnd.github+json" \
-			--header "Authorization: Bearer ${LIFERAY_RELEASE_GITHUB_PAT}" \
-			--header "X-GitHub-Api-Version: 2022-11-28" \
-			--location https://api.github.com/repos/liferay/${repository}/git/tags \
-			--retry 3 \
-			--request POST \
-			--max-time 10 \
-			--silent
-			)
-		then
-			lc_log ERROR "Unable to access the requested URL."
+		lc_log ERROR "Unable to access the requested URL."
 
-			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		fi
-	else
-		lc_log ERROR "Personal Access Token was not declared"
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
