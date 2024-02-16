@@ -1,130 +1,11 @@
 #!/bin/bash
 
-function add_version_snippet {
-	local minor_version="${1}"
-	local product_name="${2}"
-	local product_version="${3}"
-	local promoted_status="${4}"
-	local release_properties_file="${5}"
+function regenerate_releases_json {
+	_process_product dxp
 
-	lc_log INFO "Create ${product_name}-${product_version}.json"
+	_process_product portal
 
-	(
-		echo "["
-		echo "{"
-		echo "    \"liferayProductVersion\": \"$(lc_get_property "${release_properties_file}" liferay.product.version)\","
-		echo "    \"group\":\"${minor_version}\","
-		echo "    \"product\": \"${product_name}\","
-		echo "    \"releaseKey\":\"${product_name}-${product_version}\","
-		echo "    \"promoted\": \"${promoted_status}\","
-		echo "    \"url\": \"https://releases-cdn.liferay.com/${product_name}/${product_version}\""
-		echo "}"
-		echo "]"
-	) >> "${product_name}-${product_version}.json"
-}
-
-function generate_product_version_list_file {
-	local product_name="${1}"
-	local release_directory_url="https://releases.liferay.com/${product_name}"
-	local version_filter=$(tr '\n' '|' < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt")
-
-	lc_log INFO "Generating product version list from ${release_directory_url}/ to ${_PRODUCT_VERSION_LIST_FILE}-${product_name}"
-
-	set -o pipefail
-
-	lc_curl "${release_directory_url}/" - | \
-		grep -E -o "(20[0-9]+\.q[0-9]\.[0-9]+|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
-		grep -E "^(${version_filter})\." | \
-		tr -d "/" | \
-		uniq - "${_PRODUCT_VERSION_LIST_FILE}-${product_name}"
-
-	if [ "${?}" -ne 0 ]
-	then
-		lc_log ERROR "Unable to download the product version list."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-}
-
-function get_file_release_properties {
-	local product_name="${1}"
-	local product_version="${2}"
-
-	local release_properties_url="https://releases.liferay.com/${product_name}/${product_version}/release.properties"
-
-	local http_code=$(curl "${release_properties_url}" --fail --head --max-time 10 -o /dev/null --retry 3 --retry-delay 5 --silent --write-out "%{http_code}")
-
-	lc_log DEBUG "HTTP return code: ${http_code}."
-
-	if [ "${http_code}" == "200" ]
-	then
-		lc_log DEBUG "The file '${release_properties_url}' is reachable for downloading."
-	elif [ "${http_code}" == "404" ]
-	then
-		lc_log INFO "No file exists on '${release_properties_url}' for downloading."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	else
-		lc_log ERROR "Unable to check the availability of ${release_properties_url}."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	if (! lc_download "${release_properties_url}")
-	then
-		lc_log ERROR "Unable to download ${release_properties_url}."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-}
-
-function merge_json_snippets {
-	if (! jq -s add ./*.json > releases.json)
-	then
-		lc_log ERROR "Invalid JSON detected."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-}
-
-function process_product_version {
-	local product_name="${1}"
-	local product_version="${2}"
-
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
-	local release_properties_url="https://releases.liferay.com/${product_name}/${product_version}/release.properties"
-	local release_properties_file="${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}/${release_properties_url##*://}"
-
-	if [ -f "${release_properties_file}" ]
-	then
-		lc_log INFO "Using ${release_properties_file} from the cache."
-	else
-		lc_log INFO "Downloading ${release_properties_url} to the cache."
-
-		get_file_release_properties "${product_name}" "${product_version}" || return "${?}"
-	fi
-
-	local minor_version=$(echo "${product_version}" | sed -r "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")
-	local last_version=$(grep "^${minor_version}" "${_PRODUCT_VERSION_LIST_FILE}-${product_name}" | tail -1)
-
-	if [ -z "${last_version}" ]
-	then
-		lc_log ERROR "Unable to set the \${last_version} variable."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	lc_log INFO "Set promoted status of version ${product_version} based on the last version: '${last_version}'"
-
-	if [ "${product_version}" == "${last_version}" ]
-	then
-		promoted_status="true"
-	else
-		promoted_status="false"
-	fi
-
-	add_version_snippet "${minor_version}" "${product_name}" "${product_version}" "${promoted_status}" "${release_properties_file}"
+	_merge_json_snippets
 }
 
 function upload_releases_json {
@@ -137,4 +18,82 @@ function upload_releases_json {
 	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to /www/releases.liferay.com/releases.json"
 
 	scp "${_PROMOTION_DIR}/releases.json" "root@lrdcom-vm-1:/www/releases.liferay.com/releases.json"
+}
+
+function _merge_json_snippets {
+	if (! jq -s add ./*.json > releases.json)
+	then
+		lc_log ERROR "Invalid JSON detected."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
+function _process_product {
+	local product_name="${1}"
+
+	local release_directory_url="https://releases.liferay.com/${product_name}"
+
+	local version_filter=$(tr '\n' '|' < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt")
+
+	lc_log INFO "Generating product version list from ${release_directory_url}."
+
+	local directory_html=$(lc_curl "${release_directory_url}/")
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to download the product version list."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	for product_version in  $(echo -en "${directory_html}" | \
+		grep -E -o "(20[0-9]+\.q[0-9]\.[0-9]+|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
+		tr -d "/" | \
+		uniq)
+	do
+		_process_product_version "${product_name}" "${product_version}"
+	done
+}
+
+function _process_product_version {
+	local product_name=${1}
+	local product_version=${2}
+
+	lc_log INFO "Processing ${product_name} ${product_version}."
+
+	#
+	# Must stay separate line, otherwise we would not get back the error code of lc_download
+	#
+
+	local release_properties_file
+
+	release_properties_file=$(lc_download "https://releases.liferay.com/${product_name}/${product_version}/release.properties")
+
+	local exit_code=${?}
+
+	if [ "${exit_code}" == "${LIFERAY_COMMON_EXIT_CODE_MISSING_RESOURCE}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	elif [ "${exit_code}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local grouping_version=$(echo "${product_version}" | sed -r "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")
+
+	local release_date=$(lc_get_property "${release_properties_file}" release.date)
+
+	(
+		echo "["
+		echo "{"
+		echo "    \"group\":\"${grouping_version}\","
+		echo "    \"product\": \"${product_name}\","
+		echo "    \"productVersion\": \"$(lc_get_property "${release_properties_file}" liferay.product.version)\","
+		echo "    \"promoted\": \"false\","
+		echo "    \"releaseKey\":\"${product_name}-${product_version}\","
+		echo "    \"url\": \"https://releases-cdn.liferay.com/${product_name}/${product_version}\""
+		echo "}"
+		echo "]"
+	) >> "${release_date}-${product_name}-${product_version}.json"
 }

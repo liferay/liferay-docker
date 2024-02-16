@@ -4,6 +4,7 @@ source _liferay_common.sh
 source _product_info_json.sh
 source _promotion.sh
 source _publishing.sh
+source _releases_json.sh
 
 function check_usage {
 	if [ -z "${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}" ] || [ -z "${LIFERAY_RELEASE_VERSION}" ]
@@ -47,6 +48,10 @@ function main {
 	lc_time_run generate_product_info_json
 
 	lc_time_run upload_product_info_json
+
+	lc_time_run regenerate_releases_json
+
+	lc_time_run merge_json_snippets
 }
 
 function print_help {
