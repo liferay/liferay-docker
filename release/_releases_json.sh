@@ -77,20 +77,16 @@ function _process_product_version {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local grouping_version=$(echo "${product_version}" | sed -r "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")
-
-	local release_date=$(lc_get_property "${release_properties_file}" release.date)
-
 	(
 		echo "["
-		echo "{"
-		echo "    \"group\":\"${grouping_version}\","
-		echo "    \"product\": \"${product_name}\","
-		echo "    \"productVersion\": \"$(lc_get_property "${release_properties_file}" liferay.product.version)\","
-		echo "    \"promoted\": \"false\","
-		echo "    \"releaseKey\":\"${product_name}-${product_version}\","
-		echo "    \"url\": \"https://releases-cdn.liferay.com/${product_name}/${product_version}\""
-		echo "}"
+		echo "    {"
+		echo "        \"product\": \"${product_name}\","
+		echo "        \"productGroupVersion\": \"$(echo "${product_version}" | sed -r "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")\","
+		echo "        \"productVersion\": \"$(lc_get_property "${release_properties_file}" liferay.product.version)\","
+		echo "        \"promoted\": \"false\","
+		echo "        \"releaseKey\":\"${product_name}-${product_version}\","
+		echo "        \"url\": \"https://releases-cdn.liferay.com/${product_name}/${product_version}\""
+		echo "    }"
 		echo "]"
-	) >> "${release_date}-${product_name}-${product_version}.json"
+	) >> "$(lc_get_property "${release_properties_file}" release.date)-${product_name}-${product_version}.json"
 }
