@@ -51,7 +51,7 @@ function main {
 
 	lc_time_run regenerate_releases_json
 
-	lc_time_run merge_json_snippets
+	lc_time_run upload_releases_json
 }
 
 function print_help {
