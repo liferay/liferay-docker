@@ -191,7 +191,7 @@
         test_installed_patch: dxp-21-7110,hotfix-5178-7110
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.1.10/hotfix/liferay-hotfix-5178-7110.zip
     7.1.10-dxp-22:
-        bundle_url: files.liferay.com/private/ee/portal/7.1.10-dxp-22/liferay-dxp-tomcat-7.1.10-dxp-22-slim-20210303111136677.7z
+        bundle_url: files.liferay.com/private/ee/portal/7.1.10-dxp-22/liferay-dxp-tomcat-7.1.10-dxp-22-20210303111136677.7z
         test_installed_patch: dxp-22-7110,hotfix-5330-7110
         test_hotfix_url: files.liferay.com/private/ee/fix-packs/7.1.10/hotfix/liferay-hotfix-5330-7110.zip
     7.1.10-sp6:
