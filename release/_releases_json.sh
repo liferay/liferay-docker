@@ -2,7 +2,6 @@
 
 function regenerate_releases_json {
 	_process_product dxp
-
 	_process_product portal
 
 	_merge_json_snippets
@@ -60,11 +59,11 @@ function _process_product_version {
 
 	lc_log INFO "Processing ${product_name} ${product_version}."
 
-	#
-	# Must stay separate line, otherwise we would not get back the error code of lc_download
-	#
-
 	local release_properties_file
+
+	#
+	# Define release_properties_file in a separate line to capture the exit code.
+	#
 
 	release_properties_file=$(lc_download "https://releases.liferay.com/${product_name}/${product_version}/release.properties")
 

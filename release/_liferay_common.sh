@@ -230,7 +230,7 @@ function lc_download {
 	local http_code
 
 	#
-	# Define http_code in a separate line to capture the exit status.
+	# Define http_code in a separate line to capture the exit code.
 	#
 
 	http_code=$(curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_suffix}" --show-error --silent --write-out "%{http_code}")
