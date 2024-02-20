@@ -15,7 +15,7 @@ function lc_background_run {
 
 		local pid=${!}
 
-		LIFERAY_COMMON_BACKGROUND_PIDS["${pid}"]="${@}"
+		LIFERAY_COMMON_BACKGROUND_PIDS["${pid}"]="${*}"
 	fi
 }
 
@@ -91,7 +91,6 @@ function lc_curl {
 
 	if (! curl "${url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output - --retry 10 --retry-delay 5 --show-error --silent)
 	then
-
 		lc_log ERROR "Unable to curl ${url}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
@@ -228,11 +227,11 @@ function lc_download {
 
 	local temp_suffix="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
 
-	#
-	# Must stay separate line, otherwise we would not get back the error code of curl
-	#
-
 	local http_code
+
+	#
+	# Define http_code in a separate line to capture the exit status.
+	#
 
 	http_code=$(curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_suffix}" --show-error --silent --write-out "%{http_code}")
 
@@ -372,7 +371,7 @@ function lc_time_run {
 			if (declare -F lc_time_run_error &>/dev/null)
 			then
 				LC_TIME_RUN_ERROR_EXIT_CODE="${exit_code}"
-				LC_TIME_RUN_ERROR_FUNCTION="${@}"
+				LC_TIME_RUN_ERROR_FUNCTION="${*}"
 				LC_TIME_RUN_ERROR_LOG_FILE="${log_file}"
 
 				lc_time_run_error
@@ -386,7 +385,7 @@ function lc_time_run {
 }
 
 function lc_wait {
-	for pid in ${!LIFERAY_COMMON_BACKGROUND_PIDS[@]}
+	for pid in "${!LIFERAY_COMMON_BACKGROUND_PIDS[@]}"
 	do
 		wait "${pid}"
 
