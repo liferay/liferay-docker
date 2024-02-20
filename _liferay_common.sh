@@ -91,7 +91,6 @@ function lc_curl {
 
 	if (! curl "${url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output - --retry 10 --retry-delay 5 --show-error --silent)
 	then
-
 		lc_log ERROR "Unable to curl ${url}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
@@ -228,11 +227,11 @@ function lc_download {
 
 	local temp_suffix="temp_$(lc_date "${current_date}" "+%Y%m%d%H%M%S")"
 
-	#
-	# Must stay separate line, otherwise we would not get back the error code of curl
-	#
-
 	local http_code
+
+	#
+	# Define http_code in a separate line to capture the exit status.
+	#
 
 	http_code=$(curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_suffix}" --show-error --silent --write-out "%{http_code}")
 
