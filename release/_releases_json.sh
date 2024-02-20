@@ -15,7 +15,7 @@ function upload_releases_json {
 
 	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/releases.json" "/www/releases.liferay.com/releases.json.BACKUP"
 
-	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to /www/releases.liferay.com/releases.json"
+	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to /www/releases.liferay.com/releases.json."
 
 	scp "${_PROMOTION_DIR}/releases.json" "root@lrdcom-vm-1:/www/releases.liferay.com/releases.json"
 }
@@ -23,7 +23,7 @@ function upload_releases_json {
 function _merge_json_snippets {
 	if (! jq -s add ./*.json > releases.json)
 	then
-		lc_log ERROR "Invalid JSON detected."
+		lc_log ERROR "Detected invalid JSON."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
