@@ -34,8 +34,6 @@ function _process_product {
 
 	local release_directory_url="https://releases.liferay.com/${product_name}"
 
-	local version_filter=$(tr '\n' '|' < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt")
-
 	lc_log INFO "Generating product version list from ${release_directory_url}."
 
 	local directory_html=$(lc_curl "${release_directory_url}/")
