@@ -393,7 +393,7 @@ function lc_wait {
 
 		if [ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_OK}" ] && [ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
-			lc_log ERROR "Background job exit code was ${exit_code}. Exiting."
+			lc_log ERROR "Exiting because background process exit code was ${exit_code}."
 
 			exit "${exit_code}"
 		fi
