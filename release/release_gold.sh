@@ -114,7 +114,7 @@ function tag_release {
 					"tag": "${LIFERAY_RELEASE_VERSION}",
 					"type": "commit"
 				}
-			EOF
+EOF
 			--fail \
 			--header "Accept: application/vnd.github+json" \
 			--header "Authorization: Bearer ${LIFERAY_RELEASE_GITHUB_PAT}" \
