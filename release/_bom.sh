@@ -52,7 +52,7 @@ function generate_api_jars {
 
 		lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar."
 
-		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar"
+		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar" "${name}-${version}-sources.jar"
 
 		unzip -d api-sources-jar -o -q "${name}-${version}-sources.jar"
 
@@ -60,7 +60,7 @@ function generate_api_jars {
 
 		lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar."
 
-		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar"
+		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar" "${name}-${version}.jar"
 
 		_manage_bom_jar "${name}-${version}.jar"
 
@@ -139,7 +139,7 @@ function generate_poms {
 
 	for pom in "release.${LIFERAY_RELEASE_PRODUCT_NAME}.api" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party"
 	do
-		lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/${pom}/${base_version}/${pom}-${base_version}.pom"
+		lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/${pom}/${base_version}/${pom}-${base_version}.pom" "${pom}-${base_version}.pom"
 
 		sed -e "s#<version>${base_version}</version>#<version>${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}</version>#" < "${pom}-${base_version}.pom" | \
 		sed -e "s#<connection>scm:git:git@github.com:liferay/liferay-portal.git</connection>#<connection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</connection>#" | \
