@@ -58,7 +58,7 @@ function clone_repository {
 function generate_release_notes {
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
-		lc_log INFO "Not generating release notes for portal."
+		lc_log INFO "The product is set to \"portal.\""
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
