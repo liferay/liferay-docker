@@ -107,14 +107,13 @@ function tag_release {
 
 	if (! curl
 			"https://api.github.com/repos/liferay/${repository}/git/tags" \
-			--data-binary @- << EOF
+			--data-raw '
 				{
 					"message": "",
 					"object": "$(lc_get_property release-data/release.properties git.hash.liferay-portal-ee)",
 					"tag": "${LIFERAY_RELEASE_VERSION}",
 					"type": "commit"
-				}
-EOF
+				}' \
 			--fail \
 			--header "Accept: application/vnd.github+json" \
 			--header "Authorization: Bearer ${LIFERAY_RELEASE_GITHUB_PAT}" \
