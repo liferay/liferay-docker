@@ -56,13 +56,18 @@ function clone_repository {
 }
 
 function generate_release_notes {
-	local ga_version
-
-	if (echo "${_DXP_VERSION}" | grep -q "q")
+	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
-		ga_version=7.4.13-ga1
-	else
-		ga_version=${_DXP_VERSION%%-u*}-ga1
+		lc_log INFO "Not generating release notes for portal."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	local ga_version=7.4.13-ga1
+
+	if (! echo "${_PRODUCT_VERSION}" | grep -q "q")
+	then
+		ga_version=${_PRODUCT_VERSION%%-u*}-ga1
 	fi
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
@@ -76,7 +81,7 @@ function generate_release_notes {
 		grep -v LRQA | \
 		grep -v POSHI | \
 		grep -v RELEASE | \
-		paste -sd, > "${_BUILD_DIR}/release/release_notes.txt"
+		paste -sd, > "${_BUILD_DIR}/release/release-notes.txt"
 }
 
 function set_git_sha {
