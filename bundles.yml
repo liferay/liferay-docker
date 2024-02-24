@@ -676,7 +676,7 @@
     7.4.13-u110:
     7.4.13-u111:
     7.4.13.nightly:
-        bundle_url: files.liferay.com/private/ee/portal/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
+        bundle_url: releases-cdn.liferay.com/dxp/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
 quarterly:
     2023.q3.1:
         bundle_url: releases-cdn.liferay.com/dxp/2023.q3.1/liferay-dxp-tomcat-2023.q3.1-1697647393.7z
