@@ -22,7 +22,7 @@ ARG TARGETPLATFORM
 
 COPY --chown=liferay:liferay liferay /opt/liferay/
 COPY --chown=liferay:liferay resources/opt/liferay/* /opt/liferay/
-COPY --chown=liferay:liferay resources/usr/ /usr
+COPY resources/usr/ /usr
 
 ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_entrypoint.sh"]
 
