@@ -112,7 +112,7 @@ function upload_release {
 
 	echo "# Uploaded" > ../output.md
 
-	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+	ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	for file in * .*
 	do

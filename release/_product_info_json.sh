@@ -100,9 +100,9 @@ function upload_product_info_json {
 
 	lc_log INFO "Backing up to /www/releases.liferay.com/tools/workspace/.product_info.json.BACKUP."
 
-	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/tools/workspace/.product_info.json" "/www/releases.liferay.com/tools/workspace/.product_info.json.BACKUP"
+	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/tools/workspace/.product_info.json" "/www/releases.liferay.com/tools/workspace/.product_info.json.BACKUP"
 
 	lc_log DEBUG "Uploading ${_PROMOTION_DIR}/.product_info.json to /www/releases.liferay.com/tools/workspace/.product_info.json."
 
-	scp -i lrdcom-vm-1 "${_PROMOTION_DIR}/.product_info.json" root@lrdcom-vm-1:/www/releases.liferay.com/tools/workspace/.product_info.json
+	scp "${_PROMOTION_DIR}/.product_info.json" root@lrdcom-vm-1:/www/releases.liferay.com/tools/workspace/.product_info.json
 }
