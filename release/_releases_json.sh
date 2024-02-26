@@ -4,8 +4,8 @@ function regenerate_releases_json {
 	_process_product dxp
 	_process_product portal
 
-	_promote_versions dxp
-	_promote_versions portal
+	_promote_product_versions dxp
+	_promote_product_versions portal
 
 	_merge_json_snippets
 }
@@ -104,7 +104,7 @@ function _process_product_version {
 }
 
 
-function _promote_versions {
+function _promote_product_versions {
 	local product_name=${1}
 
 	while IFS= read -r group_version
@@ -118,7 +118,7 @@ function _promote_versions {
 
 			sed -i 's/"promoted": "false"/"promoted": "true"/' "${last_version}"
 		else
-			lc_log INFO "No version found to promote for ${product_name}-${group_version}."
+			lc_log INFO "No product version found to promote for ${product_name}-${group_version}."
 		fi
 	done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
 }
