@@ -1,5 +1,31 @@
 #!/bin/bash
 
+function check_url {
+	local file_url="${1}"
+
+	lc_log DEBUG "Check the URL is valid: ${file_url}."
+
+	if (curl \
+			--fail \
+			--head \
+			--max-time 300 \
+			--output /dev/null \
+			--retry 3 \
+			--retry-delay 10 \
+			--silent \
+			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" \
+			"${file_url}")
+	then
+		lc_log DEBUG "The URL is valid."
+
+		return 0
+	else
+		lc_log ERROR "Unable to access ${file_url}."
+
+		return 1
+	fi
+}
+
 function init_gcs {
 	if [ ! -n "${LIFERAY_RELEASE_GCS_TOKEN}" ]
 	then
@@ -135,13 +161,22 @@ function _upload_to_nexus {
 
 	lc_log INFO "Uploading ${file_path} to ${file_url}."
 
-	curl \
-		--fail \
-		--max-time 300 \
-		--retry 3 \
-		--retry-delay 10 \
-		--silent \
-		--upload-file "${file_path}" \
-		--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" \
-		"${file_url}"
+	if (check_url "${file_url}")
+	then
+		lc_log "Not uploading ${file_path} to ${file_url} because it already exists."
+
+		return 0
+	else
+		lc_log INFO "Uploading ${file_path} to ${file_url}."
+
+		curl \
+			--fail \
+			--max-time 300 \
+			--retry 3 \
+			--retry-delay 10 \
+			--silent \
+			--upload-file "${file_path}" \
+			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" \
+			"${file_url}"
+	fi
 }
