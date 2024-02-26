@@ -19,7 +19,9 @@ function upload_releases_json {
 
 	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to /www/releases.liferay.com/releases.json."
 
-	scp "${_PROMOTION_DIR}/releases.json" "root@lrdcom-vm-1:/www/releases.liferay.com/releases.json"
+	scp "${_PROMOTION_DIR}/releases.json" "root@lrdcom-vm-1:/www/releases.liferay.com/releases.json.upload"
+
+	ssh root@lrdcom-vm-1 mv -f "/www/releases.liferay.com/releases.json.upload" "/www/releases.liferay.com/releases.json"
 }
 
 function _merge_json_snippets {
