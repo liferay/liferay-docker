@@ -4,6 +4,9 @@ function regenerate_releases_json {
 	_process_product dxp
 	_process_product portal
 
+	_promote_versions dxp
+	_promote_versions portal
+
 	_merge_json_snippets
 }
 
@@ -77,6 +80,13 @@ function _process_product_version {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
+	local release_date=$(lc_get_property "${release_properties_file}" release.date)
+
+	if [ -z "${release_date}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	(
 		echo "["
 		echo "    {"
@@ -88,5 +98,25 @@ function _process_product_version {
 		echo "        \"url\": \"https://releases-cdn.liferay.com/${product_name}/${product_version}\""
 		echo "    }"
 		echo "]"
-	) >> "$(lc_get_property "${release_properties_file}" release.date)-${product_name}-${product_version}.json"
+	) >> "${release_date}-${product_name}-${product_version}.json"
+}
+
+
+function _promote_versions {
+	local product_name=${1}
+
+	while IFS= read -r group_version
+	do
+		# shellcheck disable=SC2010
+		last_version=$(ls | grep "${product_name}-${group_version}" | tail -n 1 2>/dev/null)
+
+		if [ -n "${last_version}" ]
+		then
+			lc_log INFO "Promoting ${last_version}."
+
+			sed -i 's/"promoted": "false"/"promoted": "true"/' "${last_version}"
+		else
+			lc_log INFO "No version found to promote for ${product_name}-${group_version}."
+		fi
+	done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
 }
