@@ -47,7 +47,7 @@ function main {
 
 	lc_time_run generate_product_info_json
 
-	lc_time_run upload_product_info_json
+	#lc_time_run upload_product_info_json
 
 	lc_time_run regenerate_releases_json
 
