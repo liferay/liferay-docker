@@ -4,6 +4,7 @@ function check_url {
 	local file_url="${1}"
 
 	if (curl \
+			"${file_url}" \
 			--fail \
 			--head \
 			--max-time 300 \
@@ -11,8 +12,7 @@ function check_url {
 			--retry 3 \
 			--retry-delay 10 \
 			--silent \
-			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" \
-			"${file_url}")
+			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}")
 	then
 		lc_log DEBUG "File is available at ${file_url}."
 
@@ -155,7 +155,7 @@ function _upload_to_nexus {
 
 	if (check_url "${file_url}")
 	then
-		lc_log "Not uploading ${file_path} to ${file_url} because it already exists."
+		lc_log "Skipping the upload of ${file_path} to ${file_url} because it already exists."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
