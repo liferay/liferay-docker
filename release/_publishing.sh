@@ -62,8 +62,6 @@ function upload_bom_file {
 function upload_boms {
 	local nexus_repository_name="${1}"
 
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ] && [ "${nexus_repository_name}" == "xanadu" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -92,8 +90,6 @@ function upload_boms {
 }
 
 function upload_hotfix {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -123,8 +119,6 @@ function upload_hotfix {
 }
 
 function upload_release {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -163,7 +157,7 @@ function _upload_to_nexus {
 	then
 		lc_log "Not uploading ${file_path} to ${file_url} because it already exists."
 
-		return 0
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
 		lc_log INFO "Uploading ${file_path} to ${file_url}."
 

@@ -11,8 +11,6 @@ function regenerate_releases_json {
 }
 
 function upload_releases_json {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
 	lc_log INFO "Backing up to /www/releases.liferay.com/releases.json.BACKUP."
 
 	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/releases.json" "/www/releases.liferay.com/releases.json.BACKUP"
