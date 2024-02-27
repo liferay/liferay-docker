@@ -95,6 +95,7 @@ function _process_product_version {
 		echo "        \"productVersion\": \"$(lc_get_property "${release_properties_file}" liferay.product.version)\","
 		echo "        \"promoted\": \"false\","
 		echo "        \"releaseKey\":\"${product_name}-${product_version}\","
+		echo "        \"targetPlatformVersion\":\"$(lc_get_property "${release_properties_file}" target.platform.version)\","
 		echo "        \"url\": \"https://releases-cdn.liferay.com/${product_name}/${product_version}\""
 		echo "    }"
 		echo "]"
