@@ -3,8 +3,6 @@
 function check_url {
 	local file_url="${1}"
 
-	lc_log DEBUG "Check the URL is valid: ${file_url}."
-
 	if (curl \
 			--fail \
 			--head \
@@ -16,13 +14,13 @@ function check_url {
 			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" \
 			"${file_url}")
 	then
-		lc_log DEBUG "The URL is valid."
+		lc_log DEBUG "File is available at ${file_url}."
 
-		return 0
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	else
-		lc_log ERROR "Unable to access ${file_url}."
+		lc_log DEBUG "Unable to access ${file_url}."
 
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_MISSING_RESOURCE}"
 	fi
 }
 
