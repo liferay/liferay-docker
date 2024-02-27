@@ -125,7 +125,7 @@ function tag_release {
 	then
 		lc_log ERROR "Unable to tag release."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 }
 
