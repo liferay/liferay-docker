@@ -108,7 +108,7 @@ function _promote_product_versions {
 	while IFS= read -r group_version
 	do
 		# shellcheck disable=SC2010
-		last_version=$(ls | grep "${product_name}-${group_version}" | tail -n 1 2>/dev/null)
+		last_version=$(ls | grep "${product_name}-${group_version}" | head -n 1 2>/dev/null)
 
 		if [ -n "${last_version}" ]
 		then
