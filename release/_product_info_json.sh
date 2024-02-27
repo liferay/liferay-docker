@@ -104,5 +104,7 @@ function upload_product_info_json {
 
 	lc_log DEBUG "Uploading ${_PROMOTION_DIR}/.product_info.json to /www/releases.liferay.com/tools/workspace/.product_info.json."
 
-	scp "${_PROMOTION_DIR}/.product_info.json" root@lrdcom-vm-1:/www/releases.liferay.com/tools/workspace/.product_info.json
+	scp "${_PROMOTION_DIR}/.product_info.json" root@lrdcom-vm-1:/www/releases.liferay.com/tools/workspace/.product_info.json.upload
+
+	ssh root@lrdcom-vm-1 mv "/www/releases.liferay.com/tools/workspace/.product_info.json.upload" "/www/releases.liferay.com/tools/workspace/.product_info.json"
 }
