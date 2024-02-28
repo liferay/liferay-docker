@@ -23,7 +23,7 @@ function upload_releases_json {
 }
 
 function _merge_json_snippets {
-	if (! jq -s add ./*.json > releases.json)
+	if (! jq -s add $(ls ./*.json | sort -r) > releases.json)
 	then
 		lc_log ERROR "Detected invalid JSON."
 
