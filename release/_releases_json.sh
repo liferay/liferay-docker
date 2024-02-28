@@ -94,7 +94,7 @@ function _process_product_version {
 		echo "        \"productGroupVersion\": \"$(echo "${product_version}" | sed -r "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")\","
 		echo "        \"productVersion\": \"$(lc_get_property "${release_properties_file}" liferay.product.version)\","
 		echo "        \"promoted\": \"false\","
-		echo "        \"releaseKey\": \"${product_name}-${product_version}\","
+		echo "        \"releaseKey\": \"$(echo "${product_name}-${product_version}" | sed 's/\([0-9]\+\)\.\([0-9]\+\)\.[0-9]\+\(-\|[^0-9]\)/\1.\2\3/g')\","
 		echo "        \"targetPlatformVersion\": \"$(lc_get_property "${release_properties_file}" target.platform.version)\","
 		echo "        \"url\": \"https://releases-cdn.liferay.com/${product_name}/${product_version}\""
 		echo "    }"
