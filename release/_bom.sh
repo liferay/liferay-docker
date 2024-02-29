@@ -137,7 +137,11 @@ function generate_pom_release_dxp_bom {
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.pom.tpl" > /dev/null
 
-	local artifact_list=$(
+	find "${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng" -name '*.properties' -print0 | \
+		xargs -0 awk -F= '/^artifact.url=/  { print $2 }' \
+		> /tmp/artifact_urls.txt
+
+	for artifact_file in $(
 		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF" -name '*.jar' | \
 			sed \
 				-e 's/\.jar$//' \
@@ -146,12 +150,6 @@ function generate_pom_release_dxp_bom {
 			grep -v -E "(\.demo|\.sample\.|\.templates\.)" | \
 			sort
 	)
-
-	find "${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng" -name '*.properties' -print0 | \
-		xargs -0 awk -F= '/^artifact.url=/  { print $2 }' \
-		> /tmp/artifact_urls.txt
-
-	for artifact_file in $artifact_list
 	do
 		local urls_raw=$(grep -E "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt)
 
