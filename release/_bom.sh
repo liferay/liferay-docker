@@ -151,19 +151,17 @@ function generate_pom_release_dxp_bom {
 			sort
 	)
 	do
-		local urls_raw=$(grep -E "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt)
-
-		for unique_url in $urls_raw
+		for artifact_url in $(grep -E "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt)
 		do
-			local file_name="${unique_url##*/}"
+			local file_name="${artifact_url##*/}"
 
 			local artifact_id=$(echo "${file_name}" | sed "s@-${version}.*@@")
 			local version=$(echo "${file_name}" | sed -e "s@\.jar\$@@" -e "s@.*${artifact_file}-@@")
 
-			if [[ "$unique_url" == */com/liferay/portal/* ]]
+			if [[ "$artifact_url" == */com/liferay/portal/* ]]
 			then
 				group_id="com.liferay.portal"
-			elif [[ "$unique_url" == */com/liferay/commerce/* ]]
+			elif [[ "$artifact_url" == */com/liferay/commerce/* ]]
 			then
 				group_id="com.liferay.commerce"
 			else
