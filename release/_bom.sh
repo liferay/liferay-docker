@@ -328,11 +328,8 @@ function generate_poms {
 
 function generate_poms_from_scratch {
 	lc_time_run generate_pom_release_dxp_api
-
 	lc_time_run generate_pom_release_dxp_bom
-
 	lc_time_run generate_pom_release_dxp_bom_compile_only
-
 	lc_time_run generate_pom_release_dxp_bom_third_party
 }
 
