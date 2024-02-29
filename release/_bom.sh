@@ -201,7 +201,7 @@ function generate_pom_release_dxp_bom_compile_only {
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.compile.only.pom.tpl" > /dev/null
 
-	cut -f2 -d= "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties" | \
+	cut -d= -f2 "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties" | \
 		while IFS=: read -r group_id artifact_id version
 		do
 			echo "            <dependency>"
@@ -239,11 +239,12 @@ function generate_pom_release_dxp_bom_third_party {
 	local jar_file
 
 	find "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" -name "*.jar" -print0 | \
-		while IFS= read -r -d '' jar_file
+		while IFS= read -d '' -r jar_file
 		do
 			if (unzip -l "${jar_file}" | grep -q "pom.xml$")
 			then
 				local artifact_name="${jar_file##*/}"
+
 				artifact_name="${artifact_name/%\.jar}"
 
 				if [[ "${artifact_name}" == com.liferay.* ]]
@@ -262,10 +263,9 @@ function generate_pom_release_dxp_bom_third_party {
 
 				if [[ "${artifact_properties}" == *development/dependencies.properties* ]] && [[ "${artifact_properties}" == *portal/dependencies.properties* ]]
 				then
-					artifact_properties=$(echo "${artifact_properties}" | grep "portal/dependencies.properties" | cut -f2 -d=)
+					artifact_properties=$(echo "${artifact_properties}" | grep "portal/dependencies.properties" | cut -d= -f2)
 				else
-
-					artifact_properties=$(echo "$artifact_properties" | cut -f2 -d=)
+					artifact_properties=$(echo "$artifact_properties" | cut -d= -f2)
 				fi
 
 				local group_id artifact_id version
