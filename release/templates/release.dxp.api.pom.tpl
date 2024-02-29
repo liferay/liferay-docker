@@ -3,5 +3,5 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.liferay.portal</groupId>
     <artifactId>release.dxp.api</artifactId>
-    <version>__DXP_VERSION__-__BUILD_TIMESTAMP__</version>
+    <version>__PRODUCT_VERSION__-__BUILD_TIMESTAMP__</version>
 </project>

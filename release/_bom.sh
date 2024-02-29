@@ -115,25 +115,25 @@ function generate_api_source_jar {
 }
 
 function generate_pom_release_dxp_api {
-	local pom_file_name="release.dxp.api-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+	local pom_file_name="release.dxp.api-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
-		-e "s/__DXP_VERSION__/${_DXP_VERSION}/" \
+		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.dxp.api.pom.tpl" > /dev/null
 }
 
 function generate_pom_release_dxp_bom {
-	local pom_file_name="release.dxp.bom-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+	local pom_file_name="release.dxp.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
-		-e "s/__DXP_VERSION__/${_DXP_VERSION}/" \
+		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.pom.tpl" > /dev/null
 
@@ -191,13 +191,13 @@ function generate_pom_release_dxp_bom {
 }
 
 function generate_pom_release_dxp_bom_compile_only {
-	local pom_file_name="release.dxp.bom.compile.only-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+	local pom_file_name="release.dxp.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
-		-e "s/__DXP_VERSION__/${_DXP_VERSION}/" \
+		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.compile.only.pom.tpl" > /dev/null
 
@@ -219,13 +219,13 @@ function generate_pom_release_dxp_bom_compile_only {
 }
 
 function generate_pom_release_dxp_bom_third_party {
-	local pom_file_name="release.dxp.bom.third.party-${_DXP_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+	local pom_file_name="release.dxp.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
-		-e "s/__DXP_VERSION__/${_DXP_VERSION}/" \
+		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.third.party.pom.tpl" > /dev/null
 

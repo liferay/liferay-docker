@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.liferay.portal</groupId>
     <artifactId>release.dxp.bom</artifactId>
-    <version>__DXP_VERSION__-__BUILD_TIMESTAMP__</version>
+    <version>__PRODUCT_VERSION__-__BUILD_TIMESTAMP__</version>
     <packaging>pom</packaging>
     <licenses>
       <license>
@@ -21,7 +21,7 @@
     <scm>
         <connection>scm:git:git@github.com:liferay/liferay-dxp.git</connection>
         <developerConnection>scm:git:git@github.com:liferay/liferay-dxp.git</developerConnection>
-        <tag>__DXP_VERSION__</tag>
+        <tag>__PRODUCT_VERSION__</tag>
         <url>https://github.com/liferay/liferay-dxp</url>
     </scm>
     <repositories>
