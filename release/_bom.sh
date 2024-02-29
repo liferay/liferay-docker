@@ -234,8 +234,6 @@ function generate_pom_release_dxp_bom_third_party {
 		"${_PROJECTS_DIR}/liferay-portal-ee/lib/portal/dependencies.properties"
 	)
 
-	local jar_file
-
 	find "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" -name "*.jar" -print0 | \
 		while IFS= read -d '' -r jar_file
 		do
