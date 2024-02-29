@@ -229,8 +229,6 @@ function generate_pom_release_dxp_bom_third_party {
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.third.party.pom.tpl" > /dev/null
 
-	local jar_list=$(find "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" -name "*.jar")
-
 	local property_files=(
 		"${_PROJECTS_DIR}/liferay-portal-ee/lib/development/dependencies.properties"
 		"${_PROJECTS_DIR}/liferay-portal-ee/lib/portal/dependencies.properties"
