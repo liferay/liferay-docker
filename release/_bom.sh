@@ -160,8 +160,9 @@ function generate_pom_release_dxp_bom {
 		for unique_url in $urls_raw
 		do
 			local file_name="${unique_url##*/}"
-			local version=$(echo "${file_name}" | sed -e "s@\.jar\$@@" -e "s@.*${artifact_file_raw}-@@")
+
 			local artifact_id=$(echo "${file_name}" | sed "s@-${version}.*@@")
+			local version=$(echo "${file_name}" | sed -e "s@\.jar\$@@" -e "s@.*${artifact_file_raw}-@@")
 
 			if [[ "$unique_url" == */com/liferay/portal/* ]]
 			then
