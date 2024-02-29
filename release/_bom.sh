@@ -158,10 +158,10 @@ function generate_pom_release_dxp_bom {
 			local artifact_id=$(echo "${file_name}" | sed "s@-${version}.*@@")
 			local version=$(echo "${file_name}" | sed -e "s@\.jar\$@@" -e "s@.*${artifact_file}-@@")
 
-			if [[ "$artifact_url" == */com/liferay/portal/* ]]
+			if [[ "${artifact_url}" == */com/liferay/portal/* ]]
 			then
 				group_id="com.liferay.portal"
-			elif [[ "$artifact_url" == */com/liferay/commerce/* ]]
+			elif [[ "${artifact_url}" == */com/liferay/commerce/* ]]
 			then
 				group_id="com.liferay.commerce"
 			else
