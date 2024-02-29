@@ -261,8 +261,6 @@ function generate_pom_release_dxp_bom_third_party {
 					artifact_properties=$(echo "$artifact_properties" | cut -d= -f2)
 				fi
 
-				local group_id artifact_id version
-
 				echo "$artifact_properties" | \
 					while IFS=: read -r group_id artifact_id version
 					do
