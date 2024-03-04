@@ -45,9 +45,14 @@ function main {
 
 	promote_boms
 
-	lc_time_run generate_product_info_json
+	if (echo "${_PRODUCT_VERSION}" | grep -q "q")
+	then
+		lc_log INFO "Do not update product_info.json for quarterly releases."
 
-	lc_time_run upload_product_info_json
+		lc_time_run generate_product_info_json
+
+		lc_time_run upload_product_info_json
+	fi
 
 	lc_time_run regenerate_releases_json
 
