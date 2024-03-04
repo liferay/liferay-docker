@@ -151,7 +151,7 @@ function generate_pom_release_dxp_bom {
 			sort
 	)
 	do
-		for artifact_url in $(grep -E "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt)
+		grep -E "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt | while IFS= read -r artifact_url
 		do
 			local file_name="${artifact_url##*/}"
 
