@@ -169,18 +169,18 @@ function generate_pom_release_dxp_bom {
 			fi
 
 			(
-				echo "            <dependency>"
-				echo "                <groupId>${group_id}</groupId>"
-				echo "                <artifactId>${artifact_id}</artifactId>"
-				echo "                <version>${version}</version>"
-				echo "           </dependency>"
+				echo -e "\t\t\t<dependency>"
+				echo -e "\t\t\t\t<groupId>${group_id}</groupId>"
+				echo -e "\t\t\t\t<artifactId>${artifact_id}</artifactId>"
+				echo -e "\t\t\t\t<version>${version}</version>"
+				echo -e "\t\t\t</dependency>"
 			) >> "${pom_file_name}"
 		done
 	done
 
 	(
-		echo "        </dependencies>"
-		echo "    </dependencyManagement>"
+		echo -e "\t\t</dependencies>"
+		echo -e "\t</dependencyManagement>"
 		echo "</project>"
 	) >> "${pom_file_name}"
 }
@@ -199,17 +199,17 @@ function generate_pom_release_dxp_bom_compile_only {
 	cut -d= -f2 "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties" | \
 		while IFS=: read -r group_id artifact_id version
 		do
-			echo "            <dependency>"
-			echo "                <groupId>${group_id}</groupId>"
-			echo "                <artifactId>${artifact_id}</artifactId>"
-			echo "                <version>${version}</version>"
-			echo "            </dependency>"
+			echo -e "\t\t\t<dependency>"
+			echo -e "\t\t\t\t<groupId>${group_id}</groupId>"
+			echo -e "\t\t\t\t<artifactId>${artifact_id}</artifactId>"
+			echo -e "\t\t\t\t<version>${version}</version>"
+			echo -e "\t\t\t</dependency>"
 		done >> "${pom_file_name}"
 
 	(
-		echo "        </dependencies>"
-		echo "    </dependencyManagement>"
-		echo "</project>"
+		echo -e "\t\t</dependencies>"
+		echo -e "\t</dependencyManagement>"
+		echo -e "</project>"
 	) >> "${pom_file_name}"
 }
 
@@ -262,18 +262,18 @@ function generate_pom_release_dxp_bom_third_party {
 				echo "$artifact_properties" | \
 					while IFS=: read -r group_id artifact_id version
 					do
-						echo "            <dependency>"
-						echo "                <groupId>${group_id}</groupId>"
-						echo "                <artifactId>${artifact_id}</artifactId>"
-						echo "                <version>${version}</version>"
-						echo "            </dependency>"
+						echo -e "\t\t\t<dependency>"
+						echo -e "\t\t\t\t<groupId>${group_id}</groupId>"
+						echo -e "\t\t\t\t<artifactId>${artifact_id}</artifactId>"
+						echo -e "\t\t\t\t<version>${version}</version>"
+						echo -e "\t\t\t</dependency>"
 					done >> "${pom_file_name}"
 			fi
 		done
 
 		(
-			echo "        </dependencies>"
-			echo "    </dependencyManagement>"
+			echo -e "\t\t</dependencies>"
+			echo -e "\t</dependencyManagement>"
 			echo "</project>"
 		) >> "${pom_file_name}"
 }
