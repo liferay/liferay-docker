@@ -28,14 +28,14 @@ function generate_api_jars {
 	for artifact in ${enforce_version_artifacts}
 	do
 		if (! echo "${artifact}" | grep -q "com.fasterxml") &&
-		   (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
-		   (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
-		   (! echo "${artifact}" | grep -q "com.liferay.portletmvc4spring:com.liferay.portletmvc4spring.test:") &&
-		   (! echo "${artifact}" | grep -q "com.liferay:biz.aQute.bnd.annotation:") &&
-		   (! echo "${artifact}" | grep -q "io.swagger") &&
-		   (! echo "${artifact}" | grep -q "javax") &&
-		   (! echo "${artifact}" | grep -q "org.jsoup") &&
-		   (! echo "${artifact}" | grep -q "org.osgi")
+			(! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
+			(! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
+			(! echo "${artifact}" | grep -q "com.liferay.portletmvc4spring:com.liferay.portletmvc4spring.test:") &&
+			(! echo "${artifact}" | grep -q "com.liferay:biz.aQute.bnd.annotation:") &&
+			(! echo "${artifact}" | grep -q "io.swagger") &&
+			(! echo "${artifact}" | grep -q "javax") &&
+			(! echo "${artifact}" | grep -q "org.jsoup") &&
+			(! echo "${artifact}" | grep -q "org.osgi")
 		then
 			continue
 		fi
@@ -305,11 +305,14 @@ function generate_poms {
 	do
 		lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/${pom}/${base_version}/${pom}-${base_version}.pom" "${pom}-${base_version}.pom"
 
-		sed -e "s#<version>${base_version}</version>#<version>${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}</version>#" < "${pom}-${base_version}.pom" | \
-		sed -e "s#<connection>scm:git:git@github.com:liferay/liferay-portal.git</connection>#<connection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</connection>#" | \
-		sed -e "s#<developerConnection>scm:git:git@github.com:liferay/liferay-portal.git</developerConnection>#<developerConnection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</developerConnection>#" | \
-		sed -e "s#<tag>.*</tag>#<tag>${_PRODUCT_VERSION}</tag>#" | \
-		sed -e "s#<url>https://github.com/liferay/liferay-portal</url>#<url>https://github.com/liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}</url>#" > "${pom}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+		sed \
+			-e "s#<version>${base_version}</version>#<version>${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}</version>#" \
+			-e "s#<connection>scm:git:git@github.com:liferay/liferay-portal.git</connection>#<connection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</connection>#" \
+			-e "s#<developerConnection>scm:git:git@github.com:liferay/liferay-portal.git</developerConnection>#<developerConnection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</developerConnection>#" \
+			-e "s#<tag>.*</tag>#<tag>${_PRODUCT_VERSION}</tag>#" \
+			-e "s#<url>https://github.com/liferay/liferay-portal</url>#<url>https://github.com/liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}</url>#" \
+			-e "w ${pom}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom" \
+			"${pom}-${base_version}.pom" > /dev/null
 
 		rm -f "${pom}-${base_version}.pom"
 	done
