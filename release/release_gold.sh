@@ -105,7 +105,7 @@ function tag_release {
 		repository=liferay-portal
 	fi
 
-	if (! curl
+	if (! curl \
 			"https://api.github.com/repos/liferay/${repository}/git/tags" \
 			--data-raw '
 				{
