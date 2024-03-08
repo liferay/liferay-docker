@@ -93,6 +93,8 @@ function promote_packages {
 	fi
 
 	ssh root@lrdcom-vm-1 cp -a "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_ARTIFACT_RC_VERSION}" "/www/releases.liferay.com/dxp/${_PRODUCT_VERSION}"
+
+	gsutil rsync "gs://${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_ARTIFACT_RC_VERSION}" "gs://${_PRODUCT_VERSION}"
 }
 
 function tag_release {
