@@ -112,10 +112,17 @@ function upload_hotfix {
 
 	scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
 
+	if (gsutils ls "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}" | grep -q "${_HOTFIX_FILE_NAME}")
+	then
+		lc_log ERROR "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP because it already exists."
+
+		return 1
+	fi
+
+	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}"
+
 	echo "# Uploaded" > ../output.md
 	echo " - https://releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
-
-	#gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://patcher-storage/hotfix/${_PRODUCT_VERSION}"
 }
 
 function upload_release {
@@ -138,7 +145,7 @@ function upload_release {
 		then
 			echo "Copying ${file}."
 
-			#gsutil cp "${_BUILD_DIR}/release/${file}" "gs://patcher-storage/dxp/${_PRODUCT_VERSION}"
+			gsutil cp "${_BUILD_DIR}/release/${file}" "gs://liferay-releases/dxp/${_PRODUCT_VERSION}"
 
 			scp "${file}" root@lrdcom-vm-1:"/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
