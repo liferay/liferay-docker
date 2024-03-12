@@ -353,7 +353,7 @@ function lc_time_run {
 	then
 		echo -e "$(lc_date) < ${*}: \e[1;34mSkip\e[0m"
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		#return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
 		local seconds=$((end_time - start_time))
 
@@ -393,7 +393,7 @@ function lc_wait {
 
 		if [ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_OK}" ] && [ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
-			lc_log ERROR "Background job exit code was ${exit_code}. Exiting."
+			lc_log ERROR "Exiting because background process exit code was ${exit_code}."
 
 			exit "${exit_code}"
 		fi

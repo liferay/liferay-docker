@@ -28,14 +28,14 @@ function generate_api_jars {
 	for artifact in ${enforce_version_artifacts}
 	do
 		if (! echo "${artifact}" | grep -q "com.fasterxml") &&
-		   (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
-		   (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
-		   (! echo "${artifact}" | grep -q "com.liferay.portletmvc4spring:com.liferay.portletmvc4spring.test:") &&
-		   (! echo "${artifact}" | grep -q "com.liferay:biz.aQute.bnd.annotation:") &&
-		   (! echo "${artifact}" | grep -q "io.swagger") &&
-		   (! echo "${artifact}" | grep -q "javax") &&
-		   (! echo "${artifact}" | grep -q "org.jsoup") &&
-		   (! echo "${artifact}" | grep -q "org.osgi")
+			(! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
+			(! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
+			(! echo "${artifact}" | grep -q "com.liferay.portletmvc4spring:com.liferay.portletmvc4spring.test:") &&
+			(! echo "${artifact}" | grep -q "com.liferay:biz.aQute.bnd.annotation:") &&
+			(! echo "${artifact}" | grep -q "io.swagger") &&
+			(! echo "${artifact}" | grep -q "javax") &&
+			(! echo "${artifact}" | grep -q "org.jsoup") &&
+			(! echo "${artifact}" | grep -q "org.osgi")
 		then
 			continue
 		fi
@@ -52,7 +52,7 @@ function generate_api_jars {
 
 		lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar."
 
-		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar"
+		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar" "${name}-${version}-sources.jar"
 
 		unzip -d api-sources-jar -o -q "${name}-${version}-sources.jar"
 
@@ -60,7 +60,7 @@ function generate_api_jars {
 
 		lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar."
 
-		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar"
+		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar" "${name}-${version}.jar"
 
 		_manage_bom_jar "${name}-${version}.jar"
 
@@ -114,6 +114,170 @@ function generate_api_source_jar {
 	done
 }
 
+function generate_pom_release_dxp_api {
+	local pom_file_name="release.dxp.api-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+
+	lc_log DEBUG "Generating ${pom_file_name}."
+
+	sed \
+		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
+		-e "w ${pom_file_name}" \
+		"${_RELEASE_TOOL_DIR}/templates/release.dxp.api.pom.tpl" > /dev/null
+}
+
+function generate_pom_release_dxp_bom {
+	local pom_file_name="release.dxp.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+
+	lc_log DEBUG "Generating ${pom_file_name}."
+
+	sed \
+		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
+		-e "w ${pom_file_name}" \
+		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.pom.tpl" > /dev/null
+
+	find "${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng" -name '*.properties' -print0 | \
+		xargs -0 awk -F= '/^artifact.url=/  { print $2 }' \
+		> /tmp/artifact_urls.txt
+
+	for artifact_file in $(
+		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF" -name '*.jar' | \
+			sed \
+				-e 's/\.jar$//' \
+				-e "s@.*/@@" \
+				-e "s@-@.@g" | \
+			grep -v -E "(\.demo|\.sample\.|\.templates\.)" | \
+			sort
+	)
+	do
+		grep -E "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt | while IFS= read -r artifact_url
+		do
+			local file_name="${artifact_url##*/}"
+
+			local artifact_id=$(echo "${file_name}" | sed "s@-${version}.*@@")
+			local version=$(echo "${file_name}" | sed -e "s@\.jar\$@@" -e "s@.*${artifact_file}-@@")
+
+			if [[ "${artifact_url}" == */com/liferay/portal/* ]]
+			then
+				group_id="com.liferay.portal"
+			elif [[ "${artifact_url}" == */com/liferay/commerce/* ]]
+			then
+				group_id="com.liferay.commerce"
+			else
+				group_id="com.liferay"
+			fi
+
+			(
+				echo -e "\t\t\t<dependency>"
+				echo -e "\t\t\t\t<groupId>${group_id}</groupId>"
+				echo -e "\t\t\t\t<artifactId>${artifact_id}</artifactId>"
+				echo -e "\t\t\t\t<version>${version}</version>"
+				echo -e "\t\t\t</dependency>"
+			) >> "${pom_file_name}"
+		done
+	done
+
+	(
+		echo -e "\t\t</dependencies>"
+		echo -e "\t</dependencyManagement>"
+		echo "</project>"
+	) >> "${pom_file_name}"
+}
+
+function generate_pom_release_dxp_bom_compile_only {
+	local pom_file_name="release.dxp.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+
+	lc_log DEBUG "Generating ${pom_file_name}."
+
+	sed \
+		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
+		-e "w ${pom_file_name}" \
+		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.compile.only.pom.tpl" > /dev/null
+
+	cut -d= -f2 "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties" | \
+		while IFS=: read -r group_id artifact_id version
+		do
+			echo -e "\t\t\t<dependency>"
+			echo -e "\t\t\t\t<groupId>${group_id}</groupId>"
+			echo -e "\t\t\t\t<artifactId>${artifact_id}</artifactId>"
+			echo -e "\t\t\t\t<version>${version}</version>"
+			echo -e "\t\t\t</dependency>"
+		done >> "${pom_file_name}"
+
+	(
+		echo -e "\t\t</dependencies>"
+		echo -e "\t</dependencyManagement>"
+		echo -e "</project>"
+	) >> "${pom_file_name}"
+}
+
+function generate_pom_release_dxp_bom_third_party {
+	local pom_file_name="release.dxp.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.FROM_SCRATCH.pom"
+
+	lc_log DEBUG "Generating ${pom_file_name}."
+
+	sed \
+		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
+		-e "w ${pom_file_name}" \
+		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.third.party.pom.tpl" > /dev/null
+
+	local property_files=(
+		"${_PROJECTS_DIR}/liferay-portal-ee/lib/development/dependencies.properties"
+		"${_PROJECTS_DIR}/liferay-portal-ee/lib/portal/dependencies.properties"
+	)
+
+	find "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" -name "*.jar" -print0 | \
+		while IFS= read -d '' -r jar_file
+		do
+			if (unzip -l "${jar_file}" | grep -q "pom.xml$")
+			then
+				local artifact_name="${jar_file##*/}"
+
+				artifact_name="${artifact_name/%\.jar}"
+
+				if [[ "${artifact_name}" == com.liferay.* ]]
+				then
+					continue
+				fi
+
+				artifact_name="${artifact_name##*.}"
+
+				local artifact_properties=$(grep -w "^$artifact_name" "${property_files[@]}")
+
+				if [ -z "${artifact_properties}" ]
+				then
+					continue
+				fi
+
+				if [[ "${artifact_properties}" == *development/dependencies.properties* ]] && [[ "${artifact_properties}" == *portal/dependencies.properties* ]]
+				then
+					artifact_properties=$(echo "${artifact_properties}" | grep "portal/dependencies.properties" | cut -d= -f2)
+				else
+					artifact_properties=$(echo "$artifact_properties" | cut -d= -f2)
+				fi
+
+				echo "$artifact_properties" | \
+					while IFS=: read -r group_id artifact_id version
+					do
+						echo -e "\t\t\t<dependency>"
+						echo -e "\t\t\t\t<groupId>${group_id}</groupId>"
+						echo -e "\t\t\t\t<artifactId>${artifact_id}</artifactId>"
+						echo -e "\t\t\t\t<version>${version}</version>"
+						echo -e "\t\t\t</dependency>"
+					done >> "${pom_file_name}"
+			fi
+		done
+
+		(
+			echo -e "\t\t</dependencies>"
+			echo -e "\t</dependencyManagement>"
+			echo "</project>"
+		) >> "${pom_file_name}"
+}
+
 function generate_poms {
 	if (! echo "${_PRODUCT_VERSION}" | grep -q "q")
 	then
@@ -139,16 +303,26 @@ function generate_poms {
 
 	for pom in "release.${LIFERAY_RELEASE_PRODUCT_NAME}.api" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party"
 	do
-		lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/${pom}/${base_version}/${pom}-${base_version}.pom"
+		lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/${pom}/${base_version}/${pom}-${base_version}.pom" "${pom}-${base_version}.pom"
 
-		sed -e "s#<version>${base_version}</version>#<version>${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}</version>#" < "${pom}-${base_version}.pom" | \
-		sed -e "s#<connection>scm:git:git@github.com:liferay/liferay-portal.git</connection>#<connection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</connection>#" | \
-		sed -e "s#<developerConnection>scm:git:git@github.com:liferay/liferay-portal.git</developerConnection>#<developerConnection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</developerConnection>#" | \
-		sed -e "s#<tag>.*</tag>#<tag>${_PRODUCT_VERSION}</tag>#" | \
-		sed -e "s#<url>https://github.com/liferay/liferay-portal</url>#<url>https://github.com/liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}</url>#" > "${pom}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+		sed \
+			-e "s#<version>${base_version}</version>#<version>${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}</version>#" \
+			-e "s#<connection>scm:git:git@github.com:liferay/liferay-portal.git</connection>#<connection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</connection>#" \
+			-e "s#<developerConnection>scm:git:git@github.com:liferay/liferay-portal.git</developerConnection>#<developerConnection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</developerConnection>#" \
+			-e "s#<tag>.*</tag>#<tag>${_PRODUCT_VERSION}</tag>#" \
+			-e "s#<url>https://github.com/liferay/liferay-portal</url>#<url>https://github.com/liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}</url>#" \
+			-e "w ${pom}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom" \
+			"${pom}-${base_version}.pom" > /dev/null
 
 		rm -f "${pom}-${base_version}.pom"
 	done
+}
+
+function generate_poms_from_scratch {
+	lc_time_run generate_pom_release_dxp_api
+	lc_time_run generate_pom_release_dxp_bom
+	lc_time_run generate_pom_release_dxp_bom_compile_only
+	lc_time_run generate_pom_release_dxp_bom_third_party
 }
 
 function _copy_file {

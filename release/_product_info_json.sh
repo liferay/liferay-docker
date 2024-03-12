@@ -12,13 +12,6 @@ function generate_product_info_json {
 
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	if (echo "${_PRODUCT_VERSION}" | grep -q "q")
-	then
-		lc_log INFO "Do not update product_info.json for quarterly releases."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
 	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/tools/workspace/.product_info.json" "${_PROMOTION_DIR}/.product_info.json.tmp"
 
 	cp -f "${_PROMOTION_DIR}/.product_info.json.tmp" "${LIFERAY_COMMON_LOG_DIR}/.product_info.json-BACKUP.txt"
@@ -100,9 +93,11 @@ function upload_product_info_json {
 
 	lc_log INFO "Backing up to /www/releases.liferay.com/tools/workspace/.product_info.json.BACKUP."
 
-	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/tools/workspace/.product_info.json" "/www/releases.liferay.com/tools/workspace/.product_info.json.BACKUP"
+	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/tools/workspace/.product_info.json" "/www/releases.liferay.com/tools/workspace/.product_info.json.BACKUP"
 
 	lc_log DEBUG "Uploading ${_PROMOTION_DIR}/.product_info.json to /www/releases.liferay.com/tools/workspace/.product_info.json."
 
-	scp -i lrdcom-vm-1 "${_PROMOTION_DIR}/.product_info.json" root@lrdcom-vm-1:/www/releases.liferay.com/tools/workspace/.product_info.json
+	scp "${_PROMOTION_DIR}/.product_info.json" root@lrdcom-vm-1:/www/releases.liferay.com/tools/workspace/.product_info.json.upload
+
+	ssh root@lrdcom-vm-1 mv "/www/releases.liferay.com/tools/workspace/.product_info.json.upload" "/www/releases.liferay.com/tools/workspace/.product_info.json"
 }

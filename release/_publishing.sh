@@ -1,5 +1,29 @@
 #!/bin/bash
 
+function check_url {
+	local file_url="${1}"
+
+	if (curl \
+			"${file_url}" \
+			--fail \
+			--head \
+			--max-time 300 \
+			--output /dev/null \
+			--retry 3 \
+			--retry-delay 10 \
+			--silent \
+			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}")
+	then
+		lc_log DEBUG "File is available at ${file_url}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	else
+		lc_log DEBUG "Unable to access ${file_url}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_MISSING_RESOURCE}"
+	fi
+}
+
 function init_gcs {
 	if [ ! -n "${LIFERAY_RELEASE_GCS_TOKEN}" ]
 	then
@@ -38,8 +62,6 @@ function upload_bom_file {
 function upload_boms {
 	local nexus_repository_name="${1}"
 
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ] && [ "${nexus_repository_name}" == "xanadu" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -68,8 +90,6 @@ function upload_boms {
 }
 
 function upload_hotfix {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -99,8 +119,6 @@ function upload_hotfix {
 }
 
 function upload_release {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -112,7 +130,7 @@ function upload_release {
 
 	echo "# Uploaded" > ../output.md
 
-	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+	ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	for file in * .*
 	do
@@ -135,13 +153,22 @@ function _upload_to_nexus {
 
 	lc_log INFO "Uploading ${file_path} to ${file_url}."
 
-	curl \
-		--fail \
-		--max-time 300 \
-		--retry 3 \
-		--retry-delay 10 \
-		--silent \
-		--upload-file "${file_path}" \
-		--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" \
-		"${file_url}"
+	if (check_url "${file_url}")
+	then
+		lc_log "Skipping the upload of ${file_path} to ${file_url} because it already exists."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	else
+		lc_log INFO "Uploading ${file_path} to ${file_url}."
+
+		curl \
+			--fail \
+			--max-time 300 \
+			--retry 3 \
+			--retry-delay 10 \
+			--silent \
+			--upload-file "${file_path}" \
+			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" \
+			"${file_url}"
+	fi
 }

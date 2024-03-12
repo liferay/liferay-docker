@@ -418,15 +418,11 @@ function prepare_release_dir {
 	then
 		7z x "${release7z}"
 	else
-		lc_download "https://releases-cdn.liferay.com/dxp/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle"
+		lc_download "https://releases-cdn.liferay.com/dxp/${_PRODUCT_VERSION}/$(lc_curl "https://releases-cdn.liferay.com/dxp/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle")" liferay-dxp.7z
 
-		lc_download "https://releases-cdn.liferay.com/dxp/${_PRODUCT_VERSION}/$(cat .lfrrelease-tomcat-bundle)"
+		7z x ./liferay-dxp.7z
 
-		rm .lfrrelease-tomcat-bundle
-
-		7z x ./*.7z
-
-		rm -f ./*.7z
+		rm -f ./liferay-dxp.7z
 	fi
 
 	shopt -s dotglob

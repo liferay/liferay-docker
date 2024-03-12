@@ -45,9 +45,14 @@ function main {
 
 	promote_boms
 
-	lc_time_run generate_product_info_json
+	if (echo "${_PRODUCT_VERSION}" | grep -q "q")
+	then
+		lc_log INFO "Do not update product_info.json for quarterly releases."
 
-	lc_time_run upload_product_info_json
+		lc_time_run generate_product_info_json
+
+		lc_time_run upload_product_info_json
+	fi
 
 	lc_time_run regenerate_releases_json
 
@@ -80,14 +85,14 @@ function promote_boms {
 }
 
 function promote_packages {
-	if (ssh -i lrdcom-vm-1 root@lrdcom-vm-1 ls -d "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}" | grep -q "${_PRODUCT_VERSION}" &>/dev/null)
+	if (ssh root@lrdcom-vm-1 ls -d "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}" | grep -q "${_PRODUCT_VERSION}" &>/dev/null)
 	then
 		lc_log ERROR "Release was already published."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	ssh -i lrdcom-vm-1 root@lrdcom-vm-1 cp -a "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_ARTIFACT_RC_VERSION}" "/www/releases.liferay.com/dxp/${_PRODUCT_VERSION}"
+	ssh root@lrdcom-vm-1 cp -a "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_ARTIFACT_RC_VERSION}" "/www/releases.liferay.com/dxp/${_PRODUCT_VERSION}"
 }
 
 function tag_release {
@@ -105,16 +110,15 @@ function tag_release {
 		repository=liferay-portal
 	fi
 
-	if (! curl
+	if (! curl \
 			"https://api.github.com/repos/liferay/${repository}/git/tags" \
-			--data-binary @- << EOF
+			--data-raw '
 				{
 					"message": "",
 					"object": "$(lc_get_property release-data/release.properties git.hash.liferay-portal-ee)",
 					"tag": "${LIFERAY_RELEASE_VERSION}",
 					"type": "commit"
-				}
-			EOF
+				}' \
 			--fail \
 			--header "Accept: application/vnd.github+json" \
 			--header "Authorization: Bearer ${LIFERAY_RELEASE_GITHUB_PAT}" \
@@ -126,7 +130,7 @@ function tag_release {
 	then
 		lc_log ERROR "Unable to tag release."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 }
 

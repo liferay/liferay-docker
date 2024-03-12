@@ -14,7 +14,7 @@ function configure_jdk {
 	then
 		lc_log INFO "Installing JDK."
 
-		lc_download https://cdn.azul.com/zulu/bin/zulu8.72.0.17-ca-jdk8.0.382-linux_x64.tar.gz
+		lc_download https://cdn.azul.com/zulu/bin/zulu8.72.0.17-ca-jdk8.0.382-linux_x64.tar.gz zulu8.72.0.17-ca-jdk8.0.382-linux_x64.tar.gz
 
 		tar -xzf zulu8.72.0.17-ca-jdk8.0.382-linux_x64.tar.gz
 

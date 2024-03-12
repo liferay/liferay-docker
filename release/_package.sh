@@ -64,15 +64,11 @@ function install_patching_tool {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE=true lc_download https://releases.liferay.com/tools/patching-tool/LATEST-4.0.txt
-
-	local latest_version=$(cat LATEST-4.0.txt)
-
-	rm -f LATEST-4.0.txt
+	local latest_version=$(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-4.0.txt)
 
 	lc_log info "Installing Patching Tool ${latest_version}."
 
-	lc_download https://releases.liferay.com/tools/patching-tool/patching-tool-"${latest_version}".zip
+	lc_download https://releases.liferay.com/tools/patching-tool/patching-tool-"${latest_version}".zip patching-tool-"${latest_version}".zip
 
 	unzip -q patching-tool-"${latest_version}".zip
 
