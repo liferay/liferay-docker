@@ -68,7 +68,12 @@ function build_product {
 
 	rm -f apache-tomcat*
 
-	mv deploy/*.war osgi/war
+	local war_files=( deploy/*.war )
+
+	if [ "${#war_files[@]}" -ge 1 ]
+	then
+		mv deploy/*.war osgi/war
+	fi
 
 	rm -fr osgi/test
 
@@ -104,7 +109,7 @@ function clean_up_ignored_dxp_modules {
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
 
-	(	
+	(
 		git grep "Liferay-Releng-Bundle: false" | sed -e s/app.bnd:.*//
 		git ls-files "*/.lfrbuild-releng-ignore" | sed -e s#/.lfrbuild-releng-ignore##
 	) | while IFS= read -r ignored_dir
