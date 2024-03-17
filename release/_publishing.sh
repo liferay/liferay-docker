@@ -107,7 +107,7 @@ function upload_hotfix {
 	then
 		lc_log ERROR "Skipping the upload of ${_HOTFIX_FILE_NAME} because it already exists."
 
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
@@ -116,7 +116,7 @@ function upload_hotfix {
 	then
 		lc_log ERROR "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP because it already exists."
 
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}"
