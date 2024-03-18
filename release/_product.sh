@@ -68,7 +68,7 @@ function build_product {
 
 	rm -f apache-tomcat*
 
-	local war_files=( deploy/*.war )
+	local war_files=(deploy/*.war)
 
 	if [ "${#war_files[@]}" -ge 1 ]
 	then
