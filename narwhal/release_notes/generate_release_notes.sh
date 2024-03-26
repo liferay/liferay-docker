@@ -3,7 +3,7 @@
 source _liferay_common.sh
 
 function find_git_dir {
-	lc_cd /home/me/dev/projects/liferay-portal-ee
+	lc_cd "${HOME}/dev/projects/liferay-portal-ee"
 }
 
 function generate_release_notes {
