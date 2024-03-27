@@ -232,11 +232,11 @@ function create_documentation {
 			writeln "            \"checksum\": \"${checksum}\""
 			write "        }"
 		done < "${_BUILD_DIR}"/hotfix/checksums
+
 		writeln ""
 	fi
 
 	writeln "    ],"
-
 	writeln "    \"removed\" :["
 
 	if [ -e "${_BUILD_DIR}"/hotfix/removed_files ]
@@ -251,6 +251,7 @@ function create_documentation {
 			else
 				writeln ","
 			fi
+
 			writeln "        {"
 			writeln "            \"path\": \"${file}\""
 			write "        }"
@@ -260,7 +261,6 @@ function create_documentation {
 	fi
 
 	writeln "    ]"
-
 	writeln "}"
 }
 
@@ -269,8 +269,6 @@ function create_hotfix {
 	mkdir -p "${_BUILD_DIR}"/hotfix
 
 	echo "Comparing ${_BUNDLES_DIR} and ${_RELEASE_DIR}"
-
-	echo "Full diff:"
 
 	diff -rq "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep -v /work/Catalina
 
@@ -358,7 +356,7 @@ function in_hotfix_scope {
 function manage_jar {
 	if (compare_jars "${1}")
 	then
-		echo "Changed .jar file: ${1}"
+		echo "The ${1} file has changed, adding it to the hotfix."
 
 		add_file_to_hotfix "${1}"
 	fi
