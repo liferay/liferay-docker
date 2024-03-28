@@ -662,24 +662,15 @@
     7.4.13-u102:
         bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u102/liferay-dxp-tomcat-7.4.13.u102-20231109153600206.7z
     7.4.13-u103:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u103/liferay-dxp-tomcat-7.4.13-u103-1700120367.7z
     7.4.13-u104:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u104/liferay-dxp-tomcat-7.4.13-u104-1700843804.7z
     7.4.13-u105:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u105/liferay-dxp-tomcat-7.4.13-u105-1701438227.7z
     7.4.13-u106:
     7.4.13-u107:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u107/liferay-dxp-tomcat-7.4.13-u107-1702556776.zip
     7.4.13-u108:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u108/liferay-dxp-tomcat-7.4.13-u108-1703850693.7z
     7.4.13-u109:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u109/liferay-dxp-tomcat-7.4.13-u109-1704159029.7z
     7.4.13-u110:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u110/liferay-dxp-tomcat-7.4.13-u110-1706020789.7z
     7.4.13-u111:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u111/liferay-dxp-tomcat-7.4.13-u111-1707169315.7z
     7.4.13-u112:
-        bundle_url: releases-cdn.liferay.com/dxp/7.4.13-u112/liferay-dxp-tomcat-7.4.13-u112-1708955019.7z
     7.4.13-u113:
     7.4.13-u114:
     7.4.13.nightly:
@@ -688,33 +679,19 @@ quarterly:
     2023.q3.1:
         bundle_url: releases-cdn.liferay.com/dxp/2023.q3.1/liferay-dxp-tomcat-2023.q3.1-1697647393.7z
     2023.q3.2:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q3.2/liferay-dxp-tomcat-2023.q3.2-1698775649.7z
     2023.q3.3:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q3.3/liferay-dxp-tomcat-2023.q3.3-1701179024.7z
     2023.q3.4:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q3.4/liferay-dxp-tomcat-2023.q3.4-1701951280.7z
     2023.q3.5:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q3.5/liferay-dxp-tomcat-2023.q3.5-1705580280.7z
     2023.q3.6:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q3.6/liferay-dxp-tomcat-2023.q3.6-1706174476.7z
     2023.q3.7:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q3.7/liferay-dxp-tomcat-2023.q3.7-1706603106.7z
     2023.q3.8:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q3.8/liferay-dxp-tomcat-2023.q3.8-1707311053.7z
     2023.q3.9:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q3.9/liferay-dxp-tomcat-2023.q3.9-1708516879.7z
     2023.q4.0:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q4.0/liferay-dxp-tomcat-2023.q4.0-1701894289.7z
     2023.q4.1:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q4.1/liferay-dxp-tomcat-2023.q4.1-1704907579.7z
     2023.q4.2:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q4.2/liferay-dxp-tomcat-2023.q4.2-1705086101.7z
     2023.q4.3:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q4.3/liferay-dxp-tomcat-2023.q4.3-1706176353.7z
     2023.q4.4:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q4.4/liferay-dxp-tomcat-2023.q4.4-1706605532.7z
     2023.q4.5:
-        bundle_url: releases-cdn.liferay.com/dxp/2023.q4.5/liferay-dxp-tomcat-2023.q4.5-1707312911.7z
     2023.q4.6:
     2023.q4.7:
     2023.q4.8:
