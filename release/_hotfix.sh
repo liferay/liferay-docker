@@ -10,6 +10,28 @@ function add_file_to_hotfix {
 	cp "${_BUNDLES_DIR}/${1}" "${_BUILD_DIR}/hotfix/binaries/${file_dir}"
 }
 
+function add_hotfix_testing_code {
+	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	then
+		echo "LIFERAY_RELEASE_HOTFIX_TEST_SHA is not set, not adding test code."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+
+	if (! git show "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" &>/dev/null)
+	then
+		echo "Running git fetch upstream tag \"${LIFERAY_RELEASE_HOTFIX_TEST_TAG}\""
+
+		git fetch -v upstream tag "${LIFERAY_RELEASE_HOTFIX_TEST_TAG}" || return 1
+	fi
+
+	echo "Running git cherry-pick -n \"${LIFERAY_RELEASE_HOTFIX_TEST_SHA}\""
+
+	git cherry-pick -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" || return 1
+}
+
 function add_portal_patcher_properties_jar {
 	lc_cd "${_BUILD_DIR}"
 
@@ -32,28 +54,6 @@ function add_portal_patcher_properties_jar {
 	else
 		cp portal-patcher-properties.jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib/"
 	fi
-}
-
-function add_hotfix_testing_code {
-	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
-	then
-		echo "LIFERAY_RELEASE_HOTFIX_TEST_SHA is not set, not adding test code."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
-
-	if (! git show "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" &>/dev/null)
-	then
-		echo "Running git fetch upstream tag \"${LIFERAY_RELEASE_HOTFIX_TEST_TAG}\""
-
-		git fetch -v upstream tag "${LIFERAY_RELEASE_HOTFIX_TEST_TAG}" || return 1
-	fi
-
-	echo "Running git cherry-pick -n \"${LIFERAY_RELEASE_HOTFIX_TEST_SHA}\""
-
-	git cherry-pick -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" || return 1
 }
 
 function calculate_checksums {
