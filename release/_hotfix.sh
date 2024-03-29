@@ -109,11 +109,11 @@ function compare_jars {
 			grep -v "_jsp.java" | \
 			grep -v "previous-compilation-data.bin" | \
 			#
-			# TODO Include portal-impl.jar when the util-* jars changed
+			# TODO Include portal-impl.jar when the util-*jars changed
 			#
 			grep -v "com/liferay/portal/deploy/dependencies/" | \
 			#
-			# TODO Modify "ant all" to to update this file every time
+			# TODO Modify "ant all" to not update this file every time
 			#
 			grep -v "META-INF/system.packages.extra.mf" | \
 			#
@@ -327,6 +327,7 @@ function create_hotfix {
 			fi
 		else
 			local changed_file=${change#Files }
+
 			changed_file=${changed_file%% *}
 			changed_file=$(echo "${changed_file}" | sed -e "s#${_BUNDLES_DIR}##")
 			changed_file=${changed_file#/}
