@@ -93,7 +93,7 @@ function compare_jars {
 		return 1
 	}
 
-	function list_file {
+	function describe_jar {
 		unzip -v "${1}" | \
 			#
 			# Remove headers and footers
@@ -123,36 +123,34 @@ function compare_jars {
 			sed -e "s/[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9]\ [0-9][0-9]:[0-9][0-9]//"
 	}
 
-	local files_list=$( (
-		list_file "${jar1}"
-		list_file "${jar2}"
+	local jar_descriptions=$( (
+		describe_jar "${jar1}"
+		describe_jar "${jar2}"
 	) | sort | uniq -c)
 
-	local files_count=$(echo "${files_list}" | grep -c "Defl:N")
-
-	if [ "${files_count}" -eq 0 ]
+	if [ $(echo "${jar_descriptions}" | grep -c "Defl:N") -eq 0 ]
 	then
 		lc_log ERROR "The JARs have no files."
 
 		exit 2
 	fi
 
-	local changed_files_list=$(echo "${files_list}" | awk '($1 == 1) && ($3 == "Defl:N") { print $7 }' | uniq)
+	jar_descriptions=$(echo "${jar_descriptions}" | awk '($1 == 1) && ($3 == "Defl:N") { print $7 }' | uniq)
 
-	if [ -n "${changed_files_list}" ]
+	if [ -n "${jar_descriptions}" ]
 	then
-		if (echo "${changed_files_list}" | grep -q "META-INF/MANIFEST.MF")
+		if (echo "${jar_descriptions}" | grep -q "META-INF/MANIFEST.MF")
 		then
 			if (compare_property_in_packaged_file "${jar1}" "${jar2}" "META-INF/MANIFEST.MF" "Export-Package")
 			then
-				changed_files_list=$(echo "${changed_files_list}" | sed "/META-INF\/MANIFEST.MF/d")
+				jar_descriptions=$(echo "${jar_descriptions}" | sed "/META-INF\/MANIFEST.MF/d")
 			fi
 		fi
 
-		if [ -n "${changed_files_list}" ]
+		if [ -n "${jar_descriptions}" ]
 		then
 			lc_log INFO "Changes in ${1}: "
-			lc_log INFO "${changed_files_list}" | sed "s/^/    /"
+			lc_log INFO "${jar_descriptions}" | sed "s/^/    /"
 			lc_log INFO ""
 
 			return 0
