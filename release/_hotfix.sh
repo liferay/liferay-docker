@@ -183,8 +183,11 @@ function create_documentation {
 	local first_line=true
 
 	writeln "{"
-	writeln "    \"patch\": {"
-	writeln "        \"id\": \"${LIFERAY_RELEASE_HOTFIX_ID}\""
+	writeln "    \"build\": {"
+	writeln "        \"builder-revision\": \"${_BUILDER_SHA}\"",
+	writeln "        \"date\": \"$(date)\","
+	writeln "        \"git-revision\": \"${_GIT_SHA}\","
+	writeln "        \"id\": \"${LIFERAY_RELEASE_HOTFIX_BUILD_ID}\""
 	writeln "    },"
 	writeln "    \"fixed-issues\": ["
 
@@ -208,11 +211,8 @@ function create_documentation {
 	fi
 
 	writeln "    ],"
-	writeln "    \"build\": {"
-	writeln "        \"builder-revision\": \"${_BUILDER_SHA}\"",
-	writeln "        \"date\": \"$(date)\","
-	writeln "        \"git-revision\": \"${_GIT_SHA}\","
-	writeln "        \"id\": \"${LIFERAY_RELEASE_HOTFIX_BUILD_ID}\""
+	writeln "    \"patch\": {"
+	writeln "        \"id\": \"${LIFERAY_RELEASE_HOTFIX_ID}\""
 	writeln "    },"
 	writeln "    \"requirement\": {"
 	writeln "        \"patching-tool-version\": \"4000\","
@@ -274,50 +274,54 @@ function create_documentation {
 
 function create_hotfix {
 	rm -fr "${_BUILD_DIR}"/hotfix
+
 	mkdir -p "${_BUILD_DIR}"/hotfix
 
-	echo "Comparing ${_BUNDLES_DIR} and ${_RELEASE_DIR}"
+	echo "Comparing ${_BUNDLES_DIR} and ${_RELEASE_DIR}."
 
-	diff -rq "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep -v /work/Catalina
+	diff -qr "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep -v /work/Catalina
 
-	diff -rq "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep -v /work/Catalina | while read -r change
+	diff -qr "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep -v /work/Catalina | while read -r change
 	do
 		if (echo "${change}" | grep "^Only in ${_RELEASE_DIR}" &>/dev/null)
 		then
 			local removed_file=${change#Only in }
+
 			removed_file=$(echo "${removed_file}" | sed -e "s#: #/#" | sed -e "s#${_RELEASE_DIR}##")
 			removed_file=${removed_file#/}
+
 			echo "${removed_file}"
 
 			if [ ! -f "${_RELEASE_DIR}/${removed_file}" ]
 			then
-				echo "Skipping ${removed_file} as it's not a file"
+				echo "Skipping ${removed_file}."
 
 				continue
 			fi
 
 			if (in_hotfix_scope "${removed_file}")
 			then
-				echo "Removed ${removed_file}"
+				echo "Removing ${removed_file}."
 
 				transform_file_name "${removed_file}" >> "${_BUILD_DIR}"/hotfix/removed_files
 			fi
 		elif (echo "${change}" | grep "^Only in ${_BUNDLES_DIR}" &>/dev/null)
 		then
 			local new_file=${change#Only in }
+
 			new_file=$(echo "${new_file}" | sed -e "s#: #/#" | sed -e "s#${_BUNDLES_DIR}##")
 			new_file=${new_file#/}
 
 			if [ ! -f "${_BUNDLES_DIR}/${new_file}" ]
 			then
-				echo "Skipping ${new_file} as it's not a file"
+				echo "Skipping ${new_file}."
 
 				continue
 			fi
 
 			if (in_hotfix_scope "${new_file}")
 			then
-				echo "New file ${new_file}"
+				echo "Adding ${new_file}."
 
 				add_file_to_hotfix "${new_file}"
 			fi
@@ -329,7 +333,7 @@ function create_hotfix {
 
 			if [ ! -f "${_BUNDLES_DIR}/${changed_file}" ]
 			then
-				echo "Skipping ${changed_file} as it's not a file"
+				echo "Skipping ${changed_file}."
 
 				continue
 			fi
@@ -364,7 +368,7 @@ function in_hotfix_scope {
 function manage_jar {
 	if (compare_jars "${1}")
 	then
-		echo "The ${1} file has changed, adding it to the hotfix."
+		echo "Adding modified file ${1} to the hotfix."
 
 		add_file_to_hotfix "${1}"
 	fi
@@ -404,7 +408,7 @@ function prepare_release_dir {
 	then
 		if [ ! -e "${_RELEASE_DIR}/tomcat" ]
 		then
-			echo "${_RELEASE_DIR} does not have a tomcat directory, deleting."
+			echo "Removing ${_RELEASE_DIR} because it does not have a Tomcat directory."
 
 			rm -fr "${_RELEASE_DIR}"
 		else
@@ -437,7 +441,7 @@ function prepare_release_dir {
 
 	shopt -u dotglob
 
-	rm -fr liferay-dxp/
+	rm -fr liferay-dxp
 
 	mv "${_RELEASE_DIR}.tmp" "${_RELEASE_DIR}"
 }
@@ -459,12 +463,12 @@ function sign_hotfix {
 
 	if [ ! -e "${LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE}" ]
 	then
-		lc_log ERROR "LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE does not point to a valid file."
+		lc_log ERROR "The environment variable LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE does not point to a valid file."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	openssl dgst -passin env:LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_PASSWORD -out hotfix.sign -sha256 -sign "${LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE}"  hotfix.json
+	openssl dgst -passin env:LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_PASSWORD -out hotfix.sign -sha256 -sign "${LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE}" hotfix.json
 }
 
 function transform_file_name {
