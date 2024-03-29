@@ -13,7 +13,7 @@ function add_file_to_hotfix {
 function add_hotfix_testing_code {
 	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
-		echo "LIFERAY_RELEASE_HOTFIX_TEST_SHA is not set, not adding test code."
+		echo "The environment variable LIFERAY_RELEASE_HOTFIX_TEST_SHA is not set."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -22,12 +22,12 @@ function add_hotfix_testing_code {
 
 	if (! git show "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" &>/dev/null)
 	then
-		echo "Running git fetch upstream tag \"${LIFERAY_RELEASE_HOTFIX_TEST_TAG}\""
+		echo "Running: git fetch upstream tag \"${LIFERAY_RELEASE_HOTFIX_TEST_TAG}\""
 
 		git fetch -v upstream tag "${LIFERAY_RELEASE_HOTFIX_TEST_TAG}" || return 1
 	fi
 
-	echo "Running git cherry-pick -n \"${LIFERAY_RELEASE_HOTFIX_TEST_SHA}\""
+	echo "Running: git cherry-pick -n \"${LIFERAY_RELEASE_HOTFIX_TEST_SHA}\""
 
 	git cherry-pick -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" || return 1
 }
@@ -48,11 +48,11 @@ function add_portal_patcher_properties_jar {
 
 	jar cfm portal-patcher-properties.jar manifest patcher.properties
 
-	if [ -e "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/" ]
+	if [ -e "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" ]
 	then
-		cp portal-patcher-properties.jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/"
+		cp portal-patcher-properties.jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib"
 	else
-		cp portal-patcher-properties.jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib/"
+		cp portal-patcher-properties.jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib"
 	fi
 }
 
