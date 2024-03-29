@@ -57,14 +57,14 @@ function add_portal_patcher_properties_jar {
 }
 
 function calculate_checksums {
-	if [ ! -e "${_BUILD_DIR}/hotfix/binaries/" ]
+	if [ ! -e "${_BUILD_DIR}/hotfix/binaries" ]
 	then
-		echo "There are no added files."
+		echo "There are no hotfix binaries."
 
 		return
 	fi
 
-	lc_cd "${_BUILD_DIR}/hotfix/binaries/"
+	lc_cd "${_BUILD_DIR}/hotfix/binaries"
 
 	find . -type f -print0 | while IFS= read -r -d '' file
 	do
@@ -73,8 +73,8 @@ function calculate_checksums {
 }
 
 function compare_jars {
-	jar1=${_BUNDLES_DIR}/"${1}"
-	jar2=${_RELEASE_DIR}/"${1}"
+	local jar1=${_BUNDLES_DIR}/"${1}"
+	local jar2=${_RELEASE_DIR}/"${1}"
 
 	function compare_property_in_packaged_file {
 		local jar1="${1}"
@@ -95,20 +95,30 @@ function compare_jars {
 
 	function list_file {
 		unzip -v "${1}" | \
-			# Remove heades and footers
+			#
+			# Remove headers and footers
+			#
 			grep "Defl:N" | \
+			#
 			# Remove 0 byte files
+			#
 			grep -v 00000000 | \
 			grep -v "pom.properties" | \
 			grep -v "source-classes-mapping.txt" | \
 			grep -v "_jsp.class" | \
 			grep -v "_jsp.java" | \
 			grep -v "previous-compilation-data.bin" | \
-			# TODO method to include portal-impl.jar when the util-* jars changed.
+			#
+			# TODO Include portal-impl.jar when the util-* jars changed
+			#
 			grep -v "com/liferay/portal/deploy/dependencies/" | \
-			# TODO change portal not to update this file every time
+			#
+			# TODO Modify "ant all" to to update this file every time
+			#
 			grep -v "META-INF/system.packages.extra.mf" | \
-			# TODO Figure out what to do with osgi/modules/com.liferay.sharepoint.soap.repository.jar
+			#
+			# TODO Decide what to do with osgi/modules/com.liferay.sharepoint.soap.repository.jar
+			#
 			grep -v "ws.jar" | \
 			sed -e "s/[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9]\ [0-9][0-9]:[0-9][0-9]//"
 	}
@@ -122,7 +132,7 @@ function compare_jars {
 
 	if [ "${files_count}" -eq 0 ]
 	then
-		lc_log ERROR "No files found in the jar files, unknown error."
+		lc_log ERROR "The JARs have no files."
 
 		exit 2
 	fi
