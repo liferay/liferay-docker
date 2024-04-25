@@ -105,9 +105,12 @@ function upload_hotfix {
 
 	if (ssh root@lrdcom-vm-1 ls "/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/" | grep -q "${_HOTFIX_FILE_NAME}")
 	then
-		lc_log ERROR "Skipping the upload of ${_HOTFIX_FILE_NAME} because it already exists."
+		lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} because it already exists."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		echo "# Uploaded" > ../output.md
+		echo " - https://releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
