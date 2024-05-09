@@ -358,7 +358,7 @@ function in_hotfix_scope {
 		return 0
 	fi
 
-	if (echo "${1}" | grep -q "^osgi/") && (! echo "${1}" | grep -q "^osgi/state") && (! echo "${1}" | grep -q "^osgi/war")
+	if (echo "${1}" | grep -q "^osgi/") && (! echo "${1}" | grep -q "^osgi/state")
 	then
 		return 0
 	fi
