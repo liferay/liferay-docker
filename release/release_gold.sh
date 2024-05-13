@@ -36,6 +36,29 @@ function check_usage {
 	LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
 }
 
+function invoke_github_api {
+    local curl_response=$(\
+        curl -i \
+            "${1}" \
+            --data "${2}" \
+            --fail \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${LIFERAY_RELEASE_GITHUB_PAT}" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            --max-time 10 \
+            --request POST \
+            --retry 3 \
+            --silent)
+
+    if [ $(echo "${curl_response}" | awk '/^HTTP/{print $2}') -ne 201 ]
+    then
+        lc_log ERROR "Unable to invoke GitHub API"
+        lc_log ERROR "${curl_response}"
+
+        return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+    fi
+}
+
 function main {
 	check_usage
 
@@ -103,6 +126,24 @@ function tag_release {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	local release_properties_file=$(lc_download "https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/release.properties")
+
+	if [ $? -ne 0 ]
+	then
+		lc_log ERROR "Unable to download release.properties"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	local git_hash=$(lc_get_property "${release_properties_file}" git.hash.liferay-portal-ee)
+
+	if [ -z "${git_hash}" ]
+	then
+		lc_log ERROR "Unable to get property git.hash.liferay-portal-ee"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local repository=liferay-portal-ee
 
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
@@ -110,28 +151,36 @@ function tag_release {
 		repository=liferay-portal
 	fi
 
-	if (! curl \
-			"https://api.github.com/repos/liferay/${repository}/git/tags" \
-			--data-raw '
-				{
-					"message": "",
-					"object": "'$(lc_get_property release-data/release.properties git.hash.liferay-portal-ee)'",
-					"tag": "'${LIFERAY_RELEASE_VERSION}'",
-					"type": "commit"
-				}' \
-			--fail \
-			--header "Accept: application/vnd.github+json" \
-			--header "Authorization: Bearer ${LIFERAY_RELEASE_GITHUB_PAT}" \
-			--header "X-GitHub-Api-Version: 2022-11-28" \
-			--max-time 10 \
-			--request POST \
-			--retry 3 \
-			--silent)
-	then
-		lc_log ERROR "Unable to tag release."
+	local tag_data=$(
+		echo "{"
+		echo "    \"message\":\"\","
+		echo "    \"object\":\"${git_hash}\","
+		echo "    \"tag\":\"${LIFERAY_RELEASE_VERSION}\","
+		echo "	  \"type\":\"commit\""
+		echo "}"
+	)
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
+	invoke_github_api "https://api.github.com/repos/liferay/${repository}/git/tags" "${tag_data}"
+
+    if [ $? -eq 4 ]
+    then
+        return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+    fi
+
+	local ref_data=$(
+		echo "{"
+		echo "    \"message\":\"\","
+		echo "    \"ref\":\"refs/tags/${LIFERAY_RELEASE_VERSION}\","
+		echo "    \"sha\":\"${git_hash}\""
+		echo "}"
+	)
+
+    invoke_github_api "https://api.github.com/repos/liferay/${repository}/git/refs" "${ref_data}"
+
+    if [ $? -eq 4 ]
+    then
+        return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+    fi
 }
 
 main
