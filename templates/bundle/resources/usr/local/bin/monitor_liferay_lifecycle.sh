@@ -39,22 +39,28 @@ function kill_service {
 function main {
 	local curl_max_time=$((LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT + 10))
 	local fail_count=0
+	local modules_active=false
 	local started=false
+
+	update_container_status liferay-start
+
+	if [ -z "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" ]
+	then
+		modules_active=true
+	fi
 
 	while true
 	do
 		if [ "${started}" != true ]
 		then
 			touch_startup_lock
-
-			update_container_status liferay-start
 		fi
 
 		local curl_content
 
 		curl_content=$(curl --connect-timeout "${LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT}" --connect-to ":80:localhost:8080" --fail --max-time "${curl_max_time}" --show-error --silent "${LIFERAY_CONTAINER_STATUS_REQUEST_URL}" 2>/dev/null)
 
-		local exit_code=$?
+		local exit_code=${?}
 
 		if [ ${exit_code} -gt 0 ]
 		then
@@ -68,7 +74,7 @@ function main {
 		then
 			curl_content=$(echo "${curl_content}" | grep "${LIFERAY_CONTAINER_STATUS_REQUEST_CONTENT}")
 
-			exit_code=$?
+			exit_code=${?}
 
 			if [ ${exit_code} -gt 0 ] && [ "${started}" == "true" ]
 			then
@@ -84,7 +90,41 @@ function main {
 
 			started=true
 
-			update_container_status live
+			if [ "${modules_active}" == "true" ]
+			then
+				update_container_status live
+			else
+				update_container_status waiting-for-modules-to-become-active
+			fi
+		fi
+
+		if [ "${modules_active}" == "false" ] && [ "${started}" == "true" ]
+		then
+			telnet_content=$(
+				(
+					sleep 1
+					echo "ss"
+					sleep 2
+				) | telnet 127.0.0.1 11311 2>/dev/null
+			)
+
+			local active_count=$(echo "${telnet_content}" | grep -E "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep -c ACTIVE)
+
+			local module_count=$(echo "${telnet_content}" | grep -cE "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}")
+
+			if [ "${module_count}" -eq 0 ]
+			then
+				echo "No modules are available yet with the following filter: ${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}"
+			elif [ "${module_count}" -eq "${active_count}" ]
+			then
+				update_container_status live
+
+				modules_active=true
+			else
+				echo "Modules pending activation:"
+
+				echo "${telnet_content}" | grep -E "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep -v ACTIVE
+			fi
 		fi
 
 		if [ "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" -gt 0 ] && [ ${exit_code} -gt 0 ] && [ "${started}" == "true" ]
@@ -97,7 +137,7 @@ function main {
 			fi
 		fi
 
-		if [ "${started}" != true ] && [ ${exit_code} -gt 1 ]
+		if [ "${started}" != "true" ] || [ "${modules_active}" != "true" ]
 		then
 			sleep 3
 		else
