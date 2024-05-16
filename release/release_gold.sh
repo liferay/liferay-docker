@@ -162,7 +162,7 @@ function tag_release {
 
 	invoke_github_api "https://api.github.com/repos/liferay/${repository}/git/tags" "${tag_data}"
 
-    if [ $? -eq 4 ]
+    if [ $? -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
     then
         return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
     fi
@@ -177,7 +177,7 @@ function tag_release {
 
     invoke_github_api "https://api.github.com/repos/liferay/${repository}/git/refs" "${ref_data}"
 
-    if [ $? -eq 4 ]
+    if [ $? -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
     then
         return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
     fi
