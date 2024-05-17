@@ -278,47 +278,13 @@ function generate_pom_release_dxp_bom_third_party {
 		) >> "${pom_file_name}"
 }
 
-function generate_poms {
-	if (! echo "${_PRODUCT_VERSION}" | grep -q "q")
-	then
-		lc_log INFO "BOMs are only generated for quarterly updates."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
-	then
-		lc_log INFO "The product is set to \"portal\" and building BOMs will not be supported until LRP-4752 is completed."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	local base_version=$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.profile-dxp.properties "release.info.version").u$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.trivial")
-
+function generate_poms_from_scratch {
 	mkdir -p "${_BUILD_DIR}/boms"
 
 	lc_cd "${_BUILD_DIR}/boms"
 
 	rm -f ./*.pom
 
-	for pom in "release.${LIFERAY_RELEASE_PRODUCT_NAME}.api" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party"
-	do
-		lc_download "https://repository.liferay.com/nexus/service/local/repositories/liferay-public-releases/content/com/liferay/portal/${pom}/${base_version}/${pom}-${base_version}.pom" "${pom}-${base_version}.pom"
-
-		sed \
-			-e "s#<version>${base_version}</version>#<version>${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}</version>#" \
-			-e "s#<connection>scm:git:git@github.com:liferay/liferay-portal.git</connection>#<connection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</connection>#" \
-			-e "s#<developerConnection>scm:git:git@github.com:liferay/liferay-portal.git</developerConnection>#<developerConnection>scm:git:git@github.com:liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}.git</developerConnection>#" \
-			-e "s#<tag>.*</tag>#<tag>${_PRODUCT_VERSION}</tag>#" \
-			-e "s#<url>https://github.com/liferay/liferay-portal</url>#<url>https://github.com/liferay/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}</url>#" \
-			-e "w ${pom}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom" \
-			"${pom}-${base_version}.pom" > /dev/null
-
-		rm -f "${pom}-${base_version}.pom"
-	done
-}
-
-function generate_poms_from_scratch {
 	lc_time_run generate_pom_release_dxp_api
 	lc_time_run generate_pom_release_dxp_bom
 	lc_time_run generate_pom_release_dxp_bom_compile_only

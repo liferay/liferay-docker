@@ -121,8 +121,6 @@ function main {
 
 		lc_time_run generate_api_source_jar
 
-		lc_time_run generate_poms
-
 		generate_poms_from_scratch
 
 		lc_time_run package_release
