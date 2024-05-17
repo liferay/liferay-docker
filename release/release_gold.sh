@@ -101,6 +101,8 @@ function main {
 	lc_time_run prepare_next_release_branch
 
 	#lc_time_run upload_to_docker_hub
+
+	#lc_time_run add_patcher_project_version
 }
 
 function prepare_next_release_branch {
@@ -171,6 +173,8 @@ function print_help {
 	echo "    LIFERAY_RELEASE_GITHUB_PAT (optional): GitHub personal access token used to tag releases"
 	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD (optional): Nexus user's password"
 	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_USER (optional): Nexus user with the right to upload BOM files"
+	echo "    LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL: E-mail for the Release Team Liferay Patcher account"
+	echo "    LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD: Password for the Release Team Liferay Patcher account"
 	echo "    LIFERAY_RELEASE_PRODUCT_NAME (optional): Set to \"portal\" for CE. The default is \"DXP\"."
 	echo "    LIFERAY_RELEASE_RC_BUILD_TIMESTAMP: Timestamp of the build to publish"
 	echo "    LIFERAY_RELEASE_VERSION: DXP version of the release to publish"
