@@ -3,7 +3,7 @@
 source _liferay_common.sh
 source _releases_json.sh
 
-function assertEquals {
+function assert_equals {
     if [ "${1}" = 1 ] || [ "${1}" = true ]
     then
         echo "Test ${FUNCNAME[1]} passed"
@@ -38,7 +38,7 @@ function test_merge_json_snipets {
     local earliest_count="$(grep -c "${earliest_url}" releases.json)"
     local latest_count="$(grep -c "${latest_url}" releases.json)"
 
-    assertEquals $(echo $(( "${earliest_count}" == 1 && "${latest_count}" == 1 )))
+    assert_equals $(echo $(( "${earliest_count}" == 1 && "${latest_count}" == 1 )))
 }
 
 function test_promote_product_versions {
@@ -50,7 +50,7 @@ function test_promote_product_versions {
 
         if [ -n "${last_version}" ]
         then
-            assertEquals $(echo "$(jq -r '.[] | .promoted' "${last_version}")") "${last_version} should be promoted."
+            assert_equals $(echo "$(jq -r '.[] | .promoted' "${last_version}")") "${last_version} should be promoted."
         fi
     done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
 }
