@@ -151,13 +151,14 @@ function tag_release {
 		repository=liferay-portal
 	fi
 
-	local tag_data=$(
-		echo "{"
-		echo "    \"message\":\"\","
-		echo "    \"object\":\"${git_hash}\","
-		echo "    \"tag\":\"${LIFERAY_RELEASE_VERSION}\","
-		echo "	  \"type\":\"commit\""
-		echo "}"
+	local tag_data=$(cat <<-END
+		{
+			"message":"",
+			"object":"${git_hash}",
+			"tag":"${LIFERAY_RELEASE_VERSION}",
+			"type":"commit"
+		}
+	END
 	)
 
 	invoke_github_api "https://api.github.com/repos/liferay/${repository}/git/tags" "${tag_data}"
@@ -167,12 +168,13 @@ function tag_release {
         return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
     fi
 
-	local ref_data=$(
-		echo "{"
-		echo "    \"message\":\"\","
-		echo "    \"ref\":\"refs/tags/${LIFERAY_RELEASE_VERSION}\","
-		echo "    \"sha\":\"${git_hash}\""
-		echo "}"
+	local ref_data=$(cat <<-END
+		{
+			"message":"",
+			"ref":"refs/tags/${LIFERAY_RELEASE_VERSION}",
+			"sha":"${git_hash}"
+		}
+	END
 	)
 
     invoke_github_api "https://api.github.com/repos/liferay/${repository}/git/refs" "${ref_data}"
