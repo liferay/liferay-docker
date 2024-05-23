@@ -17,7 +17,7 @@ function assert_equals {
     fi
 }
 
-function setup {
+function set_up {
     export _RELEASE_ROOT_DIR="${PWD}"
 
     _process_product dxp &> /dev/null
@@ -57,7 +57,7 @@ function test_promote_product_versions {
     done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
 }
 
-setup
+set_up
 
 test_merge_json_snipets dxp
 
