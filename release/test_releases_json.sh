@@ -21,7 +21,6 @@ function main {
     set_up
 
     test_merge_json_snippets dxp
-
     test_promote_product_versions dxp
 
     tear_down
