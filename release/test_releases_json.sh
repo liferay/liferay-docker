@@ -6,9 +6,9 @@ source _releases_json.sh
 function assert_equals {
     if [ "${1}" = 1 ] || [ "${1}" = true ]
     then
-        echo "Test ${FUNCNAME[1]} passed"
+        echo "${FUNCNAME[1]} SUCCESS"
     else
-        echo "Test ${FUNCNAME[1]} failed"
+        echo "${FUNCNAME[1]} FAILED"
 
         if [ -n "${2}" ]
         then
