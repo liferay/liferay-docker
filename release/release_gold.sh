@@ -51,13 +51,13 @@ function invoke_github_api {
 			--retry 3 \
 			--silent)
 
-    if [ $(echo "${curl_response}" | awk '/^HTTP/{print $2}') -ne 201 ]
-    then
-        lc_log ERROR "Unable to invoke GitHub API"
-        lc_log ERROR "${curl_response}"
+	if [ $(echo "${curl_response}" | awk '/^HTTP/{print $2}') -ne 201 ]
+	then
+		lc_log ERROR "Unable to invoke GitHub API"
+		lc_log ERROR "${curl_response}"
 
-        return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-    fi
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 }
 
 function main {
@@ -165,10 +165,10 @@ function tag_release {
 
 	invoke_github_api "https://api.github.com/repos/liferay/${repository}/git/tags" "${tag_data}"
 
-    if [ $? -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-    then
-        return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-    fi
+	if [ $? -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 
 	local ref_data=$(
 		cat <<- END
@@ -180,12 +180,12 @@ function tag_release {
 		END
 	)
 
-    invoke_github_api "https://api.github.com/repos/liferay/${repository}/git/refs" "${ref_data}"
+	invoke_github_api "https://api.github.com/repos/liferay/${repository}/git/refs" "${ref_data}"
 
-    if [ $? -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-    then
-        return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-    fi
+	if [ $? -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 }
 
 main
