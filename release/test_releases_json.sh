@@ -20,7 +20,7 @@ function assert_equals {
 function main {
     set_up
 
-    test_merge_json_snipets dxp
+    test_merge_json_snippets dxp
 
     test_promote_product_versions dxp
 
@@ -43,7 +43,7 @@ function tear_down {
     rm ./*.json
 }
 
-function test_merge_json_snipets {
+function test_merge_json_snippets {
     local earliest_url="$(jq -r '.[0].url' < "$(find ./20*dxp*.json | head -n 1)")"
 
     local earliest_count="$(grep -c "${earliest_url}" releases.json)"
