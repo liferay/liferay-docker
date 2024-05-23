@@ -21,7 +21,9 @@ function setup {
     export _RELEASE_ROOT_DIR="${PWD}"
 
     _process_product dxp &> /dev/null
+
     _promote_product_versions dxp &> /dev/null
+
     _merge_json_snippets &> /dev/null
 }
 
@@ -56,6 +58,9 @@ function test_promote_product_versions {
 }
 
 setup
+
 test_merge_json_snipets dxp
+
 test_promote_product_versions dxp
+
 tear_down
