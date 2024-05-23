@@ -35,9 +35,9 @@ function tear_down {
 
 function test_merge_json_snipets {
     local earliest_url="$(jq -r '.[0].url' < "$(find ./20*dxp*.json | head -n 1)")"
-    local latest_url="$(jq -r '.[0].url' < "$(find ./20*dxp*.json | tail -n 1)")"
-
     local earliest_count="$(grep -c "${earliest_url}" releases.json)"
+
+    local latest_url="$(jq -r '.[0].url' < "$(find ./20*dxp*.json | tail -n 1)")"
     local latest_count="$(grep -c "${latest_url}" releases.json)"
 
     assert_equals $(echo $(( "${earliest_count}" == 1 && "${latest_count}" == 1 )))
