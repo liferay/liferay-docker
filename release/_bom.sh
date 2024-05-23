@@ -278,7 +278,7 @@ function generate_pom_release_dxp_bom_third_party {
 		) >> "${pom_file_name}"
 }
 
-function generate_poms_from_scratch {
+function generate_poms {
 	mkdir -p "${_BUILD_DIR}/boms"
 
 	lc_cd "${_BUILD_DIR}/boms"
