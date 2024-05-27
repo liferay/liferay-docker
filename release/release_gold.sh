@@ -40,12 +40,12 @@ function invoke_github_api {
 	local curl_response=$(\
 		curl \
 			"${1}" \
-			-i \
 			--data "${2}" \
 			--fail \
 			--header "Accept: application/vnd.github+json" \
 			--header "Authorization: Bearer ${LIFERAY_RELEASE_GITHUB_PAT}" \
 			--header "X-GitHub-Api-Version: 2022-11-28" \
+			--include \
 			--max-time 10 \
 			--request POST \
 			--retry 3 \
