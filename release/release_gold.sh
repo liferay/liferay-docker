@@ -53,7 +53,7 @@ function invoke_github_api {
 
 	if [ $(echo "${curl_response}" | awk '/^HTTP/{print $2}') -ne 201 ]
 	then
-		lc_log ERROR "Unable to invoke GitHub API"
+		lc_log ERROR "Unable to invoke GitHub API:"
 		lc_log ERROR "${curl_response}"
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
@@ -71,7 +71,7 @@ function main {
 
 	if [[ ! $(echo "${_PRODUCT_VERSION}" | grep "q") ]] && [[ ! $(echo "${_PRODUCT_VERSION}" | grep "7.4") ]]
 	then
-		lc_log INFO "Do not update product_info.json for quarterly and 7.4 releases"
+		lc_log INFO "Do not update product_info.json for quarterly and 7.4 releases."
 
 		lc_time_run generate_product_info_json
 
@@ -131,7 +131,7 @@ function tag_release {
 
 	if [ $? -ne 0 ]
 	then
-		lc_log ERROR "Unable to download release.properties"
+		lc_log ERROR "Unable to download release.properties."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -140,7 +140,7 @@ function tag_release {
 
 	if [ -z "${git_hash}" ]
 	then
-		lc_log ERROR "Unable to get property git.hash.liferay-portal-ee"
+		lc_log ERROR "Unable to get property \"git.hash.liferay-portal-ee.\""
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
