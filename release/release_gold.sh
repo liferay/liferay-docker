@@ -69,7 +69,8 @@ function main {
 
 	promote_boms
 
-	if [[ ! $(echo "${_PRODUCT_VERSION}" | grep "q") ]] && [[ ! $(echo "${_PRODUCT_VERSION}" | grep "7.4") ]]
+	if [[ ! $(echo "${_PRODUCT_VERSION}" | grep "q") ]] &&
+	   [[ ! $(echo "${_PRODUCT_VERSION}" | grep "7.4") ]]
 	then
 		lc_log INFO "Do not update product_info.json for quarterly and 7.4 releases."
 
