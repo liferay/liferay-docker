@@ -95,6 +95,8 @@ function main {
 	lc_time_run regenerate_releases_json
 
 	lc_time_run upload_releases_json
+
+	lc_time_run upload_to_liferay_docker_hub
 }
 
 function print_help {

@@ -153,6 +153,17 @@ function upload_hotfix {
 	echo " - https://releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
 }
 
+function upload_to_liferay_docker_hub {
+    update_latest_in_bundles
+
+    export LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}"
+    export LIFERAY_DOCKER_LICENSE_API_URL="https://customer.liferay.com/api/jsonws/osb-portlet.licensekey/generate-we-deploy-license-key"
+
+	lc_cd "${BASE_DIR}"
+	
+    ./build_all_images.sh --push
+}
+
 function upload_release {
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
