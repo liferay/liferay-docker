@@ -6,6 +6,17 @@ source _promotion.sh
 source _publishing.sh
 source _releases_json.sh
 
+function check_supported_versions {
+	supported_version="${LIFERAY_RELEASE_VERSION%.*}"
+
+	if [ -z $(grep "${supported_version}" "${_RELEASE_ROOT_DIR}"/supported-"${LIFERAY_RELEASE_PRODUCT_NAME}"-versions.txt) ]
+	then
+		lc_log INFO "Unable to find ${supported_version} in supported-${LIFERAY_RELEASE_PRODUCT_NAME}-versions.txt"
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function check_usage {
 	if [ -z "${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}" ] || [ -z "${LIFERAY_RELEASE_VERSION}" ]
 	then
@@ -62,6 +73,8 @@ function invoke_github_api {
 
 function main {
 	check_usage
+
+	check_supported_versions
 
 	lc_time_run promote_packages
 
