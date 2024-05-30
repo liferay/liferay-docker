@@ -35,6 +35,31 @@ function init_gcs {
 	gcloud auth activate-service-account --key-file "${LIFERAY_RELEASE_GCS_TOKEN}"
 }
 
+function update_latest_in_bundles {
+    local file_path="${BASE_DIR}/bundles.yml"
+
+    if (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${file_path}" | grep -q "true")
+    then
+        lc_log INFO "The ${_PRODUCT_VERSION} product version was already published."
+
+        return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+    fi
+
+    local latest_key=$(yq eval '.quarterly | keys | .[-1]' "${file_path}")
+
+    yq -i --indent 4 eval "del(.quarterly.\"${latest_key}\".latest)" "${file_path}"
+    yq -i --indent 4 eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${file_path}"
+
+	sed -i 's/[[:space:]]{}//g' "${file_path}"
+    truncate -s -1 "${file_path}"
+
+    git add "${file_path}"
+
+    git commit -q -m "${_PRODUCT_VERSION}"
+ 
+    git push -q upstream master
+}
+
 function upload_bom_file {
 	local nexus_repository_name="${1}"
 
