@@ -229,9 +229,9 @@ function generate_pom_release_dxp_bom_third_party {
 
 	dependencies_properties+=("${portal_dependencies_properties[@]}")
 
-	local pom_compile_only_file_name="release.dxp.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
-
 	local dependencies_included=()
+
+	local pom_compile_only_file_name="release.dxp.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
 
 	for dependency_property in "${dependencies_properties[@]}"
 	do
