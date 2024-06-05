@@ -229,7 +229,7 @@ function generate_pom_release_dxp_bom_third_party {
 
 	dependencies_properties+=("${portal_dependencies_properties[@]}")
 
-	local dependencies_included=()
+	local included_dependencies=()
 
 	local pom_compile_only_file_name="release.dxp.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
 
@@ -237,12 +237,12 @@ function generate_pom_release_dxp_bom_third_party {
 	do
 		IFS=':' read -ra dependency_property_parts <<< "$(echo "${dependency_property}" | cut -d = -f 2)"
 
-		if [[ ${dependencies_included[@]} =~ "${dependency_property_parts}" ]]
+		if [[ ${included_dependencies[@]} =~ "${dependency_property_parts}" ]]
 		then
 			continue
 		fi
 
-		dependencies_included+=("${dependency_property_parts}")
+		included_dependencies+=("${dependency_property_parts}")
 
 		if (grep -q "<artifactId>${dependency_property_parts[1]}</artifactId>" "${pom_compile_only_file_name}" && grep -q "<groupId>${dependency_property_parts[0]}</groupId>" "${pom_compile_only_file_name}")
 		then
