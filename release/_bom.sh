@@ -224,6 +224,9 @@ function generate_pom_release_dxp_bom_third_party {
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.third.party.pom.tpl" > /dev/null
 
+	local included_dependencies=()
+	local pom_compile_only_file_name="release.dxp.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+
 	local dependencies_properties
 
 	IFS=$'\n' read -d '' -ra dependencies_properties < "${_PROJECTS_DIR}/liferay-portal-ee/lib/development/dependencies.properties"
@@ -233,10 +236,6 @@ function generate_pom_release_dxp_bom_third_party {
 	IFS=$'\n' read -d '' -ra portal_dependencies_properties < "${_PROJECTS_DIR}/liferay-portal-ee/lib/portal/dependencies.properties"
 
 	dependencies_properties+=("${portal_dependencies_properties[@]}")
-
-	local included_dependencies=()
-
-	local pom_compile_only_file_name="release.dxp.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
 
 	for dependency_property in "${dependencies_properties[@]}"
 	do
