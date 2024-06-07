@@ -43,8 +43,9 @@ function wait_until_free {
 function main {
 	local delay=$((RANDOM % 10 + 1))
 
-	echo "Delaying lock check for $delay seconds."
-	sleep $delay
+	echo "Delaying lock check for ${delay} seconds."
+
+	sleep ${delay}
 
 	wait_until_free
 
