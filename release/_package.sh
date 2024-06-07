@@ -55,7 +55,7 @@ function generate_release_properties_file {
 function install_patching_tool {
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
-		lc_log INFO "Patching Tool shouldn't be installed on product \"portal.\""
+		lc_log INFO "Patching Tool should not be installed."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
