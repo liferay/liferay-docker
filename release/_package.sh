@@ -95,6 +95,11 @@ function package_boms {
 }
 
 function package_release {
+	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	then
+		rm -fr "${_BUNDLES_DIR}/routes/default/dxp"
+	fi
+
 	rm -fr "${_BUILD_DIR}/release"
 
 	local package_dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
