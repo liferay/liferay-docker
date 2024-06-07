@@ -114,28 +114,30 @@ function generate_api_source_jar {
 	done
 }
 
-function generate_pom_release_dxp_api {
-	local pom_file_name="release.dxp.api-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+function generate_pom_release_api {
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
+		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api/" \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
-		"${_RELEASE_TOOL_DIR}/templates/release.dxp.api.pom.tpl" > /dev/null
+		"${_RELEASE_TOOL_DIR}/templates/release.api.pom.tpl" > /dev/null
 }
 
-function generate_pom_release_dxp_bom {
-	local pom_file_name="release.dxp.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+function generate_pom_release_bom {
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
+		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom/" \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
-		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.pom.tpl" > /dev/null
+		"${_RELEASE_TOOL_DIR}/templates/release.bom.pom.tpl" > /dev/null
 
 	find "${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng" -name '*.properties' -print0 | \
 		xargs -0 awk -F= '/^artifact.url=/  { print $2 }' \
@@ -185,16 +187,17 @@ function generate_pom_release_dxp_bom {
 	) >> "${pom_file_name}"
 }
 
-function generate_pom_release_dxp_bom_compile_only {
-	local pom_file_name="release.dxp.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+function generate_pom_release_bom_compile_only {
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
+		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only/" \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
-		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.compile.only.pom.tpl" > /dev/null
+		"${_RELEASE_TOOL_DIR}/templates/release.bom.compile.only.pom.tpl" > /dev/null
 
 	cut -d= -f2 "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties" | \
 		while IFS=: read -r group_id artifact_id version
@@ -213,16 +216,17 @@ function generate_pom_release_dxp_bom_compile_only {
 	) >> "${pom_file_name}"
 }
 
-function generate_pom_release_dxp_bom_third_party {
-	local pom_file_name="release.dxp.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+function generate_pom_release_bom_third_party {
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
+		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party/" \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
-		"${_RELEASE_TOOL_DIR}/templates/release.dxp.bom.third.party.pom.tpl" > /dev/null
+		"${_RELEASE_TOOL_DIR}/templates/release.bom.third.party.pom.tpl" > /dev/null
 
 	local included_dependencies=()
 	local pom_compile_only_file_name="release.dxp.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
@@ -276,10 +280,10 @@ function generate_poms {
 
 	rm -f ./*.pom
 
-	lc_time_run generate_pom_release_dxp_api
-	lc_time_run generate_pom_release_dxp_bom
-	lc_time_run generate_pom_release_dxp_bom_compile_only
-	lc_time_run generate_pom_release_dxp_bom_third_party
+	lc_time_run generate_pom_release_api
+	lc_time_run generate_pom_release_bom
+	lc_time_run generate_pom_release_bom_compile_only
+	lc_time_run generate_pom_release_bom_third_party
 }
 
 function _copy_file {
