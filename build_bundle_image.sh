@@ -271,12 +271,39 @@ function push_docker_image {
 function set_parent_image {
 	if (echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | grep -q "q")
 	then
-		return
-	fi
+		if [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1)" -gt 2024 ]]
+		then
+			return
+		fi
 
-	if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION%-*}" | cut -f1,2,3 -d'.' | cut -f1 -d '-' | sed 's/\.//g' )" -le 7310 ]
+		if [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1)" -eq 2024 ]] &&
+		   [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 2 | tr -d q)" -ge 3 ]]
+		then
+			return
+		fi
+
+		sed -i 's/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
+		sed -i 's/FROM liferay-jdk21/FROM liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
+	elif [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2)" == 7.4 ]]
 	then
-		sed -i 's/liferay\/jdk11:latest/liferay\/jdk11-jdk8:latest/g' "${TEMP_DIR}"/Dockerfile
+		if [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2,3 | cut -d '-' -f 1)" == 7.4.13 ]] &&
+		   [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '-' -f 2 | tr -d u)" -ge 125 ]]
+		then
+			return
+		fi
+
+		if [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2,3)" == 7.4.3 ]] &&
+		   [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '-' -f 2 | sed 's/ga//g')" -ge 125 ]]
+		then
+			return
+		fi
+
+		sed -i 's/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
+		sed -i 's/FROM liferay-jdk21/FROM liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
+	elif [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2 | tr -d .)" -le 73 ]]
+	then
+		sed -i 's/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11-jdk8:latest AS liferay-jdk11-jdk8/g' "${TEMP_DIR}"/Dockerfile
+		sed -i 's/FROM liferay-jdk21/FROM liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
 	fi
 }
 
