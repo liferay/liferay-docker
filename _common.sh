@@ -190,7 +190,12 @@ function make_temp_directory {
 
 	mkdir -p "${TEMP_DIR}"
 
-	cp -r "${1}"/* "${TEMP_DIR}"
+	local resource_dir
+
+	for resource_dir in "${@}"
+	do
+		cp -r "${resource_dir}"/* "${TEMP_DIR}"
+	done
 
 	#
 	# templates/_common/resources/etc/created-date
