@@ -318,10 +318,19 @@ function set_product_version {
 	then
 		_PRODUCT_VERSION="${version_display_name,,}"
 	else
-		local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
 		local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
-		_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}-u${trivial}"
+		if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
+		then
+			local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
+
+			_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}-u${trivial}"
+		elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+		then
+			local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix")
+
+			_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}.${trivial}-ga${trivial}"
+		fi
 	fi
 
 	lc_log INFO "Product Version: ${_PRODUCT_VERSION}"
