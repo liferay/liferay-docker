@@ -229,7 +229,7 @@ function generate_pom_release_bom_third_party {
 		"${_RELEASE_TOOL_DIR}/templates/release.bom.third.party.pom.tpl" > /dev/null
 
 	local included_dependencies=()
-	local pom_compile_only_file_name="release.dxp.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+	local pom_compile_only_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
 
 	local dependencies_properties
 
@@ -245,12 +245,12 @@ function generate_pom_release_bom_third_party {
 	do
 		IFS=':' read -ra dependency_property_parts <<< "$(echo "${dependency_property}" | cut -d = -f 2)"
 
-		if [[ ${included_dependencies[@]} =~ "${dependency_property_parts}" ]]
+		if [[ ${included_dependencies[@]} =~ "${dependency_property_parts[0]}${dependency_property_parts[1]}${dependency_property_parts[2]}" ]]
 		then
 			continue
 		fi
 
-		included_dependencies+=("${dependency_property_parts}")
+		included_dependencies+=("${dependency_property_parts[0]}${dependency_property_parts[1]}${dependency_property_parts[2]}")
 
 		if (grep -q "<artifactId>${dependency_property_parts[1]}</artifactId>" "${pom_compile_only_file_name}" && grep -q "<groupId>${dependency_property_parts[0]}</groupId>" "${pom_compile_only_file_name}")
 		then
