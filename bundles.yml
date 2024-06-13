@@ -466,6 +466,9 @@
 7.4.3.112:
     7.4.3.112-ga112:
         bundle_url: releases-cdn.liferay.com/portal/7.4.3.112-ga112/liferay-ce-portal-tomcat-7.4.3.112-ga112-20240226061339195.7z
+7.4.3.120:
+    7.4.3.120-ga120:
+        bundle_url: releases-cdn.liferay.com/portal/7.4.3.120-ga120/liferay-portal-tomcat-7.4.3.120-ga120-1718225443.7z
         latest: true
 7.4.13:
     7.4.13-u1:
