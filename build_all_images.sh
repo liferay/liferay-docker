@@ -298,6 +298,35 @@ function build_jdk11_jdk8_image {
 	fi
 }
 
+
+function build_jdk21_image {
+	local latest_available_zulu21_amd64_version=$(get_latest_available_zulu_version "21" "amd64")
+	local latest_available_zulu21_arm64_version=$(get_latest_available_zulu_version "21" "arm64")
+
+	if [[ $(get_latest_docker_hub_zulu_version "jdk21" "21" "amd64") == "${latest_available_zulu21_amd64_version}" ]] && [[ $(get_latest_docker_hub_zulu_version "jdk21" "21" "arm64") == "${latest_available_zulu21_arm64_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	then
+		echo ""
+		echo "Docker image JDK 21 is up to date."
+
+		return
+	fi
+
+	echo ""
+	echo "Building Docker image JDK 21."
+	echo ""
+
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_21_AMD64_VERSION=${latest_available_zulu21_amd64_version} LIFERAY_DOCKER_ZULU_21_ARM64_VERSION=${latest_available_zulu21_arm64_version} time ./build_jdk21_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/jdk21.log
+
+	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	then
+		echo "FAILED: JDK 21" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
+
+		exit 1
+	else
+		echo "SUCCESS: JDK 21" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
+	fi
+}
+
 function build_job_runner_image {
 	if [[ $(get_latest_docker_hub_version "job-runner") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
@@ -585,6 +614,7 @@ function main {
 
 	build_jdk11_image
 	build_jdk11_jdk8_image
+	build_jdk21_image
 
 	build_batch_image
 	build_caddy_image
