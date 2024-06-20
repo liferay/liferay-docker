@@ -45,7 +45,7 @@ function build_docker_image {
 function main {
 	delete_local_images "${LIFERAY_DOCKER_REPOSITORY}/jdk11-jdk8"
 
-	make_temp_directory templates/jdk11-jdk8
+	make_temp_directory templates/jdk11-jdk8 templates/_jdk
 
 	log_in_to_docker_hub
 
