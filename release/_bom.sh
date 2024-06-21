@@ -196,6 +196,7 @@ function generate_pom_release_bom_compile_only {
 		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only/" \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
+		-e "s/__RELEASE_API_DEPENDENCY__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api/" \
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.bom.compile.only.pom.tpl" > /dev/null
 

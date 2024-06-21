@@ -40,6 +40,6 @@
 		<dependencies>
 			<dependency>
 				<groupId>com.liferay.portal</groupId>
-				<artifactId>__ARTIFACT_ID__</artifactId>
+				<artifactId>__RELEASE_API_DEPENDENCY__</artifactId>
 				<version>__PRODUCT_VERSION__-__BUILD_TIMESTAMP__</version>
 			</dependency>
