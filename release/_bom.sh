@@ -139,6 +139,8 @@ function generate_pom_release_bom {
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.bom.pom.tpl" > /dev/null
 
+	echo "" >> "${pom_file_name}"
+
 	find "${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng" -name '*.properties' -print0 | \
 		xargs -0 awk -F= '/^artifact.url=/  { print $2 }' \
 		> /tmp/artifact_urls.txt
@@ -200,6 +202,8 @@ function generate_pom_release_bom_compile_only {
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.bom.compile.only.pom.tpl" > /dev/null
 
+	echo  "" >> "${pom_file_name}"
+
 	cut -d= -f2 "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties" | \
 		while IFS=: read -r group_id artifact_id version
 		do
@@ -228,6 +232,8 @@ function generate_pom_release_bom_third_party {
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.bom.third.party.pom.tpl" > /dev/null
+
+	echo "" >> "${pom_file_name}"
 
 	local included_dependencies=()
 	local pom_compile_only_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
