@@ -28,8 +28,8 @@ function _build_docker_image {
 	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/${jdk_image_name}:${image_version}-${TIMESTAMP}")
 	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/${jdk_image_name}")
 
-	local zulu_amd64_version="LIFERAY_DOCKER_ZULU_${jdk_version}_AMD64_VERSION"
-	local zulu_arm64_version="LIFERAY_DOCKER_ZULU_${jdk_version}_ARM64_VERSION"
+	local zulu_amd64_version="LIFERAY_DOCKER_ZULU_AMD64_VERSION"
+	local zulu_arm64_version="LIFERAY_DOCKER_ZULU_ARM64_VERSION"
 
 	if [ "${1}" == "push" ]
 	then
