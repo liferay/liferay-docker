@@ -18,7 +18,7 @@ function main {
 		exit "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local response=$(\
+	local jira_api_response=$(\
 		curl \
 			"https://liferay.atlassian.net/rest/api/3/search?jql=project%20%3D%20%22PUBLIC%20-%20Liferay%20Product%20Delivery%22%20and%20labels%20%3D%20release-blocker%20and%20status%20%21%3D%20Closed&fields=issuekey" \
 			--fail \
@@ -41,7 +41,7 @@ function main {
 	while IFS= read -r key
 	do
 		blocker_issues_keys+=("${key}")
-	done < <(echo "${response}" | jq -r '.issues[].key')
+	done < <(echo "${jira_api_response}" | jq -r '.issues[].key')
 
 	local blockers_not_merged=""
 
