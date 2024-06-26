@@ -60,16 +60,15 @@ function main {
 		slack_message="These blockers still need to be merged: ${blockers_not_merged}"
 	fi
 
-	if (\
-		curl \
-			"${SLACK_WEB_HOOK_URL}" \
-			--data "{\"text\":\"${slack_message}\"}" \
-			--fail \
-			--header "Content-type: application/json" \
-			--max-time 10 \
-			--request POST \
-			--retry 3 \
-			--silent)
+	if (curl \
+		"${SLACK_WEB_HOOK_URL}" \
+		--data "{\"text\":\"${slack_message}\"}" \
+		--fail \
+		--header "Content-type: application/json" \
+		--max-time 10 \
+		--request POST \
+		--retry 3 \
+		--silent)
 	then
 		lc_log INFO "The Slack message has been sent successfully"
 	else
