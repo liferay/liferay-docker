@@ -31,7 +31,7 @@ function main {
 
 	if [ $? -ne 0 ]
 	then
-		lc_log ERROR "Unable to retriver the list of blockers from Jira"
+		lc_log ERROR "Unable to retrive the list of blockers from Jira"
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
