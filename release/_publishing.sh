@@ -35,7 +35,7 @@ function init_gcs {
 	gcloud auth activate-service-account --key-file "${LIFERAY_RELEASE_GCS_TOKEN}"
 }
 
-function update_latest_in_bundles {
+function update_latest_version_in_bundles {
     local file_path="${BASE_DIR}/bundles.yml"
 
     if (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${file_path}" | grep -q "true")
@@ -154,7 +154,7 @@ function upload_hotfix {
 }
 
 function upload_to_liferay_docker_hub {
-    update_latest_in_bundles
+    update_latest_version_in_bundles
 
     export LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}"
     export LIFERAY_DOCKER_LICENSE_API_URL="https://customer.liferay.com/api/jsonws/osb-portlet.licensekey/generate-we-deploy-license-key"
