@@ -17,7 +17,7 @@ function _build_docker_image {
 
 	if [ "${jdk_image_name}" == "jdk11-jdk8" ]
 	then
-		echo "ARG LABEL_ZULU_8_VERSION" >> "${TEMP_DIR}"/Dockerfile
+		echo -e "\nARG LABEL_ZULU_8_VERSION" >> "${TEMP_DIR}"/Dockerfile
 	fi
 
 	log_in_to_docker_hub
