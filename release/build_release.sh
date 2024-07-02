@@ -161,6 +161,8 @@ function main {
 
 		lc_time_run add_portal_patcher_properties_jar
 
+		lc_time_run add_portal_patcher_service_properties_jar
+
 		lc_time_run create_hotfix
 
 		lc_time_run calculate_checksums

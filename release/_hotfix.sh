@@ -56,6 +56,35 @@ function add_portal_patcher_properties_jar {
 	fi
 }
 
+function add_portal_patcher_service_properties_jar {
+	if (! echo "${_PRODUCT_VERSION}" | grep -q "7.3")
+	then
+		lc_log INFO "Patch level verification is not needed for ${_PRODUCT_VERSION}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	lc_cd "${_BUILD_DIR}"
+
+	mkdir portal-patcher-service-properties
+
+	lc_cd "${_BUILD_DIR}/portal-patcher-service-properties"
+
+	touch manifest
+
+	(
+		echo "fixed.issues=${LIFERAY_RELEASE_FIXED_ISSUES}"
+		echo "installed.patches=${_HOTFIX_NAME}"
+	)  > patcher-service.properties
+
+	jar cfm portal-patcher-service-properties.jar manifest patcher-service.properties
+
+	if [ -e "${_BUNDLES_DIR}/tomcat/lib/ext" ]
+	then
+		cp portal-patcher-service-properties.jar "${_BUNDLES_DIR}/tomcat/lib/ext"
+	fi
+}
+
 function calculate_checksums {
 	if [ ! -e "${_BUILD_DIR}/hotfix/binaries" ]
 	then
@@ -363,6 +392,11 @@ function in_hotfix_scope {
 		return 0
 	fi
 
+	if (echo "${1}" | grep -q "^tomcat/lib/ext") && (echo "${_PRODUCT_VERSION}" | grep -q "7.3")
+	then
+		return 0
+	fi
+
 	return 1
 }
 
@@ -476,6 +510,11 @@ function transform_file_name {
 	local file_name=$(echo "${1}" | sed -e s#osgi/#OSGI_BASE_PATH/#)
 
 	file_name=$(echo "${file_name}" | sed -e s#tomcat/webapps/ROOT#WAR_PATH#)
+
+	if (echo "${_PRODUCT_VERSION}" | grep -q "7.3")
+	then
+		file_name=$(echo "${file_name}" | sed -e s#tomcat/lib/ext#GLOBAL_LIB_PATH#)
+	fi
 
 	echo "${file_name}"
 }
