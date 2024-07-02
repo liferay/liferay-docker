@@ -14,21 +14,23 @@ RUN userdel ubuntu && \
 # CVE-2024-2398 Start
 #
 
-RUN VERSION=8.7.1 && \
+RUN CURL_VERSION=8.7.1 && \
+	\
+	curl https://curl.se/download/curl-${CURL_VERSION}.tar.gz --output curl-${CURL_VERSION}.tar.gz && \
+	tar -xzf curl-${CURL_VERSION}.tar.gz && \
+	rm -f curl-${CURL_VERSION}.tar.gz && \
+	cd curl-${CURL_VERSION} && \
+	\
+	apt-get remove curl --yes && rm -fr /usr/bin/curl* && \
+	\
 	apt-get install build-essential libnghttp2-dev libssl-dev nghttp2 --yes && \
-	curl https://curl.se/download/curl-${VERSION}.tar.gz --output curl-${VERSION}.tar.gz && \
-	tar -xzf curl-${VERSION}.tar.gz && \
-	rm -f curl-${VERSION}.tar.gz && \
-	cd curl-${VERSION} && \
-	apt-get remove curl --yes && \
-	rm -fr /usr/bin/curl* && \
-	./configure --enable-static --prefix=/usr/local --with-nghttp2 --with-ssl && \
-	make -j4 && \
-	make install && \
+	\
+	./configure --enable-static --prefix=/usr/local --with-nghttp2 --with-ssl && make -j4 && make install && \
 	ldconfig && \
-	cd .. && \
-	rm -fr curl-${VERSION} && \
-	apt-get remove build-essential libnghttp2-dev libssl-dev nghttp2 --yes
+	\
+	apt-get remove build-essential libnghttp2-dev libssl-dev nghttp2 --yes && \
+	\
+	cd .. && rm -fr curl-${CURL_VERSION}
 
 #
 # CVE-2024-2398 End
