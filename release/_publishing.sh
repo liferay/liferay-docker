@@ -184,7 +184,7 @@ function _update_bundles_yml {
 
 	git add "${BASE_DIR}/bundles.yml"
 
-	git commit -m "${_PRODUCT_VERSION}"
+	git commit -m "Add ${_PRODUCT_VERSION} to bundles.yml."
 
 	git push upstream master
 }
