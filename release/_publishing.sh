@@ -153,7 +153,7 @@ function upload_hotfix {
 	echo " - https://releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
 }
 
-function upload_to_liferay_docker_hub {
+function upload_to_docker_hub {
     update_latest_version_in_bundles
 
     export LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}"
