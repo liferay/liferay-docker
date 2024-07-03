@@ -177,8 +177,8 @@ function _update_bundles_yml {
 
 	local latest_key=$(yq eval '.quarterly | keys | .[-1]' "${file_path}")
 
-	yq --inplace --indent 4 eval "del(.quarterly.\"${latest_key}\".latest)" "${file_path}"
-	yq --inplace --indent 4 eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${file_path}"
+	yq --indent 4 --inplace eval "del(.quarterly.\"${latest_key}\".latest)" "${file_path}"
+	yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${file_path}"
 
 	sed -i 's/[[:space:]]{}//g' "${file_path}"
 	truncate -s -1 "${file_path}"
