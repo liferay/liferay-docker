@@ -173,7 +173,7 @@ function _update_bundles_yml {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local latest_key=$(yq eval '.quarterly | keys | .[-1]' "${BASE_DIR}/bundles.yml")
+	local latest_key=$(yq eval ".quarterly | keys | .[-1]" "${BASE_DIR}/bundles.yml")
 
 	yq --indent 4 --inplace eval "del(.quarterly.\"${latest_key}\".latest)" "${BASE_DIR}/bundles.yml"
 	yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${BASE_DIR}/bundles.yml"
