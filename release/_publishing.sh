@@ -164,7 +164,7 @@ function upload_to_docker_hub {
 	export LIFERAY_DOCKER_LICENSE_API_URL="https://customer.liferay.com/api/jsonws/osb-portlet.licensekey/generate-we-deploy-license-key"
 
 	lc_cd "${BASE_DIR}"
-	
+
 	./build_all_images.sh --push
 }
 
