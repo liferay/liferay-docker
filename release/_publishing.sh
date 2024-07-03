@@ -166,25 +166,23 @@ function upload_to_docker_hub {
 }
 
 function _update_bundles_yml {
-	local file_path="${BASE_DIR}/bundles.yml"
-
-	if (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${file_path}" | grep -q "true")
+	if (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${BASE_DIR}/bundles.yml" | grep -q "true")
 	then
 		lc_log INFO "The ${_PRODUCT_VERSION} product version was already published."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local latest_key=$(yq eval '.quarterly | keys | .[-1]' "${file_path}")
+	local latest_key=$(yq eval '.quarterly | keys | .[-1]' "${BASE_DIR}/bundles.yml")
 
-	yq --indent 4 --inplace eval "del(.quarterly.\"${latest_key}\".latest)" "${file_path}"
-	yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${file_path}"
+	yq --indent 4 --inplace eval "del(.quarterly.\"${latest_key}\".latest)" "${BASE_DIR}/bundles.yml"
+	yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${BASE_DIR}/bundles.yml"
 
-	sed -i 's/[[:space:]]{}//g' "${file_path}"
+	sed -i 's/[[:space:]]{}//g' "${BASE_DIR}/bundles.yml"
 
-	truncate -s -1 "${file_path}"
+	truncate -s -1 "${BASE_DIR}/bundles.yml"
 
-	git add "${file_path}"
+	git add "${BASE_DIR}/bundles.yml"
 
 	git commit -m "${_PRODUCT_VERSION}"
 
