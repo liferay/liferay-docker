@@ -160,12 +160,9 @@ function upload_release {
 function upload_to_docker_hub {
 	_update_bundles_yml
 
-	export LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}"
-	export LIFERAY_DOCKER_LICENSE_API_URL="https://customer.liferay.com/api/jsonws/osb-portlet.licensekey/generate-we-deploy-license-key"
-
 	lc_cd "${BASE_DIR}"
 
-	./build_all_images.sh --push
+	LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}" ./build_all_images.sh --push
 }
 
 function _update_bundles_yml {
