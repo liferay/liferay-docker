@@ -181,13 +181,14 @@ function _update_bundles_yml {
 	yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${file_path}"
 
 	sed -i 's/[[:space:]]{}//g' "${file_path}"
+
 	truncate -s -1 "${file_path}"
 
 	git add "${file_path}"
 
-	git commit -q -m "${_PRODUCT_VERSION}"
- 
-	git push -q upstream master
+	git commit -m "${_PRODUCT_VERSION}"
+
+	git push upstream master
 }
 
 function _upload_to_nexus {
