@@ -142,7 +142,7 @@ function upload_release {
 
 	ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
-	for file in $(ls -A | grep -Ev 'pom|jar')
+	for file in $(ls --almost-all | grep --extended-regexp --invert-match "pom|jar")
 	do
 		if [ -f "${file}" ]
 		then
