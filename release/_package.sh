@@ -103,7 +103,8 @@ function package_boms {
 	lc_cd "${_BUILD_DIR}/boms"
 
 	cp -a ./*.pom "${_BUILD_DIR}/release"
-
+	cp release."${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}".jar "${_BUILD_DIR}/release"
+	
 	touch .touch
 
 	jar cvfm "${_BUILD_DIR}/release/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.jar" .touch -C api-jar .
