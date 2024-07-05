@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM} ubuntu:noble AS ubuntu-noble
+FROM --platform=${TARGETPLATFORM} ubuntu:jammy AS ubuntu-jammy
 
 COPY resources/etc/created-date /etc/created-date
 
@@ -7,10 +7,11 @@ RUN apt-get update && \
 	apt-get upgrade --yes && \
 	apt-get clean
 
-RUN userdel ubuntu && \
-	useradd --create-home --home-dir /home/liferay --shell /usr/sbin/nologin --uid 1000 --user-group liferay
+RUN adduser --disabled-password --home /home/liferay liferay --uid 1000 && \
+	addgroup liferay liferay && \
+	usermod -g 1000 liferay
 
-FROM ubuntu-noble
+FROM ubuntu-jammy
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
