@@ -3,7 +3,8 @@
 source _liferay_common.sh
 
 function check_usage {
-	if [ -z "$LIFERAY_TRACK_RELEASE_BLOCKERS_JIRA_TOKEN" ] || [ -z "$LIFERAY_TRACK_RELEASE_BLOCKERS_JIRA_USER" ] ||
+	if [ -z "$LIFERAY_TRACK_RELEASE_BLOCKERS_JIRA_TOKEN" ] ||
+	   [ -z "$LIFERAY_TRACK_RELEASE_BLOCKERS_JIRA_USER" ] ||
        [ -z "$LIFERAY_TRACK_RELEASE_BLOCKERS_SLACK_URL" ]
 	then
 		echo "Usage: ${0}"
