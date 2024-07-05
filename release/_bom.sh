@@ -280,6 +280,19 @@ function generate_pom_release_bom_third_party {
 	) >> "${pom_file_name}"
 }
 
+function generate_pom_release_distro {
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+
+	lc_log DEBUG "Generating ${pom_file_name}."
+
+	sed \
+		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro/" \
+		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
+		-e "w ${pom_file_name}" \
+		"${_RELEASE_TOOL_DIR}/templates/release.distro.pom.tpl" > /dev/null
+}
+
 function generate_poms {
 	mkdir -p "${_BUILD_DIR}/boms"
 
@@ -291,6 +304,7 @@ function generate_poms {
 	lc_time_run generate_pom_release_bom
 	lc_time_run generate_pom_release_bom_compile_only
 	lc_time_run generate_pom_release_bom_third_party
+	lc_time_run generate_pom_release_distro
 }
 
 function _copy_file {
