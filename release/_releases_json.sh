@@ -126,15 +126,15 @@ function _process_product_version {
 
 	tee "${release_date}-${product_name}-${product_version}.json" <<- END
 	[
-		{
-			"product": "${product_name}",
-			"productGroupVersion": "$(echo "${product_version}" | sed -r "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")",
-			"productVersion": "$(lc_get_property "${release_properties_file}" liferay.product.version)",
-			"promoted": "false",
-			"releaseKey": "$(echo "${product_name}-${product_version}" | sed "s/\([0-9]\+\)\.\([0-9]\+\)\.[0-9]\+\(-\|[^0-9]\)/\1.\2\3/g" | sed -e "s/portal-7\.4\.[0-9]*-ga/portal-7.4-ga/")",
-			"targetPlatformVersion": "$(lc_get_property "${release_properties_file}" target.platform.version)",
-			"url": "https://releases-cdn.liferay.com/${product_name}/${product_version}"
-		}
+	    {
+	        "product": "${product_name}",
+	        "productGroupVersion": "$(echo "${product_version}" | sed -r "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")",
+	        "productVersion": "$(lc_get_property "${release_properties_file}" liferay.product.version)",
+	        "promoted": "false",
+	        "releaseKey": "$(echo "${product_name}-${product_version}" | sed "s/\([0-9]\+\)\.\([0-9]\+\)\.[0-9]\+\(-\|[^0-9]\)/\1.\2\3/g" | sed -e "s/portal-7\.4\.[0-9]*-ga/portal-7.4-ga/")",
+	        "targetPlatformVersion": "$(lc_get_property "${release_properties_file}" target.platform.version)",
+	        "url": "https://releases-cdn.liferay.com/${product_name}/${product_version}"
+	    }
 	]
 	END
 }
