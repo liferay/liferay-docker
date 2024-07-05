@@ -25,7 +25,8 @@ RUN CURL_VERSION=8.7.1 && \
 	\
 	apt-get install build-essential libnghttp2-dev libssl-dev nghttp2 --yes && \
 	\
-	./configure --enable-static --prefix=/usr/local --with-nghttp2 --with-ssl && make && make install && \
+	./configure --enable-static --prefix=/usr/local --with-nghttp2 --with-ssl && make -j4 && make install && \
+	ldconfig && \
 	\
 	apt-get remove build-essential libnghttp2-dev libssl-dev nghttp2 --yes && \
 	\
