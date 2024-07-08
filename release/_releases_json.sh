@@ -55,7 +55,7 @@ function _process_new_product {
 
 	if (grep "${_PRODUCT_VERSION}" "${releases_json}")
 	then
-		lc_log INFO "The version ${_PRODUCT_VERSION} is already in releases.json"
+		lc_log INFO "The version ${_PRODUCT_VERSION} is already in releases.json."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
