@@ -7,7 +7,7 @@ source _publishing.sh
 source _releases_json.sh
 
 function check_supported_versions {
-	local supported_version="$(echo "${LIFERAY_RELEASE_VERSION}" | cut -d '.' -f 1,2)"
+	local supported_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
 	if [ -z $(grep "${supported_version}" "${_RELEASE_ROOT_DIR}"/supported-"${LIFERAY_RELEASE_PRODUCT_NAME}"-versions.txt) ]
 	then
@@ -173,7 +173,7 @@ function tag_release {
 		{
 			"message": "",
 			"object": "${git_hash}",
-			"tag": "${LIFERAY_RELEASE_VERSION}",
+			"tag": "${_PRODUCT_VERSION}",
 			"type": "commit"
 		}
 		END
@@ -190,7 +190,7 @@ function tag_release {
 		cat <<- END
 		{
 			"message": "",
-			"ref": "refs/tags/${LIFERAY_RELEASE_VERSION}",
+			"ref": "refs/tags/${_PRODUCT_VERSION}",
 			"sha": "${git_hash}"
 		}
 		END
