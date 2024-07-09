@@ -80,7 +80,7 @@ function main {
 	if (curl \
 			"${LIFERAY_TRACK_RELEASE_BLOCKERS_SLACK_URL}" \
 			--data-raw '{
-    			"text": "'"${slack_message}"'"
+				"text": "'"${slack_message}"'"
 			}' \
 			--fail \
 			--header "Content-type: application/json" \
