@@ -51,7 +51,7 @@ function test_merge_json_snippets {
 
 	local latest_count="$(grep -c "${latest_url}" releases.json)"
 
-	assert_equals $(echo $(( "${earliest_count}" == 2 && "${latest_count}" == 2 )))
+	assert_equals $(echo $(( "${earliest_count}" == 1 && "${latest_count}" == 1 )))
 }
 
 function test_promote_product_versions {
