@@ -127,19 +127,10 @@ function _process_product_version {
 	tee "${release_date}-${product_name}-${product_version}.json" <<- END
 	[
 	    {
-	        "appServerTomcatVersion": "$(lc_get_property "${release_properties_file}" app.server.tomcat.version)",
-	        "buildTimestamp": "$(lc_get_property "${release_properties_file}" build.timestamp)",
-	        "bundleChecksumSHA512": "$(lc_get_property "${release_properties_file}" bundle.checksum.sha512)",
-	        "bundleURL": "$(lc_get_property "${release_properties_file}" bundle.url)",
-	        "gitHashLiferayDocker": "$(lc_get_property "${release_properties_file}" git.hash.liferay-docker)",
-	        "gitHashLiferayPortalEE": "$(lc_get_property "${release_properties_file}" git.hash.liferay-portal-ee)",
-	        "liferayDockerImage": "$(lc_get_property "${release_properties_file}" liferay.docker.image)",
-	        "liferayDockerTags": "$(lc_get_property "${release_properties_file}" liferay.docker.tags)",
 	        "product": "${product_name}",
 	        "productGroupVersion": "$(echo "${product_version}" | sed -r "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")",
 	        "productVersion": "$(lc_get_property "${release_properties_file}" liferay.product.version)",
 	        "promoted": "false",
-	        "releaseDate": "$(lc_get_property "${release_properties_file}" release.date)",
 	        "releaseKey": "$(echo "${product_name}-${product_version}" | sed "s/\([0-9]\+\)\.\([0-9]\+\)\.[0-9]\+\(-\|[^0-9]\)/\1.\2\3/g" | sed -e "s/portal-7\.4\.[0-9]*-ga/portal-7.4-ga/")",
 	        "targetPlatformVersion": "$(lc_get_property "${release_properties_file}" target.platform.version)",
 	        "url": "https://releases-cdn.liferay.com/${product_name}/${product_version}"
