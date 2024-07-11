@@ -9,14 +9,14 @@ function add_fixed_issues_to_project_version {
 
 	for counter in {0..3}
 	do
-		local number_of_issues_added=$((counter * fixed_issues_array_part_length))
+		local start_index=$((counter * fixed_issues_array_part_length))
 
 		if [ "${counter}" -eq 3 ]
 		then
-			fixed_issues_array_part_length=$((fixed_issues_array_length - number_of_issues_added))
+			fixed_issues_array_part_length=$((fixed_issues_array_length - start_index))
 		fi
 
-		IFS=',' fixed_issues="${fixed_issues_array[*]:number_of_issues_added:fixed_issues_array_part_length}"
+		IFS=',' fixed_issues="${fixed_issues_array[*]:start_index:fixed_issues_array_part_length}"
 
 		if (curl \
 			"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/updateFixedIssues" \
