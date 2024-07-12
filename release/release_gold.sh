@@ -96,6 +96,8 @@ function main {
 
 	lc_time_run upload_releases_json
 
+	lc_time_run testing_boms
+
 	#lc_time_run upload_to_docker_hub
 }
 
@@ -201,6 +203,64 @@ function tag_release {
 	if [ $? -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+}
+
+function testing_boms {
+	if [ ! -d "${_RELEASE_ROOT_DIR}/temp_dir_boms" ]
+	then
+		mkdir -p "${_RELEASE_ROOT_DIR}/temp_dir_boms"
+	fi
+
+	lc_cd "${_RELEASE_ROOT_DIR}/temp_dir_boms"
+
+	if [[ "${_PRODUCT_VERSION}" == *q* ]]
+	then
+		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}"
+	else
+		local product_group_version=$(echo "${_PRODUCT_VERSION}" | cut -f 1,2 -d '.')
+
+		local product_version_suffix=$(echo "${_PRODUCT_VERSION}" | cut -f 2 -d '-')
+
+		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${product_group_version}-${product_version_suffix}"
+	fi
+
+	export LIFERAY_RELEASES_MIRRORS="https://releases.liferay.com"
+
+	sed -i "s/version: \"10.1.0\"/version: \"10.1.2\"/" "${_RELEASE_ROOT_DIR}/temp_dir_boms/settings.gradle"
+
+	if [ -f "${HOME}/.liferay/workspace/releases.json" ]
+	then
+		rm -f "${HOME}/.liferay/workspace/releases.json"
+	fi
+
+	local modules=("api" "mvc-portlet")
+
+	for module in "${modules[@]}"
+	do
+		blade create -t "${module}" "test-${module}"
+
+		local build_result=$(blade gw build)
+
+		if [[ "${build_result}" == *"BUILD SUCCESSFUL"* ]]
+		then
+			lc_log INFO "The BOMs for the module ${module} were successfully tested."
+		else
+			lc_log ERROR "The BOMs for the module ${module} were generated incorrectly."
+
+			break
+		fi
+	done
+
+	lc_cd "${_RELEASE_ROOT_DIR}"
+
+	pgrep --full --list-name temp_dir_boms | awk '{print $1}' | xargs -r kill -9
+
+	rm -fr "${_RELEASE_ROOT_DIR}/temp_dir_boms"
+
+	if [[ "${build_result}" != *"BUILD SUCCESSFUL"* ]]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
