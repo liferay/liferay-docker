@@ -24,10 +24,10 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:git:git@github.com:liferay/liferay-dxp.git</connection>
-		<developerConnection>scm:git:git@github.com:liferay/liferay-dxp.git</developerConnection>
+		<connection>scm:git:git@github.com:liferay/liferay-__LIFERAY_RELEASE_PRODUCT_NAME__.git</connection>
+		<developerConnection>scm:git:git@github.com:liferay/liferay-__LIFERAY_RELEASE_PRODUCT_NAME__.git</developerConnection>
 		<tag>__PRODUCT_VERSION__</tag>
-		<url>https://github.com/liferay/liferay-dxp</url>
+		<url>https://github.com/liferay/liferay-__LIFERAY_RELEASE_PRODUCT_NAME__</url>
 	</scm>
 	<repositories>
 		<repository>
