@@ -26,7 +26,7 @@ function add_fixed_issues_to_project_version {
 			--output /dev/null \
 			--retry 3 \
 			--silent \
-			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
+			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 		then
 			lc_log INFO "Adding fixed issues to the ${_PRODUCT_VERSION} project version."
 		else
@@ -65,7 +65,7 @@ function add_patcher_project_version {
 			--max-time 10 \
 			--retry 3 \
 			--silent \
-			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
+			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 
 	if [ $? -eq 0 ]
 	then
