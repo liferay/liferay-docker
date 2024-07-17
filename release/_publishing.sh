@@ -19,14 +19,14 @@ function add_fixed_issues_to_project_version {
 		IFS=',' fixed_issues="${fixed_issues_array[*]:start_index:fixed_issues_array_part_length}"
 
 		if (curl \
-			"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/updateFixedIssues" \
-			--data-raw "fixedIssues=${fixed_issues}&patcherProjectVersionId=${1}" \
-			--fail \
-			--max-time 10 \
-			--output /dev/null \
-			--retry 3 \
-			--silent \
-			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
+				"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/updateFixedIssues" \
+				--data-raw "fixedIssues=${fixed_issues}&patcherProjectVersionId=${1}" \
+				--fail \
+				--max-time 10 \
+				--output /dev/null \
+				--retry 3 \
+				--silent \
+				--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 		then
 			lc_log INFO "Adding fixed issues to the ${_PRODUCT_VERSION} project version."
 		else
