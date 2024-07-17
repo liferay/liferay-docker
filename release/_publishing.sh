@@ -46,18 +46,19 @@ function add_patcher_project_version {
 
 	local root_patcher_project_version_name=""
 
-	case "${project_version}" in
-	7.4.*)
-		product_version_label="DXP 7.4"
+	if [[ "${project_version}" == 7.4.* ]]
+		then
+			product_version_label="DXP 7.4"
 
-		root_patcher_project_version_name="7.4.13-ga1"
-		;;
-	7.3.*)
+			root_patcher_project_version_name="7.4.13-ga1"
+		fi
+
+	if [[ "${project_version}" == 7.3.* ]]
+	then
 		product_version_label="DXP 7.3"
 
 		root_patcher_project_version_name="fix-pack-base-7310"
-		;;
-	esac
+	fi
 
 	local add_by_name_response=$(\
 		curl \
