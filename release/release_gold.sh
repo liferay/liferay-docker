@@ -254,7 +254,7 @@ function testing_boms {
 
 	lc_cd "${_RELEASE_ROOT_DIR}"
 
-	pgrep --full --list-name temp_dir_boms | awk '{print $1}' | xargs -r kill -9
+	pgrep --full --list-name temp_dir_boms | awk '{print $1}' | xargs --no-run-if-empty kill -9
 
 	rm -fr "${_RELEASE_ROOT_DIR}/temp_dir_boms"
 
