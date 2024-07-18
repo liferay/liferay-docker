@@ -218,9 +218,9 @@ function testing_boms {
 	then
 		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}"
 	else
-		local product_group_version=$(echo "${_PRODUCT_VERSION}" | cut -f 1,2 -d '.')
+		local product_group_version=$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)
 
-		local product_version_suffix=$(echo "${_PRODUCT_VERSION}" | cut -f 2 -d '-')
+		local product_version_suffix=$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 2)
 
 		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${product_group_version}-${product_version_suffix}"
 	fi
