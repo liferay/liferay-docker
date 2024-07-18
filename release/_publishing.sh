@@ -166,17 +166,49 @@ function upload_to_docker_hub {
 }
 
 function _update_bundles_yml {
-	if (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${BASE_DIR}/bundles.yml" | grep -q "true")
+	local product_version_key="$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)"
+
+	if (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${BASE_DIR}/bundles.yml" | grep -q "true") ||
+		(yq eval ".\"${product_version_key}\" | has(\"${_PRODUCT_VERSION}\")" "${BASE_DIR}/bundles.yml" | grep -q "true")
 	then
 		lc_log INFO "The ${_PRODUCT_VERSION} product version was already published."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local latest_key=$(yq eval ".quarterly | keys | .[-1]" "${BASE_DIR}/bundles.yml")
+	if [[ "${_PRODUCT_VERSION}" == *q* ]]
+	then
+		local latest_key=$(yq eval ".quarterly | keys | .[-1]" "${BASE_DIR}/bundles.yml")
 
-	yq --indent 4 --inplace eval "del(.quarterly.\"${latest_key}\".latest)" "${BASE_DIR}/bundles.yml"
-	yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${BASE_DIR}/bundles.yml"
+		yq --indent 4 --inplace eval "del(.quarterly.\"${latest_key}\".latest)" "${BASE_DIR}/bundles.yml"
+		yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${BASE_DIR}/bundles.yml"
+	fi
+
+	if [[ "${_PRODUCT_VERSION}" == 7.3.* ]]
+	then
+		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\" = {}" "${BASE_DIR}/bundles.yml"
+	fi
+
+	if [[ "${_PRODUCT_VERSION}" == 7.4.*-u* ]]
+	then
+		local nightly_bundle_url=$(yq eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url" "${BASE_DIR}/bundles.yml")
+
+		yq --indent 4 --inplace eval "del(.\"${product_version_key}\".\"${product_version_key}.nightly\")" "${BASE_DIR}/bundles.yml"
+		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\" = {}" "${BASE_DIR}/bundles.yml"
+		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url = \"${nightly_bundle_url}\"" "${BASE_DIR}/bundles.yml"
+	fi
+
+	if [[ "${_PRODUCT_VERSION}" == 7.4.*-ga* ]]
+	then
+		local ga_bundle_url="releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/"$(curl -fsSL "https://releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle")
+
+		perl -i -0777pe 's/\s+latest: true(?!7.4.13:)//' "${BASE_DIR}/bundles.yml"
+
+		sed -i "/7.4.13:/i ${product_version_key}:" "${BASE_DIR}/bundles.yml"
+
+		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\".bundle_url = \"${ga_bundle_url}\"" "${BASE_DIR}/bundles.yml"
+		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\".latest = true" "${BASE_DIR}/bundles.yml"
+	fi
 
 	sed -i "s/[[:space:]]{}//g" "${BASE_DIR}/bundles.yml"
 
