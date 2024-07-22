@@ -560,7 +560,7 @@ function main {
 	build_base_image
 
 	build_jdk_image "JDK 11" "jdk11" "11"
-	build_jdk_image "JDK 11/JDK 8" "jdk11-jdk8" "8"
+	build_jdk_image "JDK 11 JDK 8" "jdk11-jdk8" "8"
 	build_jdk_image "JDK 21" "jdk21" "21"
 
 	build_batch_image
