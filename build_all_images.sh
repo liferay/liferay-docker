@@ -262,7 +262,7 @@ function build_jdk_image {
 	echo "Building Docker image ${jdk_friendly_name}."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_AMD64_VERSION=${latest_available_zulu_amd64_version} LIFERAY_DOCKER_ZULU_ARM64_VERSION=${latest_available_zulu_arm64_version} time ./build_"${jdk_image_name//-/_}"_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/"${jdk_image_name}".log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_AMD64_VERSION=${latest_available_zulu_amd64_version} LIFERAY_DOCKER_ZULU_ARM64_VERSION=${latest_available_zulu_arm64_version} time ./build_"$(echo "${jdk_image_name}" | sed -r "s/-/_/")"_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/"${jdk_image_name}".log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
