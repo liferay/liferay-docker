@@ -98,6 +98,8 @@ function main {
 
 	lc_time_run test_boms
 
+	lc_time_run prepare_next_release_branch
+
 	#lc_time_run upload_to_docker_hub
 }
 
@@ -116,6 +118,57 @@ function print_help {
 	echo "Example: LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964 LIFERAY_RELEASE_VERSION=2023.q3.0 ${0}"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
+}
+
+function prepare_next_release_branch {
+	local latest_quarterly_product_version="$(yq ".quarterly | to_entries | .[] | select(.value.latest == true) | .key" "${BASE_DIR}/liferay-docker/bundles.yml")"
+
+	if [ "${_PRODUCT_VERSION}" != "${latest_quarterly_product_version}" ]
+	then
+		lc_log INFO "The ${_PRODUCT_VERSION} version is not the latest quartely release. Skipping the preparetion of the next release branch."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	lc_cd "${BASE_DIR}/liferay-portal-ee"
+
+	git fetch upstream
+
+	local base_project_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
+
+	local base_branch="release-${base_project_version}"
+
+	if (git branch --list "${base_branch}")
+	then
+		git checkout "${base_branch}"
+	else
+		git checkout -b "${base_branch}" "upstream/${base_branch}"
+	fi
+
+	git reset --hard "upstream/${base_branch}"
+
+	local next_project_version_suffix="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 3)"
+
+	next_project_version_suffix=$((next_project_version_suffix + 1))
+
+	git checkout -b "${base_branch}.${next_project_version_suffix}"
+
+	sed -e -i "s/${base_project_version^^}.[0-9]\+/${base_project_version^^}.${next_project_version_suffix}/" "${BASE_DIR}/liferay-portal-ee/release.properties"
+
+	git add "${BASE_DIR}/liferay-portal-ee/release.properties"
+
+	git commit -m "Prep next"
+
+	git push upstream "${base_branch}.${next_project_version_suffix}"
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to update the next release branch."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	else
+		lc_log INFO "The next release branch was updated successfully."
+	fi
 }
 
 function promote_boms {
