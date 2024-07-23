@@ -15,11 +15,6 @@ function _build_docker_image {
 	sed -i "s/@jdk_from_image_name@/${jdk_from_image_name}/g" "${TEMP_DIR}"/Dockerfile
 	sed -i "s/@jdk_version@/${jdk_version}/g" "${TEMP_DIR}"/Dockerfile
 
-	if [ "${jdk_image_name}" == "jdk11-jdk8" ]
-	then
-		echo -e "\nARG LABEL_ZULU_8_VERSION" >> "${TEMP_DIR}"/Dockerfile
-	fi
-
 	log_in_to_docker_hub
 
 	local image_version=$(./release_notes.sh get-version)
