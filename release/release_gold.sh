@@ -96,7 +96,7 @@ function main {
 
 	lc_time_run upload_releases_json
 
-	lc_time_run testing_boms
+	lc_time_run test_boms
 
 	#lc_time_run upload_to_docker_hub
 }
@@ -206,20 +206,16 @@ function tag_release {
 	fi
 }
 
-function testing_boms {
-	if [ ! -d "${_RELEASE_ROOT_DIR}/temp_dir_boms" ]
-	then
-		mkdir -p "${_RELEASE_ROOT_DIR}/temp_dir_boms"
-	fi
+function test_boms {
+	mkdir -p "temp_dir_test_boms"
 
-	lc_cd "${_RELEASE_ROOT_DIR}/temp_dir_boms"
+	lc_cd "temp_dir_test_boms"
 
 	if [[ "${_PRODUCT_VERSION}" == *q* ]]
 	then
 		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}"
 	else
 		local product_group_version=$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)
-
 		local product_version_suffix=$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 2)
 
 		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${product_group_version}-${product_version_suffix}"
@@ -227,16 +223,14 @@ function testing_boms {
 
 	export LIFERAY_RELEASES_MIRRORS="https://releases.liferay.com"
 
-	sed -i "s/version: \"10.1.0\"/version: \"10.1.2\"/" "${_RELEASE_ROOT_DIR}/temp_dir_boms/settings.gradle"
+	sed -i "s/version: \"10.1.0\"/version: \"10.1.2\"/" "temp_dir_test_boms/settings.gradle"
 
 	if [ -f "${HOME}/.liferay/workspace/releases.json" ]
 	then
 		rm -f "${HOME}/.liferay/workspace/releases.json"
 	fi
 
-	local modules=("api" "mvc-portlet")
-
-	for module in "${modules[@]}"
+	for module in api mvc-portlet
 	do
 		blade create -t "${module}" "test-${module}"
 
@@ -246,17 +240,17 @@ function testing_boms {
 		then
 			lc_log INFO "The BOMs for the module ${module} were successfully tested."
 		else
-			lc_log ERROR "The BOMs for the module ${module} were generated incorrectly."
+			lc_log ERROR "The BOMs for the module ${module} were incorrectly generated."
 
 			break
 		fi
 	done
 
-	lc_cd "${_RELEASE_ROOT_DIR}"
+	lc_cd ".."
 
-	pgrep --full --list-name temp_dir_boms | awk '{print $1}' | xargs --no-run-if-empty kill -9
+	pgrep --full --list-name temp_dir_test_boms | awk '{print $1}' | xargs --no-run-if-empty kill -9
 
-	rm -fr "${_RELEASE_ROOT_DIR}/temp_dir_boms"
+	rm -fr "temp_dir_test_boms"
 
 	if [[ "${build_result}" != *"BUILD SUCCESSFUL"* ]]
 	then
