@@ -146,7 +146,7 @@ function prepare_next_release_branch {
 
 	next_project_version_suffix=$((next_project_version_suffix + 1))
 
-	sed -e -i "s/${product_group_version^^}.[0-9]\+/${product_group_version^^}.${next_project_version_suffix}/" "${BASE_DIR}/liferay-portal-ee/release.properties"
+	sed -i -e "s/${product_group_version^^}\.[0-9]+/${product_group_version^^}\.${next_project_version_suffix}/" "${BASE_DIR}/liferay-portal-ee/release.properties"
 
 	git add "${BASE_DIR}/liferay-portal-ee/release.properties"
 
