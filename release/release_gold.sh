@@ -209,7 +209,7 @@ function tag_release {
 function test_boms {
 	if [[ "${_PRODUCT_VERSION}" == 7.4.*-u* ]]
 	then
-		lc_log INFO "BOMs testing is not needed for ${_PRODUCT_VERSION}. This release is for internal use only."
+		lc_log INFO "Skipping test BOMs for ${_PRODUCT_VERSION}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
