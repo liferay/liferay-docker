@@ -130,28 +130,21 @@ function prepare_next_release_branch {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${BASE_DIR}/liferay-portal-ee"
-
-	git fetch upstream
-
 	local product_group_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
 	local quarterly_release_branch="release-${product_group_version}"
 
-	if (git branch --list "${quarterly_release_branch}")
-	then
-		git checkout "${quarterly_release_branch}"
-	else
-		git checkout -b "${quarterly_release_branch}" "upstream/${quarterly_release_branch}"
-	fi
+	lc_cd "${BASE_DIR}/liferay-portal-ee"
 
-	git reset --hard "upstream/${quarterly_release_branch}"
+	git branch --delete "${quarterly_release_branch}"
+
+	git fetch --no-tags upstream "${quarterly_release_branch}":"${quarterly_release_branch}"
+
+	git checkout "${quarterly_release_branch}"
 
 	local next_project_version_suffix="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 3)"
 
 	next_project_version_suffix=$((next_project_version_suffix + 1))
-
-	git checkout -b "${quarterly_release_branch}.${next_project_version_suffix}"
 
 	sed -e -i "s/${product_group_version^^}.[0-9]\+/${product_group_version^^}.${next_project_version_suffix}/" "${BASE_DIR}/liferay-portal-ee/release.properties"
 
@@ -159,7 +152,7 @@ function prepare_next_release_branch {
 
 	git commit -m "Prep next"
 
-	git push upstream "${quarterly_release_branch}.${next_project_version_suffix}"
+	git push upstream "${quarterly_release_branch}"
 
 	if [ "${?}" -ne 0 ]
 	then
