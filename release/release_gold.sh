@@ -134,32 +134,32 @@ function prepare_next_release_branch {
 
 	git fetch upstream
 
-	local base_project_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
+	local product_group_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
-	local base_branch="release-${base_project_version}"
+	local quarterly_release_branch="release-${product_group_version}"
 
-	if (git branch --list "${base_branch}")
+	if (git branch --list "${quarterly_release_branch}")
 	then
-		git checkout "${base_branch}"
+		git checkout "${quarterly_release_branch}"
 	else
-		git checkout -b "${base_branch}" "upstream/${base_branch}"
+		git checkout -b "${quarterly_release_branch}" "upstream/${quarterly_release_branch}"
 	fi
 
-	git reset --hard "upstream/${base_branch}"
+	git reset --hard "upstream/${quarterly_release_branch}"
 
 	local next_project_version_suffix="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 3)"
 
 	next_project_version_suffix=$((next_project_version_suffix + 1))
 
-	git checkout -b "${base_branch}.${next_project_version_suffix}"
+	git checkout -b "${quarterly_release_branch}.${next_project_version_suffix}"
 
-	sed -e -i "s/${base_project_version^^}.[0-9]\+/${base_project_version^^}.${next_project_version_suffix}/" "${BASE_DIR}/liferay-portal-ee/release.properties"
+	sed -e -i "s/${product_group_version^^}.[0-9]\+/${product_group_version^^}.${next_project_version_suffix}/" "${BASE_DIR}/liferay-portal-ee/release.properties"
 
 	git add "${BASE_DIR}/liferay-portal-ee/release.properties"
 
 	git commit -m "Prep next"
 
-	git push upstream "${base_branch}.${next_project_version_suffix}"
+	git push upstream "${quarterly_release_branch}.${next_project_version_suffix}"
 
 	if [ "${?}" -ne 0 ]
 	then
