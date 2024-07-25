@@ -207,6 +207,13 @@ function tag_release {
 }
 
 function test_boms {
+	if [[ "${_PRODUCT_VERSION}" == 7.4.*-u* ]]
+	then
+		lc_log INFO "BOMs testing is not needed for ${_PRODUCT_VERSION}. This release is for internal use only."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	mkdir -p "temp_dir_test_boms"
 
 	lc_cd "temp_dir_test_boms"
