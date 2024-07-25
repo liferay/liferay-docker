@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function prepare_api_jars_for_promotion {
+function prepare_jars_for_promotion {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
 	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ]
@@ -19,6 +19,8 @@ function prepare_api_jars_for_promotion {
 
 		_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api/${_ARTIFACT_RC_VERSION}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
 	done
+
+	_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro/${_ARTIFACT_RC_VERSION}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_PRODUCT_VERSION}.jar"
 }
 
 function prepare_poms_for_promotion {
