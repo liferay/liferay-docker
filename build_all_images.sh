@@ -67,7 +67,7 @@ function build_bundle_image {
 
 	if [ -z "${bundle_url}" ]
 	then
-		bundle_url="releases-cdn.liferay.com/dxp/${version}/"$(curl -fsSL "https://releases-cdn.liferay.com/dxp/${version}/.lfrrelease-tomcat-bundle")
+		bundle_url="releases.liferay.com/dxp/${version}/"$(curl -fsSL "https://releases.liferay.com/dxp/${version}/.lfrrelease-tomcat-bundle")
 	fi
 
 	if [ -n "${additional_tags}" ]
