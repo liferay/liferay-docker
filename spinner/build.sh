@@ -48,8 +48,16 @@ function build_service_liferay {
 
 	cp ../../orca/templates/liferay/resources/usr/local/liferay/scripts/pre-startup/10_wait_for_dependencies.sh build/liferay/resources/usr/local/liferay/scripts/pre-startup
 
+	local hotfix=$(retrieve_descriptor_data "hotfix")
+
+	if [ ! -z "${hotfix}" ]; then
+		hotfix="RUN \/opt\/liferay\/patching-tool\/patching-tool.sh install ${hotfix}"
+	fi
+
+	sed -i "s/\[TO-BE-REPLACED-BY-SINGLE-CI\]/${hotfix}/g" "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
+
 	(
-		echo "FROM $(grep -e '^liferay.workspace.docker.image.liferay=' "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties" | cut -d'=' -f2)"
+		echo "FROM $(retrieve_descriptor_data "liferay-image")"
 
 		echo "COPY resources/opt/liferay /opt/liferay"
 		echo "COPY resources/usr/local/bin /usr/local/bin"
@@ -523,6 +531,21 @@ function print_help {
 	echo "Example: ${0} x1e4prd -d sql.gz -o test"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
+}
+
+function retrieve_descriptor_data {
+	local file="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/automation/environment-descriptors/${LXC_ENVIRONMENT}.json"
+
+	if [ ! -f "${file}" ]; then
+		echo ""
+		echo "It was not possible to find the environment-descriptor for ${LXC_ENVIRONMENT}."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	value=$(grep -e "\"${1}\":" "${file}" | cut -d'"' -f4)
+
+	echo "${value}"
 }
 
 function write {
