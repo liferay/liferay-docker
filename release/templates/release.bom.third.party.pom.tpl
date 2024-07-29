@@ -24,10 +24,10 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:git:git@github.com:liferay/liferay-__LIFERAY_RELEASE_PRODUCT_NAME__.git</connection>
-		<developerConnection>scm:git:git@github.com:liferay/liferay-__LIFERAY_RELEASE_PRODUCT_NAME__.git</developerConnection>
+		<connection>scm:git:git@github.com:liferay/__GITHUB_REPOSITORY__.git</connection>
+		<developerConnection>scm:git:git@github.com:liferay/__GITHUB_REPOSITORY__.git</developerConnection>
 		<tag>__PRODUCT_VERSION__</tag>
-		<url>https://github.com/liferay/liferay-__LIFERAY_RELEASE_PRODUCT_NAME__</url>
+		<url>https://github.com/liferay/__GITHUB_REPOSITORY__</url>
 	</scm>
 	<dependencyManagement>
 		<dependencies>

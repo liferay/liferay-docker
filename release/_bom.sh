@@ -167,8 +167,8 @@ function generate_pom_release_bom {
 	sed \
 		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom/" \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__GITHUB_REPOSITORY__/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
-		-e "s/__LIFERAY_RELEASE_PRODUCT_NAME__/${LIFERAY_RELEASE_PRODUCT_NAME}/" \
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.bom.pom.tpl" > /dev/null
 
@@ -230,7 +230,7 @@ function generate_pom_release_bom_compile_only {
 	sed \
 		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only/" \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
-		-e "s/__LIFERAY_RELEASE_PRODUCT_NAME__/${LIFERAY_RELEASE_PRODUCT_NAME}/" \
+		-e "s/__GITHUB_REPOSITORY__/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "s/__RELEASE_API_DEPENDENCY__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api/" \
 		-e "w ${pom_file_name}" \
@@ -263,8 +263,8 @@ function generate_pom_release_bom_third_party {
 	sed \
 		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party/" \
 		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__GITHUB_REPOSITORY__/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
-		-e "s/__LIFERAY_RELEASE_PRODUCT_NAME__/${LIFERAY_RELEASE_PRODUCT_NAME}/" \
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.bom.third.party.pom.tpl" > /dev/null
 
