@@ -48,16 +48,31 @@ function build_service_liferay {
 
 	cp ../../orca/templates/liferay/resources/usr/local/liferay/scripts/pre-startup/10_wait_for_dependencies.sh build/liferay/resources/usr/local/liferay/scripts/pre-startup
 
-	local hotfix=$(retrieve_descriptor_data "hotfix")
+	local branch=$(git -C "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" rev-parse --abbrev-ref HEAD)
+	local liferay_image=""
 
-	if [ ! -z "${hotfix}" ]; then
-		hotfix="RUN \/opt\/liferay\/patching-tool\/patching-tool.sh install ${hotfix}"
+	if [ "${branch}" = "master" ]; then
+		echo "Currently checked out to the master branch."
+		echo ""
+
+		liferay_image=$(retrieve_descriptor_data "liferay-image")
+
+		local hotfix=$(retrieve_descriptor_data "hotfix")
+
+		if [ ! -z "${hotfix}" ]; then
+			hotfix="RUN \/opt\/liferay\/patching-tool\/patching-tool.sh install ${hotfix}"
+		fi
+
+		sed -i "s/\[TO-BE-REPLACED-BY-SINGLE-CI\]/${hotfix}/g" "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
+	else
+		echo "Currently checked out to the ${branch} branch."
+		echo ""
+
+		liferay_image=$(grep -e '^liferay.workspace.docker.image.liferay=' "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties" | cut -d'=' -f2)
 	fi
 
-	sed -i "s/\[TO-BE-REPLACED-BY-SINGLE-CI\]/${hotfix}/g" "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
-
 	(
-		echo "FROM $(retrieve_descriptor_data "liferay-image")"
+		echo "FROM ${liferay_image}"
 
 		echo "COPY resources/opt/liferay /opt/liferay"
 		echo "COPY resources/usr/local/bin /usr/local/bin"
