@@ -38,7 +38,7 @@ function test_merge_json_snippets {
 
 	local latest_count="$(grep -c "${latest_url}" releases.json)"
 
-	assert_equals $(echo $(( "${earliest_count}" == 1 && "${latest_count}" == 1 )))
+	assert_equals "${earliest_count}" 1 "${latest_count}" 1
 }
 
 function test_promote_product_versions {
@@ -50,7 +50,7 @@ function test_promote_product_versions {
 
 		if [ -n "${last_version}" ]
 		then
-			assert_equals $(echo "$(jq -r '.[] | .promoted' "${last_version}")") "${last_version} should be promoted."
+			assert_equals "$(jq -r '.[] | .promoted' "${last_version}")" "true"
 		fi
 	done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
 }
