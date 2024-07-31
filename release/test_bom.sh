@@ -8,11 +8,13 @@ function main {
 	set_up
 
 	test_dxp_generate_pom_release_bom_compile_only
+	test_dxp_generate_pom_release_bom_third_party
 
 	_PRODUCT_VERSION="7.4.3.120-ga120"
 	LIFERAY_RELEASE_PRODUCT_NAME="portal"
 
 	test_portal_generate_pom_release_bom_compile_only
+	test_portal_generate_pom_release_bom_third_party
 
 	tear_down
 }
@@ -47,6 +49,32 @@ function tear_down {
 	unset _RELEASE_TOOL_DIR
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
+}
+
+function test_dxp_generate_pom_release_bom_third_party {
+	generate_pom_release_bom_compile_only
+
+	generate_pom_release_bom_third_party
+
+	assert_equals \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
+		test-dependencies/expected.dxp.release.bom.third.party.pom
+
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+}
+
+function test_portal_generate_pom_release_bom_third_party {
+	generate_pom_release_bom_compile_only
+
+	generate_pom_release_bom_third_party
+
+	assert_equals \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
+		test-dependencies/expected.portal.release.bom.third.party.pom
+
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
 }
 
 function test_dxp_generate_pom_release_bom_compile_only {
