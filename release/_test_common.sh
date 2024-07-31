@@ -3,13 +3,15 @@
 function assert_equals {
 	local parameters=()
 
-	for parameter in ${@}; do
+	for parameter in ${@}
+	do
 		parameters+=(${parameter})
 	done
 
 	local assertion_result="false"
 
-	for index in ${!parameters[@]}; do
+	for index in ${!parameters[@]}
+	do
 		if [ $((index % 2)) -ne 0 ]
 		then
 			continue
