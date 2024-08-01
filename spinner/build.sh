@@ -48,26 +48,21 @@ function build_service_liferay {
 
 	cp ../../orca/templates/liferay/resources/usr/local/liferay/scripts/pre-startup/10_wait_for_dependencies.sh build/liferay/resources/usr/local/liferay/scripts/pre-startup
 
-	local branch=$(git -C "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" rev-parse --abbrev-ref HEAD)
 	local liferay_image=""
 
-	if [ "${branch}" = "master" ]; then
-		echo "Currently checked out to the master branch."
-		echo ""
-
+	if [ "$(git -C "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" rev-parse --abbrev-ref HEAD)" == "master" ]
+	then
 		liferay_image=$(retrieve_descriptor_data "liferay-image")
 
 		local hotfix=$(retrieve_descriptor_data "hotfix")
 
-		if [ ! -z "${hotfix}" ]; then
+		if [ ! -z "${hotfix}" ]
+		then
 			hotfix="RUN \/opt\/liferay\/patching-tool\/patching-tool.sh install ${hotfix}"
 		fi
 
 		sed -i "s/\[TO-BE-REPLACED-BY-SINGLE-CI\]/${hotfix}/g" "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
 	else
-		echo "Currently checked out to the ${branch} branch."
-		echo ""
-
 		liferay_image=$(grep -e '^liferay.workspace.docker.image.liferay=' "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties" | cut -d'=' -f2)
 	fi
 
@@ -551,8 +546,8 @@ function print_help {
 function retrieve_descriptor_data {
 	local file="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/automation/environment-descriptors/${LXC_ENVIRONMENT}.json"
 
-	if [ ! -f "${file}" ]; then
-		echo ""
+	if [ ! -f "${file}" ]
+	then
 		echo "It was not possible to find the environment-descriptor for ${LXC_ENVIRONMENT}."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
