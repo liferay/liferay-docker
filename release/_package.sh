@@ -19,6 +19,55 @@ function generate_checksum_files {
 	done
 }
 
+function generate_javadocs {
+	if [[ "${_PRODUCT_VERSION}" != 7.3.*-ga* ]] &&
+	   [[ "${_PRODUCT_VERSION}" != 7.3.*-u* ]] &&
+	   [[ "${_PRODUCT_VERSION}" != 7.4.*-ga* ]]
+	then
+		lc_log INFO "Javadocs should not be generated for ${_PRODUCT_VERSION}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	lc_log INFO "Generating javadocs for ${_PRODUCT_VERSION}."
+
+	git reset --hard && git clean -dfx
+
+	git fetch --no-tags upstream "refs/tags/${_PRODUCT_VERSION}:refs/tags/${_PRODUCT_VERSION}"
+
+	git checkout "tags/${_PRODUCT_VERSION}"
+
+	local portal_release_edition_private="true"
+
+	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	then
+		portal_release_edition_private="false"
+	fi
+
+	local release_info_version="$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)"
+
+	local service_pack_version_suffix="-$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 2)"
+
+	ant \
+		-Ddist.dir="${_BUILD_DIR}/release" \
+		-Dliferay.product.name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}" \
+		-Dlp.version="${_PRODUCT_VERSION}" \
+		-Dpatch.doc="true" \
+		-Dportal.dir="${_PROJECTS_DIR}/liferay-portal-ee" \
+		-Dportal.release.edition.private="${portal_release_edition_private}" \
+		-Drelease.info.version="${release_info_version}" \
+		-Dservice.pack.version.suffix="${service_pack_version_suffix}" \
+		-Dtstamp.value="${_BUILD_TIMESTAMP}" \
+		-f "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to generate the javadocs."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function generate_release_properties_file {
 	local tomcat_version=$(grep -Eo "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${_BUNDLES_DIR}/tomcat/RELEASE-NOTES")
 
@@ -164,4 +213,6 @@ function package_release {
 	rm -fr "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql"
 
 	rm -fr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+
+	generate_javadocs
 }
