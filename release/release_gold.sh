@@ -120,7 +120,10 @@ function prepare_next_release_branch {
 
 	local product_group_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
-	local latest_quarterly_product_version="$(jq -r ".[] | select(.productGroupVersion == \"${product_group_version}\" and .promoted == \"true\") | .targetPlatformVersion" releases.json)"
+	local latest_quarterly_product_version="$(\
+		jq -r ".[] | \
+			select(.productGroupVersion == \"${product_group_version}\" and .promoted == \"true\") | \
+			.targetPlatformVersion" releases.json)"
 
 	rm -fr releases.json
 
