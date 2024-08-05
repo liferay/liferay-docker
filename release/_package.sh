@@ -45,7 +45,6 @@ function generate_javadocs {
 	fi
 
 	local release_info_version="$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)"
-
 	local service_pack_version_suffix="-$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 2)"
 
 	ant \
@@ -62,7 +61,7 @@ function generate_javadocs {
 
 	if [ "${?}" -ne 0 ]
 	then
-		lc_log ERROR "Unable to generate the javadocs."
+		lc_log ERROR "Unable to generate javadocs."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
