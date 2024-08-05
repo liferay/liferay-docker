@@ -155,11 +155,11 @@ function prepare_next_release_branch {
 
 	if [ "${?}" -ne 0 ]
 	then
-		lc_log ERROR "Unable to update the next release branch."
+		lc_log ERROR "Unable to prepare the next release branch."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	else
-		lc_log INFO "The next release branch was updated successfully."
+		lc_log INFO "The next release branch was prepared successfully."
 	fi
 }
 
