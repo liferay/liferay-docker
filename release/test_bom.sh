@@ -10,8 +10,8 @@ function main {
 	test_dxp_generate_pom_release_bom_compile_only
 	test_dxp_generate_pom_release_bom_third_party
 
-	_PRODUCT_VERSION="7.4.3.120-ga120"
 	LIFERAY_RELEASE_PRODUCT_NAME="portal"
+	_PRODUCT_VERSION="7.4.3.120-ga120"
 
 	test_portal_generate_pom_release_bom_compile_only
 	test_portal_generate_pom_release_bom_third_party
