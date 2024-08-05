@@ -52,9 +52,9 @@ function build_service_liferay {
 
 	if [ "$(git -C "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" rev-parse --abbrev-ref HEAD)" == "master" ]
 	then
-		liferay_image=$(retrieve_descriptor_data "liferay-image")
+		liferay_image=$(get_environment_descriptor "liferay-image")
 
-		local hotfix=$(retrieve_descriptor_data "hotfix")
+		local hotfix=$(get_environment_descriptor "hotfix")
 
 		if [ ! -z "${hotfix}" ]
 		then
@@ -427,6 +427,19 @@ function check_usage {
 	mkdir -p "${STACK_DIR}"
 }
 
+function get_environment_descriptor {
+	local file="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/automation/environment-descriptors/${LXC_ENVIRONMENT}.json"
+
+	if [ ! -f "${file}" ]
+	then
+		echo "It was not possible to find the environment-descriptor for ${LXC_ENVIRONMENT}."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	echo "$(grep -e "\"${1}\":" "${file}" | cut -d'"' -f4)"
+}
+
 function main {
 	check_usage "${@}"
 
@@ -541,21 +554,6 @@ function print_help {
 	echo "Example: ${0} x1e4prd -d sql.gz -o test"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
-}
-
-function retrieve_descriptor_data {
-	local file="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/automation/environment-descriptors/${LXC_ENVIRONMENT}.json"
-
-	if [ ! -f "${file}" ]
-	then
-		echo "It was not possible to find the environment-descriptor for ${LXC_ENVIRONMENT}."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	value=$(grep -e "\"${1}\":" "${file}" | cut -d'"' -f4)
-
-	echo "${value}"
 }
 
 function write {
