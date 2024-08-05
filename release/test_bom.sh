@@ -48,6 +48,26 @@ function tear_down {
 	unset _RELEASE_TOOL_DIR
 }
 
+function test_generate_pom_release_bom_compile_only_dxp {
+	generate_pom_release_bom_compile_only
+
+	assert_equals \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
+		test-dependencies/expected.dxp.release.bom.compile.only.pom
+
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+}
+
+function test_generate_pom_release_bom_compile_only_portal {
+	generate_pom_release_bom_compile_only
+
+	assert_equals \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
+		test-dependencies/expected.portal.release.bom.compile.only.pom
+
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+}
+
 function test_generate_pom_release_bom_third_party_dxp {
 	generate_pom_release_bom_compile_only
 
@@ -72,26 +92,6 @@ function test_generate_pom_release_bom_third_party_portal {
 
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
-}
-
-function test_generate_pom_release_bom_compile_only_dxp {
-	generate_pom_release_bom_compile_only
-
-	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
-		test-dependencies/expected.dxp.release.bom.compile.only.pom
-
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
-}
-
-function test_generate_pom_release_bom_compile_only_portal {
-	generate_pom_release_bom_compile_only
-
-	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
-		test-dependencies/expected.portal.release.bom.compile.only.pom
-
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
 }
 
 main
