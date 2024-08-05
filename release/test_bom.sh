@@ -20,15 +20,13 @@ function main {
 }
 
 function set_up {
+	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _BUILD_TIMESTAMP=12345
 	export _PRODUCT_VERSION="2024.q2.6"
 	export _RELEASE_ROOT_DIR="${PWD}"
 
 	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
-
 	export _RELEASE_TOOL_DIR="${_RELEASE_ROOT_DIR}"
-
-	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 
 	cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
@@ -42,13 +40,12 @@ function set_up {
 }
 
 function tear_down {
+	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_TIMESTAMP
 	unset _PRODUCT_VERSION
 	unset _PROJECTS_DIR
 	unset _RELEASE_ROOT_DIR
 	unset _RELEASE_TOOL_DIR
-
-	unset LIFERAY_RELEASE_PRODUCT_NAME
 }
 
 function test_dxp_generate_pom_release_bom_third_party {
