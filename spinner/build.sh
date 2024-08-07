@@ -48,33 +48,29 @@ function build_service_liferay {
 
 	cp ../../orca/templates/liferay/resources/usr/local/liferay/scripts/pre-startup/10_wait_for_dependencies.sh build/liferay/resources/usr/local/liferay/scripts/pre-startup
 
-	local liferay_image=""
-
-	if [ "$(git -C "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}" rev-parse --abbrev-ref HEAD)" == "master" ]
+	if [ "$(git --git-dir "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/.git" rev-parse --abbrev-ref HEAD)" == "master" ]
 	then
-		liferay_image=$(get_environment_descriptor "liferay-image")
+		echo "FROM $(get_environment_descriptor "liferay-image")" > build/liferay/Dockerfile
 
-		local hotfix=$(get_environment_descriptor "hotfix")
+		local hotfix_environment_descriptor=$(get_environment_descriptor "hotfix")
 
-		if [ ! -z "${hotfix}" ]
+		if [ ! -z "${hotfix_environment_descriptor}" ]
 		then
-			hotfix="RUN \/opt\/liferay\/patching-tool\/patching-tool.sh install ${hotfix}"
+			hotfix_environment_descriptor="RUN \/opt\/liferay\/patching-tool\/patching-tool.sh install ${hotfix_environment_descriptor}"
 		fi
 
-		sed -i "s/\[TO-BE-REPLACED-BY-SINGLE-CI\]/${hotfix}/g" "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
+		sed -i "s/\[TO-BE-REPLACED-BY-SINGLE-CI\]/${hotfix_environment_descriptor}/g" "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
 	else
-		liferay_image=$(grep -e '^liferay.workspace.docker.image.liferay=' "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties" | cut -d'=' -f2)
+		echo "FROM $(grep -e '^liferay.workspace.docker.image.liferay=' "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties" | cut -d '=' -f 2)" > build/liferay/Dockerfile
 	fi
 
 	(
-		echo "FROM ${liferay_image}"
-
 		echo "COPY resources/opt/liferay /opt/liferay"
 		echo "COPY resources/usr/local/bin /usr/local/bin"
 		echo "COPY resources/usr/local/liferay/scripts /usr/local/liferay/scripts"
 
 		cat "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
-	) > build/liferay/Dockerfile
+	) >> build/liferay/Dockerfile
 
 	mkdir -p liferay_mount/files/deploy
 
@@ -428,16 +424,16 @@ function check_usage {
 }
 
 function get_environment_descriptor {
-	local file="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/automation/environment-descriptors/${LXC_ENVIRONMENT}.json"
+	local environment_descriptor="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/automation/environment-descriptors/${LXC_ENVIRONMENT}.json"
 
-	if [ ! -f "${file}" ]
+	if [ ! -e "${environment_descriptor}" ]
 	then
-		echo "It was not possible to find the environment-descriptor for ${LXC_ENVIRONMENT}."
+		echo "The ${environment_descriptor} environment-descriptor does not exist."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	echo "$(grep -e "\"${1}\":" "${file}" | cut -d'"' -f4)"
+	grep -e "\"${1}\":" "${environment_descriptor}" | cut -d '"' -f 4
 }
 
 function main {
