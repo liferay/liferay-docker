@@ -185,7 +185,7 @@ function package_release {
 
 	if [[ "${_PRODUCT_VERSION}" == 7.3* ]]
 	then
-		rm -fr "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}" 2> /dev/null
+		rm -fr "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
 		mkdir -p "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
