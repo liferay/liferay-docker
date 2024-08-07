@@ -67,15 +67,46 @@ function generate_api_jars {
 		rm -f "${name}-${version}.jar"
 	done
 
-	for portal_jar in portal-impl portal-kernel support-tomcat util-bridges util-java util-slf4j util-taglib
-	do
-		_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/${portal_jar}.jar"
-	done
+	if [[ "${_PRODUCT_VERSION}" == "7.3."* ]]
+	then
+		for portal_jar in portal-kernel support-tomcat
+		do
+			_manage_bom_jar "${_BUNDLES_DIR}/tomcat/lib/ext/${portal_jar}.jar"
+		done
 
-	find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" -name "com.liferay.*.jar" -type f -print0 | while IFS= read -r -d '' module_jar
-	do
-		_manage_bom_jar "${module_jar}"
-	done
+		for portal_jar in portal-impl util-bridges util-java util-slf4j util-taglib
+		do
+			_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib/${portal_jar}.jar"
+		done
+
+		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/lib/ext" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib" -name "com.liferay.*.jar" -type f -print0 | while IFS= read -r -d '' module_jar
+		do
+			_manage_bom_jar "${module_jar}"
+		done
+
+		for artifact in "commons*.jar" "org.apache.commons.*.jar" "poi*.jar" "spring*.jar"
+		do
+			find "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib" -name "${artifact}" -type f -print0 | while IFS= read -r -d '' module_jar
+			do
+				local module_jar_basename=$(basename "${module_jar}")
+
+				if (grep $(echo "${module_jar_basename%.jar}:") "${_PROJECTS_DIR}/liferay-portal-ee/lib/development/dependencies.properties" || grep $(echo "${module_jar_basename%.jar}:") "${_PROJECTS_DIR}/liferay-portal-ee/lib/portal/dependencies.properties")
+				then
+					_manage_bom_jar "${module_jar}"
+				fi
+			done
+		done
+	else
+		for portal_jar in portal-impl portal-kernel support-tomcat util-bridges util-java util-slf4j util-taglib
+		do
+			_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/${portal_jar}.jar"
+		done
+
+		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" -name "com.liferay.*.jar" -type f -print0 | while IFS= read -r -d '' module_jar
+		do
+			_manage_bom_jar "${module_jar}"
+		done
+	fi
 }
 
 function generate_api_source_jar {
@@ -179,7 +210,7 @@ function generate_pom_release_bom {
 		> /tmp/artifact_urls.txt
 
 	for artifact_file in $(
-		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF" -name '*.jar' | \
+		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/lib/ext" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF" -name '*.jar' | \
 			sed \
 				-e 's/\.jar$//' \
 				-e "s@.*/@@" \
