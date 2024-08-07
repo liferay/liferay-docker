@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM} liferay/jdk11:latest AS liferay-jdk11
+FROM --platform=${TARGETPLATFORM} liferay/jdk21:latest AS liferay-jdk21
 
 COPY resources/etc/created-date /etc/created-date
 
@@ -7,7 +7,7 @@ RUN apt-get update && \
 	apt-get upgrade --yes && \
 	apt-get clean
 
-FROM liferay-jdk11
+FROM liferay-jdk21
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_LIFERAY_PATCHING_TOOL_VERSION
