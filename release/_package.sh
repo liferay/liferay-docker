@@ -190,9 +190,7 @@ function package_release {
 		mkdir -p "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
 		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/development/hsql.jar "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
-
 		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/global/*.jar "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
-
 		cp "${_PROJECTS_DIR}"/liferay-portal-ee/portal-kernel/portal-kernel.jar "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
 		mv "${_PROJECTS_DIR}"/liferay-portal-ee/tools/sdk/dist/com.liferay.registry.api-*.jar "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}/com.liferay.registry.api.jar"
