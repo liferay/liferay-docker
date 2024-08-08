@@ -103,7 +103,9 @@ function main {
 			local telnet_content=$(
 				(
 					sleep 1
+
 					echo "ss"
+
 					sleep 2
 				) | telnet 127.0.0.1 11311 2> /dev/null
 			)
