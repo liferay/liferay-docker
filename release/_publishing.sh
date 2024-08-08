@@ -40,8 +40,8 @@ function add_fixed_issues_to_patcher_project_version {
 }
 
 function add_patcher_project_version {
-	local patcher_project_version="${_PRODUCT_VERSION}"
 	local patcher_product_version_label="Quarterly Releases"
+	local patcher_project_version="${_PRODUCT_VERSION}"
 	local root_patcher_project_version_name=""
 
 	if [[ "${patcher_project_version}" == 7.4.* ]]
