@@ -116,7 +116,7 @@ function main {
 
 			if [ "${module_count}" -eq 0 ]
 			then
-				echo "No modules are available yet with the following filter: ${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}"
+				echo "No modules are available that match: ${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}"
 			elif [ "${module_count}" -eq "${active_count}" ]
 			then
 				update_container_status live
