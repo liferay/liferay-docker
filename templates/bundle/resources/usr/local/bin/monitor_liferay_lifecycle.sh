@@ -105,7 +105,7 @@ function main {
 					sleep 1
 					echo "ss"
 					sleep 2
-				) | telnet 127.0.0.1 11311 2>/dev/null
+				) | telnet 127.0.0.1 11311 2> /dev/null
 			)
 
 			local active_count=$(echo "${telnet_content}" | grep -E "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep -c ACTIVE)
