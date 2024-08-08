@@ -28,15 +28,15 @@ function add_fixed_issues_to_patcher_project_version {
 				--silent \
 				--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 		then
-			lc_log INFO "Adding fixed issues to the ${2} Liferay Patcher project version."
+			lc_log INFO "Adding fixed issues to Liferay Patcher project version ${2}."
 		else
-			lc_log ERROR "Unable to add the full fixed issues list to the ${2} Liferay Patcher project version."
+			lc_log ERROR "Unable to add fixed issues to Liferay Patcher project ${2}."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 	done
 
-	lc_log INFO "The full fixed issues list has been added to the ${2} Liferay Patcher project version."
+	lc_log INFO "Added fixed issues to Liferay Patcher project ${2}."
 }
 
 function add_patcher_project_version {
@@ -70,7 +70,7 @@ function add_patcher_project_version {
 
 		add_fixed_issues_to_patcher_project_version $(echo "${add_by_name_response}" | jq -r '.data.patcherProjectVersionId') "${patcher_project_version}"
 	else
-		lc_log ERROR "Unable to add Liferay Patcher project version ${patcher_project_version}."
+		lc_log ERROR "Unable to add Liferay Patcher project ${patcher_project_version}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
