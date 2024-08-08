@@ -68,7 +68,7 @@ function add_patcher_project_version {
 			--silent \
 			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 
-	if [ $? -eq 0 ]
+	if [ "${?}" -eq 0 ]
 	then
 		lc_log INFO "Project version ${patcher_project_version} added to Patcher Portal. Populating its fixed issues list."
 
