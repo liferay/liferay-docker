@@ -66,11 +66,11 @@ function add_patcher_project_version {
 
 	if [ "${?}" -eq 0 ]
 	then
-		lc_log INFO "Project version ${patcher_project_version} added to Patcher Portal. Populating its fixed issues list."
+		lc_log INFO "Added Liferay Patcher project version ${patcher_project_version}."
 
 		add_fixed_issues_to_patcher_project_version $(echo "${add_by_name_response}" | jq -r '.data.patcherProjectVersionId') "${patcher_project_version}"
 	else
-		lc_log ERROR "Unable to add project version ${patcher_project_version} to Patcher Portal."
+		lc_log ERROR "Unable to add Liferay Patcher project version ${patcher_project_version}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
