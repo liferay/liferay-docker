@@ -100,7 +100,7 @@ function main {
 
 		if [ "${modules_active}" == "false" ] && [ "${started}" == "true" ]
 		then
-			telnet_content=$(
+			local telnet_content=$(
 				(
 					sleep 1
 					echo "ss"
