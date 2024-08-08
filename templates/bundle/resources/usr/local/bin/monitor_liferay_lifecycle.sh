@@ -137,7 +137,7 @@ function main {
 			fi
 		fi
 
-		if [ "${started}" != "true" ] || [ "${modules_active}" != "true" ]
+		if [ "${modules_active}" != "true" ] || [ "${started}" != "true" ]
 		then
 			sleep 3
 		else
