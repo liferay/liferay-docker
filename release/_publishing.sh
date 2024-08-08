@@ -44,16 +44,14 @@ function add_patcher_project_version {
 	local patcher_project_version="${_PRODUCT_VERSION}"
 	local root_patcher_project_version_name=""
 
-	if [[ "${patcher_project_version}" == 7.4.* ]]
-	then
-		patcher_product_version_label="DXP 7.4"
-		root_patcher_project_version_name="7.4.13-ga1"
-	fi
-
 	if [[ "${patcher_project_version}" == 7.3.* ]]
 	then
 		patcher_product_version_label="DXP 7.3"
 		root_patcher_project_version_name="fix-pack-base-7310"
+	elif [[ "${patcher_project_version}" == 7.4.* ]]
+	then
+		patcher_product_version_label="DXP 7.4"
+		root_patcher_project_version_name="7.4.13-ga1"
 	fi
 
 	local add_by_name_response=$(\
