@@ -48,18 +48,18 @@ function build_service_liferay {
 
 	cp ../../orca/templates/liferay/resources/usr/local/liferay/scripts/pre-startup/10_wait_for_dependencies.sh build/liferay/resources/usr/local/liferay/scripts/pre-startup
 
-	if [ "$(git --git-dir "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/.git" rev-parse --abbrev-ref HEAD)" == "master" ]
+	if [ -n "${ENVIRONMENT_DESCRIPTOR}" ]
 	then
-		echo "FROM $(get_environment_descriptor "liferay-image")" > build/liferay/Dockerfile
+		echo "FROM $(grep -e "\"liferay-image\":" "${ENVIRONMENT_DESCRIPTOR}" | cut -d '"' -f 4)" > build/liferay/Dockerfile
 
-		local hotfix_environment_descriptor=$(get_environment_descriptor "hotfix")
+		local hotfix=$(grep -e "\"hotfix\":" "${ENVIRONMENT_DESCRIPTOR}" | cut -d '"' -f 4)
 
-		if [ ! -z "${hotfix_environment_descriptor}" ]
+		if [ -n "${hotfix}" ]
 		then
-			hotfix_environment_descriptor="RUN \/opt\/liferay\/patching-tool\/patching-tool.sh install ${hotfix_environment_descriptor}"
+			hotfix="RUN \/opt\/liferay\/patching-tool\/patching-tool.sh install ${hotfix}"
 		fi
 
-		sed -i "s/\[TO-BE-REPLACED-BY-SINGLE-CI\]/${hotfix_environment_descriptor}/g" "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
+		sed -i "s/\[TO-BE-REPLACED-BY-SINGLE-CI\]/${hotfix}/g" "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/Dockerfile.ext"
 	else
 		echo "FROM $(grep -e '^liferay.workspace.docker.image.liferay=' "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/liferay/gradle.properties" | cut -d '=' -f 2)" > build/liferay/Dockerfile
 	fi
@@ -397,6 +397,18 @@ function check_usage {
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
+	if [ "$(git --git-dir "${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/.git" rev-parse --abbrev-ref HEAD)" == "master" ]
+	then
+		ENVIRONMENT_DESCRIPTOR="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/automation/environment-descriptors/${LXC_ENVIRONMENT}.json"
+
+		if [ ! -e "${ENVIRONMENT_DESCRIPTOR}" ]
+		then
+			echo "The ${ENVIRONMENT_DESCRIPTOR} file does not exist."
+
+			exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+	fi
+
 	if [[ $(find dxp-activation-key -name "*.xml" | wc -l ) -eq 0 ]]
 	then
 		echo ""
@@ -421,19 +433,6 @@ function check_usage {
 	fi
 
 	mkdir -p "${STACK_DIR}"
-}
-
-function get_environment_descriptor {
-	local environment_descriptor="${SPINNER_LIFERAY_LXC_REPOSITORY_DIR}/automation/environment-descriptors/${LXC_ENVIRONMENT}.json"
-
-	if [ ! -e "${environment_descriptor}" ]
-	then
-		echo "The ${environment_descriptor} environment-descriptor does not exist."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	grep -e "\"${1}\":" "${environment_descriptor}" | cut -d '"' -f 4
 }
 
 function main {
