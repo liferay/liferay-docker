@@ -53,6 +53,13 @@ function add_fixed_issues_to_patcher_project_version {
 }
 
 function add_patcher_project_version {
+	if [[ "${_PRODUCT_VERSION}" == *ga* ]]
+	then
+		lc_log INFO "Skipping the add patcher project version step for ${_PRODUCT_VERSION}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local patcher_product_version_label="Quarterly Releases"
 	local patcher_project_version="${_PRODUCT_VERSION}"
 	local root_patcher_project_version_name=""
