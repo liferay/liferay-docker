@@ -1,9 +1,19 @@
 #!/bin/bash
 
 function create_symlink {
-	if [[ -e /usr/lib/jvm/"${2}"-"${1}" ]] && [[ ! -e /usr/lib/jvm/"${2//-/}" ]]
+	local target
+
+	if [[ -e /usr/lib/jvm/"${2}"-"${1}" ]]
 	then
-		ln -sf /usr/lib/jvm/"${2}"-"${1}" /usr/lib/jvm/"${2//-/}"
+		target=/usr/lib/jvm/"${2}"-"${1}"
+	elif [[ -e /usr/lib/jvm/"${2}"-crac-"${1}" ]]
+	then
+		target=/usr/lib/jvm/"${2}"-crac-"${1}"
+	fi
+
+	if [[ -n "${target}" ]] && [[ ! -e /usr/lib/jvm/"${2//-/}" ]]
+	then
+		ln -sf ${target} /usr/lib/jvm/"${2//-/}"
 	fi
 }
 
