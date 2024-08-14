@@ -3,24 +3,24 @@
 function create_symlink {
 	local target_dir
 
-	if [[ -e /usr/lib/jvm/"${2}"-"${1}" ]]
+	if [ -e "/usr/lib/jvm/${2}-${1}" ]
 	then
 		target_dir=/usr/lib/jvm/"${2}"-"${1}"
-	elif [[ -e /usr/lib/jvm/"${2}"-crac-"${1}" ]]
+	elif [ -e "/usr/lib/jvm/${2}-crac-${1}" ]
 	then
-		target_dir=/usr/lib/jvm/"${2}"-crac-"${1}"
+		target_dir="/usr/lib/jvm/${2}-crac-${1}"
 	fi
 
-	if [[ -n "${target_dir}" ]] && [[ ! -e /usr/lib/jvm/"${2//-/}" ]]
+	if [ -n "${target_dir}" ] && [ ! -e "/usr/lib/jvm/${2//-/}" ]
 	then
-		ln -sf ${target_dir} /usr/lib/jvm/"${2//-/}"
+		ln -sf ${target_dir} "/usr/lib/jvm/${2//-/}"
 	fi
 }
 
 function main {
 	if [ -n "${JAVA_VERSION}" ]
 	then
-		if [[ ! -e "/usr/lib/jvm/${JAVA_VERSION}" ]]
+		if [ ! -e "/usr/lib/jvm/${JAVA_VERSION}" ]
 		then
 			local architecture=$(dpkg --print-architecture)
 			local zulu_version=$(echo "${JAVA_VERSION}" | tr -dc '0-9')
