@@ -1,7 +1,16 @@
 #!/bin/bash
 
 function add_fixed_issues_to_patcher_project_version {
-	IFS=',' read -r -a fixed_issues_array < "${_BUILD_DIR}/release/release-notes.txt"
+	lc_download "https://releases.liferay.com/dxp/${_PRODUCT_VERSION}/release-notes.txt" release-notes.txt
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to download release-notes.txt."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	IFS=',' read -r -a fixed_issues_array < "release-notes.txt"
 
 	local fixed_issues_array_length="${#fixed_issues_array[@]}"
 
@@ -32,11 +41,15 @@ function add_fixed_issues_to_patcher_project_version {
 		else
 			lc_log ERROR "Unable to add fixed issues to Liferay Patcher project ${2}."
 
+			rm -f release-notes.txt
+
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 	done
 
 	lc_log INFO "Added fixed issues to Liferay Patcher project ${2}."
+
+	rm -f release-notes.txt
 }
 
 function add_patcher_project_version {
