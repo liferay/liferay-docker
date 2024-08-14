@@ -276,7 +276,7 @@ function _update_bundles_yml {
 
 	if [[ "${_PRODUCT_VERSION}" == 7.4.*-ga* ]]
 	then
-		local ga_bundle_url="releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/"$(curl -fsSL "https://releases.liferay.com/portal/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle")
+		local ga_bundle_url="releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/"$(curl -fsSL "https://releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle")
 
 		perl -i -0777pe 's/\s+latest: true(?!7.4.13:)//' "${BASE_DIR}/bundles.yml"
 
