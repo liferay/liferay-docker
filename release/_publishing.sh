@@ -85,7 +85,7 @@ function add_patcher_project_version {
 			--silent \
 			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 
-	if [ "${?}" -eq 0 ]
+	if [ $(echo "${add_by_name_response}" | jq -r '.status') -eq 200 ]
 	then
 		lc_log INFO "Added Liferay Patcher project version ${patcher_project_version}."
 
