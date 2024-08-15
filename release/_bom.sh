@@ -417,8 +417,8 @@ function _copy_source_package {
 }
 
 function _copy_tld {
-	local directory="$1"
 	local file_names=""
+
 	local tlds=("${@:2}")
 
 	for tld in "${tlds[@]}"
@@ -437,7 +437,7 @@ function _copy_tld {
 		sort -k 1,1 -u | \
 		awk '{print $2}')
 	do
-		cp "${file}" "${directory}"
+		cp "${file}" "${1}"
 	done
 }
 
