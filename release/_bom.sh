@@ -417,25 +417,25 @@ function _copy_source_package {
 }
 
 function _copy_tld {
-	local file_names=""
+	local arguments=""
 
 	local tlds=("${@:2}")
 
 	for tld in "${tlds[@]}"
 	do
-		if [ -n "${file_names}" ]
+		if [ -n "${arguments}" ]
 		then
-			file_names+=" -o "
+			arguments+=" -o "
 		fi
 
-		file_names+="-name \"${tld}\""
+		arguments+="-name \"${tld}\""
 	done
 
 	for file in $(eval find "${_PROJECTS_DIR}" \
-		"${file_names}" -type f | \
-		awk -F "/" '{print $NF, $0}' | \
-		sort -k 1,1 -u | \
-		awk '{print $2}')
+		"${arguments}" -type f | \
+			awk -F "/" '{print $NF, $0}' | \
+			sort -k 1,1 -u | \
+			awk '{print $2}')
 	do
 		cp "${file}" "${1}"
 	done
