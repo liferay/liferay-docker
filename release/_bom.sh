@@ -122,7 +122,7 @@ function generate_api_jars {
 
 	_copy_tld "api-jar/META-INF/resources" "liferay-application-list.tld" "liferay-data-engine.tld" "liferay-ddm.tld" "liferay-export-import-changeset.tld" "liferay-form.tld" "liferay-staging.tld" "liferay-template.tld"  "react.tld" "soy.tld"
 
-	mkdir -p api-jar/META-INF/resources/WEB-INF
+	mkdir api-jar/META-INF/resources/WEB-INF
 
 	_copy_tld "api-jar/META-INF/resources/WEB-INF" "liferay-*.tld" "ratings.tld" "react.tld" "soy.tld"
 }
