@@ -58,9 +58,20 @@ function _process_new_product {
 		lc_log INFO "The version ${_PRODUCT_VERSION} is already in releases.json."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	else
-		_process_product_version "${LIFERAY_RELEASE_PRODUCT_NAME}" "${_PRODUCT_VERSION}"
 	fi
+
+	local product_group_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
+
+	jq "map(
+			if .productGroupVersion == \"${product_group_version}\" and .product == \"${LIFERAY_RELEASE_PRODUCT_NAME}\"
+			then
+				.promoted = \"false\"
+			else
+				.
+			end
+		)" "${releases_json}" > temp_file.json && mv temp_file.json "${releases_json}"
+
+	_process_product_version "${LIFERAY_RELEASE_PRODUCT_NAME}" "${_PRODUCT_VERSION}"
 }
 
 function _process_product {
