@@ -2,7 +2,7 @@
 
 source _bom.sh
 source _liferay_common.sh
-source _test_common.sh
+source ../_test_common.sh
 
 function main {
 	set_up
