@@ -7,6 +7,11 @@ source _test_common.sh
 function main {
 	set_up
 
+	if [ $? -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	test_generate_pom_release_bom_compile_only_dxp
 	test_generate_pom_release_bom_third_party_dxp
 
@@ -28,6 +33,13 @@ function set_up {
 	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
 	export _RELEASE_TOOL_DIR="${_RELEASE_ROOT_DIR}"
 
+	if [ ! -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
+	then
+		echo "liferay-portal-ee does not exist."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+	
 	cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	git branch --delete "${_PRODUCT_VERSION}" &> /dev/null
