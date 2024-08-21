@@ -25,11 +25,19 @@ function assert_equals {
 			if [ "${?}" -eq 0 ]
 			then
 				assertion_result="true"
+			else
+				assertion_result="false"
+
+				break
 			fi
 		else
 			if [ "${arguments[${index}]}" == "${arguments[${index} + 1]}" ]
 			then
 				assertion_result="true"
+			else
+				assertion_result="false"
+
+				break
 			fi
 		fi
 	done
