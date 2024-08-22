@@ -1,11 +1,11 @@
 #!/bin/bash
 
 function main {
-	local tests_result=$(find . -name "test_*.sh" -type f -exec ./{} \;)
+	local tests_results=$(find . -name "test_*.sh" -type f -exec ./{} \;)
 
-	echo "${tests_result}"
+	echo "${tests_results}"
 	
-	if [[ "${tests_result}" == *"FAILED"* ]]
+	if [[ "${tests_results}" == *"FAILED"* ]]
 	then
 		exit 1
 	fi
