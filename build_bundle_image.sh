@@ -191,6 +191,11 @@ function install_fix_pack {
 }
 
 function main {
+	if [[ " ${@} " =~ " --test " ]]
+	then
+		return
+	fi
+
 	check_usage "${@}"
 
 	make_temp_directory templates/bundle
