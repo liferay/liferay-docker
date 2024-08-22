@@ -35,7 +35,7 @@ function set_up {
 
 	if [ ! -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
 	then
-		echo "liferay-portal-ee does not exist."
+		echo "The directory ${_PROJECTS_DIR}/liferay-portal-ee does not exist."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
