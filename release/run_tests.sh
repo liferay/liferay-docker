@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function main {
-	tests_result=$(find . -name "test_*.sh" -type f -exec ./{} \;)
+	local tests_result=$(find . -name "test_*.sh" -type f -exec ./{} \;)
 
 	echo "${tests_result}"
 	
