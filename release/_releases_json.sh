@@ -63,7 +63,7 @@ function _process_new_product {
 	local product_group_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
 	jq "map(
-			if .productGroupVersion == \"${product_group_version}\" and .product == \"${LIFERAY_RELEASE_PRODUCT_NAME}\"
+			if .product == \"${LIFERAY_RELEASE_PRODUCT_NAME}\" and .productGroupVersion == \"${product_group_version}\"
 			then
 				.promoted = \"false\"
 			else
