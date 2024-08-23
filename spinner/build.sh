@@ -490,6 +490,7 @@ function prepare_database_import {
 	(
 		echo "USE lportal;"
 		echo ""
+		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.analytics.settings.configuration.AnalyticsConfiguration%';"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.ldap.%';"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.sso.openid.%';"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.saml.%';"
