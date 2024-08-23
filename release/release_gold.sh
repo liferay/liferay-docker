@@ -128,7 +128,7 @@ function prepare_next_release_branch {
 
 	git add "${BASE_DIR}/liferay-portal-ee/release.properties"
 
-	git commit -m "Prepeare ${quarterly_release_branch_name}."
+	git commit -m "Prepare ${quarterly_release_branch_name}."
 
 	git push upstream "${quarterly_release_branch_name}"
 
