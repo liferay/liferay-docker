@@ -92,7 +92,7 @@ function prepare_next_release_branch {
 
 	rm -fr releases.json
 
-	lc_download "https://releases.liferay.com/releases.json" releases.json
+	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/releases.json" releases.json
 
 	local product_group_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
