@@ -8,10 +8,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
             - name: Execute run_tests.sh
-              run: |
-                cd release
-
-                ./run_tests.sh
+              run: ./run_tests.sh
               shell: bash
 name: Release
 on:
