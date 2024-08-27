@@ -50,13 +50,16 @@ function generate_api_jars {
 		local name=$(echo "${artifact}" | sed -e "s/.*:\(.*\):.*/\\1/")
 		local version=${artifact##*:}
 
-		lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar."
+		if (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:")
+		then
+			lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar."
 
-		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar" "${name}-${version}-sources.jar"
+			lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar" "${name}-${version}-sources.jar"
 
-		unzip -d api-sources-jar -o -q "${name}-${version}-sources.jar"
+			unzip -d api-sources-jar -o -q "${name}-${version}-sources.jar"
 
-		rm -f "${name}-${version}-sources.jar"
+			rm -f "${name}-${version}-sources.jar"
+		fi
 
 		lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar."
 
