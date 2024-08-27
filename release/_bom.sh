@@ -160,6 +160,11 @@ function generate_api_source_jar {
 
 		local package_dir=$(dirname "${packageinfo_file}")
 
+		if [ ! -d "${package_dir}" ]
+		then
+			continue
+		fi
+
 		lc_log DEBUG "Copying ${package_dir} because it has a packageinfo."
 
 		_copy_source_package "${package_dir}"
