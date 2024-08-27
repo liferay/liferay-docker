@@ -212,7 +212,7 @@ function upload_hotfix {
 
 	scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
 
-	if (gsutils ls "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}" | grep -q "${_HOTFIX_FILE_NAME}")
+	if (gsutil ls "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}" | grep "${_HOTFIX_FILE_NAME}")
 	then
 		lc_log ERROR "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP because it already exists."
 
