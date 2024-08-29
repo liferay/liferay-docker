@@ -50,7 +50,7 @@ function _process_new_product {
 	then
 		lc_log INFO "Downloading https://releases.liferay.com/releases.json to ${releases_json}."
 
-		lc_download https://releases.liferay.com/releases.json "${releases_json}"
+		LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download https://releases.liferay.com/releases.json "${releases_json}"
 	fi
 
 	if (grep "${_PRODUCT_VERSION}" "${releases_json}")
