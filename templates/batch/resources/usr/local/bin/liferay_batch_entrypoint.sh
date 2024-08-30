@@ -109,8 +109,6 @@ function main {
 		fi
 	fi
 
-	local items_file="/tmp/items"
-
 	find /opt/liferay/batch -type f -name "*.batch-engine-data.json" -print0 2> /dev/null | LC_ALL=C sort -z |
 	while IFS= read -r -d "" file_name
 	do
@@ -142,9 +140,9 @@ function main {
 
 		echo "HREF: ${href}"
 
-		jq -r ".items" ${file_name} > ${items_file}
+		jq -r ".items" ${file_name} > /tmp/liferay_batch_entrypoint.items.json
 
-		echo "Items: $(<${items_file})"
+		echo "Items: $(</tmp/liferay_batch_entrypoint.items.json)"
 
 		local parameters=$(jq -r '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' ${file_name} 2>/dev/null)
 
@@ -161,7 +159,7 @@ function main {
 				-H "Authorization: Bearer ${oauth2_access_token}" \
 				-H "Content-Type: application/json" \
 				-X POST \
-				-d @${items_file} \
+				-d @/tmp/liferay_batch_entrypoint.items.json \
 				-s \
 				${curl_options} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters}" \
@@ -174,7 +172,7 @@ function main {
 		then
 			echo "Received invalid POST response."
 
-			rm ${items_file}
+			rm /tmp/liferay_batch_entrypoint.items.json
 
 			exit 1
 		fi
@@ -200,7 +198,7 @@ function main {
 			echo "Execute Status: ${status}"
 		done
 
-		rm ${items_file}
+		rm /tmp/liferay_batch_entrypoint.items.json
 
 		if [ "${status}" == "FAILED" ]
 		then
