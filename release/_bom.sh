@@ -194,6 +194,7 @@ function generate_distro_jar {
 
 	./catalina.sh stop
 
+	rm -fr "${_BUNDLES_DIR}"/logs/*
 	rm -f "${_BUNDLES_DIR}/osgi/modules/biz.aQute.remote.agent-6.4.0.jar"
 	rm -fr "${_BUNDLES_DIR}"/tomcat/logs/*
 }
