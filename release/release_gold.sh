@@ -176,7 +176,7 @@ function promote_boms {
 function promote_packages {
 	if (ssh root@lrdcom-vm-1 ls -d "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}" | grep -q "${_PRODUCT_VERSION}" &>/dev/null)
 	then
-		lc_log ERROR "Release was already published."
+		lc_log INFO "Release was already published."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -185,7 +185,7 @@ function promote_packages {
 
 	if (gsutil ls "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}" | grep "${_PRODUCT_VERSION}")
 	then
-		lc_log ERROR "Skipping the upload of ${_PRODUCT_VERSION} to GCP because it already exists."
+		lc_log INFO "Skipping the upload of ${_PRODUCT_VERSION} to GCP because it already exists."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
