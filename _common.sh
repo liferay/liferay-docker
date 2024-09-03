@@ -303,7 +303,7 @@ function test_docker_image {
 
 	if [[ ! " ${@} " =~ " --no-test-image " ]]
 	then
-		./test_image.sh
+		./test_bundle_image.sh
 
 		if [ $? -gt 0 ]
 		then
