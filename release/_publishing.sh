@@ -27,19 +27,20 @@ function add_fixed_issues_to_patcher_project_version {
 
 		IFS=',' fixed_issues="${fixed_issues_array[*]:start_index:fixed_issues_array_part_length}"
 
-		if (curl \
+		local update_fixed_issues_response=$(curl \
 				"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/updateFixedIssues" \
 				--data-raw "fixedIssues=${fixed_issues}&patcherProjectVersionId=${1}" \
-				--fail \
 				--max-time 10 \
-				--output /dev/null \
 				--retry 3 \
-				--silent \
 				--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
+
+		if [ $(echo "${update_fixed_issues_response}" | jq -r '.status') -eq 200 ]
 		then
 			lc_log INFO "Adding fixed issues to Liferay Patcher project version ${2}."
 		else
-			lc_log ERROR "Unable to add fixed issues to Liferay Patcher project ${2}."
+			lc_log ERROR "Unable to add fixed issues to Liferay Patcher project ${2}:"
+
+			lc_log ERROR "${update_fixed_issues_response}"
 
 			rm -f release-notes.txt
 
@@ -79,10 +80,8 @@ function add_patcher_project_version {
 		curl \
 			"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/addByName" \
 			--data-raw "combinedBranch=true&committish=${patcher_project_version}&fixedIssues=&name=${patcher_project_version}&productVersionLabel=${patcher_product_version_label}&repositoryName=liferay-portal-ee&rootPatcherProjectVersionName=${root_patcher_project_version_name}" \
-			--fail \
 			--max-time 10 \
 			--retry 3 \
-			--silent \
 			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 
 	if [ $(echo "${add_by_name_response}" | jq -r '.status') -eq 200 ]
@@ -91,7 +90,9 @@ function add_patcher_project_version {
 
 		add_fixed_issues_to_patcher_project_version $(echo "${add_by_name_response}" | jq -r '.data.patcherProjectVersionId') "${patcher_project_version}"
 	else
-		lc_log ERROR "Unable to add Liferay Patcher project ${patcher_project_version}."
+		lc_log ERROR "Unable to add Liferay Patcher project ${patcher_project_version}:"
+
+		lc_log ERROR "${add_by_name_response}"
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -102,13 +103,10 @@ function check_url {
 
 	if (curl \
 			"${file_url}" \
-			--fail \
 			--head \
 			--max-time 300 \
-			--output /dev/null \
 			--retry 3 \
 			--retry-delay 10 \
-			--silent \
 			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}")
 	then
 		lc_log DEBUG "File is available at ${file_url}."
