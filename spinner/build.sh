@@ -490,11 +490,11 @@ function prepare_database_import {
 	(
 		echo "USE lportal;"
 		echo ""
+		echo "DELETE FROM Configuration_ WHERE configurationId LIKE '%com.liferay.multi.factor.authentication%';"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.analytics.settings.configuration.AnalyticsConfiguration%';"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.ldap.%';"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.sso.openid.%';"
 		echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.saml.%';"
-		echo "DELETE FROM Configuration_ WHERE configurationId LIKE '%com.liferay.multi.factor.authentication%';"
 		echo ""
 		echo "UPDATE VirtualHost SET hostname=concat(hostname, \".local\");"
 
@@ -502,11 +502,11 @@ function prepare_database_import {
 		do
 			echo "USE ${schema};"
 			echo ""
+			echo "DELETE FROM Configuration_ WHERE configurationId LIKE '%com.liferay.multi.factor.authentication%';"
 			echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.analytics.settings.configuration.AnalyticsConfiguration%';"
 			echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.ldap.%';"
 			echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.portal.security.sso.openid.%';"
 			echo "DELETE FROM Configuration_ WHERE configurationId LIKE 'com.liferay.saml.%';"
-			echo "DELETE FROM Configuration_ WHERE configurationId LIKE '%com.liferay.multi.factor.authentication%';"
 			echo ""
 			echo "TRUNCATE TABLE OpenIdConnectSession;"
 			echo "TRUNCATE TABLE SamlIdpSpConnection;"
