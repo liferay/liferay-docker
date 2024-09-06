@@ -49,6 +49,13 @@ function main {
 		modules_active=true
 	fi
 
+	if [ -z "${LIFERAY_CONTAINER_STATUS_IGNORE_ACTIVE_MODULES}" ]
+	then
+		# if not set the ignore module, then ignore fragment by default
+		lecho "LIFERAY_CONTAINER_STATUS_IGNORE_ACTIVE_MODULES not set, setting its value to ignore fragment"
+		LIFERAY_CONTAINER_STATUS_IGNORE_ACTIVE_MODULES="fragment"
+	fi
+
 	while true
 	do
 		if [ "${started}" != true ]
@@ -110,9 +117,9 @@ function main {
 				) | telnet 127.0.0.1 11311 2> /dev/null
 			)
 
-			local active_count=$(echo "${telnet_content}" | grep -E "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep -c ACTIVE)
+			local active_count=$(echo "${telnet_content}" | grep -v "${LIFERAY_CONTAINER_STATUS_IGNORE_ACTIVE_MODULES}" | grep -E "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep -c ACTIVE)
 
-			local module_count=$(echo "${telnet_content}" | grep -cE "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}")
+			local module_count=$(echo "${telnet_content}" | grep -v "${LIFERAY_CONTAINER_STATUS_IGNORE_ACTIVE_MODULES}" | grep -cE "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}") 
 
 			if [ "${module_count}" -eq 0 ]
 			then
@@ -125,7 +132,7 @@ function main {
 			else
 				echo "Modules pending activation:"
 
-				echo "${telnet_content}" | grep -E "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep -v ACTIVE
+				echo "${telnet_content}" | grep -v "${LIFERAY_CONTAINER_STATUS_IGNORE_ACTIVE_MODULES}" | grep -E "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep -v ACTIVE
 			fi
 		fi
 
