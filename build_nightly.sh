@@ -19,5 +19,5 @@ do
 	echo `date`
 	echo ""
 
-	sleep 4h
+	sleep 1d
 done
