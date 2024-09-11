@@ -39,7 +39,7 @@ function _set_dockerfile {
 function _test_set_parent_image {
 	LIFERAY_DOCKER_RELEASE_VERSION="${1}"
 
-	echo -e "\nRunning _test_set_parent_image for ${LIFERAY_DOCKER_RELEASE_VERSION}\n"
+	echo -e "Running _test_set_parent_image for ${LIFERAY_DOCKER_RELEASE_VERSION}\n"
 
 	_set_dockerfile "jdk21" "jdk21" "Dockerfile"
 

@@ -44,8 +44,8 @@ function assert_equals {
 
 	if [ "${assertion_result}" == "true" ]
 	then
-		echo -e "${FUNCNAME[1]} \e[1;32mSUCCESS\e[0m"
+		echo -e "${FUNCNAME[1]} \e[1;32mSUCCESS\e[0m\n"
 	else
-		echo -e "${FUNCNAME[1]} \e[1;31mFAILED\e[0m"
+		echo -e "${FUNCNAME[1]} \e[1;31mFAILED\e[0m\n"
 	fi
 }
