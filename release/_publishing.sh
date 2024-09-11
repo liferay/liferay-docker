@@ -103,10 +103,13 @@ function check_url {
 
 	if (curl \
 			"${file_url}" \
+			--fail \
 			--head \
 			--max-time 300 \
+			--output /dev/null \
 			--retry 3 \
 			--retry-delay 10 \
+			--silent \
 			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}")
 	then
 		lc_log DEBUG "File is available at ${file_url}."
