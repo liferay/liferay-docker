@@ -58,7 +58,7 @@ function main {
 
 	lc_time_run tag_release
 
-	promote_boms
+	promote_boms xanadu
 
 	if [[ ! $(echo "${_PRODUCT_VERSION}" | grep "q") ]] &&
 	   [[ ! $(echo "${_PRODUCT_VERSION}" | grep "7.4") ]]

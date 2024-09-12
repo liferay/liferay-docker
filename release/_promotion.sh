@@ -47,9 +47,8 @@ function prepare_poms_for_promotion {
 }
 
 function promote_boms {
-	lc_time_run prepare_poms_for_promotion xanadu
-
-	lc_time_run prepare_jars_for_promotion xanadu
+	lc_time_run prepare_jars_for_promotion ${1}
+	lc_time_run prepare_poms_for_promotion ${1}
 
 	lc_time_run upload_boms liferay-public-releases
 }
