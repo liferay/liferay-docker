@@ -1103,3 +1103,10 @@ docker.image.git.id-7.0.4=4db964182c3510b2918d456a3ba4aeb06a3b97d2
 
 docker.image.change.log-7.0.5=DOCKER-259
 docker.image.git.id-7.0.5=56232c5444c9df9259b09bbfb9971d85145f3736
+
+#
+# Liferay Docker Image Version 7.0.6
+#
+
+docker.image.change.log-7.0.6=DOCKER-256
+docker.image.git.id-7.0.6=2ac00efbf13c8d12f7823b5528dc246a5617ebcb
