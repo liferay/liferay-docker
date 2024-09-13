@@ -49,3 +49,9 @@ function assert_equals {
 		echo -e "${FUNCNAME[1]} \e[1;31mFAILED\e[0m\n"
 	fi
 }
+
+function main {
+	echo -e "Running ${BASH_SOURCE[3]}...\n"
+}
+
+main
