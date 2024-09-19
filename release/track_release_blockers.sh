@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source _liferay_common.sh
+source ../_liferay_common.sh
 
 function check_usage {
 	if [ -z "$LIFERAY_TRACK_RELEASE_BLOCKERS_JIRA_TOKEN" ] ||

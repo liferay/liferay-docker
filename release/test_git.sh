@@ -1,8 +1,8 @@
 #!/bin/bash
 
+source ../_liferay_common.sh
 source ../_test_common.sh
 source _git.sh
-source _liferay_common.sh
 
 function main {
 	set_up

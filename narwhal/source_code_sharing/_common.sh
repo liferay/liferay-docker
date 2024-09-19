@@ -4,7 +4,7 @@
 
 set -o pipefail
 
-source "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")/_liferay_common.sh"
+source ../../_liferay_common.sh
 
 export BASE_DIR="${PWD}"
 

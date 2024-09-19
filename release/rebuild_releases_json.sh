@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source _liferay_common.sh
+source ../_liferay_common.sh
 source _releases_json.sh
 
 _RELEASE_ROOT_DIR=$(pwd)
