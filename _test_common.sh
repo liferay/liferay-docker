@@ -61,7 +61,13 @@ function assert_equals {
 }
 
 function main {
-	echo -e "Running ${BASH_SOURCE[3]}...\n"
+	if [ -n "${BASH_SOURCE[3]}" ]
+	then
+		echo -e "### Running tests of ${BASH_SOURCE[3]} ###\n"
+	elif [ -n "${BASH_SOURCE[2]}" ]
+	then
+		echo -e "### Running tests of ${BASH_SOURCE[2]} ###\n"
+	fi
 }
 
 main
