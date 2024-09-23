@@ -72,8 +72,10 @@ function generate_release_notes {
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	git log "tags/${ga_version}..HEAD" --pretty=%s | \
-		grep -E "^[A-Z][A-Z0-9]*-[0-9]*" | \
+	git log "tags/${ga_version}..HEAD" --pretty="%s %H" | \
+		sed -e "/c394bcbc1c36af47e66678c470d623568d3f1e88/c\LPD-27038/" | \
+		sed -e "/8a80898965553c441eef73d6d6839d0b5712ca43/c\LPD-27038/" | \
+		grep -E "^[A-Z][A-Z0-9]*-[0-9]+( .*)?" | \
 		sed -e "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/" | \
 		sort | \
 		uniq | \
