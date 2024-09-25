@@ -266,10 +266,7 @@ function test_boms {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [ -f "${HOME}/.liferay/workspace/releases.json" ]
-	then
-		rm -f "${HOME}/.liferay/workspace/releases.json"
-	fi
+	rm -f "${HOME}/.liferay/workspace/releases.json"
 
 	mkdir -p "temp_dir_test_boms"
 
