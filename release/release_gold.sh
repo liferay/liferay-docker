@@ -266,6 +266,11 @@ function test_boms {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	if [ -f "${HOME}/.liferay/workspace/releases.json" ]
+	then
+		rm -f "${HOME}/.liferay/workspace/releases.json"
+	fi
+
 	mkdir -p "temp_dir_test_boms"
 
 	lc_cd "temp_dir_test_boms"
@@ -283,11 +288,6 @@ function test_boms {
 	export LIFERAY_RELEASES_MIRRORS="https://releases.liferay.com"
 
 	sed -i "s/version: \"10.1.0\"/version: \"10.1.2\"/" "temp_dir_test_boms/settings.gradle"
-
-	if [ -f "${HOME}/.liferay/workspace/releases.json" ]
-	then
-		rm -f "${HOME}/.liferay/workspace/releases.json"
-	fi
 
 	for module in api mvc-portlet
 	do
