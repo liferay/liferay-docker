@@ -4,7 +4,6 @@ source ../_liferay_common.sh
 source _github.sh
 source _product_info_json.sh
 source _promotion.sh
-source _publishing.sh
 source _releases_json.sh
 
 function check_supported_versions {
@@ -161,34 +160,6 @@ function print_help {
 	echo "Example: LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964 LIFERAY_RELEASE_VERSION=2023.q3.0 ${0}"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
-}
-
-function promote_boms {
-	lc_time_run prepare_poms_for_promotion xanadu
-
-	lc_time_run prepare_jars_for_promotion xanadu
-
-	lc_time_run upload_boms liferay-public-releases
-}
-
-function promote_packages {
-	if (ssh root@lrdcom-vm-1 ls -d "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}" | grep -q "${_PRODUCT_VERSION}" &>/dev/null)
-	then
-		lc_log INFO "Release was already published."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	ssh root@lrdcom-vm-1 cp -a "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_ARTIFACT_RC_VERSION}" "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
-
-	if (gsutil ls "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}" | grep "${_PRODUCT_VERSION}")
-	then
-		lc_log INFO "Skipping the upload of ${_PRODUCT_VERSION} to GCP because it already exists."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	gsutil cp -r "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_ARTIFACT_RC_VERSION}" "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
 }
 
 function tag_release {

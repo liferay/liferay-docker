@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source _publishing.sh
+
 function prepare_jars_for_promotion {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
@@ -42,6 +44,34 @@ function prepare_poms_for_promotion {
 	done
 
 	sed -i "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_PRODUCT_VERSION}</version>#" ./*.pom
+}
+
+function promote_boms {
+	lc_time_run prepare_poms_for_promotion xanadu
+
+	lc_time_run prepare_jars_for_promotion xanadu
+
+	lc_time_run upload_boms liferay-public-releases
+}
+
+function promote_packages {
+	if (ssh root@lrdcom-vm-1 ls -d "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}" | grep -q "${_PRODUCT_VERSION}" &>/dev/null)
+	then
+		lc_log INFO "Release was already published."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	ssh root@lrdcom-vm-1 cp -a "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_ARTIFACT_RC_VERSION}" "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
+
+	if (gsutil ls "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}" | grep "${_PRODUCT_VERSION}")
+	then
+		lc_log INFO "Skipping the upload of ${_PRODUCT_VERSION} to GCP because it already exists."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	gsutil cp -r "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_ARTIFACT_RC_VERSION}" "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
 }
 
 function _download_bom_file {
