@@ -744,6 +744,7 @@ quarterly:
     2024.q3.0:
     2024.q3.1:
     2024.q3.2:
+    2024.q3.3:
         latest: true
 snapshot:
     snapshot-master:
