@@ -1,13 +1,16 @@
 #!/bin/bash
 
+source _liferay_common.sh
+
 function assert_equals {
 	local arguments=()
 
-	for argument in ${@}
+	for argument in "${@}"
 	do
-		arguments+=(${argument})
+		arguments+=("${argument}")
 	done
 
+	local assertion_error_file="${PWD}/assertion_error"
 	local assertion_result="false"
 
 	for index in ${!arguments[@]}
@@ -37,7 +40,10 @@ function assert_equals {
 			else
 				assertion_result="false"
 
-				break
+				touch "${assertion_error_file}"
+
+				echo -e "Actual: ${arguments[${index}]}\n" >> "${assertion_error_file}"
+				echo -e "Expected: ${arguments[${index} + 1]}\n" >> "${assertion_error_file}"
 			fi
 		fi
 	done
@@ -47,6 +53,10 @@ function assert_equals {
 		echo -e "${FUNCNAME[1]} \e[1;32mSUCCESS\e[0m\n"
 	else
 		echo -e "${FUNCNAME[1]} \e[1;31mFAILED\e[0m\n"
+
+		cat "${assertion_error_file}"
+
+		rm -f "${assertion_error_file}"
 	fi
 }
 
