@@ -53,7 +53,7 @@ function tear_down {
 	unset _PRODUCT_VERSION
 	unset _RELEASE_ROOT_DIR
 
-	rm -r "${_PROJECTS_DIR}/liferay-portal-ee/release"
+	rm -fr "${_PROJECTS_DIR}/liferay-portal-ee/release"
 
 	unset _PROJECTS_DIR
 }
