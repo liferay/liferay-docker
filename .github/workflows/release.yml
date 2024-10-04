@@ -2,7 +2,7 @@ jobs:
     release:
         env:
             LIFERAY_RELEASE_GITHUB_PAT: ${{ secrets.LIFERAY_RELEASE_GITHUB_PAT }}
-        if: (github.repository == 'natocesarrego/liferay-docker')
+        if: (github.repository == 'liferay-release/liferay-docker')
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
