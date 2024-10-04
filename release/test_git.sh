@@ -62,9 +62,9 @@ function test_generate_release_notes {
 	generate_release_notes
 
 	assert_equals \
-		$(grep -q "\-," "${_PROJECTS_DIR}/liferay-portal-ee/release/release-notes.txt"; echo "${?}") \
+		$(grep -q "\-," "${_PROJECTS_DIR}/liferay-portal-ee/release/release-notes.txt" && echo "${?}") \
 		"${LIFERAY_COMMON_EXIT_CODE_BAD}" \
-		$(grep -q "LPD-27038" "${_PROJECTS_DIR}/liferay-portal-ee/release/release-notes.txt"; echo "${?}") \
+		$(grep -q "LPD-27038" "${_PROJECTS_DIR}/liferay-portal-ee/release/release-notes.txt" && echo "${?}") \
 		"${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
