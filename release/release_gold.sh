@@ -77,7 +77,7 @@ function main {
 
 	lc_time_run test_boms
 
-	# lc_time_run prepare_next_release_branch
+	#lc_time_run prepare_next_release_branch
 
 	#lc_time_run upload_to_docker_hub
 
