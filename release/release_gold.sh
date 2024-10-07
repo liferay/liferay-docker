@@ -28,9 +28,7 @@ function check_usage {
 		LIFERAY_RELEASE_PRODUCT_NAME=dxp
 	fi
 
-	_PRODUCT_VERSION="${LIFERAY_RELEASE_VERSION}"
-
-	_ARTIFACT_RC_VERSION="${_PRODUCT_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}"
+	set_product_version "${LIFERAY_RELEASE_VERSION}" "${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}"
 
 	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
 

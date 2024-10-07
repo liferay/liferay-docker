@@ -16,9 +16,7 @@ function check_usage {
 
 	_BUILD_TIMESTAMP=$(date +%s)
 
-	_PRODUCT_VERSION="${LIFERAY_RELEASE_VERSION}"
-
-	_ARTIFACT_RC_VERSION="${_ARTIFACT_VERSION}-${_BUILD_TIMESTAMP}"
+	set_product_version "${LIFERAY_RELEASE_VERSION}" "${_BUILD_TIMESTAMP}"
 
 	_RELEASE_TOOL_DIR=$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")
 

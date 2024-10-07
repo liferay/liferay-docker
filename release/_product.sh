@@ -299,38 +299,56 @@ function obfuscate_licensing {
 		-f build-release-license.xml obfuscate-portal
 }
 
-function set_product_version {
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+function set_artifact_versions {
+	_ARTIFACT_VERSION="${1}"
 
-	local major_version=$(lc_get_property release.properties "release.info.version.major")
-	local minor_version=$(lc_get_property release.properties "release.info.version.minor")
-
-	local branch="${major_version}.${minor_version}.x"
-
-	if [ "${branch}" == "7.4.x" ]
+	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
-		branch=master
+		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-ga[0-9]*//g')
 	fi
 
-	local version_display_name=$(lc_get_property release.properties "release.info.version.display.name[${branch}-private]")
+	_ARTIFACT_RC_VERSION="${_ARTIFACT_VERSION}-${2}"
+}
 
-	if (echo "${version_display_name}" | grep -iq "q")
+function set_product_version {
+	if [ "${#@}" -eq 0 ]
 	then
-		_PRODUCT_VERSION="${version_display_name,,}"
-	else
-		local trivial=$(lc_get_property release.properties "release.info.version.trivial")
+		lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-		if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
+		local major_version=$(lc_get_property release.properties "release.info.version.major")
+		local minor_version=$(lc_get_property release.properties "release.info.version.minor")
+
+		local branch="${major_version}.${minor_version}.x"
+
+		if [ "${branch}" == "7.4.x" ]
 		then
-			local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
-
-			_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}-u${trivial}"
-		elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
-		then
-			local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix")
-
-			_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}.${trivial}-ga${trivial}"
+			branch=master
 		fi
+
+		local version_display_name=$(lc_get_property release.properties "release.info.version.display.name[${branch}-private]")
+
+		if (echo "${version_display_name}" | grep -iq "q")
+		then
+			_PRODUCT_VERSION="${version_display_name,,}"
+		else
+			local trivial=$(lc_get_property release.properties "release.info.version.trivial")
+
+			if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
+			then
+				local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
+
+				_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}-u${trivial}"
+			elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+			then
+				local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix")
+
+				_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}.${trivial}-ga${trivial}"
+			fi
+		fi
+	else
+		_PRODUCT_VERSION="${1}"
+
+		set_artifact_versions "${_PRODUCT_VERSION}" "${2}"
 	fi
 
 	lc_log INFO "Product Version: ${_PRODUCT_VERSION}"
