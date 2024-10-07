@@ -147,9 +147,9 @@ function upload_bom_file {
 
 	if [ "${nexus_repository_name}" == "liferay-public-releases" ]
 	then
-		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_PRODUCT_VERSION}/${file_name}"
+		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_ARTIFACT_VERSION}/${file_name}"
 	else
-		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/${file_name}"
+		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_ARTIFACT_RC_VERSION}/${file_name}"
 	fi
 
 	_upload_to_nexus "${file_path}" "${file_url}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"

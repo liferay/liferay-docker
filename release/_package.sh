@@ -152,12 +152,12 @@ function package_boms {
 
 	cp -a ./*.pom "${_BUILD_DIR}/release"
 
-	cp release."${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}".jar "${_BUILD_DIR}/release"
+	cp "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "${_BUILD_DIR}/release"
 
 	touch .touch
 
-	jar cvfm "${_BUILD_DIR}/release/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.jar" .touch -C api-jar .
-	jar cvfm "${_BUILD_DIR}/release/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}-sources.jar" .touch -C api-sources-jar .
+	jar cvfm "${_BUILD_DIR}/release/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.jar" .touch -C api-jar .
+	jar cvfm "${_BUILD_DIR}/release/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}-sources.jar" .touch -C api-sources-jar .
 
 	rm -f .touch
 }

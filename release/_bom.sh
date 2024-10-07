@@ -201,7 +201,7 @@ function generate_distro_jar {
 		osgi_version=$(echo "${_PRODUCT_VERSION}" | sed 's/q//g')
 	fi
 
-	java -jar biz.aQute.bnd-6.4.0.jar remote distro -o release."${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}".jar release."${LIFERAY_RELEASE_PRODUCT_NAME}".distro "${osgi_version}"
+	java -jar biz.aQute.bnd-6.4.0.jar remote distro -o "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro" "${osgi_version}"
 
 	rm -f biz.aQute.bnd-6.4.0.jar
 
@@ -216,26 +216,25 @@ function generate_distro_jar {
 }
 
 function generate_pom_release_api {
-	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
 		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api/" \
-		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
-		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
+		-e "s/__ARTIFACT_RC_VERSION__/${_ARTIFACT_RC_VERSION}/" \
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.api.pom.tpl" > /dev/null
 }
 
 function generate_pom_release_bom {
-	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
 		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom/" \
-		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__ARTIFACT_RC_VERSION__/${_ARTIFACT_RC_VERSION}/" \
 		-e "s/__GITHUB_REPOSITORY__/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
@@ -297,13 +296,13 @@ function generate_pom_release_bom {
 }
 
 function generate_pom_release_bom_compile_only {
-	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
 		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only/" \
-		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__ARTIFACT_RC_VERSION__/${_ARTIFACT_RC_VERSION}/" \
 		-e "s/__GITHUB_REPOSITORY__/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "s/__RELEASE_API_DEPENDENCY__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api/" \
@@ -330,13 +329,13 @@ function generate_pom_release_bom_compile_only {
 }
 
 function generate_pom_release_bom_third_party {
-	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
 		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party/" \
-		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
+		-e "s/__ARTIFACT_RC_VERSION__/${_ARTIFACT_RC_VERSION}/" \
 		-e "s/__GITHUB_REPOSITORY__/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/" \
 		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		-e "w ${pom_file_name}" \
@@ -345,7 +344,7 @@ function generate_pom_release_bom_third_party {
 	echo "" >> "${pom_file_name}"
 
 	local included_dependencies=()
-	local pom_compile_only_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+	local pom_compile_only_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom"
 
 	local dependencies_properties
 
@@ -390,14 +389,13 @@ function generate_pom_release_bom_third_party {
 }
 
 function generate_pom_release_distro {
-	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom"
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
 
 	sed \
 		-e "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro/" \
-		-e "s/__BUILD_TIMESTAMP__/${_BUILD_TIMESTAMP}/" \
-		-e "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
+		-e "s/__ARTIFACT_RC_VERSION__/${_ARTIFACT_RC_VERSION}/" \
 		-e "w ${pom_file_name}" \
 		"${_RELEASE_TOOL_DIR}/templates/release.distro.pom.tpl" > /dev/null
 }

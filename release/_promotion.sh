@@ -24,14 +24,14 @@ function prepare_jars_for_promotion {
 			_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api/${_ARTIFACT_RC_VERSION}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
 		else
 			mv "${_PROMOTION_DIR}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
-			mv "${_PROMOTION_DIR}/${jar_rc_name}.MD5" "${_PROMOTION_DIR}/${jar_release_name}.md5"
+			mv "${_PROMOTION_DIR}/${jar_rc_name}.MD5" "${_PROMOTION_DIR}/${jar_release_name}.MD5"
 			mv "${_PROMOTION_DIR}/${jar_rc_name}.sha512" "${_PROMOTION_DIR}/${jar_release_name}.sha512"
 		fi
 	done
 
 	if [ -n "${nexus_repository_name}" ]
 	then
-		_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro/${_ARTIFACT_RC_VERSION}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_PRODUCT_VERSION}.jar"
+		_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro/${_ARTIFACT_RC_VERSION}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_VERSION}.jar"
 	fi
 }
 
@@ -52,15 +52,15 @@ function prepare_poms_for_promotion {
 	do
 		if [ -n "${nexus_repository_name}" ]
 		then
-			_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${pom_name}/${_ARTIFACT_RC_VERSION}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom" "${_PROMOTION_DIR}/${pom_name}-${_PRODUCT_VERSION}.pom"
+			_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${pom_name}/${_ARTIFACT_RC_VERSION}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom" "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_VERSION}.pom"
 		else
-			mv "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom" "${_PROMOTION_DIR}/${pom_name}-${_PRODUCT_VERSION}.pom"
-			mv "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom.MD5" "${_PROMOTION_DIR}/${pom_name}-${_PRODUCT_VERSION}.pom.md5"
-			mv "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom.sha512" "${_PROMOTION_DIR}/${pom_name}-${_PRODUCT_VERSION}.pom.sha512"
+			mv "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom" "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_VERSION}.pom"
+			mv "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom.MD5" "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_VERSION}.pom.MD5"
+			mv "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom.sha512" "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_VERSION}.pom.sha512"
 		fi
 	done
 
-	sed -i "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_PRODUCT_VERSION}</version>#" ./*.pom
+	sed -i "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_ARTIFACT_VERSION}</version>#" ./*.pom
 }
 
 function promote_boms {

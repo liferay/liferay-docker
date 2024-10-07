@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.liferay.portal</groupId>
 	<artifactId>__ARTIFACT_ID__</artifactId>
-	<version>__PRODUCT_VERSION__-__BUILD_TIMESTAMP__</version>
+	<version>__ARTIFACT_RC_VERSION__</version>
 	<packaging>pom</packaging>
 	<licenses>
 	  <license>
@@ -41,5 +41,5 @@
 			<dependency>
 				<groupId>com.liferay.portal</groupId>
 				<artifactId>__RELEASE_API_DEPENDENCY__</artifactId>
-				<version>__PRODUCT_VERSION__-__BUILD_TIMESTAMP__</version>
+				<version>__ARTIFACT_RC_VERSION__</version>
 			</dependency>
