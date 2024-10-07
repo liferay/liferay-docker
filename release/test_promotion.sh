@@ -18,6 +18,7 @@ function set_up {
 	export LIFERAY_RELEASE_VERSION="2024.q2.6"
 	export _RELEASE_ROOT_DIR="${PWD}"
 
+	export _ARTIFACT_RC_VERSION="${LIFERAY_RELEASE_VERSION}"
 	export _BUILD_DIR="${_RELEASE_ROOT_DIR}/release-data/build"
 	export _BUNDLES_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp"
 	export _PRODUCT_VERSION="${LIFERAY_RELEASE_VERSION}"
