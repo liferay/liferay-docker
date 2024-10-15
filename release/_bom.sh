@@ -268,6 +268,11 @@ function generate_pom_release_bom {
 				group_id="com.liferay"
 			fi
 
+			if (grep -q "<artifactId>${artifact_id}</artifactId>" "${pom_file_name}" && grep -q "<groupId>${group_id}</groupId>" "${pom_file_name}")
+			then
+				continue
+			fi
+
 			(
 				echo -e "\t\t\t<dependency>"
 				echo -e "\t\t\t\t<groupId>${group_id}</groupId>"
