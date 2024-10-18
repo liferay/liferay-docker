@@ -11,6 +11,10 @@ function main {
 	test_process_new_product
 	test_promote_product_versions dxp
 
+	_PRODUCT_VERSION="7.4.13-u128"
+
+	test_not_process_new_product
+
 	tear_down
 }
 
@@ -48,6 +52,12 @@ function test_merge_json_snippets {
 	local latest_count="$(grep -c "${latest_url}" releases.json)"
 
 	assert_equals "${earliest_count}" 1 "${latest_count}" 1
+}
+
+function test_not_process_new_product {
+	_process_new_product &> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 function test_process_new_product {
