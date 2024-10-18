@@ -8,12 +8,10 @@ function generate_releases_json {
 	else
 		_process_new_product
 
-		local exit_code=${?}
-	fi
-
-	if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
 	fi
 
 	_promote_product_versions dxp
