@@ -18,18 +18,8 @@ function generate_releases_json {
 	_promote_product_versions portal
 
 	_merge_json_snippets
-}
 
-function upload_releases_json {
-	lc_log INFO "Backing up to /www/releases.liferay.com/releases.json.BACKUP."
-
-	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/releases.json" "/www/releases.liferay.com/releases.json.BACKUP"
-
-	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to /www/releases.liferay.com/releases.json."
-
-	scp "${_PROMOTION_DIR}/releases.json" "root@lrdcom-vm-1:/www/releases.liferay.com/releases.json.upload"
-
-	ssh root@lrdcom-vm-1 mv -f "/www/releases.liferay.com/releases.json.upload" "/www/releases.liferay.com/releases.json"
+	_upload_releases_json
 }
 
 function _merge_json_snippets {
@@ -156,7 +146,6 @@ function _process_product_version {
 	END
 }
 
-
 function _promote_product_versions {
 	local product_name=${1}
 
@@ -174,4 +163,16 @@ function _promote_product_versions {
 			lc_log INFO "No product version found to promote for ${product_name}-${group_version}."
 		fi
 	done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
+}
+
+function _upload_releases_json {
+	lc_log INFO "Backing up to /www/releases.liferay.com/releases.json.BACKUP."
+
+	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/releases.json" "/www/releases.liferay.com/releases.json.BACKUP"
+
+	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to /www/releases.liferay.com/releases.json."
+
+	scp "${_PROMOTION_DIR}/releases.json" "root@lrdcom-vm-1:/www/releases.liferay.com/releases.json.upload"
+
+	ssh root@lrdcom-vm-1 mv -f "/www/releases.liferay.com/releases.json.upload" "/www/releases.liferay.com/releases.json"
 }
