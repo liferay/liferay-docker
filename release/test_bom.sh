@@ -59,7 +59,7 @@ function set_up {
 
 	unzip -q liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip
 
-	cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	git branch --delete "${_PRODUCT_VERSION}" &> /dev/null
 
@@ -67,7 +67,7 @@ function set_up {
 
 	git checkout --quiet "${_PRODUCT_VERSION}"
 
-	cd "${_RELEASE_ROOT_DIR}"
+	lc_cd "${_RELEASE_ROOT_DIR}"
 }
 
 function tear_down {
