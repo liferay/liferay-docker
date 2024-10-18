@@ -44,6 +44,14 @@ function _merge_json_snippets {
 }
 
 function _process_new_product {
+	if [[ $(echo "${_PRODUCT_VERSION}" | grep "7.4") ]] &&
+	   [[ $(echo "${_PRODUCT_VERSION}" | cut -d 'u' -f 2) -gt 112 ]]
+	then
+		lc_log INFO "${_PRODUCT_VERSION} should not be added to releases.json."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local releases_json="${_PROMOTION_DIR}/0000-00-00-releases.json"
 
 	if [ ! -f "${releases_json}" ]
