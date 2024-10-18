@@ -106,7 +106,7 @@ function test_generate_pom_release_bom_compile_only_portal {
 }
 
 function test_generate_pom_release_bom_dxp {
-	generate_pom_release_bom &>/dev/null
+	generate_pom_release_bom &> /dev/null
 
 	assert_equals \
 		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
@@ -116,7 +116,7 @@ function test_generate_pom_release_bom_dxp {
 }
 
 function test_generate_pom_release_bom_portal {
-	generate_pom_release_bom &>/dev/null
+	generate_pom_release_bom &> /dev/null
 
 	assert_equals \
 		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
