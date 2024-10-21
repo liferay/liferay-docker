@@ -51,6 +51,14 @@ function test_merge_json_snippets {
 	assert_equals "${earliest_count}" 1 "${latest_count}" 1
 }
 
+function test_process_new_product_1 {
+	local actual_number_of_promoted_versions=$(jq "map(select(.promoted == \"true\")) | length" 0000-00-00-releases.json)
+	local expected_promoted_versions_dxp=$(grep -c '' "${_RELEASE_ROOT_DIR}/supported-dxp-versions.txt")
+	local expected_promoted_versions_portal=$(grep -c '' "${_RELEASE_ROOT_DIR}/supported-portal-versions.txt")
+
+	assert_equals "${actual_number_of_promoted_versions}" $((expected_promoted_versions_dxp + expected_promoted_versions_portal - 1))
+}
+
 function test_process_new_product_2 {
 	local temp_product_version=${_PRODUCT_VERSION}
 
@@ -61,14 +69,6 @@ function test_process_new_product_2 {
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 
 	_PRODUCT_VERSION="${temp_product_version}"
-}
-
-function test_process_new_product_1 {
-	local actual_number_of_promoted_versions=$(jq "map(select(.promoted == \"true\")) | length" 0000-00-00-releases.json)
-	local expected_promoted_versions_dxp=$(grep -c '' "${_RELEASE_ROOT_DIR}/supported-dxp-versions.txt")
-	local expected_promoted_versions_portal=$(grep -c '' "${_RELEASE_ROOT_DIR}/supported-portal-versions.txt")
-
-	assert_equals "${actual_number_of_promoted_versions}" $((expected_promoted_versions_dxp + expected_promoted_versions_portal - 1))
 }
 
 function test_promote_product_versions {
