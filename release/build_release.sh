@@ -113,8 +113,6 @@ function main {
 
 		lc_wait
 
-		lc_time_run warm_up_tomcat
-
 		lc_time_run install_patching_tool
 
 		lc_time_run generate_api_jars
@@ -124,6 +122,8 @@ function main {
 		lc_time_run generate_distro_jar
 
 		generate_poms
+
+		lc_time_run warm_up_tomcat
 
 		lc_time_run package_release
 
