@@ -63,10 +63,10 @@ function assert_equals {
 function main {
 	if [ -n "${BASH_SOURCE[3]}" ]
 	then
-		echo -e "\n##### Running tests of $(echo ${BASH_SOURCE[3]} | sed -r 's/\.\///g') #####\n"
+		echo -e "\n##### Running tests from $(echo ${BASH_SOURCE[3]} | sed -r 's/\.\///g') #####\n"
 	elif [ -n "${BASH_SOURCE[2]}" ]
 	then
-		echo -e "\n##### Running tests of $(echo ${BASH_SOURCE[2]} | sed -r 's/\.\///g') #####\n"
+		echo -e "\n##### Running tests from $(echo ${BASH_SOURCE[2]} | sed -r 's/\.\///g') #####\n"
 	fi
 }
 
