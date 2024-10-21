@@ -8,8 +8,8 @@ function main {
 	set_up
 
 	test_merge_json_snippets dxp
-	test_process_new_product
-	test_not_process_new_product
+	test_process_new_product_1
+	test_process_new_product_2
 	test_promote_product_versions dxp
 
 	tear_down
@@ -51,7 +51,7 @@ function test_merge_json_snippets {
 	assert_equals "${earliest_count}" 1 "${latest_count}" 1
 }
 
-function test_not_process_new_product {
+function test_process_new_product_2 {
 	local temp_product_version=${_PRODUCT_VERSION}
 
 	_PRODUCT_VERSION="7.4.13-u128"
@@ -63,7 +63,7 @@ function test_not_process_new_product {
 	_PRODUCT_VERSION="${temp_product_version}"
 }
 
-function test_process_new_product {
+function test_process_new_product_1 {
 	local actual_number_of_promoted_versions=$(jq "map(select(.promoted == \"true\")) | length" 0000-00-00-releases.json)
 	local expected_promoted_versions_dxp=$(grep -c '' "${_RELEASE_ROOT_DIR}/supported-dxp-versions.txt")
 	local expected_promoted_versions_portal=$(grep -c '' "${_RELEASE_ROOT_DIR}/supported-portal-versions.txt")
