@@ -9,11 +9,8 @@ function main {
 
 	test_merge_json_snippets dxp
 	test_process_new_product
-	test_promote_product_versions dxp
-
-	_PRODUCT_VERSION="7.4.13-u128"
-
 	test_not_process_new_product
+	test_promote_product_versions dxp
 
 	tear_down
 }
@@ -55,9 +52,15 @@ function test_merge_json_snippets {
 }
 
 function test_not_process_new_product {
+	local temp_product_version=${_PRODUCT_VERSION}
+
+	_PRODUCT_VERSION="7.4.13-u128"
+
 	_process_new_product &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+
+	_PRODUCT_VERSION="${temp_product_version}"
 }
 
 function test_process_new_product {
