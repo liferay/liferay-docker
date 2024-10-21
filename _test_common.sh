@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source _liferay_common.sh
-
 function assert_equals {
 	local arguments=()
 
