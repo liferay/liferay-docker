@@ -91,6 +91,7 @@ function generate_release_properties_file {
 	elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
 		product_version="Portal ${product_version}"
+		target_platform_version=$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)
 	fi
 
 	product_version="${product_version/-/ }"
