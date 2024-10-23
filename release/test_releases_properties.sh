@@ -41,7 +41,7 @@ function test_generate_release_properties_file_portal  {
 
 	assert_equals \
 		"$(grep 'target.platform.version' release.properties | cut -d '=' -f 2)" \
-		"${_PRODUCT_VERSION}"
+		$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)
 }
 
 function test_generate_release_properties_file_dxp  {
