@@ -350,22 +350,10 @@ function set_up_profile {
 	ant "setup-profile-${LIFERAY_RELEASE_PRODUCT_NAME}"
 }
 
-function update_release_info_date {
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
-
-	sed -i -e "s/release.info.date=.*/release.info.date=$(date +"%B %d, %Y")/" release.properties
-}
-
-function warm_up_tomcat {
-	if [ -e "${_BUILD_DIR}/warm-up-tomcat" ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
+function start_tomcat {
+	export LIFERAY_JVM_OPTS="-Xmx3G"
 
 	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
-
-	export LIFERAY_CLEAN_OSGI_STATE=true
-	export LIFERAY_JVM_OPTS="-Xmx3G"
 
 	./catalina.sh start
 
@@ -389,7 +377,7 @@ function warm_up_tomcat {
 
 		cat ../logs/catalina.out
 
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	if (echo "${_PRODUCT_VERSION}" | grep -Eq "^7.[0123]")
@@ -398,6 +386,10 @@ function warm_up_tomcat {
 
 		sleep 20
 	fi
+}
+
+function stop_tomcat {
+	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
 
 	lc_log INFO "Stopping Tomcat."
 
@@ -423,13 +415,42 @@ function warm_up_tomcat {
 
 		cat ../logs/catalina.out
 
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	cat ../logs/catalina.out
 
 	rm -fr ../logs/*
 	rm -fr ../../logs/*
+}
+
+function update_release_info_date {
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+
+	sed -i -e "s/release.info.date=.*/release.info.date=$(date +"%B %d, %Y")/" release.properties
+}
+
+function warm_up_tomcat {
+	if [ -e "${_BUILD_DIR}/warm-up-tomcat" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	export LIFERAY_CLEAN_OSGI_STATE=true
+
+	start_tomcat
+
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	stop_tomcat
+
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 
 	touch "${_BUILD_DIR}/warm-up-tomcat"
 }
