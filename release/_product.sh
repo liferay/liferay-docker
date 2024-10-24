@@ -395,13 +395,15 @@ function stop_tomcat {
 
 	./catalina.sh stop
 
-	local pid=$(lsof -Fp -i 4tcp:8080 -sTCP:LISTEN | head -n 1)
-
-	pid=${pid##p}
+	local backslash_and_slash_regex="\\\\\/"
+	local slash_regex="\/"
+	local tomcat_pattern=$(\
+		echo "${_BUNDLES_DIR}/tomcat" | \
+		sed -e "s/${slash_regex}/${backslash_and_slash_regex}/g")
 
 	for count in {0..30}
 	do
-		if (! kill -0 "${pid}" &>/dev/null)
+		if (! pkill -9 --full "${tomcat_pattern}" &> /dev/null)
 		then
 			break
 		fi
@@ -409,7 +411,7 @@ function stop_tomcat {
 		sleep 1
 	done
 
-	if (kill -0 "${pid}" &>/dev/null)
+	if (pkill -9 --full "${tomcat_pattern}" &> /dev/null)
 	then
 		lc_log ERROR "Unable to kill Tomcat after 30 seconds."
 
