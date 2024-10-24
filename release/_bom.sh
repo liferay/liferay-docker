@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source _product.sh
+
 function generate_api_jars {
 	mkdir -p "${_BUILD_DIR}/boms"
 
@@ -180,9 +182,12 @@ function generate_distro_jar {
 
 	chmod u+x "${_BUILD_DIR}/boms/biz.aQute.bnd-6.4.0.jar"
 
-	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
+	start_tomcat
 
-	./catalina.sh start
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 
 	lc_cd "${_BUILD_DIR}/boms"
 
@@ -200,13 +205,14 @@ function generate_distro_jar {
 
 	rm -f biz.aQute.bnd-6.4.0.jar
 
-	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
+	stop_tomcat
 
-	./catalina.sh stop
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 
-	rm -fr "${_BUNDLES_DIR}"/logs/*
 	rm -f "${_BUNDLES_DIR}/osgi/modules/biz.aQute.remote.agent-6.4.0.jar"
-	rm -fr "${_BUNDLES_DIR}"/tomcat/logs/*
 }
 
 function generate_pom_release_api {
