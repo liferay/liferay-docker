@@ -15,7 +15,6 @@ function main {
 		cat >> /etc/caddy.d/liferay_caddy_file << EOF
 @origin${url} header Origin ${url}
 header @origin${url} Access-Control-Allow-Origin "${url}"
-header @origin${url} Vary Origin
 EOF
 	done
 

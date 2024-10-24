@@ -14,6 +14,7 @@
 	header {
 		Access-Control-Allow-Headers *
 		Access-Control-Allow-Methods "GET,OPTIONS,POST"
+        Vary "Origin"
 	}
 
 	import /etc/caddy.d/*
