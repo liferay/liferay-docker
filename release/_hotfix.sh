@@ -183,10 +183,10 @@ function compare_jars {
 			lc_log INFO ""
 
 			return 0
-		else
-			return 1
 		fi
 	fi
+
+	return 1
 }
 
 function copy_release_info_date {
