@@ -89,10 +89,10 @@ function main {
 
 	lc_wait
 
-	lc_time_run set_product_version
-
 	if [ "${LIFERAY_RELEASE_OUTPUT}" != "hotfix" ]
 	then
+		lc_time_run set_product_version "${LIFERAY_RELEASE_GIT_REF}" "${_BUILD_TIMESTAMP}"
+
 		lc_time_run update_release_info_date
 
 		lc_time_run set_up_profile
@@ -139,6 +139,8 @@ function main {
 
 		lc_time_run upload_release
 	else
+		lc_time_run set_product_version
+
 		lc_time_run prepare_release_dir
 
 		lc_time_run copy_release_info_date
