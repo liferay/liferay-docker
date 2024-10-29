@@ -12,7 +12,9 @@ function main {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	test_generate_pom_release_bom_api_dxp
 	test_generate_pom_release_bom_compile_only_dxp
+	test_generate_pom_release_bom_distro_dxp
 	test_generate_pom_release_bom_dxp
 	test_generate_pom_release_bom_third_party_dxp
 
@@ -22,7 +24,9 @@ function main {
 
 	_ARTIFACT_RC_VERSION="$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)-${_BUILD_TIMESTAMP}"
 
+	test_generate_pom_release_bom_api_portal
 	test_generate_pom_release_bom_compile_only_portal
+	test_generate_pom_release_bom_distro_portal
 	test_generate_pom_release_bom_portal
 	test_generate_pom_release_bom_third_party_portal
 
@@ -89,6 +93,26 @@ function tear_down {
 	unset _RELEASE_TOOL_DIR
 }
 
+function test_generate_pom_release_bom_api_dxp {
+	generate_pom_release_api &> /dev/null
+
+	assert_equals \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom \
+		test-dependencies/expected.dxp.release.bom.api.pom
+
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom
+}
+
+function test_generate_pom_release_bom_api_portal {
+	generate_pom_release_api &> /dev/null
+
+	assert_equals \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom \
+		test-dependencies/expected.portal.release.bom.api.pom
+
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom
+}
+
 function test_generate_pom_release_bom_compile_only_dxp {
 	generate_pom_release_bom_compile_only
 
@@ -107,6 +131,26 @@ function test_generate_pom_release_bom_compile_only_portal {
 		test-dependencies/expected.portal.release.bom.compile.only.pom
 
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom
+}
+
+function test_generate_pom_release_bom_distro_dxp {
+	generate_pom_release_distro &> /dev/null
+
+	assert_equals \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom \
+		test-dependencies/expected.dxp.release.bom.distro.pom
+
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom
+}
+
+function test_generate_pom_release_bom_distro_portal {
+	generate_pom_release_distro &> /dev/null
+
+	assert_equals \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom \
+		test-dependencies/expected.portal.release.bom.distro.pom
+
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom
 }
 
 function test_generate_pom_release_bom_dxp {
