@@ -20,6 +20,8 @@ function main {
 	_BUNDLES_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/liferay-portal"
 	_PRODUCT_VERSION="7.4.3.120-ga120"
 
+	_ARTIFACT_RC_VERSION="$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)-${_BUILD_TIMESTAMP}"
+
 	test_generate_pom_release_bom_compile_only_portal
 	test_generate_pom_release_bom_portal
 	test_generate_pom_release_bom_third_party_portal
@@ -33,6 +35,7 @@ function set_up {
 	export _PRODUCT_VERSION="2024.q2.6"
 	export _RELEASE_ROOT_DIR="${PWD}"
 
+	export _ARTIFACT_RC_VERSION="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
 	export _RELEASE_TOOL_DIR="${_RELEASE_ROOT_DIR}"
 
@@ -77,6 +80,7 @@ function tear_down {
 	rm -f "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip"
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
+	unset _ARTIFACT_RC_VERSION
 	unset _BUILD_TIMESTAMP
 	unset _BUNDLES_DIR
 	unset _PRODUCT_VERSION
@@ -89,40 +93,40 @@ function test_generate_pom_release_bom_compile_only_dxp {
 	generate_pom_release_bom_compile_only
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom \
 		test-dependencies/expected.dxp.release.bom.compile.only.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom
 }
 
 function test_generate_pom_release_bom_compile_only_portal {
 	generate_pom_release_bom_compile_only
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom \
 		test-dependencies/expected.portal.release.bom.compile.only.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom
 }
 
 function test_generate_pom_release_bom_dxp {
 	generate_pom_release_bom &> /dev/null
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom \
 		test-dependencies/expected.dxp.release.bom.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
 }
 
 function test_generate_pom_release_bom_portal {
 	generate_pom_release_bom &> /dev/null
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom \
 		test-dependencies/expected.portal.release.bom.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
 }
 
 function test_generate_pom_release_bom_third_party_dxp {
@@ -131,11 +135,11 @@ function test_generate_pom_release_bom_third_party_dxp {
 	generate_pom_release_bom_third_party
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom \
 		test-dependencies/expected.dxp.release.bom.third.party.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom
 }
 
 function test_generate_pom_release_bom_third_party_portal {
@@ -144,11 +148,11 @@ function test_generate_pom_release_bom_third_party_portal {
 	generate_pom_release_bom_third_party
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom \
 		test-dependencies/expected.portal.release.bom.third.party.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.pom
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom
 }
 
 main
