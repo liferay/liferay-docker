@@ -9,7 +9,6 @@ function assert_equals {
 	done
 
 	local assertion_error_file="${PWD}/assertion_error"
-	local assertion_result="false"
 
 	for index in ${!arguments[@]}
 	do
@@ -23,20 +22,17 @@ function assert_equals {
 		then
 			diff "${arguments[${index}]}" "${arguments[${index} + 1]}"
 
-			if [ "${?}" -eq 0 ]
+			if [ "${?}" -ne 0 ] && [ "${TEST_RESULT}" == "true" ]
 			then
-				assertion_result="true"
-			else
-				assertion_result="false"
-
-				break
+				TEST_RESULT="false"
 			fi
 		else
-			if [ "${arguments[${index}]}" == "${arguments[${index} + 1]}" ]
+			if [ "${arguments[${index}]}" != "${arguments[${index} + 1]}" ]
 			then
-				assertion_result="true"
-			else
-				assertion_result="false"
+				if [ "${TEST_RESULT}" == "true" ]
+				then
+					TEST_RESULT="false"
+				fi
 
 				touch "${assertion_error_file}"
 
@@ -46,7 +42,7 @@ function assert_equals {
 		fi
 	done
 
-	if [ "${assertion_result}" == "true" ]
+	if [ "${TEST_RESULT}" == "true" ]
 	then
 		echo -e "${FUNCNAME[1]} \e[1;32mSUCCESS\e[0m\n"
 	else
@@ -55,10 +51,14 @@ function assert_equals {
 		cat "${assertion_error_file}"
 
 		rm -f "${assertion_error_file}"
+
+		TEST_RESULT="true"
 	fi
 }
 
 function main {
+	TEST_RESULT="true"
+
 	if [ -n "${BASH_SOURCE[3]}" ]
 	then
 		echo -e "\n##### Running tests from $(echo ${BASH_SOURCE[3]} | sed -r 's/\.\///g') #####\n"
