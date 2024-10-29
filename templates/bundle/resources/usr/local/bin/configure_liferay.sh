@@ -3,11 +3,6 @@
 source /usr/local/bin/_liferay_bundle_common.sh
 
 function main {
-	if [ "${JAVA_VERSION}" == "zulu21" ]
-	then
-		rm -fr /opt/liferay/data/elasticsearch7
-	fi
-
 	if [ "${LIFERAY_DISABLE_TRIAL_LICENSE}" == "true" ]
 	then
 		rm -f /opt/liferay/data/license/trial-commerce-enterprise-license-*.li
