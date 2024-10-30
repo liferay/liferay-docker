@@ -22,16 +22,16 @@ function assert_equals {
 		then
 			diff "${arguments[${index}]}" "${arguments[${index} + 1]}"
 
-			if [ "${?}" -ne 0 ] && [ "${TEST_RESULT}" == "true" ]
+			if [ "${?}" -ne 0 ] && [ "${_TEST_RESULT}" == "true" ]
 			then
-				TEST_RESULT="false"
+				_TEST_RESULT="false"
 			fi
 		else
 			if [ "${arguments[${index}]}" != "${arguments[${index} + 1]}" ]
 			then
-				if [ "${TEST_RESULT}" == "true" ]
+				if [ "${_TEST_RESULT}" == "true" ]
 				then
-					TEST_RESULT="false"
+					_TEST_RESULT="false"
 				fi
 
 				touch "${assertion_error_file}"
@@ -42,7 +42,7 @@ function assert_equals {
 		fi
 	done
 
-	if [ "${TEST_RESULT}" == "true" ]
+	if [ "${_TEST_RESULT}" == "true" ]
 	then
 		echo -e "${FUNCNAME[1]} \e[1;32mSUCCESS\e[0m\n"
 	else
@@ -52,12 +52,12 @@ function assert_equals {
 
 		rm -f "${assertion_error_file}"
 
-		TEST_RESULT="true"
+		_TEST_RESULT="true"
 	fi
 }
 
 function main {
-	TEST_RESULT="true"
+	_TEST_RESULT="true"
 
 	if [ -n "${BASH_SOURCE[3]}" ]
 	then
