@@ -397,13 +397,14 @@ function stop_tomcat {
 
 	local backslash_and_slash_regex="\\\\\/"
 	local slash_regex="\/"
-	local tomcat_pattern=$(\
+
+	local tomcat_dir_regex=$(\
 		echo "${_BUNDLES_DIR}/tomcat" | \
 		sed -e "s/${slash_regex}/${backslash_and_slash_regex}/g")
 
 	for count in {0..30}
 	do
-		if (! pkill -9 --full "${tomcat_pattern}" &> /dev/null)
+		if (! pkill -9 --full "${tomcat_dir_regex}" &> /dev/null)
 		then
 			break
 		fi
@@ -411,7 +412,7 @@ function stop_tomcat {
 		sleep 1
 	done
 
-	if (pkill -9 --full "${tomcat_pattern}" &> /dev/null)
+	if (pkill -9 --full "${tomcat_dir_regex}" &> /dev/null)
 	then
 		lc_log ERROR "Unable to kill Tomcat after 30 seconds."
 
