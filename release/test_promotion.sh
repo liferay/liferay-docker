@@ -32,12 +32,6 @@ function set_up {
 
 	unzip -q liferay-dxp-tomcat-2024.q2.6-1721635298.zip
 
-	lc_cd "${_RELEASE_ROOT_DIR}"
-
-	mkdir -p release-data
-
-	lc_cd release-data
-
 	mkdir -p "${_RELEASE_ROOT_DIR}/release-data/build/boms"
 }
 

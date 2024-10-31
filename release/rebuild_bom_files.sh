@@ -14,7 +14,10 @@ function check_usage {
 		print_help
 	fi
 
+	LIFERAY_RELEASE_UPLOAD="true"
 	_BUILD_TIMESTAMP=$(date +%s)
+
+	LIFERAY_RELEASE_RC_BUILD_TIMESTAMP="${_BUILD_TIMESTAMP}"
 
 	set_product_version "${LIFERAY_RELEASE_VERSION}" "${_BUILD_TIMESTAMP}"
 
@@ -30,15 +33,12 @@ function check_usage {
 
 	_BUILD_DIR="${_RELEASE_ROOT_DIR}"/build
 
+	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
 	_PROMOTION_DIR="${_BUILD_DIR}"/release
 
 	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/dev/projects
 
 	_BUNDLES_DIR="${_PROJECTS_DIR}"/bundles
-
-	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
-	LIFERAY_RELEASE_RC_BUILD_TIMESTAMP="${_BUILD_TIMESTAMP}"
-	LIFERAY_RELEASE_UPLOAD="true"
 }
 
 function checkout_product_version {
