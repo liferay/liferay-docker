@@ -35,6 +35,7 @@ function check_usage {
 
 	_RELEASE_ROOT_DIR="${PWD}"
 
+	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}/dev/projects"
 	_PROMOTION_DIR="${_RELEASE_ROOT_DIR}/release-data/promotion/files"
 
 	rm -fr "${_PROMOTION_DIR}"
@@ -46,7 +47,7 @@ function check_usage {
 	LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
 }
 
-function commit_to_branch {
+function commit_to_branch_and_send_pull_request {
 	git add "${1}"
 
 	git commit -m "${2}"
@@ -97,6 +98,25 @@ function main {
 	#lc_time_run upload_to_docker_hub
 
 	lc_time_run add_patcher_project_version
+}
+
+function prepare_branch_to_commit {
+	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
+
+	git restore .
+
+	git checkout master &> /dev/null
+
+	git branch --delete --force "${1}" &> /dev/null
+
+	git fetch --no-tags upstream "${1}":"${1}" &> /dev/null
+
+	git checkout "${1}" &> /dev/null
+
+	if [ "$(git rev-parse --abbrev-ref HEAD 2> /dev/null)" != "${1}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 }
 
 function prepare_next_release_branch {
