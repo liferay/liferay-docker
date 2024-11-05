@@ -95,6 +95,8 @@ function main {
 
 	#lc_time_run prepare_next_release_branch
 
+	lc_time_run update_release_info_date
+
 	#lc_time_run upload_to_docker_hub
 
 	lc_time_run add_patcher_project_version
@@ -325,6 +327,52 @@ function test_boms {
 	if [[ "${build_result}" != *"BUILD SUCCESSFUL"* ]]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
+function update_release_info_date {
+	if [[ "${_PRODUCT_VERSION}" != *q* ]] ||
+	   [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 3)" -eq 0 ]] ||
+	   [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1)" -lt 2024 ]]
+	then
+		lc_log INFO "Skipping the release info update."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	local product_group_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
+
+	local quarterly_release_branch_name="release-${product_group_version}"
+
+	prepare_branch_to_commit "${quarterly_release_branch_name}"
+
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		lc_log ERROR "Unable to update the release date."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	sed -i \
+		-e "s/release.info.date=.*/release.info.date=$(date -d "next monday" +"%B %-d, %Y")/" \
+		release.properties
+
+	if [[ ! " ${@} " =~ " --test " ]]
+	then
+		commit_to_branch_and_send_pull_request \
+			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
+			"Update the release info date for ${_PRODUCT_VERSION}" \
+			"${quarterly_release_branch_name}" \
+			"Prep next"
+
+		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		then
+			lc_log ERROR "Unable to commit to the release branch."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		else
+			lc_log INFO "The release date was updated successfully."
+		fi
 	fi
 }
 
