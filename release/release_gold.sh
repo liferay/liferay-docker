@@ -147,35 +147,42 @@ function prepare_next_release_branch {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${BASE_DIR}/liferay-portal-ee"
-
 	local quarterly_release_branch_name="release-${product_group_version}"
 
-	git branch --delete "${quarterly_release_branch_name}" &> /dev/null
+	prepare_branch_to_commit "${quarterly_release_branch_name}"
 
-	git fetch --no-tags upstream "${quarterly_release_branch_name}":"${quarterly_release_branch_name}" &> /dev/null
-
-	git checkout "${quarterly_release_branch_name}" &> /dev/null
-
-	local next_project_version_suffix="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 3)"
-
-	next_project_version_suffix=$((next_project_version_suffix + 1))
-
-	sed -e "s/${product_group_version^^}\.[0-9]*/${product_group_version^^}\.${next_project_version_suffix}/" -i "${BASE_DIR}/liferay-portal-ee/release.properties"
-
-	git add "${BASE_DIR}/liferay-portal-ee/release.properties"
-
-	git commit -m "Prepare ${quarterly_release_branch_name}."
-
-	git push upstream "${quarterly_release_branch_name}"
-
-	if [ "${?}" -ne 0 ]
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
 		lc_log ERROR "Unable to prepare the next release branch."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	else
-		lc_log INFO "The next release branch was prepared successfully."
+		local next_project_version_suffix="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 3)"
+
+		next_project_version_suffix=$((next_project_version_suffix + 1))
+
+		sed -i \
+			-e "s/release.info.version.display.name\[master-private\]=.*/release.info.version.display.name[master-private]=${product_group_version^^}.${next_project_version_suffix}/" \
+			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
+
+		sed -i \
+			-e "s/release.info.version.display.name\[release-private\]=.*/release.info.version.display.name[release-private]=${product_group_version^^}.${next_project_version_suffix}/" \
+			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
+
+		commit_to_branch_and_send_pull_request \
+			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
+			"Prepare ${quarterly_release_branch_name}" \
+			"${quarterly_release_branch_name}" \
+			"Prep next"
+
+		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		then
+			lc_log ERROR "Unable to commit to the release branch."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		else
+			lc_log INFO "The next release branch was prepared successfully."
+		fi
 	fi
 }
 
