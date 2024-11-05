@@ -5490,8 +5490,8 @@
 			</dependency>
 			<dependency>
 				<groupId>com.liferay.portal</groupId>
-				<artifactId>com.liferay.portal.web-5.0.213.war</artifactId>
-				<version>5.0.213.war</version>
+				<artifactId>com.liferay.portal.web</artifactId>
+				<version>5.0.213</version>
 			</dependency>
 			<dependency>
 				<groupId>com.liferay</groupId>
