@@ -93,6 +93,8 @@ function main {
 
 	if [ "${LIFERAY_RELEASE_OUTPUT}" != "hotfix" ]
 	then
+		lc_time_run set_artifact_versions "${_PRODUCT_VERSION}" "${_BUILD_TIMESTAMP}"
+
 		lc_time_run update_release_info_date
 
 		lc_time_run set_up_profile
