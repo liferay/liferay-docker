@@ -256,7 +256,7 @@ function generate_pom_release_bom {
 			sort
 	)
 	do
-		grep -E "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt | while IFS= read -r artifact_url
+		grep -E "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt | sort | while IFS= read -r artifact_url
 		do
 			local file_name="${artifact_url##*/}"
 
