@@ -7,7 +7,7 @@ fi
 
 if [ -z "${LIFERAY_DOCKER_UBUNTU_PRO_TOKEN}" ]
 then
-	echo "Set the environment variable \"LIFERAY_DOCKER_UBUNTU_PRO_TOKEN\"."
+	echo "Set the environment variable LIFERAY_DOCKER_UBUNTU_PRO_TOKEN."
 
 	exit 1
 fi
