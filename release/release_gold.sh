@@ -68,6 +68,11 @@ function commit_to_branch_and_send_pull_request {
 }
 
 function main {
+	if [[ " ${@} " =~ " --test " ]]
+	then
+		return
+	fi
+
 	check_usage
 
 	check_supported_versions
@@ -383,4 +388,4 @@ function update_release_info_date {
 	fi
 }
 
-main
+main "${@}"
