@@ -175,7 +175,7 @@ function generate_api_source_jar {
 function generate_distro_jar {
 	if [ ! -e "${_BUNDLES_DIR}/osgi/modules/biz.aQute.remote.agent-6.4.0.jar" ]
 	then
-		lc_download "https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.remote.agent/6.4.0/biz.aQute.remote.agent-6.4.0.jar" "${_BUNDLES_DIR}/osgi/modules/biz.aQute.remote.agent-6.4.0.jar"
+		lc_download "https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.remote.agent/6.4.0/biz.aQute.remote.agent-6.4.0.jar" "${_BUNDLES_DIR}/deploy/biz.aQute.remote.agent-6.4.0.jar"
 	fi
 
 	lc_download "https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.bnd/6.4.0/biz.aQute.bnd-6.4.0.jar" "${_BUILD_DIR}/boms/biz.aQute.bnd-6.4.0.jar"
