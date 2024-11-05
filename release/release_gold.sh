@@ -3,6 +3,7 @@
 source ../_liferay_common.sh
 source _github.sh
 source _product.sh
+source _git.sh
 source _product_info_json.sh
 source _promotion.sh
 source _releases_json.sh
@@ -92,6 +93,12 @@ function main {
 	lc_time_run generate_releases_json
 
 	lc_time_run test_boms
+
+	lc_background_run clone_repository liferay-portal-ee
+
+	lc_wait
+
+	lc_time_run clean_portal_repository
 
 	#lc_time_run prepare_next_release_branch
 
