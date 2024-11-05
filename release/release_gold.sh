@@ -46,6 +46,25 @@ function check_usage {
 	LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
 }
 
+function commit_to_branch {
+	git add "${1}"
+
+	git commit -m "${2}"
+
+	git push -f origin "${3}"
+
+	gh pr create \
+		--base "${3}" \
+		--body "Created by the Release team automation." \
+		--repo brianchandotcom/liferay-portal-ee \
+		--title "${4}"
+
+	if [ "${?}" -ne 0 ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function main {
 	check_usage
 
