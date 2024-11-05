@@ -260,8 +260,8 @@ function generate_pom_release_bom {
 		do
 			local file_name="${artifact_url##*/}"
 
-			local artifact_id=$(echo "${file_name}" | sed "s@-${version}.*@@")
-			local version=$(echo "${file_name}" | sed -e "s@\.jar\$@@" -e "s@.*${artifact_file}-@@")
+			local artifact_id=$(echo "${file_name}" | cut -d '-' -f 1)
+			local version=$(echo "${file_name}" | sed -e "s@\.\(jar\|war\)\$@@" -e "s@.*${artifact_file}-@@")
 
 			if [[ "${artifact_url}" == */com/liferay/portal/* ]]
 			then
