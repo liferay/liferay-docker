@@ -371,9 +371,9 @@ function set_up_profile {
 function start_tomcat {
 	export LIFERAY_JVM_OPTS="-Xmx3G"
 
-	rm -rf "${_BUNDLES_DIR}/osgi/state"
-	rm -rf "${_BUNDLES_DIR}/tomcat/temp"
-	rm -rf "${_BUNDLES_DIR}/tomcat/work"
+	rm -fr "${_BUNDLES_DIR}/osgi/state"
+	rm -fr "${_BUNDLES_DIR}/tomcat/temp"
+	rm -fr "${_BUNDLES_DIR}/tomcat/work"
 
 	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
 
