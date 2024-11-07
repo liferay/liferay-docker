@@ -273,7 +273,7 @@ function generate_pom_release_bom {
 				group_id="com.liferay"
 			fi
 
-			if (grep -q "<artifactId>${artifact_id}</artifactId>" "${pom_file_name}" && grep -q "<groupId>${group_id}</groupId>" "${pom_file_name}")
+			if (grep -q "(\t)*<groupId>${group_id}</groupId>\n(\t)*<artifactId>${artifact_id}</artifactId>\n\(\t)*<version>${version}</version>" "${pom_file_name}")
 			then
 				continue
 			fi
