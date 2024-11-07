@@ -2,6 +2,7 @@
 
 source ../_liferay_common.sh
 source _github.sh
+source _product.sh
 source _product_info_json.sh
 source _promotion.sh
 source _releases_json.sh
