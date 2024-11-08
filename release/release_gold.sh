@@ -144,6 +144,29 @@ function prepare_branch_to_commit {
 	fi
 }
 
+function prepare_branch_to_commit_from_master {
+	lc_cd "${1}"
+
+	git fetch upstream master
+
+	git checkout master
+
+	git reset --hard upstream/master
+
+	git push --delete origin "${2}"
+
+	git branch --delete --force "${2}"
+
+	git checkout -b "${2}"
+
+	git push origin "${2}" --force
+
+	if [ "$(git rev-parse --abbrev-ref HEAD)" != "${2}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function prepare_next_release_branch {
 	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "true") ] ||
 	   [[ "${_PRODUCT_VERSION}" != *q* ]]
