@@ -59,15 +59,15 @@ function check_usage {
 function commit_to_branch_and_send_pull_request {
 	git add "${1}"
 
-	git commit -m "${2}"
+	git commit --message "${2}"
 
-	git push -f origin "${3}"
+	git push --force origin "${3}"
 
 	gh pr create \
-		--base "${3}" \
+		--base "${4}" \
 		--body "Created by liferay-docker/release/release_gold.sh." \
-		--repo brianchandotcom/liferay-portal-ee \
-		--title "${4}"
+		--repo "${5}" \
+		--title "${6}"
 
 	if [ "${?}" -ne 0 ]
 	then
@@ -222,8 +222,10 @@ function prepare_next_release_branch {
 		then
 			commit_to_branch_and_send_pull_request \
 				"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
-				"Prepare ${quarterly_release_branch_name}" \
+				"Prepare ${product_group_version}.${next_project_version_suffix}" \
 				"${quarterly_release_branch_name}" \
+				"${quarterly_release_branch_name}" \
+				"brianchandotcom/liferay-portal-ee" \
 				"Prep next"
 
 			if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
@@ -424,6 +426,8 @@ function update_release_info_date {
 			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
 			"Update the release info date for ${_PRODUCT_VERSION}" \
 			"${quarterly_release_branch_name}" \
+			"${quarterly_release_branch_name}" \
+			"brianchandotcom/liferay-portal-ee" \
 			"Prep next"
 
 		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
