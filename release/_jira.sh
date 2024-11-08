@@ -28,6 +28,35 @@ function add_comment_jira_ticket {
 	_invoke_jira_api "https://liferay.atlassian.net/rest/api/3/issue/${2}/comment" "${data}"
 }
 
+function create_jira_ticket {
+	local data=$(
+		cat <<- END
+		{
+			"fields": {
+				"assignee": {
+					"id": "${1}"
+				},
+				"components": [
+					{
+						"name": "${2}"
+					}
+				],
+				"issuetype": {
+					"name": "${3}"
+				},
+				"project": {
+					"key": "${4}"
+				},
+				"summary": "${5}",
+				"${6}": "${7}"
+			}
+		}
+		END
+	)
+
+	_invoke_jira_api "https://liferay.atlassian.net/rest/api/3/issue/" "${data}"
+}
+
 function _invoke_jira_api {
 	local http_response=$(curl \
 		"${1}" \
