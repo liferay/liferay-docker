@@ -3,10 +3,19 @@
 source ../_liferay_common.sh
 source _git.sh
 source _github.sh
+source _jira.sh
 source _product.sh
 source _product_info_json.sh
 source _promotion.sh
 source _releases_json.sh
+
+function add_property {
+	local new_key="${1}"
+	local new_value="${2}"
+	local search_key="${3}"
+
+	sed -i "/${search_key}/a\	\\${new_key}=${new_value}" "build.properties"
+}
 
 function check_supported_versions {
 	local supported_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
@@ -121,6 +130,8 @@ function main {
 	#lc_time_run prepare_next_release_branch
 
 	#lc_time_run update_release_info_date
+
+	lc_time_run reference_new_releases
 
 	#lc_time_run upload_to_docker_hub
 }
@@ -260,6 +271,152 @@ function print_help {
 	echo "Example: LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH=true LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964 LIFERAY_RELEASE_VERSION=2023.q3.0 ${0}"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
+}
+
+function reference_new_releases {
+	if [[ "${_PRODUCT_VERSION}" != *q* ]]
+	then
+		lc_log INFO "Skipping the update to the references in the liferay-jenkins-ee repository."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	prepare_branch_to_commit_from_master "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "new_releases_branch"
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to prepare the next release references branch."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local base_url="http://mirrors.lax.liferay.com/releases.liferay.com"
+
+	local previous_product_version="$(grep "portal.latest.bundle.version\[master\]=" "build.properties" | cut -d "=" -f 2)"
+
+	for component in osgi sql tools
+	do
+		add_property \
+			"portal.${component}.zip.url\[${_PRODUCT_VERSION}\]" \
+			"${base_url}/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${component}-${_PRODUCT_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}.zip" \
+			"portal.${component}.zip.url\[${previous_product_version}\]="
+	done
+
+	add_property \
+		"plugins.war.zip.url\[${_PRODUCT_VERSION}\]" \
+		"http://release-1/1/userContent/liferay-release-tool/7413/plugins.war.latest.zip" \
+		"plugins.war.zip.url\[${previous_product_version}\]="
+
+	add_property \
+		"	portal.bundle.tomcat\[${_PRODUCT_VERSION}\]" \
+		"${base_url}/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}.7z" \
+		"portal.bundle.tomcat\[${previous_product_version}\]="
+
+	add_property \
+		"portal.license.url\[${_PRODUCT_VERSION}\]" \
+		"http://www.liferay.com/licenses/license-portaldevelopment-developer-cluster-7.0de-liferaycom.xml" \
+		"portal.license.url\[${previous_product_version}\]="
+
+	add_property \
+		"portal.version.latest\[${_PRODUCT_VERSION}\]" \
+		"${_PRODUCT_VERSION}" \
+		"portal.version.latest\[${previous_product_version}\]="
+
+	add_property \
+		"portal.war.url\[${_PRODUCT_VERSION}\]" \
+		"${base_url}/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}.war" \
+		"portal.war.url\[${previous_product_version}\]="
+
+	add_property \
+		"portal.latest.bundle.version\[${_PRODUCT_VERSION}\]" \
+		"${_PRODUCT_VERSION}" \
+		"portal.latest.bundle.version\[${previous_product_version}\]="
+
+	replace_property \
+		"portal.latest.bundle.version\[master\]" \
+		"${_PRODUCT_VERSION}" \
+		"portal.latest.bundle.version\[master\]=${previous_product_version}"
+
+	local previous_quarterly_release_branch_name="$(grep "portal.latest.bundle.version" \
+														"build.properties" | \
+														tail -1 | \
+														cut -d '[' -f 2 | \
+														cut -d ']' -f 1)"
+
+	local quarterly_release_branch_name="release-$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
+
+	if [ "${quarterly_release_branch_name}" == "${previous_quarterly_release_branch_name}" ]
+	then
+		replace_property \
+			"portal.latest.bundle.version\[${quarterly_release_branch_name}\]" \
+			"${_PRODUCT_VERSION}" \
+			"portal.latest.bundle.version\[${quarterly_release_branch_name}\]=${previous_product_version}"
+
+		replace_property \
+			"portal.version.latest\[${quarterly_release_branch_name}\]" \
+			"${_PRODUCT_VERSION}" \
+			"portal.version.latest\[${quarterly_release_branch_name}\]=${previous_product_version}"
+	else
+		add_property \
+			"portal.latest.bundle.version\[${quarterly_release_branch_name}\]" \
+			"${_PRODUCT_VERSION}" \
+			"portal.latest.bundle.version\[${previous_quarterly_release_branch_name}\]="
+
+		add_property \
+			"portal.version.latest\[${quarterly_release_branch_name}\]" \
+			"${_PRODUCT_VERSION}" \
+			"portal.version.latest\[${previous_quarterly_release_branch_name}\]="
+	fi
+
+	local ticket_key="$(\
+		create_jira_ticket \
+			"60a3f462391e56006e6b661b" \
+			"Release Tester" \
+			"Task" \
+			"LRCI" \
+			"Add release references for ${_PRODUCT_VERSION}" \
+			"customfield_10001" \
+			"04c03e90-c5a7-4fda-82f6-65746fe08b83")"
+
+	if [ "${ticket_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		lc_log ERROR "Unable to create the jira ticket."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	commit_to_branch_and_send_pull_request \
+		"${_PROJECTS_DIR}/liferay-jenkins-ee/commands/build.properties" \
+		"${ticket_key} Add release references for ${_PRODUCT_VERSION}" \
+		"new_releases_branch" \
+		"master" \
+		"pyoo47/liferay-jenkins-ee" \
+		"${ticket_key} Add release references for ${_PRODUCT_VERSION}"
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to send the next release references."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	else
+		lc_log INFO "The pull request with next release references was sent successfully."
+	fi
+
+	local pull_request_url="$(\
+		gh pr view liferay-release:new_releases_branch \
+		--repo pyoo47/liferay-jenkins-ee \
+		--json url \
+		-q ".url")"
+
+	add_comment_jira_ticket "Related pull request: ${pull_request_url}" "${ticket_key}"
+}
+
+function replace_property {
+	local new_key="${1}"
+	local new_value="${2}"
+	local search_key="${3}"
+
+	sed -i "s/${search_key}/${new_key}=${new_value}/" "build.properties"
 }
 
 function tag_release {
