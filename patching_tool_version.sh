@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ./_common.sh
+source ./_liferay_common.sh
 
 function check_usage {
 	if [ ! -n "${1}" ]
@@ -19,13 +20,13 @@ function get_full_version {
 		echo "1.0.24"
 	elif [ "${1}" == "2.0" ]
 	then
-		echo "2.0.16"
+		echo $(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-2.0.txt)
 	elif [ "${1}" == "3.0" ]
 	then
-		echo "3.0.38"
+		echo $(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-3.0.txt)
 	elif [ "${1}" == "4.0" ]
 	then
-		echo "4.0.3"
+		echo $(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-4.0.txt)
 	else
 		echo "Unable to get full version for ${1}."
 
