@@ -1,11 +1,11 @@
-FROM --platform=${TARGETPLATFORM} liferay/jdk11-jdk8:latest AS liferay-jdk11-jdk8
+FROM --platform=${TARGETPLATFORM} liferay/jdk21-jdk11-jdk8:latest AS liferay-jdk21-jdk11-jdk8
 
 COPY resources/etc/created-date /etc/created-date
 
 RUN curl -fsSL "https://dl.filippo.io/mkcert/latest?for=linux/$(dpkg --print-architecture)" -o /usr/local/bin/mkcert && \
 	chmod +x /usr/local/bin/mkcert
 
-FROM liferay-jdk11-jdk8
+FROM liferay-jdk21-jdk11-jdk8
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
@@ -18,7 +18,7 @@ COPY resources/ /
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_jar_runner_entrypoint.sh"]
 
-ENV JAVA_VERSION=zulu11
+ENV JAVA_VERSION=zulu21
 ENV LANG="C.UTF-8"
 ENV LIFERAY_JAR_RUNNER_JAVA_OPTS="-Xmx512m"
 
