@@ -183,19 +183,22 @@ function prepare_next_release_branch {
 			-e "s/release.info.version.display.name\[release-private\]=.*/release.info.version.display.name[release-private]=${product_group_version^^}.${next_project_version_suffix}/" \
 			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
 
-		commit_to_branch_and_send_pull_request \
-			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
-			"Prepare ${quarterly_release_branch_name}" \
-			"${quarterly_release_branch_name}" \
-			"Prep next"
-
-		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		if [[ ! " ${@} " =~ " --test " ]]
 		then
-			lc_log ERROR "Unable to commit to the release branch."
+			commit_to_branch_and_send_pull_request \
+				"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
+				"Prepare ${quarterly_release_branch_name}" \
+				"${quarterly_release_branch_name}" \
+				"Prep next"
 
-			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		else
-			lc_log INFO "The next release branch was prepared successfully."
+			if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+			then
+				lc_log ERROR "Unable to commit to the release branch."
+
+				return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+			else
+				lc_log INFO "The next release branch was prepared successfully."
+			fi
 		fi
 	fi
 }
