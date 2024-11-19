@@ -204,6 +204,7 @@ function generate_distro_jar {
 	java -jar biz.aQute.bnd-6.4.0.jar remote distro -o "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro" "${osgi_version}"
 
 	rm -f biz.aQute.bnd-6.4.0.jar
+	rm -f "${_BUNDLES_DIR}/osgi/modules/biz.aQute.remote.agent-6.4.0.jar"
 
 	stop_tomcat
 
@@ -211,8 +212,6 @@ function generate_distro_jar {
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
-
-	rm -f "${_BUNDLES_DIR}/osgi/modules/biz.aQute.remote.agent-6.4.0.jar"
 }
 
 function generate_pom_release_api {
