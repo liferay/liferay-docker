@@ -2,7 +2,7 @@
 
 function main {
 	local tests_results=$(\
-		find . -name "test_build_*.sh" -type f -exec ./{} \; && \
+		find . \( -name "test_build_*.sh" -o -name "test_patching_tool_version.sh" \) -type f -exec ./{} \; && \
 		\
 		cd release && \
 		\
