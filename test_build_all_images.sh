@@ -28,8 +28,13 @@ function _test_get_latest_available_zulu_version {
 	else
 		assert_equals \
 			"${latest_available_zulu_version}" \
-			$(curl -H 'accept: */*' -L -s "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | \
-				jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
+			$(curl \
+				--header 'accept: */*' \
+				--location \
+				--silent \
+				"https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | \
+				jq -r '.zulu_version | join(".")' | \
+				cut -d '.' -f 1,2,3)
 	fi
 }
 
