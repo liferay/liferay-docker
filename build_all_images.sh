@@ -540,6 +540,11 @@ function get_tag_from_image {
 }
 
 function main {
+	if [[ " ${@} " =~ " --test " ]]
+	then
+		return
+	fi
+
 	check_utils 7z curl docker git java jq sed sort tr unzip yq
 
 	if [[ " ${@} " =~ " --push " ]]
