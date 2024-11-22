@@ -431,7 +431,14 @@ function build_zabbix_web_image {
 }
 
 function get_latest_available_zulu_version {
-	local version=$(curl -H 'accept: */*' -L -s "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
+	local java_version="${1}"
+
+	if [ "${java_version}" == "21" ]
+	then
+		java_version="21.0.1"
+	fi
+
+	local version=$(curl -H 'accept: */*' -L -s "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${java_version}&os=linux" | jq -r '.zulu_version | join(".")' | cut -f1,2,3 -d'.')
 
 	echo "${version}"
 }
