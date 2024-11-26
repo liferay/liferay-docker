@@ -15,7 +15,7 @@ function test_patching_tool_version {
 }
 
 function _test_patching_tool_version {
-	echo -e "Running _test_patching_tool_version for ${1}\n"
+	echo -e "Running _test_patching_tool_version for ${1}.\n"
 
 	local latest_patching_tool_version=$(./patching_tool_version.sh "${1}")
 

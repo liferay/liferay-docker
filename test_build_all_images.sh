@@ -17,10 +17,9 @@ function test_get_latest_available_zulu_version {
 }
 
 function _test_get_latest_available_zulu_version {
-	echo -e "Running _test_get_latest_available_zulu_version for JDK ${1}, ${2}\n"
+	echo -e "Running _test_get_latest_available_zulu_version for JDK ${1} ${2}.\n"
 
-	local latest_available_zulu_version=$(\
-		get_latest_available_zulu_version "${1}" "${2}")
+	local latest_available_zulu_version=$(get_latest_available_zulu_version "${1}" "${2}")
 
 	if [ "${1}" == "21" ]
 	then
