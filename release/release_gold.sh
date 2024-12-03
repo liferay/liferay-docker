@@ -99,6 +99,8 @@ function main {
 
 	lc_time_run test_boms
 
+	lc_time_run add_patcher_project_version
+
 	lc_background_run clone_repository liferay-portal-ee
 
 	lc_wait
@@ -110,8 +112,6 @@ function main {
 	lc_time_run update_release_info_date
 
 	#lc_time_run upload_to_docker_hub
-
-	lc_time_run add_patcher_project_version
 }
 
 function prepare_branch_to_commit {
