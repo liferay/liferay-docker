@@ -57,7 +57,7 @@ function commit_to_branch_and_send_pull_request {
 
 	gh pr create \
 		--base "${3}" \
-		--body "Created by the Release team automation." \
+		--body "Created by liferay-docker/release/release_gold.sh." \
 		--repo brianchandotcom/liferay-portal-ee \
 		--title "${4}"
 
