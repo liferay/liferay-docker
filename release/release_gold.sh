@@ -1,9 +1,9 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
+source _git.sh
 source _github.sh
 source _product.sh
-source _git.sh
 source _product_info_json.sh
 source _promotion.sh
 source _releases_json.sh
