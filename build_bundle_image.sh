@@ -291,6 +291,11 @@ function set_parent_image {
 		sed -i 's/FROM liferay-jdk21/FROM liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
 	elif [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2)" == 7.4 ]]
 	then
+		if [ "${LIFERAY_DOCKER_RELEASE_VERSION}" == "7.4.13.nightly" ]
+		then
+			return
+		fi
+
 		if [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2,3 | cut -d '-' -f 1)" == 7.4.13 ]] &&
 		   [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '-' -f 2 | tr -d u)" -ge 125 ]]
 		then
