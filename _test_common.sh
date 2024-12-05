@@ -20,7 +20,10 @@ function assert_equals {
 		if [ -f "${arguments[${index}]}" ] &&
 		   [ -f "${arguments[${index} + 1]}" ]
 		then
-			diff "${arguments[${index}]}" "${arguments[${index} + 1]}"
+			diff \
+				--side-by-side \
+				--suppress-common-lines \
+				"${arguments[${index}]}" "${arguments[${index} + 1]}" > "${assertion_error_file}"
 
 			if [ "${?}" -ne 0 ] && [ "${_TEST_RESULT}" == "true" ]
 			then
@@ -48,9 +51,27 @@ function assert_equals {
 	else
 		echo -e "${FUNCNAME[1]} \e[1;31mFAILED\e[0m\n"
 
-		cat "${assertion_error_file}"
+		local assertion_error_processed_file="${PWD}/assertion_error_processed"
+
+		touch "${assertion_error_processed_file}"
+
+		while IFS= read -r line
+		do
+			if [[ ! "${line}" =~ "|" ]]
+			then
+				cat "${assertion_error_file}" >> "${assertion_error_processed_file}"
+
+				break
+			fi
+
+			echo "Actual: $(echo "${line}" | cut -d '|' -f 1 | xargs)" >> "${assertion_error_processed_file}"
+			echo -e "Expected: $(echo "${line}" | cut -d '|' -f 2 | xargs)\n" >> "${assertion_error_processed_file}"
+		done < "${assertion_error_file}"
+
+		cat "${assertion_error_processed_file}"
 
 		rm -f "${assertion_error_file}"
+		rm -f "${assertion_error_processed_file}"
 
 		_TEST_RESULT="true"
 	fi
