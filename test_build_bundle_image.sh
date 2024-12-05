@@ -25,6 +25,7 @@ function test_set_parent_image {
 	_test_set_parent_image "2025.q1.0" "jdk21" "jdk21"
 	_test_set_parent_image "7.2.10.8" "jdk11-jdk8" "jdk11-jdk8"
 	_test_set_parent_image "7.3.10-u36" "jdk11-jdk8" "jdk11-jdk8"
+	_test_set_parent_image "7.4.13.nightly" "jdk21" "jdk21"
 	_test_set_parent_image "7.4.13-u124" "jdk11" "jdk11"
 	_test_set_parent_image "7.4.13-u125" "jdk21" "jdk21"
 	_test_set_parent_image "7.4.3.120-ga120" "jdk11" "jdk11"
