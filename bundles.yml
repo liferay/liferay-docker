@@ -328,7 +328,7 @@
     7.3.10-ga1:
         bundle_url: releases-cdn.liferay.com/dxp/7.3.10/liferay-dxp-tomcat-7.3.10-ga1-20200930160533946.7z
         test_installed_patch: hotfix-234-7310
-        test_hotfix_url: releases-cdn.liferay.com/dxp/7.3.10-ga1/liferay-hotfix-234-7310.zip
+        test_hotfix_url: releases-cdn.liferay.com/dxp/7.3.10/liferay-hotfix-234-7310.zip
     7.3.10-dxp-1:
         bundle_url: releases-cdn.liferay.com/dxp/7.3.10.1/liferay-dxp-tomcat-7.3.10.1-sp1-slim-20210303153956119.7z
         test_installed_patch: dxp-1-7310,hotfix-699-7310
