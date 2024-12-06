@@ -308,7 +308,7 @@ function set_parent_image {
 	elif [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2 | tr -d .)" -le 73 ]]
 	then
 		sed -i 's/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11-jdk8:latest AS liferay-jdk11-jdk8/g' "${TEMP_DIR}"/Dockerfile
-		sed -i 's/FROM liferay-jdk21/FROM liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
+		sed -i 's/FROM liferay-jdk21/FROM liferay-jdk11-jdk8/g' "${TEMP_DIR}"/Dockerfile
 	fi
 }
 
