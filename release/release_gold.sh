@@ -36,6 +36,7 @@ function check_usage {
 
 	_RELEASE_ROOT_DIR="${PWD}"
 
+	_BASE_DIR="$(dirname "${_RELEASE_ROOT_DIR}")"
 	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}/dev/projects"
 	_PROMOTION_DIR="${_RELEASE_ROOT_DIR}/release-data/promotion/files"
 
