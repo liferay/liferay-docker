@@ -281,7 +281,10 @@ function reference_new_releases {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	prepare_branch_to_commit_from_master "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "new_releases_branch"
+	if [[ ! " ${@} " =~ " --test " ]]
+	then
+		prepare_branch_to_commit_from_master "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "new_releases_branch"
+	fi
 
 	if [ "${?}" -ne 0 ]
 	then
@@ -368,47 +371,50 @@ function reference_new_releases {
 			"portal.version.latest\[${previous_quarterly_release_branch_name}\]="
 	fi
 
-	local ticket_key="$(\
-		create_jira_ticket \
-			"60a3f462391e56006e6b661b" \
-			"Release Tester" \
-			"Task" \
-			"LRCI" \
-			"Add release references for ${_PRODUCT_VERSION}" \
-			"customfield_10001" \
-			"04c03e90-c5a7-4fda-82f6-65746fe08b83")"
-
-	if [ "${ticket_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ ! " ${@} " =~ " --test " ]]
 	then
-		lc_log ERROR "Unable to create the jira ticket."
+		local ticket_key="$(\
+			create_jira_ticket \
+				"60a3f462391e56006e6b661b" \
+				"Release Tester" \
+				"Task" \
+				"LRCI" \
+				"Add release references for ${_PRODUCT_VERSION}" \
+				"customfield_10001" \
+				"04c03e90-c5a7-4fda-82f6-65746fe08b83")"
 
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		if [ "${ticket_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		then
+			lc_log ERROR "Unable to create the jira ticket."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+
+		commit_to_branch_and_send_pull_request \
+			"${_PROJECTS_DIR}/liferay-jenkins-ee/commands/build.properties" \
+			"${ticket_key} Add release references for ${_PRODUCT_VERSION}" \
+			"new_releases_branch" \
+			"master" \
+			"pyoo47/liferay-jenkins-ee" \
+			"${ticket_key} Add release references for ${_PRODUCT_VERSION}"
+
+		if [ "${?}" -ne 0 ]
+		then
+			lc_log ERROR "Unable to send the next release references."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		else
+			lc_log INFO "The pull request with next release references was sent successfully."
+		fi
+
+		local pull_request_url="$(\
+			gh pr view liferay-release:new_releases_branch \
+				--repo pyoo47/liferay-jenkins-ee \
+				--json url \
+				-q ".url")"
+
+		add_comment_jira_ticket "Related pull request: ${pull_request_url}" "${ticket_key}"
 	fi
-
-	commit_to_branch_and_send_pull_request \
-		"${_PROJECTS_DIR}/liferay-jenkins-ee/commands/build.properties" \
-		"${ticket_key} Add release references for ${_PRODUCT_VERSION}" \
-		"new_releases_branch" \
-		"master" \
-		"pyoo47/liferay-jenkins-ee" \
-		"${ticket_key} Add release references for ${_PRODUCT_VERSION}"
-
-	if [ "${?}" -ne 0 ]
-	then
-		lc_log ERROR "Unable to send the next release references."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	else
-		lc_log INFO "The pull request with next release references was sent successfully."
-	fi
-
-	local pull_request_url="$(\
-		gh pr view liferay-release:new_releases_branch \
-		--repo pyoo47/liferay-jenkins-ee \
-		--json url \
-		-q ".url")"
-
-	add_comment_jira_ticket "Related pull request: ${pull_request_url}" "${ticket_key}"
 }
 
 function replace_property {
