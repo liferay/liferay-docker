@@ -20,14 +20,22 @@ function assert_equals {
 		if [ -f "${arguments[${index}]}" ] &&
 		   [ -f "${arguments[${index} + 1]}" ]
 		then
+			local temp_assertion_error_file="${PWD}/temp_assertion_error"
+
 			diff \
 				--side-by-side \
 				--suppress-common-lines \
-				"${arguments[${index}]}" "${arguments[${index} + 1]}" > "${assertion_error_file}"
+				"${arguments[${index}]}" "${arguments[${index} + 1]}" > "${temp_assertion_error_file}"
 
 			if [ "${?}" -ne 0 ] && [ "${_TEST_RESULT}" == "true" ]
 			then
 				_TEST_RESULT="false"
+
+				while IFS= read -r line
+				do
+					echo "Actual: $(echo "${line}" | cut -d '|' -f 1 | xargs)" >> "${assertion_error_file}"
+					echo -e "Expected: $(echo "${line}" | cut -d '|' -f 2 | xargs)\n" >> "${assertion_error_file}"
+				done < "${temp_assertion_error_file}"
 			fi
 		else
 			if [ "${arguments[${index}]}" != "${arguments[${index} + 1]}" ]
@@ -51,27 +59,9 @@ function assert_equals {
 	else
 		echo -e "${FUNCNAME[1]} \e[1;31mFAILED\e[0m\n"
 
-		local assertion_error_processed_file="${PWD}/assertion_error_processed"
-
-		touch "${assertion_error_processed_file}"
-
-		while IFS= read -r line
-		do
-			if [[ ! "${line}" =~ "|" ]]
-			then
-				cat "${assertion_error_file}" >> "${assertion_error_processed_file}"
-
-				break
-			fi
-
-			echo "Actual: $(echo "${line}" | cut -d '|' -f 1 | xargs)" >> "${assertion_error_processed_file}"
-			echo -e "Expected: $(echo "${line}" | cut -d '|' -f 2 | xargs)\n" >> "${assertion_error_processed_file}"
-		done < "${assertion_error_file}"
-
-		cat "${assertion_error_processed_file}"
+		cat "${assertion_error_file}"
 
 		rm -f "${assertion_error_file}"
-		rm -f "${assertion_error_processed_file}"
 
 		_TEST_RESULT="true"
 	fi
