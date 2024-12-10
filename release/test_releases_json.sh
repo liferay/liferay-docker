@@ -21,6 +21,8 @@ function set_up {
 	export _PROMOTION_DIR="${PWD}"
 	export _RELEASE_ROOT_DIR="${PWD}"
 
+	rm -fr "${HOME}/.liferay-common-cache/releases.liferay.com"
+
 	_process_product dxp &> /dev/null
 
 	_promote_product_versions dxp &> /dev/null
