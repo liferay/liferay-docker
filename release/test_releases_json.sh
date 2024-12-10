@@ -44,11 +44,11 @@ function tear_down {
 function test_merge_json_snippets {
 	local earliest_url="$(jq -r '.[0].url' < "$(find ./20*dxp*.json | head -n 1)")"
 
-	local earliest_count="$(grep -c "${earliest_url}" releases.json)"
+	local earliest_count="$(grep -c "\"url\": \"${earliest_url}"\" releases.json)"
 
 	local latest_url="$(jq -r '.[0].url' < "$(find ./20*dxp*.json | tail -n 1)")"
 
-	local latest_count="$(grep -c "${latest_url}" releases.json)"
+	local latest_count="$(grep -c "\"url\": \"${latest_url}"\" releases.json)"
 
 	assert_equals "${earliest_count}" 1 "${latest_count}" 1
 }
