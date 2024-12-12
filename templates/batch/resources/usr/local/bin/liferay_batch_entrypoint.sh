@@ -43,11 +43,6 @@ function main {
 
 	local curl_options="${LIFERAY_BATCH_CURL_OPTIONS}"
 
-	if [ -e /opt/liferay/caroot/rootCA.pem ]
-	then
-		curl_options="${curl_options} --cacert /opt/liferay/caroot/rootCA.pem"
-	fi
-
 	local oauth2_token_response=$(\
 		curl \
 			-H "Content-type: application/x-www-form-urlencoded" \
