@@ -37,6 +37,8 @@ function assert_equals {
 					echo -e "Expected: $(echo "${line}" | cut -d '|' -f 2 | xargs)\n" >> "${assertion_error_file}"
 				done < "${temp_assertion_error_file}"
 			fi
+
+			rm -f "${temp_assertion_error_file}"
 		else
 			if [ "${arguments[${index}]}" != "${arguments[${index} + 1]}" ]
 			then
