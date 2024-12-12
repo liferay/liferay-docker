@@ -49,7 +49,7 @@ function assert_equals {
 
 				touch "${assertion_error_file}"
 
-				echo -e "Actual: ${arguments[${index}]}\n" >> "${assertion_error_file}"
+				echo "Actual: ${arguments[${index}]}" >> "${assertion_error_file}"
 				echo -e "Expected: ${arguments[${index} + 1]}\n" >> "${assertion_error_file}"
 			fi
 		fi
