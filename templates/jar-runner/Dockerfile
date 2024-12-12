@@ -18,7 +18,7 @@ COPY resources/ /
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_jar_runner_entrypoint.sh"]
 
-ENV JAVA_VERSION=zulu21
+ENV JAVA_VERSION=zulu11
 ENV LANG="C.UTF-8"
 ENV LIFERAY_JAR_RUNNER_JAVA_OPTS="-Xmx512m"
 
