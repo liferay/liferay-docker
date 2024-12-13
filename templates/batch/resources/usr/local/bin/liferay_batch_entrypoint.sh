@@ -41,15 +41,13 @@ function main {
 	echo "OAuth Token URI: ${oauth2_token_uri}"
 	echo ""
 
-	local curl_options="${LIFERAY_BATCH_CURL_OPTIONS}"
-
 	local oauth2_token_response=$(\
 		curl \
 			-H "Content-type: application/x-www-form-urlencoded" \
 			-X POST \
 			-d "client_id=${oauth2_client_id}&client_secret=${oauth2_client_secret}&grant_type=client_credentials" \
 			-s \
-			${curl_options} \
+			"${LIFERAY_BATCH_CURL_OPTIONS}" \
 			"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}" \
 		| jq -r ".")
 
@@ -89,7 +87,7 @@ function main {
 				-F "file=@/opt/liferay/site-initializer/site-initializer.zip;type=application/zip" \
 				-F "site=${site}" \
 				-s \
-				${curl_options} \
+				"${LIFERAY_BATCH_CURL_OPTIONS}" \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}" \
 			| jq -r ".")
 
@@ -156,7 +154,7 @@ function main {
 				-X POST \
 				-d @/tmp/liferay_batch_entrypoint.items.json \
 				-s \
-				${curl_options} \
+				"${LIFERAY_BATCH_CURL_OPTIONS}" \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters}" \
 			| jq -r ".")
 
@@ -181,10 +179,10 @@ function main {
 			local status_response=$(\
 				curl \
 					-s \
-					${curl_options} \
+					"${LIFERAY_BATCH_CURL_OPTIONS}" \
 					-X 'GET' \
 					"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}" \
-					-H 'accept: application/json' \
+					-H "accept: application/json" \
 					-H "Authorization: Bearer ${oauth2_access_token}" \
 				| jq -r '.')
 
