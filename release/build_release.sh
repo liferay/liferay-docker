@@ -48,12 +48,12 @@ function check_usage {
 
 	_RELEASE_ROOT_DIR="${PWD}"
 
-	_BUILD_DIR="${_RELEASE_ROOT_DIR}"/build
+	_BUILD_DIR="${_RELEASE_ROOT_DIR}/build"
 	_BUILDER_SHA=$(git rev-parse HEAD)
 	_BUNDLES_DIR="/opt/dev/projects/github/bundles"
 	_PROJECTS_DIR="/opt/dev/projects/github"
-	_RELEASES_DIR="${_RELEASE_ROOT_DIR}"/releases
-	_TEST_RELEASE_DIR="${_RELEASE_ROOT_DIR}"/test_release
+	_RELEASES_DIR="${_RELEASE_ROOT_DIR}/releases"
+	_TEST_RELEASE_DIR="${_RELEASE_ROOT_DIR}/test_release"
 
 	if [ ! -d "${_PROJECTS_DIR}" ]
 	then
