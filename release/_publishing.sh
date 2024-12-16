@@ -316,11 +316,14 @@ function _update_bundles_yml {
 
 	truncate -s -1 "${_BASE_DIR}/bundles.yml"
 
-	git add "${_BASE_DIR}/bundles.yml"
+	if [[ ! " ${@} " =~ " --test " ]]
+	then
+		git add "${_BASE_DIR}/bundles.yml"
 
-	git commit -m "Add ${_PRODUCT_VERSION} to bundles.yml."
+		git commit -m "Add ${_PRODUCT_VERSION} to bundles.yml."
 
-	git push upstream master
+		git push upstream master
+	fi
 }
 
 function _upload_to_nexus {

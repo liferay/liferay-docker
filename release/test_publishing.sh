@@ -19,7 +19,7 @@ function setup {
 }
 
 function tear_down {
-	git reset HEAD~3 --hard &> /dev/null
+	git restore "${_BASE_DIR}/bundles.yml"
 
 	unset _BASE_DIR
 	unset _RELEASE_ROOT_DIR
@@ -40,7 +40,7 @@ function _run_update_bundles_yml {
 
 	echo -e "Running _update_bundles_yml for ${_PRODUCT_VERSION}\n"
 
-	_update_bundles_yml &> /dev/null
+	_update_bundles_yml --test &> /dev/null
 }
 
 main
