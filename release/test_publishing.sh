@@ -15,7 +15,7 @@ function main {
 function setup {
 	export _RELEASE_ROOT_DIR="${PWD}"
 
-	export _BASE_DIR="${_RELEASE_ROOT_DIR}/test-dependencies"
+	export _BASE_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/actual"
 }
 
 function tear_down {
@@ -30,7 +30,9 @@ function test_update_bundles_yml {
 	_run_update_bundles_yml "7.4.13-u130"
 	_run_update_bundles_yml "2024.q3.1"
 
-	assert_equals "${_BASE_DIR}/bundles.yml" "${_BASE_DIR}/expected.bundles.yml"
+	assert_equals \
+		"${_RELEASE_ROOT_DIR}/test-dependencies/actual/bundles.yml" \
+		"${_RELEASE_ROOT_DIR}/test-dependencies/expected/bundles.yml"
 }
 
 function _run_update_bundles_yml {
