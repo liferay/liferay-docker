@@ -108,9 +108,9 @@ function main {
 
 	lc_time_run clean_portal_repository
 
-	lc_time_run prepare_next_release_branch
+	#lc_time_run prepare_next_release_branch
 
-	lc_time_run update_release_info_date
+	#lc_time_run update_release_info_date
 
 	#lc_time_run upload_to_docker_hub
 }
