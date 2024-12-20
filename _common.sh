@@ -266,8 +266,13 @@ function start_tomcat {
 
 	"./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh" start
 
-	until curl --fail --output /dev/null --silent http://localhost:8080
+	for count in {0..30}
 	do
+		if (curl --fail --max-time 3 --output /dev/null --silent http://localhost:8080)
+		then
+			break
+		fi
+
 		sleep 3
 	done
 
