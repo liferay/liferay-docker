@@ -135,7 +135,8 @@ function prepare_branch_to_commit {
 }
 
 function prepare_next_release_branch {
-	if [[ "${_PRODUCT_VERSION}" != *q* ]]
+	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "yes") ] ||
+	   [[ "${_PRODUCT_VERSION}" != *q* ]]
 	then
 		lc_log INFO "Skipping the preparation of the next release branch."
 
@@ -348,7 +349,8 @@ function test_boms {
 }
 
 function update_release_info_date {
-	if [[ "${_PRODUCT_VERSION}" != *q* ]] ||
+	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "yes") ] ||
+	   [[ "${_PRODUCT_VERSION}" != *q* ]] ||
 	   [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 3)" -eq 0 ]] ||
 	   [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1)" -lt 2024 ]]
 	then
