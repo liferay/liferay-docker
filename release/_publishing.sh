@@ -195,23 +195,30 @@ function upload_hotfix {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
+	ssh root@lrdcom-vm-1 "exit" &> /dev/null
 
-	#
-	# shellcheck disable=SC2029
-	#
-
-	if (ssh root@lrdcom-vm-1 ls "/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/" | grep -q "${_HOTFIX_FILE_NAME}")
+	if [ $? -eq 0 ]
 	then
-		lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} because it already exists."
+		lc_log INFO "SSH connection successful."
 
-		echo "# Uploaded" > ../output.md
-		echo " - https://releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
+		ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		#
+		# shellcheck disable=SC2029
+		#
+
+		if (ssh root@lrdcom-vm-1 ls "/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/" | grep -q "${_HOTFIX_FILE_NAME}")
+		then
+			lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} because it already exists."
+
+			echo "# Uploaded" > ../output.md
+			echo " - https://releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+
+		scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
 	fi
-
-	scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
 
 	if (gsutil ls "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}" | grep "${_HOTFIX_FILE_NAME}")
 	then
