@@ -37,8 +37,13 @@ function check_usage {
 	_RELEASE_ROOT_DIR="${PWD}"
 
 	_BASE_DIR="$(dirname "${_RELEASE_ROOT_DIR}")"
-	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}/dev/projects"
+	_PROJECTS_DIR="/opt/dev/projects/github"
 	_PROMOTION_DIR="${_RELEASE_ROOT_DIR}/release-data/promotion/files"
+
+	if [ ! -d "${_PROJECTS_DIR}" ]
+	then
+		_PROJECTS_DIR="${_RELEASE_ROOT_DIR}/dev/projects"
+	fi
 
 	rm -fr "${_PROMOTION_DIR}"
 
@@ -102,9 +107,12 @@ function main {
 
 	lc_time_run add_patcher_project_version
 
-	lc_background_run clone_repository liferay-portal-ee
+	if [ -d "${_RELEASE_ROOT_DIR}/dev/projects" ]
+	then
+		lc_background_run clone_repository liferay-portal-ee
 
-	lc_wait
+		lc_wait
+	fi
 
 	lc_time_run clean_portal_repository
 
