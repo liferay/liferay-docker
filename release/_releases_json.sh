@@ -166,13 +166,18 @@ function _promote_product_versions {
 }
 
 function _upload_releases_json {
-	lc_log INFO "Backing up to /www/releases.liferay.com/releases.json.BACKUP."
+	ssh root@lrdcom-vm-1 "exit" &> /dev/null
 
-	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/releases.json" "/www/releases.liferay.com/releases.json.BACKUP"
+	if [ "${?}" -eq 0 ]
+	then
+		lc_log INFO "Backing up to /www/releases.liferay.com/releases.json.BACKUP."
 
-	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to /www/releases.liferay.com/releases.json."
+		ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/releases.json" "/www/releases.liferay.com/releases.json.BACKUP"
 
-	scp "${_PROMOTION_DIR}/releases.json" "root@lrdcom-vm-1:/www/releases.liferay.com/releases.json.upload"
+		lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to /www/releases.liferay.com/releases.json."
 
-	ssh root@lrdcom-vm-1 mv -f "/www/releases.liferay.com/releases.json.upload" "/www/releases.liferay.com/releases.json"
+		scp "${_PROMOTION_DIR}/releases.json" "root@lrdcom-vm-1:/www/releases.liferay.com/releases.json.upload"
+
+		ssh root@lrdcom-vm-1 mv -f "/www/releases.liferay.com/releases.json.upload" "/www/releases.liferay.com/releases.json"
+	fi
 }
