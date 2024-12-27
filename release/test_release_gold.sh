@@ -12,6 +12,17 @@ function main {
 		return
 	fi
 
+	test_check_usage
+	test_not_prepare_next_release_branch
+	test_not_update_release_info_date
+
+	export LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="no"
+
+	test_not_prepare_next_release_branch
+	test_not_update_release_info_date
+
+	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="yes"
+
 	test_not_prepare_next_release_branch
 	test_not_update_release_info_date
 	test_prepare_next_release_branch
@@ -39,7 +50,19 @@ function tear_down {
 	unset _PROJECTS_DIR
 }
 
+function test_check_usage {
+	local check_usage_output=$(check_usage)
+	local expected_check_usage_output=$(cat test-dependencies/expected/check_usage_output.txt)
+
+	assert_equals "${check_usage_output}" "${expected_check_usage_output}"
+}
+
 function test_not_prepare_next_release_branch {
+	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "yes") ]
+	then
+		_test_not_prepare_next_release_branch "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	_test_not_prepare_next_release_branch "2023.q2.5" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_not_prepare_next_release_branch "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_not_prepare_next_release_branch "7.4.13-u101" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
@@ -47,6 +70,11 @@ function test_not_prepare_next_release_branch {
 }
 
 function test_not_update_release_info_date {
+	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "yes") ]
+	then
+		_test_not_update_release_info_date "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	_test_not_update_release_info_date "2023.q2.11" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_not_update_release_info_date "2023.q3.0" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_not_update_release_info_date "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
