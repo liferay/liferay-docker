@@ -104,7 +104,8 @@ function test_update_release_info_date {
 function _test_not_prepare_next_release_branch {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_not_prepare_next_release_branch for ${_PRODUCT_VERSION} " \
+	echo -e \
+		"Running _test_not_prepare_next_release_branch for ${_PRODUCT_VERSION} " \
 		"and LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH=${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}\n"
 
 	prepare_next_release_branch --test 1> /dev/null
@@ -115,7 +116,8 @@ function _test_not_prepare_next_release_branch {
 function _test_not_update_release_info_date {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_not_update_release_info_date for ${_PRODUCT_VERSION} " \
+	echo -e \
+		"Running _test_not_update_release_info_date for ${_PRODUCT_VERSION} " \
 		"and LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH=${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}\n"
 
 	update_release_info_date --test 1> /dev/null
