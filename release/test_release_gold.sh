@@ -51,10 +51,7 @@ function tear_down {
 }
 
 function test_check_usage {
-	local check_usage_output=$(check_usage)
-	local expected_check_usage_output=$(cat test-dependencies/expected/check_usage_output.txt)
-
-	assert_equals "${check_usage_output}" "${expected_check_usage_output}"
+	assert_equals "$(check_usage)" "$(cat test-dependencies/expected/check_usage_output.txt)"
 }
 
 function test_not_prepare_next_release_branch {
