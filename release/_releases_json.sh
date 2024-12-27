@@ -180,4 +180,14 @@ function _upload_releases_json {
 
 		ssh root@lrdcom-vm-1 mv -f "/www/releases.liferay.com/releases.json.upload" "/www/releases.liferay.com/releases.json"
 	fi
+
+	lc_log INFO "Backing up to gs://liferay-releases/releases.json.BACKUP."
+
+	gsutil cp "gs://liferay-releases/releases.json" "gs://liferay-releases/releases.json.BACKUP"
+
+	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to gs://liferay-releases/releases.json."
+
+	gsutil cp "${_PROMOTION_DIR}/releases.json" "gs://liferay-releases/releases.json.upload"
+
+	gsutil mv "gs://liferay-releases/releases.json.upload" "gs://liferay-releases/releases.json"
 }
