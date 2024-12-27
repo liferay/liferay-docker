@@ -216,7 +216,7 @@ function print_help {
 	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_USER (optional): Nexus user with the right to upload BOM files"
 	echo "    LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS: Email address to the release team's Liferay Patcher user"
 	echo "    LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD: Password to the release team's Liferay Patcher user"
-	echo "    LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH: Set to \"yes\" to proceed with branch preparation to next release. Set to \"no\" to skip this step."
+	echo "    LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH: Set to \"yes\" to proceed with branch preparation to next release."
 	echo "    LIFERAY_RELEASE_PRODUCT_NAME (optional): Set to \"portal\" for CE. The default is \"DXP\"."
 	echo "    LIFERAY_RELEASE_RC_BUILD_TIMESTAMP: Timestamp of the build to publish"
 	echo "    LIFERAY_RELEASE_REPOSITORY_OWNER (optional): Set to \"EnterpriseReleaseHU\" for development. The default is \"liferay\"."
