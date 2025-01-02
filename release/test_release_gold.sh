@@ -16,12 +16,12 @@ function main {
 	test_not_prepare_next_release_branch
 	test_not_update_release_info_date
 
-	export LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="no"
+	export LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="false"
 
 	test_not_prepare_next_release_branch
 	test_not_update_release_info_date
 
-	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="yes"
+	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
 
 	test_not_prepare_next_release_branch
 	test_not_update_release_info_date
@@ -55,7 +55,7 @@ function test_check_usage {
 }
 
 function test_not_prepare_next_release_branch {
-	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "yes") ]
+	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "true") ]
 	then
 		_test_not_prepare_next_release_branch "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -67,7 +67,7 @@ function test_not_prepare_next_release_branch {
 }
 
 function test_not_update_release_info_date {
-	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "yes") ]
+	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "true") ]
 	then
 		_test_not_update_release_info_date "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

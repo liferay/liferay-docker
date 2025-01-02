@@ -135,7 +135,7 @@ function prepare_branch_to_commit {
 }
 
 function prepare_next_release_branch {
-	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "yes") ] ||
+	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "true") ] ||
 	   [[ "${_PRODUCT_VERSION}" != *q* ]]
 	then
 		lc_log INFO "Skipping the preparation of the next release branch."
