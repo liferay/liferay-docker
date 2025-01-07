@@ -133,6 +133,17 @@ function init_gcs {
 	gcloud auth activate-service-account --key-file "${LIFERAY_RELEASE_GCS_TOKEN}"
 }
 
+function test_ssh_connection {
+	ssh "root@${1}" "exit" &> /dev/null
+
+	if [ $? -eq 0 ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	fi
+
+	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+}
+
 function upload_bom_file {
 	local nexus_repository_name="${1}"
 
@@ -195,9 +206,7 @@ function upload_hotfix {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	ssh root@lrdcom-vm-1 "exit" &> /dev/null
-
-	if [ $? -eq 0 ]
+	if (test_ssh_connection "lrdcom-vm-1")
 	then
 		lc_log INFO "SSH connection successful."
 
@@ -247,9 +256,7 @@ function upload_release {
 
 	local ssh_connection="false"
 
-	ssh root@lrdcom-vm-1 "exit" &> /dev/null
-
-	if [ $? -eq 0 ]
+	if (test_ssh_connection "lrdcom-vm-1")
 	then
 		lc_log INFO "SSH connection successful."
 
