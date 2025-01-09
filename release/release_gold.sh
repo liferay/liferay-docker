@@ -373,15 +373,19 @@ function reference_new_releases {
 
 	if [[ ! " ${@} " =~ " --test " ]]
 	then
+		local jira_ticket_assignee="60a3f462391e56006e6b661b"
+		local jira_ticket_custom_field_team="customfield_10001"
+		local jira_ticket_custom_field_team_value="04c03e90-c5a7-4fda-82f6-65746fe08b83"
+
 		local jira_ticket_key="$(\
 			create_jira_ticket \
-				"60a3f462391e56006e6b661b" \
+				"${jira_ticket_assignee}" \
 				"Release Tester" \
 				"Task" \
 				"LRCI" \
 				"Add release references for ${_PRODUCT_VERSION}" \
-				"customfield_10001" \
-				"04c03e90-c5a7-4fda-82f6-65746fe08b83")"
+				"${jira_ticket_custom_field_team}" \
+				"${jira_ticket_custom_field_team_value}")"
 
 		if [ "${jira_ticket_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 		then
