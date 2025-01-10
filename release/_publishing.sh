@@ -208,7 +208,7 @@ function upload_hotfix {
 
 	if (has_ssh_connection "lrdcom-vm-1")
 	then
-		lc_log INFO "SSH connection successful."
+		lc_log INFO "Connecting to lrdcom-vm-1."
 
 		ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
 
@@ -227,6 +227,8 @@ function upload_hotfix {
 		fi
 
 		scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
+	else
+		lc_log INFO "Skipping lrdcom-vm-1."
 	fi
 
 	if (gsutil ls "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}" | grep "${_HOTFIX_FILE_NAME}")
@@ -258,13 +260,15 @@ function upload_release {
 
 	if (has_ssh_connection "lrdcom-vm-1")
 	then
-		lc_log INFO "SSH connection successful."
+		lc_log INFO "Connecting to lrdcom-vm-1."
 
 		ssh_connection="true"
 
 		ssh root@lrdcom-vm-1 rm -r "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-*"
 
 		ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+	else
+		lc_log INFO "Skipping lrdcom-vm-1."
 	fi
 
 	gsutil rm -r "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-*"
