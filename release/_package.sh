@@ -162,27 +162,7 @@ function package_boms {
 	rm -f .touch
 }
 
-function package_release {
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
-	then
-		rm -fr "${_BUNDLES_DIR}/routes/default/dxp"
-	fi
-
-	rm -fr "${_BUILD_DIR}/release"
-
-	local package_dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
-
-	mkdir -p "${package_dir}"
-
-	cp -a "${_BUNDLES_DIR}"/* "${package_dir}"
-
-	echo "${_GIT_SHA}" > "${package_dir}"/.githash
-	echo "${_PRODUCT_VERSION}" > "${package_dir}"/.liferay-version
-
-	touch "${package_dir}"/.liferay-home
-
-	lc_cd "${_BUILD_DIR}/release"
-
+function package_portal_dependencies {
 	if [[ "${_PRODUCT_VERSION}" == 7.3* ]]
 	then
 
@@ -216,6 +196,30 @@ function package_release {
 
 		rm -fr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 	fi
+}
+
+function package_release {
+	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	then
+		rm -fr "${_BUNDLES_DIR}/routes/default/dxp"
+	fi
+
+	rm -fr "${_BUILD_DIR}/release"
+
+	local package_dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+
+	mkdir -p "${package_dir}"
+
+	cp -a "${_BUNDLES_DIR}"/* "${package_dir}"
+
+	echo "${_GIT_SHA}" > "${package_dir}"/.githash
+	echo "${_PRODUCT_VERSION}" > "${package_dir}"/.liferay-version
+
+	touch "${package_dir}"/.liferay-home
+
+	lc_cd "${_BUILD_DIR}/release"
+
+	package_portal_dependencies
 
 	7z a "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" liferay-${LIFERAY_RELEASE_PRODUCT_NAME}
 
