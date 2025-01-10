@@ -205,9 +205,9 @@ function package_release {
 		# Dependencies
 		#
 
-		rm -fr "${_BUILD_DIR}/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
+		rm -fr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
-		mkdir -p "${_BUILD_DIR}/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
+		mkdir -p "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
 		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/development/hsql.jar "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/global/*.jar "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
