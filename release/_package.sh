@@ -209,10 +209,8 @@ function package_release {
 
 		mkdir -p "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
-		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/development/hsql.jar "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
-		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/global/*.jar "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
-		cp "${_PROJECTS_DIR}"/liferay-portal-ee/portal-kernel/portal-kernel.jar "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
-		cp "${_PROJECTS_DIR}"/liferay-portal-ee/tools/sdk/dist/com.liferay.registry.api-*.jar "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}/com.liferay.registry.api.jar"
+		cp "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/tomcat/lib/ext/{hsql.jar,portal-kernel.jar,portlet.jar}" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
+		cp "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/tomcat/lib/ext/com.liferay.registry.api-*.jar" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}/com.liferay.registry.api.jar"
 
 		zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
