@@ -1,0 +1,17 @@
+com.liferay.petra.concurrent.jar
+com.liferay.petra.executor.jar
+com.liferay.petra.function.jar
+com.liferay.petra.io.jar
+com.liferay.petra.lang.jar
+com.liferay.petra.memory.jar
+com.liferay.petra.nio.jar
+com.liferay.petra.process.jar
+com.liferay.petra.reflect.jar
+com.liferay.petra.sql.dsl.api.jar
+com.liferay.petra.sql.dsl.spi.jar
+com.liferay.petra.string.jar
+com.liferay.petra.url.pattern.mapper.jar
+com.liferay.registry.api.jar
+hsql.jar
+portal-kernel.jar
+portlet.jar
