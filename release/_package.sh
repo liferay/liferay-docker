@@ -174,8 +174,27 @@ function package_portal_dependencies {
 
 		mkdir -p "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
 
-		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/development/{activation.jar,mail.jar} "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
-		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/portal/{axis.jar,commons-discovery.jar,commons-logging.jar,jaxrpc.jar,portal-client.jar,saaj-api.jar,saaj-impl.jar,wsdl4j.jar} "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
+		for jar in \
+			activation.jar \
+			axis.jar \
+			commons-discovery.jar \
+			commons-logging.jar \
+			jaxrpc.jar \
+			mail.jar \
+			portal-client.jar \
+			saaj-api.jar \
+			saaj-impl.jar \
+			wsdl4j.jar
+		do
+			local jar_dir="portal"
+
+			if [ "${jar}" == "activation.jar" ] || [ "${jar}" == "mail.jar" ]
+			then
+				jar_dir="development"
+			fi
+
+			cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/"${jar_dir}"/"${jar}" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
+		done
 
 		zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
 
@@ -189,8 +208,27 @@ function package_portal_dependencies {
 
 		mkdir -p "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
-		cp "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/tomcat/lib/ext/{hsql.jar,portal-kernel.jar,portlet.jar}" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
-		cp "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/tomcat/lib/ext/com.liferay.registry.api-*.jar" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}/com.liferay.registry.api.jar"
+		for jar in \
+			com.liferay.petra.concurrent.jar \
+			com.liferay.petra.executor.jar \
+			com.liferay.petra.function.jar \
+			com.liferay.petra.io.jar \
+			com.liferay.petra.lang.jar \
+			com.liferay.petra.memory.jar \
+			com.liferay.petra.nio.jar \
+			com.liferay.petra.process.jar \
+			com.liferay.petra.reflect.jar \
+			com.liferay.petra.sql.dsl.api.jar \
+			com.liferay.petra.sql.dsl.spi.jar \
+			com.liferay.petra.string.jar \
+			com.liferay.petra.url.pattern.mapper.jar \
+			com.liferay.registry.api.jar \
+			hsql.jar \
+			portal-kernel.jar \
+			portlet.jar
+		do
+			cp "${_BUILD_DIR}"/release/liferay-"${LIFERAY_RELEASE_PRODUCT_NAME}"/tomcat/lib/ext/"${jar}" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
+		done
 
 		zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
