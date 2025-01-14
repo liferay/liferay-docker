@@ -100,6 +100,8 @@ function main {
 
 	lc_time_run set_product_version
 
+	lc_time_run set_jdk_version
+
 	if [ "${LIFERAY_RELEASE_OUTPUT}" != "hotfix" ]
 	then
 		lc_time_run set_artifact_versions "${_PRODUCT_VERSION}" "${_BUILD_TIMESTAMP}"

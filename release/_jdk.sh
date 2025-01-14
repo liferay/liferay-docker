@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../_liferay_common.sh
+
 function configure_jdk {
 	if (java -version | grep -q 1.8.0_381)
 	then
@@ -34,4 +36,42 @@ function configure_jdk {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
+}
+
+function set_jdk_version {
+	local jdk_version=jdk8
+
+	if (echo "${_PRODUCT_VERSION}" | grep -q "q")
+	then
+		if [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1)" -gt 2025 ]]
+		then
+			jdk_version=zulu17
+		elif [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1)" -eq 2025 ]] &&
+			 [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 2 | tr -d q)" -ge 1 ]]
+		then
+			jdk_version=zulu17
+		fi
+	fi
+
+	if [[ "$(echo "${_PRODUCT_VERSION}" | grep "ga")" ]] &&
+	   [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 2 | sed 's/ga//g')" -ge 132 ]]
+	then
+		jdk_version=zulu17
+	fi
+
+	if [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)" == "7.4.13" ]] &&
+	   [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 2 | tr -d u)" -ge 132 ]]
+	then
+		jdk_version=zulu17
+	fi
+
+	lc_log INFO "Using JDK ${jdk_version} for release ${_PRODUCT_VERSION}"
+
+	if [[ ! " ${@} " =~ " --test " ]]
+	then
+		export JAVA_HOME="/opt/java/${jdk_version}"
+		export PATH="${JAVA_HOME}/bin:${PATH}"
+	else
+		export TEST_JAVA_HOME="/opt/java/${jdk_version}"
+	fi
 }
