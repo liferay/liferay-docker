@@ -43,11 +43,7 @@ function set_jdk_version {
 
 	if (echo "${_PRODUCT_VERSION}" | grep -q "q")
 	then
-		if [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1)" -gt 2025 ]]
-		then
-			jdk_version=zulu17
-		elif [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1)" -eq 2025 ]] &&
-			 [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 2 | tr -d q)" -ge 1 ]]
+		if [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1)" -ge 2025 ]]
 		then
 			jdk_version=zulu17
 		fi
