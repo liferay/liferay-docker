@@ -71,8 +71,6 @@ function main {
 
 	check_usage
 
-	lc_time_run configure_jdk
-
 	lc_time_run report_jenkins_url
 
 	if [ -d "${_RELEASE_ROOT_DIR}/dev/projects" ]
