@@ -92,7 +92,7 @@ function promote_packages {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gsutil cp -r "gs://liferay-release-candidates/${_PRODUCT_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}" "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
+	gsutil cp -r "gs://liferay-releases-candidates/${_PRODUCT_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}" "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
 }
 
 function _download_bom_file {

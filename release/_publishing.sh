@@ -271,7 +271,7 @@ function upload_release {
 		lc_log INFO "Skipping lrdcom-vm-1."
 	fi
 
-	gsutil rm -r "gs://liferay-release-candidates/${_PRODUCT_VERSION}-*"
+	gsutil rm -r "gs://liferay-releases-candidates/${_PRODUCT_VERSION}-*"
 
 	for file in $(ls --almost-all --ignore "*.jar*" --ignore "*.pom*")
 	do
@@ -279,7 +279,7 @@ function upload_release {
 		then
 			echo "Copying ${file}."
 
-			gsutil cp "${_BUILD_DIR}/release/${file}" "gs://liferay-release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
+			gsutil cp "${_BUILD_DIR}/release/${file}" "gs://liferay-releases-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 
 			if [ "${ssh_connection}" == "true" ]
 			then
