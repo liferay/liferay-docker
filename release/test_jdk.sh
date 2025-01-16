@@ -13,6 +13,20 @@ function main {
 function set_up {
 	CURRENT_JAVA_HOME="${JAVA_HOME}"
 	CURRENT_PATH="${PATH}"
+
+	JDK_VERSION_8="zulu8"
+
+	if [ ! -d "/opt/java/zulu8" ]
+	then
+		JDK_VERSION_8="jdk8"
+	fi
+
+	JDK_VERSION_17="zulu17"
+
+	if [ ! -d "/opt/java/zulu17" ]
+	then
+		JDK_VERSION_17="jdk17"
+	fi
 }
 
 function tear_down {
@@ -21,13 +35,13 @@ function tear_down {
 }
 
 function test_set_jdk_version {
-	_test_set_jdk_version "2024.q2.0" "/opt/java/jdk8"
-	_test_set_jdk_version "2025.q1.0" "/opt/java/zulu17"
-	_test_set_jdk_version "7.3.10-u36" "/opt/java/jdk8"
-	_test_set_jdk_version "7.4.3-ga131" "/opt/java/jdk8"
-	_test_set_jdk_version "7.4.3-ga132" "/opt/java/zulu17"
-	_test_set_jdk_version "7.4.13-u131" "/opt/java/jdk8"
-	_test_set_jdk_version "7.4.13-u132" "/opt/java/zulu17"
+	_test_set_jdk_version "2024.q2.0" "/opt/java/${JDK_VERSION_8}"
+	_test_set_jdk_version "2025.q1.0" "/opt/java/${JDK_VERSION_17}"
+	_test_set_jdk_version "7.3.10-u36" "/opt/java/${JDK_VERSION_8}"
+	_test_set_jdk_version "7.4.3-ga131" "/opt/java/${JDK_VERSION_8}"
+	_test_set_jdk_version "7.4.3-ga132" "/opt/java/${JDK_VERSION_17}"
+	_test_set_jdk_version "7.4.13-u131" "/opt/java/${JDK_VERSION_8}"
+	_test_set_jdk_version "7.4.13-u132" "/opt/java/${JDK_VERSION_17}"
 }
 
 function _test_set_jdk_version {
