@@ -5,6 +5,11 @@ source _jdk.sh
 function main {
 	set_up
 
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	test_set_jdk_version
 
 	tear_down
@@ -26,6 +31,13 @@ function set_up {
 	if [ ! -d "/opt/java/zulu17" ]
 	then
 		JDK_VERSION_17="jdk17"
+	fi
+
+	if [ ! -d "/opt/java/jdk8" ] || [ ! -d "/opt/java/jdk17" ]
+	then
+		echo -e "JDK 8 and JDK 17 are not installed.\n"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 }
 
