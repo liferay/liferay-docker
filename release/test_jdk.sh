@@ -11,11 +11,13 @@ function main {
 }
 
 function set_up {
-	export TEST_JAVA_HOME
+	CURRENT_JAVA_HOME="${JAVA_HOME}"
+	CURRENT_PATH="${PATH}"
 }
 
 function tear_down {
-	unset TEST_JAVA_HOME
+	JAVA_HOME="${CURRENT_JAVA_HOME}"
+	PATH="${CURRENT_PATH}"
 }
 
 function test_set_jdk_version {
@@ -31,11 +33,11 @@ function test_set_jdk_version {
 function _test_set_jdk_version {
 	_PRODUCT_VERSION="${1}"
 
-	echo "Running _test_set_jdk_version for ${_PRODUCT_VERSION} "
+	echo -e "Running _test_set_jdk_version for ${_PRODUCT_VERSION}\n"
 
-	set_jdk_version --test
+	set_jdk_version 1> /dev/null
 
-	assert_equals "${TEST_JAVA_HOME}" "${2}"
+	assert_equals "${JAVA_HOME}" "${2}"
 }
 
 main

@@ -63,11 +63,6 @@ function set_jdk_version {
 
 	lc_log INFO "Using JDK ${jdk_version} for release ${_PRODUCT_VERSION}"
 
-	if [[ ! " ${@} " =~ " --test " ]]
-	then
-		export JAVA_HOME="/opt/java/${jdk_version}"
-		export PATH="${JAVA_HOME}/bin:${PATH}"
-	else
-		export TEST_JAVA_HOME="/opt/java/${jdk_version}"
-	fi
+	export JAVA_HOME="/opt/java/${jdk_version}"
+	export PATH="${JAVA_HOME}/bin:${PATH}"
 }
