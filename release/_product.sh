@@ -272,6 +272,18 @@ function deploy_elasticsearch_sidecar {
 	fi
 }
 
+function get_java_specification_version {
+	if (echo "${JAVA_HOME}" | grep -E "jdk8|zulu8" &> /dev/null)
+	then
+		echo "1.8"
+	fi
+
+	if (echo "${JAVA_HOME}" | grep -E "jdk17|zulu17" &> /dev/null)
+	then
+		echo "17"
+	fi
+}
+
 function obfuscate_licensing {
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
@@ -293,6 +305,7 @@ function obfuscate_licensing {
 	ant \
 		-Dext.dir=. \
 		-Djava.lib.dir="${JAVA_HOME}/jre/lib" \
+		-Djava.specification.version="$(get_java_specification_version)" \
 		-Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee \
 		-Dportal.kernel.dir="${_PROJECTS_DIR}"/liferay-portal-ee/portal-kernel \
 		-Dportal.release.edition.private=true \
