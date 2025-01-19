@@ -42,10 +42,10 @@ function tear_down {
 }
 
 function test_get_java_specification_version {
-	_test_get_java_specification_version "jdk8" "1.8"
-	_test_get_java_specification_version "zulu8" "1.8"
 	_test_get_java_specification_version "jdk17" "17"
+	_test_get_java_specification_version "jdk8" "1.8"
 	_test_get_java_specification_version "zulu17" "17"
+	_test_get_java_specification_version "zulu8" "1.8"
 }
 
 function test_warm_up_tomcat {
