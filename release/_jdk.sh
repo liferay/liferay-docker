@@ -27,19 +27,19 @@ function set_jdk_version {
 
 	if [ ! -d "/opt/java/${jdk_version}" ]
 	then
-		lc_log INFO "JDK ${jdk_version} is not installed"
+		lc_log INFO "JDK ${jdk_version} is not installed."
 
 		jdk_version=$(echo "${jdk_version}" | sed "s/zulu/jdk/g")
 
 		if [ ! -d "/opt/java/${jdk_version}" ]
 		then
-			lc_log INFO "JDK ${jdk_version} is not installed"
+			lc_log INFO "JDK ${jdk_version} is not installed."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 	fi
 
-	lc_log INFO "Using JDK ${jdk_version} for release ${_PRODUCT_VERSION}"
+	lc_log INFO "Using JDK ${jdk_version} for release ${_PRODUCT_VERSION}."
 
 	export JAVA_HOME="/opt/java/${jdk_version}"
 	export PATH="${JAVA_HOME}/bin:${PATH}"
