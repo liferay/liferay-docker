@@ -1,9 +1,9 @@
-FROM liferay/dxp AS liferay_image
+FROM liferay/dxp AS liferay-image
 
 FROM azul/zulu-openjdk-alpine
 
-COPY --from=liferay_image /opt/liferay /opt/liferay
-COPY --from=liferay_image /usr/local/bin /usr/local/bin
+COPY --from=liferay-image /opt/liferay /opt/liferay
+COPY --from=liferay-image /usr/local/bin /usr/local/bin
 
 ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_entrypoint.sh"]
 
