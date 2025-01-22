@@ -270,36 +270,46 @@ function tag_release {
 		repository=liferay-portal
 	fi
 
-	local tag_data=$(
-		cat <<- END
-		{
-			"message": "",
-			"object": "${git_hash}",
-			"tag": "${_PRODUCT_VERSION}",
-			"type": "commit"
-		}
-		END
-	)
+	for repository_owner in brianchandotcom liferay
+	do
 
-	if [ $(invoke_github_api_post "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
+		LIFERAY_RELEASE_REPOSITORY_OWNER="${repository_owner}"
 
-	local ref_data=$(
-		cat <<- END
-		{
-			"message": "",
-			"ref": "refs/tags/${_PRODUCT_VERSION}",
-			"sha": "${git_hash}"
-		}
-		END
-	)
+		local tag_data=$(
+			cat <<- END
+			{
+				"message": "",
+				"object": "${git_hash}",
+				"tag": "${_PRODUCT_VERSION}",
+				"type": "commit"
+			}
+			END
+		)
 
-	if [ $(invoke_github_api_post "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
+		if [ $(invoke_github_api_post "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		then
+			lc_log ERROR "Unable to create tag '${_PRODUCT_VERSION}' with repository owner '${repository_owner}'."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+
+		local ref_data=$(
+			cat <<- END
+			{
+				"message": "",
+				"ref": "refs/tags/${_PRODUCT_VERSION}",
+				"sha": "${git_hash}"
+			}
+			END
+		)
+
+		if [ $(invoke_github_api_post "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		then
+			lc_log ERROR "Unable to create tag reference for '${_PRODUCT_VERSION}' with repository owner '${repository_owner}'."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+	done
 }
 
 function test_boms {
