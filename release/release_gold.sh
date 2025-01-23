@@ -290,7 +290,7 @@ function tag_release {
 
 		if [ $(invoke_github_api_post "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
-			lc_log ERROR "Unable to create tag '${_PRODUCT_VERSION}' with repository owner '${repository_owner}'."
+			lc_log ERROR "Unable to create tag ${_PRODUCT_VERSION} in ${repository_owner}/${repository}."
 
 			tag_release_created="false"
 		fi
@@ -307,7 +307,7 @@ function tag_release {
 
 		if [ $(invoke_github_api_post "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
-			lc_log ERROR "Unable to create tag reference for '${_PRODUCT_VERSION}' with repository owner '${repository_owner}'."
+			lc_log ERROR "Unable to create tag reference for ${_PRODUCT_VERSION} in ${repository_owner}/${repository}."
 
 			tag_release_created="false"
 		fi
