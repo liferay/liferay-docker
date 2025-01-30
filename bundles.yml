@@ -32,15 +32,15 @@
         test_installed_patch: de-91-7010,hotfix-6871-7010
         test_hotfix_url: releases-cdn.liferay.com/dxp/7.0.10-de-91/liferay-hotfix-6871-7010.zip
     7.0.10-security-de-91-202003-1:
-        bundle_url: releases-cdn.liferay.com/dxp/7.0.10-de-91/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-91-slim-20200420163527702.7z
-        fix_pack_url: releases-cdn.liferay.com/dxp/7.0.10-de-91/security-de/liferay-security-de-91-202003-1-7010.zip
+        bundle_url: releases-cdn.liferay.com/dxp/7.0.10-de-91/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-91-20200420163527702.7z
+        fix_pack_url: releases-cdn.liferay.com/dxp/7.0.10-security-de-91-202003-1/liferay-security-de-91-202003-1-7010.zip
         test_installed_patch: de-91-7010,security-de-91-202003-1-7010
     7.0.10-de-92:
         bundle_url: releases-cdn.liferay.com/dxp/7.0.10-de-92/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-92-slim-20200519134012683.7z
         test_installed_patch: de-92-7010,hotfix-6854-7010
         test_hotfix_url: releases-cdn.liferay.com/dxp/7.0.10-de-92/liferay-hotfix-6854-7010.zip
     7.0.10-security-de-92-202004-2:
-        bundle_url: releases-cdn.liferay.com/dxp/7.0.10-de-92/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-92-slim-20200519134012683.7z
+        bundle_url: releases-cdn.liferay.com/dxp/7.0.10-de-92/liferay-dxp-digital-enterprise-tomcat-7.0.10-de-92-20200519134012683.7z
         fix_pack_url: releases-cdn.liferay.com/dxp/7.0.10-security-de-92-202004-2/liferay-security-de-92-202004-2-7010.zip
         test_installed_patch: de-92-7010,security-de-92-202004-2-7010
     7.0.10-sp14:
