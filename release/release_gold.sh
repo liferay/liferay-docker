@@ -189,9 +189,12 @@ function prepare_next_release_branch {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	rm -fr releases.json
+	if [[ ! " ${@} " =~ " --test " ]]
+	then
+		rm -fr releases.json
 
-	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/releases.json" releases.json
+		LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/releases.json" releases.json
+	fi
 
 	local product_group_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
@@ -200,7 +203,10 @@ function prepare_next_release_branch {
 			select(.productGroupVersion == \"${product_group_version}\" and .promoted == \"true\") | \
 			.targetPlatformVersion" releases.json)"
 
-	rm -fr releases.json
+	if [[ ! " ${@} " =~ " --test " ]]
+	then
+		rm -fr releases.json
+	fi
 
 	if [ "${_PRODUCT_VERSION}" != "${latest_quarterly_product_version}" ]
 	then
