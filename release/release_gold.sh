@@ -70,7 +70,9 @@ function commit_to_branch_and_send_pull_request {
 
 	git commit --message "${2}"
 
-	git push --force origin "${3}"
+	local repository_name=$(echo "${5}" | cut -d '/' -f 2)
+
+	git push --force "git@github.com:liferay-release/${repository_name}.git" "${3}"
 
 	gh pr create \
 		--base "${4}" \
@@ -145,7 +147,7 @@ function prepare_branch_to_commit {
 
 	git branch --delete --force "${1}" &> /dev/null
 
-	git fetch --no-tags upstream "${1}":"${1}" &> /dev/null
+	git fetch --no-tags git@github.com:liferay/liferay-portal-ee.git "${1}":"${1}" &> /dev/null
 
 	git checkout "${1}" &> /dev/null
 
@@ -158,19 +160,19 @@ function prepare_branch_to_commit {
 function prepare_branch_to_commit_from_master {
 	lc_cd "${1}"
 
-	git fetch upstream master
-
 	git checkout master
 
-	git reset --hard upstream/master
+	git fetch git@github.com:liferay/liferay-jenkins-ee.git master
 
-	git push --delete origin "${2}"
+	git reset --hard FETCH_HEAD
+
+	git push --delete git@github.com:liferay-release/liferay-jenkins-ee.git "${2}"
 
 	git branch --delete --force "${2}"
 
 	git checkout -b "${2}"
 
-	git push origin "${2}" --force
+	git push git@github.com:liferay-release/liferay-jenkins-ee.git "${2}" --force
 
 	if [ "$(git rev-parse --abbrev-ref HEAD)" != "${2}" ]
 	then
