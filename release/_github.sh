@@ -30,8 +30,6 @@ function _invoke_github_api {
 
 	if ! [[ $(echo "${curl_response}" | awk '/^HTTP/{print $2}') =~ ^2 ]]
 	then
-		echo "Unable to inkove GitHub API."
-
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
