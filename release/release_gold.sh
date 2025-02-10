@@ -381,34 +381,34 @@ function reference_new_releases {
 
 	if [[ ! " ${@} " =~ " --test " ]]
 	then
-		local jira_ticket_assignee="60a3f462391e56006e6b661b"
-		local jira_ticket_custom_field_team="customfield_10001"
-		local jira_ticket_custom_field_team_value="04c03e90-c5a7-4fda-82f6-65746fe08b83"
+		local issue_assignee="60a3f462391e56006e6b661b"
+		local issue_custom_field_team="customfield_10001"
+		local issue_custom_field_team_value="04c03e90-c5a7-4fda-82f6-65746fe08b83"
 
-		local jira_ticket_key="$(\
-			create_jira_ticket \
-				"${jira_ticket_assignee}" \
+		local issue_key="$(\
+			create_jira_issue \
+				"${issue_assignee}" \
 				"Release Tester" \
 				"Task" \
 				"LRCI" \
 				"Add release references for ${_PRODUCT_VERSION}" \
-				"${jira_ticket_custom_field_team}" \
-				"${jira_ticket_custom_field_team_value}")"
+				"${issue_custom_field_team}" \
+				"${issue_custom_field_team_value}")"
 
-		if [ "${jira_ticket_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		if [ "${issue_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 		then
-			lc_log ERROR "Unable to create the jira ticket."
+			lc_log ERROR "Unable to create the jira issue."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 
 		commit_to_branch_and_send_pull_request \
 			"${_PROJECTS_DIR}/liferay-jenkins-ee/commands/build.properties" \
-			"${jira_ticket_key} Add release references for ${_PRODUCT_VERSION}" \
+			"${issue_key} Add release references for ${_PRODUCT_VERSION}" \
 			"new_releases_branch" \
 			"master" \
 			"pyoo47/liferay-jenkins-ee" \
-			"${jira_ticket_key} Add release references for ${_PRODUCT_VERSION}"
+			"${issue_key} Add release references for ${_PRODUCT_VERSION}"
 
 		if [ "${?}" -ne 0 ]
 		then
@@ -425,7 +425,7 @@ function reference_new_releases {
 				--json url \
 				-q ".url")"
 
-		add_comment_jira_ticket "Related pull request: ${pull_request_url}" "${jira_ticket_key}"
+		add_comment_jira_issue "Related pull request: ${pull_request_url}" "${issue_key}"
 	fi
 }
 
