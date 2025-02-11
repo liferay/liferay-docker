@@ -21,6 +21,7 @@ function tear_down {
 }
 
 function test_add_lts_suffix {
+	_test_add_lts_suffix "2024.q1.0" "2024.q1.0"
 	_test_add_lts_suffix "2025.q1.0" "2025.q1.0-LTS"
 	_test_add_lts_suffix "2025.q2.0" "2025.q2.0"
 	_test_add_lts_suffix "2025.q3.0" "2025.q3.0"
