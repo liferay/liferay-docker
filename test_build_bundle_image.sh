@@ -6,7 +6,7 @@ source _test_common.sh
 function main {
 	set_up
 
-	test_append_lts_if_q1_release
+	test_add_lts_suffix
 
 	test_set_parent_image
 
@@ -21,11 +21,11 @@ function tear_down {
 	unset TEMP_DIR
 }
 
-function test_append_lts_if_q1_release {
-	_test_append_lts_if_q1_release "2025.q1.0" "2025.q1.0-LTS"
-	_test_append_lts_if_q1_release "2025.q2.0" "2025.q2.0"
-	_test_append_lts_if_q1_release "2025.q3.0" "2025.q3.0"
-	_test_append_lts_if_q1_release "2025.q4.0" "2025.q4.0"
+function test_add_lts_suffix {
+	_test_add_lts_suffix "2025.q1.0" "2025.q1.0-LTS"
+	_test_add_lts_suffix "2025.q2.0" "2025.q2.0"
+	_test_add_lts_suffix "2025.q3.0" "2025.q3.0"
+	_test_add_lts_suffix "2025.q4.0" "2025.q4.0"
 }
 
 function test_set_parent_image {
@@ -46,12 +46,12 @@ function _set_dockerfile {
 	echo -e "FROM liferay-${2}\n" >> "${3}"
 }
 
-function _test_append_lts_if_q1_release {
+function _test_add_lts_suffix {
 	LIFERAY_DOCKER_RELEASE_VERSION="${1}"
 
-	echo -e "Running _test_append_lts_if_q1_release for ${LIFERAY_DOCKER_RELEASE_VERSION}.\n"
+	echo -e "Running _test_add_lts_suffix for ${LIFERAY_DOCKER_RELEASE_VERSION}.\n"
 
-	append_lts_if_q1_release
+	add_lts_suffix
 
 	assert_equals ${LIFERAY_DOCKER_RELEASE_VERSION} "${2}"
 }
