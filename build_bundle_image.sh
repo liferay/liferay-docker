@@ -2,6 +2,13 @@
 
 source ./_common.sh
 
+function add_lts_suffix {
+	if [[ "${LIFERAY_DOCKER_RELEASE_VERSION}" == *.q1.* ]]
+	then
+		LIFERAY_DOCKER_RELEASE_VERSION="${LIFERAY_DOCKER_RELEASE_VERSION}-LTS"
+	fi
+}
+
 function build_docker_image {
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
@@ -272,13 +279,6 @@ function push_docker_image {
 			--push \
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 			"${TEMP_DIR}" || exit 1
-	fi
-}
-
-function add_lts_suffix {
-	if [[ "${LIFERAY_DOCKER_RELEASE_VERSION}" == *.q1.* ]]
-	then
-		LIFERAY_DOCKER_RELEASE_VERSION="${LIFERAY_DOCKER_RELEASE_VERSION}-LTS"
 	fi
 }
 
