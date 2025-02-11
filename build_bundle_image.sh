@@ -3,9 +3,12 @@
 source ./_common.sh
 
 function add_lts_suffix {
-	if [[ "${LIFERAY_DOCKER_RELEASE_VERSION}" == *.q1.* ]]
+	if [[ "${LIFERAY_DOCKER_RELEASE_VERSION}" == *q1* ]]
 	then
-		LIFERAY_DOCKER_RELEASE_VERSION="${LIFERAY_DOCKER_RELEASE_VERSION}-LTS"
+		if [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1)" -ge 2025 ]]
+		then
+			LIFERAY_DOCKER_RELEASE_VERSION="${LIFERAY_DOCKER_RELEASE_VERSION}-LTS"
+		fi
 	fi
 }
 
