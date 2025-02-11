@@ -7,7 +7,6 @@ function main {
 	set_up
 
 	test_add_lts_suffix
-
 	test_set_parent_image
 
 	tear_down
