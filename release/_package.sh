@@ -88,6 +88,12 @@ function generate_release_properties_file {
 	then
 		product_version="DXP ${product_version}"
 		target_platform_version=$(echo "${target_platform_version}" | sed -r 's/-u/.u/')
+
+		if [[ "${_PRODUCT_VERSION}" == *"-lts" ]]
+		then
+			target_platform_version=$(echo "${target_platform_version}" | sed -r 's/-lts//g')
+		fi
+
 	elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
 		product_version="Portal ${product_version}"

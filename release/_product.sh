@@ -320,6 +320,11 @@ function set_artifact_versions {
 		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-ga[0-9]*//g')
 	fi
 
+	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
+	then
+		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-lts//g')
+	fi
+
 	_ARTIFACT_RC_VERSION="${_ARTIFACT_VERSION}-${2}"
 }
 
@@ -342,7 +347,7 @@ function set_product_version {
 
 		if (echo "${version_display_name}" | grep -iq "q")
 		then
-			_PRODUCT_VERSION="${version_display_name,,}"
+			_PRODUCT_VERSION=$(echo "${version_display_name,,}" | sed 's/ /-/g')
 		else
 			local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
@@ -360,6 +365,13 @@ function set_product_version {
 		fi
 	else
 		_PRODUCT_VERSION="${1}"
+
+		if [[ $(echo "$_PRODUCT_VERSION" | cut -d '.' -f 1) -gt 2024 ]] &&
+		   [[ "${_PRODUCT_VERSION}" == *"q1.0"* ]] &&
+		   [[ "${_PRODUCT_VERSION}" != *"-lts" ]]
+		then
+				_PRODUCT_VERSION="${_PRODUCT_VERSION}-lts"
+		fi
 
 		set_artifact_versions "${_PRODUCT_VERSION}" "${2}"
 	fi
