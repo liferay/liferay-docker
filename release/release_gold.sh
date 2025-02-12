@@ -270,11 +270,10 @@ function tag_release {
 		repository=liferay-portal
 	fi
 
-	local tag_release_created="true"
+	local created_release_tag="true"
 
 	for repository_owner in brianchandotcom liferay
 	do
-
 		LIFERAY_RELEASE_REPOSITORY_OWNER="${repository_owner}"
 
 		local tag_data=$(
@@ -292,7 +291,7 @@ function tag_release {
 		then
 			lc_log ERROR "Unable to create tag ${_PRODUCT_VERSION} in ${repository_owner}/${repository}."
 
-			tag_release_created="false"
+			created_release_tag="false"
 		fi
 
 		local ref_data=$(
@@ -309,11 +308,11 @@ function tag_release {
 		then
 			lc_log ERROR "Unable to create tag reference for ${_PRODUCT_VERSION} in ${repository_owner}/${repository}."
 
-			tag_release_created="false"
+			created_release_tag="false"
 		fi
 	done
 
-	if [ "${tag_release_created}" == "false" ]
+	if [ "${created_release_tag}" == "false" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
