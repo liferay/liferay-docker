@@ -2,7 +2,7 @@
 
 source ../_liferay_common.sh
 
-function add_comment_jira_issue {
+function add_jira_issue_comment {
 	local data=$(
 		cat <<- END
 		{
@@ -28,7 +28,7 @@ function add_comment_jira_issue {
 	_invoke_jira_api "https://liferay.atlassian.net/rest/api/3/issue/${2}/comment" "${data}"
 }
 
-function create_jira_issue {
+function add_jira_issue {
 	local data=$(
 		cat <<- END
 		{

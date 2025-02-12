@@ -386,7 +386,7 @@ function reference_new_releases {
 		local issue_custom_field_team_value="04c03e90-c5a7-4fda-82f6-65746fe08b83"
 
 		local issue_key="$(\
-			create_jira_issue \
+			add_jira_issue \
 				"${issue_assignee}" \
 				"Release Tester" \
 				"Task" \
@@ -425,7 +425,7 @@ function reference_new_releases {
 				--json url \
 				-q ".url")"
 
-		add_comment_jira_issue "Related pull request: ${pull_request_url}" "${issue_key}"
+		add_jira_issue_comment "Related pull request: ${pull_request_url}" "${issue_key}"
 	fi
 }
 
