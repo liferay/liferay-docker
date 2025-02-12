@@ -2,32 +2,6 @@
 
 source ../_liferay_common.sh
 
-function add_jira_issue_comment {
-	local data=$(
-		cat <<- END
-		{
-			"body": {
-				"content": [
-					{
-						"content": [
-							{
-								"text": "${1}",
-								"type": "text"
-							}
-						],
-						"type": "paragraph"
-					}
-				],
-				"type": "doc",
-				"version": 1
-			}
-		}
-		END
-	)
-
-	_invoke_jira_api "https://liferay.atlassian.net/rest/api/3/issue/${2}/comment" "${data}"
-}
-
 function add_jira_issue {
 	local data=$(
 		cat <<- END
@@ -55,6 +29,32 @@ function add_jira_issue {
 	)
 
 	_invoke_jira_api "https://liferay.atlassian.net/rest/api/3/issue/" "${data}"
+}
+
+function add_jira_issue_comment {
+	local data=$(
+		cat <<- END
+		{
+			"body": {
+				"content": [
+					{
+						"content": [
+							{
+								"text": "${1}",
+								"type": "text"
+							}
+						],
+						"type": "paragraph"
+					}
+				],
+				"type": "doc",
+				"version": 1
+			}
+		}
+		END
+	)
+
+	_invoke_jira_api "https://liferay.atlassian.net/rest/api/3/issue/${2}/comment" "${data}"
 }
 
 function _invoke_jira_api {
