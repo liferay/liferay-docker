@@ -191,14 +191,19 @@ function generate_distro_jar {
 
 	lc_cd "${_BUILD_DIR}/boms"
 
-	local osgi_version=$(echo "${_PRODUCT_VERSION}"| sed 's/-/\./g')
+	local osgi_version=$(echo "${_PRODUCT_VERSION}" | sed 's/-/\./g')
+
+	if [[ "${_PRODUCT_VERSION}" == *-lts ]]
+	then
+		osgi_version=$(echo "${osgi_version}" | sed 's/.lts//g')
+	fi
 
 	if [[ $(echo "${_PRODUCT_VERSION}" | grep "ga") ]]
 	then
 		osgi_version=$(echo "${osgi_version}" | cut -d '.' -f 1,2,3,5)
 	elif [[ $(echo "${_PRODUCT_VERSION}" | grep "q") ]]
 	then
-		osgi_version=$(echo "${_PRODUCT_VERSION}" | sed 's/q//g')
+		osgi_version=$(echo "${osgi_version}" | sed 's/q//g')
 	fi
 
 	java -jar biz.aQute.bnd-6.4.0.jar remote distro -o "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro" "${osgi_version}"
