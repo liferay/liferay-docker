@@ -229,6 +229,14 @@ function prepare_next_release_branch {
 
 		next_project_version_suffix=$((next_project_version_suffix + 1))
 
+		if [[ "${_PRODUCT_VERSION}" == *q1* ]]
+		then
+			if [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1)" -ge 2025 ]]
+			then
+				next_project_version_suffix="${next_project_version_suffix} LTS"
+			fi
+		fi
+
 		sed -i \
 			-e "s/release.info.version.display.name\[master-private\]=.*/release.info.version.display.name[master-private]=${product_group_version^^}.${next_project_version_suffix}/" \
 			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
