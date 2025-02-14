@@ -94,15 +94,26 @@ function test_not_update_release_info_date {
 }
 
 function test_prepare_next_release_branch {
-	_PRODUCT_VERSION="2024.q1.12"
+	_test_prepare_next_release_branch "2024.q1.12" "2024.Q1.13"
+	_test_prepare_next_release_branch "2025.q1.0" "2025.Q1.1 LTS"
+}
+
+function _test_prepare_next_release_branch {
+	_PRODUCT_VERSION="${1}"
+
+	echo -e "Running test_prepare_next_release_branch for ${_PRODUCT_VERSION}\n"
+
+	local current_dir="${PWD}"
 
 	prepare_next_release_branch --test 1> /dev/null
 
 	assert_equals \
 		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[master-private]")" \
-		"2024.Q1.13" \
+		"${2}" \
 		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[release-private]")" \
-		"2024.Q1.13"
+		"${2}"
+
+	lc_cd "${current_dir}"
 }
 
 function test_reference_new_releases {

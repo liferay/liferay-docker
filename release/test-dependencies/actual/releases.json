@@ -34,5 +34,14 @@
 		"releaseKey": "dxp-2024.q1.11",
 		"targetPlatformVersion": "2024.q1.11",
 		"url": "https://releases-cdn.liferay.com/dxp/2024.q1.11"
+	},
+	{
+		"product": "dxp",
+		"productGroupVersion": "2025.q1",
+		"productVersion": "DXP 2025.Q1.0 LTS",
+		"promoted": "true",
+		"releaseKey": "dxp-2025.q1.0-lts",
+		"targetPlatformVersion": "2025.q1.0",
+		"url": "https://releases-cdn.liferay.com/dxp/2025.q1.0-lts"
 	}
 ]
