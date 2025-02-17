@@ -14,13 +14,13 @@ function main {
 }
 
 function setup {
-	export _PROJECTS_DIR="/home/me/dev/projects/liferay-docker/release/test-dependencies/actual"
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+	export _PROJECTS_DIR="/home/me/dev/projects/liferay-docker/release/test-dependencies/actual"
 }
 
 function tear_down {
-	unset _PROJECTS_DIR
 	unset LIFERAY_RELEASE_PRODUCT_NAME
+	unset _PROJECTS_DIR
 }
 
 function test_lts_set_product_version {
@@ -32,7 +32,6 @@ function test_lts_set_product_version {
 }
 
 function test_parameterized_set_product_version {
-
 	_test_parameterized_set_product_version "2024.q1.0" "123456789" "2024.q1.0" "2024.q1.0-123456789"
 	_test_parameterized_set_product_version "2025.q1.0" "123456789" "2025.q1.0-lts" "2025.q1.0-123456789"
 	_test_parameterized_set_product_version "2025.q1.1" "123456789" "2025.q1.1" "2025.q1.1-123456789"
