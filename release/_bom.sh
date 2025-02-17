@@ -193,16 +193,16 @@ function generate_distro_jar {
 
 	local osgi_version=$(echo "${_PRODUCT_VERSION}" | sed 's/-/\./g')
 
-	if [[ "${_PRODUCT_VERSION}" == *"-lts" ]]
-	then
-		osgi_version=$(echo "${osgi_version}" | sed 's/.lts//g')
-	fi
-
 	if [[ $(echo "${_PRODUCT_VERSION}" | grep "ga") ]]
 	then
 		osgi_version=$(echo "${osgi_version}" | cut -d '.' -f 1,2,3,5)
 	elif [[ $(echo "${_PRODUCT_VERSION}" | grep "q") ]]
 	then
+		if [[ $(echo "${_PRODUCT_VERSION}" | grep "lts") ]]
+		then
+			osgi_version=$(echo "${osgi_version}" | sed 's/.lts//g')
+		fi
+
 		osgi_version=$(echo "${osgi_version}" | sed 's/q//g')
 	fi
 
