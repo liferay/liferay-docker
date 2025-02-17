@@ -347,7 +347,7 @@ function set_product_version {
 
 		if (echo "${version_display_name}" | grep -iq "q")
 		then
-			_PRODUCT_VERSION=$(echo "${version_display_name,,}" | sed 's/ /-/g')
+			_PRODUCT_VERSION=$(echo "${version_display_name,,}" | sed 's/ lts/-lts/g')
 		else
 			local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
