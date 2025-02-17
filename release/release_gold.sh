@@ -215,9 +215,9 @@ function prepare_next_release_branch {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local quarterly_release_branch_name="release-${product_group_version}"
+	local quarterly_release_branch="release-${product_group_version}"
 
-	prepare_branch_to_commit "${quarterly_release_branch_name}"
+	prepare_branch_to_commit "${quarterly_release_branch}"
 
 	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
@@ -242,8 +242,8 @@ function prepare_next_release_branch {
 			commit_to_branch_and_send_pull_request \
 				"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
 				"Prepare ${product_group_version}.${next_project_version_suffix}" \
-				"${quarterly_release_branch_name}" \
-				"${quarterly_release_branch_name}" \
+				"${quarterly_release_branch}" \
+				"${quarterly_release_branch}" \
 				"brianchandotcom/liferay-portal-ee" \
 				"Prep next"
 
@@ -348,36 +348,36 @@ function reference_new_releases {
 		"${_PRODUCT_VERSION}" \
 		"portal.latest.bundle.version\[master\]=${previous_product_version}"
 
-	local previous_quarterly_release_branch_name="$(\
+	local previous_quarterly_release_branch="$(\
 		grep "portal.latest.bundle.version" \
 			"build.properties" | \
 			tail -1 | \
 			cut -d '[' -f 2 | \
 			cut -d ']' -f 1)"
 
-	local quarterly_release_branch_name="release-$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
+	local quarterly_release_branch="release-$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
-	if [ "${quarterly_release_branch_name}" == "${previous_quarterly_release_branch_name}" ]
+	if [ "${quarterly_release_branch}" == "${previous_quarterly_release_branch}" ]
 	then
 		replace_property \
-			"portal.latest.bundle.version\[${quarterly_release_branch_name}\]" \
+			"portal.latest.bundle.version\[${quarterly_release_branch}\]" \
 			"${_PRODUCT_VERSION}" \
-			"portal.latest.bundle.version\[${quarterly_release_branch_name}\]=${previous_product_version}"
+			"portal.latest.bundle.version\[${quarterly_release_branch}\]=${previous_product_version}"
 
 		replace_property \
-			"portal.version.latest\[${quarterly_release_branch_name}\]" \
+			"portal.version.latest\[${quarterly_release_branch}\]" \
 			"${_PRODUCT_VERSION}" \
-			"portal.version.latest\[${quarterly_release_branch_name}\]=${previous_product_version}"
+			"portal.version.latest\[${quarterly_release_branch}\]=${previous_product_version}"
 	else
 		add_property \
-			"portal.latest.bundle.version\[${quarterly_release_branch_name}\]" \
+			"portal.latest.bundle.version\[${quarterly_release_branch}\]" \
 			"${_PRODUCT_VERSION}" \
-			"portal.latest.bundle.version\[${previous_quarterly_release_branch_name}\]="
+			"portal.latest.bundle.version\[${previous_quarterly_release_branch}\]="
 
 		add_property \
-			"portal.version.latest\[${quarterly_release_branch_name}\]" \
+			"portal.version.latest\[${quarterly_release_branch}\]" \
 			"${_PRODUCT_VERSION}" \
-			"portal.version.latest\[${previous_quarterly_release_branch_name}\]="
+			"portal.version.latest\[${previous_quarterly_release_branch}\]="
 	fi
 
 	if [[ ! " ${@} " =~ " --test " ]]
@@ -581,9 +581,9 @@ function update_release_info_date {
 
 	local product_group_version="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
-	local quarterly_release_branch_name="release-${product_group_version}"
+	local quarterly_release_branch="release-${product_group_version}"
 
-	prepare_branch_to_commit "${quarterly_release_branch_name}"
+	prepare_branch_to_commit "${quarterly_release_branch}"
 
 	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
@@ -601,8 +601,8 @@ function update_release_info_date {
 		commit_to_branch_and_send_pull_request \
 			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
 			"Update the release info date for ${_PRODUCT_VERSION}" \
-			"${quarterly_release_branch_name}" \
-			"${quarterly_release_branch_name}" \
+			"${quarterly_release_branch}" \
+			"${quarterly_release_branch}" \
 			"brianchandotcom/liferay-portal-ee" \
 			"Prep next"
 
