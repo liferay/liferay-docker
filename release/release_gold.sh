@@ -348,11 +348,12 @@ function reference_new_releases {
 		"${_PRODUCT_VERSION}" \
 		"portal.latest.bundle.version\[master\]=${previous_product_version}"
 
-	local previous_quarterly_release_branch_name="$(grep "portal.latest.bundle.version" \
-														"build.properties" | \
-														tail -1 | \
-														cut -d '[' -f 2 | \
-														cut -d ']' -f 1)"
+	local previous_quarterly_release_branch_name="$(\
+		grep "portal.latest.bundle.version" \
+			"build.properties" | \
+			tail -1 | \
+			cut -d '[' -f 2 | \
+			cut -d ']' -f 1)"
 
 	local quarterly_release_branch_name="release-$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
@@ -421,9 +422,9 @@ function reference_new_releases {
 
 		local pull_request_url="$(\
 			gh pr view liferay-release:new_releases_branch \
-				--repo pyoo47/liferay-jenkins-ee \
+				--jq ".url" \
 				--json url \
-				-q ".url")"
+				--repo pyoo47/liferay-jenkins-ee)"
 
 		add_jira_issue_comment "Related pull request: ${pull_request_url}" "${issue_key}"
 	fi
