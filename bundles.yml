@@ -771,7 +771,6 @@ quarterly:
     # 2024.q4.5:
     #
     2024.q4.6:
-        bundle_url: releases-cdn.liferay.com/dxp/2024.q4.6/liferay-dxp-tomcat-2024.q4.6-1738857376.7z
         latest: true
 snapshot:
     snapshot-master:
