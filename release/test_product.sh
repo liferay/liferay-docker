@@ -8,8 +8,8 @@ function main {
 	set_up
 
 	test_get_java_specification_version
-	test_lts_set_product_version
-	test_parameterized_set_product_version
+	test_set_product_version_lts
+	test_set_product_version_parameterized
 	test_warm_up_tomcat
 
 	test_warm_up_tomcat_already_warmed
@@ -54,7 +54,7 @@ function test_get_java_specification_version {
 	_test_get_java_specification_version "zulu8" "1.8"
 }
 
-function test_lts_set_product_version {
+function test_set_product_version_lts {
 	set_product_version 1> /dev/null
 
 	assert_equals \
@@ -62,15 +62,15 @@ function test_lts_set_product_version {
 		"2025.q1.0-lts"
 }
 
-function test_parameterized_set_product_version {
-	_test_parameterized_set_product_version "2024.q1.0" "123456789" "2024.q1.0" "2024.q1.0-123456789"
-	_test_parameterized_set_product_version "2025.q1.0" "123456789" "2025.q1.0-lts" "2025.q1.0-123456789"
-	_test_parameterized_set_product_version "2025.q1.1" "123456789" "2025.q1.1" "2025.q1.1-123456789"
-	_test_parameterized_set_product_version "7.3.10-u36" "123456789" "7.3.10-u36" "7.3.10-u36-123456789"
+function test_set_product_version_parameterized {
+	_test_set_product_version_parameterized "2024.q1.0" "123456789" "2024.q1.0" "2024.q1.0-123456789"
+	_test_set_product_version_parameterized "2025.q1.0" "123456789" "2025.q1.0-lts" "2025.q1.0-123456789"
+	_test_set_product_version_parameterized "2025.q1.1" "123456789" "2025.q1.1" "2025.q1.1-123456789"
+	_test_set_product_version_parameterized "7.3.10-u36" "123456789" "7.3.10-u36" "7.3.10-u36-123456789"
 
 	LIFERAY_RELEASE_PRODUCT_NAME="portal"
 
-	_test_parameterized_set_product_version "7.4.3.129-ga129" "123456789" "7.4.3.129-ga129" "7.4.3.129-123456789"
+	_test_set_product_version_parameterized "7.4.3.129-ga129" "123456789" "7.4.3.129-ga129" "7.4.3.129-123456789"
 }
 
 function test_warm_up_tomcat {
@@ -98,7 +98,7 @@ function _test_get_java_specification_version {
 	JAVA_HOME="${_CURRENT_JAVA_HOME}"
 }
 
-function _test_parameterized_set_product_version {
+function _test_set_product_version_parameterized {
 	set_product_version "${1}" "${2}" 1> /dev/null
 
 	assert_equals \
