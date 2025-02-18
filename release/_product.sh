@@ -315,14 +315,12 @@ function obfuscate_licensing {
 function set_artifact_versions {
 	_ARTIFACT_VERSION="${1}"
 
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
-	then
-		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-ga[0-9]*//g')
-	fi
-
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
 	then
 		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-lts//g')
+	elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	then
+		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-ga[0-9]*//g')
 	fi
 
 	_ARTIFACT_RC_VERSION="${_ARTIFACT_VERSION}-${2}"
