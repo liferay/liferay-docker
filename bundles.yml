@@ -766,9 +766,9 @@ quarterly:
     2024.q4.3:
     2024.q4.4:
     #
-    # NOTE: Due to LPD-48218, this release and its corresponding Docker image are no longer available. This issue is fixed in the 2024.Q4.6 Patch Release.
+    # LPD-48218
     #
-    # 2024.q4.5:
+    #2024.q4.5:
     #
     2024.q4.6:
     2024.q4.7:
