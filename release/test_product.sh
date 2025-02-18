@@ -8,6 +8,8 @@ function main {
 	set_up
 
 	test_get_java_specification_version
+	test_lts_set_product_version
+	test_parameterized_set_product_version
 	test_warm_up_tomcat
 
 	test_warm_up_tomcat_already_warmed
@@ -16,9 +18,11 @@ function main {
 }
 
 function set_up {
+	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _BUILD_DIR="${PWD}"
 	export _BUNDLES_DIR="${PWD}/test-dependencies/liferay-dxp"
 	export _CURRENT_JAVA_HOME="${JAVA_HOME}"
+	export _PROJECTS_DIR="/home/me/dev/projects/liferay-docker/release/test-dependencies/actual"
 
 	lc_cd test-dependencies
 
@@ -36,9 +40,11 @@ function tear_down {
 	rm -f "${_BUILD_DIR}/warm-up-tomcat"
 	rm -fr "${_BUNDLES_DIR}"
 
+	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
 	unset _BUNDLES_DIR
 	unset _CURRENT_JAVA_HOME
+	unset _PROJECTS_DIR
 }
 
 function test_get_java_specification_version {
@@ -46,6 +52,25 @@ function test_get_java_specification_version {
 	_test_get_java_specification_version "jdk8" "1.8"
 	_test_get_java_specification_version "zulu17" "17"
 	_test_get_java_specification_version "zulu8" "1.8"
+}
+
+function test_lts_set_product_version {
+	set_product_version 1> /dev/null
+
+	assert_equals \
+		"${_PRODUCT_VERSION}" \
+		"2025.q1.0-lts"
+}
+
+function test_parameterized_set_product_version {
+	_test_parameterized_set_product_version "2024.q1.0" "123456789" "2024.q1.0" "2024.q1.0-123456789"
+	_test_parameterized_set_product_version "2025.q1.0" "123456789" "2025.q1.0-lts" "2025.q1.0-123456789"
+	_test_parameterized_set_product_version "2025.q1.1" "123456789" "2025.q1.1" "2025.q1.1-123456789"
+	_test_parameterized_set_product_version "7.3.10-u36" "123456789" "7.3.10-u36" "7.3.10-u36-123456789"
+
+	LIFERAY_RELEASE_PRODUCT_NAME="portal"
+
+	_test_parameterized_set_product_version "7.4.3.129-ga129" "123456789" "7.4.3.129-ga129" "7.4.3.129-123456789"
 }
 
 function test_warm_up_tomcat {
@@ -72,5 +97,16 @@ function _test_get_java_specification_version {
 
 	JAVA_HOME="${_CURRENT_JAVA_HOME}"
 }
+
+function _test_parameterized_set_product_version {
+	set_product_version "${1}" "${2}" 1> /dev/null
+
+	assert_equals \
+		"${_PRODUCT_VERSION}" \
+		"${3}" \
+		"${_ARTIFACT_RC_VERSION}" \
+		"${4}"
+}
+
 
 main
