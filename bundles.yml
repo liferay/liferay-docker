@@ -472,6 +472,9 @@
 7.4.3.125:
     7.4.3.125-ga125:
         bundle_url: releases-cdn.liferay.com/portal/7.4.3.125-ga125/liferay-portal-tomcat-7.4.3.125-ga125-1726242956.7z
+7.4.3.129:
+    7.4.3.129-ga129:
+        bundle_url: releases-cdn.liferay.com/portal/7.4.3.129-ga129/liferay-portal-tomcat-7.4.3.129-ga129-1733783976.7z
         latest: true
 7.4.13:
     7.4.13-u1:
