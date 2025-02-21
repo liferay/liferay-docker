@@ -302,7 +302,6 @@ function reference_new_releases {
 	fi
 
 	local base_url="http://mirrors.lax.liferay.com/releases.liferay.com"
-
 	local previous_product_version="$(grep "portal.latest.bundle.version\[master\]=" "build.properties" | cut -d "=" -f 2)"
 
 	for component in osgi sql tools
@@ -382,19 +381,15 @@ function reference_new_releases {
 
 	if [[ ! " ${@} " =~ " --test " ]]
 	then
-		local issue_assignee="60a3f462391e56006e6b661b"
-		local issue_custom_field_team="customfield_10001"
-		local issue_custom_field_team_value="04c03e90-c5a7-4fda-82f6-65746fe08b83"
-
 		local issue_key="$(\
 			add_jira_issue \
-				"${issue_assignee}" \
+				"60a3f462391e56006e6b661b" \
 				"Release Tester" \
 				"Task" \
 				"LRCI" \
 				"Add release references for ${_PRODUCT_VERSION}" \
-				"${issue_custom_field_team}" \
-				"${issue_custom_field_team_value}")"
+				"customfield_10001" \
+				"04c03e90-c5a7-4fda-82f6-65746fe08b83")"
 
 		if [ "${issue_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 		then
