@@ -2,7 +2,7 @@
 # See https://github.com/zabbix/zabbix-docker/blob/6.2/Dockerfiles/web-nginx-mysql/ubuntu/Dockerfile
 #
 
-FROM zabbix/zabbix-web-nginx-mysql:ubuntu-latest as zabbix-web-nginx-mysql
+FROM zabbix/zabbix-web-nginx-mysql:ubuntu-latest AS zabbix-web-nginx-mysql
 
 FROM --platform=${TARGETPLATFORM} liferay/base:latest
 

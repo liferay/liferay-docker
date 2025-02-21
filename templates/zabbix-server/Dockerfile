@@ -2,7 +2,7 @@
 # See https://github.com/zabbix/zabbix-docker/blob/6.2/Dockerfiles/server-mysql/ubuntu/Dockerfile
 #
 
-FROM zabbix/zabbix-server-mysql:ubuntu-latest as zabbix-server-mysql
+FROM zabbix/zabbix-server-mysql:ubuntu-latest AS zabbix-server-mysql
 
 FROM --platform=${TARGETPLATFORM} liferay/base:latest
 

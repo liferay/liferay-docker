@@ -1,10 +1,10 @@
-FROM --platform=linux/arm64 liferay/@jdk_from_image_name@:latest as liferay-@jdk_from_image_name@-arm64
+FROM --platform=linux/arm64 liferay/@jdk_from_image_name@:latest AS liferay-@jdk_from_image_name@-arm64
 
 ARG LABEL_ZULU_@jdk_version@_AMD64_VERSION
 ARG LABEL_ZULU_@jdk_version@_ARM64_VERSION
 ARG LABEL_ZULU_@jdk_version@_VERSION=${LABEL_ZULU_@jdk_version@_ARM64_VERSION}
 
-FROM --platform=linux/amd64 liferay/@jdk_from_image_name@:latest as liferay-@jdk_from_image_name@-amd64
+FROM --platform=linux/amd64 liferay/@jdk_from_image_name@:latest AS liferay-@jdk_from_image_name@-amd64
 
 ARG LABEL_ZULU_@jdk_version@_AMD64_VERSION
 ARG LABEL_ZULU_@jdk_version@_ARM64_VERSION
