@@ -393,7 +393,7 @@ function reference_new_releases {
 
 		if [ "${issue_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 		then
-			lc_log ERROR "Unable to create the jira issue."
+			lc_log ERROR "Unable to create the Jira issue."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
@@ -404,22 +404,23 @@ function reference_new_releases {
 			"new_releases_branch" \
 			"master" \
 			"pyoo47/liferay-jenkins-ee" \
-			"${issue_key} Add release references for ${_PRODUCT_VERSION}"
+			"${issue_key}" \
+			"Add release references for ${_PRODUCT_VERSION}."
 
 		if [ "${?}" -ne 0 ]
 		then
-			lc_log ERROR "Unable to send the next release references."
+			lc_log ERROR "Unable to send pull request with references to the next release."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		else
-			lc_log INFO "The pull request with next release references was sent successfully."
+			lc_log INFO "Pull request with references to the next release was sent successfully."
 		fi
 
 		local pull_request_url="$(\
 			gh pr view liferay-release:new_releases_branch \
 				--jq ".url" \
-				--json url \
-				--repo pyoo47/liferay-jenkins-ee)"
+				--json "url" \
+				--repo "pyoo47/liferay-jenkins-ee")"
 
 		add_jira_issue_comment "Related pull request: ${pull_request_url}" "${issue_key}"
 	fi
