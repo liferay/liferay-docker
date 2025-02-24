@@ -404,8 +404,7 @@ function reference_new_releases {
 			"new_releases_branch" \
 			"master" \
 			"pyoo47/liferay-jenkins-ee" \
-			"${issue_key}" \
-			"Add release references for ${_PRODUCT_VERSION}."
+			"${issue_key} Add release references for ${_PRODUCT_VERSION}."
 
 		if [ "${?}" -ne 0 ]
 		then
