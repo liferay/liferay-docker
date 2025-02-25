@@ -65,7 +65,7 @@ function test_set_product_version_lts {
 function test_set_product_version_with_parameters {
 	_test_set_product_version_with_parameters "2024.q1.0" "123456789" "2024.q1.0" "2024.q1.0-123456789"
 	_test_set_product_version_with_parameters "2025.q1.0" "123456789" "2025.q1.0-lts" "2025.q1.0-123456789"
-	_test_set_product_version_with_parameters "2025.q1.1" "123456789" "2025.q1.1" "2025.q1.1-123456789"
+	_test_set_product_version_with_parameters "2025.q1.1" "123456789" "2025.q1.1-lts" "2025.q1.1-123456789"
 	_test_set_product_version_with_parameters "7.3.10-u36" "123456789" "7.3.10-u36" "7.3.10-u36-123456789"
 
 	LIFERAY_RELEASE_PRODUCT_NAME="portal"
