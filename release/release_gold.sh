@@ -483,7 +483,7 @@ function tag_release {
 			{
 				"message": "",
 				"object": "${git_hash}",
-				"tag": "${_PRODUCT_VERSION}",
+				"tag": "${_ARTIFACT_VERSION}",
 				"type": "commit"
 			}
 			END
@@ -491,7 +491,7 @@ function tag_release {
 
 		if [ $(invoke_github_api_post "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
-			lc_log ERROR "Unable to create tag ${_PRODUCT_VERSION} in ${repository_owner}/${repository}."
+			lc_log ERROR "Unable to create tag ${_ARTIFACT_VERSION} in ${repository_owner}/${repository}."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
@@ -500,7 +500,7 @@ function tag_release {
 			cat <<- END
 			{
 				"message": "",
-				"ref": "refs/tags/${_PRODUCT_VERSION}",
+				"ref": "refs/tags/${_ARTIFACT_VERSION}",
 				"sha": "${git_hash}"
 			}
 			END
@@ -508,7 +508,7 @@ function tag_release {
 
 		if [ $(invoke_github_api_post "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
-			lc_log ERROR "Unable to create tag reference for ${_PRODUCT_VERSION} in ${repository_owner}/${repository}."
+			lc_log ERROR "Unable to create tag reference for ${_ARTIFACT_VERSION} in ${repository_owner}/${repository}."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
