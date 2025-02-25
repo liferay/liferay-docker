@@ -101,7 +101,7 @@ function test_prepare_next_release_branch {
 function _test_prepare_next_release_branch {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running test_prepare_next_release_branch for ${_PRODUCT_VERSION}\n"
+	echo -e "Running _test_prepare_next_release_branch for ${_PRODUCT_VERSION}\n"
 
 	local current_dir="${PWD}"
 
