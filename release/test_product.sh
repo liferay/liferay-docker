@@ -63,14 +63,14 @@ function test_set_product_version_lts {
 }
 
 function test_set_product_version_with_parameters {
-	_test_set_product_version_with_parameters "2024.q1.0" "123456789" "2024.q1.0" "2024.q1.0-123456789"
-	_test_set_product_version_with_parameters "2025.q1.0" "123456789" "2025.q1.0-lts" "2025.q1.0-123456789"
-	_test_set_product_version_with_parameters "2025.q1.1" "123456789" "2025.q1.1-lts" "2025.q1.1-123456789"
-	_test_set_product_version_with_parameters "7.3.10-u36" "123456789" "7.3.10-u36" "7.3.10-u36-123456789"
+	_test_set_product_version_with_parameters "2024.q1.0" "2024.q1.0" "2024.q1.0"
+	_test_set_product_version_with_parameters "2025.q1.0" "2025.q1.0-lts" "2025.q1.0"
+	_test_set_product_version_with_parameters "2025.q1.1" "2025.q1.1-lts" "2025.q1.1"
+	_test_set_product_version_with_parameters "7.3.10-u36" "7.3.10-u36" "7.3.10-u36"
 
 	LIFERAY_RELEASE_PRODUCT_NAME="portal"
 
-	_test_set_product_version_with_parameters "7.4.3.129-ga129" "123456789" "7.4.3.129-ga129" "7.4.3.129-123456789"
+	_test_set_product_version_with_parameters "7.4.3.129-ga129" "7.4.3.129-ga129" "7.4.3.129"
 }
 
 function test_warm_up_tomcat {
@@ -99,14 +99,17 @@ function _test_get_java_specification_version {
 }
 
 function _test_set_product_version_with_parameters {
-	set_product_version "${1}" "${2}" 1> /dev/null
+	echo -e "Running _test_set_product_version_with_parameters for ${1}\n"
+
+	set_product_version "${1}" "123456789" 1> /dev/null
 
 	assert_equals \
 		"${_PRODUCT_VERSION}" \
+		"${2}" \
+		"${_ARTIFACT_VERSION}" \
 		"${3}" \
 		"${_ARTIFACT_RC_VERSION}" \
-		"${4}"
+		"${3}-123456789"
 }
-
 
 main
