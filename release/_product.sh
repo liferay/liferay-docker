@@ -365,7 +365,7 @@ function set_product_version {
 		_PRODUCT_VERSION="${1}"
 
 		if [[ $(echo "$_PRODUCT_VERSION" | cut -d '.' -f 1) -gt 2024 ]] &&
-		   [[ "${_PRODUCT_VERSION}" == *"q1.0"* ]] &&
+		   [[ "${_PRODUCT_VERSION}" == *"q1"* ]] &&
 		   [[ "${_PRODUCT_VERSION}" != *"-lts" ]]
 		then
 				_PRODUCT_VERSION="${_PRODUCT_VERSION}-lts"
