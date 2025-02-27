@@ -214,8 +214,6 @@ function main {
 
 	download_trial_dxp_license
 
-	append_lts_if_q1_release
-
 	build_docker_image
 
 	test_docker_image
@@ -272,13 +270,6 @@ function push_docker_image {
 			--push \
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 			"${TEMP_DIR}" || exit 1
-	fi
-}
-
-function append_lts_if_q1_release {
-	if [[ "${LIFERAY_DOCKER_RELEASE_VERSION}" == *.q1.* ]]
-	then
-		LIFERAY_DOCKER_RELEASE_VERSION="${LIFERAY_DOCKER_RELEASE_VERSION}-LTS"
 	fi
 }
 
