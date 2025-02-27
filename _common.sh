@@ -85,7 +85,7 @@ function download {
 	local file_name="${1}"
 	local file_url="${2}"
 
-	if [ -e "${file_name}" ] && [[ "${file_url}" != */nightly/* ]] && [[ "${file_url}" != */latest/* ]]
+	if [ -e "${file_name}" ] && [[ "${file_url}" != */apache-tomcat/* ]] && [[ "${file_url}" != */nightly/* ]] && [[ "${file_url}" != */latest/* ]]
 	then
 		return
 	fi
@@ -95,7 +95,8 @@ function download {
 		file_url="https://${file_url}"
 	fi
 
-	if [[ "${file_url}" != http://mirrors.*.liferay.com* ]] &&
+	if [[ "${file_url}" != https://dlcdn.apache.org/* ]] &&
+	   [[ "${file_url}" != http://mirrors.*.liferay.com* ]] &&
 	   [[ "${file_url}" != https://release-1* ]] &&
 	   [[ "${file_url}" != https://releases-cdn.liferay.com* ]] &&
 	   [[ "${file_url}" != https://release.liferay.com* ]] &&
