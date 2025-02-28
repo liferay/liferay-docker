@@ -2,6 +2,12 @@
 
 source ../_liferay_common.sh
 
+function invoke_github_api_delete {
+	_invoke_github_api "${1}" "${2}" "DELETE"
+
+	echo $?
+}
+
 function invoke_github_api_post {
 	_invoke_github_api "${1}" "${2}" "POST"
 
