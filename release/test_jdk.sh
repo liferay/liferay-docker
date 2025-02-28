@@ -26,9 +26,9 @@ function set_up {
 		_JDK_VERSION_8="jdk8"
 	fi
 
-	export _JDK_VERSION_17="zulu17"
+	export _JDK_VERSION_17="openjdk17"
 
-	if [ ! -d "/opt/java/zulu17" ]
+	if [ ! -d "/opt/java/openjdk17" ]
 	then
 		_JDK_VERSION_17="jdk17"
 	fi
