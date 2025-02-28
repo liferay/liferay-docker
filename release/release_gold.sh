@@ -513,6 +513,20 @@ function tag_release {
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
 	done
+
+	if [[ "${_PRODUCT_VERSION}" == 7.4.*-u* ]]
+	then
+		LIFERAY_RELEASE_REPOSITORY_OWNER="brianchandotcom"
+
+		local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | tr '-' '.' | tr -d 'u')"
+
+		if [ $(invoke_github_api_delete "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		then
+			lc_log ERROR "Unable to delete temp branch ${temp_branch} in ${LIFERAY_RELEASE_REPOSITORY_OWNER}/${repository}."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+	fi
 }
 
 function test_boms {
