@@ -2,7 +2,7 @@
 
 source ../_liferay_common.sh
 
-function set_jdk_version {
+function set_jdk_version_and_parameters {
 	local jdk_version="zulu8"
 
 	if (echo "${_PRODUCT_VERSION}" | grep -q "q")
@@ -43,4 +43,16 @@ function set_jdk_version {
 
 	export JAVA_HOME="/opt/java/${jdk_version}"
 	export PATH="${JAVA_HOME}/bin:${PATH}"
+
+	if [[ "${jdk_version}" == *"8"* ]] && [[ ! "${JAVA_OPTS}" =~ "-XX:MaxPermSize" ]]
+	then
+		JAVA_OPTS="${JAVA_OPTS} -XX:MaxPermSize=256m"
+	fi
+
+	if [[ "${jdk_version}" == *"17"* ]]
+	then
+		JAVA_OPTS=$(echo "${JAVA_OPTS}" | sed "s/-XX:MaxPermSize=[^ ]*//g")
+	fi
+
+	export JAVA_OPTS
 }
