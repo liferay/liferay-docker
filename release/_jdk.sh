@@ -42,7 +42,6 @@ function set_jdk_version_and_parameters {
 	lc_log INFO "Using JDK ${jdk_version} for release ${_PRODUCT_VERSION}."
 
 	export JAVA_HOME="/opt/java/${jdk_version}"
-	export PATH="${JAVA_HOME}/bin:${PATH}"
 
 	if [[ "${jdk_version}" == *"8"* ]] && [[ ! "${JAVA_OPTS}" =~ "-XX:MaxPermSize" ]]
 	then
@@ -55,4 +54,6 @@ function set_jdk_version_and_parameters {
 	fi
 
 	export JAVA_OPTS
+
+	export PATH="${JAVA_HOME}/bin:${PATH}"
 }
