@@ -281,7 +281,6 @@ function print_help {
 	echo "    LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH: Set to \"true\" to prepare the next release branch. The default is \"false\"."
 	echo "    LIFERAY_RELEASE_PRODUCT_NAME (optional): Set to \"portal\" for CE. The default is \"DXP\"."
 	echo "    LIFERAY_RELEASE_RC_BUILD_TIMESTAMP: Timestamp of the build to publish"
-	echo "    LIFERAY_RELEASE_REPOSITORY_OWNER (optional): Set to \"EnterpriseReleaseHU\" for development. The default is \"liferay\"."
 	echo "    LIFERAY_RELEASE_VERSION: DXP or portal version of the release to publish"
 	echo ""
 	echo "Example: LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH=true LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964 LIFERAY_RELEASE_VERSION=2023.q3.0 ${0}"
