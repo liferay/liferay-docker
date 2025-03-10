@@ -476,7 +476,6 @@ function tag_release {
 
 	for repository_owner in brianchandotcom liferay
 	do
-		LIFERAY_RELEASE_REPOSITORY_OWNER="${repository_owner}"
 
 		local tag_data=$(
 			cat <<- END
@@ -489,7 +488,7 @@ function tag_release {
 			END
 		)
 
-		if [ $(invoke_github_api_post "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
 			lc_log ERROR "Unable to create tag ${_ARTIFACT_VERSION} in ${repository_owner}/${repository}."
 
@@ -506,7 +505,7 @@ function tag_release {
 			END
 		)
 
-		if [ $(invoke_github_api_post "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
 			lc_log ERROR "Unable to create tag reference for ${_ARTIFACT_VERSION} in ${repository_owner}/${repository}."
 
@@ -516,11 +515,9 @@ function tag_release {
 
 	if [[ "${_PRODUCT_VERSION}" == 7.4.*-u* ]]
 	then
-		LIFERAY_RELEASE_REPOSITORY_OWNER="brianchandotcom"
-
 		local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | tr '-' '.' | tr -d 'u')"
 
-		if [ $(invoke_github_api_delete "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		if [ $(invoke_github_api_delete "brianchandotcom" "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
 			lc_log ERROR "Unable to delete temp branch ${temp_branch} in ${LIFERAY_RELEASE_REPOSITORY_OWNER}/${repository}."
 
