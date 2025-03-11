@@ -9,9 +9,9 @@ function invoke_github_api_delete {
 }
 
 function invoke_github_api_post {
-    _invoke_github_api "${1}" "${2}" "${3}" "POST"
+	_invoke_github_api "${1}" "${2}" "${3}" "POST"
 
-    echo $?
+	echo $?
 }
 
 function _invoke_github_api {
