@@ -512,9 +512,9 @@ function tag_release {
 		fi
 	done
 
-	if [[ "${_PRODUCT_VERSION}" == "7.4."*"-u"* ]]
+	if [[ "${_PRODUCT_VERSION}" == 7.4.*-u* ]]
 	then
-		local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | tr '-' '.' | tr -d 'u')"
+		local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | sed -r "s/-u/\./")"
 
 		if [ $(invoke_github_api_delete "brianchandotcom" "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
