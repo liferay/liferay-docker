@@ -475,7 +475,6 @@ function tag_release {
 
 	for repository_owner in brianchandotcom liferay
 	do
-
 		local tag_data=$(
 			cat <<- END
 			{
