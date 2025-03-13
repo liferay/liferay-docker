@@ -87,7 +87,7 @@ function _process_product {
 	fi
 
 	for product_version in  $(echo -en "${directory_html}" | \
-		grep -E -o "(20[0-9]+\.q[0-9]\.[0-9]+|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
+		grep -E -o "(20[0-9]+\.q[0-9]\.[0-9]+(-lts)?|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
 		tr -d "/" | \
 		uniq)
 	do
