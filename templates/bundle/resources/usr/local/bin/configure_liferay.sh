@@ -112,7 +112,7 @@ EOF
 
 		sed -i '/<Engine name="Catalina" defaultHost="localhost">/r'<(echo "$cluster") /opt/liferay/tomcat/conf/server.xml
 
-		sed -i -E '/(<web-app id="Liferay_Portal".*)/\1\n<distributable />' /opt/liferay/tomcat/webapps/ROOT/WEB-INF/web.xml
+		sed -E -i '/(<web-app id="Liferay_Portal".*)/\1\n<distributable />' /opt/liferay/tomcat/webapps/ROOT/WEB-INF/web.xml
 	fi
 }
 
