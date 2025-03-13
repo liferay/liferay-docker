@@ -98,6 +98,7 @@ function main {
 	if [ "${LIFERAY_TOMCAT_SESSION_REPLICATION_ENABLED}" == "true" ]
 	then
 		local cluster
+
 		IFS='' read -r -d '' cluster <<EOF
 		<Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster">
 			<Manager className="com.liferay.support.tomcat.session.LiferayDeltaManager" />
