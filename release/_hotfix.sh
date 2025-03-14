@@ -176,10 +176,48 @@ function compare_jars {
 			fi
 		fi
 
-		if [ -n "${jar_descriptions}" ]
+		local new_jar_descriptions=""
+
+		if (echo "${jar_descriptions}" | grep -q ".class")
+		then
+			mkdir -p "${_BUILD_DIR}/tmp/jar1" "${_BUILD_DIR}/tmp/jar2"
+
+			while IFS= read -r line
+			do
+				if (echo "${line}" | grep -q ".class")
+				then
+					line_basename=$(basename "${line}")
+
+					unzip -p "${jar1}" "${line}" > "${_BUILD_DIR}/tmp/jar1/${line_basename}"
+					unzip -p "${jar2}" "${line}" > "${_BUILD_DIR}/tmp/jar2/${line_basename}"
+
+					javap -c -private -verbose "${_BUILD_DIR}/tmp/jar1/${line_basename}" | tail -n +4 > \
+						"${_BUILD_DIR}/tmp/jar1/${line_basename}.txt"
+					javap -c -private -verbose "${_BUILD_DIR}/tmp/jar2/${line_basename}" | tail -n +4 > \
+						"${_BUILD_DIR}/tmp/jar2/${line_basename}.txt"
+
+					diff_result=$(diff \
+						"${_BUILD_DIR}/tmp/jar1/${line_basename}.txt" \
+						"${_BUILD_DIR}/tmp/jar2/${line_basename}.txt")
+
+					if [ -n "${diff_result}" ]
+					then
+						new_jar_descriptions+="${line}"$'\n'
+					fi
+				else
+					new_jar_descriptions+="${line}"$'\n'
+				fi
+			done <<< "${jar_descriptions}"
+
+			rm -fr "${_BUILD_DIR}/tmp/jar1" "${_BUILD_DIR}/tmp/jar2"
+		else
+			new_jar_descriptions="${jar_descriptions}"
+		fi
+
+		if [ -n "${new_jar_descriptions}" ]
 		then
 			lc_log INFO "Changes in ${1}: "
-			lc_log INFO "${jar_descriptions}" | sed "s/^/    /"
+			lc_log INFO "${new_jar_descriptions}" | sed "s/^/    /"
 			lc_log INFO ""
 
 			return 0
