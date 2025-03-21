@@ -13,6 +13,7 @@ function main {
 	if [ -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
 	then
 		test_check_usage
+		test_get_tag_name
 		test_not_prepare_next_release_branch
 		test_not_update_release_info_date
 
@@ -62,6 +63,16 @@ function test_check_usage {
 	assert_equals "$(check_usage)" "$(cat test-dependencies/expected/check_usage_output.txt)"
 }
 
+function test_get_tag_name {
+	_test_get_tag_name "2024.q1.12" "" "2024.q1.12"
+
+	LIFERAY_RELEASE_PRODUCT_NAME="portal"
+
+	_test_get_tag_name "" "7.4.3.132-ga132" "7.4.3.132-ga132"
+
+	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+}
+
 function test_not_prepare_next_release_branch {
 	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "true") ]
 	then
@@ -96,6 +107,15 @@ function test_not_update_release_info_date {
 function test_prepare_next_release_branch {
 	_test_prepare_next_release_branch "2024.q1.12" "2024.Q1.13"
 	_test_prepare_next_release_branch "2025.q1.0" "2025.Q1.1 LTS"
+}
+
+function _test_get_tag_name {
+	_ARTIFACT_VERSION="${1}"
+	_PRODUCT_VERSION="${2}"
+
+	echo -e "Running _test_get_tag_name for ${3}.\n"
+
+	assert_equals "$(get_tag_name)" "${3}"
 }
 
 function _test_prepare_next_release_branch {
