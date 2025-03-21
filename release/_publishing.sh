@@ -61,10 +61,12 @@ function add_patcher_project_version {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	local patcher_project_version="$(get_patcher_project_version)"
+
 	local add_by_name_response=$(\
 		curl \
 			"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/addByName" \
-			--data-raw "combinedBranch=true&committish=${patcher_project_version}&fixedIssues=&name=${patcher_project_version}&productVersionLabel=${patcher_product_version_label}&repositoryName=liferay-portal-ee&rootPatcherProjectVersionName=${root_patcher_project_version_name}" \
+			--data-raw "combinedBranch=true&committish=${patcher_project_version}&fixedIssues=&name=${patcher_project_version}&productVersionLabel=$(get_patcher_product_version_label)&repositoryName=liferay-portal-ee&rootPatcherProjectVersionName=$(get_root_patcher_project_version_name)" \
 			--max-time 10 \
 			--retry 3 \
 			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
