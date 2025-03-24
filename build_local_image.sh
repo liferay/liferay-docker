@@ -88,8 +88,8 @@ function prepare_temp_directory {
 	if [[ " ${@} " =~ " --no-test " ]]
 	then
 		excludes+=(
-			"--exclude" "osgi/modules/com.liferay.data.guard.connector.jar"
 			"--exclude" "osgi/modules/*.test*"
+			"--exclude" "osgi/modules/com.liferay.data.guard.connector.jar"
 			"--exclude" "osgi/portal/*.test*"
 			"--exclude" "osgi/test"
 			"--exclude" "osgi/war/com.liferay.portal.bundle.blacklist.test.bundle.war.war"
