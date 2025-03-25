@@ -1,13 +1,15 @@
 #!/bin/bash
 
+source _liferay_common.sh
+
 function check_usage {
 	if [ ! -n "${1}" ]
 	then
 		echo "Usage: ${0} <version>"
 		echo ""
-		echo "This script requires the first parameter to be set to the version of the Apache Tomcat (e.g. 9.0.97)."
+		echo "<version>: version number of Apache Tomcat (e.g. 9.0.97)."
 
-		exit 1
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
@@ -18,7 +20,7 @@ function get_full_version {
 	else
 		echo "Unable to get full version for ${1}."
 
-		exit 2
+		exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 	fi
 }
 
