@@ -64,11 +64,12 @@ function test_check_usage {
 }
 
 function test_get_tag_name {
-	_test_get_tag_name "2024.q1.12" "" "2024.q1.12"
+	_test_get_tag_name "2024.q1.12" "2024.q1.12" "2024.q1.12"
+	_test_get_tag_name "2025.q1.0" "2025.q1.0-lts" "2025.q1.0"
 
 	LIFERAY_RELEASE_PRODUCT_NAME="portal"
 
-	_test_get_tag_name "" "7.4.3.132-ga132" "7.4.3.132-ga132"
+	_test_get_tag_name "7.4.3.132" "7.4.3.132-ga132" "7.4.3.132-ga132"
 
 	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 }
