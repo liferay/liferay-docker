@@ -88,10 +88,10 @@ function commit_to_branch_and_send_pull_request {
 }
 
 function get_tag_name {
-	if [[ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]]
+	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
 	then
 		echo "${_ARTIFACT_VERSION}"
-	elif [[ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]]
+	elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
 		echo "${_PRODUCT_VERSION}"
 	fi
