@@ -196,14 +196,16 @@ function compare_jars {
 					local class_file_name=$(basename "${line}")
 
 					unzip -p "${jar1}" "${line}" > "${_BUILD_DIR}/tmp/jar1/${class_file_name}"
-					unzip -p "${jar2}" "${line}" > "${_BUILD_DIR}/tmp/jar2/${class_file_name}"
 
 					javap -c -private -verbose "${_BUILD_DIR}/tmp/jar1/${class_file_name}" | tail -n +4 > \
 						"${_BUILD_DIR}/tmp/jar1/${class_file_name}.txt"
+
+					unzip -p "${jar2}" "${line}" > "${_BUILD_DIR}/tmp/jar2/${class_file_name}"
+
 					javap -c -private -verbose "${_BUILD_DIR}/tmp/jar2/${class_file_name}" | tail -n +4 > \
 						"${_BUILD_DIR}/tmp/jar2/${class_file_name}.txt"
 
-					diff_result=$(diff \
+					local diff_result=$(diff \
 						"${_BUILD_DIR}/tmp/jar1/${class_file_name}.txt" \
 						"${_BUILD_DIR}/tmp/jar2/${class_file_name}.txt")
 
