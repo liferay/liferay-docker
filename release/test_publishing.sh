@@ -59,7 +59,7 @@ function test_update_bundles_yml {
 function _run_update_bundles_yml {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _update_bundles_yml for ${_PRODUCT_VERSION}\n"
+	echo -e "Running _update_bundles_yml for ${_PRODUCT_VERSION}.\n"
 
 	_update_bundles_yml --test &> /dev/null
 }

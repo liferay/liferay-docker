@@ -91,7 +91,7 @@ function test_warm_up_tomcat_already_warmed {
 function _test_get_java_specification_version {
 	JAVA_HOME="/opt/java/${1}"
 
-	echo -e "Running _test_get_java_specification_version for ${JAVA_HOME}\n"
+	echo -e "Running _test_get_java_specification_version for ${JAVA_HOME}.\n"
 
 	assert_equals "$(get_java_specification_version)" "${2}"
 
@@ -99,7 +99,7 @@ function _test_get_java_specification_version {
 }
 
 function _test_set_product_version_with_parameters {
-	echo -e "Running _test_set_product_version_with_parameters for ${1}\n"
+	echo -e "Running _test_set_product_version_with_parameters for ${1}.\n"
 
 	set_product_version "${1}" "123456789" 1> /dev/null
 
