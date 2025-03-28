@@ -77,7 +77,7 @@ function commit_to_branch_and_send_pull_request {
 	gh pr create \
 		--base "${4}" \
 		--body "Created by liferay-docker/release/release_gold.sh." \
-		--head "${3}" \
+		--head "liferay-release:${3}" \
 		--repo "${5}" \
 		--title "${6}"
 
