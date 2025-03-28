@@ -399,7 +399,7 @@ function reference_new_releases {
 
 	local quarterly_release_branch="release-$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)"
 
-	if [ "${quarterly_release_branch}" == "${previous_quarterly_release_branch}" ]
+	if [ "${latest_quarterly_release}" == "false" ]
 	then
 		replace_property \
 			"portal.latest.bundle.version\[${quarterly_release_branch}\]" \
