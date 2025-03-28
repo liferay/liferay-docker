@@ -264,9 +264,9 @@ function prepare_temp_directory {
 	rm -fr "${TEMP_DIR}/liferay/tomcat/webapps"
 
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/bin/catalina-tasks.xml" "${TEMP_DIR}/liferay/tomcat/bin/catalina-tasks.xml"
-	cp -r "${TEMP_DIR}/liferay/tomcat-old/conf" "${TEMP_DIR}/liferay/tomcat/"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/bin/setenv.bat" "${TEMP_DIR}/liferay/tomcat/bin/setenv.bat"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/bin/setenv.sh" "${TEMP_DIR}/liferay/tomcat/bin/setenv.sh"
+	cp -r "${TEMP_DIR}/liferay/tomcat-old/conf" "${TEMP_DIR}/liferay/tomcat/"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/webapps" "${TEMP_DIR}/liferay/tomcat/"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/work/Catalina" "${TEMP_DIR}/liferay/tomcat/work/Catalina"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/LICENSE" "${TEMP_DIR}/liferay/tomcat/LICENSE"
