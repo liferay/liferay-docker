@@ -376,10 +376,19 @@ function reference_new_releases {
 		"${_PRODUCT_VERSION}" \
 		"portal.latest.bundle.version\[${previous_product_version}\]="
 
-	replace_property \
-		"portal.latest.bundle.version\[master\]" \
-		"${_PRODUCT_VERSION}" \
-		"portal.latest.bundle.version\[master\]=${previous_product_version}"
+	local latest_product_group_version="$(\
+		grep "portal.latest.bundle.version\[master\]=" \
+			"build.properties" | \
+			cut -d '=' -f 2 | \
+			cut -d '.' -f 1,2)"
+
+	if [ "${product_group_version}" == "${latest_product_group_version}" ] || [ "${latest_quarterly_release}" == "true" ] 
+	then
+		replace_property \
+			"portal.latest.bundle.version\[master\]" \
+			"${_PRODUCT_VERSION}" \
+			"portal.latest.bundle.version\[master\]=${previous_product_version}"
+	fi
 
 	local previous_quarterly_release_branch="$(\
 		grep "portal.latest.bundle.version" \
