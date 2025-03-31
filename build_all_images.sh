@@ -55,8 +55,9 @@ function build_batch_image {
 }
 
 function build_bundle_image {
-	local query=${1}
-	local version=${2}
+	local query=${2}
+	local slim_type=${1}
+	local version=${3}
 
 	local additional_tags=$(get_string $( yq "${query}".additional_tags < bundles.yml))
 	local bundle_url=$(get_string $(yq "${query}".bundle_url < bundles.yml))
@@ -82,28 +83,35 @@ function build_bundle_image {
 		local build_id=${version}
 	fi
 
+	local image_name="${build_id}"
+
+	if [ "${slim_type}" == "true" ]
+	then
+		image_name="${image_name}-slim"
+	fi
+
 	echo ""
-	echo "Building Docker image ${build_id} based on ${bundle_url}."
+	echo "Building Docker image ${image_name} based on ${bundle_url}."
 	echo ""
 
-	LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_LATEST=${latest} LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LIFERAY_DOCKER_LOGS_DIR}/${build_id}.log"
+	LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES="${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}" LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_LATEST=${latest} LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_SLIM="${slim_type}" LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LIFERAY_DOCKER_LOGS_DIR}/${build_id}.log"
 
 	local build_bundle_image_exit_code=${PIPESTATUS[0]}
 
 	if [ "${build_bundle_image_exit_code}" -gt 0 ]
 	then
-		echo "FAILED: ${build_id}" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
+		echo "FAILED: ${image_name}" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
 		if [ "${build_bundle_image_exit_code}" -eq 4 ]
 		then
-			echo "Detected a license failure while building image ${build_id}." > "${LIFERAY_DOCKER_LOGS_DIR}/license-failure"
+			echo "Detected a license failure while building image ${image_name}." > "${LIFERAY_DOCKER_LOGS_DIR}/license-failure"
 
 			echo "There is an existing license failure."
 
 			exit 4
 		fi
 	else
-		echo "SUCCESS: ${build_id}" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
+		echo "SUCCESS: ${image_name}" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 	fi
 }
 
@@ -142,7 +150,8 @@ function build_bundle_images {
 
 			local query=.\"${main_key}\".\"${version}\"
 
-			build_bundle_image "${query}" "${version}"
+			build_bundle_image "false" "${query}" "${version}"
+			build_bundle_image "true" "${query}" "${version}"
 		done
 	else
 		local main_key=$(get_main_key "${main_keys}" "${specified_version}")
@@ -157,7 +166,8 @@ function build_bundle_images {
 
 			if [[ "$(yq "${query}" < bundles.yml)" != "null" ]]
 			then
-				build_bundle_image "${query}" "${specified_version}"
+				build_bundle_image "false" "${query}" "${specified_version}"
+				build_bundle_image "true" "${query}" "${specified_version}"
 			else
 				echo "No bundles were found."
 
