@@ -2,6 +2,39 @@
 
 source ../_liferay_common.sh
 
+function check_usage {
+	if [ -z "${LIFERAY_IMAGE_NAMES}" ]
+	then
+		print_help
+	fi
+
+	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
+
+	_RELEASE_ROOT_DIR="${PWD}"
+
+	LIFERAY_COMMON_LOG_DIR="${_RELEASE_ROOT_DIR}/logs"
+
+	mkdir -p "${LIFERAY_COMMON_LOG_DIR}"
+}
+
+function main {
+	check_usage
+
+	lc_time_run scan_docker_images
+}
+
+function print_help {
+	echo "Usage: LIFERAY_IMAGE_NAMES=<image name> ${0}"
+	echo ""
+	echo "The script reads the following environment variables:"
+	echo ""
+	echo "    LIFERAY_IMAGE_NAMES: Comma-separated list of DXP or portal version of Docker images"
+	echo ""
+	echo "Example: LIFERAY_IMAGE_NAMES=liferay/dxp:2025.q1.5-lts,liferay/dxp:2024.q2.2 ${0}"
+
+	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
+}
+
 function scan_docker_images {
 	local api_url="https://api.eu.prismacloud.io"
 	local console="https://europe-west3.cloud.twistlock.com/eu-1614931"
@@ -70,4 +103,4 @@ function scan_docker_images {
 	rm -f ./twistcli
 }
 
-lc_time_run scan_docker_images "${@}"
+main "${@}"
