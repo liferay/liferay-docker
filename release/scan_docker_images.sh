@@ -38,7 +38,6 @@ function print_help {
 function scan_docker_images {
 	local api_url="https://api.eu.prismacloud.io"
 	local console="https://europe-west3.cloud.twistlock.com/eu-1614931"
-	local image_names=("$@") # Capture all arguments as an array
 
 	LIFERAY_PRISMA_ACCESS_KEY=""
 	LIFERAY_PRISMA_SECRET=""
@@ -70,7 +69,7 @@ function scan_docker_images {
 
 	chmod +x ./twistcli
 
-	for image_name in "${image_names[@]}"
+	echo "${LIFERAY_IMAGE_NAMES}" | tr ',' '\n' | while read -r image_name
 	do
 		local sanitized_image_name=$(echo "${image_name}" | sed 's/[^a-zA-Z0-9]/_/g')
 
@@ -103,4 +102,4 @@ function scan_docker_images {
 	rm -f ./twistcli
 }
 
-main "${@}"
+main
