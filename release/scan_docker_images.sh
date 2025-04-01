@@ -39,9 +39,6 @@ function scan_docker_images {
 	local api_url="https://api.eu.prismacloud.io"
 	local console="https://europe-west3.cloud.twistlock.com/eu-1614931"
 
-	LIFERAY_PRISMA_ACCESS_KEY=""
-	LIFERAY_PRISMA_SECRET=""
-
 	local request_data=$(
 		cat <<- END
 		{
