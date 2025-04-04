@@ -22,6 +22,23 @@ function generate_releases_json {
 	_upload_releases_json
 }
 
+function _generate_product_version_list {
+	local release_directory_url="https://releases.liferay.com/${1}"
+
+	lc_log INFO "Generating product version list from ${release_directory_url}."
+
+	local directory_html=$(lc_curl "${release_directory_url}/")
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to download the product version list."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	echo "${directory_html}"
+}
+
 function _merge_json_snippets {
 	if (! jq -s add $(ls ./*.json | sort -r) > releases.json)
 	then
@@ -75,18 +92,7 @@ function _process_product {
 
 	local release_directory_url="https://releases.liferay.com/${product_name}"
 
-	lc_log INFO "Generating product version list from ${release_directory_url}."
-
-	local directory_html=$(lc_curl "${release_directory_url}/")
-
-	if [ "${?}" -ne 0 ]
-	then
-		lc_log ERROR "Unable to download the product version list."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	for product_version in  $(echo -en "${directory_html}" | \
+	for product_version in  $(echo -en "$(_generate_product_version_list "${product_name}")" | \
 		grep -E -o "(20[0-9]+\.q[0-9]\.[0-9]+(-lts)?|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
 		tr -d "/" | \
 		uniq)
