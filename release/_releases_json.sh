@@ -39,6 +39,31 @@ function _generate_product_version_list {
 	echo "${directory_html}"
 }
 
+function _get_latest_product_version {
+	local product_name="dxp"
+	local product_version_regex
+	local release_type="${1}"
+
+	if [[ "${release_type}" == "dxp" ]]
+	then
+		product_version_regex='(?<=<a href=")(7\.3\.10-u\d+)'
+	elif [[ "${release_type}" == "ga" ]]
+	then
+		product_name="portal"
+		product_version_regex='(?<=<a href=")(7\.4\.3\.\d+-ga\d+)'
+	elif [[ "${release_type}" == "quartely" ]]
+	then
+		product_version_regex='(?<=<a href=")(\d{4}\.q[1-4]\.\d+(-lts)?)'
+	fi
+
+	echo "$(_generate_product_version_list "${product_name}")" | \
+		grep \
+		--only-matching \
+		--perl-regexp \
+		"${product_version_regex}" | \
+		tail -n 1
+}
+
 function _merge_json_snippets {
 	if (! jq -s add $(ls ./*.json | sort -r) > releases.json)
 	then
