@@ -12,6 +12,7 @@ function main {
 	test_process_new_product_2
 	test_process_product
 	test_promote_product_versions dxp
+	test_tag_recommended_product_versions
 
 	tear_down
 }
@@ -24,9 +25,15 @@ function set_up {
 
 	rm -fr "${HOME}/.liferay-common-cache/releases.liferay.com"
 
+	cp test-dependencies/actual/latest-ga-product-version.json "${_PROMOTION_DIR}"
+
+	mv "${_PROMOTION_DIR}/latest-ga-product-version.json" "${_PROMOTION_DIR}/ga-$(_get_latest_product_version "ga").json"
+
 	_process_product dxp &> /dev/null
 
 	_promote_product_versions dxp &> /dev/null
+
+	_tag_recommended_product_versions &> /dev/null
 
 	_merge_json_snippets &> /dev/null
 
@@ -90,6 +97,23 @@ function test_promote_product_versions {
 			assert_equals "$(jq -r '.[] | .promoted' "${last_version}")" "true"
 		fi
 	done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
+}
+
+function test_tag_recommended_product_versions {
+	for release_type in "dxp" "quartely"
+	do
+		assert_equals \
+			"$(jq "[.[] | select(.productVersion == \"DXP $(_get_latest_product_version "${release_type}" | tr '[:lower:]-' '[:upper:] ')\" and .tags == [\"recommended\"])] | length == 1" releases.json)" \
+			"true"
+	done
+
+	assert_equals \
+		"$(jq '[.[] | select(.product == "portal" and .tags == ["recommended"])] | length == 1' releases.json)" \
+		"true"
+
+	assert_equals \
+		"$(jq '[.[] | select(.tags == ["recommended"])] | length == 3' releases.json)" \
+		"true"
 }
 
 main
