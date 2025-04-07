@@ -16,6 +16,7 @@ function generate_releases_json {
 
 	_promote_product_versions dxp
 	_promote_product_versions portal
+	_tag_recommended_product_versions
 
 	_merge_json_snippets
 
@@ -51,7 +52,7 @@ function _get_latest_product_version {
 	then
 		product_name="portal"
 		product_version_regex='(?<=<a href=")(7\.4\.3\.\d+-ga\d+)'
-	elif [[ "${release_type}" == "quartely" ]]
+	elif [[ "${release_type}" == "quarterly" ]]
 	then
 		product_version_regex='(?<=<a href=")(\d{4}\.q[1-4]\.\d+(-lts)?)'
 	fi
@@ -183,7 +184,7 @@ function _promote_product_versions {
 	while read -r group_version || [ -n "${group_version}" ]
 	do
 		# shellcheck disable=SC2010
-		last_version=$(ls | grep "${product_name}-${group_version}" | tail -n 1 2>/dev/null)
+		last_version=$(ls "${_PROMOTION_DIR}" | grep "${product_name}-${group_version}" | tail -n 1 2>/dev/null)
 
 		if [ -n "${last_version}" ]
 		then
@@ -194,6 +195,27 @@ function _promote_product_versions {
 			lc_log INFO "No product version found to promote for ${product_name}-${group_version}."
 		fi
 	done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
+}
+
+function _tag_recommended_product_versions {
+	for product_version in "ga" "quarterly"
+	do
+		local latest_product_version_json=$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "${release_type}")")
+
+		if [ -f "${latest_product_version_json}" ]
+		then
+			jq "map(
+					(. + {tags: [\"recommended\"]})
+					| to_entries
+					| sort_by(.key)
+					| from_entries
+				)" "${latest_product_version_json}" > "${latest_product_version_json}.tmp" && mv "${latest_product_version_json}.tmp" "${latest_product_version_json}"
+
+			lc_log INFO "Tagging ${latest_product_version_json} as recommended."
+		else
+			lc_log INFO "No JSON snippet found to tag for ${release_type} release."
+		fi
+	done
 }
 
 function _upload_releases_json {
