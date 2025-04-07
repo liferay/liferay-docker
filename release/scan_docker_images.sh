@@ -37,8 +37,6 @@ function print_help {
 
 function scan_docker_images {
 	local api_url="https://api.eu.prismacloud.io"
-	local console_url="https://europe-west3.cloud.twistlock.com/eu-1614931"
-
 	local data=$(
 		cat <<- END
 		{
@@ -56,6 +54,7 @@ function scan_docker_images {
 			--silent \
 			"${api_url}/login")
 
+	local console_url="https://europe-west3.cloud.twistlock.com/eu-1614931"
 	local token=$(echo "${auth_response}" | jq -r '.token')
 
 	curl \
