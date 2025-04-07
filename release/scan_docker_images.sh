@@ -73,7 +73,7 @@ function scan_docker_images {
 
 		lc_log INFO "Scanning ${image_name}."
 
-		export scan_output=$(\
+		local scan_output=$(\
 			./twistcli images scan \
 				--address "${console_url}" \
 				--docker-address "/run/user/1000/docker.sock" \
