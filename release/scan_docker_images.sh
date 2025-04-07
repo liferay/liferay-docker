@@ -72,7 +72,7 @@ function scan_docker_images {
 		local scan_output=$(\
 			./twistcli images scan \
 				--address "${console_url}" \
-				--docker-address "/run/user/1000/docker.sock" \
+				--docker-address "$(find / -name docker.sock 2>/dev/null)" \
 				--password "${LIFERAY_PRISMA_SECRET}" \
 				--user "${LIFERAY_PRISMA_ACCESS_KEY}" \
 				"${image_name}")
