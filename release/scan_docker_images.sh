@@ -37,9 +37,9 @@ function print_help {
 
 function scan_docker_images {
 	local api_url="https://api.eu.prismacloud.io"
-	local console="https://europe-west3.cloud.twistlock.com/eu-1614931"
+	local console_url="https://europe-west3.cloud.twistlock.com/eu-1614931"
 
-	local request_data=$(
+	local data=$(
 		cat <<- END
 		{
 			"password": "${LIFERAY_PRISMA_SECRET}",
@@ -50,7 +50,7 @@ function scan_docker_images {
 
 	local auth_response=$(\
 		curl \
-			--data "${request_data}" \
+			--data "${data}" \
 			--header "Content-Type: application/json" \
 			--request POST \
 			--silent \
@@ -62,7 +62,7 @@ function scan_docker_images {
 		--header "x-redlock-auth: ${token}" \
 		--output twistcli \
 		--silent \
-		"${console}/api/v1/util/twistcli"
+		"${console_url}/api/v1/util/twistcli"
 
 	chmod +x ./twistcli
 
@@ -76,7 +76,7 @@ function scan_docker_images {
 
 		export scan_output=$(\
 			./twistcli images scan \
-				--address "${console}" \
+				--address "${console_url}" \
 				--docker-address "/run/user/1000/docker.sock" \
 				--password "${LIFERAY_PRISMA_SECRET}" \
 				--user "${LIFERAY_PRISMA_ACCESS_KEY}" \
