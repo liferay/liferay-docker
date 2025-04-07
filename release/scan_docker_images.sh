@@ -67,10 +67,6 @@ function scan_docker_images {
 
 	echo "${LIFERAY_IMAGE_NAMES}" | tr ',' '\n' | while read -r image_name
 	do
-		local sanitized_image_name=$(echo "${image_name}" | sed 's/[^a-zA-Z0-9]/_/g')
-
-		local vulnerabilities_file="vulnerabilities_${sanitized_image_name}.json"
-
 		lc_log INFO "Scanning ${image_name}."
 
 		local scan_output=$(\
