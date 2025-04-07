@@ -81,7 +81,8 @@ function scan_docker_images {
 
 		lc_log INFO "${scan_output}"
 
-		if [[ ${scan_output} == *"Vulnerability threshold check results: PASS"* ]] || [[ ${image_name} == *"7.4.13.nightly"* ]]
+		if [[ ${scan_output} == *"Compliance threshold check results: PASS"* ]] &&
+		   [[ ${scan_output} == *"Vulnerability threshold check results: PASS"* ]]
 		then
 			lc_log INFO "The result of scan for ${image_name} is: PASS"
 		else
