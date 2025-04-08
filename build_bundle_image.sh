@@ -261,8 +261,9 @@ function prepare_temp_directory {
 	mv "${TEMP_DIR}/liferay-"* "${TEMP_DIR}/liferay"
 
 	local tomcat_version=$(get_latest_tomcat_version)
-	local tomcat_url="https://dlcdn.apache.org/tomcat/tomcat-${tomcat_version%%.*}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}.zip"
+
 	local tomcat_download_dir="downloads/tomcat/apache-tomcat-${tomcat_version}"
+	local tomcat_url="https://dlcdn.apache.org/tomcat/tomcat-${tomcat_version%%.*}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}.zip"
 
 	download "${tomcat_download_dir}/apache-tomcat.zip" "${tomcat_url}"
 
@@ -276,15 +277,15 @@ function prepare_temp_directory {
 	rm -fr "${TEMP_DIR}/liferay/tomcat/temp/safeToDelete.tmp"
 	rm -fr "${TEMP_DIR}/liferay/tomcat/webapps"
 
+	cp -r "${TEMP_DIR}/liferay/tomcat-old/LICENSE" "${TEMP_DIR}/liferay/tomcat/LICENSE"
+	cp -r "${TEMP_DIR}/liferay/tomcat-old/NOTICE" "${TEMP_DIR}/liferay/tomcat/NOTICE"
+	cp -r "${TEMP_DIR}/liferay/tomcat-old/RELEASE-NOTES" "${TEMP_DIR}/liferay/tomcat/RELEASE-NOTES"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/bin/catalina-tasks.xml" "${TEMP_DIR}/liferay/tomcat/bin/catalina-tasks.xml"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/bin/setenv.bat" "${TEMP_DIR}/liferay/tomcat/bin/setenv.bat"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/bin/setenv.sh" "${TEMP_DIR}/liferay/tomcat/bin/setenv.sh"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/conf" "${TEMP_DIR}/liferay/tomcat/"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/webapps" "${TEMP_DIR}/liferay/tomcat/"
 	cp -r "${TEMP_DIR}/liferay/tomcat-old/work/Catalina" "${TEMP_DIR}/liferay/tomcat/work/Catalina"
-	cp -r "${TEMP_DIR}/liferay/tomcat-old/LICENSE" "${TEMP_DIR}/liferay/tomcat/LICENSE"
-	cp -r "${TEMP_DIR}/liferay/tomcat-old/NOTICE" "${TEMP_DIR}/liferay/tomcat/NOTICE"
-	cp -r "${TEMP_DIR}/liferay/tomcat-old/RELEASE-NOTES" "${TEMP_DIR}/liferay/tomcat/RELEASE-NOTES"
 
 	rm -fr "${TEMP_DIR}/liferay/tomcat-old"
 
