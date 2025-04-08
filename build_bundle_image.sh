@@ -289,7 +289,7 @@ function prepare_temp_directory {
 
 	rm -fr "${TEMP_DIR}/liferay/tomcat-old"
 
-	chmod +x "${TEMP_DIR}/liferay/tomcat/bin/"*
+	chmod +x "${TEMP_DIR}/liferay/tomcat/bin/*"
 }
 
 function push_docker_image {
