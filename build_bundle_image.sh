@@ -177,7 +177,7 @@ function get_latest_tomcat_version {
 
 	if [[ "${tomcat_version}" == "9.0"* ]]
 	then
-		echo "9.0.100"
+		echo "9.0.102"
 	else
 		echo "Unable to get full version for ${1}."
 
