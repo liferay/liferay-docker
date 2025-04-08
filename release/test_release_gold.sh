@@ -189,11 +189,9 @@ function _test_reference_new_releases {
 
 	lc_cd "${_PROJECTS_DIR}/liferay-docker/release"
 
-	local build_properties_file="build_$(echo "${_PRODUCT_VERSION}" | tr '.' '_').properties"
-
 	assert_equals \
 		"test-dependencies/actual/build.properties" \
-		"test-dependencies/expected/${build_properties_file}"
+		"test-dependencies/expected/build_$(echo "${_PRODUCT_VERSION}" | tr '.' '_').properties"
 }
 
 function _test_not_update_release_info_date {
