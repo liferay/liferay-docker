@@ -138,9 +138,9 @@ function _test_prepare_next_release_branch {
 }
 
 function test_reference_new_releases {
-	for version in "2024.q3.13" "2025.q1.1-lts" "2025.q2.1"
+	for product_version in "2024.q3.13" "2025.q1.1-lts" "2025.q2.1"
 	do
-		_test_reference_new_releases "${version}"
+		_test_reference_new_releases "${product_version}"
 
 		git restore "test-dependencies/actual/build.properties"
 	done
