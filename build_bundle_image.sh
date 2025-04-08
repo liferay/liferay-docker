@@ -179,7 +179,7 @@ function get_latest_tomcat_version {
 	then
 		echo "9.0.102"
 	else
-		echo "Unable to get full version for ${1}."
+		echo "Unable to get latest Tomcat version for ${1}."
 
 		exit 1
 	fi

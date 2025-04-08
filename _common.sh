@@ -161,7 +161,7 @@ function get_tomcat_version {
 
 	if [ -z "${liferay_tomcat_version}" ]
 	then
-		echo "Unable to determine Tomcat version."
+		echo "Unable to get Tomcat version."
 
 		exit 1
 	fi
