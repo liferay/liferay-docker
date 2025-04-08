@@ -141,7 +141,10 @@ function _process_product {
 	local release_directory_url="https://releases.liferay.com/${product_name}"
 
 	for product_version in  $(echo -en "$(_generate_product_version_list "${product_name}")" | \
-		grep -E -o "(20[0-9]+\.q[0-9]\.[0-9]+(-lts)?|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
+		grep \
+		--extended-regexp \
+		--only-matching \
+		"(20[0-9]+\.q[0-9]\.[0-9]+(-lts)?|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
 		tr -d "/" | \
 		uniq)
 	do
