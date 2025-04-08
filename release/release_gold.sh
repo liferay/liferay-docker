@@ -321,6 +321,8 @@ function reference_new_releases {
 
 	local base_url="http://mirrors.lax.liferay.com/releases.liferay.com"
 
+	local latest_quarterly_release="false"
+
 	local product_group_version=$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2)
 
 	local previous_product_version="$(\
@@ -329,13 +331,10 @@ function reference_new_releases {
 			tail -1 | \
 			cut -d '=' -f 2)"
 
-	local latest_quarterly_release="false"
-
 	if [ -z "${previous_product_version}" ]
 	then
-		previous_product_version="$(grep "portal.latest.bundle.version\[master\]=" "build.properties" | cut -d '=' -f 2)"
-
 		latest_quarterly_release="true"
+		previous_product_version="$(grep "portal.latest.bundle.version\[master\]=" "build.properties" | cut -d '=' -f 2)"
 	fi
 
 	for component in osgi sql tools
