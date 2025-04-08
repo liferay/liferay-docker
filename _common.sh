@@ -85,7 +85,10 @@ function download {
 	local file_name="${1}"
 	local file_url="${2}"
 
-	if [ -e "${file_name}" ] && [[ "${file_url}" != */apache-tomcat/* ]] && [[ "${file_url}" != */nightly/* ]] && [[ "${file_url}" != */latest/* ]]
+	if [ -e "${file_name}" ] &&
+	   [[ "${file_url}" != */apache-tomcat/* ]] &&
+	   [[ "${file_url}" != */latest/* ]] &&
+	   [[ "${file_url}" != */nightly/* ]]
 	then
 		return
 	fi
