@@ -271,7 +271,7 @@ function prepare_temp_directory {
 
 	unzip -d "${TEMP_DIR}/liferay" -q "${tomcat_download_dir}/apache-tomcat.zip" || exit 3
 
-	mv "${TEMP_DIR}/liferay/apache-tomcat-*" "${TEMP_DIR}/liferay/tomcat"
+	mv "${TEMP_DIR}/liferay/apache-tomcat-"* "${TEMP_DIR}/liferay/tomcat"
 
 	rm -fr "${TEMP_DIR}/liferay/tomcat/conf"
 	rm -fr "${TEMP_DIR}/liferay/tomcat/temp/safeToDelete.tmp"
