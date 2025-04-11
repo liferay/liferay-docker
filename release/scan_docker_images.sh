@@ -28,7 +28,7 @@ function print_help {
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
-	echo "    LIFERAY_IMAGE_NAMES: Comma-separated list of DXP or portal version of Docker images"
+	echo "    LIFERAY_IMAGE_NAMES: Comma-separated list of DXP or Portal Docker images"
 	echo ""
 	echo "Example: LIFERAY_IMAGE_NAMES=liferay/dxp:2025.q1.5-lts,liferay/dxp:2024.q2.2 ${0}"
 
