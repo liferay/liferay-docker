@@ -32,6 +32,24 @@ function add_licensing {
 		-f build-release-license.xml
 }
 
+function build_opensearch_jar {
+	lc_cd "${_BUNDLES_DIR}/osgi/portal"
+
+	if [ -e "com.liferay.portal.search.opensearch2.api.jar" ] &&
+	   [ -e "com.liferay.portal.search.opensearch2.impl.jar" ]
+	then
+		lc_log INFO "The OpenSearch jar already exists."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	else
+		lc_log INFO "Generating OpenSearch jar."
+
+		lc_cd "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2"
+
+		"${_PROJECTS_DIR}/liferay-portal-ee/gradlew" clean deploy
+	fi
+}
+
 function build_product {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
