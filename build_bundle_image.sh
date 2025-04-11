@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ./_common.sh
+source ./_liferay_common.sh
 
 function build_docker_image {
 	if [ "${LIFERAY_DOCKER_SLIM}" == "true" ]
@@ -221,6 +222,11 @@ function main {
 	if [ -n "${LIFERAY_DOCKER_SLIM}" ]
 	then
 		prepare_slim_image
+
+		if [ $? -ne 0 ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
 	fi
 
 	download_trial_dxp_license
@@ -237,14 +243,54 @@ function main {
 }
 
 function prepare_slim_image {
+	local release_product_name=$(echo "${LIFERAY_DOCKER_RELEASE_FILE_URL}" | cut -d '/' -f 2)
+	local release_version=$(echo "${LIFERAY_DOCKER_RELEASE_FILE_URL}" | cut -d '/' -f 3)
+
+	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases-gcp.liferay.com/opensearch/${release_product_name}/${release_version}/com.liferay.portal.search.opensearch2.api.jar" "${TEMP_DIR}/liferay/deploy/com.liferay.portal.search.opensearch2.api.jar"
+
+	if [ $? -ne 0 ]
+	then
+		lc_log ERROR "Unable to download com.liferay.portal.search.opensearch2.api.jar."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases-gcp.liferay.com/opensearch/${release_product_name}/${release_version}/com.liferay.portal.search.opensearch2.impl.jar" "${TEMP_DIR}/liferay/deploy/com.liferay.portal.search.opensearch2.impl.jar"
+
+	if [ $? -ne 0 ]
+	then
+		lc_log ERROR "Unable to download com.liferay.portal.search.opensearch2.impl.jar."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
 	rm -fr "${TEMP_DIR}/liferay/elasticsearch-sidecar"
 
-	touch "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
+	(
+		echo "active=B\"true\""
+		echo "connectionId=\"REMOTE\""
+		echo "password=\"${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}\""
+		echo "networkHostAddresses=\"${LIFERAY_DOCKER_SEARCH_NETWORK_ADDRESSES}\""
+	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
 
+	(
+		echo "blacklistBundleSymbolicNames=[\\"
+		echo "	\"com.liferay.portal.search.elasticsearch.cross.cluster.replication.impl\",\\"
+		echo "	\"com.liferay.portal.search.elasticsearch.monitoring.web\",\\"
+		echo "	\"com.liferay.portal.search.elasticsearch7.api\",\\"
+		echo "	\"com.liferay.portal.search.elasticsearch7.impl\",\\"
+		echo "	\"com.liferay.portal.search.learning.to.rank.api\",\\"
+		echo "	\"com.liferay.portal.search.learning.to.rank.impl\"\\"
+		echo "]"
+	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
+	
 	(
 		echo "networkHostAddresses=\"${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}\""
 		echo "productionModeEnabled=B\"true\""
 	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
+
+	echo "remoteClusterConnectionId=\"REMOTE\"" > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConfiguration.config"
+
 }
 
 function prepare_temp_directory {
