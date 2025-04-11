@@ -177,10 +177,6 @@ function prepare_branch_to_commit_from_master {
 
 	git reset --hard FETCH_HEAD
 
-	git push --delete git@github.com:liferay-release/liferay-jenkins-ee.git "${2}"
-
-	git branch --delete --force "${2}"
-
 	git checkout -b "${2}"
 
 	git push git@github.com:liferay-release/liferay-jenkins-ee.git "${2}" --force
