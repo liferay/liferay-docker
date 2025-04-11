@@ -323,10 +323,7 @@ function reference_new_releases {
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
-	fi
 
-	if [[ ! " ${@} " =~ " --test " ]]
-	then
 		prepare_branch_to_commit_from_master "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "${issue_key}"
 	fi
 
