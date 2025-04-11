@@ -38,11 +38,11 @@ function build_opensearch_jar {
 	if [ -e "com.liferay.portal.search.opensearch2.api.jar" ] &&
 	   [ -e "com.liferay.portal.search.opensearch2.impl.jar" ]
 	then
-		lc_log INFO "The OpenSearch jar already exists."
+		lc_log INFO "The OpenSearch 2 jar already exists."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
-		lc_log INFO "Generating OpenSearch jar."
+		lc_log INFO "Generating OpenSearch 2 jar."
 
 		lc_cd "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2"
 
