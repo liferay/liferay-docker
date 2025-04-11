@@ -140,13 +140,24 @@ function check_release {
 }
 
 function check_usage {
+	if [ ! -n "${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}" ]
+	then
+		print_help
+	fi
+
 	if [ ! -n "${LIFERAY_DOCKER_RELEASE_FILE_URL}" ]
 	then
 		print_help
 	fi
 
 	if [[ -n "${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}" ]] &&
-	! [[ "${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}" =~ \[(\"(http|https):\/\/[-\d\w]+\:[\d]+\")+(\,)*(\s)*(\"(http|https):\/\/[-\d\w]+\:[\d]+\")*\] ]]
+	   ! ( echo "${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?" )
+	then
+		print_help
+	fi
+
+	if [[ -n "${LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES}" ]] &&
+	   ! ( echo "${LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?" )
 	then
 		print_help
 	fi
@@ -270,7 +281,7 @@ function prepare_slim_image {
 		echo "active=B\"true\""
 		echo "connectionId=\"REMOTE\""
 		echo "password=\"${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}\""
-		echo "networkHostAddresses=\"${LIFERAY_DOCKER_SEARCH_NETWORK_ADDRESSES}\""
+		echo "networkHostAddresses=\"${LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES}\""
 	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
 
 	(
@@ -290,7 +301,6 @@ function prepare_slim_image {
 	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
 
 	echo "remoteClusterConnectionId=\"REMOTE\"" > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConfiguration.config"
-
 }
 
 function prepare_temp_directory {
@@ -385,13 +395,15 @@ function print_help {
 	echo "    LIFERAY_DOCKER_IMAGE_PLATFORMS (optional): Comma separated Docker image platforms to build when the \"push\" parameter is set"
 	echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API header used to generate the trial license"
 	echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
+	echo "    LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES (optional): OpenSearch remote server network addresses"
+	echo "    LIFERAY_DOCKER_OPENSEARCH_PASSWORD (optional): OpenSearch remote server password"
 	echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
 	echo "    LIFERAY_DOCKER_REPOSITORY (optional): Docker repository"
 	echo "    LIFERAY_DOCKER_SLIM (optional): If set to \"true\", the image will be the slim variant"
 	echo ""
 	echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0} push"
 	echo ""
-	echo "Example: LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES='[\"http://es-node1:9200\",\"http://es-node2:9201\"]' LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z LIFERAY_DOCKER_SLIM=true ${0} push"
+	echo "Example: LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES=["http://es-node1:9200","http://es-node2:9201"] LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES=http://es-node1:9203 LIFERAY_DOCKER_OPENSEARCH_PASSWORD=OpenSearchPassword LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z LIFERAY_DOCKER_SLIM=true ${0} push"
 	echo ""
 
 	exit 1
