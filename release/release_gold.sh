@@ -456,7 +456,7 @@ function reference_new_releases {
 		fi
 
 		local pull_request_url="$(\
-			gh pr view liferay-release:new_releases_branch \
+			gh pr view liferay-release:${issue_key} \
 				--jq ".url" \
 				--json "url" \
 				--repo "pyoo47/liferay-jenkins-ee")"
