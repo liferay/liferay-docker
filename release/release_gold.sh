@@ -307,9 +307,31 @@ function reference_new_releases {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	local issue_key=""
+
 	if [[ ! " ${@} " =~ " --test " ]]
 	then
-		prepare_branch_to_commit_from_master "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "new_releases_branch"
+		issue_key="$(\
+			add_jira_issue \
+				"60a3f462391e56006e6b661b" \
+				"Release Tester" \
+				"Task" \
+				"LRCI" \
+				"Add release references for ${_PRODUCT_VERSION}" \
+				"customfield_10001" \
+				"04c03e90-c5a7-4fda-82f6-65746fe08b83")"
+
+		if [ "${issue_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		then
+			lc_log ERROR "Unable to create the Jira issue."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+	fi
+
+	if [[ ! " ${@} " =~ " --test " ]]
+	then
+		prepare_branch_to_commit_from_master "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "${issue_key}"
 	fi
 
 	if [ "${?}" -ne 0 ]
@@ -423,27 +445,10 @@ function reference_new_releases {
 
 	if [[ ! " ${@} " =~ " --test " ]]
 	then
-		local issue_key="$(\
-			add_jira_issue \
-				"60a3f462391e56006e6b661b" \
-				"Release Tester" \
-				"Task" \
-				"LRCI" \
-				"Add release references for ${_PRODUCT_VERSION}" \
-				"customfield_10001" \
-				"04c03e90-c5a7-4fda-82f6-65746fe08b83")"
-
-		if [ "${issue_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
-		then
-			lc_log ERROR "Unable to create the Jira issue."
-
-			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		fi
-
 		commit_to_branch_and_send_pull_request \
 			"${_PROJECTS_DIR}/liferay-jenkins-ee/commands/build.properties" \
 			"${issue_key} Add release references for ${_PRODUCT_VERSION}" \
-			"new_releases_branch" \
+			"${issue_key}" \
 			"master" \
 			"pyoo47/liferay-jenkins-ee" \
 			"${issue_key} Add release references for ${_PRODUCT_VERSION}."
