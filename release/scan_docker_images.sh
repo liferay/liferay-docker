@@ -54,6 +54,13 @@ function scan_docker_images {
 			--silent \
 			"${api_url}/login")
 
+	if (! echo "${auth_response}" | grep -q "login_successful")
+	then
+		lc_log ERROR "Unable to authenticate in ${api_url}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
 	local console_url="https://europe-west3.cloud.twistlock.com/eu-1614931"
 	local token=$(echo "${auth_response}" | jq -r '.token')
 
@@ -62,6 +69,13 @@ function scan_docker_images {
 		--output twistcli \
 		--silent \
 		"${console_url}/api/v1/util/twistcli"
+
+	if ! [ -f "./twistcli" ]
+	then
+		lc_log ERROR "Unable to download twistcli."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 
 	chmod +x ./twistcli
 
