@@ -45,10 +45,10 @@ function _get_latest_product_version {
 	local product_version_regex
 	local release_type="${1}"
 
-	if [[ "${release_type}" == "dxp" ]]
+	if [ "${release_type}" == "dxp" ]
 	then
 		product_version_regex='(?<=<a href=")(7\.3\.10-u\d+)'
-	elif [[ "${release_type}" == "ga" ]]
+	elif [ "${release_type}" == "ga" ]
 	then
 		product_name="portal"
 		product_version_regex='(?<=<a href=")(7\.4\.3\.\d+-ga\d+)'
@@ -59,9 +59,9 @@ function _get_latest_product_version {
 
 	echo "$(_generate_product_version_list "${product_name}")" | \
 		grep \
-		--only-matching \
-		--perl-regexp \
-		"${product_version_regex}" | \
+			--only-matching \
+			--perl-regexp \
+			"${product_version_regex}" | \
 		tail -n 1
 }
 
@@ -142,9 +142,9 @@ function _process_product {
 
 	for product_version in  $(echo -en "$(_generate_product_version_list "${product_name}")" | \
 		grep \
-		--extended-regexp \
-		--only-matching \
-		"(20[0-9]+\.q[0-9]\.[0-9]+(-lts)?|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
+			--extended-regexp \
+			--only-matching \
+			"(20[0-9]+\.q[0-9]\.[0-9]+(-lts)?|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
 		tr -d "/" | \
 		uniq)
 	do
