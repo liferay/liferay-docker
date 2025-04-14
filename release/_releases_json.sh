@@ -240,7 +240,7 @@ function _tag_recommended_product_versions {
 
 			lc_log INFO "Tagging ${latest_product_version_json} as recommended."
 		else
-			lc_log INFO "No JSON snippet found to tag for ${product_version} release."
+			lc_log INFO "Unable to find JSON file for ${product_version}."
 		fi
 	done
 }
