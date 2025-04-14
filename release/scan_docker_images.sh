@@ -52,11 +52,11 @@ function scan_docker_images {
 
 	local auth_response=$(\
 		curl \
+			"${api_url}/login" \
 			--data "${data}" \
 			--header "Content-Type: application/json" \
 			--request POST \
-			--silent \
-			"${api_url}/login")
+			--silent)
 
 	if (! echo "${auth_response}" | grep -q "login_successful")
 	then
@@ -69,10 +69,10 @@ function scan_docker_images {
 	local token=$(echo "${auth_response}" | jq -r '.token')
 
 	curl \
+		"${console_url}/api/v1/util/twistcli" \
 		--header "x-redlock-auth: ${token}" \
 		--output twistcli \
-		--silent \
-		"${console_url}/api/v1/util/twistcli"
+		--silent
 
 	if ! [ -f "./twistcli" ]
 	then
