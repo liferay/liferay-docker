@@ -319,7 +319,7 @@ function reference_new_releases {
 
 		if [ "${issue_key}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 		then
-			lc_log ERROR "Unable to create the Jira issue."
+			lc_log ERROR "Unable to create a Jira issue to add release references for ${_PRODUCT_VERSION}."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
