@@ -41,20 +41,22 @@ function _generate_product_version_list {
 }
 
 function _get_latest_product_version {
-	local product_name="dxp"
-	local product_version_regex
-	local release_type="${1}"
+	local product_name=""
+	local product_version="${1}"
+	local product_version_regex="(?<=<a href=\")"
 
-	if [ "${release_type}" == "dxp" ]
+	if [ "${product_version}" == "dxp" ]
 	then
-		product_version_regex='(?<=<a href=")(7\.3\.10-u\d+)'
-	elif [ "${release_type}" == "ga" ]
+		product_name="dxp"
+		product_version_regex="${product_version_regex}(7\.3\.10-u\d+)"
+	elif [ "${product_version}" == "ga" ]
 	then
 		product_name="portal"
-		product_version_regex='(?<=<a href=")(7\.4\.3\.\d+-ga\d+)'
-	elif [[ "${release_type}" == "quarterly" ]]
+		product_version_regex="${product_version_regex}(7\.4\.3\.\d+-ga\d+)"
+	elif [ "${product_version}" == "quarterly" ]
 	then
-		product_version_regex='(?<=<a href=")(\d{4}\.q[1-4]\.\d+(-lts)?)'
+		product_name="dxp"
+		product_version_regex="${product_version_regex}(\d{4}\.q[1-4]\.\d+(-lts)?)"
 	fi
 
 	echo "$(_generate_product_version_list "${product_name}")" | \
@@ -225,7 +227,7 @@ function _promote_product_versions {
 function _tag_recommended_product_versions {
 	for product_version in "ga" "quarterly"
 	do
-		local latest_product_version_json=$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "${release_type}")")
+		local latest_product_version_json=$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "${product_version}")")
 
 		if [ -f "${latest_product_version_json}" ]
 		then
@@ -238,7 +240,7 @@ function _tag_recommended_product_versions {
 
 			lc_log INFO "Tagging ${latest_product_version_json} as recommended."
 		else
-			lc_log INFO "No JSON snippet found to tag for ${release_type} release."
+			lc_log INFO "No JSON snippet found to tag for ${product_version} release."
 		fi
 	done
 }
