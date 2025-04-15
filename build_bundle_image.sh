@@ -230,7 +230,7 @@ function main {
 
 	prepare_tomcat
 
-	if [ -n "${LIFERAY_DOCKER_SLIM}" ]
+	if [ "${LIFERAY_DOCKER_SLIM}" == "true" ]
 	then
 		prepare_slim_image
 
