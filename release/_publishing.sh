@@ -218,7 +218,7 @@ function upload_boms {
 	done
 }
 
-function upload_opensearch_jar {
+function upload_opensearch {
 	gsutil mv -r "${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.api.jar" "gs://liferay-releases/opensearch/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/"
 	gsutil mv -r "${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.impl.jar" "gs://liferay-releases/opensearch/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/"
 }
