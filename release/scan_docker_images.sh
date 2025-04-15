@@ -10,6 +10,16 @@ function check_usage {
 		print_help
 	fi
 
+	while read -r image_name
+	do
+		if [ -z "$(docker images -q "${image_name}" 2> /dev/null)" ]
+		then
+			lc_log ERROR "Unable to find ${image_name} locally."
+
+			exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+	done <<< "$(echo "${LIFERAY_IMAGE_NAMES}" | tr ',' '\n')"
+
 	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
 
 	_RELEASE_ROOT_DIR="${PWD}"
