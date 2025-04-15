@@ -7,6 +7,7 @@ source _hotfix.sh
 source _jdk.sh
 source _package.sh
 source _patcher.sh
+source _portal_release_tester.sh
 source _product.sh
 source _publishing.sh
 
@@ -207,6 +208,8 @@ function main {
 
 		cat "${_BUILD_DIR}/output.md"
 	fi
+
+	lc_time_run send_to_ci_test
 }
 
 function print_help {
