@@ -357,31 +357,6 @@ function prepare_temp_directory {
 	chmod +x "${TEMP_DIR}/liferay/tomcat/bin/"*
 }
 
-function push_docker_image {
-	if [ "${1}" == "push" ]
-	then
-		check_docker_buildx
-
-		sed -i '1s/FROM /FROM --platform=${TARGETPLATFORM} /g' "${TEMP_DIR}"/Dockerfile
-
-		docker buildx build \
-			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
-			--build-arg LABEL_LIFERAY_PATCHING_TOOL_VERSION="${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" \
-			--build-arg LABEL_LIFERAY_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
-			--build-arg LABEL_LIFERAY_VCS_REF="${LIFERAY_VCS_REF}" \
-			--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
-			--build-arg LABEL_RELEASE_VERSION="${LIFERAY_DOCKER_RELEASE_VERSION}" \
-			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
-			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
-			--build-arg LABEL_VERSION="${LABEL_VERSION}" \
-			--builder "liferay-buildkit" \
-			--platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
-			--push \
-			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
-			"${TEMP_DIR}" || exit 1
-	fi
-}
-
 function print_help {
 	echo "Usage: ${0} --push"
 	echo ""
@@ -407,6 +382,31 @@ function print_help {
 	echo ""
 
 	exit 1
+}
+
+function push_docker_image {
+	if [ "${1}" == "push" ]
+	then
+		check_docker_buildx
+
+		sed -i '1s/FROM /FROM --platform=${TARGETPLATFORM} /g' "${TEMP_DIR}"/Dockerfile
+
+		docker buildx build \
+			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
+			--build-arg LABEL_LIFERAY_PATCHING_TOOL_VERSION="${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" \
+			--build-arg LABEL_LIFERAY_TOMCAT_VERSION=$(get_tomcat_version "${TEMP_DIR}/liferay") \
+			--build-arg LABEL_LIFERAY_VCS_REF="${LIFERAY_VCS_REF}" \
+			--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
+			--build-arg LABEL_RELEASE_VERSION="${LIFERAY_DOCKER_RELEASE_VERSION}" \
+			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
+			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
+			--build-arg LABEL_VERSION="${LABEL_VERSION}" \
+			--builder "liferay-buildkit" \
+			--platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
+			--push \
+			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
+			"${TEMP_DIR}" || exit 1
+	fi
 }
 
 function set_parent_image {
