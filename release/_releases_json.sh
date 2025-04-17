@@ -225,20 +225,20 @@ function _promote_product_versions {
 function _tag_recommended_product_versions {
 	for product_version in "ga" "quarterly"
 	do
-		local latest_product_version_json=$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "${product_version}")")
+		local latest_product_version_json_file=$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "${product_version}")")
 
-		if [ -f "${latest_product_version_json}" ]
+		if [ -f "${latest_product_version_json_file}" ]
 		then
 			jq "map(
 					(. + {tags: [\"recommended\"]})
 					| to_entries
 					| sort_by(.key)
 					| from_entries
-				)" "${latest_product_version_json}" > "${latest_product_version_json}.tmp" && mv "${latest_product_version_json}.tmp" "${latest_product_version_json}"
+				)" "${latest_product_version_json_file}" > "${latest_product_version_json_file}.tmp" && mv "${latest_product_version_json_file}.tmp" "${latest_product_version_json_file}"
 
-			lc_log INFO "Tagging ${latest_product_version_json} as recommended."
+			lc_log INFO "Tagging ${latest_product_version_json_file} as recommended."
 		else
-			lc_log INFO "Unable to find JSON file for ${product_version}."
+			lc_log INFO "Unable to get latest production version JSON file for ${product_version}."
 		fi
 	done
 }
