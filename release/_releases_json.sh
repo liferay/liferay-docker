@@ -23,10 +23,10 @@ function generate_releases_json {
 	_upload_releases_json
 }
 
-function _generate_product_version_list_html {
+function _download_product_version_list_html {
 	local product_version_list_url="https://releases.liferay.com/${1}"
 
-	lc_log INFO "Generating product version list from ${product_version_list_url}."
+	lc_log INFO "Downloading product version list from ${product_version_list_url}."
 
 	local product_version_list_html=$(lc_curl "${product_version_list_url}/")
 
@@ -59,7 +59,7 @@ function _get_latest_product_version {
 		product_version_regex="${product_version_regex}(\d{4}\.q[1-4]\.\d+(-lts)?)"
 	fi
 
-	echo "$(_generate_product_version_list_html "${product_name}")" | \
+	echo "$(_download_product_version_list_html "${product_name}")" | \
 		grep \
 			--only-matching \
 			--perl-regexp \
@@ -140,7 +140,7 @@ function _process_new_product {
 function _process_product {
 	local product_name="${1}"
 
-	for product_version in  $(echo -en "$(_generate_product_version_list_html "${product_name}")" | \
+	for product_version in  $(echo -en "$(_download_product_version_list_html "${product_name}")" | \
 		grep \
 			--extended-regexp \
 			--only-matching \
