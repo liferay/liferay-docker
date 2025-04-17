@@ -32,7 +32,7 @@ function add_licensing {
 		-f build-release-license.xml
 }
 
-function deploy_opensearch {
+function deploy_opensearch_2 {
 	lc_cd "${_BUNDLES_DIR}/osgi/portal"
 
 	if [ -e "com.liferay.portal.search.opensearch2.api.jar" ] &&
