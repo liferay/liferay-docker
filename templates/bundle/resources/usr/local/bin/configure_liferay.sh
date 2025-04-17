@@ -37,7 +37,7 @@ function main {
 		sed -i "s/\"\",\\\\//g" "${blacklist_config_path}"
 		sed -i "s/\"\"\\\\//g" "${blacklist_config_path}"
 
-		if (! grep -q '"' "${blacklist_config_path}")
+		if (! grep -q "\"" "${blacklist_config_path}")
 		then
 			echo "[LIFERAY] Deleting com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
 

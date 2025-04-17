@@ -234,7 +234,7 @@ function main {
 	then
 		prepare_slim_image
 
-		if [ $? -ne 0 ]
+		if [ "${?}" -ne 0 ]
 		then
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
@@ -266,7 +266,7 @@ function prepare_slim_image {
 
 	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases-gcp.liferay.com/opensearch2/${product_name}/${product_version}/com.liferay.portal.search.opensearch2.api.jar" "${TEMP_DIR}/liferay/deploy/com.liferay.portal.search.opensearch2.api.jar"
 
-	if [ $? -ne 0 ]
+	if [ "${?}" -ne 0 ]
 	then
 		lc_log ERROR "Unable to download com.liferay.portal.search.opensearch2.api.jar."
 
@@ -275,7 +275,7 @@ function prepare_slim_image {
 
 	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases-gcp.liferay.com/opensearch2/${product_name}/${product_version}/com.liferay.portal.search.opensearch2.impl.jar" "${TEMP_DIR}/liferay/deploy/com.liferay.portal.search.opensearch2.impl.jar"
 
-	if [ $? -ne 0 ]
+	if [ "${?}" -ne 0 ]
 	then
 		lc_log ERROR "Unable to download com.liferay.portal.search.opensearch2.impl.jar."
 
