@@ -32,24 +32,6 @@ function add_licensing {
 		-f build-release-license.xml
 }
 
-function deploy_opensearch_2 {
-	lc_cd "${_BUNDLES_DIR}/osgi/portal"
-
-	if [ -e "com.liferay.portal.search.opensearch2.api.jar" ] &&
-	   [ -e "com.liferay.portal.search.opensearch2.impl.jar" ]
-	then
-		lc_log INFO "The OpenSearch 2 jar already exists."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	else
-		lc_log INFO "Generating OpenSearch 2 jar."
-
-		lc_cd "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2"
-
-		"${_PROJECTS_DIR}/liferay-portal-ee/gradlew" clean deploy
-	fi
-}
-
 function build_product {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
@@ -287,6 +269,24 @@ function deploy_elasticsearch_sidecar {
 		echo "The directory portal-search-elasticsearch7-impl does not exist."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+}
+
+function deploy_opensearch_2 {
+	lc_cd "${_BUNDLES_DIR}/osgi/portal"
+
+	if [ -e "com.liferay.portal.search.opensearch2.api.jar" ] &&
+	   [ -e "com.liferay.portal.search.opensearch2.impl.jar" ]
+	then
+		lc_log INFO "The OpenSearch 2 jar already exists."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	else
+		lc_log INFO "Generating OpenSearch 2 jar."
+
+		lc_cd "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2"
+
+		"${_PROJECTS_DIR}/liferay-portal-ee/gradlew" clean deploy
 	fi
 }
 
