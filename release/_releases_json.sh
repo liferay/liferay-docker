@@ -140,8 +140,6 @@ function _process_new_product {
 function _process_product {
 	local product_name="${1}"
 
-	local release_directory_url="https://releases.liferay.com/${product_name}"
-
 	for product_version in  $(echo -en "$(_generate_product_version_list "${product_name}")" | \
 		grep \
 			--extended-regexp \
