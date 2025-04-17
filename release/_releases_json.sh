@@ -23,12 +23,12 @@ function generate_releases_json {
 	_upload_releases_json
 }
 
-function _generate_product_version_list {
-	local release_directory_url="https://releases.liferay.com/${1}"
+function _generate_product_version_list_html {
+	local product_version_list_url="https://releases.liferay.com/${1}"
 
-	lc_log INFO "Generating product version list from ${release_directory_url}."
+	lc_log INFO "Generating product version list from ${product_version_list_url}."
 
-	local directory_html=$(lc_curl "${release_directory_url}/")
+	local product_version_list_html=$(lc_curl "${product_version_list_url}/")
 
 	if [ "${?}" -ne 0 ]
 	then
@@ -37,7 +37,7 @@ function _generate_product_version_list {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	echo "${directory_html}"
+	echo "${product_version_list_html}"
 }
 
 function _get_latest_product_version {
@@ -59,7 +59,7 @@ function _get_latest_product_version {
 		product_version_regex="${product_version_regex}(\d{4}\.q[1-4]\.\d+(-lts)?)"
 	fi
 
-	echo "$(_generate_product_version_list "${product_name}")" | \
+	echo "$(_generate_product_version_list_html "${product_name}")" | \
 		grep \
 			--only-matching \
 			--perl-regexp \
@@ -124,14 +124,14 @@ function _process_new_product {
 			)" "${releases_json}" > temp_file.json && mv temp_file.json "${releases_json}"
 	elif [[ "${product_group_version}" == *q* ]] && [ "$(_get_latest_product_version "quarterly")" == "${_PRODUCT_VERSION}" ]
 	then
-		jq 'map(
-				if .productGroupVersion | test("q")
+		jq "map(
+				if .productGroupVersion | test(\"q\")
 				then
 					del(.tags)
 				else
 					.
 				end
-			)' "${releases_json}" > temp_file.json && mv temp_file.json "${releases_json}"
+			)" "${releases_json}" > temp_file.json && mv temp_file.json "${releases_json}"
 	fi
 
 	_process_product_version "${LIFERAY_RELEASE_PRODUCT_NAME}" "${_PRODUCT_VERSION}"
@@ -140,7 +140,7 @@ function _process_new_product {
 function _process_product {
 	local product_name="${1}"
 
-	for product_version in  $(echo -en "$(_generate_product_version_list "${product_name}")" | \
+	for product_version in  $(echo -en "$(_generate_product_version_list_html "${product_name}")" | \
 		grep \
 			--extended-regexp \
 			--only-matching \
