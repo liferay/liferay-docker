@@ -13,7 +13,7 @@ function main {
 	then
 		LIFERAY_OPENSEARCH_2_ENABLED="false"
 
-		echo "[LIFERAY] LIFERAY_OPENSEARCH_2_ENABLED is not set. Defaulting to false."
+		echo "[LIFERAY] Set the environment variable \"LIFERAY_OPENSEARCH_2_ENABLED\" to \"true\" to enable OpenSearch 2."
 	fi
 
 	if [ "${LIFERAY_OPENSEARCH_2_ENABLED}" == "true" ]
