@@ -378,8 +378,7 @@ function print_help {
 	echo ""
 	echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0} push"
 	echo ""
-	echo "Example: LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES=["http://es-node1:9200","http://es-node2:9201"] LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES=http://es-node1:9203 LIFERAY_DOCKER_OPENSEARCH_PASSWORD=OpenSearch2Password LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z LIFERAY_DOCKER_SLIM=true ${0} push"
-	echo ""
+	echo "Set \"push\" as a parameter to automatically push the image to Docker Hub."
 
 	exit 1
 }
