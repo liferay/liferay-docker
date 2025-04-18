@@ -55,8 +55,8 @@ function build_batch_image {
 }
 
 function build_bundle_image {
-	local query=${2}
-	local slim=${1}
+	local query=${1}
+	local slim=${2}
 	local version=${3}
 
 	local additional_tags=$(get_string $( yq "${query}".additional_tags < bundles.yml))
@@ -150,8 +150,8 @@ function build_bundle_images {
 
 			local query=.\"${main_key}\".\"${version}\"
 
-			build_bundle_image "false" "${query}" "${version}"
-			build_bundle_image "true" "${query}" "${version}"
+			build_bundle_image "${query}" "false" "${version}"
+			build_bundle_image "${query}" "true" "${version}"
 		done
 	else
 		local main_key=$(get_main_key "${main_keys}" "${specified_version}")
@@ -166,8 +166,8 @@ function build_bundle_images {
 
 			if [[ "$(yq "${query}" < bundles.yml)" != "null" ]]
 			then
-				build_bundle_image "false" "${query}" "${specified_version}"
-				build_bundle_image "true" "${query}" "${specified_version}"
+				build_bundle_image "${query}" "false" "${specified_version}"
+				build_bundle_image "${query}" "true" "${specified_version}"
 			else
 				echo "No bundles were found."
 
