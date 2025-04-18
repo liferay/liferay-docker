@@ -140,16 +140,6 @@ function check_release {
 }
 
 function check_usage {
-	if [ ! -n "${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}" ]
-	then
-		print_help
-	fi
-
-	if [ ! -n "${LIFERAY_DOCKER_RELEASE_FILE_URL}" ]
-	then
-		print_help
-	fi
-
 	if [[ -n "${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}" ]] &&
 	   ! ( echo "${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?" )
 	then
@@ -158,6 +148,16 @@ function check_usage {
 
 	if [[ -n "${LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES}" ]] &&
 	   ! ( echo "${LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?" )
+	then
+		print_help
+	fi
+
+	if [ ! -n "${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}" ]
+	then
+		print_help
+	fi
+
+	if [ ! -n "${LIFERAY_DOCKER_RELEASE_FILE_URL}" ]
 	then
 		print_help
 	fi
