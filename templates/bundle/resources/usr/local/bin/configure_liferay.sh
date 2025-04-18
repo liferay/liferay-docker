@@ -9,40 +9,22 @@ function main {
 		rm -f /opt/liferay/deploy/trial-dxp-license-*.xml
 	fi
 
-	if [ -z "${LIFERAY_OPENSEARCH_2_ENABLED}" ]
+	if [ -n "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE}" ]
 	then
-		LIFERAY_OPENSEARCH_2_ENABLED="false"
+		LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=$(cat "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE}")
 
-		echo "[LIFERAY] Set the environment variable \"LIFERAY_OPENSEARCH_2_ENABLED\" to \"true\" to enable OpenSearch 2."
+		export LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD
+
+		unset LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE
 	fi
 
-	if [ "${LIFERAY_OPENSEARCH_2_ENABLED}" == "true" ]
+	if [ -n "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME_FILE}" ]
 	then
-		rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
-	else
-		rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.api.jar"
-		rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.impl.jar"
-		rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConfiguration.config"
-		rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
+		LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=$(cat "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME_FILE}")
 
-		local blacklist_config_path="/opt/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
+		export LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME
 
-		sed -i "s/com.liferay.portal.search.elasticsearch.cross.cluster.replication.impl//g" "${blacklist_config_path}"
-		sed -i "s/com.liferay.portal.search.elasticsearch.monitoring.web//g" "${blacklist_config_path}"
-		sed -i "s/com.liferay.portal.search.elasticsearch7.api//g" "${blacklist_config_path}"
-		sed -i "s/com.liferay.portal.search.elasticsearch7.impl//g" "${blacklist_config_path}"
-		sed -i "s/com.liferay.portal.search.learning.to.rank.api//g" "${blacklist_config_path}"
-		sed -i "s/com.liferay.portal.search.learning.to.rank.impl//g" "${blacklist_config_path}"
-
-		sed -i "s/\"\",\\\\//g" "${blacklist_config_path}"
-		sed -i "s/\"\"\\\\//g" "${blacklist_config_path}"
-
-		if (! grep -q "\"" "${blacklist_config_path}")
-		then
-			echo "[LIFERAY] Deleting com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
-
-			rm -f "${blacklist_config_path}"
-		fi
+		unset LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME_FILE
 	fi
 
 	if [ ! -d "${LIFERAY_MOUNT_DIR}" ]
@@ -96,29 +78,47 @@ function main {
 		echo "[LIFERAY] The directory /mnt/liferay/deploy does not exist. Create the directory \$(pwd)/xyz123/deploy on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/deploy on the container. Copy files to \$(pwd)/xyz123/deploy to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
 	fi
 
+	if [ -z "${LIFERAY_OPENSEARCH_2_ENABLED}" ]
+	then
+		LIFERAY_OPENSEARCH_2_ENABLED="false"
+
+		echo "[LIFERAY] Set the environment variable \"LIFERAY_OPENSEARCH_2_ENABLED\" to \"true\" to enable OpenSearch 2."
+	fi
+
+	if [ "${LIFERAY_OPENSEARCH_2_ENABLED}" == "true" ]
+	then
+		rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
+	else
+		rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.api.jar"
+		rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.impl.jar"
+		rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConfiguration.config"
+		rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
+
+		local blacklist_config_path="/opt/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
+
+		sed -i "s/com.liferay.portal.search.elasticsearch.cross.cluster.replication.impl//g" "${blacklist_config_path}"
+		sed -i "s/com.liferay.portal.search.elasticsearch.monitoring.web//g" "${blacklist_config_path}"
+		sed -i "s/com.liferay.portal.search.elasticsearch7.api//g" "${blacklist_config_path}"
+		sed -i "s/com.liferay.portal.search.elasticsearch7.impl//g" "${blacklist_config_path}"
+		sed -i "s/com.liferay.portal.search.learning.to.rank.api//g" "${blacklist_config_path}"
+		sed -i "s/com.liferay.portal.search.learning.to.rank.impl//g" "${blacklist_config_path}"
+
+		sed -i "s/\"\",\\\\//g" "${blacklist_config_path}"
+		sed -i "s/\"\"\\\\//g" "${blacklist_config_path}"
+
+		if (! grep -q "\"" "${blacklist_config_path}")
+		then
+			echo "[LIFERAY] Deleting com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
+
+			rm -f "${blacklist_config_path}"
+		fi
+	fi
+
 	export LIFERAY_PATCHING_DIR="${LIFERAY_MOUNT_DIR}"/patching
 
 	if [ -e /opt/liferay/patching-tool ]
 	then
 		patch_liferay.sh
-	fi
-
-	if [ -n "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE}" ]
-	then
-		LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=$(cat "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE}")
-
-		export LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD
-
-		unset LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD_FILE
-	fi
-
-	if [ -n "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME_FILE}" ]
-	then
-		LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=$(cat "${LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME_FILE}")
-
-		export LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME
-
-		unset LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME_FILE
 	fi
 
 	if [ -n "${LIFERAY_TOMCAT_AJP_PORT}" ]
