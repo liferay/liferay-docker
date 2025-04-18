@@ -108,7 +108,7 @@ function main {
 
 		if (! grep -q "\"" "${blacklist_config_path}")
 		then
-			echo "[LIFERAY] Deleting com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
+			echo "[LIFERAY] Deleting com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config."
 
 			rm -f "${blacklist_config_path}"
 		fi
