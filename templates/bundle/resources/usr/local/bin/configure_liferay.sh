@@ -78,14 +78,14 @@ function main {
 		echo "[LIFERAY] The directory /mnt/liferay/deploy does not exist. Create the directory \$(pwd)/xyz123/deploy on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/deploy on the container. Copy files to \$(pwd)/xyz123/deploy to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
 	fi
 
-	if [ -z "${LIFERAY_OPENSEARCH_2_ENABLED}" ]
+	if [ -z "${LIFERAY_OPENSEARCH_ENABLED}" ]
 	then
-		LIFERAY_OPENSEARCH_2_ENABLED="false"
+		LIFERAY_OPENSEARCH_ENABLED="false"
 
-		echo "[LIFERAY] Set the environment variable \"LIFERAY_OPENSEARCH_2_ENABLED\" to \"true\" to enable OpenSearch 2."
+		echo "[LIFERAY] Set the environment variable \"LIFERAY_OPENSEARCH_ENABLED\" to \"true\" to enable OpenSearch 2."
 	fi
 
-	if [ "${LIFERAY_OPENSEARCH_2_ENABLED}" == "true" ]
+	if [ "${LIFERAY_OPENSEARCH_ENABLED}" == "true" ]
 	then
 		rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
 	else

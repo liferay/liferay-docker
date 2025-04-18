@@ -272,17 +272,17 @@ function deploy_elasticsearch_sidecar {
 	fi
 }
 
-function deploy_opensearch_2 {
+function deploy_opensearch {
 	lc_cd "${_BUNDLES_DIR}/osgi/portal"
 
 	if [ -e "com.liferay.portal.search.opensearch2.api.jar" ] &&
 	   [ -e "com.liferay.portal.search.opensearch2.impl.jar" ]
 	then
-		lc_log INFO "The OpenSearch 2 connector is already deployed."
+		lc_log INFO "The OpenSearch connector is already deployed."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
-		lc_log INFO "Deploying the OpenSearch 2 connector."
+		lc_log INFO "Deploying the OpenSearch connector."
 
 		lc_cd "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2"
 
