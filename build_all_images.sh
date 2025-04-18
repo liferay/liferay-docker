@@ -56,7 +56,7 @@ function build_batch_image {
 
 function build_bundle_image {
 	local query=${2}
-	local slim_type=${1}
+	local slim=${1}
 	local version=${3}
 
 	local additional_tags=$(get_string $( yq "${query}".additional_tags < bundles.yml))
@@ -85,7 +85,7 @@ function build_bundle_image {
 
 	local image_name="${build_id}"
 
-	if [ "${slim_type}" == "true" ]
+	if [ "${slim}" == "true" ]
 	then
 		image_name="${image_name}-slim"
 	fi
@@ -94,7 +94,7 @@ function build_bundle_image {
 	echo "Building Docker image ${image_name} based on ${bundle_url}."
 	echo ""
 
-	LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES="${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}" LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_LATEST=${latest} LIFERAY_DOCKER_OPENSEARCH_2_NETWORK_ADDRESSES="${LIFERAY_DOCKER_OPENSEARCH_2_NETWORK_ADDRESSES}" LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_SLIM="${slim_type}" LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LIFERAY_DOCKER_LOGS_DIR}/${build_id}.log"
+	LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES="${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}" LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_LATEST=${latest} LIFERAY_DOCKER_OPENSEARCH_2_NETWORK_ADDRESSES="${LIFERAY_DOCKER_OPENSEARCH_2_NETWORK_ADDRESSES}" LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_SLIM="${slim}" LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LIFERAY_DOCKER_LOGS_DIR}/${build_id}.log"
 
 	local build_bundle_image_exit_code=${PIPESTATUS[0]}
 
