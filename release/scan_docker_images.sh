@@ -84,7 +84,7 @@ function scan_docker_images {
 		--output twistcli \
 		--silent
 
-	if ! [ -f "./twistcli" ]
+	if [ ! -f "./twistcli" ]
 	then
 		lc_log ERROR "Unable to download twistcli."
 
