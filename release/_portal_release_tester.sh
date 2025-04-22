@@ -1,24 +1,6 @@
 #!/bin/bash
 
-function get_githash {
-    local branch_name=${1}
-
-	if [[ "${branch_name}" =~ "7.4." ]]
-	then
-		local curl_url="https://api.github.com/repos/brianchandotcom/liferay-portal/commits/${branch_name}"
-	else
-		local curl_url="https://api.github.com/repos/brianchandotcom/liferay-portal-ee/commits/${branch_name}"
-	fi
-
-	local curl_response=$(\
-				curl \
-					${curl_url} \
-					-H "Accept: application/vnd.github.VERSION.sha" \
-					-H "Authorization: Bearer ${GH_TOKEN}" \
-					-s)
-
-    echo "${curl_response}"
-}
+source _github.sh
 
 function get_test_portal_branch_name {
     local branch_name=${1}
@@ -32,24 +14,17 @@ function get_test_portal_branch_name {
 }
 
 function send_to_ci_test {
-
 	if [ "${SEND_BUILD_TO_TEST_CI}" = "true" ]
 	then
-
-		# Jenkins server details
-		local jenkins_url="http://test-1-1"
-		local job_name="test-portal-release"
-
 		# Parameters
 		local github_branch_name="$(get_test_portal_branch_name ${LIFERAY_RELEASE_GIT_REF})"
 		local github_user_branch_name="${LIFERAY_RELEASE_GIT_REF}"
 		local github_user_name="brianchandotcom"
-		local git_commit_id="$(get_githash ${github_user_branch_name})"
+		local git_commit_id="$(get_git_hash ${github_user_branch_name})"
 		local release_url="https://releases.liferay.com/dxp/release-candidates/"
 		local repo_name="liferay-portal-ee"
-
 		# Trigger job
-		if(curl -X POST "${jenkins_url}/job/${job_name}/buildWithParameters" \
+		if(curl -X POST "http://test-1-1/job/test-portal-release/buildWithParameters" \
 			--user "${LIFERAY_RELEASE_JENKINS_USER}:${JENKINS_API_TOKEN}" \
 			--data-urlencode "CI_TEST_SUITE=${CI_TEST_SUITE}" \
 			--data-urlencode "RUN_SCANCODE_PIPELINE=${RUN_SCANCODE_PIPELINE}" \
