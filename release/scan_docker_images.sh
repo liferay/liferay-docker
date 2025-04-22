@@ -41,8 +41,8 @@ function print_help {
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_IMAGE_NAMES: Comma-separated list of DXP or Portal Docker images"
-	echo "    LIFERAY_PRISMA_ACCESS_KEY: An access key configured in the job environment variables"
-	echo "    LIFERAY_PRISMA_SECRET: A secret configured in the job environment variables"
+	echo "    LIFERAY_PRISMA_ACCESS_KEY: Prisma Cloud Access Key"
+	echo "    LIFERAY_PRISMA_SECRET: Prisma Cloud Secret"
 	echo ""
 	echo "Example: LIFERAY_IMAGE_NAMES=liferay/dxp:2025.q1.5-lts,liferay/dxp:2024.q2.2 ${0}"
 
