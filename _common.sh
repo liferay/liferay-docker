@@ -40,7 +40,7 @@ function clean_up_temp_directory {
 function configure_tomcat {
 	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> "${TEMP_DIR}/liferay/tomcat/bin/setenv.sh"
 
-	sed -i "/<web-app /a \\t<distributable />" "${TEMP_DIR}/liferay/tomcat/webapps/ROOT/WEB-INF/web.xml"
+	sed -i "/<web-app /a <distributable />" "${TEMP_DIR}/liferay/tomcat/webapps/ROOT/WEB-INF/web.xml"
 }
 
 function date {
