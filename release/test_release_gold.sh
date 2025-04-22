@@ -60,7 +60,7 @@ function tear_down {
 }
 
 function test_release_gold_check_usage {
-	assert_equals "$(check_usage)" "$(cat test-dependencies/expected/check_usage_output.txt)"
+	assert_equals "$(check_usage)" "$(cat test-dependencies/expected/test_release_gold_check_usage_output.txt)"
 }
 
 function test_release_gold_get_tag_name {
@@ -191,7 +191,7 @@ function _test_release_gold_reference_new_releases {
 
 	assert_equals \
 		"test-dependencies/actual/build.properties" \
-		"test-dependencies/expected/build_$(echo "${_PRODUCT_VERSION}" | tr '.' '_').properties"
+		"test-dependencies/expected/test_release_gold_build_$(echo "${_PRODUCT_VERSION}" | tr '.' '_').properties"
 }
 
 function _test_release_gold_not_update_release_info_date {

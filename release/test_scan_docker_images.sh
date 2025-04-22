@@ -33,7 +33,7 @@ function test_scan_docker_images_with_invalid_image {
 function test_scan_docker_images_without_parameters {
 	assert_equals \
 		"$(./scan_docker_images.sh)" \
-		"$(cat test-dependencies/expected/scan_docker_without_parameters_output.txt)"
+		"$(cat test-dependencies/expected/test_scan_docker_images_without_parameters_output.txt)"
 }
 
 main

@@ -53,7 +53,7 @@ function test_publishing_update_bundles_yml {
 
 	assert_equals \
 		"${_RELEASE_ROOT_DIR}/test-dependencies/actual/bundles.yml" \
-		"${_RELEASE_ROOT_DIR}/test-dependencies/expected/bundles.yml"
+		"${_RELEASE_ROOT_DIR}/test-dependencies/expected/test_publishing_bundles.yml"
 }
 
 function _run_update_bundles_yml {
