@@ -4,19 +4,19 @@ source build_all_images.sh --test
 source _test_common.sh
 
 function main {
-	test_get_latest_available_zulu_version
+	test_build_all_images_get_latest_available_zulu_version
 }
 
-function test_get_latest_available_zulu_version {
-	_test_get_latest_available_zulu_version "8" "amd64"
-	_test_get_latest_available_zulu_version "8" "arm64"
-	_test_get_latest_available_zulu_version "11" "amd64"
-	_test_get_latest_available_zulu_version "11" "arm64"
-	_test_get_latest_available_zulu_version "21" "amd64"
-	_test_get_latest_available_zulu_version "21" "arm64"
+function test_build_all_images_get_latest_available_zulu_version {
+	_test_build_all_images_get_latest_available_zulu_version "8" "amd64"
+	_test_build_all_images_get_latest_available_zulu_version "8" "arm64"
+	_test_build_all_images_get_latest_available_zulu_version "11" "amd64"
+	_test_build_all_images_get_latest_available_zulu_version "11" "arm64"
+	_test_build_all_images_get_latest_available_zulu_version "21" "amd64"
+	_test_build_all_images_get_latest_available_zulu_version "21" "arm64"
 }
 
-function _test_get_latest_available_zulu_version {
+function _test_build_all_images_get_latest_available_zulu_version {
 	echo -e "Running _test_get_latest_available_zulu_version for JDK ${1} ${2}.\n"
 
 	local latest_available_zulu_version=$(get_latest_available_zulu_version "${1}" "${2}")

@@ -12,11 +12,11 @@ function main {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	test_generate_pom_release_bom_api_dxp
-	test_generate_pom_release_bom_compile_only_dxp
-	test_generate_pom_release_bom_distro_dxp
-	test_generate_pom_release_bom_dxp
-	test_generate_pom_release_bom_third_party_dxp
+	test_bom_generate_pom_release_bom_api_dxp
+	test_bom_generate_pom_release_bom_compile_only_dxp
+	test_bom_generate_pom_release_bom_distro_dxp
+	test_bom_generate_pom_release_bom_dxp
+	test_bom_generate_pom_release_bom_third_party_dxp
 
 	LIFERAY_RELEASE_PRODUCT_NAME="portal"
 	_BUNDLES_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/liferay-portal"
@@ -24,11 +24,11 @@ function main {
 
 	_ARTIFACT_RC_VERSION="$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)-${_BUILD_TIMESTAMP}"
 
-	test_generate_pom_release_bom_api_portal
-	test_generate_pom_release_bom_compile_only_portal
-	test_generate_pom_release_bom_distro_portal
-	test_generate_pom_release_bom_portal
-	test_generate_pom_release_bom_third_party_portal
+	test_bom_generate_pom_release_bom_api_portal
+	test_bom_generate_pom_release_bom_compile_only_portal
+	test_bom_generate_pom_release_bom_distro_portal
+	test_bom_generate_pom_release_bom_portal
+	test_bom_generate_pom_release_bom_third_party_portal
 
 	tear_down
 }
@@ -93,7 +93,7 @@ function tear_down {
 	unset _RELEASE_TOOL_DIR
 }
 
-function test_generate_pom_release_bom_api_dxp {
+function test_bom_generate_pom_release_bom_api_dxp {
 	generate_pom_release_api &> /dev/null
 
 	assert_equals \
@@ -103,7 +103,7 @@ function test_generate_pom_release_bom_api_dxp {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_generate_pom_release_bom_api_portal {
+function test_bom_generate_pom_release_bom_api_portal {
 	generate_pom_release_api &> /dev/null
 
 	assert_equals \
@@ -113,7 +113,7 @@ function test_generate_pom_release_bom_api_portal {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_generate_pom_release_bom_compile_only_dxp {
+function test_bom_generate_pom_release_bom_compile_only_dxp {
 	generate_pom_release_bom_compile_only
 
 	assert_equals \
@@ -123,7 +123,7 @@ function test_generate_pom_release_bom_compile_only_dxp {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_generate_pom_release_bom_compile_only_portal {
+function test_bom_generate_pom_release_bom_compile_only_portal {
 	generate_pom_release_bom_compile_only
 
 	assert_equals \
@@ -133,7 +133,7 @@ function test_generate_pom_release_bom_compile_only_portal {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_generate_pom_release_bom_distro_dxp {
+function test_bom_generate_pom_release_bom_distro_dxp {
 	generate_pom_release_distro &> /dev/null
 
 	assert_equals \
@@ -143,7 +143,7 @@ function test_generate_pom_release_bom_distro_dxp {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_generate_pom_release_bom_distro_portal {
+function test_bom_generate_pom_release_bom_distro_portal {
 	generate_pom_release_distro &> /dev/null
 
 	assert_equals \
@@ -153,7 +153,7 @@ function test_generate_pom_release_bom_distro_portal {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_generate_pom_release_bom_dxp {
+function test_bom_generate_pom_release_bom_dxp {
 	generate_pom_release_bom &> /dev/null
 
 	assert_equals \
@@ -163,7 +163,7 @@ function test_generate_pom_release_bom_dxp {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_generate_pom_release_bom_portal {
+function test_bom_generate_pom_release_bom_portal {
 	generate_pom_release_bom &> /dev/null
 
 	assert_equals \
@@ -173,7 +173,7 @@ function test_generate_pom_release_bom_portal {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_generate_pom_release_bom_third_party_dxp {
+function test_bom_generate_pom_release_bom_third_party_dxp {
 	generate_pom_release_bom_compile_only
 
 	generate_pom_release_bom_third_party
@@ -186,7 +186,7 @@ function test_generate_pom_release_bom_third_party_dxp {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_generate_pom_release_bom_third_party_portal {
+function test_bom_generate_pom_release_bom_third_party_portal {
 	generate_pom_release_bom_compile_only
 
 	generate_pom_release_bom_third_party

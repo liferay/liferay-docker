@@ -7,12 +7,12 @@ source _package.sh
 function main {
 	set_up
 
-	test_generate_release_properties_file_portal
+	test_release_properties_generate_file_portal
 
 	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	_PRODUCT_VERSION="7.4.13-u36"
 
-	test_generate_release_properties_file_dxp
+	test_release_properties_generate_file_dxp
 
 	tear_down
 }
@@ -36,7 +36,7 @@ function tear_down {
 	rm -fr tomcat
 }
 
-function test_generate_release_properties_file_portal  {
+function test_release_properties_generate_file_portal  {
 	generate_release_properties_file &>/dev/null
 
 	assert_equals \
@@ -44,7 +44,7 @@ function test_generate_release_properties_file_portal  {
 		$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)
 }
 
-function test_generate_release_properties_file_dxp  {
+function test_release_properties_generate_file_dxp  {
 	generate_release_properties_file &>/dev/null
 
 	assert_equals \

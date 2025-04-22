@@ -12,7 +12,7 @@ function main {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	test_generate_release_notes
+	test_git_generate_release_notes
 
 	tear_down
 }
@@ -58,7 +58,7 @@ function tear_down {
 	unset _PROJECTS_DIR
 }
 
-function test_generate_release_notes {
+function test_git_generate_release_notes {
 	generate_release_notes
 
 	assert_equals \

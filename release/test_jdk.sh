@@ -10,7 +10,7 @@ function main {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	test_set_jdk_version_and_parameters
+	test_jdk_set_jdk_version_and_parameters
 
 	tear_down
 }
@@ -57,25 +57,25 @@ function tear_down {
 	unset _JDK_VERSION_17
 }
 
-function test_set_jdk_version_and_parameters {
-	_test_set_jdk_version_and_parameters "2024.q2.0" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
+function test_jdk_set_jdk_version_and_parameters {
+	_test_jdk_set_jdk_version_and_parameters "2024.q2.0" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
 
 	JAVA_OPTS="-XX:MaxPermSize=256m"
 
-	_test_set_jdk_version_and_parameters "2024.q3.0" "/opt/java/${_JDK_VERSION_8}" "${JAVA_OPTS}"
+	_test_jdk_set_jdk_version_and_parameters "2024.q3.0" "/opt/java/${_JDK_VERSION_8}" "${JAVA_OPTS}"
 
-	_test_set_jdk_version_and_parameters "2025.q1.0" "/opt/java/${_JDK_VERSION_17}" "${_JDK_PARAMETERS_17}"
-	_test_set_jdk_version_and_parameters "7.3.10-u36" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
-	_test_set_jdk_version_and_parameters "7.4.3-ga131" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
-	_test_set_jdk_version_and_parameters "7.4.3-ga132" "/opt/java/${_JDK_VERSION_17}" "${_JDK_PARAMETERS_17}"
-	_test_set_jdk_version_and_parameters "7.4.13-u131" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
-	_test_set_jdk_version_and_parameters "7.4.13-u132" "/opt/java/${_JDK_VERSION_17}" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "2025.q1.0" "/opt/java/${_JDK_VERSION_17}" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "7.3.10-u36" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
+	_test_jdk_set_jdk_version_and_parameters "7.4.3-ga131" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
+	_test_jdk_set_jdk_version_and_parameters "7.4.3-ga132" "/opt/java/${_JDK_VERSION_17}" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "7.4.13-u131" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
+	_test_jdk_set_jdk_version_and_parameters "7.4.13-u132" "/opt/java/${_JDK_VERSION_17}" "${_JDK_PARAMETERS_17}"
 }
 
-function _test_set_jdk_version_and_parameters {
+function _test_jdk_set_jdk_version_and_parameters {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_set_jdk_version_and_parameters for ${_PRODUCT_VERSION}.\n"
+	echo -e "Running _test_jdk_set_jdk_version_and_parameters for ${_PRODUCT_VERSION}.\n"
 
 	set_jdk_version_and_parameters 1> /dev/null
 

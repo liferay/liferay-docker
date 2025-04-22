@@ -8,7 +8,7 @@ source _promotion.sh
 function main {
 	set_up
 
-	test_generate_distro_jar
+	test_promotion_generate_distro_jar
 
 	tear_down
 }
@@ -51,7 +51,7 @@ function tear_down {
 	unset _RELEASE_ROOT_DIR
 }
 
-function test_generate_distro_jar {
+function test_promotion_generate_distro_jar {
 	generate_distro_jar &> /dev/null
 
 	assert_equals "$(find "${_RELEASE_ROOT_DIR}" -name "release.dxp.distro-${LIFERAY_RELEASE_VERSION}*.jar" | grep -c /)" 1
