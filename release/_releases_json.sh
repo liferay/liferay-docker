@@ -3,8 +3,7 @@
 function generate_releases_json {
 	if [ "${1}" = "regenerate" ]
 	then
-		_process_product dxp
-		_process_product portal
+		_process_products
 	else
 		_process_new_product
 
@@ -14,8 +13,7 @@ function generate_releases_json {
 		fi
 	fi
 
-	_promote_product_versions dxp
-	_promote_product_versions portal
+	_promote_product_versions
 	_tag_recommended_product_versions
 
 	_merge_json_snippets
@@ -144,23 +142,24 @@ function _process_new_product {
 	_process_product_version "${LIFERAY_RELEASE_PRODUCT_NAME}" "${_PRODUCT_VERSION}"
 }
 
-function _process_product {
-	local product_name="${1}"
-
-	for product_version in  $(echo -en "$(_download_product_version_list_html "${product_name}")" | \
-		grep \
-			--extended-regexp \
-			--only-matching \
-			"(20[0-9]+\.q[0-9]\.[0-9]+(-lts)?|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
-		tr -d "/" | \
-		uniq)
+function _process_products {
+	for product_name in "dxp" "portal"
 	do
-		if [[ $(echo "${product_version}" | grep "7.4") ]] && [[ $(echo "${product_version}" | cut -d 'u' -f 2) -gt 112 ]]
-		then
-			continue
-		fi
+		for product_version in $(echo -en "$(_download_product_version_list_html "${product_name}")" | \
+			grep \
+				--extended-regexp \
+				--only-matching \
+				"(20[0-9]+\.q[0-9]\.[0-9]+(-lts)?|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
+			tr -d "/" | \
+			uniq)
+		do
+			if [[ $(echo "${product_version}" | grep "7.4") ]] && [[ $(echo "${product_version}" | cut -d 'u' -f 2) -gt 112 ]]
+			then
+				continue
+			fi
 
-		_process_product_version "${product_name}" "${product_version}"
+			_process_product_version "${product_name}" "${product_version}"
+		done
 	done
 }
 
@@ -211,22 +210,23 @@ function _process_product_version {
 }
 
 function _promote_product_versions {
-	local product_name=${1}
-
-	while read -r group_version || [ -n "${group_version}" ]
+	for product_name in "dxp" "portal"
 	do
-		# shellcheck disable=SC2010
-		last_version=$(ls "${_PROMOTION_DIR}" | grep "${product_name}-${group_version}" | tail -n 1 2>/dev/null)
+		while read -r group_version || [ -n "${group_version}" ]
+		do
+			# shellcheck disable=SC2010
+			last_version=$(ls "${_PROMOTION_DIR}" | grep "${product_name}-${group_version}" | tail -n 1 2>/dev/null)
 
-		if [ -n "${last_version}" ]
-		then
-			lc_log INFO "Promoting ${last_version}."
+			if [ -n "${last_version}" ]
+			then
+				lc_log INFO "Promoting ${last_version}."
 
-			sed -i 's/"promoted": "false"/"promoted": "true"/' "${last_version}"
-		else
-			lc_log INFO "No product version found to promote for ${product_name}-${group_version}."
-		fi
-	done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
+				sed -i 's/"promoted": "false"/"promoted": "true"/' "${last_version}"
+			else
+				lc_log INFO "No product version found to promote for ${product_name}-${group_version}."
+			fi
+		done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
+	done
 }
 
 function _tag_recommended_product_versions {

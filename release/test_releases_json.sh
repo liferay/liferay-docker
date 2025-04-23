@@ -29,7 +29,7 @@ function set_up {
 
 	mv "${_PROMOTION_DIR}/latest-ga-product-version.json" "${_PROMOTION_DIR}/ga-$(_get_latest_product_version "ga").json"
 
-	_process_product dxp &> /dev/null
+	_process_products &> /dev/null
 
 	_promote_product_versions dxp &> /dev/null
 
