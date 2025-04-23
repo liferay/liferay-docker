@@ -116,6 +116,7 @@ function build_docker_image {
 		--build-arg LABEL_LIFERAY_VCS_REF="${LIFERAY_VCS_REF}" \
 		--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
 		--build-arg LABEL_RELEASE_VERSION="${LIFERAY_DOCKER_RELEASE_VERSION}" \
+		--build-arg LABEL_SLIM="${LIFERAY_DOCKER_SLIM}" \
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 		--build-arg LABEL_VERSION="${LABEL_VERSION}" \
@@ -140,23 +141,6 @@ function check_release {
 }
 
 function check_usage {
-	if [[ -n "${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}" ]] &&
-	   ! ( echo "${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?" )
-	then
-		print_help
-	fi
-
-	if [[ -n "${LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES}" ]] &&
-	   ! ( echo "${LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?" )
-	then
-		print_help
-	fi
-
-	if [ ! -n "${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}" ]
-	then
-		print_help
-	fi
-
 	if [ ! -n "${LIFERAY_DOCKER_RELEASE_FILE_URL}" ]
 	then
 		print_help
@@ -257,7 +241,6 @@ function prepare_slim_image {
 	rm -fr "${TEMP_DIR}/liferay/elasticsearch-sidecar"
 
 	(
-		echo "networkHostAddresses=\"${LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES}\""
 		echo "productionModeEnabled=B\"true\""
 	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
 
@@ -285,8 +268,6 @@ function prepare_slim_image {
 	(
 		echo "active=B\"true\""
 		echo "connectionId=\"REMOTE\""
-		echo "password=\"${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}\""
-		echo "networkHostAddresses=\"${LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES}\""
 	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
 
 	(
@@ -363,15 +344,12 @@ function print_help {
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_DOCKER_DEVELOPER_MODE (optional): If set to \"true\", all local images will be deleted before building a new one"
-	echo "    LIFERAY_DOCKER_ELASTICSEARCH_NETWORK_ADDRESSES (optional): Elasticsearch network addresses"
 	echo "    LIFERAY_DOCKER_FIX_PACK_URL (optional): URL to a fix pack"
 	echo "    LIFERAY_DOCKER_HUB_TOKEN (optional): Docker Hub token to log in automatically"
 	echo "    LIFERAY_DOCKER_HUB_USERNAME (optional): Docker Hub username to log in automatically"
 	echo "    LIFERAY_DOCKER_IMAGE_PLATFORMS (optional): Comma separated Docker image platforms to build when the \"push\" parameter is set"
 	echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API header used to generate the trial license"
 	echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
-	echo "    LIFERAY_DOCKER_OPENSEARCH_NETWORK_ADDRESSES (optional): OpenSearch network addresses"
-	echo "    LIFERAY_DOCKER_OPENSEARCH_PASSWORD (optional): OpenSearch password"
 	echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
 	echo "    LIFERAY_DOCKER_REPOSITORY (optional): Docker repository"
 	echo "    LIFERAY_DOCKER_SLIM (optional): If set to \"true\", the image be smaller"
@@ -397,6 +375,7 @@ function push_docker_image {
 			--build-arg LABEL_LIFERAY_VCS_REF="${LIFERAY_VCS_REF}" \
 			--build-arg LABEL_NAME="${DOCKER_LABEL_NAME}" \
 			--build-arg LABEL_RELEASE_VERSION="${LIFERAY_DOCKER_RELEASE_VERSION}" \
+			--build-arg LABEL_SLIM="${LIFERAY_DOCKER_SLIM}" \
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${LABEL_VERSION}" \

@@ -74,43 +74,70 @@ function main {
 		ln -s "${LIFERAY_MOUNT_DIR}"/deploy /opt/liferay/deploy
 
 		echo "[LIFERAY] The directory /mnt/liferay/deploy is ready. Copy files to \$(pwd)/xyz123/deploy on the host operating system to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
+		echo ""
 	else
 		echo "[LIFERAY] The directory /mnt/liferay/deploy does not exist. Create the directory \$(pwd)/xyz123/deploy on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/deploy on the container. Copy files to \$(pwd)/xyz123/deploy to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
+		echo ""
 	fi
 
-	if [ -z "${LIFERAY_OPENSEARCH_ENABLED}" ]
+	if [ "${LIFERAY_SLIM}" == "true" ]
 	then
-		LIFERAY_OPENSEARCH_ENABLED="false"
-
-		echo "[LIFERAY] Set the environment variable \"LIFERAY_OPENSEARCH_ENABLED\" to \"true\" to enable OpenSearch 2."
-	fi
-
-	if [ "${LIFERAY_OPENSEARCH_ENABLED}" == "true" ]
-	then
-		rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
-	else
-		rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.api.jar"
-		rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.impl.jar"
-		rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConfiguration.config"
-		rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
-
-		local blacklist_config_path="/opt/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
-
-		sed -i "s/com.liferay.portal.search.elasticsearch.cross.cluster.replication.impl//g" "${blacklist_config_path}"
-		sed -i "s/com.liferay.portal.search.elasticsearch.monitoring.web//g" "${blacklist_config_path}"
-		sed -i "s/com.liferay.portal.search.elasticsearch7.api//g" "${blacklist_config_path}"
-		sed -i "s/com.liferay.portal.search.elasticsearch7.impl//g" "${blacklist_config_path}"
-		sed -i "s/com.liferay.portal.search.learning.to.rank.api//g" "${blacklist_config_path}"
-		sed -i "s/com.liferay.portal.search.learning.to.rank.impl//g" "${blacklist_config_path}"
-
-		sed -i "s/\"\",\\\\//g" "${blacklist_config_path}"
-		sed -i "s/\"\"\\\\//g" "${blacklist_config_path}"
-
-		if (! grep -q "\"" "${blacklist_config_path}")
+		if ! ( echo "${LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?" )
 		then
-			echo "[LIFERAY] Deleting com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config."
+			echo "[LIFERAY] Run this container with the option \"--env LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES=[\"http://es-node1:9201\",\"http://es-node2:9202\"]\" to enable the connection to the search engine."
+			echo ""
+		fi
 
-			rm -f "${blacklist_config_path}"
+		if [ -z "${LIFERAY_OPENSEARCH_ENABLED}" ]
+		then
+			LIFERAY_OPENSEARCH_ENABLED="false"
+
+			echo "[LIFERAY] Run this container with the option \"--env LIFERAY_OPENSEARCH_ENABLED=true\" to enable OpenSearch."
+			echo ""
+		fi
+
+		if [ "${LIFERAY_OPENSEARCH_ENABLED}" == "true" ]
+		then
+			if [ -z "${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}" ]
+			then
+				echo "[LIFERAY] Run this container with the option \"--env LIFERAY_DOCKER_OPENSEARCH_PASSWORD=yourOpeanSearchPassword\" to enable the OpenSearch connection."
+				echo ""
+			fi
+
+			(
+				echo "networkHostAddresses=\"${LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES}\""
+				echo "password=\"${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}\""
+			) >> "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
+
+			rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
+		else
+			(
+				echo "networkHostAddresses=\"${LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES}\""
+			) >> "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
+
+			rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.api.jar"
+			rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.impl.jar"
+			rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConfiguration.config"
+			rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
+
+			local blacklist_config_path="/opt/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
+
+			sed -i "s/com.liferay.portal.search.elasticsearch.cross.cluster.replication.impl//g" "${blacklist_config_path}"
+			sed -i "s/com.liferay.portal.search.elasticsearch.monitoring.web//g" "${blacklist_config_path}"
+			sed -i "s/com.liferay.portal.search.elasticsearch7.api//g" "${blacklist_config_path}"
+			sed -i "s/com.liferay.portal.search.elasticsearch7.impl//g" "${blacklist_config_path}"
+			sed -i "s/com.liferay.portal.search.learning.to.rank.api//g" "${blacklist_config_path}"
+			sed -i "s/com.liferay.portal.search.learning.to.rank.impl//g" "${blacklist_config_path}"
+
+			sed -i "s/\"\",\\\\//g" "${blacklist_config_path}"
+			sed -i "s/\"\"\\\\//g" "${blacklist_config_path}"
+
+			if (! grep -q "\"" "${blacklist_config_path}")
+			then
+				echo "[LIFERAY] Deleting com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config."
+
+				rm -f "${blacklist_config_path}"
+			fi
 		fi
 	fi
 
