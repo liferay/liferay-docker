@@ -20,7 +20,6 @@ function send_to_ci_test {
 		local github_branch_name="$(get_test_portal_branch_name ${LIFERAY_RELEASE_GIT_REF})"
 		local github_user_branch_name="${LIFERAY_RELEASE_GIT_REF}"
 		local github_user_name="brianchandotcom"
-		local git_commit_id="$(get_git_hash ${github_user_branch_name})"
 		local release_url="https://releases.liferay.com/dxp/release-candidates/"
 		local repo_name="liferay-portal-ee"
 		# Trigger job
@@ -32,7 +31,7 @@ function send_to_ci_test {
 			--data-urlencode "TEST_PORTAL_USER_BRANCH_NAME=${github_user_branch_name}" \
 			--data-urlencode "TEST_PORTAL_USER_NAME=${github_user_name}" \
 			--data-urlencode "TEST_PORTAL_BUILD_PROFILE=${LIFERAY_RELEASE_PRODUCT_NAME}" \
-			--data-urlencode "TEST_PORTAL_RELEASE_GIT_ID=${git_commit_id}" \
+			--data-urlencode "TEST_PORTAL_RELEASE_GIT_ID=${_GIT_SHA}" \
 			--data-urlencode "TEST_PORTAL_RELEASE_OSGI_URL=${release_url}${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/liferay-dxp-osgi-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
 			--data-urlencode "TEST_PORTAL_RELEASE_SQL_URL=${release_url}${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/liferay-dxp-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
 			--data-urlencode "TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" \

@@ -2,26 +2,6 @@
 
 source ../_liferay_common.sh
 
-function get_git_hash {
-    local branch_name=${1}
-
-	if [[ "${branch_name}" =~ "7.4." ]]
-	then
-		local curl_url="https://api.github.com/repos/brianchandotcom/liferay-portal/commits/${branch_name}"
-	else
-		local curl_url="https://api.github.com/repos/brianchandotcom/liferay-portal-ee/commits/${branch_name}"
-	fi
-
-	local curl_response=$(\
-				curl \
-					${curl_url} \
-					-H "Accept: application/vnd.github.VERSION.sha" \
-					-H "Authorization: Bearer ${GH_TOKEN}" \
-					-s)
-
-    echo "${curl_response}"
-}
-
 function invoke_github_api_delete {
 	_invoke_github_api "${1}" "${2}" "${3}" "DELETE"
 
