@@ -7,11 +7,12 @@ source _releases_json.sh
 function main {
 	set_up
 
-	test_releases_json_merge_json_snippets dxp
+	test_releases_json_promote_product_versions
+	test_releases_json_tag_recommended_product_versions
+
+	test_releases_json_merge_json_snippets
 	test_releases_json_process_new_product_1
 	test_releases_json_process_new_product_2
-	test_releases_json_promote_product_versions dxp
-	test_releases_json_tag_recommended_product_versions
 
 	tear_down
 }
@@ -69,26 +70,22 @@ function test_releases_json_process_new_product_2 {
 }
 
 function test_releases_json_promote_product_versions {
-	local product_name=${1}
+	_promote_product_versions &> /dev/null
 
-	while read -r group_version || [ -n "${group_version}" ]
-	do
-		last_version=$(ls | grep "${product_name}-${group_version}" | tail -n 1 2>/dev/null)
-
-		if [ -n "${last_version}" ]
-		then
-			assert_equals "$(jq -r '.[] | .promoted' "${last_version}")" "true"
-		fi
-	done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
+	assert_equals \
+		"$(jq "[.[] | select(.promoted == \"true\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "2025.q1.8-lts")")" \
+		"true"
+		"$(jq "[.[] | select(.promoted == \"true\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "7.4.3.132-ga132")")" \
+		"true"
 }
 
 function test_releases_json_tag_recommended_product_versions {
+	_tag_recommended_product_versions &> /dev/null
+
 	assert_equals \
-		"$(jq "[.[] | select(.releaseKey == \"dxp-$(_get_latest_product_version "quarterly")\" and .tags == [\"recommended\"])] | length == 1" releases.json)" \
+		"$(jq "[.[] | select(.tags[]? == \"recommended\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "ga")")")" \
 		"true" \
-		"$(jq '[.[] | select(.product == "portal" and .tags == ["recommended"])] | length == 1' releases.json)" \
-		"true" \
-		"$(jq '[.[] | select(.tags == ["recommended"])] | length == 2' releases.json)" \
+		"$(jq "[.[] | select(.tags[]? == \"recommended\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "quarterly")")")" \
 		"true"
 }
 
