@@ -90,13 +90,20 @@ function _process_new_product {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local releases_json="${_PROMOTION_DIR}/0000-00-00-releases.json"
+	local releases_json=""
 
-	if [ ! -f "${releases_json}" ]
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
-		lc_log INFO "Downloading https://releases.liferay.com/releases.json to ${releases_json}."
+		releases_json="${_PROMOTION_DIR}/releases.json"
+	else
+		releases_json="${_PROMOTION_DIR}/0000-00-00-releases.json"
 
-		LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download https://releases.liferay.com/releases.json "${releases_json}"
+		if [ ! -f "${releases_json}" ]
+		then
+			lc_log INFO "Downloading https://releases.liferay.com/releases.json to ${releases_json}."
+
+			LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download https://releases.liferay.com/releases.json "${releases_json}"
+		fi
 	fi
 
 	if (grep "${_PRODUCT_VERSION}" "${releases_json}")
