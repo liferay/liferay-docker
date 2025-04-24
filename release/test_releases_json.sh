@@ -20,7 +20,7 @@ function main {
 function set_up {
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export LIFERAY_RELEASE_TEST_MODE="true"
-	export _PRODUCT_VERSION="2024.q1.9999"
+	export _PRODUCT_VERSION="7.4.13-u128"
 	export _PROMOTION_DIR="${PWD}"
 	export _RELEASE_ROOT_DIR="${PWD}"
 
@@ -55,23 +55,27 @@ function test_releases_json_merge_json_snippets {
 }
 
 function test_releases_json_process_new_product_1 {
-	local actual_number_of_promoted_versions=$(jq "map(select(.promoted == \"true\")) | length" 0000-00-00-releases.json)
-	local expected_promoted_versions_dxp=$(grep -c '' "${_RELEASE_ROOT_DIR}/supported-dxp-versions.txt")
-	local expected_promoted_versions_portal=$(grep -c '' "${_RELEASE_ROOT_DIR}/supported-portal-versions.txt")
-
-	assert_equals "${actual_number_of_promoted_versions}" $((expected_promoted_versions_dxp + expected_promoted_versions_portal - 1))
-}
-
-function test_releases_json_process_new_product_2 {
-	local temp_product_version=${_PRODUCT_VERSION}
-
-	_PRODUCT_VERSION="7.4.13-u128"
-
 	_process_new_product &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+}
 
-	_PRODUCT_VERSION="${temp_product_version}"
+function test_releases_json_process_new_product_2 {
+	_PRODUCT_VERSION="2024.q4.7"
+
+	_process_products &> /dev/null
+
+	_process_new_product &> /dev/null
+
+	_promote_product_versions &> /dev/null
+
+	_tag_recommended_product_versions &> /dev/null
+
+	_merge_json_snippets &> /dev/null
+
+	assert_equals \
+		"${_PROMOTION_DIR}/releases.json" \
+		"${_RELEASE_ROOT_DIR}/test-dependencies/expected/releases.json"
 }
 
 function test_releases_json_promote_product_versions {
