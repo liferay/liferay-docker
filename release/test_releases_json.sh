@@ -24,21 +24,7 @@ function set_up {
 	export _PROMOTION_DIR="${PWD}"
 	export _RELEASE_ROOT_DIR="${PWD}"
 
-	rm -fr "${HOME}/.liferay-common-cache/releases.liferay.com"
-
-	cp test-dependencies/actual/latest-ga-product-version.json "${_PROMOTION_DIR}"
-
-	mv "${_PROMOTION_DIR}/latest-ga-product-version.json" "${_PROMOTION_DIR}/ga-$(_get_latest_product_version "ga").json"
-
 	_process_products &> /dev/null
-
-	_promote_product_versions dxp &> /dev/null
-
-	_tag_recommended_product_versions &> /dev/null
-
-	_merge_json_snippets &> /dev/null
-
-	_process_new_product &> /dev/null
 }
 
 function tear_down {
