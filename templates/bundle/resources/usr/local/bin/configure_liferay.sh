@@ -82,9 +82,9 @@ function main {
 
 	if [ "${LIFERAY_SLIM}" == "true" ]
 	then
-		if (! echo "${LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?")
+		if (! echo "${LIFERAY_NETWORK_HOST_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?")
 		then
-			echo "[LIFERAY] Run this container with the option \"--env LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES=[\"http://node1:9201\",\"http://node2:9202\"]\" to enable the connection to remote search servers (Elasticsearch or OpenSearch)."
+			echo "[LIFERAY] Run this container with the option \"--env LIFERAY_NETWORK_HOST_ADDRESSES=[\"http://node1:9201\",\"http://node2:9202\"]\" to enable the connection to remote search servers (Elasticsearch or OpenSearch)."
 			echo ""
 		fi
 
@@ -98,21 +98,21 @@ function main {
 
 		if [ "${LIFERAY_OPENSEARCH_ENABLED}" == "true" ]
 		then
-			if [ -z "${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}" ]
+			if [ -z "${LIFERAY_OPENSEARCH_PASSWORD}" ]
 			then
-				echo "[LIFERAY] Run this container with the option \"--env LIFERAY_DOCKER_OPENSEARCH_PASSWORD=yourOpeanSearchPassword\" to enable the OpenSearch connection."
+				echo "[LIFERAY] Run this container with the option \"--env LIFERAY_OPENSEARCH_PASSWORD=yourOpeanSearchPassword\" to enable the OpenSearch connection."
 				echo ""
 			fi
 
 			(
-				echo "networkHostAddresses=\"${LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES}\""
-				echo "password=\"${LIFERAY_DOCKER_OPENSEARCH_PASSWORD}\""
+				echo "networkHostAddresses=\"${LIFERAY_NETWORK_HOST_ADDRESSES}\""
+				echo "password=\"${LIFERAY_OPENSEARCH_PASSWORD}\""
 			) >> "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
 
 			rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
 		else
 			(
-				echo "networkHostAddresses=\"${LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES}\""
+				echo "networkHostAddresses=\"${LIFERAY_NETWORK_HOST_ADDRESSES}\""
 			) >> "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
 
 			rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.api.jar"
