@@ -82,7 +82,7 @@ function main {
 
 	if [ "${LIFERAY_SLIM}" == "true" ]
 	then
-		if ! ( echo "${LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?" )
+		if (! echo "${LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?")
 		then
 			echo "[LIFERAY] Run this container with the option \"--env LIFERAY_DOCKER_NETWORK_HOST_ADDRESSES=[\"http://node1:9201\",\"http://node2:9202\"]\" to enable the connection to remote search servers (Elasticsearch or OpenSearch)."
 			echo ""
