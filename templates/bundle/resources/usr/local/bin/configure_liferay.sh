@@ -82,63 +82,7 @@ function main {
 
 	if [ "${LIFERAY_SLIM}" == "true" ]
 	then
-		if (! echo "${LIFERAY_NETWORK_HOST_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?")
-		then
-			echo "[LIFERAY] Run this container with the option \"--env LIFERAY_NETWORK_HOST_ADDRESSES=[\"http://node1:9201\",\"http://node2:9202\"]\" to enable the connection to remote search servers (Elasticsearch or OpenSearch)."
-			echo ""
-		fi
-
-		if [ -z "${LIFERAY_OPENSEARCH_ENABLED}" ]
-		then
-			LIFERAY_OPENSEARCH_ENABLED="false"
-
-			echo "[LIFERAY] Run this container with the option \"--env LIFERAY_OPENSEARCH_ENABLED=true\" to enable OpenSearch."
-			echo ""
-		fi
-
-		if [ "${LIFERAY_OPENSEARCH_ENABLED}" == "true" ]
-		then
-			if [ -z "${LIFERAY_OPENSEARCH_PASSWORD}" ]
-			then
-				echo "[LIFERAY] Run this container with the option \"--env LIFERAY_OPENSEARCH_PASSWORD=yourOpeanSearchPassword\" to enable the OpenSearch connection."
-				echo ""
-			fi
-
-			(
-				echo "networkHostAddresses=\"${LIFERAY_NETWORK_HOST_ADDRESSES}\""
-				echo "password=\"${LIFERAY_OPENSEARCH_PASSWORD}\""
-			) >> "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
-
-			rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
-		else
-			(
-				echo "networkHostAddresses=\"${LIFERAY_NETWORK_HOST_ADDRESSES}\""
-			) >> "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
-
-			rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.api.jar"
-			rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.impl.jar"
-			rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConfiguration.config"
-			rm -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
-
-			local blacklist_config_path="/opt/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
-
-			sed -i "s/com.liferay.portal.search.elasticsearch.cross.cluster.replication.impl//g" "${blacklist_config_path}"
-			sed -i "s/com.liferay.portal.search.elasticsearch.monitoring.web//g" "${blacklist_config_path}"
-			sed -i "s/com.liferay.portal.search.elasticsearch7.api//g" "${blacklist_config_path}"
-			sed -i "s/com.liferay.portal.search.elasticsearch7.impl//g" "${blacklist_config_path}"
-			sed -i "s/com.liferay.portal.search.learning.to.rank.api//g" "${blacklist_config_path}"
-			sed -i "s/com.liferay.portal.search.learning.to.rank.impl//g" "${blacklist_config_path}"
-
-			sed -i "s/\"\",\\\\//g" "${blacklist_config_path}"
-			sed -i "s/\"\"\\\\//g" "${blacklist_config_path}"
-
-			if (! grep -q "\"" "${blacklist_config_path}")
-			then
-				echo "[LIFERAY] Deleting com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config."
-
-				rm -f "${blacklist_config_path}"
-			fi
-		fi
+		process_slim_image
 	fi
 
 	export LIFERAY_PATCHING_DIR="${LIFERAY_MOUNT_DIR}"/patching
@@ -156,6 +100,71 @@ function main {
 	if [ -n "${LIFERAY_TOMCAT_JVM_ROUTE}" ]
 	then
 		sed -i s/"<Engine name=\"Catalina\" defaultHost=\"localhost\">"/"<Engine defaultHost=\"localhost\" jvmRoute=\"${LIFERAY_TOMCAT_JVM_ROUTE}\" name=\"Catalina\">"/ /opt/liferay/tomcat/conf/server.xml
+	fi
+}
+
+function process_slim_image {
+	if (! echo "${LIFERAY_NETWORK_HOST_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?")
+	then
+		echo "[LIFERAY] Run this container with the option \"--env LIFERAY_NETWORK_HOST_ADDRESSES=[\"http://node1:9201\",\"http://node2:9202\"]\" to enable the connection to remote search servers (Elasticsearch or OpenSearch)."
+		echo ""
+	fi
+
+	if [ -z "${LIFERAY_OPENSEARCH_ENABLED}" ]
+	then
+		LIFERAY_OPENSEARCH_ENABLED="false"
+
+		echo "[LIFERAY] Run this container with the option \"--env LIFERAY_OPENSEARCH_ENABLED=true\" to enable OpenSearch."
+		echo ""
+	fi
+
+	if [ "${LIFERAY_OPENSEARCH_ENABLED}" == "true" ]
+	then
+		if [ -z "${LIFERAY_OPENSEARCH_PASSWORD}" ]
+		then
+			echo "[LIFERAY] Run this container with the option \"--env LIFERAY_OPENSEARCH_PASSWORD=yourOpeanSearchPassword\" to enable the OpenSearch connection."
+			echo ""
+		fi
+
+		if [ ! -f "/opt/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config" ]
+		then
+			(
+				echo "blacklistBundleSymbolicNames=[\\"
+				echo "\"com.liferay.portal.search.elasticsearch.cross.cluster.replication.impl\",\\"
+				echo "\"com.liferay.portal.search.elasticsearch.monitoring.web\",\\"
+				echo "\"com.liferay.portal.search.elasticsearch7.api\",\\"
+				echo "\"com.liferay.portal.search.elasticsearch7.impl\",\\"
+				echo "\"com.liferay.portal.search.learning.to.rank.api\",\\"
+				echo "\"com.liferay.portal.search.learning.to.rank.impl\"\\"
+				echo "]"
+			) > "/opt/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
+		fi
+
+		if [ ! -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConfiguration.config" ]
+		then
+			echo "remoteClusterConnectionId=\"REMOTE\"" > "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConfiguration.config"
+		fi
+
+		if [ ! -f "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config" ]
+		then
+			(
+				echo "active=B\"true\""
+				echo "connectionId=\"REMOTE\""
+				echo "networkHostAddresses=\"${LIFERAY_NETWORK_HOST_ADDRESSES}\""
+				echo "password=\"${LIFERAY_OPENSEARCH_PASSWORD}\""
+			) > "/opt/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
+		fi
+	else
+		if [ ! -f "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config" ]
+		then
+			(
+				echo "networkHostAddresses=\"${LIFERAY_NETWORK_HOST_ADDRESSES}\""
+				echo "productionModeEnabled=B\"true\""
+			) > "/opt/liferay/osgi/configs/com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config"
+		fi
+
+		rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.api.jar"
+		rm -f "/opt/liferay/deploy/com.liferay.portal.search.opensearch2.impl.jar"
 	fi
 }
 
