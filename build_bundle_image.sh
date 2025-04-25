@@ -266,11 +266,6 @@ function prepare_slim_image {
 	fi
 
 	(
-		echo "active=B\"true\""
-		echo "connectionId=\"REMOTE\""
-	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
-
-	(
 		echo "blacklistBundleSymbolicNames=[\\"
 		echo "\"com.liferay.portal.search.elasticsearch.cross.cluster.replication.impl\",\\"
 		echo "\"com.liferay.portal.search.elasticsearch.monitoring.web\",\\"
@@ -280,6 +275,11 @@ function prepare_slim_image {
 		echo "\"com.liferay.portal.search.learning.to.rank.impl\"\\"
 		echo "]"
 	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
+
+	(
+		echo "active=B\"true\""
+		echo "connectionId=\"REMOTE\""
+	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConnectionConfiguration-REMOTE.config"
 
 	echo "remoteClusterConnectionId=\"REMOTE\"" > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.search.opensearch2.configuration.OpenSearchConfiguration.config"
 }
