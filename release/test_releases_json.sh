@@ -11,8 +11,8 @@ function main {
 	test_releases_json_tag_recommended_product_versions
 
 	test_releases_json_merge_json_snippets
-	test_releases_json_process_new_product_1
-	test_releases_json_process_new_product_2
+	test_releases_json_not_process_new_product
+	test_releases_json_process_new_product
 
 	tear_down
 }
@@ -54,13 +54,13 @@ function test_releases_json_merge_json_snippets {
 	rm ./*dxp*.json ./*portal*.json
 }
 
-function test_releases_json_process_new_product_1 {
+function test_releases_json_not_process_new_product {
 	_process_new_product &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
-function test_releases_json_process_new_product_2 {
+function test_releases_json_process_new_product {
 	_PRODUCT_VERSION="2024.q4.7"
 
 	_process_products &> /dev/null
