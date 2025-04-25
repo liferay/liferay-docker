@@ -72,7 +72,7 @@ function scan_docker_images {
 
 	if (! echo "${auth_response}" | grep -q "login_successful")
 	then
-		lc_log ERROR "Unable to authenticate in ${api_url}."
+		lc_log ERROR "Unable to authenticate with ${api_url}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
