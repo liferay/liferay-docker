@@ -272,12 +272,12 @@ function prepare_slim_image {
 
 	(
 		echo "blacklistBundleSymbolicNames=[\\"
-		echo "	\"com.liferay.portal.search.elasticsearch.cross.cluster.replication.impl\",\\"
-		echo "	\"com.liferay.portal.search.elasticsearch.monitoring.web\",\\"
-		echo "	\"com.liferay.portal.search.elasticsearch7.api\",\\"
-		echo "	\"com.liferay.portal.search.elasticsearch7.impl\",\\"
-		echo "	\"com.liferay.portal.search.learning.to.rank.api\",\\"
-		echo "	\"com.liferay.portal.search.learning.to.rank.impl\"\\"
+		echo "\"com.liferay.portal.search.elasticsearch.cross.cluster.replication.impl\",\\"
+		echo "\"com.liferay.portal.search.elasticsearch.monitoring.web\",\\"
+		echo "\"com.liferay.portal.search.elasticsearch7.api\",\\"
+		echo "\"com.liferay.portal.search.elasticsearch7.impl\",\\"
+		echo "\"com.liferay.portal.search.learning.to.rank.api\",\\"
+		echo "\"com.liferay.portal.search.learning.to.rank.impl\"\\"
 		echo "]"
 	) > "${TEMP_DIR}/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config"
 
