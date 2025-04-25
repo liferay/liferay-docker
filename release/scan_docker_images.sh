@@ -4,8 +4,8 @@ source ../_liferay_common.sh
 
 function check_usage {
 	if [ -z "${LIFERAY_IMAGE_NAMES}" ] ||
-	   [ -z "${LIFERAY_PRISMA_ACCESS_KEY}" ] ||
-	   [ -z "${LIFERAY_PRISMA_SECRET}" ]
+	   [ -z "${LIFERAY_PRISMA_CLOUD_ACCESS_KEY}" ] ||
+	   [ -z "${LIFERAY_PRISMA_CLOUD_SECRET}" ]
 	then
 		print_help
 	fi
@@ -43,8 +43,8 @@ function print_help {
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_IMAGE_NAMES: Comma separated list of DXP or Portal Docker images"
-	echo "    LIFERAY_PRISMA_ACCESS_KEY: Prisma Cloud access key"
-	echo "    LIFERAY_PRISMA_SECRET: Prisma Cloud secret"
+	echo "    LIFERAY_PRISMA_CLOUD_ACCESS_KEY: Prisma Cloud access key"
+	echo "    LIFERAY_PRISMA_CLOUD_SECRET: Prisma Cloud secret"
 	echo ""
 	echo "Example: LIFERAY_IMAGE_NAMES=liferay/dxp:2025.q1.5-lts,liferay/dxp:2024.q2.2 ${0}"
 
@@ -56,8 +56,8 @@ function scan_docker_images {
 	local data=$(
 		cat <<- END
 		{
-			"password": "${LIFERAY_PRISMA_SECRET}",
-			"username": "${LIFERAY_PRISMA_ACCESS_KEY}"
+			"password": "${LIFERAY_PRISMA_CLOUD_SECRET}",
+			"username": "${LIFERAY_PRISMA_CLOUD_ACCESS_KEY}"
 		}
 		END
 	)
@@ -106,8 +106,8 @@ function scan_docker_images {
 					find \
 						/run/user/$(id -u) \
 						-name docker.sock 2> /dev/null)" \
-				--password "${LIFERAY_PRISMA_SECRET}" \
-				--user "${LIFERAY_PRISMA_ACCESS_KEY}" \
+				--password "${LIFERAY_PRISMA_CLOUD_SECRET}" \
+				--user "${LIFERAY_PRISMA_CLOUD_ACCESS_KEY}" \
 				"${image_name}")
 
 		lc_log INFO "Scan output for ${image_name}:"

@@ -14,14 +14,14 @@ function main {
 
 function set_up {
 	export LIFERAY_IMAGE_NAMES="liferay/dxp:test-image"
-	export LIFERAY_PRISMA_ACCESS_KEY="key"
-	export LIFERAY_PRISMA_SECRET="secret"
+	export LIFERAY_PRISMA_CLOUD_ACCESS_KEY="key"
+	export LIFERAY_PRISMA_CLOUD_SECRET="secret"
 }
 
 function tear_down {
 	unset LIFERAY_IMAGE_NAMES
-	unset LIFERAY_PRISMA_ACCESS_KEY
-	unset LIFERAY_PRISMA_SECRET
+	unset LIFERAY_PRISMA_CLOUD_ACCESS_KEY
+	unset LIFERAY_PRISMA_CLOUD_SECRET
 }
 
 function test_scan_docker_images_with_invalid_image {
