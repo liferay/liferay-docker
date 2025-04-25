@@ -352,7 +352,7 @@ function print_help {
 	echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
 	echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
 	echo "    LIFERAY_DOCKER_REPOSITORY (optional): Docker repository"
-	echo "    LIFERAY_DOCKER_SLIM (optional): If set to \"true\", the image be smaller"
+	echo "    LIFERAY_DOCKER_SLIM (optional): If set to \"true\", the image will be smaller"
 	echo ""
 	echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0} push"
 	echo ""
