@@ -10,6 +10,8 @@ function check_usage {
 		print_help
 	fi
 
+	local image_name
+
 	while read -r image_name
 	do
 		if [ -z "$(docker images -q "${image_name}" 2> /dev/null)" ]
@@ -40,9 +42,9 @@ function print_help {
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
-	echo "    LIFERAY_IMAGE_NAMES: Comma-separated list of DXP or Portal Docker images"
-	echo "    LIFERAY_PRISMA_ACCESS_KEY: Prisma Cloud Access Key"
-	echo "    LIFERAY_PRISMA_SECRET: Prisma Cloud Secret"
+	echo "    LIFERAY_IMAGE_NAMES: Comma separated list of DXP or Portal Docker images"
+	echo "    LIFERAY_PRISMA_ACCESS_KEY: Prisma Cloud access key"
+	echo "    LIFERAY_PRISMA_SECRET: Prisma Cloud secret"
 	echo ""
 	echo "Example: LIFERAY_IMAGE_NAMES=liferay/dxp:2025.q1.5-lts,liferay/dxp:2024.q2.2 ${0}"
 
