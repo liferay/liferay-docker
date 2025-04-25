@@ -117,9 +117,9 @@ function scan_docker_images {
 		if [[ ${scan_output} == *"Compliance threshold check results: PASS"* ]] &&
 		   [[ ${scan_output} == *"Vulnerability threshold check results: PASS"* ]]
 		then
-			lc_log INFO "The result of scan for ${image_name} is: PASS"
+			lc_log INFO "The result of scan for ${image_name} is: PASS."
 		else
-			lc_log INFO "The result of scan for ${image_name} is: FAIL"
+			lc_log INFO "The result of scan for ${image_name} is: FAIL."
 
 			lc_log ERROR "The Docker image ${image_name} has security vulnerabilities."
 		fi
