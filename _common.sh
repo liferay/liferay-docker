@@ -174,6 +174,28 @@ function get_tomcat_version {
 	echo "${liferay_tomcat_version}"
 }
 
+function invoke_github_api_get_file {
+	local file_name=${1}
+	local file_path=${2}
+	local repository_name=${3}
+
+	local http_response=$(\
+		curl \
+			"https://api.github.com/repos/liferay/${repository_name}/contents/${file_path}?ref=master" \
+			--header "Accept: application/vnd.github.v3.raw" \
+			--header "Authorization: token ${LIFERAY_RELEASE_GITHUB_PAT}" \
+			--include \
+			--max-time 10 \
+			--request GET \
+			--retry 3 \
+			--write-out "%{http_code}" \
+			--output "${file_name}")
+	if [ "${http_response}" != "200" ]
+	then
+		echo "Unable to download ${file_name} from GitHub."
+	fi
+}
+
 function log_in_to_docker_hub {
 	if [ ! -n "${LIFERAY_DOCKER_HUB_LOGGED_IN}" ] && [ -n "${LIFERAY_DOCKER_HUB_TOKEN}" ] && [ -n "${LIFERAY_DOCKER_HUB_USERNAME}" ]
 	then

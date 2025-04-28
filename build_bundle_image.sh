@@ -164,11 +164,27 @@ function download_trial_dxp_license {
 function get_latest_tomcat_version {
 	local tomcat_version=$(get_tomcat_version "${TEMP_DIR}/liferay")
 
+	invoke_github_api_get_file \
+		"app.server.properties" \
+		"app.server.properties" \
+		"liferay-portal-ee" \
+
+	local master_tomcat_version=$(lc_get_property "app.server.properties" "app.server.tomcat.version")
+
+	rm -f "app.server.properties"
+
 	if [[ "${tomcat_version}" == "9.0"* ]]
 	then
-		echo "9.0.102"
+		local latest_tomcat_version="9.0.102"
+
+		if [[ "${master_tomcat_version}" == "9.0"* ]]
+		then
+			latest_tomcat_version=$(echo -e "${latest_tomcat_version}\n${master_tomcat_version}" | sort --version-sort | tail -1)
+		fi
+
+		echo "${latest_tomcat_version}"
 	else
-		echo "Unable to get latest Tomcat version for ${1}."
+		echo "Unable to get latest Tomcat version."
 
 		exit 1
 	fi
@@ -287,7 +303,10 @@ function prepare_temp_directory {
 	local tomcat_version=$(get_latest_tomcat_version)
 
 	local tomcat_download_dir="downloads/tomcat/apache-tomcat-${tomcat_version}"
-	local tomcat_url="https://dlcdn.apache.org/tomcat/tomcat-${tomcat_version%%.*}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}.zip"
+
+	local tomcat_major_version=$(echo "${tomcat_version}" | cut -d '.' -f 1)
+
+	local tomcat_url="https://dlcdn.apache.org/tomcat/tomcat-${tomcat_major_version}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}.zip"
 
 	download "${tomcat_download_dir}/apache-tomcat.zip" "${tomcat_url}"
 
