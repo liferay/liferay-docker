@@ -136,6 +136,7 @@ function compare_jars {
 			grep -v "__liferay__/index.js" | \
 			grep -v "_jsp.class" | \
 			grep -v "_jsp.java" | \
+			grep -v "_jsp\$1.class" | \
 			grep -v "index.js.map" | \
 			grep -v "pom.properties" | \
 			grep -v "previous-compilation-data.bin" | \
