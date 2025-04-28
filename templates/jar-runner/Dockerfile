@@ -15,7 +15,16 @@ COPY resources/ /
 
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_jar_runner_entrypoint.sh"]
 
-ENV JAVA_VERSION=zulu11
+ENV JAVA_VERSION=zulu21
+ENV JDK_JAVA_OPTIONS="--add-opens java.base/java.lang=ALL-UNNAMED \
+	--add-opens java.base/java.lang.invoke=ALL-UNNAMED \
+	--add-opens java.base/java.lang.reflect=ALL-UNNAMED \
+	--add-opens java.base/java.lang.net=ALL-UNNAMED \
+	--add-opens java.base/java.net=ALL-UNNAMED \
+	--add-opens java.base/sun.net.www.protocol.http=ALL-UNNAMED \
+	--add-opens java.base/sun.net.www.protocol.https=ALL-UNNAMED \
+	--add-opens java.base/sun.util.calendar=ALL-UNNAMED \
+	--add-opens jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED"
 ENV LANG="C.UTF-8"
 ENV LIFERAY_JAR_RUNNER_JAVA_OPTS="-Xmx512m"
 
