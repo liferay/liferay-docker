@@ -11,8 +11,8 @@ function get_test_portal_branch_name {
 	fi
 }
 
-function send_to_ci_test {
-	if [ "${SEND_BUILD_TO_TEST_CI}" = "true" ]
+function trigger_ci_test_suite {
+	if [ "${TRIGGER_CI_TEST_SUITE}" = "true" ]
 	then
 		local github_branch_name="$(get_test_portal_branch_name "${LIFERAY_RELEASE_GIT_REF}")"
 		local github_user_branch_name="${LIFERAY_RELEASE_GIT_REF}"
