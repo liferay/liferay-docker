@@ -4,7 +4,6 @@ function trigger_ci_test_suite {
 	if [ "${TRIGGER_CI_TEST_SUITE}" = "true" ]
 	then
 		local release_url="https://releases.liferay.com/dxp/release-candidates/"
-		local repo_name="liferay-portal-ee"
 
 		local http_response=$(curl \
 			"http://test-1-1/job/test-portal-release/buildWithParameters" \
