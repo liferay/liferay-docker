@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source _github.sh
-
 function get_test_portal_branch_name {
 	local branch_name="${1}"
 
