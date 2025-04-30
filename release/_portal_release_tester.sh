@@ -1,20 +1,9 @@
 #!/bin/bash
 
-function get_test_portal_branch_name {
-	local branch_name="${1}"
-
-	if [[ "${branch_name}" =~ ^7.4.* ]]
-	then
-		echo "master"
-	else
-		echo "${branch_name}"
-	fi
-}
-
 function trigger_ci_test_suite {
 	if [ "${TRIGGER_CI_TEST_SUITE}" = "true" ]
 	then
-		local github_branch_name="$(get_test_portal_branch_name "${LIFERAY_RELEASE_GIT_REF}")"
+		local github_branch_name="$(_get_test_portal_branch_name "${LIFERAY_RELEASE_GIT_REF}")"
 		local github_user_branch_name="${LIFERAY_RELEASE_GIT_REF}"
 		local github_user_name="brianchandotcom"
 		local release_url="https://releases.liferay.com/dxp/release-candidates/"
@@ -55,5 +44,16 @@ function trigger_ci_test_suite {
 		lc_log INFO "Skipping the test build job."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+}
+
+function _get_test_portal_branch_name {
+	local branch_name="${1}"
+
+	if [[ "${branch_name}" =~ ^7.4.* ]]
+	then
+		echo "master"
+	else
+		echo "${branch_name}"
 	fi
 }
