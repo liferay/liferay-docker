@@ -50,6 +50,8 @@ function send_to_ci_test {
 			lc_log INFO "Test build triggered."
 		else
 			lc_log ERROR "Unable to trigger the test build."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 	else
 		lc_log INFO "Skipping the test build job."
