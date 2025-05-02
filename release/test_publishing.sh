@@ -5,7 +5,7 @@ source ../_test_common.sh
 source _publishing.sh
 
 function main {
-	setup
+	set_up
 
 	test_publishing_get_patcher_product_version_label
 	test_publishing_get_patcher_project_version
@@ -15,7 +15,7 @@ function main {
 	tear_down
 }
 
-function setup {
+function set_up {
 	export _RELEASE_ROOT_DIR="${PWD}"
 
 	export _BASE_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/actual"
