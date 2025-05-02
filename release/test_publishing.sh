@@ -61,7 +61,7 @@ function _run_update_bundles_yml {
 
 	echo -e "Running _update_bundles_yml for ${_PRODUCT_VERSION}.\n"
 
-	_update_bundles_yml --test &> /dev/null
+	_update_bundles_yml &> /dev/null
 }
 
 function _test_publishing_get_patcher_product_version_label {

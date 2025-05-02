@@ -196,7 +196,7 @@ function prepare_next_release_branch {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [[ ! " ${@} " =~ " --test " ]]
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
 		rm -fr releases.json
 
@@ -210,7 +210,7 @@ function prepare_next_release_branch {
 			select(.productGroupVersion == \"${product_group_version}\" and .promoted == \"true\") | \
 			.targetPlatformVersion" releases.json)"
 
-	if [[ ! " ${@} " =~ " --test " ]]
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
 		rm -fr releases.json
 	fi
@@ -252,7 +252,7 @@ function prepare_next_release_branch {
 			-e "s/release.info.version.display.name\[release-private\]=.*/release.info.version.display.name[release-private]=${product_group_version^^}.${next_project_version_suffix}/" \
 			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
 
-		if [[ ! " ${@} " =~ " --test " ]]
+		if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 		then
 			commit_to_branch_and_send_pull_request \
 				"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
@@ -305,7 +305,7 @@ function reference_new_releases {
 
 	local issue_key=""
 
-	if [[ ! " ${@} " =~ " --test " ]]
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
 		issue_key="$(\
 			add_jira_issue \
@@ -436,7 +436,7 @@ function reference_new_releases {
 			"portal.version.latest\[${previous_quarterly_release_branch}\]="
 	fi
 
-	if [[ ! " ${@} " =~ " --test " ]]
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
 		commit_to_branch_and_send_pull_request \
 			"${_PROJECTS_DIR}/liferay-jenkins-ee/commands/build.properties" \
@@ -643,7 +643,7 @@ function update_release_info_date {
 		-e "s/release.info.date=.*/release.info.date=$(date -d "next monday" +"%B %-d, %Y")/" \
 		release.properties
 
-	if [[ ! " ${@} " =~ " --test " ]]
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
 		commit_to_branch_and_send_pull_request \
 			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \

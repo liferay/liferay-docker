@@ -70,6 +70,7 @@ function assert_equals {
 }
 
 function main {
+	LIFERAY_RELEASE_TEST_MODE="true"
 	_TEST_RESULT="true"
 
 	if [ -n "${BASH_SOURCE[3]}" ]

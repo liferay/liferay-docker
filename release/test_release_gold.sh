@@ -126,7 +126,7 @@ function _test_release_gold_prepare_next_release_branch {
 
 	local current_dir="${PWD}"
 
-	prepare_next_release_branch --test 1> /dev/null
+	prepare_next_release_branch 1> /dev/null
 
 	assert_equals \
 		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[master-private]")" \
@@ -149,7 +149,7 @@ function test_release_gold_reference_new_releases {
 function test_release_gold_update_release_info_date {
 	_PRODUCT_VERSION="2024.q2.12"
 
-	update_release_info_date --test 1> /dev/null
+	update_release_info_date 1> /dev/null
 
 	assert_equals \
 		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.date")" \
@@ -163,7 +163,7 @@ function _test_release_gold_not_prepare_next_release_branch {
 		"Running _test_release_gold_not_prepare_next_release_branch for ${_PRODUCT_VERSION} " \
 		"and LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH=${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}.\n"
 
-	prepare_next_release_branch --test 1> /dev/null
+	prepare_next_release_branch 1> /dev/null
 
 	assert_equals "${?}" "${2}"
 }
@@ -173,7 +173,7 @@ function _test_release_gold_not_reference_new_releases {
 
 	echo -e "Running _test_release_gold_not_reference_new_releases for ${_PRODUCT_VERSION}.\n"
 
-	reference_new_releases --test 1> /dev/null
+	reference_new_releases 1> /dev/null
 
 	assert_equals "${?}" "${2}"
 }
@@ -185,7 +185,7 @@ function _test_release_gold_reference_new_releases {
 
 	lc_cd "test-dependencies/actual"
 
-	reference_new_releases --test 1> /dev/null
+	reference_new_releases 1> /dev/null
 
 	lc_cd "${_PROJECTS_DIR}/liferay-docker/release"
 
@@ -201,7 +201,7 @@ function _test_release_gold_not_update_release_info_date {
 		"Running _test_release_gold_not_update_release_info_date for ${_PRODUCT_VERSION} " \
 		"and LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH=${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}.\n"
 
-	update_release_info_date --test 1> /dev/null
+	update_release_info_date 1> /dev/null
 
 	assert_equals "${?}" "${2}"
 }
