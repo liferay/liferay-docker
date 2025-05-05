@@ -164,18 +164,18 @@ function download_trial_dxp_license {
 function get_latest_tomcat_version {
 	local tomcat_version=$(get_tomcat_version "${TEMP_DIR}/liferay")
 
-	invoke_github_api_get_file \
-		"app.server.properties" \
-		"app.server.properties" \
-		"liferay-portal-ee" \
-
-	local master_tomcat_version=$(lc_get_property "app.server.properties" "app.server.tomcat.version")
-
-	rm -f "app.server.properties"
-
 	if [[ "${tomcat_version}" == "9.0"* ]]
 	then
 		local latest_tomcat_version="9.0.104"
+
+		invoke_github_api_get_file \
+			"app.server.properties" \
+			"app.server.properties" \
+			"liferay-portal-ee" \
+
+		local master_tomcat_version=$(lc_get_property "app.server.properties" "app.server.tomcat.version")
+
+		rm -f "app.server.properties"
 
 		if [[ "${master_tomcat_version}" == "9.0"* ]]
 		then
