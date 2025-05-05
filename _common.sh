@@ -186,10 +186,11 @@ function invoke_github_api_get_file {
 			--header "Authorization: token ${LIFERAY_RELEASE_GITHUB_PAT}" \
 			--include \
 			--max-time 10 \
+			--output "${file_name}" \
 			--request GET \
 			--retry 3 \
-			--write-out "%{http_code}" \
-			--output "${file_name}")
+			--write-out "%{http_code}")
+
 	if [ "${http_response}" != "200" ]
 	then
 		echo "Unable to download ${file_name} from GitHub."
