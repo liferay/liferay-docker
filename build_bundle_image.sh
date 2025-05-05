@@ -184,9 +184,9 @@ function get_latest_tomcat_version {
 
 		echo "${latest_tomcat_version}"
 	else
-		echo "Unable to get latest Tomcat version."
+		lc_log ERROR "Unable to get latest Tomcat version."
 
-		exit 1
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
@@ -228,8 +228,6 @@ function download_file_from_github {
 	if [ "${http_response}" != "200" ]
 	then
 		lc_log ERROR "Unable to download ${file_name} from GitHub."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
