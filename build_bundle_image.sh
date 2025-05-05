@@ -357,6 +357,7 @@ function prepare_temp_directory {
 	cp -r "${TEMP_DIR}/liferay/tomcat-temp/bin/setenv.bat" "${TEMP_DIR}/liferay/${tomcat_dir_name}/bin/setenv.bat"
 	cp -r "${TEMP_DIR}/liferay/tomcat-temp/bin/setenv.sh" "${TEMP_DIR}/liferay/${tomcat_dir_name}/bin/setenv.sh"
 	cp -r "${TEMP_DIR}/liferay/tomcat-temp/conf" "${TEMP_DIR}/liferay/${tomcat_dir_name}/"
+	cp -r "${TEMP_DIR}/liferay/tomcat-temp/lib/ext" "${TEMP_DIR}/liferay/${tomcat_dir_name}/lib/ext"
 	cp -r "${TEMP_DIR}/liferay/tomcat-temp/webapps" "${TEMP_DIR}/liferay/${tomcat_dir_name}/"
 	cp -r "${TEMP_DIR}/liferay/tomcat-temp/work/Catalina" "${TEMP_DIR}/liferay/${tomcat_dir_name}/work/Catalina"
 
