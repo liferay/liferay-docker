@@ -168,7 +168,7 @@ function get_latest_tomcat_version {
 	then
 		local latest_tomcat_version="9.0.104"
 
-		invoke_github_api_get_file \
+		download_file_from_github \
 			"app.server.properties" \
 			"app.server.properties" \
 			"liferay-portal-ee" \
@@ -208,7 +208,7 @@ function install_fix_pack {
 	fi
 }
 
-function invoke_github_api_get_file {
+function download_file_from_github {
 	local file_name=${1}
 	local file_path=${2}
 	local repository_name=${3}
