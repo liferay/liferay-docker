@@ -208,6 +208,31 @@ function install_fix_pack {
 	fi
 }
 
+function invoke_github_api_get_file {
+	local file_name=${1}
+	local file_path=${2}
+	local repository_name=${3}
+
+	local http_response=$(\
+		curl \
+			"https://api.github.com/repos/liferay/${repository_name}/contents/${file_path}?ref=master" \
+			--header "Accept: application/vnd.github.v3.raw" \
+			--header "Authorization: token ${LIFERAY_RELEASE_GITHUB_PAT}" \
+			--include \
+			--max-time 10 \
+			--output "${file_name}" \
+			--request GET \
+			--retry 3 \
+			--write-out "%{http_code}")
+
+	if [ "${http_response}" != "200" ]
+	then
+		lc_log ERROR "Unable to download ${file_name} from GitHub."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function main {
 	if [[ " ${@} " =~ " --test " ]]
 	then
