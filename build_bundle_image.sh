@@ -175,7 +175,7 @@ function get_latest_tomcat_version {
 
 	if [[ "${tomcat_version}" == "9.0"* ]]
 	then
-		local latest_tomcat_version="9.0.102"
+		local latest_tomcat_version="9.0.104"
 
 		if [[ "${master_tomcat_version}" == "9.0"* ]]
 		then
