@@ -192,10 +192,13 @@ function get_latest_tomcat_version {
 		sort --version-sort | \
 		tail -1)
 
-	download_file_from_github \
-		"app.server.properties" \
-		"app.server.properties" \
-		"liferay-portal-ee" \
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
+	then
+		download_file_from_github \
+			"app.server.properties" \
+			"app.server.properties" \
+			"liferay-portal-ee"
+	fi
 
 	if [ "${?}" == "${LIFERAY_COMMON_EXIT_CODE_OK}" ]
 	then

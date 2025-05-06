@@ -6,17 +6,28 @@ source _test_common.sh
 function main {
 	set_up
 
+	test_build_bundle_image_get_latest_tomcat_version
 	test_build_bundle_image_set_parent_image
 
 	tear_down
 }
 
 function set_up {
+	common_set_up
+
 	export TEMP_DIR="${PWD}"
 }
 
 function tear_down {
+	common_tear_down
+
 	unset TEMP_DIR
+}
+
+function test_build_bundle_image_get_latest_tomcat_version {
+	_test_build_bundle_image_get_latest_tomcat_version "9.0.83" "" "9.0.104"
+	_test_build_bundle_image_get_latest_tomcat_version "9.0.104" "" "9.0.104"
+	_test_build_bundle_image_get_latest_tomcat_version "9.0.105" "10.1.40" "10.1.40"
 }
 
 function test_build_bundle_image_set_parent_image {
@@ -35,6 +46,14 @@ function test_build_bundle_image_set_parent_image {
 function _set_dockerfile {
 	echo -e "FROM --platform=amd64 liferay/${1}:latest AS liferay-${1}\n" > "${3}"
 	echo -e "FROM liferay-${2}\n" >> "${3}"
+}
+
+function _test_build_bundle_image_get_latest_tomcat_version {
+	echo -e "Running _test_build_bundle_image_get_latest_tomcat_version for Tomcat vesion ${1}.\n"
+
+	echo "app.server.tomcat.version=${2}" > app.server.properties
+
+	assert_equals "$(get_latest_tomcat_version "${1}")" "${3}"
 }
 
 function _test_build_bundle_image_set_parent_image {
