@@ -430,17 +430,17 @@ function create_hotfix {
 }
 
 function in_hotfix_scope {
-	if (echo "${1}" | grep -q "^tomcat/webapps/ROOT/")
-	then
-		return 0
-	fi
-
 	if (echo "${1}" | grep -q "^osgi/") && (! echo "${1}" | grep -q "^osgi/state")
 	then
 		return 0
 	fi
 
 	if (echo "${1}" | grep -q "^tomcat/lib/ext") && (echo "${_PRODUCT_VERSION}" | grep -q "7.3")
+	then
+		return 0
+	fi
+
+	if (echo "${1}" | grep -q "^tomcat/webapps/ROOT/")
 	then
 		return 0
 	fi
