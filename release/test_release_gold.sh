@@ -36,6 +36,8 @@ function main {
 }
 
 function set_up {
+	common_set_up
+
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export LIFERAY_RELEASE_RC_BUILD_TIMESTAMP="1695892964"
 	export _PROJECTS_DIR="${PWD}"/../..
@@ -44,6 +46,8 @@ function set_up {
 }
 
 function tear_down {
+	common_tear_down
+
 	lc_cd "${_PROJECTS_DIR}/liferay-docker"
 
 	git restore .

@@ -69,8 +69,15 @@ function assert_equals {
 	fi
 }
 
-function main {
+function common_set_up {
 	LIFERAY_RELEASE_TEST_MODE="true"
+}
+
+function common_tear_down {
+	unset LIFERAY_RELEASE_TEST_MODE
+}
+
+function main {
 	_TEST_RESULT="true"
 
 	if [ -n "${BASH_SOURCE[3]}" ]

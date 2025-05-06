@@ -16,12 +16,16 @@ function main {
 }
 
 function set_up {
+	common_set_up
+
 	export _RELEASE_ROOT_DIR="${PWD}"
 
 	export _BASE_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/actual"
 }
 
 function tear_down {
+	common_tear_down
+
 	git restore "${_BASE_DIR}/bundles.yml"
 
 	unset _BASE_DIR
