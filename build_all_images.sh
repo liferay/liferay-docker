@@ -1,6 +1,8 @@
 #!/bin/bash
 
 source ./_common.sh
+source ./_liferay_common.sh
+source ./_release_common.sh
 
 function build_base_image {
 	log_in_to_docker_hub
@@ -151,7 +153,11 @@ function build_bundle_images {
 			local query=.\"${main_key}\".\"${version}\"
 
 			build_bundle_image "${query}" "false" "${version}"
-			build_bundle_image "${query}" "true" "${version}"
+
+			if (meets_slim_build_criteria "${version}")
+			then
+				build_bundle_image "${query}" "true" "${version}"
+			fi
 		done
 	else
 		local main_key=$(get_main_key "${main_keys}" "${specified_version}")
@@ -167,7 +173,11 @@ function build_bundle_images {
 			if [[ "$(yq "${query}" < bundles.yml)" != "null" ]]
 			then
 				build_bundle_image "${query}" "false" "${specified_version}"
-				build_bundle_image "${query}" "true" "${specified_version}"
+
+				if (meets_slim_build_criteria "${specified_version}")
+				then
+					build_bundle_image "${query}" "true" "${specified_version}"
+				fi
 			else
 				echo "No bundles were found."
 
@@ -615,6 +625,34 @@ function main {
 	then
 		exit 1
 	fi
+}
+
+function meets_slim_build_criteria {
+	if [[ "${1}" == *-u* ]] ||
+	   [[ "${1}" == *.nightly ]]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	if [[ "${1}" == *-ga* ]]
+	then
+		local release_info_version_trivial="$(echo "${1}" | cut -d '-' -f 2 | sed 's/ga//')"
+
+		if (( release_info_version_trivial <= 132 ))
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+	fi
+
+	if [[ "${1}" == *q* ]]
+	then
+		if [ $(get_latest_quartely_version "${1}" "2025.q1.10-lts") == "2025.q1.10-lts" ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+	fi
+
+	return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
 function validate_bundles_yml {
