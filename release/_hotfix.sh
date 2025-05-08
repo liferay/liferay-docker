@@ -192,7 +192,7 @@ function compare_jars {
 
 			while IFS= read -r line
 			do
-				if (echo "${line}" | grep -q ".class")
+				if (echo "$(basename ${line})" | grep -q ".class")
 				then
 					local class_file_name=$(basename "${line}")
 
