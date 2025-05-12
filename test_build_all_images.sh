@@ -53,10 +53,7 @@ function _test_build_all_images_meets_slim_build_criteria {
 
 	meets_slim_build_criteria "${1}"
 
-	local slim_build_criteria="${?}"
-	local slim_build_criteria_expected="${2}"
-
-	assert_equals "${slim_build_criteria}" "${slim_build_criteria_expected}"
+	assert_equals "${?}" "${2}"
 }
 
 main
