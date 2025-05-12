@@ -135,9 +135,8 @@ function start_container {
 
 	CONTAINER_HOSTNAME="localhost"
 
-	local test_dir="${PWD}/${TEST_DIR}"
-
 	local parameters="--publish=8080 --volume=${test_dir}/mnt:/mnt:rw"
+	local test_dir="${PWD}/${TEST_DIR}"
 
 	if [ -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
