@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function get_latest_quarterly_version {
+function get_latest_quarterly_product_version {
 	local product_version_1=$(echo "${1}" | sed -e "s/-lts//")
 	local product_version_2=$(echo "${2}" | sed -e "s/-lts//")
 
