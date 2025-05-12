@@ -646,7 +646,7 @@ function meets_slim_build_criteria {
 
 	if [[ "${1}" == *q* ]]
 	then
-		if [ $(get_latest_quarterly_product_version "${1}" "2025.q1.10-lts") == "2025.q1.10-lts" ]
+		if [ $(is_later_product_version "${1}" "2025.q1.10-lts") == "false" ]
 		then
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
