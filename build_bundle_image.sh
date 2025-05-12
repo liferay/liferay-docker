@@ -4,11 +4,6 @@ source ./_common.sh
 source ./_liferay_common.sh
 
 function build_docker_image {
-	if [ "${LIFERAY_DOCKER_SLIM}" == "true" ]
-	then
-		DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME}-slim
-	fi
-
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
 		DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME}-snapshot
@@ -74,6 +69,11 @@ function build_docker_image {
 	if [ -n "${LIFERAY_DOCKER_RELEASE_VERSION}" ]
 	then
 		release_version=${LIFERAY_DOCKER_RELEASE_VERSION}
+
+		if [ "${LIFERAY_DOCKER_SLIM}" == "true" ]
+		then
+			release_version=${release_version}-slim
+		fi
 	fi
 
 	DOCKER_IMAGE_TAGS=()
