@@ -47,7 +47,7 @@ function trigger_ci_test_suite {
 function _get_test_portal_branch_name {
 	local branch_name="${1}"
 
-	if [[ "${branch_name}" =~ ^7.4.* ]]
+	if (echo "${branch_name}" | grep --quiet "7.4")
 	then
 		echo "master"
 	else
