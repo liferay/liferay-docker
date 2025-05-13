@@ -440,12 +440,12 @@ function in_hotfix_scope {
 		return 0
 	fi
 
-	if (echo "${1}" | grep -q "^tomcat/webapps/ROOT/")
+	if (echo "${1}" | grep -q "^tomcat/webapps/ROOT")
 	then
 		return 0
 	fi
 
-	if (echo "${1}" | grep -q "^tools/")
+	if (echo "${1}" | grep -q "^tools")
 	then
 		return 0
 	fi
