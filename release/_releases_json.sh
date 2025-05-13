@@ -13,12 +13,34 @@ function generate_releases_json {
 		fi
 	fi
 
+	_add_major_versions
 	_promote_product_versions
 	_tag_recommended_product_versions
 
 	_merge_json_snippets
 
 	_upload_releases_json
+}
+
+function _add_major_versions {
+	for quarterly_release_json_file in "${_PROMOTION_DIR}"/*q*.json
+	do
+		if [ ! -e "${quarterly_release_json_file}" ]
+		then
+			lc_log INFO "Skipping major version addition because the new version it's not a quarterly release."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+
+		local product_major_version=$(jq -r ".[].productVersion" "${quarterly_release_json_file}" | sed "s/\.[0-9]\+//");
+
+		jq "map(
+				. + {productMajorVersion: \"${product_major_version}\"}
+				| to_entries
+				| sort_by(.key)
+				| from_entries
+		)" "${quarterly_release_json_file}" > "${quarterly_release_json_file}.tmp" && mv "${quarterly_release_json_file}.tmp" "${quarterly_release_json_file}"
+	done
 }
 
 function _download_product_version_list_html {
