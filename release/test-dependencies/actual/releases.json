@@ -2,8 +2,12 @@
 	{
 		"product": "dxp",
 		"productGroupVersion": "2025.q1",
+		"productMajorVersion": "DXP 2025.Q1 LTS",
 		"productVersion": "DXP 2025.Q1.0 LTS",
 		"promoted": "true",
+		"tags": [
+			"recommended"
+		],
 		"releaseKey": "dxp-2025.q1.0-lts",
 		"targetPlatformVersion": "2025.q1.0",
 		"url": "https://releases-cdn.liferay.com/dxp/2025.q1.0-lts"
@@ -11,6 +15,7 @@
 	{
 		"product": "dxp",
 		"productGroupVersion": "2024.q2",
+		"productMajorVersion": "DXP 2024.Q2",
 		"productVersion": "DXP 2024.Q2.12",
 		"promoted": "true",
 		"releaseKey": "dxp-2024.q2.12",
@@ -20,6 +25,7 @@
 	{
 		"product": "dxp",
 		"productGroupVersion": "2024.q2",
+		"productMajorVersion": "DXP 2024.Q2",
 		"productVersion": "DXP 2024.Q2.11",
 		"promoted": "false",
 		"releaseKey": "dxp-2024.q2.11",
@@ -29,6 +35,7 @@
 	{
 		"product": "dxp",
 		"productGroupVersion": "2024.q1",
+		"productMajorVersion": "DXP 2024.Q1",
 		"productVersion": "DXP 2024.Q1.12",
 		"promoted": "true",
 		"releaseKey": "dxp-2024.q1.12",
@@ -38,6 +45,7 @@
 	{
 		"product": "dxp",
 		"productGroupVersion": "2024.q1",
+		"productMajorVersion": "DXP 2024.Q1",
 		"productVersion": "DXP 2024.Q1.11",
 		"promoted": "false",
 		"releaseKey": "dxp-2024.q1.11",

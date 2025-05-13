@@ -2,6 +2,7 @@
   {
     "product": "dxp",
     "productGroupVersion": "2025.q1",
+    "productMajorVersion": "DXP 2025.Q1 LTS",
     "productVersion": "DXP 2025.Q1.8 LTS",
     "promoted": "true",
     "releaseKey": "dxp-2025.q1.8-lts",
@@ -14,6 +15,7 @@
   {
     "product": "dxp",
     "productGroupVersion": "2025.q1",
+    "productMajorVersion": "DXP 2025.Q1 LTS",
     "productVersion": "DXP 2025.Q1.7 LTS",
     "promoted": "false",
     "releaseKey": "dxp-2025.q1.7-lts",
@@ -35,6 +37,7 @@
   {
     "product": "dxp",
     "productGroupVersion": "2024.q4",
+    "productMajorVersion": "DXP 2024.Q4",
     "productVersion": "DXP 2024.Q4.7",
     "promoted": "true",
     "releaseKey": "dxp-2024.q4.7",
@@ -44,6 +47,7 @@
   {
     "product": "dxp",
     "productGroupVersion": "2024.q4",
+    "productMajorVersion": "DXP 2024.Q4",
     "productVersion": "DXP 2024.Q4.6",
     "promoted": "false",
     "releaseKey": "dxp-2024.q4.6",
@@ -53,6 +57,7 @@
   {
     "product": "dxp",
     "productGroupVersion": "2024.q4",
+    "productMajorVersion": "DXP 2024.Q4",
     "productVersion": "DXP 2024.Q4.5",
     "promoted": "false",
     "releaseKey": "dxp-2024.q4.5",
