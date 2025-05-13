@@ -7,6 +7,7 @@ source _releases_json.sh
 function main {
 	set_up
 
+	test_releases_json_add_major_versions
 	test_releases_json_promote_product_versions
 	test_releases_json_tag_recommended_product_versions
 
@@ -35,6 +36,16 @@ function tear_down {
 	unset _RELEASE_ROOT_DIR
 
 	rm ./*.json
+}
+
+function test_releases_json_add_major_versions {
+	_add_major_versions
+
+	assert_equals \
+		"$(jq "[.[] | select(.productMajorVersion == \"DXP 2024.Q4\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "2024.q4.5")")" \
+		"true" \
+		"$(jq "[.[] | select(.productMajorVersion == \"DXP 2025.Q1 LTS\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "2025.q1.8-lts")")" \
+		"true"
 }
 
 function test_releases_json_merge_json_snippets {
@@ -66,6 +77,8 @@ function test_releases_json_process_new_product {
 	_process_products &> /dev/null
 
 	_process_new_product &> /dev/null
+
+	_add_major_versions &> /dev/null
 
 	_promote_product_versions &> /dev/null
 
