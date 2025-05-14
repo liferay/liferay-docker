@@ -154,7 +154,7 @@ function build_bundle_images {
 
 			build_bundle_image "${query}" "false" "${version}"
 
-			if (meets_slim_build_criteria "${version}")
+			if (has_slim_build_criteria "${version}")
 			then
 				build_bundle_image "${query}" "true" "${version}"
 			fi
@@ -174,7 +174,7 @@ function build_bundle_images {
 			then
 				build_bundle_image "${query}" "false" "${specified_version}"
 
-				if (meets_slim_build_criteria "${specified_version}")
+				if (has_slim_build_criteria "${specified_version}")
 				then
 					build_bundle_image "${query}" "true" "${specified_version}"
 				fi
@@ -627,7 +627,7 @@ function main {
 	fi
 }
 
-function meets_slim_build_criteria {
+function has_slim_build_criteria {
 	if [[ "${1}" == *-u* ]] ||
 	   [[ "${1}" == *.nightly ]]
 	then

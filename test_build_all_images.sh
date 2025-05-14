@@ -6,7 +6,7 @@ source _test_common.sh
 
 function main {
 	test_build_all_images_get_latest_available_zulu_version
-	test_build_all_images_meets_slim_build_criteria
+	test_build_all_images_has_slim_build_criteria
 }
 
 function test_build_all_images_get_latest_available_zulu_version {
@@ -18,13 +18,13 @@ function test_build_all_images_get_latest_available_zulu_version {
 	_test_build_all_images_get_latest_available_zulu_version "21" "arm64"
 }
 
-function test_build_all_images_meets_slim_build_criteria {
-	_test_build_all_images_meets_slim_build_criteria "2024.q2.0" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_build_all_images_meets_slim_build_criteria "2025.q1.11-lts" "${LIFERAY_COMMON_EXIT_CODE_OK}"
-	_test_build_all_images_meets_slim_build_criteria "7.4.13.nightly" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_build_all_images_meets_slim_build_criteria "7.4.13-u124" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_build_all_images_meets_slim_build_criteria "7.4.3.132-ga132" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_build_all_images_meets_slim_build_criteria "7.4.3.142-ga142" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+function test_build_all_images_has_slim_build_criteria {
+	_test_build_all_images_has_slim_build_criteria "2024.q2.0" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_build_all_images_has_slim_build_criteria "2025.q1.11-lts" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_build_all_images_has_slim_build_criteria "7.4.13.nightly" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_build_all_images_has_slim_build_criteria "7.4.13-u124" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_build_all_images_has_slim_build_criteria "7.4.3.132-ga132" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_build_all_images_has_slim_build_criteria "7.4.3.142-ga142" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
 function _test_build_all_images_get_latest_available_zulu_version {
@@ -48,10 +48,10 @@ function _test_build_all_images_get_latest_available_zulu_version {
 	fi
 }
 
-function _test_build_all_images_meets_slim_build_criteria {
-	echo -e "Running _test_build_all_images_meets_slim_build_criteria for version ${1}.\n"
+function _test_build_all_images_has_slim_build_criteria {
+	echo -e "Running _test_build_all_images_has_slim_build_criteria for version ${1}.\n"
 
-	meets_slim_build_criteria "${1}"
+	has_slim_build_criteria "${1}"
 
 	assert_equals "${?}" "${2}"
 }
