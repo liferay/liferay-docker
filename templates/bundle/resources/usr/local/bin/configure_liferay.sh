@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source /usr/local/bin/_liferay_bundle_common.sh
+source /usr/local/bin/_liferay_common.sh
 
 function main {
 	if [ "${LIFERAY_DISABLE_TRIAL_LICENSE}" == "true" ]
@@ -83,6 +84,14 @@ function main {
 	if [ "${LIFERAY_SLIM}" == "true" ]
 	then
 		slim
+
+		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		then
+			echo "[LIFERAY] Docker slim processing failed. Ensure that the necessary environment variables are set."
+			echo ""
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
 	fi
 
 	export LIFERAY_PATCHING_DIR="${LIFERAY_MOUNT_DIR}"/patching
@@ -106,15 +115,20 @@ function main {
 function slim {
 	if (! echo "${LIFERAY_NETWORK_HOST_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?")
 	then
-		echo "[LIFERAY] Run this container with the option \"--env LIFERAY_NETWORK_HOST_ADDRESSES=[\"http://node1:9201\", \"http://node2:9202\"]\" to connect to remote search servers (Elasticsearch or OpenSearch)."
+		echo "[LIFERAY] Run the container with the option \"--env LIFERAY_NETWORK_HOST_ADDRESSES=[\"http://node1:9201\", \"http://node2:9202\"]\" to connect to remote search servers (Elasticsearch or OpenSearch)."
 		echo ""
+
+		if [ "${LIFERAY_DOCKER_TEST_MODE}" != "true" ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
 	fi
 
 	if [ -z "${LIFERAY_OPENSEARCH_ENABLED}" ]
 	then
 		LIFERAY_OPENSEARCH_ENABLED="false"
 
-		echo "[LIFERAY] Run this container with the option \"--env LIFERAY_OPENSEARCH_ENABLED=true\" to enable OpenSearch."
+		echo "[LIFERAY] Run the container with the option \"--env LIFERAY_OPENSEARCH_ENABLED=true\" to enable OpenSearch."
 		echo ""
 	fi
 
@@ -122,8 +136,13 @@ function slim {
 	then
 		if [ -z "${LIFERAY_OPENSEARCH_PASSWORD}" ]
 		then
-			echo "[LIFERAY] Run this container with the option \"--env LIFERAY_OPENSEARCH_PASSWORD=myfancypassword\" to set your OpenSearch password."
+			echo "[LIFERAY] Run the container with the option \"--env LIFERAY_OPENSEARCH_PASSWORD=myfancypassword\" to set your OpenSearch password."
 			echo ""
+
+			if [ "${LIFERAY_DOCKER_TEST_MODE}" != "true" ]
+			then
+				return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+			fi
 		fi
 
 		if [ ! -f "/opt/liferay/osgi/configs/com.liferay.portal.bundle.blacklist.internal.configuration.BundleBlacklistConfiguration.config" ]

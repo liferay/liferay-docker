@@ -137,7 +137,7 @@ function start_container {
 
 	local test_dir="${PWD}/${TEST_DIR}"
 
-	local parameters="--publish=8080 --volume=${test_dir}/mnt:/mnt:rw"
+	local parameters="--env=LIFERAY_DOCKER_TEST_MODE=true --publish=8080 --volume=${test_dir}/mnt:/mnt:rw"
 
 	if [ -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
@@ -151,14 +151,14 @@ function start_container {
 
 			test_dir="/mnt/pd/liferay-docker/${TEST_DIR}"
 
-			parameters="--hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME} --publish=8081:8080 --volume=${test_dir}/mnt:/mnt:rw --volume=/mnt/pd/liferay-docker/portal-ext.properties:/opt/liferay/portal-ext.properties"
+			parameters="--env=LIFERAY_DOCKER_TEST_MODE=true --hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME} --publish=8081:8080 --volume=${test_dir}/mnt:/mnt:rw --volume=/mnt/pd/liferay-docker/portal-ext.properties:/opt/liferay/portal-ext.properties"
 		else
 			CONTAINER_HOSTNAME=portal-container
 			CONTAINER_HTTP_PORT=8080
 
 			test_dir="/data/${LIFERAY_DOCKER_NETWORK_NAME}/liferay/liferay-docker/${TEST_DIR}"
 
-			parameters=" --hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME} --publish=8080 --volume=${test_dir}/mnt:/mnt:rw"
+			parameters="--env=LIFERAY_DOCKER_TEST_MODE=true --hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME} --publish=8080 --volume=${test_dir}/mnt:/mnt:rw"
 		fi
 	fi
 

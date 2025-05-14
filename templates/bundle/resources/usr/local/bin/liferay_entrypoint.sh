@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source /usr/local/bin/_liferay_bundle_common.sh
+source /usr/local/bin/_liferay_common.sh
 
 function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."
@@ -51,6 +52,14 @@ function main {
 	update_container_status configure
 
 	. configure_liferay.sh
+
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		echo "[LIFERAY] Liferay configuration failed."
+		echo ""
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 
 	update_container_status pre-startup-scripts
 
