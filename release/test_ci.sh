@@ -1,3 +1,5 @@
+#!/bin/bash
+
 source ../_liferay_common.sh
 source ../_test_common.sh
 source _ci.sh
