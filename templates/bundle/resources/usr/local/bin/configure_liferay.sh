@@ -87,7 +87,7 @@ function main {
 
 		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 		then
-			echo "[LIFERAY] Docker slim processing failed. Ensure that the necessary environment variables are set."
+			echo "[LIFERAY] Unable to slim container. Ensure that the necessary environment variables are set."
 			echo ""
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"

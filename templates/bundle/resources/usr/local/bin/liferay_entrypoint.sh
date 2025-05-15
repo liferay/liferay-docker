@@ -55,7 +55,7 @@ function main {
 
 	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
-		echo "[LIFERAY] Liferay configuration failed."
+		echo "[LIFERAY] Unable to configure Liferay."
 		echo ""
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
