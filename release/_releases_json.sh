@@ -27,7 +27,7 @@ function _add_major_versions {
 	do
 		if [ ! -e "${quarterly_release_json_file}" ]
 		then
-			lc_log INFO "Skipping major version addition because the new version it's not a quarterly release."
+			lc_log INFO "Skipping major version addition because the new version is not a quarterly release."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
