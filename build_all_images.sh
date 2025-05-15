@@ -566,6 +566,36 @@ function get_tag_from_image {
 	fi
 }
 
+function has_slim_build_criteria {
+	if [[ "${1}" == *-u* ]] ||
+	   [[ "${1}" == *.nightly ]]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	if [[ "${1}" == *-ga* ]]
+	then
+		local release_info_version_trivial="$(echo "${1}" | cut -d '-' -f 2 | sed 's/ga//')"
+
+		if (( release_info_version_trivial <= 132 ))
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+	fi
+
+	if [[ "${1}" == *q* ]]
+	then
+		set_actual_product_version "${1}"
+
+		if [ $(is_early_product_version_than "2025.q1.11-lts") == "true" ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+	fi
+
+	return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+}
+
 function main {
 	if [[ " ${@} " =~ " --test " ]]
 	then
@@ -625,36 +655,6 @@ function main {
 	then
 		exit 1
 	fi
-}
-
-function has_slim_build_criteria {
-	if [[ "${1}" == *-u* ]] ||
-	   [[ "${1}" == *.nightly ]]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	if [[ "${1}" == *-ga* ]]
-	then
-		local release_info_version_trivial="$(echo "${1}" | cut -d '-' -f 2 | sed 's/ga//')"
-
-		if (( release_info_version_trivial <= 132 ))
-		then
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-		fi
-	fi
-
-	if [[ "${1}" == *q* ]]
-	then
-		set_actual_product_version "${1}"
-
-		if [ $(is_early_product_version_than "2025.q1.11-lts") == "true" ]
-		then
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-		fi
-	fi
-
-	return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
 function validate_bundles_yml {
