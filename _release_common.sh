@@ -2,19 +2,19 @@
 
 function is_early_product_version_than {
 	local product_version_1=$(echo "${ACTUAL_PRODUCT_VERSION}" | sed -e "s/-lts//")
-	local product_version_2=$(echo "${1}" | sed -e "s/-lts//")
-
 	local product_version_1_quarter
 	local product_version_1_suffix
 
 	IFS='.' read -r product_version_1_year product_version_1_quarter product_version_1_suffix <<< "${product_version_1}"
 
+	product_version_1_quarter=$(echo "${product_version_1_quarter}" | sed -e "s/q//")
+
+	local product_version_2=$(echo "${1}" | sed -e "s/-lts//")
 	local product_version_2_quarter
 	local product_version_2_suffix
 
 	IFS='.' read -r product_version_2_year product_version_2_quarter product_version_2_suffix <<< "${product_version_2}"
 
-	product_version_1_quarter=$(echo "${product_version_1_quarter}" | sed -e "s/q//")
 	product_version_2_quarter=$(echo "${product_version_2_quarter}" | sed -e "s/q//")
 
 	if [ "${product_version_1_year}" -lt "${product_version_2_year}" ]
