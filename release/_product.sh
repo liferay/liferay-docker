@@ -1,5 +1,38 @@
 #!/bin/bash
 
+source ../_release_common.sh
+
+function add_ckeditor_license {
+	if [ "$(is_quarterly_release "${_PRODUCT_VERSION}")" == "false" ]
+	then
+		lc_log INFO "The product version is not a quarterly release."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	set_actual_product_version "${_PRODUCT_VERSION}"
+
+	if [ $(is_early_product_version_than "2025.q2.0") == "true" ] 
+	then
+		lc_log INFO "The quarterly release is earlier than 2025.q2."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	local config_file="${_BUNDLES_DIR}/osgi/configs/com.liferay.frontend.editor.ckeditor.web.internal.configuration.CKEditor5Configuration.config"
+
+	if [ ! -f "${config_file}" ]
+	then
+		lc_log INFO "Adding the CKEditor license key to ${config_file}."
+
+		echo "licenseKey=\"${LIFERAY_CKEDITOR_LICENSE_KEY}\"" > "${config_file}"
+	else
+		lc_log INFO "The CKEditor license key already exists in ${config_file}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+}
+
 function add_licensing {
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then

@@ -117,6 +117,7 @@ function main {
 
 		lc_time_run build_product
 
+		lc_time_run add_ckeditor_license
 		lc_time_run deploy_opensearch
 
 		lc_time_run upload_opensearch
