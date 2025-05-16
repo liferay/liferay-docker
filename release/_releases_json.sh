@@ -23,6 +23,8 @@ function generate_releases_json {
 }
 
 function _add_major_versions {
+	local quarterly_release_json_file
+
 	for quarterly_release_json_file in "${_PROMOTION_DIR}"/*q*.json
 	do
 		if [ ! -e "${quarterly_release_json_file}" ]
