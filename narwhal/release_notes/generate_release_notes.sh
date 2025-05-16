@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../../_liferay_common.sh
+source ../../_release_common.sh
 
 function find_git_dir {
 	lc_cd "${HOME}/dev/projects/liferay-portal-ee"
@@ -11,7 +12,7 @@ function generate_release_notes {
 
 	local ga_version
 
-	if (echo "${version}" | grep -q "q")
+	if (is_quarterly_release "${version}")
 	then
 		ga_version=7.4.13-ga1
 	else

@@ -56,6 +56,15 @@ function is_early_product_version_than {
 	echo "false"
 }
 
+function is_quarterly_release {
+	if [[ "${1}" == *q* ]]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
 function set_actual_product_version {
 	ACTUAL_PRODUCT_VERSION="${1}"
 }

@@ -1,13 +1,14 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
-source _git.sh
-source _github.sh
-source _jira.sh
-source _product.sh
-source _product_info_json.sh
-source _promotion.sh
-source _releases_json.sh
+source ./_git.sh
+source ./_github.sh
+source ./_jira.sh
+source ./_product.sh
+source ./_product_info_json.sh
+source ./_promotion.sh
+source ../_release_common.sh
+source ./_releases_json.sh
 
 function add_property {
 	local new_key="${1}"
@@ -115,7 +116,7 @@ function main {
 
 	promote_boms xanadu
 
-	if [[ ! $(echo "${_PRODUCT_VERSION}" | grep "q") ]] &&
+	if (! is_quarterly_release "${_PRODUCT_VERSION}") &&
 	   [[ ! $(echo "${_PRODUCT_VERSION}" | grep "7.4") ]]
 	then
 		lc_log INFO "Do not update product_info.json for quarterly and 7.4 releases."
@@ -189,7 +190,7 @@ function prepare_branch_to_commit_from_master {
 
 function prepare_next_release_branch {
 	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "true") ] ||
-	   [[ "${_PRODUCT_VERSION}" != *q* ]]
+	   (! is_quarterly_release "${_PRODUCT_VERSION}")
 	then
 		lc_log INFO "Skipping the preparation of the next release branch."
 
@@ -296,7 +297,7 @@ function print_help {
 }
 
 function reference_new_releases {
-	if [[ "${_PRODUCT_VERSION}" != *q* ]]
+	if (! is_quarterly_release "${_PRODUCT_VERSION}")
 	then
 		lc_log INFO "Skipping the update to the references in the liferay-jenkins-ee repository."
 
@@ -573,7 +574,7 @@ function test_boms {
 
 	lc_cd "temp_dir_test_boms"
 
-	if [[ "${_PRODUCT_VERSION}" == *q* ]]
+	if (is_quarterly_release "${_PRODUCT_VERSION}")
 	then
 		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}"
 	else
@@ -617,7 +618,7 @@ function test_boms {
 
 function update_release_info_date {
 	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "true") ] ||
-	   [[ "${_PRODUCT_VERSION}" != *q* ]] ||
+	   (! is_quarterly_release "${_PRODUCT_VERSION}") ||
 	   [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 3)" -eq 0 ]] ||
 	   [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1)" -lt 2024 ]]
 	then

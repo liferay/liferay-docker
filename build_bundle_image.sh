@@ -2,6 +2,7 @@
 
 source ./_common.sh
 source ./_liferay_common.sh
+source ./_release_common.sh
 
 function build_docker_image {
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
@@ -425,7 +426,7 @@ function push_docker_image {
 }
 
 function set_parent_image {
-	if (echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | grep -q "q")
+	if (is_quarterly_release "${LIFERAY_DOCKER_RELEASE_VERSION}")
 	then
 		if [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1)" -gt 2024 ]]
 		then

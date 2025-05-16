@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../_release_common.sh
+
 function clean_portal_repository {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
@@ -65,7 +67,7 @@ function generate_release_notes {
 
 	local ga_version=7.4.13-ga1
 
-	if (! echo "${_PRODUCT_VERSION}" | grep -q "q")
+	if (! is_quarterly_release "${_PRODUCT_VERSION}")
 	then
 		ga_version=${_PRODUCT_VERSION%%-u*}-ga1
 	fi

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../_release_common.sh
+
 function generate_releases_json {
 	if [ "${1}" = "regenerate" ]
 	then
@@ -158,7 +160,7 @@ function _process_new_product {
 					.
 				end
 			)" "${releases_json}" > temp_file.json && mv temp_file.json "${releases_json}"
-	elif [[ "${product_group_version}" == *q* ]] && [ "$(_get_latest_product_version "quarterly")" == "${_PRODUCT_VERSION}" ]
+	elif (is_quarterly_release "${product_group_version}") && [ "$(_get_latest_product_version "quarterly")" == "${_PRODUCT_VERSION}" ]
 	then
 		jq "map(
 				if .productGroupVersion | test(\"q\")

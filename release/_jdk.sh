@@ -1,11 +1,12 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
+source ../_release_common.sh
 
 function set_jdk_version_and_parameters {
 	local jdk_version="zulu8"
 
-	if (echo "${_PRODUCT_VERSION}" | grep -q "q")
+	if (is_quarterly_release "${_PRODUCT_VERSION}")
 	then
 		if [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1)" -ge 2025 ]]
 		then

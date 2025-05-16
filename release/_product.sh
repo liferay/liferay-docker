@@ -3,7 +3,7 @@
 source ../_release_common.sh
 
 function add_ckeditor_license {
-	if [ "$(is_quarterly_release "${_PRODUCT_VERSION}")" == "false" ]
+	if (! is_quarterly_release "${_PRODUCT_VERSION}")
 	then
 		lc_log INFO "The product version is not a quarterly release."
 

@@ -515,7 +515,7 @@ function get_main_key {
 	local main_keys=${1}
 	local version=${2}
 
-	if (echo "${version}" | grep -q "q")
+	if (is_quarterly_release "${version}")
 	then
 		echo quarterly
 
@@ -583,7 +583,7 @@ function has_slim_build_criteria {
 		fi
 	fi
 
-	if [[ "${1}" == *q* ]]
+	if (is_quarterly_release "${1}")
 	then
 		set_actual_product_version "${1}"
 

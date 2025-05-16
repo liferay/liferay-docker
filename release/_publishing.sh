@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../_release_common.sh
+
 function add_fixed_issues_to_patcher_project_version {
 	lc_download "https://releases.liferay.com/dxp/${_PRODUCT_VERSION}/release-notes.txt" release-notes.txt
 
@@ -333,7 +335,7 @@ function _update_bundles_yml {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [[ "${_PRODUCT_VERSION}" == *q* ]]
+	if (is_quarterly_release "${_PRODUCT_VERSION}")
 	then
 		local latest_key=$(yq eval ".quarterly | keys | .[-1]" "${_BASE_DIR}/bundles.yml")
 
