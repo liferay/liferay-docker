@@ -1,6 +1,6 @@
 #!/bin/bash
 source ../_test_common.sh
-source _jdk.sh
+source ./_jdk.sh
 
 function main {
 	set_up

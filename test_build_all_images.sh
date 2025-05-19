@@ -1,8 +1,8 @@
 #!/bin/bash
 
-source build_all_images.sh --test
-source _liferay_common.sh
-source _test_common.sh
+source ./_liferay_common.sh
+source ./_test_common.sh
+source ./build_all_images.sh --test
 
 function main {
 	test_build_all_images_get_latest_available_zulu_version

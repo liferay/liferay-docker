@@ -2,7 +2,7 @@
 
 source ../_liferay_common.sh
 source ../_test_common.sh
-source _git.sh
+source ./_git.sh
 
 function main {
 	set_up

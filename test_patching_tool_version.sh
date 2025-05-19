@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source _liferay_common.sh
-source _test_common.sh
+source ./_liferay_common.sh
+source ./_test_common.sh
 
 function main {
 	test_patching_tool_version

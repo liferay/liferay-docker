@@ -1,15 +1,15 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
-source _bom.sh
-source _ci.sh
-source _git.sh
-source _hotfix.sh
-source _jdk.sh
-source _package.sh
-source _patcher.sh
-source _product.sh
-source _publishing.sh
+source ./_bom.sh
+source ./_ci.sh
+source ./_git.sh
+source ./_hotfix.sh
+source ./_jdk.sh
+source ./_package.sh
+source ./_patcher.sh
+source ./_product.sh
+source ./_publishing.sh
 
 function check_usage {
 

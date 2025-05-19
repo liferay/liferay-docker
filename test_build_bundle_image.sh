@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source build_bundle_image.sh --test
-source _test_common.sh
+source ./_test_common.sh
+source ./build_bundle_image.sh --test
 
 function main {
 	set_up

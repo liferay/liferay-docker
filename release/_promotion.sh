@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source _publishing.sh
+source ./_publishing.sh
 
 function prepare_jars_for_promotion {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
