@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../_release_common.sh
+
 function generate_checksum_files {
 	lc_cd "${_BUILD_DIR}"/release
 
@@ -20,9 +22,9 @@ function generate_checksum_files {
 }
 
 function generate_javadocs {
-	if [[ "${_PRODUCT_VERSION}" != 7.3.*-ga* ]] &&
-	   [[ "${_PRODUCT_VERSION}" != 7.3.*-u* ]] &&
-	   [[ "${_PRODUCT_VERSION}" != 7.4.*-ga* ]]
+	if (! is_7_3_ga_release) &&
+	   (! is_7_3_u_release) &&
+	   (! is_7_4_ga_release)
 	then
 		lc_log INFO "Javadocs should not be generated for ${_PRODUCT_VERSION}."
 
@@ -169,7 +171,7 @@ function package_boms {
 }
 
 function package_portal_dependencies {
-	if [[ "${_PRODUCT_VERSION}" == 7.3* ]]
+	if (is_7_3_release)
 	then
 
 		#
@@ -279,7 +281,7 @@ function package_release {
 
 	lc_cd tomcat/webapps/ROOT
 
-	if [[ "${_PRODUCT_VERSION}" == 7.3* ]]
+	if (is_7_3_release)
 	then
 		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/portal/ccpp.jar WEB-INF/lib
 	fi

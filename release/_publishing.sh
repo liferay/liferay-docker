@@ -112,10 +112,10 @@ function check_url {
 }
 
 function get_patcher_product_version_label {
-	if [[ "${_PRODUCT_VERSION}" == 7.3.* ]]
+	if (is_7_3_release)
 	then
 		echo "DXP 7.3"
-	elif [[ "${_PRODUCT_VERSION}" == 7.4.* ]]
+	elif (is_7_4_release)
 	then
 		echo "DXP 7.4"
 	else
@@ -124,7 +124,7 @@ function get_patcher_product_version_label {
 }
 
 function get_patcher_project_version {
-	if [[ "${_PRODUCT_VERSION}" == 7.3.* ]]
+	if (is_7_3_release)
 	then
 		echo "fix-pack-dxp-$(echo "${_PRODUCT_VERSION}" | cut -d 'u' -f 2)-7310"
 	else
@@ -133,10 +133,10 @@ function get_patcher_project_version {
 }
 
 function get_root_patcher_project_version_name {
-	if [[ "${_PRODUCT_VERSION}" == 7.3.* ]]
+	if (is_7_3_release)
 	then
 		echo "fix-pack-base-7310"
-	elif [[ "${_PRODUCT_VERSION}" == 7.4.* ]]
+	elif (is_7_4_release)
 	then
 		echo "7.4.13-ga1"
 	else
@@ -335,7 +335,7 @@ function _update_bundles_yml {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if (is_quarterly_release "${_PRODUCT_VERSION}")
+	if (is_quarterly_release)
 	then
 		local latest_key=$(yq eval ".quarterly | keys | .[-1]" "${_BASE_DIR}/bundles.yml")
 
@@ -343,12 +343,12 @@ function _update_bundles_yml {
 		yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${_BASE_DIR}/bundles.yml"
 	fi
 
-	if [[ "${_PRODUCT_VERSION}" == 7.3.* ]]
+	if (is_7_3_release)
 	then
 		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\" = {}" "${_BASE_DIR}/bundles.yml"
 	fi
 
-	if [[ "${_PRODUCT_VERSION}" == 7.4.*-u* ]]
+	if (is_7_4_u_release)
 	then
 		local nightly_bundle_url=$(yq eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url" "${_BASE_DIR}/bundles.yml")
 
@@ -357,7 +357,7 @@ function _update_bundles_yml {
 		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url = \"${nightly_bundle_url}\"" "${_BASE_DIR}/bundles.yml"
 	fi
 
-	if [[ "${_PRODUCT_VERSION}" == 7.4.*-ga* ]]
+	if (is_7_4_ga_release)
 	then
 		local ga_bundle_url="releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/"$(curl -fsSL "https://releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle")
 

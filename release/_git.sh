@@ -67,7 +67,7 @@ function generate_release_notes {
 
 	local ga_version=7.4.13-ga1
 
-	if (! is_quarterly_release "${_PRODUCT_VERSION}")
+	if (! is_quarterly_release)
 	then
 		ga_version=${_PRODUCT_VERSION%%-u*}-ga1
 	fi

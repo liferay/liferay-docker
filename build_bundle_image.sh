@@ -428,12 +428,12 @@ function push_docker_image {
 function set_parent_image {
 	if (is_quarterly_release "${LIFERAY_DOCKER_RELEASE_VERSION}")
 	then
-		if [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1)" -gt 2024 ]]
+		if [[ "$(get_release_year "${LIFERAY_DOCKER_RELEASE_VERSION}")" -gt 2024 ]]
 		then
 			return
 		fi
 
-		if [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1)" -eq 2024 ]] &&
+		if [[ "$(get_release_year "${LIFERAY_DOCKER_RELEASE_VERSION}")" -eq 2024 ]] &&
 		   [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 2 | tr -d q)" -ge 3 ]]
 		then
 			return
@@ -441,7 +441,7 @@ function set_parent_image {
 
 		sed -i 's/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
 		sed -i 's/FROM liferay-jdk21/FROM liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
-	elif [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2)" == 7.4 ]
+	elif [ "$(get_product_group_version "${LIFERAY_DOCKER_RELEASE_VERSION}")" == "7.4" ]
 	then
 		if [ "${LIFERAY_DOCKER_RELEASE_VERSION}" == "7.4.13.nightly" ]
 		then

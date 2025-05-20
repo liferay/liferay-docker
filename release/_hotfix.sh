@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../_release_common.sh
+
 function add_file_to_hotfix {
 	local file_name=$(transform_file_name "${1}")
 
@@ -57,7 +59,7 @@ function add_portal_patcher_properties_jar {
 }
 
 function add_portal_patcher_service_properties_jar {
-	if (! echo "${_PRODUCT_VERSION}" | grep -q "7.3")
+	if (! is_7_3_release)
 	then
 		lc_log INFO "Patch level verification is not needed for ${_PRODUCT_VERSION}."
 
@@ -453,7 +455,7 @@ function in_hotfix_scope {
 		return 0
 	fi
 
-	if (echo "${1}" | grep -q "^tomcat/lib/ext") && (echo "${_PRODUCT_VERSION}" | grep -q "7.3")
+	if (echo "${1}" | grep -q "^tomcat/lib/ext") && (is_7_3_release)
 	then
 		return 0
 	fi
@@ -582,7 +584,7 @@ function transform_file_name {
 
 	file_name=$(echo "${file_name}" | sed -e s#tomcat/webapps/ROOT#WAR_PATH#)
 
-	if (echo "${_PRODUCT_VERSION}" | grep -q "7.3")
+	if (is_7_3_release)
 	then
 		file_name=$(echo "${file_name}" | sed -e s#tomcat/lib/ext#GLOBAL_LIB_PATH#)
 	fi

@@ -567,13 +567,12 @@ function get_tag_from_image {
 }
 
 function has_slim_build_criteria {
-	if [[ "${1}" == *-u* ]] ||
-	   [[ "${1}" == *.nightly ]]
+	if (is_u_release "${1}") || [[ "${1}" == *.nightly ]]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [[ "${1}" == *-ga* ]]
+	if (is_ga_release "${1}")
 	then
 		local release_info_version_trivial="$(echo "${1}" | cut -d '-' -f 2 | sed 's/ga//')"
 
