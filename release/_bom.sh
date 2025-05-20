@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source ./_product.sh
 source ../_release_common.sh
+source ./_product.sh
 
 function generate_api_jars {
 	mkdir -p "${_BUILD_DIR}/boms"

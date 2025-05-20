@@ -65,11 +65,11 @@ function test_product_get_java_specification_version {
 }
 
 function test_product_not_add_ckeditor_license {
-	_test_product_not_add_ckeditor_license "7.4.3.129-ga129"
-	_test_product_not_add_ckeditor_license "7.4.13-u134"
 	_test_product_not_add_ckeditor_license "2023.q1.0"
 	_test_product_not_add_ckeditor_license "2024.q2.0"
 	_test_product_not_add_ckeditor_license "2025.q1.0-lts"
+	_test_product_not_add_ckeditor_license "7.4.13-u134"
+	_test_product_not_add_ckeditor_license "7.4.3.129-ga129"
 }
 
 function test_product_set_product_version_lts {
