@@ -1236,3 +1236,10 @@ docker.image.git.id-8.0.9=9cf896b67a0733adadd053036a71c4514f36a0ca
 
 docker.image.change.log-8.0.10=DOCKER-289
 docker.image.git.id-8.0.10=f1435dc2cbd1aa04a72e0a7323580fbb2c4b9ab1
+
+#
+# Liferay Docker Image Version 8.0.11
+#
+
+docker.image.change.log-8.0.11=LCD-46130
+docker.image.git.id-8.0.11=61cdb75c6d764aa2eb8ce31254a1c7d1662b73c2
