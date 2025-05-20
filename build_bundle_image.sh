@@ -428,12 +428,14 @@ function push_docker_image {
 function set_parent_image {
 	if (is_quarterly_release "${LIFERAY_DOCKER_RELEASE_VERSION}")
 	then
-		if [[ "$(get_release_year "${LIFERAY_DOCKER_RELEASE_VERSION}")" -gt 2024 ]]
+		local release_year="$(get_release_year "${LIFERAY_DOCKER_RELEASE_VERSION}")"
+
+		if [[ "${release_year}" -gt 2024 ]]
 		then
 			return
 		fi
 
-		if [[ "$(get_release_year "${LIFERAY_DOCKER_RELEASE_VERSION}")" -eq 2024 ]] &&
+		if [[ "${release_year}" -eq 2024 ]] &&
 		   [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 2 | tr -d q)" -ge 3 ]]
 		then
 			return
