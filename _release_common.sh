@@ -48,9 +48,9 @@ function is_quarterly_release {
 	if [[ "${1}" == *q* ]]
 	then
 		return 0
-	else
-		return 1
 	fi
+
+	return 1
 }
 
 function set_actual_product_version {
