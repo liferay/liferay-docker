@@ -12,7 +12,7 @@ function add_ckeditor_license {
 
 	set_actual_product_version "${_PRODUCT_VERSION}"
 
-	if [ $(is_early_product_version_than "2025.q2.0") == "true" ] 
+	if (is_early_product_version_than "2025.q2.0")
 	then
 		lc_log INFO "The quarterly release is earlier than 2025.q2."
 

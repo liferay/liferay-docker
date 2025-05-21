@@ -19,41 +19,29 @@ function is_early_product_version_than {
 
 	if [ "${product_version_1_year}" -lt "${product_version_2_year}" ]
 	then
-		echo "true"
-
-		return
+		return 0
 	elif [ "${product_version_1_year}" -gt "${product_version_2_year}" ]
 	then
-		echo "false"
-
-		return
+		return 1
 	fi
 
 	if [ "${product_version_1_quarter}" -lt "${product_version_2_quarter}" ]
 	then
-		echo "true"
-
-		return
+		return 0
 	elif [ "${product_version_1_quarter}" -gt "${product_version_2_quarter}" ]
 	then
-		echo "false"
-
-		return
+		return 1
 	fi
 
 	if [ "${product_version_1_suffix}" -lt "${product_version_2_suffix}" ]
 	then
-		echo "true"
-
-		return
+		return 0
 	elif [ "${product_version_1_suffix}" -gt "${product_version_2_suffix}" ]
 	then
-		echo "false"
-
-		return
+		return 1
 	fi
 
-	echo "false"
+	return 1
 }
 
 function is_quarterly_release {

@@ -18,23 +18,27 @@ function test_release_common_is_early_product_version_than {
 }
 
 function test_release_common_is_quarterly_release {
-	_test_release_common_is_quarterly_release "2025.q1.0-lts" "${LIFERAY_COMMON_EXIT_CODE_OK}"
-	_test_release_common_is_quarterly_release "7.4.3.112-ga112" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_release_common_is_quarterly_release "7.4.13-u134" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_release_common_is_quarterly_release "2025.q1.0-lts" "0"
+	_test_release_common_is_quarterly_release "7.4.3.112-ga112" "1"
+	_test_release_common_is_quarterly_release "7.4.13-u134" "1"
 }
 
 function _test_release_common_is_early_product_version_than {
-	set_actual_product_version "${1}" 
+	set_actual_product_version "${1}"
 
 	echo -e "Running _test_release_common_is_early_product_version_than for ${1}.\n"
 
-	assert_equals "$(is_early_product_version_than "${2}")" "${3}"
+	is_early_product_version_than "${2}" &> /dev/null
+
+	assert_equals "${?}" "${3}"
 }
 
 function _test_release_common_is_quarterly_release {
 	echo -e "Running _test_release_common_is_quarterly_release for ${1}.\n"
 
-	assert_equals "$(is_quarterly_release "${1}")" "${2}"
+	is_quarterly_release "${1}" &> /dev/null
+
+	assert_equals "${?}" "${2}"
 }
 
 main
