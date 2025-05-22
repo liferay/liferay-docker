@@ -21,16 +21,18 @@ function add_ckeditor_license {
 
 	local config_file="${_BUNDLES_DIR}/osgi/configs/com.liferay.frontend.editor.ckeditor.web.internal.configuration.CKEditor5Configuration.config"
 
-	if [ ! -f "${config_file}" ]
+	if [ -f "${config_file}" ]
 	then
-		lc_log INFO "Adding the CKEditor license key to ${config_file}."
-
-		echo "licenseKey=\"${LIFERAY_CKEDITOR_LICENSE_KEY}\"" > "${config_file}"
-	else
 		lc_log INFO "The CKEditor license key already exists in ${config_file}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
+
+	lc_log INFO "Adding the CKEditor license key to ${config_file}."
+
+	mkdir --parents "$(dirname "${config_file}")"
+
+	echo "licenseKey=\"${LIFERAY_CKEDITOR_LICENSE_KEY}\"" > "${config_file}"
 }
 
 function add_licensing {
