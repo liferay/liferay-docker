@@ -159,9 +159,9 @@ function _test_release_common_is_7_4_u_release {
 }
 
 function _test_release_common_is_early_product_version_than {
-	set_actual_product_version "${1}"
+	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_release_common_is_early_product_version_than for ${1}.\n"
+	echo -e "Running _test_release_common_is_early_product_version_than for ${_PRODUCT_VERSION}.\n"
 
 	is_early_product_version_than "${2}"
 
