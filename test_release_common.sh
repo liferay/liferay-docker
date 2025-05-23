@@ -179,7 +179,7 @@ function _test_release_common_is_ga_release {
 function _test_release_common_is_quarterly_release {
 	echo -e "Running _test_release_common_is_quarterly_release for ${1}.\n"
 
-	is_quarterly_release "${1}" &> /dev/null
+	is_quarterly_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }
