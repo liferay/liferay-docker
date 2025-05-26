@@ -57,6 +57,28 @@ function clone_repository {
 	git remote --verbose
 }
 
+function commit_to_branch_and_send_pull_request {
+	git add "${1}"
+
+	git commit --message "${2}"
+
+	local repository_name=$(echo "${5}" | cut -d '/' -f 2)
+
+	git push --force "git@github.com:liferay-release/${repository_name}.git" "${3}"
+
+	gh pr create \
+		--base "${4}" \
+		--body "Created by Release Team." \
+		--head "liferay-release:${3}" \
+		--repo "${5}" \
+		--title "${6}"
+
+	if [ "${?}" -ne 0 ]
+	then
+		return 1
+	fi
+}
+
 function generate_release_notes {
 	if is_portal_release
 	then
@@ -159,6 +181,27 @@ function update_portal_repository {
 	git status
 
 	echo "${LIFERAY_RELEASE_GIT_REF}" > "${_BUILD_DIR}"/liferay-portal-ee.sha
+}
+
+function prepare_branch_to_commit_from_master {
+	lc_cd "${1}"
+
+	git checkout master
+
+	git fetch "git@github.com:liferay-release/${2}.git" master
+
+	git reset --hard FETCH_HEAD
+
+	local temp_branch="temp-branch-$(date "+%Y%m%d%H%M%S")"
+
+	git checkout -b "${temp_branch}"
+
+	git push "git@github.com:liferay-release/${2}.git" "${temp_branch}" --force
+
+	if [ "$(git rev-parse --abbrev-ref HEAD)" != "${temp_branch}" ]
+	then
+		return 1
+	fi
 }
 
 function update_release_tool_repository {

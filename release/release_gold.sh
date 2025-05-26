@@ -66,28 +66,6 @@ function check_usage {
 	LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
 }
 
-function commit_to_branch_and_send_pull_request {
-	git add "${1}"
-
-	git commit --message "${2}"
-
-	local repository_name=$(echo "${5}" | cut -d '/' -f 2)
-
-	git push --force "git@github.com:liferay-release/${repository_name}.git" "${3}"
-
-	gh pr create \
-		--base "${4}" \
-		--body "Created by liferay-docker/release/release_gold.sh." \
-		--head "liferay-release:${3}" \
-		--repo "${5}" \
-		--title "${6}"
-
-	if [ "${?}" -ne 0 ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-}
-
 function get_tag_name {
 	if (is_ga_release || is_u_release)
 	then
@@ -163,25 +141,6 @@ function prepare_branch_to_commit {
 	git checkout "${1}" &> /dev/null
 
 	if [ "$(git rev-parse --abbrev-ref HEAD 2> /dev/null)" != "${1}" ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-}
-
-function prepare_branch_to_commit_from_master {
-	lc_cd "${1}"
-
-	git checkout master
-
-	git fetch git@github.com:liferay/liferay-jenkins-ee.git master
-
-	git reset --hard FETCH_HEAD
-
-	git checkout -b "${2}"
-
-	git push git@github.com:liferay-release/liferay-jenkins-ee.git "${2}" --force
-
-	if [ "$(git rev-parse --abbrev-ref HEAD)" != "${2}" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -324,7 +283,7 @@ function reference_new_releases {
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 
-		prepare_branch_to_commit_from_master "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "${issue_key}"
+		prepare_branch_to_commit_from_master "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "liferay-jenkins-ee"
 	fi
 
 	if [ "${?}" -ne 0 ]
