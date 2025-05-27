@@ -224,6 +224,23 @@ function compare_jars {
 			new_jar_descriptions="${jar_descriptions}"
 		fi
 
+		if [[ "${1}" == *"portal.tools.db.schema.importer.jar"* ]]
+		then
+			while IFS= read -r line
+			do
+				if [[ "${line}" != *"kernel"* ]] && [ ! -z "${line}" ]
+				then
+					lc_log INFO "Changes in ${1}: "
+					lc_log INFO "${new_jar_descriptions}" | sed "s/^/    /"
+					lc_log INFO ""
+
+					return 0
+				fi
+			done <<< "${new_jar_descriptions}"
+
+			return 1
+		fi
+
 		if [ -n "${new_jar_descriptions}" ]
 		then
 			lc_log INFO "Changes in ${1}: "
