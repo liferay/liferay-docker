@@ -391,6 +391,7 @@ function _update_bundles_yml {
 		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\".latest = true" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 	fi
 
+	sed -i "/^$/d" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 	sed -i "s/[[:space:]]{}//g" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 
 	truncate -s -1 "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
