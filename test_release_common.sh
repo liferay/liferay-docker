@@ -5,6 +5,7 @@ source ./_test_common.sh
 
 function main {
 	test_release_common_get_product_group_version
+	test_release_common_get_release_quarter
 	test_release_common_get_release_year
 	test_release_common_is_7_3_ga_release
 	test_release_common_is_7_3_release
@@ -14,6 +15,7 @@ function main {
 	test_release_common_is_7_4_u_release
 	test_release_common_is_early_product_version_than
 	test_release_common_is_ga_release
+	test_release_common_is_lts_release
 	test_release_common_is_quarterly_release
 	test_release_common_is_u_release
 
@@ -24,6 +26,13 @@ function main {
 function test_release_common_get_product_group_version {
 	_test_release_common_get_product_group_version "2025.q1.0-lts" "2025.q1"
 	_test_release_common_get_product_group_version "7.4.13.nightly" "7.4"
+}
+
+function test_release_common_get_release_quarter {
+	_test_release_common_get_release_quarter "2023.q4.3" "4"
+	_test_release_common_get_release_quarter "2024.q3.7" "3"
+	_test_release_common_get_release_quarter "2025.q1.1-lts" "1"
+	_test_release_common_get_release_quarter "2025.q2.0" "2"
 }
 
 function test_release_common_get_release_year {
@@ -89,6 +98,13 @@ function test_release_common_is_ga_release {
 	_test_release_common_is_ga_release "7.4.3.132-ga132" "0"
 }
 
+function test_release_common_is_lts_release {
+	_test_release_common_is_lts_release "2023.q4.3" "1"
+	_test_release_common_is_lts_release "2024.q3.7" "1"
+	_test_release_common_is_lts_release "2025.q1.1-lts" "0"
+	_test_release_common_is_lts_release "2025.q2.0" "1"
+}
+
 function test_release_common_is_quarterly_release {
 	_test_release_common_is_quarterly_release "2025.q1.0-lts" "0"
 	_test_release_common_is_quarterly_release "7.4.13-u134" "1"
@@ -108,6 +124,14 @@ function _test_release_common_get_product_group_version {
 	echo -e "Running _test_release_common_get_product_group_version for ${_PRODUCT_VERSION}.\n"
 
 	assert_equals "$(get_product_group_version)" "${2}"
+}
+
+function _test_release_common_get_release_quarter {
+	_PRODUCT_VERSION="${1}"
+
+	echo -e "Running _test_release_common_get_release_quarter for ${1}.\n"
+	
+	assert_equals "$(get_release_quarter)" "${2}"
 }
 
 function _test_release_common_is_7_3_ga_release {
@@ -172,6 +196,14 @@ function _test_release_common_is_ga_release {
 	echo -e "Running _test_release_common_is_ga_release for ${1}.\n"
 
 	is_ga_release "${1}"
+
+	assert_equals "${?}" "${2}"
+}
+
+function _test_release_common_is_lts_release {
+	echo -e "Running _test_release_common_is_lts_release for ${1}.\n"
+
+	is_lts_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }
