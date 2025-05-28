@@ -16,6 +16,7 @@ function main {
 	test_release_common_is_early_product_version_than
 	test_release_common_is_ga_release
 	test_release_common_is_lts_release
+	test_release_common_is_nightly_release
 	test_release_common_is_quarterly_release
 	test_release_common_is_u_release
 
@@ -103,6 +104,13 @@ function test_release_common_is_lts_release {
 	_test_release_common_is_lts_release "2024.q3.7" "1"
 	_test_release_common_is_lts_release "2025.q1.1-lts" "0"
 	_test_release_common_is_lts_release "2025.q2.0" "1"
+}
+
+function test_release_common_is_nightly_release {
+	_test_release_common_is_nightly_release "7.4.3.132-ga132" "1"
+	_test_release_common_is_nightly_release "7.4.13-u134" "1"
+	_test_release_common_is_nightly_release "2025.q1.0-lts" "1"
+	_test_release_common_is_nightly_release "7.4.13.nightly" "0"
 }
 
 function test_release_common_is_quarterly_release {
@@ -204,6 +212,14 @@ function _test_release_common_is_lts_release {
 	echo -e "Running _test_release_common_is_lts_release for ${1}.\n"
 
 	is_lts_release "${1}"
+
+	assert_equals "${?}" "${2}"
+}
+
+function _test_release_common_is_nightly_release {
+	echo -e "Running _test_release_common_is_nightly_release for ${1}.\n"
+
+	is_nightly_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }
