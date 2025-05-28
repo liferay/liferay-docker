@@ -229,7 +229,7 @@ function compare_jars {
 		then
 			while IFS= read -r line
 			do
-				if [[ "${line}" != *"kernel"* ]] && [ ! -z "${line}" ]
+				if [ -n "${line}" ] && [[ "${line}" != *"kernel"* ]]
 				then
 					lc_log INFO "Changes in ${1}: "
 					lc_log INFO "${new_jar_descriptions}" | sed "s/^/    /"
