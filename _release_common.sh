@@ -151,6 +151,15 @@ function is_lts_release {
 	return 1
 }
 
+function is_nightly_release {
+	if [[ "$(_get_product_version "${1}")" == *nightly ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function is_quarterly_release {
 	if [[ "$(_get_product_version "${1}")" == *q* ]]
 	then

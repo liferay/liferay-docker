@@ -567,7 +567,7 @@ function get_tag_from_image {
 }
 
 function has_slim_build_criteria {
-	if (is_u_release "${1}") || [[ "${1}" == *.nightly ]]
+	if (is_u_release "${1}") || (is_nightly_release "${1}")
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
