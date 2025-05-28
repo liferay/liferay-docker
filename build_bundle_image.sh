@@ -332,13 +332,11 @@ function prepare_temp_directory {
 
 	if [ "${tomcat_version}" != "${latest_tomcat_version}" ]
 	then
-		tomcat_version="${latest_tomcat_version}"
+		local tomcat_download_dir="downloads/tomcat/apache-tomcat-${latest_tomcat_version}"
 
-		local tomcat_download_dir="downloads/tomcat/apache-tomcat-${tomcat_version}"
+		local tomcat_major_version=$(echo "${latest_tomcat_version}" | cut -d '.' -f 1)
 
-		local tomcat_major_version=$(echo "${tomcat_version}" | cut -d '.' -f 1)
-
-		local tomcat_url="https://dlcdn.apache.org/tomcat/tomcat-${tomcat_major_version}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}.zip"
+		local tomcat_url="https://dlcdn.apache.org/tomcat/tomcat-${tomcat_major_version}/v${latest_tomcat_version}/bin/apache-tomcat-${latest_tomcat_version}.zip"
 
 		download "${tomcat_download_dir}/apache-tomcat.zip" "${tomcat_url}"
 
@@ -366,7 +364,12 @@ function prepare_temp_directory {
 		cp -r "${TEMP_DIR}/liferay/tomcat-temp/bin/setenv.bat" "${TEMP_DIR}/liferay/${tomcat_dir_name}/bin/setenv.bat"
 		cp -r "${TEMP_DIR}/liferay/tomcat-temp/bin/setenv.sh" "${TEMP_DIR}/liferay/${tomcat_dir_name}/bin/setenv.sh"
 		cp -r "${TEMP_DIR}/liferay/tomcat-temp/conf" "${TEMP_DIR}/liferay/${tomcat_dir_name}/"
-		cp -r "${TEMP_DIR}/liferay/tomcat-temp/lib/ext" "${TEMP_DIR}/liferay/${tomcat_dir_name}/lib/ext"
+
+		if is_7_3_release
+		then
+			cp -r "${TEMP_DIR}/liferay/tomcat-temp/lib/ext" "${TEMP_DIR}/liferay/${tomcat_dir_name}/lib/ext"
+		fi
+
 		cp -r "${TEMP_DIR}/liferay/tomcat-temp/webapps" "${TEMP_DIR}/liferay/${tomcat_dir_name}/"
 		cp -r "${TEMP_DIR}/liferay/tomcat-temp/work/Catalina" "${TEMP_DIR}/liferay/${tomcat_dir_name}/work/Catalina"
 
