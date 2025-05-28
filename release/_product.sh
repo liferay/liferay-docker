@@ -416,8 +416,8 @@ function set_product_version {
 		_PRODUCT_VERSION="${1}"
 
 		if [[ "$(get_release_year)" -gt 2024 ]] &&
-		   [[ "${_PRODUCT_VERSION}" == *"q1"* ]] &&
-		   [[ "${_PRODUCT_VERSION}" != *"-lts" ]]
+		   [[ "$(get_release_quarter)" -eq 1 ]] &&
+		   (is_lts_release)
 		then
 				_PRODUCT_VERSION="${_PRODUCT_VERSION}-lts"
 		fi

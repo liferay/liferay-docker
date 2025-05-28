@@ -436,7 +436,7 @@ function set_parent_image {
 		fi
 
 		if [[ "${release_year}" -eq 2024 ]] &&
-		   [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 2 | tr -d q)" -ge 3 ]]
+		   [[ "$(get_release_quarter "${LIFERAY_DOCKER_RELEASE_VERSION}")" -ge 3 ]]
 		then
 			return
 		fi

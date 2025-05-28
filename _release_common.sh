@@ -9,6 +9,15 @@ function get_product_group_version {
 	fi
 }
 
+function get_release_quarter {
+	if [ -n "${_PRODUCT_VERSION}" ]
+	then
+		echo "${_PRODUCT_VERSION}" | cut -d '.' -f 2 | tr -d 'q'
+	else
+		echo "${1}" | cut -d '.' -f 2 | tr -d 'q'
+	fi
+}
+
 function get_release_year {
 	if [ -n "${_PRODUCT_VERSION}" ]
 	then
@@ -126,6 +135,15 @@ function is_early_product_version_than {
 
 function is_ga_release {
 	if [[ "$(_get_product_version "${1}")" == *-ga* ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function is_lts_release {
+	if [[ "$(_get_product_version "${1}")" == *lts* ]]
 	then
 		return 0
 	fi

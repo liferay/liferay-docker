@@ -199,7 +199,7 @@ function generate_distro_jar {
 		osgi_version=$(echo "${osgi_version}" | cut -d '.' -f 1,2,3,5)
 	elif (is_quarterly_release)
 	then
-		if [[ $(echo "${_PRODUCT_VERSION}" | grep "lts") ]]
+		if (is_lts_release)
 		then
 			osgi_version=$(echo "${osgi_version}" | sed 's/.lts//g')
 		fi
