@@ -225,7 +225,7 @@ function compare_jars {
 			new_jar_descriptions="${jar_descriptions}"
 		fi
 
-		if [[ "${1}" == *"portal.tools.db.schema.importer.jar"* ]]
+		if [[ "${1}" == *"portal.tools.db.schema.importer.jar" ]]
 		then
 			while IFS= read -r line
 			do
