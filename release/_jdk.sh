@@ -19,7 +19,7 @@ function set_jdk_version_and_parameters {
 		jdk_version="openjdk17"
 	fi
 
-	if [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)" == "7.4.13" ]] &&
+	if [[ "$(get_release_version)" == "7.4.13" ]] &&
 	   [[ "$(get_release_version_trivial)" -ge 132 ]]
 	then
 		jdk_version="openjdk17"

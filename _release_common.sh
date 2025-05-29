@@ -18,6 +18,23 @@ function get_release_quarter {
 	fi
 }
 
+function get_release_version {
+	local product_version="$(_get_product_version "${1}")"
+
+	if (is_ga_release "${product_version}")
+	then
+		if (is_7_3_ga_release "${product_version}")
+		then
+			echo "${product_version}" | cut -d '.' -f 1,2,3 | cut -d '-' -f 1
+		else
+			echo "${product_version}" | cut -d '.' -f 1,2,3
+		fi
+	elif (is_u_release "${product_version}")
+	then
+		echo "${product_version}" | cut -d '-' -f 1
+	fi
+}
+
 function get_release_version_trivial {
 	local product_version="$(_get_product_version "${1}")"
 

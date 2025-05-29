@@ -450,13 +450,13 @@ function set_parent_image {
 			return
 		fi
 
-		if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2,3 | cut -d '-' -f 1)" == 7.4.13 ] &&
+		if [ "$(get_release_version "${LIFERAY_DOCKER_RELEASE_VERSION}")" == "7.4.13" ] &&
 		   [[ "$(get_release_version_trivial "${LIFERAY_DOCKER_RELEASE_VERSION}")" -ge 125 ]]
 		then
 			return
 		fi
 
-		if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2,3)" == 7.4.3 ] &&
+		if [ "$(get_release_version "${LIFERAY_DOCKER_RELEASE_VERSION}")" == "7.4.3" ] &&
 		   [[ "$(get_release_version_trivial "${LIFERAY_DOCKER_RELEASE_VERSION}")" -ge 125 ]]
 		then
 			return
@@ -464,7 +464,7 @@ function set_parent_image {
 
 		sed -i 's/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
 		sed -i 's/FROM liferay-jdk21/FROM liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
-	elif [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2 | tr -d .)" -le 73 ]]
+	elif [[ "$(get_product_group_version "${LIFERAY_DOCKER_RELEASE_VERSION}" | tr -d .)" -le 73 ]]
 	then
 		sed -i 's/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11-jdk8:latest AS liferay-jdk11-jdk8/g' "${TEMP_DIR}"/Dockerfile
 		sed -i 's/FROM liferay-jdk21/FROM liferay-jdk11-jdk8/g' "${TEMP_DIR}"/Dockerfile
