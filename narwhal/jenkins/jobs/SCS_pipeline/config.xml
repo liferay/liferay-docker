@@ -28,8 +28,8 @@
 			<configVersion>2</configVersion>
 			<userRemoteConfigs>
 				<hudson.plugins.git.UserRemoteConfig>
-					<url>https://github.com/lucasmiranda0/liferay-docker.git</url>
 					<credentialsId>ci-hu</credentialsId>
+					<url>https://github.com/lucasmiranda0/liferay-docker.git</url>
 				</hudson.plugins.git.UserRemoteConfig>
 			</userRemoteConfigs>
 			<branches>
