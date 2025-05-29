@@ -14,13 +14,13 @@ function set_jdk_version_and_parameters {
 		fi
 	fi
 
-	if (is_ga_release) && [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 2 | sed "s/ga//g")" -ge 132 ]]
+	if (is_ga_release) && [[ "$(get_release_version_trivial)" -ge 132 ]]
 	then
 		jdk_version="openjdk17"
 	fi
 
 	if [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)" == "7.4.13" ]] &&
-	   [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 2 | tr -d u)" -ge 132 ]]
+	   [[ "$(get_release_version_trivial)" -ge 132 ]]
 	then
 		jdk_version="openjdk17"
 	fi

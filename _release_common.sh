@@ -18,6 +18,18 @@ function get_release_quarter {
 	fi
 }
 
+function get_release_version_trivial {
+	local product_version="$(_get_product_version "${1}")"
+
+	if (is_ga_release "${product_version}")
+	then
+		echo "${product_version}" | cut -d '-' -f 2 | sed 's/ga//'
+	elif (is_u_release "${product_version}")
+	then
+		echo "${product_version}" | cut -d '-' -f 2 | tr -d u
+	fi
+}
+
 function get_release_year {
 	if [ -n "${_PRODUCT_VERSION}" ]
 	then

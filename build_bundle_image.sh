@@ -451,13 +451,13 @@ function set_parent_image {
 		fi
 
 		if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2,3 | cut -d '-' -f 1)" == 7.4.13 ] &&
-		   [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '-' -f 2 | tr -d u)" -ge 125 ]]
+		   [[ "$(get_release_version_trivial "${LIFERAY_DOCKER_RELEASE_VERSION}")" -ge 125 ]]
 		then
 			return
 		fi
 
 		if [ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '.' -f 1,2,3)" == 7.4.3 ] &&
-		   [[ "$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | cut -d '-' -f 2 | sed 's/ga//g')" -ge 125 ]]
+		   [[ "$(get_release_version_trivial "${LIFERAY_DOCKER_RELEASE_VERSION}")" -ge 125 ]]
 		then
 			return
 		fi
