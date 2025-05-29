@@ -56,29 +56,14 @@
 		<hudson.plugins.jira.JiraProjectProperty plugin="jira@3.7.1" />
 		<hudson.model.ParametersDefinitionProperty>
 			<parameterDefinitions>
-				<hudson.model.StringParameterDefinition>
-					<name>TAG_FORCE_COPY</name>
-					<description>The hotfix will be copied regardless of the .patch.requirements property.</description>
-					<trim>false</trim>
-				</hudson.model.StringParameterDefinition>
 				<hudson.model.BooleanParameterDefinition>
-					<name>RUN_SCRIPT_VERSIONS</name>
-					<description>Parameter</description>
-					<defaultValue>true</defaultValue>
+					<name>DEBUG_MODE</name>
+					<defaultValue>false</defaultValue>
 				</hudson.model.BooleanParameterDefinition>
 				<hudson.model.StringParameterDefinition>
-					<name>VERSIONS_VERSION</name>
-					<defaultValue>7.[0-9].[0-9] 7.[0-9].1[0-9] 2023 2024</defaultValue>
-					<trim>false</trim>
-				</hudson.model.StringParameterDefinition>
-				<hudson.model.BooleanParameterDefinition>
-					<name>RUN_SCRIPT_HOTFIXES</name>
-					<defaultValue>true</defaultValue>
-				</hudson.model.BooleanParameterDefinition>
-				<hudson.model.StringParameterDefinition>
-					<name>IGNORE_ZIP_FILES</name>
-					<description>Comma-separated list of zip files that are not processed.</description>
-					<defaultValue>liferay-hotfix-2115-7413.zip,liferay-hotfix-2116-7413.zip,liferay-hotfix-1629-7413.zip,liferay-hotfix-239-7310.zip,liferay-hotfix-5146-7413.zip,liferay-dxp-2023.q4.2-hotfix-224.zip,liferay-dxp-2024.q1.7-hotfix-46.zip,liferay-dxp-2024.q1.8-hotfix-15.zip,liferay-dxp-2024.q1.7-hotfix-55.zip,liferay-dxp-2024.q2.1-hotfix-6.zip,liferay-hotfix-5998-7413.zip,liferay-dxp-2023.q3.4-hotfix-95.zip,liferay-hotfix-9605-7310.zip,liferay-dxp-2024.q1.2-hotfix-180.zip,liferay-dxp-2024.q2.11-hotfix-2.zip,liferay-dxp-2024.q3.0-hotfix-14.zip,liferay-dxp-2024.q3.0-hotfix-15.zip,liferay-dxp-2024.q3.0-hotfix-17.zip,liferay-hotfix-9891-7310.zip,liferay-dxp-2024.q3.4-hotfix-4.zip,liferay-dxp-2024.q3.4-hotfix-6.zip</defaultValue>
+					<name>GITHUB_PROJECT</name>
+					<description>The Github project you want to use</description>
+					<defaultValue>liferay</defaultValue>
 					<trim>false</trim>
 				</hudson.model.StringParameterDefinition>
 				<hudson.model.StringParameterDefinition>
@@ -86,10 +71,12 @@
 					<defaultValue>7.3.10 7.4.13 2023.q3.0 2023.q3.1 2023.q3.2 2023.q3.3 2023.q3.4 2023.q3.6 2023.q3.7 2023.q3.8 2023.q3.9 2023.q4.0 2023.q4.1 2023.q4.2 2023.q4.3 2023.q4.4 2023.q4.5 2023.q4.6 2023.q4.7 2023.q4.8 2023.q4.9 2024.q1.1 2024.q1.2 2024.q1.3 2024.q1.4 2024.q1.5 2024.q1.6 2024.q1.7 2024.q1.8 2024.q1.9 2024.q1.10 2024.q1.11 2024.q1.12 2024.q2.0 2024.q2.1 2024.q2.2 2024.q2.3 2024.q2.4 2024.q2.5 2024.q2.6 2024.q2.7 2024.q2.8 2024.q2.9 2024.q2.10 2024.q2.11 2024.q2.12 2024.q4.0 2024.q4.1 2024.q4.2 2024.q4.7 2025.q1.0 2025.q1.1 2025.q1.2 2025.q1.3</defaultValue>
 					<trim>false</trim>
 				</hudson.model.StringParameterDefinition>
-				<hudson.model.BooleanParameterDefinition>
-					<name>DEBUG_MODE</name>
-					<defaultValue>false</defaultValue>
-				</hudson.model.BooleanParameterDefinition>
+				<hudson.model.StringParameterDefinition>
+					<name>IGNORE_ZIP_FILES</name>
+					<description>Comma-separated list of zip files that are not processed.</description>
+					<defaultValue>liferay-hotfix-2115-7413.zip,liferay-hotfix-2116-7413.zip,liferay-hotfix-1629-7413.zip,liferay-hotfix-239-7310.zip,liferay-hotfix-5146-7413.zip,liferay-dxp-2023.q4.2-hotfix-224.zip,liferay-dxp-2024.q1.7-hotfix-46.zip,liferay-dxp-2024.q1.8-hotfix-15.zip,liferay-dxp-2024.q1.7-hotfix-55.zip,liferay-dxp-2024.q2.1-hotfix-6.zip,liferay-hotfix-5998-7413.zip,liferay-dxp-2023.q3.4-hotfix-95.zip,liferay-hotfix-9605-7310.zip,liferay-dxp-2024.q1.2-hotfix-180.zip,liferay-dxp-2024.q2.11-hotfix-2.zip,liferay-dxp-2024.q3.0-hotfix-14.zip,liferay-dxp-2024.q3.0-hotfix-15.zip,liferay-dxp-2024.q3.0-hotfix-17.zip,liferay-hotfix-9891-7310.zip,liferay-dxp-2024.q3.4-hotfix-4.zip,liferay-dxp-2024.q3.4-hotfix-6.zip</defaultValue>
+					<trim>false</trim>
+				</hudson.model.StringParameterDefinition>
 				<hudson.model.BooleanParameterDefinition>
 					<name>NO_PUSH</name>
 					<defaultValue>false</defaultValue>
@@ -106,10 +93,23 @@
 					<name>REMOVE_LOG_DIR</name>
 					<defaultValue>false</defaultValue>
 				</hudson.model.BooleanParameterDefinition>
+				<hudson.model.BooleanParameterDefinition>
+					<name>RUN_SCRIPT_HOTFIXES</name>
+					<defaultValue>true</defaultValue>
+				</hudson.model.BooleanParameterDefinition>
+				<hudson.model.BooleanParameterDefinition>
+					<name>RUN_SCRIPT_VERSIONS</name>
+					<description>Parameter</description>
+					<defaultValue>true</defaultValue>
+				</hudson.model.BooleanParameterDefinition>
 				<hudson.model.StringParameterDefinition>
-					<name>GITHUB_PROJECT</name>
-					<description>The Github project you want to use</description>
-					<defaultValue>liferay</defaultValue>
+					<name>TAG_FORCE_COPY</name>
+					<description>The hotfix will be copied regardless of the .patch.requirements property.</description>
+					<trim>false</trim>
+				</hudson.model.StringParameterDefinition>
+				<hudson.model.StringParameterDefinition>
+					<name>VERSIONS_VERSION</name>
+					<defaultValue>7.[0-9].[0-9] 7.[0-9].1[0-9] 2023 2024</defaultValue>
 					<trim>false</trim>
 				</hudson.model.StringParameterDefinition>
 				<hudson.model.StringParameterDefinition>
