@@ -124,10 +124,10 @@ function test_release_common_is_lts_release {
 }
 
 function test_release_common_is_nightly_release {
-	_test_release_common_is_nightly_release "7.4.3.132-ga132" "1"
-	_test_release_common_is_nightly_release "7.4.13-u134" "1"
 	_test_release_common_is_nightly_release "2025.q1.0-lts" "1"
+	_test_release_common_is_nightly_release "7.4.13-u134" "1"
 	_test_release_common_is_nightly_release "7.4.13.nightly" "0"
+	_test_release_common_is_nightly_release "7.4.3.132-ga132" "1"
 }
 
 function test_release_common_is_quarterly_release {
@@ -137,10 +137,10 @@ function test_release_common_is_quarterly_release {
 }
 
 function test_release_common_is_u_release {
+	_test_release_common_is_u_release "2025.q1.0-lts" "1"
 	_test_release_common_is_u_release "7.3.10-u2" "0"
-	_test_release_common_is_u_release "7.4.13-u1" "0"
 	_test_release_common_is_u_release "7.4.0-ga1" "1"
-	_test_release_common_is_u_release "2025.q2.0-lts" "1"
+	_test_release_common_is_u_release "7.4.13-u1" "0"
 }
 
 function _test_release_common_get_product_group_version {
