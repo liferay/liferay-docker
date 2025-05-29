@@ -10,7 +10,7 @@ function main {
 
 	if [ ! -n "${LIFERAY_BATCH_CURL_OPTIONS}" ]
 	then
-		LIFERAY_BATCH_CURL_OPTIONS=""
+		LIFERAY_BATCH_CURL_OPTIONS=" "
 	fi
 
 	if [ ! -n "${LIFERAY_ROUTES_CLIENT_EXTENSION}" ]
