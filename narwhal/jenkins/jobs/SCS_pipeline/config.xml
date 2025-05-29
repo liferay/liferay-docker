@@ -48,10 +48,10 @@
 	<keepDependencies>false</keepDependencies>
 	<properties>
 		<hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.8">
-			<blockLevel>GLOBAL</blockLevel>
-			<blockingJobs></blockingJobs>
-			<scanQueueFor>DISABLED</scanQueueFor>
 			<useBuildBlocker>false</useBuildBlocker>
+			<blockLevel>GLOBAL</blockLevel>
+			<scanQueueFor>DISABLED</scanQueueFor>
+			<blockingJobs></blockingJobs>
 		</hudson.plugins.buildblocker.BuildBlockerProperty>
 		<hudson.plugins.jira.JiraProjectProperty plugin="jira@3.7.1" />
 		<hudson.model.ParametersDefinitionProperty>
