@@ -20,13 +20,13 @@ function set_up {
 
 	export _RELEASE_ROOT_DIR="${PWD}"
 
-	export _BASE_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/actual"
+	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/actual"
 }
 
 function tear_down {
 	common_tear_down
 
-	git restore "${_BASE_DIR}/bundles.yml"
+	git restore "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 
 	unset _BASE_DIR
 	unset _RELEASE_ROOT_DIR
@@ -56,7 +56,7 @@ function test_publishing_update_bundles_yml {
 	_run_update_bundles_yml "2024.q3.1"
 
 	assert_equals \
-		"${_RELEASE_ROOT_DIR}/test-dependencies/actual/bundles.yml" \
+		"${_RELEASE_ROOT_DIR}/test-dependencies/actual/liferay-docker/bundles.yml" \
 		"${_RELEASE_ROOT_DIR}/test-dependencies/expected/test_publishing_bundles.yml"
 }
 
