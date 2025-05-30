@@ -515,7 +515,7 @@ function get_main_key {
 	local main_keys=${1}
 	local version=${2}
 
-	if (is_quarterly_release "${version}")
+	if is_quarterly_release "${version}"
 	then
 		echo quarterly
 
@@ -567,12 +567,12 @@ function get_tag_from_image {
 }
 
 function has_slim_build_criteria {
-	if (is_u_release "${1}") || (is_nightly_release "${1}")
+	if (is_u_release "${1}" || is_nightly_release "${1}")
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if (is_ga_release "${1}")
+	if is_ga_release "${1}"
 	then
 		if (( "$(get_release_version_trivial "${1}")" <= 132 ))
 		then
@@ -580,11 +580,11 @@ function has_slim_build_criteria {
 		fi
 	fi
 
-	if (is_quarterly_release "${1}")
+	if is_quarterly_release "${1}"
 	then
 		set_actual_product_version "${1}"
 
-		if (is_early_product_version_than "2025.q1.11-lts")
+		if is_early_product_version_than "2025.q1.11-lts"
 		then
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi

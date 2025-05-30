@@ -12,7 +12,7 @@ function generate_release_notes {
 
 	local ga_version
 
-	if (is_quarterly_release "${version}")
+	if is_quarterly_release "${version}"
 	then
 		ga_version=7.4.13-ga1
 	else

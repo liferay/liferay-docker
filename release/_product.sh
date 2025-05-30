@@ -3,14 +3,14 @@
 source ../_release_common.sh
 
 function add_ckeditor_license {
-	if (! is_quarterly_release)
+	if ! is_quarterly_release
 	then
 		lc_log INFO "The product version is not a quarterly release."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if (is_early_product_version_than "2025.q2.0")
+	if is_early_product_version_than "2025.q2.0"
 	then
 		lc_log INFO "The quarterly release is earlier than 2025.q2."
 
@@ -415,11 +415,12 @@ function set_product_version {
 	else
 		_PRODUCT_VERSION="${1}"
 
-		if [[ "$(get_release_year)" -gt 2024 ]] &&
-		   [[ "$(get_release_quarter)" -eq 1 ]] &&
-		   (is_lts_release)
+		if [[ "$(get_release_year)" -gt 2024 ]] && [[ "$(get_release_quarter)" -eq 1 ]]
 		then
+			if is_lts_release
+			then
 				_PRODUCT_VERSION="${_PRODUCT_VERSION}-lts"
+			fi
 		fi
 
 		set_artifact_versions "${_PRODUCT_VERSION}" "${2}"

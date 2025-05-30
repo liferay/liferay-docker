@@ -6,7 +6,7 @@ source ../_release_common.sh
 function set_jdk_version_and_parameters {
 	local jdk_version="zulu8"
 
-	if (is_quarterly_release)
+	if is_quarterly_release
 	then
 		if [[ "$(get_release_year)" -ge 2025 ]]
 		then
@@ -14,9 +14,12 @@ function set_jdk_version_and_parameters {
 		fi
 	fi
 
-	if (is_ga_release) && [[ "$(get_release_version_trivial)" -ge 132 ]]
+	if is_ga_release
 	then
-		jdk_version="openjdk17"
+		if [[ "$(get_release_version_trivial)" -ge 132 ]]
+		then
+			jdk_version="openjdk17"
+		fi
 	fi
 
 	if [[ "$(get_release_version)" == "7.4.13" ]] &&

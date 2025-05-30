@@ -59,7 +59,7 @@ function add_portal_patcher_properties_jar {
 }
 
 function add_portal_patcher_service_properties_jar {
-	if (! is_7_3_release)
+	if ! is_7_3_release
 	then
 		lc_log INFO "Patch level verification is not needed for ${_PRODUCT_VERSION}."
 
@@ -396,7 +396,7 @@ function create_hotfix {
 				continue
 			fi
 
-			if (in_hotfix_scope "${removed_file}")
+			if in_hotfix_scope "${removed_file}"
 			then
 				echo "Removing ${removed_file}."
 
@@ -416,7 +416,7 @@ function create_hotfix {
 				continue
 			fi
 
-			if (in_hotfix_scope "${new_file}")
+			if in_hotfix_scope "${new_file}"
 			then
 				echo "Adding ${new_file}."
 
@@ -436,7 +436,7 @@ function create_hotfix {
 				continue
 			fi
 
-			if (in_hotfix_scope "${changed_file}")
+			if in_hotfix_scope "${changed_file}"
 			then
 				if (echo "${changed_file}" | grep -q ".[jw]ar$")
 				then
@@ -455,7 +455,7 @@ function in_hotfix_scope {
 		return 0
 	fi
 
-	if (echo "${1}" | grep -q "^tomcat/lib/ext") && (is_7_3_release)
+	if (echo "${1}" | grep -q "^tomcat/lib/ext") && is_7_3_release
 	then
 		return 0
 	fi
@@ -584,7 +584,7 @@ function transform_file_name {
 
 	file_name=$(echo "${file_name}" | sed -e s#tomcat/webapps/ROOT#WAR_PATH#)
 
-	if (is_7_3_release)
+	if is_7_3_release
 	then
 		file_name=$(echo "${file_name}" | sed -e s#tomcat/lib/ext#GLOBAL_LIB_PATH#)
 	fi

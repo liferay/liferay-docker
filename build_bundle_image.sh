@@ -426,7 +426,7 @@ function push_docker_image {
 }
 
 function set_parent_image {
-	if (is_quarterly_release "${LIFERAY_DOCKER_RELEASE_VERSION}")
+	if is_quarterly_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 	then
 		local release_year="$(get_release_year "${LIFERAY_DOCKER_RELEASE_VERSION}")"
 
@@ -445,7 +445,7 @@ function set_parent_image {
 		sed -i 's/FROM liferay-jdk21/FROM liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
 	elif [ "$(get_product_group_version "${LIFERAY_DOCKER_RELEASE_VERSION}")" == "7.4" ]
 	then
-		if (is_nightly_release "${LIFERAY_DOCKER_RELEASE_VERSION}")
+		if is_nightly_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 		then
 			return
 		fi
