@@ -5,6 +5,7 @@ source ./_test_common.sh
 
 function main {
 	test_release_common_get_product_group_version
+	test_release_common_get_release_patch_version
 	test_release_common_get_release_quarter
 	test_release_common_get_release_version
 	test_release_common_get_release_version_trivial
@@ -29,6 +30,13 @@ function main {
 function test_release_common_get_product_group_version {
 	_test_release_common_get_product_group_version "2025.q1.0-lts" "2025.q1"
 	_test_release_common_get_product_group_version "7.4.13.nightly" "7.4"
+}
+
+function test_release_common_get_release_patch_version {
+	_test_release_common_get_release_patch_version "2023.q4.3" "3"
+	_test_release_common_get_release_patch_version "2024.q3.7" "7"
+	_test_release_common_get_release_patch_version "2025.q1.13-lts" "13"
+	_test_release_common_get_release_patch_version "2025.q2.0" "0"
 }
 
 function test_release_common_get_release_quarter {
@@ -150,6 +158,15 @@ function _test_release_common_get_product_group_version {
 
 	assert_equals "$(get_product_group_version)" "${2}"
 }
+
+function _test_release_common_get_release_patch_version {
+	_PRODUCT_VERSION="${1}"
+
+	echo -e "Running _test_release_common_get_release_patch_version for ${_PRODUCT_VERSION}.\n"
+
+	assert_equals "$(get_release_patch_version)" "${2}"
+}
+
 
 function _test_release_common_get_release_quarter {
 	_PRODUCT_VERSION="${1}"
