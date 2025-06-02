@@ -232,7 +232,7 @@ function prepare_next_release_branch {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	else
-		local next_project_version_suffix="$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 3)"
+		local next_project_version_suffix=$(get_release_patch_version)
 
 		next_project_version_suffix=$((next_project_version_suffix + 1))
 
@@ -618,7 +618,7 @@ function test_boms {
 function update_release_info_date {
 	if ! is_quarterly_release ||
 	   [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "true") ] ||
-	   [[ "$(echo "${_PRODUCT_VERSION}" | cut -d '.' -f 3)" -eq 0 ]] ||
+	   [[ "$(get_release_patch_version)" -eq 0 ]] ||
 	   [[ "$(get_release_year)" -lt 2024 ]]
 	then
 		lc_log INFO "Skipping the release info update."

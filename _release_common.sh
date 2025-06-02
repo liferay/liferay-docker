@@ -4,6 +4,17 @@ function get_product_group_version {
 	echo "$(_get_product_version "${1}")" | cut -d '.' -f 1,2
 }
 
+function get_release_patch_version {
+	local product_version="$(_get_product_version "${1}")"
+
+	if is_lts_release "${product_version}"
+	then
+		echo "${product_version}" | cut -d '.' -f 3 | sed -e "s/-lts//"
+	else
+		echo "${product_version}" | cut -d '.' -f 3
+	fi
+}
+
 function get_release_quarter {
 	echo "$(_get_product_version "${1}")" | cut -d '.' -f 2 | tr -d 'q'
 }
