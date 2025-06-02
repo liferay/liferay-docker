@@ -267,8 +267,8 @@ function build_jdk_image {
 	local jdk_image_name="${2}"
 	local jdk_version="${3}"
 
-	local latest_available_zulu_amd64_version=$(get_latest_available_zulu_version "${jdk_version}" "amd64")
-	local latest_available_zulu_arm64_version=$(get_latest_available_zulu_version "${jdk_version}" "arm64")
+	local latest_available_zulu_amd64_version=$(get_latest_available_zulu_version "amd64" "${jdk_version}")
+	local latest_available_zulu_arm64_version=$(get_latest_available_zulu_version "arm64" "${jdk_version}")
 
 	if [[ $(get_latest_docker_hub_zulu_version "${jdk_image_name}" "${jdk_version}" "amd64") == "${latest_available_zulu_amd64_version}" ]] && [[ $(get_latest_docker_hub_zulu_version "${jdk_image_name}" "${jdk_version}" "arm64") == "${latest_available_zulu_arm64_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
@@ -451,19 +451,12 @@ function build_zabbix_web_image {
 }
 
 function get_latest_available_zulu_version {
-	local java_version="${1}"
-
-	if [ "${java_version}" == "21" ]
-	then
-		java_version="21.0.1"
-	fi
-
 	local version=$(\
 		curl \
 			--header 'accept: */*' \
 			--location \
 			--silent \
-			"https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${java_version}&os=linux" | \
+			"https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${1}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${2}&os=linux" | \
 			jq -r '.zulu_version | join(".")' | \
 			cut -d '.' -f 1,2,3)
 
