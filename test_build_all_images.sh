@@ -10,12 +10,12 @@ function main {
 }
 
 function test_build_all_images_get_latest_available_zulu_version {
-	_test_build_all_images_get_latest_available_zulu_version "8" "amd64"
-	_test_build_all_images_get_latest_available_zulu_version "8" "arm64"
-	_test_build_all_images_get_latest_available_zulu_version "11" "amd64"
-	_test_build_all_images_get_latest_available_zulu_version "11" "arm64"
-	_test_build_all_images_get_latest_available_zulu_version "21" "amd64"
-	_test_build_all_images_get_latest_available_zulu_version "21" "arm64"
+	_test_build_all_images_get_latest_available_zulu_version "amd64" "8"
+	_test_build_all_images_get_latest_available_zulu_version "arm64" "8"
+	_test_build_all_images_get_latest_available_zulu_version "amd64" "11"
+	_test_build_all_images_get_latest_available_zulu_version "arm64" "11"
+	_test_build_all_images_get_latest_available_zulu_version "amd64" "21"
+	_test_build_all_images_get_latest_available_zulu_version "arm64" "21"
 }
 
 function test_build_all_images_has_slim_build_criteria {
@@ -32,20 +32,15 @@ function _test_build_all_images_get_latest_available_zulu_version {
 
 	local latest_available_zulu_version=$(get_latest_available_zulu_version "${1}" "${2}")
 
-	if [ "${1}" == "21" ]
-	then
-		assert_equals "${latest_available_zulu_version}" "21.30.15"
-	else
-		assert_equals \
-			"${latest_available_zulu_version}" \
-			$(curl \
-				--header 'accept: */*' \
-				--location \
-				--silent \
-				"https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${2}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${1}&os=linux" | \
-				jq -r '.zulu_version | join(".")' | \
-				cut -d '.' -f 1,2,3)
-	fi
+	assert_equals \
+		"${latest_available_zulu_version}" \
+		$(curl \
+			--header 'accept: */*' \
+			--location \
+			--silent \
+			"https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${1}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${2}&os=linux" | \
+			jq -r '.zulu_version | join(".")' | \
+			cut -d '.' -f 1,2,3)
 }
 
 function _test_build_all_images_has_slim_build_criteria {
