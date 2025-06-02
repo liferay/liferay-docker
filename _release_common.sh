@@ -1,21 +1,11 @@
 #!/bin/bash
 
 function get_product_group_version {
-	if [ -n "${_PRODUCT_VERSION}" ]
-	then
-		echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1,2
-	else
-		echo "${1}" | cut -d '.' -f 1,2
-	fi
+	echo "$(_get_product_version "${1}")" | cut -d '.' -f 1,2
 }
 
 function get_release_quarter {
-	if [ -n "${_PRODUCT_VERSION}" ]
-	then
-		echo "${_PRODUCT_VERSION}" | cut -d '.' -f 2 | tr -d 'q'
-	else
-		echo "${1}" | cut -d '.' -f 2 | tr -d 'q'
-	fi
+	echo "$(_get_product_version "${1}")" | cut -d '.' -f 2 | tr -d 'q'
 }
 
 function get_release_version {
@@ -48,12 +38,7 @@ function get_release_version_trivial {
 }
 
 function get_release_year {
-	if [ -n "${_PRODUCT_VERSION}" ]
-	then
-		echo "${_PRODUCT_VERSION}" | cut -d '.' -f 1
-	else
-		echo "${1}" | cut -d '.' -f 1
-	fi
+	echo "$(_get_product_version "${1}")" | cut -d '.' -f 1
 }
 
 function is_7_3_ga_release {
