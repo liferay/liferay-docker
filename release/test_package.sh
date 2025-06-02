@@ -1,12 +1,15 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
+source ../_release_common.sh
 source ../_test_common.sh
 source ./_package.sh
 
 function main {
 	set_up
 
+	test_package_generate_javadocs
+	test_package_not_generate_javadocs
 	test_package_portal_dependencies
 
 	tear_down
@@ -16,8 +19,9 @@ function set_up {
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _BUILD_DIR="${PWD}/test-dependencies"
 	export _BUILD_TIMESTAMP="1234567890"
-	export _PRODUCT_VERSION="7.3.10-u36"
 	export _PROJECTS_DIR="${PWD}/test-dependencies/expected"
+
+	common_set_up
 
 	mkdir -p "${_BUILD_DIR}/release"
 
@@ -33,6 +37,8 @@ function set_up {
 }
 
 function tear_down {
+	common_tear_down
+
 	rm -f "${_BUILD_DIR}/liferay-dxp-tomcat-7.3.10-u36-1706652128.zip"
 	rm -fr "${_BUILD_DIR}/release"
 
@@ -43,7 +49,24 @@ function tear_down {
 	unset _PROJECTS_DIR
 }
 
+function test_package_generate_javadocs {
+	_test_package_generate_javadocs "2025.q3.0"
+	_test_package_generate_javadocs "2026.q1.0-lts"
+	_test_package_generate_javadocs "7.3.10-ga1"
+	_test_package_generate_javadocs "7.3.10-u36"
+	_test_package_generate_javadocs "7.4.3.132-ga132"
+}
+
+function test_package_not_generate_javadocs {
+	_test_package_not_generate_javadocs "2025.q2.0"
+	_test_package_not_generate_javadocs "2025.q3.1"
+	_test_package_not_generate_javadocs "2026.q1.1-lts"
+	_test_package_not_generate_javadocs "7.4.13-u136"
+}
+
 function test_package_portal_dependencies {
+	_PRODUCT_VERSION="7.3.10-u36"
+
 	lc_cd "${_BUILD_DIR}/release"
 
 	package_portal_dependencies
@@ -59,6 +82,26 @@ function test_package_portal_dependencies {
 
 	rm -f "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
 	rm -f "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
+}
+
+ function _test_package_generate_javadocs {
+	_PRODUCT_VERSION="${1}"
+
+	echo -e "Running _test_package_generate_javadocs for ${_PRODUCT_VERSION}.\n"
+
+	generate_javadocs &> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+ }
+
+function _test_package_not_generate_javadocs {
+	_PRODUCT_VERSION="${1}"
+
+	echo -e "Running _test_package_not_generate_javadocs for ${_PRODUCT_VERSION}.\n"
+
+	generate_javadocs &> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 main

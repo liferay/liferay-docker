@@ -39,36 +39,39 @@ function generate_javadocs {
 		fi
 	fi
 
-	lc_log INFO "Generating javadocs for ${_PRODUCT_VERSION}."
-
-	git reset --hard && git clean -dfx
-
-	git fetch --no-tags upstream "refs/tags/${_PRODUCT_VERSION}:refs/tags/${_PRODUCT_VERSION}"
-
-	git checkout "tags/${_PRODUCT_VERSION}"
-
-	local portal_release_edition_private="true"
-
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
-		portal_release_edition_private="false"
-	fi
+		lc_log INFO "Generating javadocs for ${_PRODUCT_VERSION}."
 
-	ant \
-		-Ddist.dir="${_BUILD_DIR}/release" \
-		-Dliferay.product.name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}" \
-		-Dlp.version="${_PRODUCT_VERSION}" \
-		-Dpatch.doc="true" \
-		-Dportal.dir="${_PROJECTS_DIR}/liferay-portal-ee" \
-		-Dportal.release.edition.private="${portal_release_edition_private}" \
-		-Dtstamp.value="${_BUILD_TIMESTAMP}" \
-		-f "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
+		git reset --hard && git clean -dfx
 
-	if [ "${?}" -ne 0 ]
-	then
-		lc_log ERROR "Unable to generate javadocs."
+		git fetch --no-tags upstream "refs/tags/${_PRODUCT_VERSION}:refs/tags/${_PRODUCT_VERSION}"
 
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		git checkout "tags/${_PRODUCT_VERSION}"
+
+		local portal_release_edition_private="true"
+
+		if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+		then
+			portal_release_edition_private="false"
+		fi
+
+		ant \
+			-Ddist.dir="${_BUILD_DIR}/release" \
+			-Dliferay.product.name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}" \
+			-Dlp.version="${_PRODUCT_VERSION}" \
+			-Dpatch.doc="true" \
+			-Dportal.dir="${_PROJECTS_DIR}/liferay-portal-ee" \
+			-Dportal.release.edition.private="${portal_release_edition_private}" \
+			-Dtstamp.value="${_BUILD_TIMESTAMP}" \
+			-f "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
+
+		if [ "${?}" -ne 0 ]
+		then
+			lc_log ERROR "Unable to generate javadocs."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
 	fi
 }
 
