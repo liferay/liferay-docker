@@ -54,9 +54,6 @@ function generate_javadocs {
 		portal_release_edition_private="false"
 	fi
 
-	local release_info_version="$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)"
-	local service_pack_version_suffix="-$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 2)"
-
 	ant \
 		-Ddist.dir="${_BUILD_DIR}/release" \
 		-Dliferay.product.name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}" \
@@ -64,8 +61,6 @@ function generate_javadocs {
 		-Dpatch.doc="true" \
 		-Dportal.dir="${_PROJECTS_DIR}/liferay-portal-ee" \
 		-Dportal.release.edition.private="${portal_release_edition_private}" \
-		-Drelease.info.version="${release_info_version}" \
-		-Dservice.pack.version.suffix="${service_pack_version_suffix}" \
 		-Dtstamp.value="${_BUILD_TIMESTAMP}" \
 		-f "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
 
