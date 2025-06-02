@@ -15,9 +15,9 @@ function report_jenkins_url {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	mkdir -p "${_BUILD_DIR}"/patcher-status/production/osbPatcherStatus/build/jenkins
+	mkdir -p "${_BUILD_DIR}/patcher-status/production/osbPatcherStatus/build/jenkins"
 
-	lc_cd "${_BUILD_DIR}"/patcher-status/production/osbPatcherStatus/build/jenkins
+	lc_cd "${_BUILD_DIR}/patcher-status/production/osbPatcherStatus/build/jenkins"
 
 	(
 		echo "{"
@@ -27,9 +27,18 @@ function report_jenkins_url {
 		echo "}"
 	) > "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}"
 
-	rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}"/patcher-status/ test-3-1::patcher/
+	if (has_ssh_connection "test-3-1")
+	then
+		rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}/patcher-status/" test-3-1::patcher/
 
-	ssh test-3-1 "chown -R 501:501 /mnt/mfs-hdd1-172.16.168/patcher"
+		ssh test-3-1 "chown -R 501:501 /mnt/mfs-hdd1-172.16.168/patcher"
+
+		echo "Pushing patcher report to test-3-1."
+	else
+		echo "No SSH connection to test-3-1."
+
+		cp -prv "${_BUILD_DIR}/patcher-status/" /mnt/patcher-shared/patcher/
+	fi
 }
 
 function report_patcher_status {
@@ -54,7 +63,16 @@ function report_patcher_status {
 
 	cat "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}"
 
-	rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}"/patcher-status/ test-3-1::patcher/
+	if (has_ssh_connection "test-3-1")
+	then
+		rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}/patcher-status/" test-3-1::patcher/
 
-	ssh test-3-1 "chown -R 501:501 /mnt/mfs-hdd1-172.16.168/patcher"
+		ssh test-3-1 "chown -R 501:501 /mnt/mfs-hdd1-172.16.168/patcher"
+
+		echo "Pushing patcher status to test-3-1."
+	else
+		echo "No SSH connection to test-3-1."
+
+		cp -prv "${_BUILD_DIR}/patcher-status/" /mnt/patcher-shared/patcher/
+	fi
 }

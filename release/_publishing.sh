@@ -253,9 +253,11 @@ function upload_hotfix {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}"
+	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://files_liferay_com/private/ee/portal/hotfix/${_PRODUCT_VERSION}/"
+	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}/"
 
 	echo "# Uploaded" > ../output.md
+	echo " - https://files.liferay.com/private/ee/portal/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
 	echo " - https://releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
 }
 
