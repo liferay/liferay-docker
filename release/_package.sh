@@ -91,7 +91,7 @@ function generate_release_properties_file {
 		product_version="DXP ${product_version}"
 		target_platform_version=$(echo "${target_platform_version}" | sed -r 's/-u/.u/')
 
-		if [[ "${_PRODUCT_VERSION}" == *"-lts" ]]
+		if is_lts_release
 		then
 			target_platform_version=$(echo "${target_platform_version}" | sed -r 's/-lts//g')
 		fi
