@@ -280,7 +280,7 @@ function _tag_recommended_product_versions {
 
 			lc_log INFO "Tagging ${latest_product_version_json_file} as recommended."
 		else
-			lc_log INFO "Unable to get latest production version JSON file for ${product_version}."
+			lc_log INFO "Unable to get latest product version JSON file for ${product_version}."
 		fi
 	done
 }
