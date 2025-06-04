@@ -327,7 +327,7 @@ function upload_to_docker_hub {
 
 	if [ "${?}" -ne 0 ]
 	then
-		lc_log ERROR "Unable to prepare the update bundles.yml branch."
+		lc_log ERROR "Unable to prepare the branch to update the bundles.yml."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
