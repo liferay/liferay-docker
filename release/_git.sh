@@ -110,6 +110,27 @@ function generate_release_notes {
 		paste -sd, > "${_BUILD_DIR}/release/release-notes.txt"
 }
 
+function prepare_branch_to_commit_from_master {
+	lc_cd "${1}"
+
+	git checkout master
+
+	git fetch "git@github.com:liferay-release/${2}.git" master
+
+	git reset --hard FETCH_HEAD
+
+	local temp_branch="temp-branch-$(date "+%Y%m%d%H%M%S")"
+
+	git checkout -b "${temp_branch}"
+
+	git push "git@github.com:liferay-release/${2}.git" "${temp_branch}" --force
+
+	if [ "$(git rev-parse --abbrev-ref HEAD)" != "${temp_branch}" ]
+	then
+		return 1
+	fi
+}
+
 function set_git_sha {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
@@ -181,27 +202,6 @@ function update_portal_repository {
 	git status
 
 	echo "${LIFERAY_RELEASE_GIT_REF}" > "${_BUILD_DIR}"/liferay-portal-ee.sha
-}
-
-function prepare_branch_to_commit_from_master {
-	lc_cd "${1}"
-
-	git checkout master
-
-	git fetch "git@github.com:liferay-release/${2}.git" master
-
-	git reset --hard FETCH_HEAD
-
-	local temp_branch="temp-branch-$(date "+%Y%m%d%H%M%S")"
-
-	git checkout -b "${temp_branch}"
-
-	git push "git@github.com:liferay-release/${2}.git" "${temp_branch}" --force
-
-	if [ "$(git rev-parse --abbrev-ref HEAD)" != "${temp_branch}" ]
-	then
-		return 1
-	fi
 }
 
 function update_release_tool_repository {
