@@ -123,12 +123,12 @@ function prepare_branch_to_commit_from_master {
 
 	git checkout -b "${temp_branch}"
 
-	git push "git@github.com:liferay-release/${2}.git" "${temp_branch}" --force
-
 	if [ "$(git rev-parse --abbrev-ref HEAD)" != "${temp_branch}" ]
 	then
 		return 1
 	fi
+
+	git push "git@github.com:liferay-release/${2}.git" "${temp_branch}" --force
 }
 
 function set_git_sha {
