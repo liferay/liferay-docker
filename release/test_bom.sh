@@ -76,7 +76,7 @@ function set_up {
 
 	git fetch --no-tags upstream "${_PRODUCT_VERSION}":"${_PRODUCT_VERSION}" &> /dev/null
 
-	git checkout --quiet "${_PRODUCT_VERSION}"
+	git checkout "${_PRODUCT_VERSION}" &> /dev/null
 
 	lc_cd "${_RELEASE_ROOT_DIR}"
 }
