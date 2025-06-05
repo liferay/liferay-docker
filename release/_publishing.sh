@@ -159,6 +159,20 @@ function init_gcs {
 	gcloud auth activate-service-account --key-file "${LIFERAY_RELEASE_GCS_TOKEN}"
 }
 
+function log_upload_result {
+	local destination="${1}"
+	local file_name="${2}"
+
+	if [ "${3}" -eq 0 ]
+	then
+		lc_log INFO "${file_name} was successfully uploaded to ${destination}."
+	else
+		lc_log ERROR "Failed to upload ${file_name} to ${destination}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function upload_bom_file {
 	local nexus_repository_name="${1}"
 
@@ -242,6 +256,8 @@ function upload_hotfix {
 		fi
 
 		scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
+
+		log_upload_result "lrdcom-vm-1" "${_HOTFIX_FILE_NAME}" "${?}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	else
 		lc_log INFO "Skipping lrdcom-vm-1."
 	fi
@@ -254,7 +270,12 @@ function upload_hotfix {
 	fi
 
 	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://files_liferay_com/private/ee/portal/hotfix/${_PRODUCT_VERSION}/"
+
+	log_upload_result "files_liferay_com GCP bucket" "${_HOTFIX_FILE_NAME}" "${?}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+
 	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}/"
+
+	log_upload_result "liferay-releases-hotfix GCP bucket" "${_HOTFIX_FILE_NAME}" "${?}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 
 	echo "# Uploaded" > ../output.md
 	echo " - https://files.liferay.com/private/ee/portal/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
