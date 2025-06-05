@@ -266,7 +266,7 @@ function upload_hotfix {
 	then
 		lc_log ERROR "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP because it already exists."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://files_liferay_com/private/ee/portal/hotfix/${_PRODUCT_VERSION}/"
