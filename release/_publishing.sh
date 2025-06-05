@@ -336,14 +336,18 @@ function upload_to_docker_hub {
 
 	LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}" ./build_all_images.sh --push
 
-	if [ "${?}" -ne 0 ]
+	local exit_code="${?}"
+
+	if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
 		lc_log ERROR "Unable to build the Docker image."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
+	delete_temp_branch "liferay-docker"
+
 	lc_cd "${_BASE_DIR}"
+
+	return "${exit_code}"
 }
 
 function _update_bundles_yml {
@@ -401,7 +405,6 @@ function _update_bundles_yml {
 		commit_to_branch_and_send_pull_request \
 			"${_PROJECTS_DIR}/liferay-docker/bundles.yml" \
 			"Add ${_PRODUCT_VERSION} to bundles.yml." \
-			"update-bundles-yml-branch" \
 			"master" \
 			"brianchandotcom/liferay-docker" \
 			"Add ${_PRODUCT_VERSION} to bundles.yml."

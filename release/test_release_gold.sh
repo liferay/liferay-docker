@@ -58,6 +58,10 @@ function tear_down {
 
 	git restore .
 
+	git checkout master &> /dev/null
+
+	git branch --list | grep -E 'temp-branch-[0-9]{14}' | xargs -r git branch -D &> /dev/null
+
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_RC_BUILD_TIMESTAMP
 	unset _PROJECTS_DIR
@@ -131,7 +135,7 @@ function _test_release_gold_prepare_next_release_branch {
 
 	local current_dir="${PWD}"
 
-	prepare_next_release_branch 1> /dev/null
+	prepare_next_release_branch &> /dev/null
 
 	assert_equals \
 		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[master-private]")" \
@@ -154,7 +158,7 @@ function test_release_gold_reference_new_releases {
 function test_release_gold_update_release_info_date {
 	_PRODUCT_VERSION="2024.q2.12"
 
-	update_release_info_date 1> /dev/null
+	update_release_info_date &> /dev/null
 
 	assert_equals \
 		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.date")" \
