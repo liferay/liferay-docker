@@ -127,8 +127,11 @@ function get_patcher_project_version {
 	if is_7_3_release
 	then
 		echo "fix-pack-dxp-$(echo "${_PRODUCT_VERSION}" | cut -d 'u' -f 2)-7310"
-	else
+	elif is_quarterly_release
+	then
 		echo "${_ARTIFACT_VERSION}"
+	else
+		echo "${_PRODUCT_VERSION}"
 	fi
 }
 
