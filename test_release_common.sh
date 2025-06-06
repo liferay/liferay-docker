@@ -167,7 +167,6 @@ function _test_release_common_get_release_patch_version {
 	assert_equals "$(get_release_patch_version)" "${2}"
 }
 
-
 function _test_release_common_get_release_quarter {
 	_PRODUCT_VERSION="${1}"
 
