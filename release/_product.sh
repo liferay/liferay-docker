@@ -368,7 +368,15 @@ function set_artifact_versions {
 
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
 	then
-		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-lts//g')
+		if is_u_release
+		then
+			_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | tr '-' '.')
+		fi
+	
+		if is_quarterly_release
+		then
+			_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-lts//g')
+		fi
 	elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
 		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-ga[0-9]*//g')
