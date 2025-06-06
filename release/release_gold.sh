@@ -232,31 +232,31 @@ function prepare_next_release_branch {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	else
-		local next_project_version_suffix=$(get_release_patch_version)
+		local next_release_patch_version=$(get_release_patch_version)
 
-		next_project_version_suffix=$((next_project_version_suffix + 1))
+		next_release_patch_version=$((next_release_patch_version + 1))
 
 		if [[ "${_PRODUCT_VERSION}" == *q1* ]]
 		then
 			if [[ "$(get_release_year)" -ge 2025 ]]
 			then
-				next_project_version_suffix="${next_project_version_suffix} LTS"
+				next_release_patch_version="${next_release_patch_version} LTS"
 			fi
 		fi
 
 		sed -i \
-			-e "s/release.info.version.display.name\[master-private\]=.*/release.info.version.display.name[master-private]=${product_group_version^^}.${next_project_version_suffix}/" \
+			-e "s/release.info.version.display.name\[master-private\]=.*/release.info.version.display.name[master-private]=${product_group_version^^}.${next_release_patch_version}/" \
 			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
 
 		sed -i \
-			-e "s/release.info.version.display.name\[release-private\]=.*/release.info.version.display.name[release-private]=${product_group_version^^}.${next_project_version_suffix}/" \
+			-e "s/release.info.version.display.name\[release-private\]=.*/release.info.version.display.name[release-private]=${product_group_version^^}.${next_release_patch_version}/" \
 			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
 
 		if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 		then
 			commit_to_branch_and_send_pull_request \
 				"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
-				"Prepare ${product_group_version}.${next_project_version_suffix}" \
+				"Prepare ${product_group_version}.${next_release_patch_version}" \
 				"${quarterly_release_branch}" \
 				"${quarterly_release_branch}" \
 				"brianchandotcom/liferay-portal-ee" \
