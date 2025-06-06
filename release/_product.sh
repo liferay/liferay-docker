@@ -34,7 +34,7 @@ function add_ckeditor_license {
 }
 
 function add_licensing {
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	if is_portal_release
 	then
 		lc_log INFO "The product is set to \"portal.\""
 
@@ -131,7 +131,7 @@ function build_sql {
 }
 
 function clean_up_ignored_dxp_modules {
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	if is_portal_release
 	then
 		lc_log INFO "The product is set to \"portal.\""
 
@@ -336,7 +336,7 @@ function get_java_specification_version {
 }
 
 function obfuscate_licensing {
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	if is_portal_release
 	then
 		lc_log INFO "The product is set to \"portal.\""
 
@@ -366,7 +366,7 @@ function obfuscate_licensing {
 function set_artifact_versions {
 	_ARTIFACT_VERSION="${1}"
 
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
+	if is_dxp_release
 	then
 		if is_u_release
 		then
@@ -377,7 +377,7 @@ function set_artifact_versions {
 		then
 			_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-lts//g')
 		fi
-	elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	elif is_portal_release
 	then
 		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-ga[0-9]*//g')
 	fi
@@ -408,12 +408,12 @@ function set_product_version {
 		else
 			local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
-			if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
+			if is_dxp_release
 			then
 				local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
 
 				_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}-u${trivial}"
-			elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+			elif is_portal_release
 			then
 				local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix")
 

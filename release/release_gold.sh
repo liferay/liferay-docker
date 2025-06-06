@@ -501,7 +501,7 @@ function tag_release {
 
 	local repository=liferay-portal-ee
 
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	if is_portal_release
 	then
 		repository=liferay-portal
 	fi

@@ -51,7 +51,7 @@ function generate_javadocs {
 
 		local portal_release_edition_private="true"
 
-		if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+		if is_portal_release
 		then
 			portal_release_edition_private="false"
 		fi
@@ -92,7 +92,7 @@ function generate_release_properties_file {
 	local product_version="${_PRODUCT_VERSION^^}"
 	local target_platform_version="${_PRODUCT_VERSION}"
 
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
+	if is_dxp_release
 	then
 		product_version="DXP ${product_version}"
 		target_platform_version=$(echo "${target_platform_version}" | sed -r 's/-u/.u/')
@@ -102,7 +102,7 @@ function generate_release_properties_file {
 			target_platform_version=$(echo "${target_platform_version}" | sed -r 's/-lts//g')
 		fi
 
-	elif [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	elif is_portal_release
 	then
 		product_version="Portal ${product_version}"
 		target_platform_version=$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)
@@ -126,7 +126,7 @@ function generate_release_properties_file {
 }
 
 function install_patching_tool {
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	if is_portal_release
 	then
 		lc_log INFO "Patching Tool should not be installed."
 
@@ -251,7 +251,7 @@ function package_portal_dependencies {
 }
 
 function package_release {
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	if is_portal_release
 	then
 		rm -fr "${_BUNDLES_DIR}/routes/default/dxp"
 	fi

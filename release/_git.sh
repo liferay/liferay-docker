@@ -58,7 +58,7 @@ function clone_repository {
 }
 
 function generate_release_notes {
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	if is_portal_release
 	then
 		lc_log INFO "The product is set to \"portal.\""
 
@@ -164,7 +164,7 @@ function update_portal_repository {
 function update_release_tool_repository {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
+	if is_portal_release
 	then
 		lc_log INFO "The product is set to \"portal.\""
 
