@@ -85,6 +85,7 @@ function test_product_set_product_version_with_parameters {
 	_test_product_set_product_version_with_parameters "2025.q1.0" "2025.q1.0-lts" "2025.q1.0"
 	_test_product_set_product_version_with_parameters "2025.q1.1" "2025.q1.1-lts" "2025.q1.1"
 	_test_product_set_product_version_with_parameters "7.3.10-u36" "7.3.10-u36" "7.3.10-u36"
+	_test_product_set_product_version_with_parameters "7.4.13-u136" "7.4.13-u136" "7.4.13.u136"
 
 	LIFERAY_RELEASE_PRODUCT_NAME="portal"
 
