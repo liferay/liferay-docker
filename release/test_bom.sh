@@ -68,6 +68,10 @@ function set_up {
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
+	git reset --hard &> /dev/null
+
+	git clean -dfx &> /dev/null
+
 	git branch --delete "${_PRODUCT_VERSION}" &> /dev/null
 
 	git fetch --no-tags upstream "${_PRODUCT_VERSION}":"${_PRODUCT_VERSION}" &> /dev/null
@@ -82,6 +86,14 @@ function tear_down {
 	rm -fr "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp"
 	rm -f "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp-tomcat-2024.q2.6-1721635298.zip"
 	rm -f "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip"
+
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+
+	git reset --hard &> /dev/null
+
+	git clean -dfx &> /dev/null
+
+	git checkout master &> /dev/null
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _ARTIFACT_RC_VERSION
