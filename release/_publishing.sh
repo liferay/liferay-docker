@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../_release_common.sh
+source ../_ssh_common.sh
 
 function add_fixed_issues_to_patcher_project_version {
 	lc_download "https://releases.liferay.com/dxp/${_PRODUCT_VERSION}/release-notes.txt" release-notes.txt
@@ -145,17 +146,6 @@ function get_root_patcher_project_version_name {
 	else
 		echo ""
 	fi
-}
-
-function has_ssh_connection {
-	ssh "root@${1}" "exit" &> /dev/null
-
-	if [ $? -eq 0 ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
-	fi
-
-	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
 function init_gcs {
