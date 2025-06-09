@@ -129,6 +129,8 @@ function main {
 
 	lc_time_run test_boms
 
+	lc_time_run reference_new_releases
+
 	lc_time_run add_patcher_project_version
 
 	# if [ -d "${_RELEASE_ROOT_DIR}/dev/projects" ]
@@ -143,8 +145,6 @@ function main {
 	#lc_time_run prepare_next_release_branch
 
 	#lc_time_run update_release_info_date
-
-	lc_time_run reference_new_releases
 
 	#lc_time_run upload_to_docker_hub
 }
