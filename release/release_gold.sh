@@ -131,14 +131,14 @@ function main {
 
 	lc_time_run add_patcher_project_version
 
-	if [ -d "${_RELEASE_ROOT_DIR}/dev/projects" ]
-	then
-		lc_background_run clone_repository liferay-portal-ee
+	# if [ -d "${_RELEASE_ROOT_DIR}/dev/projects" ]
+	# then
+	# 	lc_background_run clone_repository liferay-portal-ee
 
-		lc_wait
-	fi
+	# 	lc_wait
+	# fi
 
-	lc_time_run clean_portal_repository
+	# lc_time_run clean_portal_repository
 
 	#lc_time_run prepare_next_release_branch
 
