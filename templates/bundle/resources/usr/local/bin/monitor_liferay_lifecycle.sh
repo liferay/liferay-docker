@@ -110,9 +110,9 @@ function main {
 				) | telnet 127.0.0.1 11311 2> /dev/null
 			)
 
-			local active_count=$(echo "${telnet_content}" | grep -E "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep -c ACTIVE)
+			local active_count=$(echo "${telnet_content}" | grep --extended-regexp "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep --count ACTIVE)
 
-			local module_count=$(echo "${telnet_content}" | grep -cE "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}")
+			local module_count=$(echo "${telnet_content}" | grep --count --extended-regexp "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}")
 
 			if [ "${module_count}" -eq 0 ]
 			then
@@ -125,7 +125,7 @@ function main {
 			else
 				echo "Modules pending activation:"
 
-				echo "${telnet_content}" | grep -E "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep -v ACTIVE
+				echo "${telnet_content}" | grep --extended-regexp "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep --invert-match ACTIVE
 			fi
 		fi
 

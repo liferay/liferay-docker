@@ -12,7 +12,7 @@ then
 	exit 1
 fi
 
-if (pro status 2>/dev/null | grep -q "Subscription: Ubuntu Pro" 2>/dev/null)
+if (pro status 2>/dev/null | grep --quiet "Subscription: Ubuntu Pro" 2>/dev/null)
 then
 	echo "Ubuntu Pro subscription is already active."
 

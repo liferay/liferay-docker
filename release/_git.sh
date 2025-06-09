@@ -99,14 +99,14 @@ function generate_release_notes {
 	git log "tags/${ga_version}..HEAD" --pretty="%s %H" | \
 		sed -e "/c394bcbc1c36af47e66678c470d623568d3f1e88/c\LPD-27038/" | \
 		sed -e "/8a80898965553c441eef73d6d6839d0b5712ca43/c\LPD-27038/" | \
-		grep -E "^[A-Z][A-Z0-9]*-[0-9]+" | \
+		grep --extended-regexp "^[A-Z][A-Z0-9]*-[0-9]+" | \
 		sed -e "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/" | \
 		sort | \
 		uniq | \
-		grep -v LRCI | \
-		grep -v LRQA | \
-		grep -v POSHI | \
-		grep -v RELEASE | \
+		grep --invert-match LRCI | \
+		grep --invert-match LRQA | \
+		grep --invert-match POSHI | \
+		grep --invert-match RELEASE | \
 		paste -sd, > "${_BUILD_DIR}/release/release-notes.txt"
 }
 
@@ -160,12 +160,12 @@ function update_portal_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -q -E "^[[:alnum:]\.-]+/[0-9a-z]{40}$")
+	if (echo "${LIFERAY_RELEASE_GIT_REF}" | grep --quiet --extended-regexp "^[[:alnum:]\.-]+/[0-9a-z]{40}$")
 	then
 		checkout_ref="${LIFERAY_RELEASE_GIT_REF#*/}"
 
 		LIFERAY_RELEASE_GIT_REF="${LIFERAY_RELEASE_GIT_REF%/*}"
-	elif (echo "${LIFERAY_RELEASE_GIT_REF}" | grep -qE "^[0-9a-f]{40}$")
+	elif (echo "${LIFERAY_RELEASE_GIT_REF}" | grep --quiet --extended-regexp "^[0-9a-f]{40}$")
 	then
 		lc_log INFO "Looking for a tag that matches Git SHA ${LIFERAY_RELEASE_GIT_REF}."
 

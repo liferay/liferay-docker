@@ -76,7 +76,7 @@ function generate_javadocs {
 }
 
 function generate_release_properties_file {
-	local tomcat_version=$(grep -Eo "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${_BUNDLES_DIR}/tomcat/RELEASE-NOTES")
+	local tomcat_version=$(grep --extended-regexp --only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${_BUNDLES_DIR}/tomcat/RELEASE-NOTES")
 
 	tomcat_version="${tomcat_version/Apache Tomcat Version /}"
 

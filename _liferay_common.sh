@@ -295,11 +295,11 @@ function lc_get_property {
 
 	if [ "${file##*.}" == "bnd" ]
 	then
-		local property_value=$(grep -F "${property_key}: " "${file}")
+		local property_value=$(grep --fixed-strings "${property_key}: " "${file}")
 
 		echo "${property_value##*: }"
 	else
-		local property_value=$(sed -r "s/\\\r?\n[ \t]*//g" -z < "${file}" | grep -F "${property_key}=")
+		local property_value=$(sed -r "s/\\\r?\n[ \t]*//g" -z < "${file}" | grep --fixed-strings "${property_key}=")
 
 		echo "${property_value##*=}"
 	fi
@@ -423,7 +423,7 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
 
-	if (locale -a | grep -q en_US.utf8)
+	if (locale -a | grep --quiet en_US.utf8)
 	then
 		export LC_ALL=en_US.utf8
 	else

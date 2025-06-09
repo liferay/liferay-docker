@@ -30,14 +30,14 @@ function generate_api_jars {
 
 	for artifact in ${enforce_version_artifacts}
 	do
-		if (! echo "${artifact}" | grep -q "com.fasterxml") &&
-			(! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:") &&
-			(! echo "${artifact}" | grep -q "com.liferay.portletmvc4spring:com.liferay.portletmvc4spring.test:") &&
-			(! echo "${artifact}" | grep -q "com.liferay:biz.aQute.bnd.annotation:") &&
-			(! echo "${artifact}" | grep -q "io.swagger") &&
-			(! echo "${artifact}" | grep -q "javax") &&
-			(! echo "${artifact}" | grep -q "org.jsoup") &&
-			(! echo "${artifact}" | grep -q "org.osgi")
+		if (! echo "${artifact}" | grep --quiet "com.fasterxml") &&
+			(! echo "${artifact}" | grep --quiet "com.liferay.alloy-taglibs:alloy-taglib:") &&
+			(! echo "${artifact}" | grep --quiet "com.liferay.portletmvc4spring:com.liferay.portletmvc4spring.test:") &&
+			(! echo "${artifact}" | grep --quiet "com.liferay:biz.aQute.bnd.annotation:") &&
+			(! echo "${artifact}" | grep --quiet "io.swagger") &&
+			(! echo "${artifact}" | grep --quiet "javax") &&
+			(! echo "${artifact}" | grep --quiet "org.jsoup") &&
+			(! echo "${artifact}" | grep --quiet "org.osgi")
 		then
 			continue
 		fi
@@ -52,7 +52,7 @@ function generate_api_jars {
 		local name=$(echo "${artifact}" | sed -e "s/.*:\(.*\):.*/\\1/")
 		local version=${artifact##*:}
 
-		if (! echo "${artifact}" | grep -q "com.liferay.alloy-taglibs:alloy-taglib:")
+		if (! echo "${artifact}" | grep --quiet "com.liferay.alloy-taglibs:alloy-taglib:")
 		then
 			lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}-sources.jar."
 
@@ -139,8 +139,8 @@ function generate_api_source_jar {
 
 	find . -name taglib -type d -print0 | while IFS= read -r -d '' taglib_dir
 	do
-		if (! echo "${taglib_dir}" | grep -q "/com/liferay/") ||
-		   (echo "${taglib_dir}" | grep -q "/classes/")
+		if (! echo "${taglib_dir}" | grep --quiet "/com/liferay/") ||
+		   (echo "${taglib_dir}" | grep --quiet "/classes/")
 		then
 			continue
 		fi
@@ -152,8 +152,8 @@ function generate_api_source_jar {
 
 	find . -name packageinfo -type f -print0 | while IFS= read -r -d '' packageinfo_file
 	do
-		if (echo "${packageinfo_file}" | grep -q "/classes/") ||
-		   (echo "${packageinfo_file}" | grep -q "/portal-kernel/")
+		if (echo "${packageinfo_file}" | grep --quiet "/classes/") ||
+		   (echo "${packageinfo_file}" | grep --quiet "/portal-kernel/")
 		then
 			continue
 		fi
@@ -257,11 +257,11 @@ function generate_pom_release_bom {
 				-e 's/\.jar$//' \
 				-e "s@.*/@@" \
 				-e "s@-@.@g" | \
-			grep -v -E "(\.demo|\.sample\.|\.templates\.)" | \
+			grep --invert-match --extended-regexp "(\.demo|\.sample\.|\.templates\.)" | \
 			sort
 	)
 	do
-		grep -E "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt | sort | while IFS= read -r artifact_url
+		grep --extended-regexp "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt | sort | while IFS= read -r artifact_url
 		do
 			local file_name="${artifact_url##*/}"
 
@@ -278,7 +278,7 @@ function generate_pom_release_bom {
 				group_id="com.liferay"
 			fi
 
-			if (grep -q "(\t)*<groupId>${group_id}</groupId>\n(\t)*<artifactId>${artifact_id}</artifactId>\n\(\t)*<version>${version}</version>" "${pom_file_name}")
+			if (grep --quiet "(\t)*<groupId>${group_id}</groupId>\n(\t)*<artifactId>${artifact_id}</artifactId>\n\(\t)*<version>${version}</version>" "${pom_file_name}")
 			then
 				continue
 			fi
@@ -372,7 +372,7 @@ function generate_pom_release_bom_third_party {
 
 		included_dependencies+=("${dependency_property_parts[0]}${dependency_property_parts[1]}${dependency_property_parts[2]}")
 
-		if (grep -q "<artifactId>${dependency_property_parts[1]}</artifactId>" "${pom_compile_only_file_name}" && grep -q "<groupId>${dependency_property_parts[0]}</groupId>" "${pom_compile_only_file_name}")
+		if (grep --quiet "<artifactId>${dependency_property_parts[1]}</artifactId>" "${pom_compile_only_file_name}" && grep --quiet "<groupId>${dependency_property_parts[0]}</groupId>" "${pom_compile_only_file_name}")
 		then
 			continue
 		fi
@@ -478,7 +478,7 @@ function _manage_bom_jar {
 
 	#rm -f "${name}-${version}.jar"
 
-	if (basename "${1}" | grep -Eq "^com.liferay.")
+	if (basename "${1}" | grep --extended-regexp --quiet "^com.liferay.")
 	then
 		local current_file
 

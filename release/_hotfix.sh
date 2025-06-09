@@ -113,8 +113,8 @@ function compare_jars {
 		local packaged_file="${3}"
 		local property="${4}"
 
-		local value1=$(unzip -p "${jar1}" "${packaged_file}" | sed -z -r 's@\r?\n @@g' | grep -w "${property}")
-		local value2=$(unzip -p "${jar2}" "${packaged_file}" | sed -z -r 's@\r?\n @@g' | grep -w "${property}")
+		local value1=$(unzip -p "${jar1}" "${packaged_file}" | sed -z -r 's@\r?\n @@g' | grep --word-regexp "${property}")
+		local value2=$(unzip -p "${jar2}" "${packaged_file}" | sed -z -r 's@\r?\n @@g' | grep --word-regexp "${property}")
 
 		if [ "${value1}" == "${value2}" ]
 		then
@@ -129,20 +129,20 @@ function compare_jars {
 			#
 			# Remove 0 byte files
 			#
-			grep -v 00000000 | \
+			grep --invert-match 00000000 | \
 			#
 			# Remove generated files
 			#
-			grep -v "META-INF/resources/aui/aui_deprecated.css" | \
-			grep -v "META-INF/resources/language.json" | \
-			grep -v "__liferay__/index.js" | \
-			grep -v "_jsp.class" | \
-			grep -v "_jsp.java" | \
-			grep -v "_jsp\$1.class" | \
-			grep -v "index.js.map" | \
-			grep -v "pom.properties" | \
-			grep -v "previous-compilation-data.bin" | \
-			grep -v "source-classes-mapping.txt" | \
+			grep --invert-match "META-INF/resources/aui/aui_deprecated.css" | \
+			grep --invert-match "META-INF/resources/language.json" | \
+			grep --invert-match "__liferay__/index.js" | \
+			grep --invert-match "_jsp.class" | \
+			grep --invert-match "_jsp.java" | \
+			grep --invert-match "_jsp\$1.class" | \
+			grep --invert-match "index.js.map" | \
+			grep --invert-match "pom.properties" | \
+			grep --invert-match "previous-compilation-data.bin" | \
+			grep --invert-match "source-classes-mapping.txt" | \
 			#
 			# Remove headers and footers
 			#
@@ -150,15 +150,15 @@ function compare_jars {
 			#
 			# TODO Decide what to do with osgi/modules/com.liferay.sharepoint.soap.repository.jar
 			#
-			grep -v "ws.jar" | \
+			grep --invert-match "ws.jar" | \
 			#
 			# TODO Include portal-impl.jar when the util-*jars changed
 			#
-			grep -v "com/liferay/portal/deploy/dependencies/" | \
+			grep --invert-match "com/liferay/portal/deploy/dependencies/" | \
 			#
 			# TODO Modify "ant all" to not update this file every time
 			#
-			grep -v "META-INF/system.packages.extra.mf" | \
+			grep --invert-match "META-INF/system.packages.extra.mf" | \
 			sed -e "s/[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9][-]*[0-9][0-9]\ [0-9][0-9]:[0-9][0-9]//"
 	}
 
@@ -167,7 +167,7 @@ function compare_jars {
 		describe_jar "${jar2}"
 	) | sort | uniq -c)
 
-	if [ $(echo "${jar_descriptions}" | grep -c "Defl:N") -eq 0 ]
+	if [ $(echo "${jar_descriptions}" | grep --count "Defl:N") -eq 0 ]
 	then
 		lc_log ERROR "The JARs have no files."
 
@@ -178,7 +178,7 @@ function compare_jars {
 
 	if [ -n "${jar_descriptions}" ]
 	then
-		if (echo "${jar_descriptions}" | grep -q "META-INF/MANIFEST.MF")
+		if (echo "${jar_descriptions}" | grep --quiet "META-INF/MANIFEST.MF")
 		then
 			if (compare_property_in_packaged_file "${jar1}" "${jar2}" "META-INF/MANIFEST.MF" "Export-Package")
 			then
@@ -188,13 +188,13 @@ function compare_jars {
 
 		local new_jar_descriptions=""
 
-		if (echo "${jar_descriptions}" | grep -q ".class")
+		if (echo "${jar_descriptions}" | grep --quiet ".class")
 		then
 			mkdir -p "${_BUILD_DIR}/tmp/jar1" "${_BUILD_DIR}/tmp/jar2"
 
 			while IFS= read -r line
 			do
-				if (echo "$(basename ${line})" | grep -q ".class")
+				if (echo "$(basename ${line})" | grep --quiet ".class")
 				then
 					local class_file_name=$(basename "${line}")
 
@@ -375,9 +375,9 @@ function create_hotfix {
 
 	echo "Comparing ${_BUNDLES_DIR} and ${_RELEASE_DIR}."
 
-	diff -qr "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep -v /work/Catalina
+	diff -qr "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep --invert-match /work/Catalina
 
-	diff -qr "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep -v /work/Catalina | while read -r change
+	diff -qr "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep --invert-match /work/Catalina | while read -r change
 	do
 		if (echo "${change}" | grep "^Only in ${_RELEASE_DIR}" &>/dev/null)
 		then
@@ -437,7 +437,7 @@ function create_hotfix {
 
 			if in_hotfix_scope "${changed_file}"
 			then
-				if (echo "${changed_file}" | grep -q ".[jw]ar$")
+				if (echo "${changed_file}" | grep --quiet ".[jw]ar$")
 				then
 					manage_jar "${changed_file}"
 				else
@@ -449,22 +449,22 @@ function create_hotfix {
 }
 
 function in_hotfix_scope {
-	if (echo "${1}" | grep -q "^osgi/") && (! echo "${1}" | grep -q "^osgi/state")
+	if (echo "${1}" | grep --quiet "^osgi/") && (! echo "${1}" | grep --quiet "^osgi/state")
 	then
 		return 0
 	fi
 
-	if (echo "${1}" | grep -q "^tomcat/lib/ext") && is_7_3_release
+	if (echo "${1}" | grep --quiet "^tomcat/lib/ext") && is_7_3_release
 	then
 		return 0
 	fi
 
-	if (echo "${1}" | grep -q "^tomcat/webapps/ROOT")
+	if (echo "${1}" | grep --quiet "^tomcat/webapps/ROOT")
 	then
 		return 0
 	fi
 
-	if (echo "${1}" | grep -q "^tools")
+	if (echo "${1}" | grep --quiet "^tools")
 	then
 		return 0
 	fi

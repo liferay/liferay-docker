@@ -70,7 +70,7 @@ function scan_docker_images {
 			--request POST \
 			--silent)
 
-	if (! echo "${auth_response}" | grep -q "login_successful")
+	if (! echo "${auth_response}" | grep --quiet "login_successful")
 	then
 		lc_log ERROR "Unable to authenticate with ${api_url}."
 

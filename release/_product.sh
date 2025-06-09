@@ -147,7 +147,7 @@ function clean_up_ignored_dxp_modules {
 	do
 		local dxp_dir=""
 
-		if (echo "${ignored_dir}" | grep -Eq "^apps/")
+		if (echo "${ignored_dir}" | grep --extended-regexp --quiet "^apps/")
 		then
 			dxp_dir=$(echo "${ignored_dir}" | sed -e "s#apps/#dxp/apps/#")
 
@@ -249,7 +249,7 @@ function decrement_module_versions {
 
 	find . -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd_bnd_file
 	do
-		if (echo "${bnd_bnd_file}" | grep -q archetype-resources) || (echo "${bnd_bnd_file}" | grep -q modules/third-party)
+		if (echo "${bnd_bnd_file}" | grep --quiet archetype-resources) || (echo "${bnd_bnd_file}" | grep --quiet modules/third-party)
 		then
 			continue
 		fi
@@ -290,7 +290,7 @@ function deploy_elasticsearch_sidecar {
 	then
 		lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
 
-		if ("${_PROJECTS_DIR}"/liferay-portal-ee/gradlew tasks | grep -q deploySidecar)
+		if ("${_PROJECTS_DIR}"/liferay-portal-ee/gradlew tasks | grep --quiet deploySidecar)
 		then
 			"${_PROJECTS_DIR}"/liferay-portal-ee/gradlew deploySidecar
 		else
@@ -324,12 +324,12 @@ function deploy_opensearch {
 }
 
 function get_java_specification_version {
-	if (echo "${JAVA_HOME}" | grep -E "jdk8|zulu8" &> /dev/null)
+	if (echo "${JAVA_HOME}" | grep --extended-regexp "jdk8|zulu8" &> /dev/null)
 	then
 		echo "1.8"
 	fi
 
-	if (echo "${JAVA_HOME}" | grep -E "jdk17|openjdk17" &> /dev/null)
+	if (echo "${JAVA_HOME}" | grep --extended-regexp "jdk17|openjdk17" &> /dev/null)
 	then
 		echo "17"
 	fi
@@ -402,7 +402,7 @@ function set_product_version {
 
 		local version_display_name=$(lc_get_property release.properties "release.info.version.display.name[${branch}-private]")
 
-		if (echo "${version_display_name}" | grep -iq "q")
+		if (echo "${version_display_name}" | grep --ignore-case --quiet "q")
 		then
 			_PRODUCT_VERSION=$(echo "${version_display_name,,}" | sed 's/ lts/-lts/g')
 		else
@@ -485,7 +485,7 @@ function start_tomcat {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	if (echo "${_PRODUCT_VERSION}" | grep -Eq "^7.[0123]")
+	if (echo "${_PRODUCT_VERSION}" | grep --extended-regexp --quiet "^7.[0123]")
 	then
 		lc_log INFO "Sleep for 20 seconds before shutting down."
 

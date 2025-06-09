@@ -66,7 +66,7 @@ function main {
 
 	if [ -n "${LIFERAY_DOCKER_HOTFIX}" ]
 	then
-		if (! /opt/liferay/patching-tool/patching-tool.sh version | grep -q "Patching-tool version: 4.")
+		if (! /opt/liferay/patching-tool/patching-tool.sh version | grep --quiet "Patching-tool version: 4.")
 		then
 			echo "[LIFERAY] The environment variable \"LIFERAY_DOCKER_HOTFIX\" requires Patching Tool 4 and above."
 		else

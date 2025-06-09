@@ -15,7 +15,7 @@ function check_docker_buildx {
 		exit 1
 	fi
 
-	if [ $(docker buildx ls | grep -c -w "liferay-buildkit") -eq 0 ]
+	if [ $(docker buildx ls | grep --count --word-regexp "liferay-buildkit") -eq 0 ]
 	then
 		docker buildx create --name "liferay-buildkit"
 	fi
@@ -149,7 +149,7 @@ function get_tomcat_version {
 
 	if [ -e "${1}"/tomcat ]
 	then
-		liferay_tomcat_version=$(grep -Eo "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${1}/tomcat/RELEASE-NOTES" | sed -r "s/Apache Tomcat Version //")
+		liferay_tomcat_version=$(grep --extended-regexp --only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${1}/tomcat/RELEASE-NOTES" | sed -r "s/Apache Tomcat Version //")
 	else
 		for tomcat_dir_path in "${1}"/tomcat-*
 		do

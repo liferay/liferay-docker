@@ -54,7 +54,7 @@ function tear_down {
 function test_promotion_generate_distro_jar {
 	generate_distro_jar &> /dev/null
 
-	assert_equals "$(find "${_RELEASE_ROOT_DIR}" -name "release.dxp.distro-${LIFERAY_RELEASE_VERSION}*.jar" | grep -c /)" 1
+	assert_equals "$(find "${_RELEASE_ROOT_DIR}" -name "release.dxp.distro-${LIFERAY_RELEASE_VERSION}*.jar" | grep --count /)" 1
 }
 
 main
