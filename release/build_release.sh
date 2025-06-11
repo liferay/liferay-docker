@@ -205,13 +205,6 @@ function main {
 	local seconds=$((end_time - _BUILD_TIMESTAMP))
 
 	lc_log INFO "Completed ${LIFERAY_RELEASE_OUTPUT} building in $(lc_echo_time ${seconds}) on $(date)."
-
-	if [ -e "${_BUILD_DIR}/output.md" ]
-	then
-		echo ""
-
-		cat "${_BUILD_DIR}/output.md"
-	fi
 }
 
 function print_help {

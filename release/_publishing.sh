@@ -249,9 +249,6 @@ function upload_hotfix {
 		then
 			lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} because it already exists."
 
-			echo "# Uploaded" > ../output.md
-			echo " - https://releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
-
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
 
@@ -276,10 +273,6 @@ function upload_hotfix {
 	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}/"
 
 	log_upload_result "liferay-releases-hotfix GCP bucket" "${_HOTFIX_FILE_NAME}" "${?}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-
-	echo "# Uploaded" > ../output.md
-	echo " - https://files.liferay.com/private/ee/portal/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
-	echo " - https://releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/${_HOTFIX_FILE_NAME}" >> ../output.md
 }
 
 function upload_opensearch {
@@ -296,8 +289,6 @@ function upload_release {
 	fi
 
 	lc_cd "${_BUILD_DIR}"/release
-
-	echo "# Uploaded" > ../output.md
 
 	local ssh_connection="false"
 
