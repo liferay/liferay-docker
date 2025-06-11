@@ -29,11 +29,11 @@ function report_jenkins_url {
 
 	if (has_ssh_connection "test-3-1")
 	then
+		echo "Pushing patcher status to test-3-1."
+
 		rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}/patcher-status/" test-3-1::patcher/
 
 		ssh test-3-1 "chown -R 501:501 /mnt/mfs-hdd1-172.16.168/patcher"
-
-		echo "Pushing patcher report to test-3-1."
 	else
 		echo "No SSH connection to test-3-1."
 
@@ -65,11 +65,11 @@ function report_patcher_status {
 
 	if (has_ssh_connection "test-3-1")
 	then
+		echo "Pushing patcher status to test-3-1."
+
 		rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}/patcher-status/" test-3-1::patcher/
 
 		ssh test-3-1 "chown -R 501:501 /mnt/mfs-hdd1-172.16.168/patcher"
-
-		echo "Pushing patcher status to test-3-1."
 	else
 		echo "No SSH connection to test-3-1."
 
