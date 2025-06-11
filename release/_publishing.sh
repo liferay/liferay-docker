@@ -159,20 +159,6 @@ function init_gcs {
 	gcloud auth activate-service-account --key-file "${LIFERAY_RELEASE_GCS_TOKEN}"
 }
 
-function log_upload_result {
-	local destination="${1}"
-	local file_name="${2}"
-
-	if [ "${3}" -eq 0 ]
-	then
-		lc_log INFO "${file_name} was successfully uploaded to ${destination}."
-	else
-		lc_log ERROR "Failed to upload ${file_name} to ${destination}."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-}
-
 function upload_bom_file {
 	local nexus_repository_name="${1}"
 
@@ -247,32 +233,45 @@ function upload_hotfix {
 
 		if (ssh root@lrdcom-vm-1 ls "/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/" | grep -q "${_HOTFIX_FILE_NAME}")
 		then
-			lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} because it already exists."
+			lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} to lrdcom-vm-1 because it already exists."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
 
 		scp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" root@lrdcom-vm-1:"/www/releases.liferay.com/dxp/hotfix/${_PRODUCT_VERSION}/"
 
-		log_upload_result "lrdcom-vm-1" "${_HOTFIX_FILE_NAME}" "${?}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	else
-		lc_log INFO "Skipping lrdcom-vm-1."
+		if [ "${?}" -ne 0 ]
+		then
+			lc_log ERROR "Unable to upload ${_HOTFIX_FILE_NAME} to lrdcom-vm-1."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+
+		lc_log INFO "${_HOTFIX_FILE_NAME} successfully uploaded to lrdcom-vm-1."
 	fi
 
-	if (gsutil ls "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}" | grep "${_HOTFIX_FILE_NAME}")
-	then
-		lc_log ERROR "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP because it already exists."
+	for gcp_bucket in \
+		files_liferay_com/private/ee/portal/hotfix \
+		liferay-releases-hotfix
+	do
+		if (gsutil ls "gs://${gcp_bucket}/${_PRODUCT_VERSION}" | grep -q "${_HOTFIX_FILE_NAME}")
+		then
+			lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP bucket ${gcp_bucket} because it already exists."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
 
-	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://files_liferay_com/private/ee/portal/hotfix/${_PRODUCT_VERSION}/"
+		gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://${gcp_bucket}/${_PRODUCT_VERSION}/"
 
-	log_upload_result "files_liferay_com GCP bucket" "${_HOTFIX_FILE_NAME}" "${?}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		if [ "${?}" -ne 0 ]
+		then
+			lc_log ERROR "Unable to upload ${_HOTFIX_FILE_NAME} to GCP bucket ${gcp_bucket}."
 
-	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://liferay-releases-hotfix/${_PRODUCT_VERSION}/"
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
 
-	log_upload_result "liferay-releases-hotfix GCP bucket" "${_HOTFIX_FILE_NAME}" "${?}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		lc_log INFO "${_HOTFIX_FILE_NAME} successfully uploaded to GCP bucket ${gcp_bucket}."
+	done
 }
 
 function upload_opensearch {
