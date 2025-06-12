@@ -121,25 +121,32 @@ function generate_release_notes {
 		paste -sd, > "${_BUILD_DIR}/release/release-notes.txt"
 }
 
-function prepare_branch_to_commit_from_master {
+function prepare_branch_to_commit {
 	lc_cd "${1}"
+
+	git restore .
 
 	git checkout master
 
-	git fetch "git@github.com:liferay-release/${2}.git" master
+	local base_branch="master"
 
-	git reset --hard FETCH_HEAD
+	if [ -n "${3}" ]
+	then
+		base_branch="${3}"
+	fi
+
+	local repository_name="${2}"
 
 	_TEMP_BRANCH="temp-branch-$(date "+%Y%m%d%H%M%S")"
 
-	git checkout -b "${_TEMP_BRANCH}"
+	git fetch --no-tags "git@github.com:liferay/${repository_name}.git" "${base_branch}:${_TEMP_BRANCH}"
+
+	git checkout "${_TEMP_BRANCH}"
 
 	if [ "$(git rev-parse --abbrev-ref HEAD)" != "${_TEMP_BRANCH}" ]
 	then
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
-
-	git push "git@github.com:liferay-release/${2}.git" "${_TEMP_BRANCH}" --force
 }
 
 function set_git_sha {

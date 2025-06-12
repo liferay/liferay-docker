@@ -323,7 +323,7 @@ function upload_release {
 }
 
 function upload_to_docker_hub {
-	prepare_branch_to_commit_from_master "${_PROJECTS_DIR}/liferay-docker" "liferay-docker"
+	prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-docker" "liferay-docker"
 
 	if [ "${?}" -ne 0 ]
 	then

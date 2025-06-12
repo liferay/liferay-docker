@@ -127,25 +127,6 @@ function main {
 	#lc_time_run upload_to_docker_hub
 }
 
-function prepare_branch_to_commit {
-	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
-
-	git restore .
-
-	git checkout master &> /dev/null
-
-	git branch --delete --force "${1}" &> /dev/null
-
-	git fetch --no-tags git@github.com:liferay/liferay-portal-ee.git "${1}":"${1}" &> /dev/null
-
-	git checkout "${1}" &> /dev/null
-
-	if [ "$(git rev-parse --abbrev-ref HEAD 2> /dev/null)" != "${1}" ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-}
-
 function prepare_next_release_branch {
 	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep -i "true") ] ||
 	   ! is_quarterly_release
@@ -183,7 +164,7 @@ function prepare_next_release_branch {
 
 	local quarterly_release_branch="release-${product_group_version}"
 
-	prepare_branch_to_commit "${quarterly_release_branch}"
+	prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
 
 	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
@@ -286,7 +267,7 @@ function reference_new_releases {
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 
-		prepare_branch_to_commit_from_master "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "liferay-jenkins-ee"
+		prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "liferay-jenkins-ee"
 	fi
 
 	if [ "${?}" -ne 0 ]
@@ -595,7 +576,7 @@ function update_release_info_date {
 
 	local quarterly_release_branch="release-${product_group_version}"
 
-	prepare_branch_to_commit "${quarterly_release_branch}"
+	prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
 
 	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
