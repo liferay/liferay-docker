@@ -1,7 +1,6 @@
 #!/bin/bash
 
 source ../_release_common.sh
-source ../_ssh_common.sh
 
 function add_fixed_issues_to_patcher_project_version {
 	lc_download "https://releases.liferay.com/dxp/${_PRODUCT_VERSION}/release-notes.txt" release-notes.txt

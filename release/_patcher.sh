@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ../_ssh_common.sh
+source ../_release_common.sh
 
 function lc_time_run_error {
 	report_patcher_status &>/dev/null
