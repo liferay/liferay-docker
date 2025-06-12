@@ -35,7 +35,7 @@ function report_jenkins_url {
 
 		ssh test-3-1 "chown -R 501:501 /mnt/mfs-hdd1-172.16.168/patcher"
 	else
-		echo "No SSH connection to test-3-1."
+		echo "Unable to connect to test-3-1."
 
 		cp -prv "${_BUILD_DIR}/patcher-status/" /mnt/patcher-shared/patcher/
 	fi
@@ -71,7 +71,7 @@ function report_patcher_status {
 
 		ssh test-3-1 "chown -R 501:501 /mnt/mfs-hdd1-172.16.168/patcher"
 	else
-		echo "No SSH connection to test-3-1."
+		echo "Unable to connect to test-3-1."
 
 		cp -prv "${_BUILD_DIR}/patcher-status/" /mnt/patcher-shared/patcher/
 	fi
