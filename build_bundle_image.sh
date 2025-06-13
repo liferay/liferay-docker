@@ -332,13 +332,13 @@ function prepare_temp_directory {
 
 	if [ "${tomcat_version}" != "${latest_tomcat_version}" ]
 	then
-		local tomcat_download_dir="downloads/tomcat/apache-tomcat-${latest_tomcat_version}"
+		local latest_tomcat_download_dir="downloads/tomcat/apache-tomcat-${latest_tomcat_version}"
 
-		local tomcat_major_version=$(echo "${latest_tomcat_version}" | cut -d '.' -f 1)
+		local latest_tomcat_major_version=$(echo "${latest_tomcat_version}" | cut -d '.' -f 1)
 
-		local tomcat_url="https://dlcdn.apache.org/tomcat/tomcat-${tomcat_major_version}/v${latest_tomcat_version}/bin/apache-tomcat-${latest_tomcat_version}.zip"
+		local latest_tomcat_url="https://dlcdn.apache.org/tomcat/tomcat-${latest_tomcat_major_version}/v${latest_tomcat_version}/bin/apache-tomcat-${latest_tomcat_version}.zip"
 
-		download "${tomcat_download_dir}/apache-tomcat.zip" "${tomcat_url}"
+		download "${latest_tomcat_download_dir}/apache-tomcat.zip" "${latest_tomcat_url}"
 
 		local tomcat_dir_name="tomcat"
 
@@ -349,7 +349,7 @@ function prepare_temp_directory {
 
 		mv "${TEMP_DIR}/liferay/${tomcat_dir_name}" "${TEMP_DIR}/liferay/tomcat-temp"
 
-		unzip -d "${TEMP_DIR}/liferay" -q "${tomcat_download_dir}/apache-tomcat.zip" || exit 3
+		unzip -d "${TEMP_DIR}/liferay" -q "${latest_tomcat_download_dir}/apache-tomcat.zip" || exit 3
 
 		mv "${TEMP_DIR}/liferay/apache-tomcat-"* "${TEMP_DIR}/liferay/${tomcat_dir_name}"
 
