@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM} ubuntu:oracular AS ubuntu-oracular
+FROM --platform=${TARGETPLATFORM} ubuntu:plucky AS ubuntu-plucky
 
 COPY resources/ /
 
@@ -10,7 +10,7 @@ RUN apt-get update && \
 RUN userdel ubuntu && \
 	useradd --create-home --home-dir /home/liferay --shell /usr/sbin/nologin --uid 1000 --user-group liferay
 
-FROM ubuntu-oracular
+FROM ubuntu-plucky
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
