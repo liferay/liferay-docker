@@ -4,11 +4,11 @@ source /usr/local/bin/_liferay_bundle_common.sh
 source /usr/local/bin/_liferay_common.sh
 
 function main {
-	if [ "${JAVA_VERSION}" == "zulu21" ] && [ ! -f "/opt/liferay/.elasticsearch7-startup" ]
+	if [ "${JAVA_VERSION}" == "zulu21" ] && [ ! -e "/opt/liferay/data/.elasticsearch7.initialized" ]
 	then
 		rm -fr /opt/liferay/data/elasticsearch7
 
-		touch /opt/liferay/.elasticsearch7-startup
+		touch /opt/liferay/data/.elasticsearch7.initialized
 	fi
 
 	if [ "${LIFERAY_DISABLE_TRIAL_LICENSE}" == "true" ]
