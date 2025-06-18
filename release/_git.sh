@@ -84,7 +84,7 @@ function delete_temp_branch {
 
 	git branch --delete --force "${_TEMP_BRANCH}"
 
-	if ( git ls-remote --heads "git@github.com:liferay-release/${1}.git" "${_TEMP_BRANCH}" | grep -q "${_TEMP_BRANCH}" )
+	if (git ls-remote --heads "git@github.com:liferay-release/${1}.git" "${_TEMP_BRANCH}" | grep -q "${_TEMP_BRANCH}")
 	then
 		git push "git@github.com:liferay-release/${1}.git" --delete --force "${_TEMP_BRANCH}"
 	fi
