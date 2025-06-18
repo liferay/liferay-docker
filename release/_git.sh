@@ -75,7 +75,7 @@ function commit_to_branch_and_send_pull_request {
 
 	if [ "${?}" -ne 0 ]
 	then
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
