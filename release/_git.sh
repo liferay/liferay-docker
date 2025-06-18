@@ -68,7 +68,7 @@ function commit_to_branch_and_send_pull_request {
 
 	gh pr create \
 		--base "${3}" \
-		--body "Created by Release Team." \
+		--body "This pull request was automatically created by the Release team." \
 		--head "liferay-release:${_TEMP_BRANCH}" \
 		--repo "${4}" \
 		--title "${5}"
