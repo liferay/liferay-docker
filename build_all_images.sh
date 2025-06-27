@@ -152,12 +152,12 @@ function build_bundle_images {
 
 			local query=.\"${main_key}\".\"${version}\"
 
-			build_bundle_image "${query}" "false" "${version}"
-
 			if (has_slim_build_criteria "${version}")
 			then
 				build_bundle_image "${query}" "true" "${version}"
 			fi
+
+			build_bundle_image "${query}" "false" "${version}"
 		done
 	else
 		local main_key=$(get_main_key "${main_keys}" "${specified_version}")
@@ -172,12 +172,12 @@ function build_bundle_images {
 
 			if [[ "$(yq "${query}" < bundles.yml)" != "null" ]]
 			then
-				build_bundle_image "${query}" "false" "${specified_version}"
-
 				if (has_slim_build_criteria "${specified_version}")
 				then
 					build_bundle_image "${query}" "true" "${specified_version}"
 				fi
+
+				build_bundle_image "${query}" "false" "${specified_version}"
 			else
 				echo "No bundles were found."
 
