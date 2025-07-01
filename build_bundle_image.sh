@@ -186,7 +186,17 @@ function download_trial_dxp_license {
 }
 
 function get_latest_tomcat_version {
-	local latest_tomcat_version="9.0.104"
+	local latest_tomcat_version=$(curl \
+		"https://downloads.apache.org/tomcat/tomcat-9/" \
+		--silent \
+		| grep --only-matching --perl-regexp "9\.\d+\.\d+" \
+		| sort --version-sort \
+		| tail --lines=1)
+
+	if [ -z "${latest_tomcat_version}" ]
+	then
+		lc_log INFO "Unable to retrieve the latest Tomcat version from apache.org."
+	fi
 
 	latest_tomcat_version=$(\
 		echo -e "${latest_tomcat_version}\n${1}" | \
@@ -329,6 +339,8 @@ function prepare_temp_directory {
 	local tomcat_version=$(get_tomcat_version "${TEMP_DIR}/liferay")
 
 	local latest_tomcat_version=$(get_latest_tomcat_version "${tomcat_version}")
+
+	lc_log INFO "Latest Tomcat version set to ${latest_tomcat_version}."
 
 	if [ "${tomcat_version}" != "${latest_tomcat_version}" ]
 	then
