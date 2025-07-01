@@ -343,8 +343,6 @@ function upload_to_docker_hub {
 		lc_log ERROR "Unable to build the Docker image."
 	fi
 
-	delete_temp_branch "liferay-docker"
-
 	lc_cd "${_BASE_DIR}"
 
 	return "${exit_code}"

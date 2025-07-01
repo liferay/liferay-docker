@@ -210,8 +210,6 @@ function prepare_next_release_branch {
 				lc_log INFO "The next release branch was prepared successfully."
 			fi
 
-			delete_temp_branch "liferay-portal-ee"
-
 			return "${exit_code}"
 		fi
 	fi
@@ -404,8 +402,6 @@ function reference_new_releases {
 
 			add_jira_issue_comment "Related pull request: ${pull_request_url}" "${issue_key}"
 		fi
-
-		delete_temp_branch "liferay-jenkins-ee"
 
 		return "${exit_code}"
 	fi
@@ -606,8 +602,6 @@ function update_release_info_date {
 		else
 			lc_log INFO "The release date was updated successfully."
 		fi
-
-		delete_temp_branch "liferay-portal-ee"
 
 		return "${exit_code}"
 	fi
