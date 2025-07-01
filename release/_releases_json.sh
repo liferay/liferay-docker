@@ -269,7 +269,7 @@ function _tag_recommended_product_versions {
 	do
 		local latest_product_version_json_file=$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "${product_version}")")
 
-		if [ -f "${latest_product_version_json_file}" ]
+		if [ -n "${latest_product_version_json_file}" ]
 		then
 			jq "map(
 					(. + {tags: [\"recommended\"]})
