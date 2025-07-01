@@ -267,7 +267,11 @@ function _promote_product_versions {
 function _tag_recommended_product_versions {
 	for product_version in "ga" "quarterly"
 	do
-		local latest_product_version_json_file=$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "${product_version}")")
+		local latest_product_version=$(_get_latest_product_version "${product_version}")
+
+		lc_log INFO "Latest product version for ${product_version} release is ${latest_product_version}."
+
+		local latest_product_version_json_file=$(ls "${_PROMOTION_DIR}" | grep "${latest_product_version}")
 
 		if [ -n "${latest_product_version_json_file}" ]
 		then
