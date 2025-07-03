@@ -271,7 +271,7 @@ function _tag_recommended_product_versions {
 
 		lc_log INFO "Latest product version for ${product_version} release is ${latest_product_version}."
 
-		local latest_product_version_json_file=$(ls "${_PROMOTION_DIR}" | grep "${latest_product_version}")
+		local latest_product_version_json_file=$(find "${_PROMOTION_DIR}" -type f -name "*${latest_product_version}.json")
 
 		if [ -n "${latest_product_version_json_file}" ]
 		then
