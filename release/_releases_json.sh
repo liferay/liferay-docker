@@ -273,7 +273,7 @@ function _tag_recommended_product_versions {
 
 		local latest_product_version_json_file=$(find "${_PROMOTION_DIR}" -type f -name "*${latest_product_version}.json")
 
-		if [ -n "${latest_product_version_json_file}" ]
+		if [ -f "${latest_product_version_json_file}" ]
 		then
 			lc_log INFO "Tagging ${latest_product_version_json_file} as recommended."
 
