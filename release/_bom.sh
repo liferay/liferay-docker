@@ -459,13 +459,15 @@ function _copy_tld {
 		arguments+="-name \"${tld}\""
 	done
 
-	for file in $(eval find "${_PROJECTS_DIR}" \
+	for file in $(eval find "${_BUNDLES_DIR}" \
 		"${arguments}" -type f | \
 			awk -F "/" '{print $NF, $0}' | \
 			sort -k 1,1 -u | \
 			awk '{print $2}')
 	do
 		cp "${file}" "${1}"
+
+		lc_log INFO "File: ${file} to ${1}."
 	done
 }
 
