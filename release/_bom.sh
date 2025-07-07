@@ -465,9 +465,9 @@ function _copy_tld {
 			sort -k 1,1 -u | \
 			awk '{print $2}')
 	do
-		cp "${file}" "${1}"
-
 		lc_log INFO "File: ${file} to ${1}."
+
+		cp "${file}" "${1}"
 	done
 }
 
