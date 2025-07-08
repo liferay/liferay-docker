@@ -30,6 +30,10 @@ function main {
 	test_bom_generate_pom_release_bom_portal
 	test_bom_generate_pom_release_bom_third_party_portal
 
+	_PROJECTS_DIR="${PWD}/test-dependencies/actual"
+
+	test_bom_copy_tld
+
 	tear_down
 }
 
@@ -103,6 +107,16 @@ function tear_down {
 	unset _PROJECTS_DIR
 	unset _RELEASE_ROOT_DIR
 	unset _RELEASE_TOOL_DIR
+}
+
+function test_bom_copy_tld {
+	mkdir -parents "${_RELEASE_ROOT_DIR}"/test-dependencies/actual/META-INF
+
+	copy_tld "${_RELEASE_ROOT_DIR}/test-dependencies/actual/META-INF" "liferay-*.tld" "ratings.tld"
+
+	assert_equals \
+		"$(ls test-dependencies/actual/META-INF)" \
+		"$(ls test-dependencies/expected/META-INF)"
 }
 
 function test_bom_generate_pom_release_bom_api_dxp {

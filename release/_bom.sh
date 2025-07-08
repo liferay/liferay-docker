@@ -121,15 +121,15 @@ function generate_api_jars {
 		fi
 	done
 
-	_copy_tld "api-jar/META-INF" "liferay-*.tld" "ratings.tld"
+	copy_tld "api-jar/META-INF" "liferay-*.tld" "ratings.tld"
 
 	mkdir -p api-jar/META-INF/resources
 
-	_copy_tld "api-jar/META-INF/resources" "liferay-application-list.tld" "liferay-data-engine.tld" "liferay-ddm.tld" "liferay-export-import-changeset.tld" "liferay-form.tld" "liferay-staging.tld" "liferay-template.tld"  "react.tld" "soy.tld"
+	copy_tld "api-jar/META-INF/resources" "liferay-application-list.tld" "liferay-data-engine.tld" "liferay-ddm.tld" "liferay-export-import-changeset.tld" "liferay-form.tld" "liferay-staging.tld" "liferay-template.tld"  "react.tld" "soy.tld"
 
 	mkdir api-jar/META-INF/resources/WEB-INF
 
-	_copy_tld "api-jar/META-INF/resources/WEB-INF" "liferay-*.tld" "ratings.tld" "react.tld" "soy.tld"
+	copy_tld "api-jar/META-INF/resources/WEB-INF" "liferay-*.tld" "ratings.tld" "react.tld" "soy.tld"
 }
 
 function generate_api_source_jar {
@@ -444,7 +444,7 @@ function _copy_source_package {
 	cp --archive "${1}" "${new_dir_name}"
 }
 
-function _copy_tld {
+function copy_tld {
 	local arguments=""
 
 	local tlds=("${@:2}")
