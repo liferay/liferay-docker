@@ -257,7 +257,7 @@ function generate_pom_release_bom {
 				-e 's/\.jar$//' \
 				-e "s@.*/@@" \
 				-e "s@-@.@g" | \
-			grep --invert-match --extended-regexp "(\.demo|\.sample\.|\.templates\.)" | \
+			grep --extended-regexp --invert-match "(\.demo|\.sample\.|\.templates\.)" | \
 			sort
 	)
 	do

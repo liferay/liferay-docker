@@ -160,12 +160,12 @@ function update_portal_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if (echo "${LIFERAY_RELEASE_GIT_REF}" | grep --quiet --extended-regexp "^[[:alnum:]\.-]+/[0-9a-z]{40}$")
+	if (echo "${LIFERAY_RELEASE_GIT_REF}" | grep --extended-regexp --quiet "^[[:alnum:]\.-]+/[0-9a-z]{40}$")
 	then
 		checkout_ref="${LIFERAY_RELEASE_GIT_REF#*/}"
 
 		LIFERAY_RELEASE_GIT_REF="${LIFERAY_RELEASE_GIT_REF%/*}"
-	elif (echo "${LIFERAY_RELEASE_GIT_REF}" | grep --quiet --extended-regexp "^[0-9a-f]{40}$")
+	elif (echo "${LIFERAY_RELEASE_GIT_REF}" | grep --extended-regexp --quiet "^[0-9a-f]{40}$")
 	then
 		lc_log INFO "Looking for a tag that matches Git SHA ${LIFERAY_RELEASE_GIT_REF}."
 
