@@ -67,6 +67,11 @@ function checkout_product_version {
 }
 
 function main {
+	if [[ " ${@} " =~ " --test " ]]
+	then
+		return
+	fi
+
 	check_usage
 
 	lc_time_run clone_repository liferay-portal-ee
@@ -112,4 +117,4 @@ function print_help {
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
 
-main
+main "${@}"
