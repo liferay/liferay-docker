@@ -139,6 +139,10 @@ function is_ga_release {
 	return 1
 }
 
+function is_later_product_version_than {
+	_compare_product_versions "${1}" "later"
+}
+
 function is_lts_release {
 	if [[ "$(_get_product_version "${1}")" == *lts* ]]
 	then
@@ -220,6 +224,10 @@ function _compare_product_versions {
 	then
 		operator_1="-lt"
 		operator_2="-gt"
+	elif [ "${2}" == "later" ]
+	then
+		operator_1="-gt"
+		operator_2="-lt"
 	fi
 
 	if [ "${product_version_1_year}" "${operator_1}" "${product_version_2_year}" ]
