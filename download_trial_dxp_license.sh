@@ -28,7 +28,7 @@ function main {
 		sed 's/\\"/\"/g' |
 		sed 's/\\\//\//g' > "${license_dir}/deploy/${license_file_name}"
 
-		rm -f "${license_dir}/deploy/${license_file_name}.json"
+		rm --force "${license_dir}/deploy/${license_file_name}.json"
 
 		if [ ! -e "${license_dir}/deploy/${license_file_name}" ]
 		then

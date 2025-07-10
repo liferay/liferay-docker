@@ -34,7 +34,7 @@ function check_utils {
 }
 
 function clean_up_temp_directory {
-	rm -fr "${TEMP_DIR}"
+	rm --force --recursive "${TEMP_DIR}"
 }
 
 function configure_tomcat {
@@ -78,7 +78,7 @@ function delete_local_images {
 
 		for image_id in $(docker image ls | grep "${1}" | awk '{print $3}' | uniq)
 		do
-			docker image rm -f "${image_id}"
+			docker image rm --force "${image_id}"
 		done
 	fi
 }
@@ -239,8 +239,8 @@ function prepare_tomcat {
 		warm_up_tomcat
 	fi
 
-	rm -fr "${TEMP_DIR}"/liferay/logs/*
-	rm -fr "${TEMP_DIR}"/liferay/tomcat/logs/*
+	rm --force --recursive "${TEMP_DIR}"/liferay/logs/*
+	rm --force --recursive "${TEMP_DIR}"/liferay/tomcat/logs/*
 }
 
 function remove_temp_dockerfile_target_platform {
@@ -296,8 +296,8 @@ function start_tomcat {
 
 	kill -0 "${pid}" 2>/dev/null && kill -9 "${pid}" 2>/dev/null
 
-	rm -fr "${TEMP_DIR}/liferay/data/osgi/state"
-	rm -fr "${TEMP_DIR}/liferay/osgi/state"
+	rm --force --recursive "${TEMP_DIR}/liferay/data/osgi/state"
+	rm --force --recursive "${TEMP_DIR}/liferay/osgi/state"
 }
 
 function stat {

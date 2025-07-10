@@ -79,7 +79,7 @@ function main {
 
 	lc_time_run generate_poms
 
-	rm -fr "${_BUILD_DIR}/release"
+	rm --force --recursive "${_BUILD_DIR}/release"
 
 	mkdir -p "${_BUILD_DIR}/release"
 

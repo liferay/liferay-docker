@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function calculate_results {
-	rm -fr "${RESULTS_DIR}"
+	rm --force --recursive "${RESULTS_DIR}"
 
 	mkdir -p "${RESULTS_DIR}"
 

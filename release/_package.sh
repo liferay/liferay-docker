@@ -152,13 +152,13 @@ function install_patching_tool {
 
 	unzip -q patching-tool-"${latest_version}".zip
 
-	rm -f patching-tool-"${latest_version}".zip
+	rm --force patching-tool-"${latest_version}".zip
 
 	lc_cd patching-tool
 
 	./patching-tool.sh auto-discovery
 
-	rm -f logs/*
+	rm --force logs/*
 }
 
 function package_boms {
@@ -173,7 +173,7 @@ function package_boms {
 	jar cvfm "${_BUILD_DIR}/release/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.jar" .touch -C api-jar .
 	jar cvfm "${_BUILD_DIR}/release/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}-sources.jar" .touch -C api-sources-jar .
 
-	rm -f .touch
+	rm --force .touch
 }
 
 function package_portal_dependencies {
@@ -184,7 +184,7 @@ function package_portal_dependencies {
 		# Client
 		#
 
-		rm -fr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
+		rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
 
 		mkdir -p "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
 
@@ -212,13 +212,13 @@ function package_portal_dependencies {
 
 		zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
 
-		rm -fr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
+		rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
 
 		#
 		# Dependencies
 		#
 
-		rm -fr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
+		rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
 		mkdir -p "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
@@ -246,17 +246,17 @@ function package_portal_dependencies {
 
 		zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
-		rm -fr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
+		rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 	fi
 }
 
 function package_release {
 	if is_portal_release
 	then
-		rm -fr "${_BUNDLES_DIR}/routes/default/dxp"
+		rm --force --recursive "${_BUNDLES_DIR}/routes/default/dxp"
 	fi
 
-	rm -fr "${_BUILD_DIR}/release"
+	rm --force --recursive "${_BUILD_DIR}/release"
 
 	local package_dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 
@@ -304,9 +304,9 @@ function package_release {
 
 	zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql" -i "*.sql"
 
-	rm -fr "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql"
+	rm --force --recursive "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql"
 
-	rm -fr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+	rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 
 	generate_javadocs
 }

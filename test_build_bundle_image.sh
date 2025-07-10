@@ -69,8 +69,8 @@ function _test_build_bundle_image_set_parent_image {
 
 	assert_equals Dockerfile expected.Dockerfile
 
-	rm -f Dockerfile
-	rm -f expected.Dockerfile
+	rm --force Dockerfile
+	rm --force expected.Dockerfile
 }
 
 main

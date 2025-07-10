@@ -39,8 +39,8 @@ function set_up {
 function tear_down {
 	common_tear_down
 
-	rm -f "${_BUILD_DIR}/liferay-dxp-tomcat-7.3.10-u36-1706652128.zip"
-	rm -fr "${_BUILD_DIR}/release"
+	rm --force "${_BUILD_DIR}/liferay-dxp-tomcat-7.3.10-u36-1706652128.zip"
+	rm --force --recursive "${_BUILD_DIR}/release"
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
@@ -80,8 +80,8 @@ function test_package_portal_dependencies {
 		"$(ls -1 liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION})" \
 		"$(cat ${_BUILD_DIR}/expected/test_publishing_liferay-dxp-dependencies-7.3.10-u36.txt)"
 
-	rm -f "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
-	rm -f "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
+	rm --force "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
+	rm --force "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
 }
 
  function _test_package_generate_javadocs {

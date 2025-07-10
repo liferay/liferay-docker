@@ -27,7 +27,7 @@ function check_usage {
 function clean_up_test_directory {
 	if [ "${TEST_RESULT}" -eq 0 ]
 	then
-		rm -fr "${TEST_DIR}"
+		rm --force --recursive "${TEST_DIR}"
 	fi
 }
 

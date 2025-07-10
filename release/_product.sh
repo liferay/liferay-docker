@@ -76,7 +76,7 @@ function build_product {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	rm -fr "${_BUNDLES_DIR}"
+	rm --force --recursive "${_BUNDLES_DIR}"
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
@@ -99,20 +99,20 @@ function build_product {
 		mv tomcat-* tomcat
 	fi
 
-	rm -f apache-tomcat*
+	rm --force apache-tomcat*
 
 	if ls deploy/*.war 1> /dev/null 2>&1
 	then
 		mv deploy/*.war osgi/war
 	fi
 
-	rm -fr osgi/test
+	rm --force --recursive osgi/test
 
 	#
 	# TODO Remove in 2025
 	#
 
-	rm -f tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/mysql.jar
+	rm --force tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/mysql.jar
 
 	echo "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" > "${_BUILD_DIR}"/built.sha
 }
@@ -169,10 +169,10 @@ function clean_up_ignored_dxp_modules {
 
 			if [ -e "${_BUNDLES_DIR}/osgi/modules/${ignored_file}.jar" ]
 			then
-				rm -f "${_BUNDLES_DIR}/osgi/modules/${ignored_file}.jar"
+				rm --force "${_BUNDLES_DIR}/osgi/modules/${ignored_file}.jar"
 			elif [ -e "${_BUNDLES_DIR}/osgi/portal/${ignored_file}.jar" ]
 			then
-				rm -f "${_BUNDLES_DIR}/osgi/portal/${ignored_file}.jar"
+				rm --force "${_BUNDLES_DIR}/osgi/portal/${ignored_file}.jar"
 			else
 				lc_log INFO "Unable to delete ${ignored_file}.jar."
 			fi
@@ -190,18 +190,18 @@ function clean_up_ignored_dxp_plugins {
 
 	lc_cd "${_BUNDLES_DIR}/osgi/war"
 
-	rm -fv documentum-hook-*.war
-	rm -fv fjord-theme.war
-	rm -fv minium-theme.war
-	rm -fv opensocial-portlet-*.war
-	rm -fv porygon-theme.war
-	rm -fv powwow-portlet-*.war
-	rm -fv saml-hook-*.war
-	rm -fv sharepoint-hook-*.war
-	rm -fv social-bookmarks-hook-*.war
-	rm -fv speedwell-theme.war
-	rm -fv tasks-portlet-*.war
-	rm -fv westeros-bank-theme.war
+	rm --force --verbose documentum-hook-*.war
+	rm --force --verbose fjord-theme.war
+	rm --force --verbose minium-theme.war
+	rm --force --verbose opensocial-portlet-*.war
+	rm --force --verbose porygon-theme.war
+	rm --force --verbose powwow-portlet-*.war
+	rm --force --verbose saml-hook-*.war
+	rm --force --verbose sharepoint-hook-*.war
+	rm --force --verbose social-bookmarks-hook-*.war
+	rm --force --verbose speedwell-theme.war
+	rm --force --verbose tasks-portlet-*.war
+	rm --force --verbose westeros-bank-theme.war
 }
 
 function compile_product {
@@ -457,9 +457,9 @@ function set_up_profile {
 function start_tomcat {
 	export LIFERAY_JVM_OPTS="-Xmx3G"
 
-	rm -fr "${_BUNDLES_DIR}/osgi/state"
-	rm -fr "${_BUNDLES_DIR}/tomcat/temp"
-	rm -fr "${_BUNDLES_DIR}/tomcat/work"
+	rm --force --recursive "${_BUNDLES_DIR}/osgi/state"
+	rm --force --recursive "${_BUNDLES_DIR}/tomcat/temp"
+	rm --force --recursive "${_BUNDLES_DIR}/tomcat/work"
 
 	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
 
@@ -531,8 +531,8 @@ function stop_tomcat {
 
 	cat ../logs/catalina.out
 
-	rm -fr ../logs/*
-	rm -fr ../../logs/*
+	rm --force --recursive ../logs/*
+	rm --force --recursive ../../logs/*
 }
 
 function update_release_info_date {

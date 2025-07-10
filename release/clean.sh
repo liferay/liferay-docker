@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -fr release-data/build release-data/promotion
+rm --force --recursive release-data/build release-data/promotion

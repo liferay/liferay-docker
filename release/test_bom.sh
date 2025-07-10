@@ -82,10 +82,10 @@ function set_up {
 }
 
 function tear_down {
-	rm -fr "${_BUNDLES_DIR}"
-	rm -fr "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp"
-	rm -f "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp-tomcat-2024.q2.6-1721635298.zip"
-	rm -f "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip"
+	rm --force --recursive "${_BUNDLES_DIR}"
+	rm --force --recursive "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp"
+	rm --force "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp-tomcat-2024.q2.6-1721635298.zip"
+	rm --force "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip"
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 

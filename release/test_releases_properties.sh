@@ -32,8 +32,8 @@ function tear_down {
 	unset _BUNDLES_DIR
 	unset _PRODUCT_VERSION
 
-	rm -f release.properties
-	rm -fr tomcat
+	rm --force release.properties
+	rm --force --recursive tomcat
 }
 
 function test_release_properties_generate_file_portal  {

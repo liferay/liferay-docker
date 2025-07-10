@@ -36,7 +36,7 @@ function install_patch_step_1 {
 }
 
 function install_patch_step_2 {
-	rm -fr /opt/liferay/osgi/state/*
+	rm --force --recursive /opt/liferay/osgi/state/*
 
 	echo ""
 	echo "[LIFERAY] Patch applied successfully."
@@ -51,11 +51,11 @@ function main {
 		mv /opt/liferay/patching-tool/default.properties /opt/liferay/patching-tool-default.properties
 		mv /opt/liferay/patching-tool/patches /opt/liferay/patching-tool-upgrade-patches
 
-		rm -fr /opt/liferay/patching-tool
+		rm --force --recursive /opt/liferay/patching-tool
 
 		unzip -d /opt/liferay -q "${LIFERAY_PATCHING_DIR}"/patching-tool-*
 
-		rm -fr /opt/liferay/patching-tool/patches
+		rm --force --recursive /opt/liferay/patching-tool/patches
 
 		mv /opt/liferay/patching-tool-default.properties /opt/liferay/patching-tool/default.properties
 		mv /opt/liferay/patching-tool-upgrade-patches /opt/liferay/patching-tool/patches

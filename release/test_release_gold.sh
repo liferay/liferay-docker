@@ -52,7 +52,7 @@ function tear_down {
 
 	git restore .
 
-	rm -f release/releases.json
+	rm --force release/releases.json
 
 	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee" 2> /dev/null
 

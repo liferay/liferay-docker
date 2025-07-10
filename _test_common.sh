@@ -38,7 +38,7 @@ function assert_equals {
 				done < "${temp_assertion_error_file}"
 			fi
 
-			rm -f "${temp_assertion_error_file}"
+			rm --force "${temp_assertion_error_file}"
 		else
 			if [ "${arguments[${index}]}" != "${arguments[${index} + 1]}" ]
 			then
@@ -63,7 +63,7 @@ function assert_equals {
 
 		cat "${assertion_error_file}"
 
-		rm -f "${assertion_error_file}"
+		rm --force "${assertion_error_file}"
 
 		_TEST_RESULT="true"
 	fi

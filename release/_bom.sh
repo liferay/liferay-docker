@@ -60,7 +60,7 @@ function generate_api_jars {
 
 			unzip -d api-sources-jar -o -q "${name}-${version}-sources.jar"
 
-			rm -f "${name}-${version}-sources.jar"
+			rm --force "${name}-${version}-sources.jar"
 		fi
 
 		lc_log INFO "Downloading and unzipping https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar."
@@ -69,7 +69,7 @@ function generate_api_jars {
 
 		_manage_bom_jar "${name}-${version}.jar"
 
-		rm -f "${name}-${version}.jar"
+		rm --force "${name}-${version}.jar"
 	done
 
 	if is_7_3_release
@@ -209,8 +209,8 @@ function generate_distro_jar {
 
 	java -jar biz.aQute.bnd-6.4.0.jar remote distro -o "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro" "${osgi_version}"
 
-	rm -f biz.aQute.bnd-6.4.0.jar
-	rm -f "${_BUNDLES_DIR}/osgi/modules/biz.aQute.remote.agent-6.4.0.jar"
+	rm --force biz.aQute.bnd-6.4.0.jar
+	rm --force "${_BUNDLES_DIR}/osgi/modules/biz.aQute.remote.agent-6.4.0.jar"
 
 	stop_tomcat
 
@@ -410,7 +410,7 @@ function generate_poms {
 
 	lc_cd "${_BUILD_DIR}/boms"
 
-	rm -f ./*.pom
+	rm --force ./*.pom
 
 	lc_time_run generate_pom_release_api
 	lc_time_run generate_pom_release_bom
@@ -476,7 +476,7 @@ function _manage_bom_jar {
 
 	unzip -d temp_dir_manage_bom_jar -o -q "${1}"
 
-	#rm -f "${name}-${version}.jar"
+	#rm --force "${name}-${version}.jar"
 
 	if (basename "${1}" | grep --extended-regexp --quiet "^com.liferay.")
 	then
@@ -486,21 +486,21 @@ function _manage_bom_jar {
 		do
 			lc_log DEBUG "Removing ${current_file}."
 
-			rm -f "${current_file}"
+			rm --force "${current_file}"
 		done
 
 		find temp_dir_manage_bom_jar -name "java-docs-*.xml" -type f -print0 | while IFS= read -r -d '' current_file
 		do
 			lc_log DEBUG "Removing ${current_file}."
 
-			rm -f "${current_file}"
+			rm --force "${current_file}"
 		done
 
 		find temp_dir_manage_bom_jar -name "node-modules" -type d -print0 | while IFS= read -r -d '' current_file
 		do
 			lc_log DEBUG "Removing ${current_file}."
 
-			rm -f "${current_file}"
+			rm --force "${current_file}"
 		done
 
 		find temp_dir_manage_bom_jar -maxdepth 1 -type f -print0 | while IFS= read -r -d '' current_file
@@ -529,13 +529,13 @@ function _manage_bom_jar {
 			_copy_file "$(dirname "${current_file}")" api-jar
 		done
 	else
-		rm -fr temp_dir_manage_bom_jar/META-INF/custom-sql
-		rm -fr temp_dir_manage_bom_jar/META-INF/images
-		rm -fr temp_dir_manage_bom_jar/META-INF/sql
-		rm -fr temp_dir_manage_bom_jar/META-INF/versions
+		rm --force --recursive temp_dir_manage_bom_jar/META-INF/custom-sql
+		rm --force --recursive temp_dir_manage_bom_jar/META-INF/images
+		rm --force --recursive temp_dir_manage_bom_jar/META-INF/sql
+		rm --force --recursive temp_dir_manage_bom_jar/META-INF/versions
 
 		cp --archive temp_dir_manage_bom_jar/* api-jar
 	fi
 
-	rm -fr temp_dir_manage_bom_jar
+	rm --force --recursive temp_dir_manage_bom_jar
 }

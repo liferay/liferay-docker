@@ -39,9 +39,9 @@ function set_up {
 }
 
 function tear_down {
-	rm -f "${_BUILD_DIR}/test-dependencies/liferay-dxp-tomcat-2024.q2.6-1721635298.zip"
-	rm -f "${_BUILD_DIR}/warm-up-tomcat"
-	rm -fr "${_BUNDLES_DIR}"
+	rm --force "${_BUILD_DIR}/test-dependencies/liferay-dxp-tomcat-2024.q2.6-1721635298.zip"
+	rm --force "${_BUILD_DIR}/warm-up-tomcat"
+	rm --force --recursive "${_BUNDLES_DIR}"
 
 	unset LIFERAY_CKEDITOR_LICENSE_KEY
 	unset LIFERAY_RELEASE_PRODUCT_NAME
@@ -118,7 +118,7 @@ function _test_product_add_ckeditor_license {
 		"$(cat ${_BUNDLES_DIR}/osgi/configs/com.liferay.frontend.editor.ckeditor.web.internal.configuration.CKEditor5Configuration.config)" \
 		"licenseKey=\"${LIFERAY_CKEDITOR_LICENSE_KEY}\""
 
-	rm -f "${_BUNDLES_DIR}/osgi/configs/com.liferay.frontend.editor.ckeditor.web.internal.configuration.CKEditor5Configuration.config"
+	rm --force "${_BUNDLES_DIR}/osgi/configs/com.liferay.frontend.editor.ckeditor.web.internal.configuration.CKEditor5Configuration.config"
 }
 
 function _test_product_get_java_specification_version {

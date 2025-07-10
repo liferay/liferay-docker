@@ -121,7 +121,7 @@ function lc_download {
 		then
 			lc_log DEBUG "Deleting file from cache: ${cache_file}."
 
-			rm -f "${cache_file}"
+			rm --force "${cache_file}"
 		else
 			lc_log DEBUG "Copying file from cache: ${cache_file}."
 

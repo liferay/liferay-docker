@@ -196,7 +196,7 @@ function lc_download {
 		then
 			lc_log DEBUG "Deleting file from cache: ${cache_file}."
 
-			rm -f "${cache_file}"
+			rm --force "${cache_file}"
 		else
 			lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
 
@@ -406,7 +406,7 @@ function _lc_init {
 	LIFERAY_COMMON_START_TIME=$(date +%s)
 	LIFERAY_COMMON_STEP_FILE=$(mktemp)
 
-	trap 'rm -f "${LIFERAY_COMMON_STEP_FILE}"' EXIT ERR SIGINT SIGTERM
+	trap 'rm --force "${LIFERAY_COMMON_STEP_FILE}"' EXIT ERR SIGINT SIGTERM
 
 	declare -A LIFERAY_COMMON_BACKGROUND_PIDS
 

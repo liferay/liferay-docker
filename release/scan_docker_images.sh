@@ -125,7 +125,7 @@ function scan_docker_images {
 		fi
 	done
 
-	rm -f ./twistcli
+	rm --force ./twistcli
 }
 
 main

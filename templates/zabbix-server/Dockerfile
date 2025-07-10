@@ -54,7 +54,7 @@ RUN groupadd --gid 1995 --system zabbix && \
 RUN chown --quiet -R zabbix:root /etc/zabbix /var/lib/zabbix && \
 	chgrp -R 0 /etc/zabbix /var/lib/zabbix && \
 	chmod -R g=u /etc/zabbix /var/lib/zabbix && \
-	rm -fr /var/lib/apt/lists/*
+	rm --force --recursive /var/lib/apt/lists/*
 
 STOPSIGNAL SIGTERM
 

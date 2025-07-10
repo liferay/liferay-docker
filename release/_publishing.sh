@@ -45,7 +45,7 @@ function add_fixed_issues_to_patcher_project_version {
 
 			lc_log ERROR "${update_fixed_issues_response}"
 
-			rm -f release-notes.txt
+			rm --force release-notes.txt
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
@@ -53,7 +53,7 @@ function add_fixed_issues_to_patcher_project_version {
 
 	lc_log INFO "Added fixed issues to Liferay Patcher project ${2}."
 
-	rm -f release-notes.txt
+	rm --force release-notes.txt
 }
 
 function add_patcher_project_version {
@@ -297,7 +297,7 @@ function upload_release {
 
 		ssh_connection="true"
 
-		ssh root@lrdcom-vm-1 rm -r "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-*"
+		ssh root@lrdcom-vm-1 rm --recursive "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-*"
 
 		ssh root@lrdcom-vm-1 mkdir -p "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 	else

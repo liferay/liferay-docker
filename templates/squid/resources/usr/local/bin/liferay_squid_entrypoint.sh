@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function main {
-	rm -f /run/squid.pid
+	rm --force /run/squid.pid
 
 	if [ ! -e /etc/squid/seeder.crt ]
 	then
@@ -25,7 +25,7 @@ function main {
 			-x509
 	fi
 
-	squid -z && rm -f /run/squid.pid
+	squid -z && rm --force /run/squid.pid
 
 	squid -CNYd 1
 

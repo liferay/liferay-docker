@@ -151,7 +151,7 @@ function main {
 function remove_startup_lock {
 	if [ -n "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}" ] && [ -e "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}" ]
 	then
-		rm -fr "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}"
+		rm --force --recursive "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}"
 	fi
 }
 

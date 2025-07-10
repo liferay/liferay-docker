@@ -52,10 +52,10 @@ RUN groupadd --gid 1995 --system zabbix && \
 	useradd -G root -g zabbix --home-dir /var/lib/zabbix/ --shell /sbin/nologin --system --uid 1997 zabbix
 
 RUN ln -fs /dev/fd/2 /var/log/nginx/error.log && \
-	rm -f /etc/nginx/conf.d/*.conf && \
-	rm -f /etc/php/8.1/fpm/php-fpm.conf.dpkg-dist && \
-	rm -f /etc/php/8.1/fpm/pool.d/www.conf && \
-	rm -fr /var/cache/nginx && \
+	rm --force /etc/nginx/conf.d/*.conf && \
+	rm --force /etc/php/8.1/fpm/php-fpm.conf.dpkg-dist && \
+	rm --force /etc/php/8.1/fpm/pool.d/www.conf && \
+	rm --force --recursive /var/cache/nginx && \
 	dpkg-reconfigure locales
 
 RUN	chown --quiet -R zabbix:root /etc/nginx /etc/php/8.1/fpm/php-fpm.conf /etc/php/8.1/fpm/pool.d && \
