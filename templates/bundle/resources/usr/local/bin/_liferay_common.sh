@@ -283,7 +283,7 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
 
-	if (locale -a | grep --quiet en_US.utf8)
+	if (locale --all-locales | grep --quiet en_US.utf8)
 	then
 		export LC_ALL=en_US.utf8
 	else
