@@ -29,7 +29,7 @@ function main {
 			update-java-alternatives -s zulu-"${zulu_version}"-"${architecture}"
 		fi
 
-		local zulu_jdks=$(ls /usr/lib/jvm/ | grep "zulu-.*-.*" | awk -F- '{print $1$2}' | paste -s -d "," | sed "s/,/, /g")
+		local zulu_jdks=$(ls /usr/lib/jvm/ | grep "zulu-.*-.*" | awk -F- '{print $1$2}' | paste --delimiters=',' --serial | sed "s/,/, /g")
 
 		if [ -e "/usr/lib/jvm/${JAVA_VERSION}" ]
 		then

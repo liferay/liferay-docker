@@ -107,7 +107,7 @@ function generate_release_notes {
 		grep --invert-match LRQA | \
 		grep --invert-match POSHI | \
 		grep --invert-match RELEASE | \
-		paste -sd, > "${_BUILD_DIR}/release/release-notes.txt"
+		paste --delimiters=',' --serial > "${_BUILD_DIR}/release/release-notes.txt"
 }
 
 function get_pull_request_url {
