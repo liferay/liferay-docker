@@ -16,6 +16,11 @@ function main {
 }
 
 function set_up {
+	if [ -z "${JAVA_OPTS}" ]
+	then
+		JAVA_OPTS="-XX:MaxPermSize=256m -Xmx2048m -XX:+IgnoreUnrecognizedVMOptions"
+	fi
+
 	export _CURRENT_JAVA_HOME="${JAVA_HOME}"
 	export _CURRENT_JAVA_OPTS="${JAVA_OPTS}"
 	export _CURRENT_PATH="${PATH}"
