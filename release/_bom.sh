@@ -539,6 +539,12 @@ function _manage_bom_jar {
 		rm --force --recursive temp_dir_manage_bom_jar/META-INF/sql
 		rm --force --recursive temp_dir_manage_bom_jar/META-INF/versions
 
+		if [[ "${1}" == javax.persistence-*.jar ]]
+		then
+			rm --force temp_dir_manage_bom_jar/META-INF/ECLIPSE_.RSA
+			rm --force temp_dir_manage_bom_jar/META-INF/ECLIPSE_.SF
+		fi
+
 		cp --archive temp_dir_manage_bom_jar/* api-jar
 	fi
 
