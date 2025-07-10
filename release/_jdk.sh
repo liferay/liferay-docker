@@ -32,7 +32,7 @@ function set_jdk_version_and_parameters {
 	then
 		lc_log INFO "JDK ${jdk_version} is not installed."
 
-		jdk_version=$(echo "${jdk_version}" | sed -r "s/(openjdk|zulu)/jdk/g")
+		jdk_version=$(echo "${jdk_version}" | sed --regexp-extended "s/(openjdk|zulu)/jdk/g")
 
 		if [ ! -d "/opt/java/${jdk_version}" ]
 		then

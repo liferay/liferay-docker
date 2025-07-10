@@ -79,7 +79,7 @@ function calculate_results {
 							fi
 						fi
 
-						local md5=$(md5sum "${file_version}" | sed -e "s/\ .*//")
+						local md5=$(md5sum "${file_version}" | sed --expression "s/\ .*//")
 						local size=$(stat --printf="%s" "${file_version}")
 
 						echo "${size} ${md5}" >> "${RESULTS_DIR}/${company_id}/type_${type}"
@@ -112,7 +112,7 @@ function get_regenerated_dir_size {
 
 	if [ -n "${size}" ]
 	then
-		size=$(echo "${size}" | sed -e s/[^0-9]*//g)
+		size=$(echo "${size}" | sed --expression s/[^0-9]*//g)
 		size=$((size / 1024))
 
 		local count=$(find "${1}" -type f | wc -l)
@@ -159,21 +159,21 @@ function print_results {
 
 			echo -en "${type},"
 
-			local count=$(wc -l "type_${type}" | sed -e "s/\ .*//")
+			local count=$(wc -l "type_${type}" | sed --expression "s/\ .*//")
 
 			echo -en "${count},"
 
-			local unique=$(sed -e "s/.*\ //" < "type_${type}"| sort | uniq | wc -l)
+			local unique=$(sed --expression "s/.*\ //" < "type_${type}"| sort | uniq | wc -l)
 
 			echo -en "${unique},"
 
-			local size=$(sed -e "s/\ .*//" < "type_${type}"| tr '\n' '+' | sed -e "s/\+$/\n/" | bc)
+			local size=$(sed --expression "s/\ .*//" < "type_${type}"| tr '\n' '+' | sed --expression "s/\+$/\n/" | bc)
 
 			size=$((size / 1048576))
 
 			echo -en "${size},"
 
-			local unique_size=$(sort < "type_${type}"| uniq | sed -e "s/\ .*//" | tr '\n' '+' | sed -e "s/\+$/\n/" | bc)
+			local unique_size=$(sort < "type_${type}"| uniq | sed --expression "s/\ .*//" | tr '\n' '+' | sed --expression "s/\+$/\n/" | bc)
 
 			unique_size=$((unique_size / 1048576))
 

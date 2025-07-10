@@ -14,9 +14,9 @@ function generate_checksum_files {
 			# TODO Remove *.MD5 in favor of *.sha512.
 			#
 
-			md5sum "${file}" | sed -e "s/ .*//" > "${file}.MD5"
+			md5sum "${file}" | sed --expression "s/ .*//" > "${file}.MD5"
 
-			sha512sum "${file}" | sed -e "s/ .*//" > "${file}.sha512"
+			sha512sum "${file}" | sed --expression "s/ .*//" > "${file}.sha512"
 		fi
 	done
 }
@@ -95,11 +95,11 @@ function generate_release_properties_file {
 	if is_dxp_release
 	then
 		product_version="DXP ${product_version}"
-		target_platform_version=$(echo "${target_platform_version}" | sed -r 's/-u/.u/')
+		target_platform_version=$(echo "${target_platform_version}" | sed --regexp-extended 's/-u/.u/')
 
 		if is_lts_release
 		then
-			target_platform_version=$(echo "${target_platform_version}" | sed -r 's/-lts//g')
+			target_platform_version=$(echo "${target_platform_version}" | sed --regexp-extended 's/-lts//g')
 		fi
 
 	elif is_portal_release

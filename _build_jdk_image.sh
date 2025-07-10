@@ -12,8 +12,8 @@ function _build_docker_image {
 
 	make_temp_directory templates/_jdk
 
-	sed -i "s/@jdk_from_image_name@/${jdk_from_image_name}/g" "${TEMP_DIR}"/Dockerfile
-	sed -i "s/@jdk_version@/${jdk_version}/g" "${TEMP_DIR}"/Dockerfile
+	sed --in-place "s/@jdk_from_image_name@/${jdk_from_image_name}/g" "${TEMP_DIR}"/Dockerfile
+	sed --in-place "s/@jdk_version@/${jdk_version}/g" "${TEMP_DIR}"/Dockerfile
 
 	log_in_to_docker_hub
 

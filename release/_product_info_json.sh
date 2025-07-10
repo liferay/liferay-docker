@@ -17,11 +17,12 @@ function generate_product_info_json {
 	cp -f "${_PROMOTION_DIR}/.product_info.json.tmp" "${LIFERAY_COMMON_LOG_DIR}/.product_info.json-BACKUP.txt"
 
 	sed \
-		-r \
-		-e 's@\r?\n        "@"@g' \
-		-e 's@\r?\n    \}(,)?@\}\1@g' \
-		-e 's@[ ]+"@"@g' \
-		-i -z \
+		--expression 's@\r?\n        "@"@g' \
+		--expression 's@\r?\n    \}(,)?@\}\1@g' \
+		--expression 's@[ ]+"@"@g' \
+		--in-place \
+		--null-data \
+		--regexp-extended \
 		"${_PROMOTION_DIR}/.product_info.json.tmp"
 
 	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${LIFERAY_RELEASE_VERSION}/release.properties"
@@ -29,9 +30,9 @@ function generate_product_info_json {
 	lc_log DEBUG "Updating ${_PROMOTION_DIR}/.product_info.json."
 
 	sed \
-		-e "s@\(${product_version}.*\),\"promoted\":\"true\",\(.*\)@\1,\"promoted\":\"false\",\2@" \
-		-e "s/^\}/,/" \
-		-i \
+		--expression "s@\(${product_version}.*\),\"promoted\":\"true\",\(.*\)@\1,\"promoted\":\"false\",\2@" \
+		--expression "s/^\}/,/" \
+		--in-place \
 		"${_PROMOTION_DIR}/.product_info.json.tmp"
 
 	local release_date=$(lc_get_property "${_PROMOTION_DIR}/release.properties" release.date)

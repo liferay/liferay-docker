@@ -15,7 +15,7 @@ function add_property {
 	local new_value="${2}"
 	local search_key="${3}"
 
-	sed -i "/${search_key}/a\	\\${new_key}=${new_value}" "build.properties"
+	sed --in-place "/${search_key}/a\	\\${new_key}=${new_value}" "build.properties"
 }
 
 function check_supported_versions {
@@ -184,12 +184,14 @@ function prepare_next_release_branch {
 			fi
 		fi
 
-		sed -i \
-			-e "s/release.info.version.display.name\[master-private\]=.*/release.info.version.display.name[master-private]=${product_group_version^^}.${next_release_patch_version}/" \
+		sed \
+			--expression "s/release.info.version.display.name\[master-private\]=.*/release.info.version.display.name[master-private]=${product_group_version^^}.${next_release_patch_version}/" \
+			--in-place \
 			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
 
-		sed -i \
-			-e "s/release.info.version.display.name\[release-private\]=.*/release.info.version.display.name[release-private]=${product_group_version^^}.${next_release_patch_version}/" \
+		sed \
+			--expression "s/release.info.version.display.name\[release-private\]=.*/release.info.version.display.name[release-private]=${product_group_version^^}.${next_release_patch_version}/" \
+			--in-place \
 			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
 
 		if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
@@ -412,7 +414,7 @@ function replace_property {
 	local new_value="${2}"
 	local search_key="${3}"
 
-	sed -i "s/${search_key}/${new_key}=${new_value}/" "build.properties"
+	sed --in-place "s/${search_key}/${new_key}=${new_value}/" "build.properties"
 }
 
 function tag_release {
@@ -490,7 +492,7 @@ function tag_release {
 
 	if is_7_4_u_release
 	then
-		local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | sed -r "s/-u/\./")"
+		local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | sed --regexp-extended "s/-u/\./")"
 
 		if [ $(invoke_github_api_delete "brianchandotcom" "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
@@ -527,7 +529,7 @@ function test_boms {
 
 	export LIFERAY_RELEASES_MIRRORS="https://releases.liferay.com"
 
-	sed -i "s/version: \"10.1.0\"/version: \"10.1.2\"/" "temp_dir_test_boms/settings.gradle"
+	sed --in-place "s/version: \"10.1.0\"/version: \"10.1.2\"/" "temp_dir_test_boms/settings.gradle"
 
 	for module in api mvc-portlet
 	do
@@ -581,7 +583,7 @@ function update_release_info_date {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	sed -i \
+	sed --in-place \
 		-e "s/release.info.date=.*/release.info.date=$(date -d "next monday" +"%B %-d, %Y")/" \
 		release.properties
 

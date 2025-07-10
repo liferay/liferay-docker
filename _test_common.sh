@@ -82,10 +82,10 @@ function main {
 
 	if [ -n "${BASH_SOURCE[3]}" ]
 	then
-		echo -e "\n##### Running tests from $(echo ${BASH_SOURCE[3]} | sed -r 's/\.\///g') #####\n"
+		echo -e "\n##### Running tests from $(echo ${BASH_SOURCE[3]} | sed --regexp-extended 's/\.\///g') #####\n"
 	elif [ -n "${BASH_SOURCE[2]}" ]
 	then
-		echo -e "\n##### Running tests from $(echo ${BASH_SOURCE[2]} | sed -r 's/\.\///g') #####\n"
+		echo -e "\n##### Running tests from $(echo ${BASH_SOURCE[2]} | sed --regexp-extended 's/\.\///g') #####\n"
 	fi
 }
 

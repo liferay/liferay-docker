@@ -40,7 +40,7 @@ function clean_up_temp_directory {
 function configure_tomcat {
 	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> "${TEMP_DIR}/liferay/tomcat/bin/setenv.sh"
 
-	sed -i "/<web-app /a <distributable />" "${TEMP_DIR}/liferay/tomcat/webapps/ROOT/WEB-INF/web.xml"
+	sed --in-place "/<web-app /a <distributable />" "${TEMP_DIR}/liferay/tomcat/webapps/ROOT/WEB-INF/web.xml"
 }
 
 function date {
@@ -149,7 +149,7 @@ function get_tomcat_version {
 
 	if [ -e "${1}"/tomcat ]
 	then
-		liferay_tomcat_version=$(grep --extended-regexp --only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${1}/tomcat/RELEASE-NOTES" | sed -r "s/Apache Tomcat Version //")
+		liferay_tomcat_version=$(grep --extended-regexp --only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${1}/tomcat/RELEASE-NOTES" | sed --regexp-extended "s/Apache Tomcat Version //")
 	else
 		for tomcat_dir_path in "${1}"/tomcat-*
 		do

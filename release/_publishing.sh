@@ -387,14 +387,14 @@ function _update_bundles_yml {
 
 		perl -i -0777pe 's/\s+latest: true(?!7.4.13:)//' "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 
-		sed -i "/7.4.13:/i ${product_version_key}:" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+		sed --in-place "/7.4.13:/i ${product_version_key}:" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 
 		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\".bundle_url = \"${ga_bundle_url}\"" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\".latest = true" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 	fi
 
-	sed -i "/^$/d" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
-	sed -i "s/[[:space:]]{}//g" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+	sed --in-place "/^$/d" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+	sed --in-place "s/[[:space:]]{}//g" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 
 	truncate -s -1 "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 

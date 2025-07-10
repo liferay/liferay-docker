@@ -141,15 +141,15 @@ function clean_up_ignored_dxp_modules {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
 
 	(
-		git grep "Liferay-Releng-Bundle: false" | sed -e s/app.bnd:.*//
-		git ls-files "*/.lfrbuild-releng-ignore" | sed -e s#/.lfrbuild-releng-ignore##
+		git grep "Liferay-Releng-Bundle: false" | sed --expression s/app.bnd:.*//
+		git ls-files "*/.lfrbuild-releng-ignore" | sed --expression s#/.lfrbuild-releng-ignore##
 	) | while IFS= read -r ignored_dir
 	do
 		local dxp_dir=""
 
 		if (echo "${ignored_dir}" | grep --extended-regexp --quiet "^apps/")
 		then
-			dxp_dir=$(echo "${ignored_dir}" | sed -e "s#apps/#dxp/apps/#")
+			dxp_dir=$(echo "${ignored_dir}" | sed --expression "s#apps/#dxp/apps/#")
 
 			lc_log INFO "Exclude ${dxp_dir} if it exists."
 
@@ -274,7 +274,10 @@ function decrement_module_versions {
 
 		micro_version=$((micro_version - 1))
 
-		sed -i -e "s/Bundle-Version: ${bundle_version}/Bundle-Version: ${major_minor_version}.${micro_version}/" "${bnd_bnd_file}"
+		sed \
+			--expression "s/Bundle-Version: ${bundle_version}/Bundle-Version: ${major_minor_version}.${micro_version}/" \
+			--in-place \
+			"${bnd_bnd_file}"
 	done
 }
 
@@ -505,7 +508,7 @@ function stop_tomcat {
 
 	local tomcat_dir_regex=$(\
 		echo "${_BUNDLES_DIR}/tomcat" | \
-		sed -e "s/${slash_regex}/${backslash_and_slash_regex}/g")
+		sed --expression "s/${slash_regex}/${backslash_and_slash_regex}/g")
 
 	for count in {0..30}
 	do
@@ -535,7 +538,10 @@ function stop_tomcat {
 function update_release_info_date {
 	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
-	sed -i -e "s/release.info.date=.*/release.info.date=$(date +"%B %d, %Y")/" release.properties
+	sed \
+	--expression "s/release.info.date=.*/release.info.date=$(date +"%B %d, %Y")/" \
+	--in-place \
+	release.properties
 }
 
 function warm_up_tomcat {

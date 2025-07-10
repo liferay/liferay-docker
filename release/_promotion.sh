@@ -60,7 +60,7 @@ function prepare_poms_for_promotion {
 		fi
 	done
 
-	sed -i "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_ARTIFACT_VERSION}</version>#" ./*.pom
+	sed --in-place "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_ARTIFACT_VERSION}</version>#" ./*.pom
 }
 
 function promote_boms {
@@ -134,7 +134,7 @@ function _verify_checksum {
 	file="${1}"
 
 	(
-		sed -z "s/\n$//" "${file}.sha512"
+		sed --null-data "s/\n$//" "${file}.sha512"
 
 		echo "  ${file}"
 	) | sha512sum -c - --status

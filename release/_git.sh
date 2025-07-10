@@ -97,10 +97,10 @@ function generate_release_notes {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	git log "tags/${ga_version}..HEAD" --pretty="%s %H" | \
-		sed -e "/c394bcbc1c36af47e66678c470d623568d3f1e88/c\LPD-27038/" | \
-		sed -e "/8a80898965553c441eef73d6d6839d0b5712ca43/c\LPD-27038/" | \
+		sed --expression "/c394bcbc1c36af47e66678c470d623568d3f1e88/c\LPD-27038/" | \
+		sed --expression "/8a80898965553c441eef73d6d6839d0b5712ca43/c\LPD-27038/" | \
 		grep --extended-regexp "^[A-Z][A-Z0-9]*-[0-9]+" | \
-		sed -e "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/" | \
+		sed --expression "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/" | \
 		sort | \
 		uniq | \
 		grep --invert-match LRCI | \
@@ -169,7 +169,7 @@ function update_portal_repository {
 	then
 		lc_log INFO "Looking for a tag that matches Git SHA ${LIFERAY_RELEASE_GIT_REF}."
 
-		LIFERAY_RELEASE_GIT_REF=$(git ls-remote upstream | grep "${LIFERAY_RELEASE_GIT_REF}" | grep refs/tags/fix-pack-fix- | head -n 1 | sed -e "s#.*/##")
+		LIFERAY_RELEASE_GIT_REF=$(git ls-remote upstream | grep "${LIFERAY_RELEASE_GIT_REF}" | grep refs/tags/fix-pack-fix- | head -n 1 | sed --expression "s#.*/##"
 
 		if [ -n "${LIFERAY_RELEASE_GIT_REF}" ]
 		then
