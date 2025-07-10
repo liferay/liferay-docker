@@ -19,7 +19,7 @@ function build_base_image {
 	echo "Building Docker image Base."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/base.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/base.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -44,7 +44,7 @@ function build_batch_image {
 	echo "Building Docker image Batch."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_batch_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/batch.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_batch_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/batch.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -207,7 +207,7 @@ function build_caddy_image {
 	echo "Building Docker image Caddy resources."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_caddy_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/caddy.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_caddy_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/caddy.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -232,7 +232,7 @@ function build_dynamic_rendering_image {
 	echo "Building Docker image Dynamic Rendering."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/dynamic_rendering.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/dynamic_rendering.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -257,7 +257,7 @@ function build_jar_runner_image {
 	echo "Building Docker image JAR Runner."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_jar_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/jar_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_jar_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/jar_runner.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -289,7 +289,7 @@ function build_jdk_image {
 	echo "Building Docker image ${jdk_friendly_name}."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_AMD64_VERSION=${latest_available_zulu_amd64_version} LIFERAY_DOCKER_ZULU_ARM64_VERSION=${latest_available_zulu_arm64_version} time ./build_"$(echo "${jdk_image_name}" | sed --regexp-extended "s/-/_/g")"_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/"${jdk_image_name}".log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_AMD64_VERSION=${latest_available_zulu_amd64_version} LIFERAY_DOCKER_ZULU_ARM64_VERSION=${latest_available_zulu_arm64_version} time ./build_"$(echo "${jdk_image_name}" | sed --regexp-extended "s/-/_/g")"_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/"${jdk_image_name}".log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -314,7 +314,7 @@ function build_job_runner_image {
 	echo "Building Docker image Job Runner."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/job_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/job_runner.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -339,7 +339,7 @@ function build_node_runner_image {
 	echo "Building Docker image Node Runner."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_node_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/node_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_node_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/node_runner.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -364,7 +364,7 @@ function build_noop_image {
 	echo "Building Docker image NOOP."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_noop_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/noop.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_noop_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/noop.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -389,7 +389,7 @@ function build_squid_image {
 	echo "Building Docker image Squid resources."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_squid_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/squid.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_squid_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/squid.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -417,7 +417,7 @@ function build_zabbix_server_image {
 	echo "Building Docker image Zabbix Server."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/zabbix_server.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/zabbix_server.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -445,7 +445,7 @@ function build_zabbix_web_image {
 	echo "Building Docker image Zabbix Web."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee -a "${LIFERAY_DOCKER_LOGS_DIR}"/zabbix_server_web_interface.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/zabbix_server_web_interface.log
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
