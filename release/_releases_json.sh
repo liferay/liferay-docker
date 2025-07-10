@@ -185,7 +185,7 @@ function _process_products {
 				--extended-regexp \
 				--only-matching \
 				"(20[0-9]+\.q[0-9]\.[0-9]+(-lts)?|7\.[0-9]+\.[0-9]+[a-z0-9\.-]+)/" | \
-			tr -d "/" | \
+			tr --delete '/' | \
 			uniq)
 		do
 			if [[ $(echo "${product_version}" | grep "7.4") ]] && [[ $(echo "${product_version}" | cut --delimiter 'u' --fields 2) -gt 112 ]]

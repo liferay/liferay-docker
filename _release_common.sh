@@ -16,7 +16,7 @@ function get_release_patch_version {
 }
 
 function get_release_quarter {
-	echo "$(_get_product_version "${1}")" | cut --delimiter '.' --fields 2 | tr -d 'q'
+	echo "$(_get_product_version "${1}")" | cut --delimiter '.' --fields 2 | tr --delete 'q'
 }
 
 function get_release_version {
@@ -47,7 +47,7 @@ function get_release_version_trivial {
 		echo "${product_version}" | cut --delimiter '-' --fields 2 | sed 's/ga//'
 	elif is_u_release "${product_version}"
 	then
-		echo "${product_version}" | cut --delimiter '-' --fields 2 | tr -d u
+		echo "${product_version}" | cut --delimiter '-' --fields 2 | tr --delete 'u'
 	fi
 }
 
