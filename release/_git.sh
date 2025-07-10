@@ -30,12 +30,12 @@ function clone_repository {
 	then
 		echo "Copying Git repository from /home/me/dev/projects/${1}."
 
-		cp -a "/home/me/dev/projects/${1}" "${_PROJECTS_DIR}"
+		cp --archive "/home/me/dev/projects/${1}" "${_PROJECTS_DIR}"
 	elif [ -e "/opt/dev/projects/github/${1}" ]
 	then
 		echo "Copying Git repository from /opt/dev/projects/github/${1}."
 
-		cp -a "/opt/dev/projects/github/${1}" "${_PROJECTS_DIR}"
+		cp --archive "/opt/dev/projects/github/${1}" "${_PROJECTS_DIR}"
 	else
 		git clone git@github.com:liferay/"${1}".git
 	fi

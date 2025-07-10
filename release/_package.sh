@@ -164,7 +164,7 @@ function install_patching_tool {
 function package_boms {
 	lc_cd "${_BUILD_DIR}/boms"
 
-	cp -a ./*.pom "${_BUILD_DIR}/release"
+	cp --archive ./*.pom "${_BUILD_DIR}/release"
 
 	cp "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "${_BUILD_DIR}/release"
 
@@ -262,7 +262,7 @@ function package_release {
 
 	mkdir -p "${package_dir}"
 
-	cp -a "${_BUNDLES_DIR}"/* "${package_dir}"
+	cp --archive "${_BUNDLES_DIR}"/* "${package_dir}"
 
 	echo "${_GIT_SHA}" > "${package_dir}"/.githash
 	echo "${_PRODUCT_VERSION}" > "${package_dir}"/.liferay-version
@@ -300,7 +300,7 @@ function package_release {
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
-	cp -a sql liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql
+	cp --archive sql liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql
 
 	zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql" -i "*.sql"
 

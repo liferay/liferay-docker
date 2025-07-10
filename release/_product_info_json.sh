@@ -14,7 +14,7 @@ function generate_product_info_json {
 
 	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/tools/workspace/.product_info.json" "${_PROMOTION_DIR}/.product_info.json.tmp"
 
-	cp -f "${_PROMOTION_DIR}/.product_info.json.tmp" "${LIFERAY_COMMON_LOG_DIR}/.product_info.json-BACKUP.txt"
+	cp --force "${_PROMOTION_DIR}/.product_info.json.tmp" "${LIFERAY_COMMON_LOG_DIR}/.product_info.json-BACKUP.txt"
 
 	sed \
 		--expression 's@\r?\n        "@"@g' \
@@ -94,7 +94,7 @@ function upload_product_info_json {
 
 	lc_log INFO "Backing up to /www/releases.liferay.com/tools/workspace/.product_info.json.BACKUP."
 
-	ssh root@lrdcom-vm-1 cp -f "/www/releases.liferay.com/tools/workspace/.product_info.json" "/www/releases.liferay.com/tools/workspace/.product_info.json.BACKUP"
+	ssh root@lrdcom-vm-1 cp --force "/www/releases.liferay.com/tools/workspace/.product_info.json" "/www/releases.liferay.com/tools/workspace/.product_info.json.BACKUP"
 
 	lc_log DEBUG "Uploading ${_PROMOTION_DIR}/.product_info.json to /www/releases.liferay.com/tools/workspace/.product_info.json."
 

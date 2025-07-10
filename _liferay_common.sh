@@ -64,12 +64,12 @@ function lc_clone_repository {
 	then
 		lc_log DEBUG "Copying Git repository from /home/me/dev/projects/${repository_name}."
 
-		cp -a "/home/me/dev/projects/${repository_name}" "${repository_path}"
+		cp --archive "/home/me/dev/projects/${repository_name}" "${repository_path}"
 	elif [ -e "/opt/dev/projects/github/${repository_name}" ]
 	then
 		lc_log DEBUG "Copying Git repository from /opt/dev/projects/github/${repository_path}."
 
-		cp -a "/opt/dev/projects/github/${repository_name}" "${repository_path}"
+		cp --archive "/opt/dev/projects/github/${repository_name}" "${repository_path}"
 	else
 		git clone "git@github.com:liferay/${repository_name}.git" "${repository_path}"
 	fi

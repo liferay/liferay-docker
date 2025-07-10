@@ -53,7 +53,7 @@ function main {
 			echo ""
 			echo "[LIFERAY] ... into ${LIFERAY_HOME}."
 
-			cp -r "${LIFERAY_MOUNT_DIR}"/files/* "${LIFERAY_HOME}"
+			cp --recursive "${LIFERAY_MOUNT_DIR}"/files/* "${LIFERAY_HOME}"
 
 			echo ""
 		fi

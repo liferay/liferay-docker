@@ -90,7 +90,7 @@ function prepare_mount {
 
 	mkdir -p "${TEST_DIR}"
 
-	cp -r templates/test/resources/* "${TEST_DIR}"
+	cp --recursive templates/test/resources/* "${TEST_DIR}"
 
 	mkdir -p "${TEST_DIR}/mnt/liferay/patching"
 

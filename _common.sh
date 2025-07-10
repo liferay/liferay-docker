@@ -200,7 +200,7 @@ function make_temp_directory {
 
 	for resource_dir in "${@}"
 	do
-		cp -r "${resource_dir}"/* "${TEMP_DIR}"
+		cp --recursive "${resource_dir}"/* "${TEMP_DIR}"
 	done
 
 	#
@@ -213,7 +213,7 @@ function make_temp_directory {
 
 	echo "${current_date}" > templates/_common/resources/etc/created-date
 
-	cp -r templates/_common/* "${TEMP_DIR}"
+	cp --recursive templates/_common/* "${TEMP_DIR}"
 }
 
 function pid_8080 {

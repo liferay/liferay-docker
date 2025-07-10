@@ -37,7 +37,12 @@ function report_jenkins_url {
 	else
 		echo "Unable to connect to test-3-1."
 
-		cp -prv "${_BUILD_DIR}/patcher-status/" /mnt/patcher-shared/patcher/
+	cp \
+		--preserve \
+		--recursive \
+		--verbose \
+		"${_BUILD_DIR}/patcher-status/" \
+		/mnt/patcher-shared/patcher/
 	fi
 }
 
@@ -73,6 +78,11 @@ function report_patcher_status {
 	else
 		echo "Unable to connect to test-3-1."
 
-		cp -prv "${_BUILD_DIR}/patcher-status/" /mnt/patcher-shared/patcher/
+		cp \
+			--preserve \
+			--recursive \
+			--verbose \
+			"${_BUILD_DIR}/patcher-status/" \
+			/mnt/patcher-shared/patcher/
 	fi
 }
