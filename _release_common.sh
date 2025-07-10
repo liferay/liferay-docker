@@ -193,29 +193,16 @@ function set_actual_product_version {
 }
 
 function _compare_product_versions {
-	local product_version_1=""
+	local product_version_1
 
 	if [ -n "${ACTUAL_PRODUCT_VERSION}" ]
 	then
-		product_version_1=$(echo "${ACTUAL_PRODUCT_VERSION}" | sed -e "s/-lts//")
+		product_version_1="${ACTUAL_PRODUCT_VERSION}"
 	else
-		product_version_1=$(_get_product_version | sed -e "s/-lts//")
+		product_version_1=$(_get_product_version)
 	fi
 
-	local product_version_1_quarter
-	local product_version_1_suffix
-
-	IFS='.' read -r product_version_1_year product_version_1_quarter product_version_1_suffix <<< "${product_version_1}"
-
-	product_version_1_quarter=$(echo "${product_version_1_quarter}" | sed -e "s/q//")
-
-	local product_version_2=$(echo "${1}" | sed -e "s/-lts//")
-	local product_version_2_quarter
-	local product_version_2_suffix
-
-	IFS='.' read -r product_version_2_year product_version_2_quarter product_version_2_suffix <<< "${product_version_2}"
-
-	product_version_2_quarter=$(echo "${product_version_2_quarter}" | sed -e "s/q//")
+	local product_version_2="${1}"
 
 	local operator_1
 	local operator_2
@@ -230,28 +217,60 @@ function _compare_product_versions {
 		operator_2="-lt"
 	fi
 
-	if [ "${product_version_1_year}" "${operator_1}" "${product_version_2_year}" ]
+	if is_quarterly_release "${product_version_1}" &&
+	   is_quarterly_release "${product_version_2}"
 	then
-		return 0
-	elif [ "${product_version_1_year}" "${operator_2}" "${product_version_2_year}" ]
-	then
-		return 1
-	fi
+		local product_version_1_quarter=$(\
+			echo "${product_version_1}" | \
+			cut --delimiter "." --fields 2 | \
+			sed --expression "s/q//")
 
-	if [ "${product_version_1_quarter}" "${operator_1}" "${product_version_2_quarter}" ]
-	then
-		return 0
-	elif [ "${product_version_1_quarter}" "${operator_2}" "${product_version_2_quarter}" ]
-	then
-		return 1
-	fi
+		local product_version_1_suffix=$(\
+			echo "${product_version_1}" | \
+			cut --delimiter "." --fields 3 | \
+			sed --expression "s/-lts//")
 
-	if [ "${product_version_1_suffix}" "${operator_1}" "${product_version_2_suffix}" ]
-	then
-		return 0
-	elif [ "${product_version_1_suffix}" "${operator_2}" "${product_version_2_suffix}" ]
-	then
-		return 1
+		local product_version_1_year=$(\
+			echo "${product_version_1}" | \
+			cut --delimiter "." --fields 1)
+
+		local product_version_2_quarter=$(\
+			echo "${product_version_2}" | \
+			cut --delimiter "." --fields 2 | \
+			sed --expression "s/q//")
+
+		local product_version_2_suffix=$(\
+			echo "${product_version_2}" | \
+			cut --delimiter "." --fields 3 | \
+			sed --expression "s/-lts//")
+
+		local product_version_2_year=$(\
+			echo "${product_version_2}" | \
+			cut --delimiter "." --fields 1)
+
+		if [ "${product_version_1_year}" "${operator_1}" "${product_version_2_year}" ]
+		then
+			return 0
+		elif [ "${product_version_1_year}" "${operator_2}" "${product_version_2_year}" ]
+		then
+			return 1
+		fi
+
+		if [ "${product_version_1_quarter}" "${operator_1}" "${product_version_2_quarter}" ]
+		then
+			return 0
+		elif [ "${product_version_1_quarter}" "${operator_2}" "${product_version_2_quarter}" ]
+		then
+			return 1
+		fi
+
+		if [ "${product_version_1_suffix}" "${operator_1}" "${product_version_2_suffix}" ]
+		then
+			return 0
+		elif [ "${product_version_1_suffix}" "${operator_2}" "${product_version_2_suffix}" ]
+		then
+			return 1
+		fi
 	fi
 
 	return 1
