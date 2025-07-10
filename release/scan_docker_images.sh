@@ -104,7 +104,7 @@ function scan_docker_images {
 				--address "${console_url}" \
 				--docker-address "$(\
 					find \
-						/run/user/$(id -u) \
+						/run/user/$(id --user) \
 						-name docker.sock 2> /dev/null)" \
 				--password "${LIFERAY_PRISMA_CLOUD_SECRET}" \
 				--user "${LIFERAY_PRISMA_CLOUD_ACCESS_KEY}" \

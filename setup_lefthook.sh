@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function check_permission {
-	if [ "$(id -u)" -ne 0 ]
+	if [ "$(id --user)" -ne 0 ]
 	then
 		echo "This script must be run by root."
 
