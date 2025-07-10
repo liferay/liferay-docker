@@ -129,7 +129,8 @@ function generate_api_jars {
 		done
 	fi
 
-	if (is_quarterly_release && is_later_product_version_than "2025.q2.3") ||
+	if (is_quarterly_release && [ "$(get_release_version)" == "2025.q3.0" ]) ||
+	   (is_quarterly_release && is_later_product_version_than "2025.q3.0") ||
 	   (is_u_release && is_later_product_version_than "7.4.13-u135")
 	then
 		_manage_bom_jar "${_BUNDLES_DIR}/tomcat/lib/servlet-api.jar"

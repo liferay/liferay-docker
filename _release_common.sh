@@ -33,6 +33,9 @@ function get_release_version {
 	elif is_u_release "${product_version}"
 	then
 		echo "${product_version}" | cut --delimiter '-' --fields 1
+	elif is_quarterly_release "${product_version}"
+	then
+		echo "${product_version}"
 	fi
 }
 
