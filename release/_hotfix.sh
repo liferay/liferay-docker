@@ -165,7 +165,7 @@ function compare_jars {
 	local jar_descriptions=$( (
 		describe_jar "${jar1}"
 		describe_jar "${jar2}"
-	) | sort | uniq -c)
+	) | sort | uniq --count)
 
 	if [ $(echo "${jar_descriptions}" | grep --count "Defl:N") -eq 0 ]
 	then
