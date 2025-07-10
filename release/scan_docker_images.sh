@@ -14,7 +14,7 @@ function check_usage {
 
 	while read -r image_name
 	do
-		if [ -z "$(docker images -q "${image_name}" 2> /dev/null)" ]
+		if [ -z "$(docker images --quiet "${image_name}" 2> /dev/null)" ]
 		then
 			lc_log ERROR "Unable to find ${image_name} locally."
 

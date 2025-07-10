@@ -34,7 +34,7 @@ function clean_up_test_directory {
 function generate_thread_dump {
 	if [ "${TEST_RESULT}" -gt 0 ]
 	then
-		docker exec -it "${CONTAINER_ID}" /usr/local/bin/generate_thread_dump.sh
+		docker exec --interactive --tty "${CONTAINER_ID}" /usr/local/bin/generate_thread_dump.sh
 
 		docker cp "${CONTAINER_ID}":/opt/liferay/data/sre/thread_dumps "${PWD}/${LIFERAY_DOCKER_LOGS_DIR}"
 	fi
@@ -162,7 +162,7 @@ function start_container {
 		fi
 	fi
 
-	CONTAINER_ID=$(docker run -d ${parameters} "${LIFERAY_DOCKER_IMAGE_ID}")
+	CONTAINER_ID=$(docker run --detach ${parameters} "${LIFERAY_DOCKER_IMAGE_ID}")
 
 	if [ ! -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
@@ -189,7 +189,7 @@ function test_docker_image_fix_pack_installed {
 	if [ -n "${LIFERAY_DOCKER_TEST_INSTALLED_PATCHES}" ]
 	then
 		local correct_fix_pack=$(echo "${LIFERAY_DOCKER_TEST_INSTALLED_PATCHES}" | tr -d '[:space:]')
-		local output=$(docker exec -it "${CONTAINER_ID}" /opt/liferay/patching-tool/patching-tool.sh info | grep "Currently installed patches:")
+		local output=$(docker exec --interactive --tty "${CONTAINER_ID}" /opt/liferay/patching-tool/patching-tool.sh info | grep "Currently installed patches:")
 
 		local installed_fix_pack=$(echo "${output##*: }" | tr -d '[:space:]')
 
