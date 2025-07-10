@@ -129,15 +129,11 @@ function generate_api_jars {
 		done
 	fi
 
-	if is_quarterly_release ||
-	   is_u_release
+	if (is_quarterly_release && is_later_product_version_than "2025.q2.3") ||
+	   (is_u_release && is_later_product_version_than "7.4.13-u135")
 	then
-		if is_later_product_version_than "2025.q2.3" ||
-		   is_later_product_version_than "7.4.13-u135"
-		then
-			_manage_bom_jar "${_BUNDLES_DIR}/tomcat/lib/servlet-api.jar"
-			_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/com.liferay.jakarta.portlet-api.jar"
-		fi
+		_manage_bom_jar "${_BUNDLES_DIR}/tomcat/lib/servlet-api.jar"
+		_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/com.liferay.jakarta.portlet-api.jar"
 	fi
 
 	for file in $(ls api-jar/META-INF --almost-all | grep --extended-regexp --invert-match '^(alloy-util.tld|alloy.tld|c.tld|liferay.tld)$')
