@@ -482,7 +482,7 @@ function copy_tld {
 				--extended-regexp "(/build/|/classes/|/gradleTest/|/sdk/|/test/|/testIntegration/)" \
 				--invert-match | \
 			awk -F "/" '{print $NF, $0}' | \
-			sort -k 1,1 -u | \
+			sort --key 1,1 --unique | \
 			awk '{print $2}')
 	do
 		lc_log INFO "Copying file ${file} to ${1}."

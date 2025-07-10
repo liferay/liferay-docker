@@ -107,7 +107,7 @@ function main {
 		fi
 	fi
 
-	find /opt/liferay/batch -type f -name "*.batch-engine-data.json" -print0 2> /dev/null | LC_ALL=C sort -z |
+	find /opt/liferay/batch -type f -name "*.batch-engine-data.json" -print0 2> /dev/null | LC_ALL=C sort --zero-terminated |
 	while IFS= read -r -d "" file_name
 	do
 		echo "Processing: ${file_name}"

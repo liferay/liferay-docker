@@ -99,7 +99,7 @@ function _get_latest_product_version {
 }
 
 function _merge_json_snippets {
-	if (! jq --slurp add $(ls ./*.json | sort -r) > releases.json)
+	if (! jq --slurp add $(ls ./*.json | sort --reverse) > releases.json)
 	then
 		lc_log ERROR "Detected invalid JSON."
 
