@@ -217,8 +217,18 @@ function _compare_product_versions {
 		operator_2="-lt"
 	fi
 
-	if is_quarterly_release "${product_version_1}" &&
-	   is_quarterly_release "${product_version_2}"
+	if (is_ga_release "${product_version_1}" && is_ga_release "${product_version_2}") ||
+	   (is_u_release "${product_version_1}" && is_u_release "${product_version_2}")
+	then
+		if [ "$(get_release_version_trivial ${product_version_1})" "${operator_1}" "$(get_release_version_trivial ${product_version_2})" ]
+		then
+			return 0
+		elif [ "$(get_release_version_trivial ${product_version_1})" "${operator_2}" "$(get_release_version_trivial ${product_version_2})" ]
+		then
+			return 1
+		fi
+	elif is_quarterly_release "${product_version_1}" &&
+		 is_quarterly_release "${product_version_2}"
 	then
 		if [ "$(get_release_year ${product_version_1})" "${operator_1}" "$(get_release_year ${product_version_2})" ]
 		then

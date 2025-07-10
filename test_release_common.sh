@@ -122,6 +122,14 @@ function test_release_common_is_early_product_version_than {
 	_test_release_common_is_early_product_version_than "2024.q4.7" "2025.q1.0" "0"
 	_test_release_common_is_early_product_version_than "2025.q1.0" "2025.q1.1" "0"
 	_test_release_common_is_early_product_version_than "2025.q1.1-lts" "2025.q1.0-lts" "1"
+	_test_release_common_is_early_product_version_than "7.3.6-ga7" "7.3.7-ga8" "0"
+	_test_release_common_is_early_product_version_than "7.3.10-u35" "7.3.10-u36" "0"
+	_test_release_common_is_early_product_version_than "7.4.13-u134" "7.4.13-u135" "0"
+	_test_release_common_is_early_product_version_than "7.4.3.120-ga120" "7.4.3.132-ga132" "0"
+	_test_release_common_is_early_product_version_than "7.3.7-ga8" "7.3.6-ga7" "1"
+	_test_release_common_is_early_product_version_than "7.3.10-u36" "7.3.10-u35" "1"
+	_test_release_common_is_early_product_version_than "7.4.13-u135" "7.4.13-u134" "1"
+	_test_release_common_is_early_product_version_than "7.4.3.132-ga132" "7.4.3.120-ga120" "1"
 }
 
 function test_release_common_is_ga_release {
@@ -137,6 +145,14 @@ function test_release_common_is_later_product_version_than {
 	_test_release_common_is_later_product_version_than "2025.q1.0" "2024.q4.7" "0"
 	_test_release_common_is_later_product_version_than "2025.q1.1" "2025.q1.0" "0"
 	_test_release_common_is_later_product_version_than "2025.q1.0-lts" "2025.q1.1-lts" "1"
+	_test_release_common_is_later_product_version_than "7.3.6-ga7" "7.3.7-ga8" "1"
+	_test_release_common_is_later_product_version_than "7.3.10-u35" "7.3.10-u36" "1"
+	_test_release_common_is_later_product_version_than "7.4.13-u134" "7.4.13-u135" "1"
+	_test_release_common_is_later_product_version_than "7.4.3.120-ga120" "7.4.3.132-ga132" "1"
+	_test_release_common_is_later_product_version_than "7.3.7-ga8" "7.3.6-ga7" "0"
+	_test_release_common_is_later_product_version_than "7.3.10-u36" "7.3.10-u35" "0"
+	_test_release_common_is_later_product_version_than "7.4.13-u135" "7.4.13-u134" "0"
+	_test_release_common_is_later_product_version_than "7.4.3.132-ga132" "7.4.3.120-ga120" "0"
 }
 
 function test_release_common_is_lts_release {
