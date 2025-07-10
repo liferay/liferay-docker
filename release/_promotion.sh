@@ -21,7 +21,7 @@ function prepare_jars_for_promotion {
 
 		if [ -n "${nexus_repository_name}" ]
 		then
-			_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/$(echo ${jar_rc_name} | cut -d '-' -f 1)/${_ARTIFACT_RC_VERSION}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
+			_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/$(echo ${jar_rc_name} | cut --delimiter '-' --fields 1)/${_ARTIFACT_RC_VERSION}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
 		else
 			mv "${_PROMOTION_DIR}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
 			mv "${_PROMOTION_DIR}/${jar_rc_name}.MD5" "${_PROMOTION_DIR}/${jar_release_name}.MD5"

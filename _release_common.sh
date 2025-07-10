@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function get_product_group_version {
-	echo "$(_get_product_version "${1}")" | cut -d '.' -f 1,2
+	echo "$(_get_product_version "${1}")" | cut --delimiter '.' --fields 1,2
 }
 
 function get_release_patch_version {
@@ -9,14 +9,14 @@ function get_release_patch_version {
 
 	if is_lts_release "${product_version}"
 	then
-		echo "${product_version}" | cut -d '.' -f 3 | sed -e "s/-lts//"
+		echo "${product_version}" | cut --delimiter '.' --fields 3 | sed -e "s/-lts//"
 	else
-		echo "${product_version}" | cut -d '.' -f 3
+		echo "${product_version}" | cut --delimiter '.' --fields 3
 	fi
 }
 
 function get_release_quarter {
-	echo "$(_get_product_version "${1}")" | cut -d '.' -f 2 | tr -d 'q'
+	echo "$(_get_product_version "${1}")" | cut --delimiter '.' --fields 2 | tr -d 'q'
 }
 
 function get_release_version {
@@ -26,13 +26,13 @@ function get_release_version {
 	then
 		if is_7_3_ga_release "${product_version}"
 		then
-			echo "${product_version}" | cut -d '.' -f 1,2,3 | cut -d '-' -f 1
+			echo "${product_version}" | cut --delimiter '.' --fields 1,2,3 | cut --delimiter '-' --fields 1
 		else
-			echo "${product_version}" | cut -d '.' -f 1,2,3
+			echo "${product_version}" | cut --delimiter '.' --fields 1,2,3
 		fi
 	elif is_u_release "${product_version}"
 	then
-		echo "${product_version}" | cut -d '-' -f 1
+		echo "${product_version}" | cut --delimiter '-' --fields 1
 	fi
 }
 
@@ -41,15 +41,15 @@ function get_release_version_trivial {
 
 	if is_ga_release "${product_version}"
 	then
-		echo "${product_version}" | cut -d '-' -f 2 | sed 's/ga//'
+		echo "${product_version}" | cut --delimiter '-' --fields 2 | sed 's/ga//'
 	elif is_u_release "${product_version}"
 	then
-		echo "${product_version}" | cut -d '-' -f 2 | tr -d u
+		echo "${product_version}" | cut --delimiter '-' --fields 2 | tr -d u
 	fi
 }
 
 function get_release_year {
-	echo "$(_get_product_version "${1}")" | cut -d '.' -f 1
+	echo "$(_get_product_version "${1}")" | cut --delimiter '.' --fields 1
 }
 
 function has_ssh_connection {

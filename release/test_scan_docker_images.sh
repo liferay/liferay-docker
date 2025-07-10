@@ -26,7 +26,7 @@ function tear_down {
 
 function test_scan_docker_images_with_invalid_image {
 	assert_equals \
-		"$(./scan_docker_images.sh | cut -d ' ' -f 2-)" \
+		"$(./scan_docker_images.sh | cut --delimiter ' ' --fields 2-)" \
 		"[ERROR] Unable to find liferay/dxp:test-image locally."
 }
 

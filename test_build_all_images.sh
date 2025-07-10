@@ -40,7 +40,7 @@ function _test_build_all_images_get_latest_available_zulu_version {
 			--silent \
 			"https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?arch=${1}&bundle_type=jdk&ext=deb&hw_bitness=64&javafx=false&java_version=${2}&os=linux" | \
 			jq -r '.zulu_version | join(".")' | \
-			cut -d '.' -f 1,2,3)
+			cut --delimiter '.' --fields 1,2,3)
 }
 
 function _test_build_all_images_has_slim_build_criteria {

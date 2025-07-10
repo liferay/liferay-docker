@@ -282,8 +282,8 @@ function main {
 function prepare_slim_image {
 	rm -fr "${TEMP_DIR}/liferay/elasticsearch-sidecar"
 
-	local product_name=$(echo "${LIFERAY_DOCKER_RELEASE_FILE_URL}" | cut -d '/' -f 2)
-	local product_version=$(echo "${LIFERAY_DOCKER_RELEASE_FILE_URL}" | cut -d '/' -f 3)
+	local product_name=$(echo "${LIFERAY_DOCKER_RELEASE_FILE_URL}" | cut --delimiter '/' --fields 2)
+	local product_version=$(echo "${LIFERAY_DOCKER_RELEASE_FILE_URL}" | cut --delimiter '/' --fields 3)
 
 	LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases-gcp.liferay.com/opensearch2/${product_name}/${product_version}/com.liferay.portal.search.opensearch2.api.jar" "${TEMP_DIR}/liferay/deploy/com.liferay.portal.search.opensearch2.api.jar"
 
@@ -345,7 +345,7 @@ function prepare_temp_directory {
 
 		local latest_tomcat_download_dir="downloads/tomcat/apache-tomcat-${latest_tomcat_version}"
 
-		local latest_tomcat_major_version=$(echo "${latest_tomcat_version}" | cut -d '.' -f 1)
+		local latest_tomcat_major_version=$(echo "${latest_tomcat_version}" | cut --delimiter '.' --fields 1)
 
 		local latest_tomcat_url="https://dlcdn.apache.org/tomcat/tomcat-${latest_tomcat_major_version}/v${latest_tomcat_version}/bin/apache-tomcat-${latest_tomcat_version}.zip"
 

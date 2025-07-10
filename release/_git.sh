@@ -62,7 +62,7 @@ function commit_to_branch_and_send_pull_request {
 
 	git commit --message "${2}"
 
-	local repository_name=$(echo "${4}" | cut -d '/' -f 2)
+	local repository_name=$(echo "${4}" | cut --delimiter '/' --fields 2)
 
 	git push --force "git@github.com:liferay-release/${repository_name}.git" "${_TEMP_BRANCH}"
 

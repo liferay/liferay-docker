@@ -105,7 +105,7 @@ function generate_release_properties_file {
 	elif is_portal_release
 	then
 		product_version="Portal ${product_version}"
-		target_platform_version=$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)
+		target_platform_version=$(echo "${_PRODUCT_VERSION}" | cut --delimiter '-' --fields 1)
 	fi
 
 	product_version="${product_version/-/ }"

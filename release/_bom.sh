@@ -196,7 +196,7 @@ function generate_distro_jar {
 
 	if is_ga_release
 	then
-		osgi_version=$(echo "${osgi_version}" | cut -d '.' -f 1,2,3,5)
+		osgi_version=$(echo "${osgi_version}" | cut --delimiter '.' --fields 1,2,3,5)
 	elif is_quarterly_release
 	then
 		if is_lts_release
@@ -265,7 +265,7 @@ function generate_pom_release_bom {
 		do
 			local file_name="${artifact_url##*/}"
 
-			local artifact_id=$(echo "${file_name}" | cut -d '-' -f 1)
+			local artifact_id=$(echo "${file_name}" | cut --delimiter '-' --fields 1)
 			local version=$(echo "${file_name}" | sed -e "s@\.\(jar\|war\)\$@@" -e "s@.*${artifact_file}-@@")
 
 			if [[ "${artifact_url}" == */com/liferay/portal/* ]]
@@ -316,7 +316,7 @@ function generate_pom_release_bom_compile_only {
 
 	echo  "" >> "${pom_file_name}"
 
-	cut -d= -f2 "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties" | \
+	cut --delimiter '=' --fields 2 "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties" | \
 		while IFS=: read -r group_id artifact_id version
 		do
 			echo -e "\t\t\t<dependency>"
@@ -363,7 +363,7 @@ function generate_pom_release_bom_third_party {
 
 	for dependency_property in "${dependencies_properties[@]}"
 	do
-		IFS=':' read -ra dependency_property_parts <<< "$(echo "${dependency_property}" | cut -d = -f 2)"
+		IFS=':' read -ra dependency_property_parts <<< "$(echo "${dependency_property}" | cut --delimiter '=' --fields 2)"
 
 		if [[ ${included_dependencies[@]} =~ "${dependency_property_parts[0]}${dependency_property_parts[1]}${dependency_property_parts[2]}" ]]
 		then

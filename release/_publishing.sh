@@ -127,7 +127,7 @@ function get_patcher_product_version_label {
 function get_patcher_project_version {
 	if is_7_3_release
 	then
-		echo "fix-pack-dxp-$(echo "${_PRODUCT_VERSION}" | cut -d 'u' -f 2)-7310"
+		echo "fix-pack-dxp-$(echo "${_PRODUCT_VERSION}" | cut --delimiter 'u' --fields 2)-7310"
 	elif is_quarterly_release
 	then
 		echo "${_ARTIFACT_VERSION}"
@@ -349,7 +349,7 @@ function upload_to_docker_hub {
 }
 
 function _update_bundles_yml {
-	local product_version_key="$(echo "${_PRODUCT_VERSION}" | cut -d '-' -f 1)"
+	local product_version_key="$(echo "${_PRODUCT_VERSION}" | cut --delimiter '-' --fields 1)"
 
 	if (yq eval ".\"${product_version_key}\" | has(\"${_PRODUCT_VERSION}\")" "${_PROJECTS_DIR}/liferay-docker/bundles.yml" | grep --quiet "true") ||
 	   (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${_PROJECTS_DIR}/liferay-docker/bundles.yml" | grep --quiet "true")
