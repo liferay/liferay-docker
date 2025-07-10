@@ -218,7 +218,7 @@ function prepare_next_release_branch {
 }
 
 function print_help {
-	echo "Usage: LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=<timestamp> LIFERAY_RELEASE_VERSION=<version> ${0}"
+	echo "Usage: LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=<timestamp> LIFERAY_RELEASE_VERSION=<version> ./$(basename ${0})"
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
@@ -233,7 +233,7 @@ function print_help {
 	echo "    LIFERAY_RELEASE_RC_BUILD_TIMESTAMP: Timestamp of the build to publish"
 	echo "    LIFERAY_RELEASE_VERSION: DXP or portal version of the release to publish"
 	echo ""
-	echo "Example: LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH=true LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964 LIFERAY_RELEASE_VERSION=2023.q3.0 ${0}"
+	echo "Example: LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH=true LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964 LIFERAY_RELEASE_VERSION=2023.q3.0 ./$(basename ${0})"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
