@@ -43,7 +43,7 @@ function install_patch_step_2 {
 }
 
 function main {
-	if [[ $(ls -A "${LIFERAY_PATCHING_DIR}"/patching-tool-*.zip 2>/dev/null) ]]
+	if [[ $(ls --almost-all "${LIFERAY_PATCHING_DIR}"/patching-tool-*.zip 2>/dev/null) ]]
 	then
 		echo ""
 		echo "[LIFERAY] Updating Patching Tool."

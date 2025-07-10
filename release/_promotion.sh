@@ -75,7 +75,7 @@ function promote_packages {
 
 	if [ "${?}" -eq 0 ]
 	then
-		if (ssh root@lrdcom-vm-1 ls -d "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}" | grep --quiet "${_PRODUCT_VERSION}" &>/dev/null)
+		if (ssh root@lrdcom-vm-1 ls --directory "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}" | grep --quiet "${_PRODUCT_VERSION}" &>/dev/null)
 		then
 			lc_log INFO "Release was already published."
 
