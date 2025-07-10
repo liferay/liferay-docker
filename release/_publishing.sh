@@ -250,28 +250,25 @@ function upload_hotfix {
 		lc_log INFO "${_HOTFIX_FILE_NAME} successfully uploaded to lrdcom-vm-1."
 	fi
 
-	for gcp_bucket in \
-		files_liferay_com/private/ee/portal/hotfix \
-		liferay-releases-hotfix
-	do
-		if (gsutil ls "gs://${gcp_bucket}/${_PRODUCT_VERSION}" | grep --quiet "${_HOTFIX_FILE_NAME}")
-		then
-			lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP bucket ${gcp_bucket} because it already exists."
+	local gcp_bucket="liferay-releases-hotfix"
 
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-		fi
+	if (gsutil ls "gs://${gcp_bucket}/${_PRODUCT_VERSION}" | grep --quiet "${_HOTFIX_FILE_NAME}")
+	then
+		lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP bucket ${gcp_bucket} because it already exists."
 
-		gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://${gcp_bucket}/${_PRODUCT_VERSION}/"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 
-		if [ "${?}" -ne 0 ]
-		then
-			lc_log ERROR "Unable to upload ${_HOTFIX_FILE_NAME} to GCP bucket ${gcp_bucket}."
+	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://${gcp_bucket}/${_PRODUCT_VERSION}/"
 
-			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		fi
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to upload ${_HOTFIX_FILE_NAME} to GCP bucket ${gcp_bucket}."
 
-		lc_log INFO "${_HOTFIX_FILE_NAME} successfully uploaded to GCP bucket ${gcp_bucket}."
-	done
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	lc_log INFO "${_HOTFIX_FILE_NAME} successfully uploaded to GCP bucket ${gcp_bucket}."
 }
 
 function upload_opensearch {
