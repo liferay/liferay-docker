@@ -583,8 +583,9 @@ function update_release_info_date {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	sed --in-place \
-		-e "s/release.info.date=.*/release.info.date=$(date -d "next monday" +"%B %-d, %Y")/" \
+	sed \
+		--expression "s/release.info.date=.*/release.info.date=$(date -d "next monday" +"%B %-d, %Y")/" \
+		--in-place \
 		release.properties
 
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
