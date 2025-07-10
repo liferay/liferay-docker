@@ -137,7 +137,7 @@ function build_bundle_images {
 
 	if [[ "${search_output}" != "null" ]]
 	then
-		local latest_7413_version=$(yq '."7.4.13"' bundles.yml | grep '^.*:$' | sed 's/://' | sed 's/.*-u//' | sed 's/7.4.13.nightly//' | sort -nr | head -n1)
+		local latest_7413_version=$(yq '."7.4.13"' bundles.yml | grep '^.*:$' | sed 's/://' | sed 's/.*-u//' | sed 's/7.4.13.nightly//' | sort -nr | head --lines 1)
 
 		local versions=$(echo "${search_output}" | grep '^.*:$' | sed 's/://')
 

@@ -169,7 +169,7 @@ function update_portal_repository {
 	then
 		lc_log INFO "Looking for a tag that matches Git SHA ${LIFERAY_RELEASE_GIT_REF}."
 
-		LIFERAY_RELEASE_GIT_REF=$(git ls-remote upstream | grep "${LIFERAY_RELEASE_GIT_REF}" | grep refs/tags/fix-pack-fix- | head -n 1 | sed --expression "s#.*/##")
+		LIFERAY_RELEASE_GIT_REF=$(git ls-remote upstream | grep "${LIFERAY_RELEASE_GIT_REF}" | grep refs/tags/fix-pack-fix- | head --lines 1 | sed --expression "s#.*/##")
 
 		if [ -n "${LIFERAY_RELEASE_GIT_REF}" ]
 		then

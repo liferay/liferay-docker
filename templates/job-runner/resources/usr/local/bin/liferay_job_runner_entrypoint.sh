@@ -42,7 +42,7 @@ function run_jobs {
 	do
 		if [ $(ls /opt/liferay/job-queue | wc -l) -gt 0 ]
 		then
-			local job=$(ls -tr /opt/liferay/job-queue | head -n 1)
+			local job=$(ls -tr /opt/liferay/job-queue | head --lines 1)
 
 			rm "/opt/liferay/job-queue/${job}"
 
