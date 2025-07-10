@@ -50,6 +50,8 @@ function test_release_common_get_release_quarter {
 }
 
 function test_release_common_get_release_version {
+	_test_release_common_get_release_version "2025.q1.13-lts" "2025.q1.13-lts"
+	_test_release_common_get_release_version "2025.q2.0" "2025.q2.0"
 	_test_release_common_get_release_version "7.3.10-ga1" "7.3.10"
 	_test_release_common_get_release_version "7.3.10-u36" "7.3.10"
 	_test_release_common_get_release_version "7.3.7-ga8" "7.3.7"
