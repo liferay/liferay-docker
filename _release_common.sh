@@ -220,54 +220,26 @@ function _compare_product_versions {
 	if is_quarterly_release "${product_version_1}" &&
 	   is_quarterly_release "${product_version_2}"
 	then
-		local product_version_1_quarter=$(\
-			echo "${product_version_1}" | \
-			cut --delimiter "." --fields 2 | \
-			sed --expression "s/q//")
-
-		local product_version_1_suffix=$(\
-			echo "${product_version_1}" | \
-			cut --delimiter "." --fields 3 | \
-			sed --expression "s/-lts//")
-
-		local product_version_1_year=$(\
-			echo "${product_version_1}" | \
-			cut --delimiter "." --fields 1)
-
-		local product_version_2_quarter=$(\
-			echo "${product_version_2}" | \
-			cut --delimiter "." --fields 2 | \
-			sed --expression "s/q//")
-
-		local product_version_2_suffix=$(\
-			echo "${product_version_2}" | \
-			cut --delimiter "." --fields 3 | \
-			sed --expression "s/-lts//")
-
-		local product_version_2_year=$(\
-			echo "${product_version_2}" | \
-			cut --delimiter "." --fields 1)
-
-		if [ "${product_version_1_year}" "${operator_1}" "${product_version_2_year}" ]
+		if [ "$(get_release_year ${product_version_1})" "${operator_1}" "$(get_release_year ${product_version_2})" ]
 		then
 			return 0
-		elif [ "${product_version_1_year}" "${operator_2}" "${product_version_2_year}" ]
+		elif [ "$(get_release_year ${product_version_1})" "${operator_2}" "$(get_release_year ${product_version_2})" ]
 		then
 			return 1
 		fi
 
-		if [ "${product_version_1_quarter}" "${operator_1}" "${product_version_2_quarter}" ]
+		if [ "$(get_release_quarter ${product_version_1})" "${operator_1}" "$(get_release_quarter ${product_version_2})" ]
 		then
 			return 0
-		elif [ "${product_version_1_quarter}" "${operator_2}" "${product_version_2_quarter}" ]
+		elif [ "$(get_release_quarter ${product_version_1})" "${operator_2}" "$(get_release_quarter ${product_version_2})" ]
 		then
 			return 1
 		fi
 
-		if [ "${product_version_1_suffix}" "${operator_1}" "${product_version_2_suffix}" ]
+		if [ "$(get_release_patch_version ${product_version_1})" "${operator_1}" "$(get_release_patch_version ${product_version_2})" ]
 		then
 			return 0
-		elif [ "${product_version_1_suffix}" "${operator_2}" "${product_version_2_suffix}" ]
+		elif [ "$(get_release_patch_version ${product_version_1})" "${operator_2}" "$(get_release_patch_version ${product_version_2})" ]
 		then
 			return 1
 		fi
