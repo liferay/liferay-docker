@@ -422,6 +422,11 @@ function generate_poms {
 function _copy_file {
 	local dir=$(dirname "${1}" | sed --expression "s#[./]*[^/]*/##")
 
+	if [ "${dir}" == "temp_dir_manage_bom_jar" ]
+	then
+		dir=""
+	fi
+
 	mkdir -p "${2}/${dir}"
 
 	lc_log DEBUG "Copying ${1}."
