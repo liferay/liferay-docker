@@ -146,7 +146,7 @@ function prepare_next_release_branch {
 	local product_group_version="$(get_product_group_version)"
 
 	local latest_quarterly_product_version="$(\
-		jq -r ".[] | \
+		jq --raw-output ".[] | \
 			select(.productGroupVersion == \"${product_group_version}\" and .promoted == \"true\") | \
 			.targetPlatformVersion" releases.json)"
 

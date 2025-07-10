@@ -37,7 +37,7 @@ function add_fixed_issues_to_patcher_project_version {
 			--retry 3 \
 			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 
-		if [ $(echo "${update_fixed_issues_response}" | jq -r '.status') -eq 200 ]
+		if [ $(echo "${update_fixed_issues_response}" | jq --raw-output '.status') -eq 200 ]
 		then
 			lc_log INFO "Adding fixed issues to Liferay Patcher project version ${2}."
 		else
@@ -74,11 +74,11 @@ function add_patcher_project_version {
 			--retry 3 \
 			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 
-	if [ $(echo "${add_by_name_response}" | jq -r '.status') -eq 200 ]
+	if [ $(echo "${add_by_name_response}" | jq --raw-output '.status') -eq 200 ]
 	then
 		lc_log INFO "Added Liferay Patcher project version ${patcher_project_version}."
 
-		add_fixed_issues_to_patcher_project_version $(echo "${add_by_name_response}" | jq -r '.data.patcherProjectVersionId') "${patcher_project_version}"
+		add_fixed_issues_to_patcher_project_version $(echo "${add_by_name_response}" | jq --raw-output '.data.patcherProjectVersionId') "${patcher_project_version}"
 	else
 		lc_log ERROR "Unable to add Liferay Patcher project ${patcher_project_version}:"
 

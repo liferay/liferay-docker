@@ -60,7 +60,7 @@ function main {
 	while IFS= read -r key
 	do
 		blocker_issues_keys+=("${key}")
-	done < <(echo "${jira_api_response}" | jq -r ".issues[].key")
+	done < <(echo "${jira_api_response}" | jq --raw-output ".issues[].key")
 
 	for blocker_issue_key in "${blocker_issues_keys[@]}"
 	do

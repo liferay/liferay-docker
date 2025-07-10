@@ -36,7 +36,7 @@ function _add_major_versions {
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
 
-		local product_major_version=$(jq -r ".[].productVersion" "${quarterly_release_json_file}" | sed "s/\.[0-9]\+//");
+		local product_major_version=$(jq --raw-output ".[].productVersion" "${quarterly_release_json_file}" | sed "s/\.[0-9]\+//");
 
 		jq "map(
 				. + {productMajorVersion: \"${product_major_version}\"}
@@ -99,7 +99,7 @@ function _get_latest_product_version {
 }
 
 function _merge_json_snippets {
-	if (! jq -s add $(ls ./*.json | sort -r) > releases.json)
+	if (! jq --slurp add $(ls ./*.json | sort -r) > releases.json)
 	then
 		lc_log ERROR "Detected invalid JSON."
 

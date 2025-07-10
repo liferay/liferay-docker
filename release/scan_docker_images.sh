@@ -78,7 +78,7 @@ function scan_docker_images {
 	fi
 
 	local console_url="https://europe-west3.cloud.twistlock.com/eu-1614931"
-	local token=$(echo "${auth_response}" | jq -r '.token')
+	local token=$(echo "${auth_response}" | jq --raw-output '.token')
 
 	curl \
 		"${console_url}/api/v1/util/twistcli" \

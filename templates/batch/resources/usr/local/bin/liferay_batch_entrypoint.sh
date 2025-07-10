@@ -54,12 +54,12 @@ function main {
 			-s \
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}" \
-		| jq -r ".")
+		| jq --raw-output ".")
 
 	echo "OAuth Token Response: ${oauth2_token_response}"
 	echo ""
 
-	local oauth2_access_token=$(jq -r ".access_token" <<< ${oauth2_token_response})
+	local oauth2_access_token=$(jq --raw-output ".access_token" <<< ${oauth2_token_response})
 
 	if [ "${oauth2_access_token}" == "" ]
 	then
@@ -77,11 +77,11 @@ function main {
 
 		echo "HREF: ${href}"
 
-		local site=$(jq -r '.' /opt/liferay/site-initializer/site-initializer.json)
+		local site=$(jq --raw-output '.' /opt/liferay/site-initializer/site-initializer.json)
 
 		echo "Site: ${site}"
 
-		local external_reference_code=$(jq -r ".externalReferenceCode" <<< "${site}")
+		local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${site}")
 
 		local put_response=$(\
 			curl \
@@ -94,7 +94,7 @@ function main {
 				-s \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}" \
-			| jq -r ".")
+			| jq --raw-output ".")
 
 		echo "PUT Response: ${put_response}"
 		echo ""
@@ -113,11 +113,11 @@ function main {
 		echo "Processing: ${file_name}"
 		echo ""
 
-		local href=$(jq -r ".actions.createBatch.href" ${file_name})
+		local href=$(jq --raw-output ".actions.createBatch.href" ${file_name})
 
 		if [[ "$href" == "null" ]]
 		then
-			local class_name=$(jq -r ".configuration.className" ${file_name})
+			local class_name=$(jq --raw-output ".configuration.className" ${file_name})
 
 			if [[ "$class_name" == "null" ]]
 			then
@@ -138,11 +138,11 @@ function main {
 
 		echo "HREF: ${href}"
 
-		jq -r ".items" ${file_name} > /tmp/liferay_batch_entrypoint.items.json
+		jq --raw-output ".items" ${file_name} > /tmp/liferay_batch_entrypoint.items.json
 
 		echo "Items: $(</tmp/liferay_batch_entrypoint.items.json)"
 
-		local parameters=$(jq -r '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' ${file_name} 2>/dev/null)
+		local parameters=$(jq --raw-output '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' ${file_name} 2>/dev/null)
 
 		if [ "${parameters}" != "" ]
 		then
@@ -161,7 +161,7 @@ function main {
 				-s \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters}" \
-			| jq -r ".")
+			| jq --raw-output ".")
 
 		echo "POST Response: ${post_response}"
 		echo ""
@@ -175,9 +175,9 @@ function main {
 			exit 1
 		fi
 
-		local external_reference_code=$(jq -r ".externalReferenceCode" <<< "${post_response}")
+		local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${post_response}")
 
-		local status=$(jq -r ".executeStatus//.status" <<< "${post_response}")
+		local status=$(jq --raw-output ".executeStatus//.status" <<< "${post_response}")
 
 		until [ "${status}" == "COMPLETED" ] || [ "${status}" == "FAILED" ] || [ "${status}" == "NOT_FOUND" ]
 		do
@@ -189,9 +189,9 @@ function main {
 					"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}" \
 					-H "accept: application/json" \
 					-H "Authorization: Bearer ${oauth2_access_token}" \
-				| jq -r '.')
+				| jq --raw-output '.')
 
-			status=$(jq -r '.executeStatus//.status' <<< "${status_response}")
+			status=$(jq --raw-output '.executeStatus//.status' <<< "${status_response}")
 
 			echo "Execute Status: ${status}"
 		done
