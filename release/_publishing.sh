@@ -394,7 +394,7 @@ function _update_bundles_yml {
 	sed --in-place "/^$/d" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 	sed --in-place "s/[[:space:]]{}//g" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 
-	truncate -s -1 "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+	truncate --size=-1 "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
