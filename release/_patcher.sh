@@ -41,7 +41,7 @@ function report_jenkins_url {
 		--preserve \
 		--recursive \
 		--verbose \
-		"${_BUILD_DIR}/patcher-status/" \
+		"${_BUILD_DIR}/patcher-status/production/" \
 		/mnt/patcher-shared/patcher/
 	fi
 }
@@ -82,7 +82,7 @@ function report_patcher_status {
 			--preserve \
 			--recursive \
 			--verbose \
-			"${_BUILD_DIR}/patcher-status/" \
+			"${_BUILD_DIR}/patcher-status/production/" \
 			/mnt/patcher-shared/patcher/
 	fi
 }
