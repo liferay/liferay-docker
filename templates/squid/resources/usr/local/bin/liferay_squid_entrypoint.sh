@@ -12,7 +12,7 @@ function main {
 			-s /var/lib/squid/ssl_db \
 			-M 20MB
 
-		chown -R proxy:proxy /var/lib/squid
+		chown --recursive proxy:proxy /var/lib/squid
 
 		openssl req \
 			-days 365 \
