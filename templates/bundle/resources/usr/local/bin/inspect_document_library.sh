@@ -48,7 +48,7 @@ function calculate_results {
 					do
 						local file_path="${company_id}/${repository_id}/${file_entry_id}/${file_version}"
 
-						local file_brief=$(file -b "${file_version}")
+						local file_brief=$(file --brief "${file_version}")
 
 						local type=${file_brief%% *}
 
