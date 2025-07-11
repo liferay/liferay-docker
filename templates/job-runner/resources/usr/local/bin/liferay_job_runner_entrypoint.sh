@@ -40,7 +40,7 @@ function register_crontab {
 function run_jobs {
 	while true
 	do
-		if [ $(ls /opt/liferay/job-queue | wc -l) -gt 0 ]
+		if [ $(ls /opt/liferay/job-queue | wc --lines) -gt 0 ]
 		then
 			local job=$(ls --reverse --sort=time /opt/liferay/job-queue | head --lines 1)
 

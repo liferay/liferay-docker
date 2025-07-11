@@ -129,9 +129,9 @@ function test_bom_copy_file {
 	done
 
 	assert_equals \
-		"$(ls -1 temp_dir_test_bom_copy_file/com/example/file1.txt | wc -l)" \
+		"$(ls -1 temp_dir_test_bom_copy_file/com/example/file1.txt | wc --lines)" \
 		"1" \
-		"$(ls -1 temp_dir_test_bom_copy_file/file2.txt | wc -l)" \
+		"$(ls -1 temp_dir_test_bom_copy_file/file2.txt | wc --lines)" \
 		"1"
 
 	rm --force --recursive temp_dir_manage_bom_jar
@@ -265,11 +265,11 @@ function test_bom_manage_bom_jar {
 	manage_bom_jar javax.persistence-2.2.0.jar &> /dev/null
 
 	assert_equals \
-		"$(ls -1 api-jar/META-INF/ECLIPSE_.RSA 2> /dev/null | wc -l)" \
+		"$(ls -1 api-jar/META-INF/ECLIPSE_.RSA 2> /dev/null | wc --lines)" \
 		"0" \
-		"$(ls -1 api-jar/META-INF/ECLIPSE_.SF 2> /dev/null | wc -l)" \
+		"$(ls -1 api-jar/META-INF/ECLIPSE_.SF 2> /dev/null | wc --lines)" \
 		"0" \
-		"$(ls -1 api-jar/META-INF/file1.txt | wc -l)" \
+		"$(ls -1 api-jar/META-INF/file1.txt | wc --lines)" \
 		"1"
 
 	rm --force --recursive api-jar

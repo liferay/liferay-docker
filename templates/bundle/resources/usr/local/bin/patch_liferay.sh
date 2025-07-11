@@ -74,7 +74,7 @@ function main {
 		fi
 	elif [ -d "${LIFERAY_PATCHING_DIR}" ] && [[ $(find "${LIFERAY_PATCHING_DIR}" -maxdepth 1 -type f -name "liferay-*.zip" 2>/dev/null) ]]
 	then
-		if [ $(find "${LIFERAY_PATCHING_DIR}" -maxdepth 1 -type f -name "liferay-*.zip" | wc -l) == 1 ]
+		if [ $(find "${LIFERAY_PATCHING_DIR}" -maxdepth 1 -type f -name "liferay-*.zip" | wc --lines) == 1 ]
 		then
 			local patch_file_name=$(basename "${LIFERAY_PATCHING_DIR}"/liferay-*.zip)
 

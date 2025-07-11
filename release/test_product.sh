@@ -96,9 +96,9 @@ function test_product_warm_up_tomcat {
 	warm_up_tomcat 1> /dev/null
 
 	assert_equals \
-		"$(ls -1 ${_BUILD_DIR}/warm-up-tomcat | wc -l)" "1" \
-		"$(ls -1 ${_BUNDLES_DIR}/logs | wc -l)" "0" \
-		"$(ls -1 ${_BUNDLES_DIR}/tomcat/logs | wc -l)" "0"
+		"$(ls -1 ${_BUILD_DIR}/warm-up-tomcat | wc --lines)" "1" \
+		"$(ls -1 ${_BUNDLES_DIR}/logs | wc --lines)" "0" \
+		"$(ls -1 ${_BUNDLES_DIR}/tomcat/logs | wc --lines)" "0"
 }
 
 function test_product_warm_up_tomcat_already_warmed {

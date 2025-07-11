@@ -54,7 +54,7 @@ function test_releases_json_merge_json_snippets {
 		grep \
 			--extended-regexp \
 			"(20.*(dxp|portal).*\.json)" 2> /dev/null | \
-		wc -l)
+		wc --lines)
 
 	_merge_json_snippets &> /dev/null
 

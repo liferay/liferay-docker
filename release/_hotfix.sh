@@ -503,7 +503,7 @@ function prepare_release_dir {
 
 	local release7z
 
-	if [ -e "${_TEST_RELEASE_DIR}" ] && [ $(find "${_TEST_RELEASE_DIR}" -type f -printf "%f\n" | wc -l) -eq 1 ]
+	if [ -e "${_TEST_RELEASE_DIR}" ] && [ $(find "${_TEST_RELEASE_DIR}" -type f -printf "%f\n" | wc --lines) -eq 1 ]
 	then
 		lc_cd "${_TEST_RELEASE_DIR}"
 
