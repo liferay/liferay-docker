@@ -19,6 +19,7 @@ function main {
 
 function set_up {
 	export _RELEASE_ROOT_DIR="${PWD}"
+
 	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
 }
 

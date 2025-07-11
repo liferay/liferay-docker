@@ -45,6 +45,7 @@ function checkout_product_version {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	git clean -d --force -x
+
 	git reset --hard
 
 	git checkout master
