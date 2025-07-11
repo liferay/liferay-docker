@@ -229,7 +229,7 @@ function prepare_tomcat {
 	then
 		mv "${TEMP_DIR}/liferay/tomcat-${liferay_tomcat_version}" "${TEMP_DIR}/liferay/tomcat"
 
-		ln -s tomcat "${TEMP_DIR}/liferay/tomcat-${liferay_tomcat_version}"
+		ln --symbolic tomcat "${TEMP_DIR}/liferay/tomcat-${liferay_tomcat_version}"
 	fi
 
 	configure_tomcat

@@ -13,7 +13,7 @@ function create_symlink {
 
 	if [ -n "${target_dir}" ] && [ ! -e "/usr/lib/jvm/${2//-/}" ]
 	then
-		ln -sf ${target_dir} "/usr/lib/jvm/${2//-/}"
+		ln --force --symbolic ${target_dir} "/usr/lib/jvm/${2//-/}"
 	fi
 }
 

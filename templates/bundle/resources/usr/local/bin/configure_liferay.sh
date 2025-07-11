@@ -79,7 +79,7 @@ function main {
 
 		rm --force --recursive /opt/liferay/deploy
 
-		ln -s "${LIFERAY_MOUNT_DIR}"/deploy /opt/liferay/deploy
+		ln --symbolic "${LIFERAY_MOUNT_DIR}"/deploy /opt/liferay/deploy
 
 		echo "[LIFERAY] The directory /mnt/liferay/deploy is ready. Copy files to \$(pwd)/xyz123/deploy on the host operating system to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
 		echo ""
