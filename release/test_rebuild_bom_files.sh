@@ -44,9 +44,7 @@ function _test_rebuild_bom_files_checkout_product_version {
 
 	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
-	local product_version_branch=$(git rev-parse --abbrev-ref HEAD)
-
-	assert_equals "${product_version_branch}" "${2}"
+	assert_equals "$(git rev-parse --abbrev-ref HEAD)" "${2}"
 }
 
 main
