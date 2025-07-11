@@ -110,7 +110,7 @@ function tear_down {
 }
 
 function test_bom_copy_tld {
-	mkdir -parents "${_RELEASE_ROOT_DIR}"/test-dependencies/actual/META-INF
+	mkdir --parents "${_RELEASE_ROOT_DIR}"/test-dependencies/actual/META-INF
 
 	copy_tld "${_RELEASE_ROOT_DIR}/test-dependencies/actual/META-INF" "liferay-*.tld" "ratings.tld"
 
