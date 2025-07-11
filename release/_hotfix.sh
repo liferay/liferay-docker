@@ -378,9 +378,9 @@ function create_hotfix {
 
 	echo "Comparing ${_BUNDLES_DIR} and ${_RELEASE_DIR}."
 
-	diff -qr "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep --invert-match /work/Catalina
+	diff --brief --recursive "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep --invert-match /work/Catalina
 
-	diff -qr "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep --invert-match /work/Catalina | while read -r change
+	diff --brief --recursive "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep --invert-match /work/Catalina | while read -r change
 	do
 		if (echo "${change}" | grep "^Only in ${_RELEASE_DIR}" &>/dev/null)
 		then
