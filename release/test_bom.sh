@@ -30,6 +30,16 @@ function main {
 	test_bom_generate_pom_release_bom_portal
 	test_bom_generate_pom_release_bom_third_party_portal
 
+	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+
+	git reset --hard &> /dev/null
+
+	git clean -dfx &> /dev/null
+
+	git checkout master &> /dev/null
+
+	lc_cd "${_RELEASE_ROOT_DIR}"
+
 	_PROJECTS_DIR="${PWD}/test-dependencies/actual"
 
 	test_bom_copy_tld
@@ -91,13 +101,7 @@ function tear_down {
 	rm --force "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp-tomcat-2024.q2.6-1721635298.zip"
 	rm --force "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip"
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
-
-	git reset --hard &> /dev/null
-
 	git clean -dfx &> /dev/null
-
-	git checkout master &> /dev/null
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _ARTIFACT_RC_VERSION
