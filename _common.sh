@@ -119,7 +119,7 @@ function download {
 	echo "Downloading ${file_url}."
 	echo ""
 
-	mkdir -p $(dirname "${file_name}")
+	mkdir --parents $(dirname "${file_name}")
 
 	curl $(echo "${LIFERAY_DOCKER_CURL_OPTIONS}") --fail --location --output "${file_name}" "${file_url}" || exit 2
 }
@@ -194,7 +194,7 @@ function make_temp_directory {
 
 	TEMP_DIR="temp-${TIMESTAMP}"
 
-	mkdir -p "${TEMP_DIR}"
+	mkdir --parents "${TEMP_DIR}"
 
 	local resource_dir
 

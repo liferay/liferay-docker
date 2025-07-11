@@ -43,7 +43,7 @@ function check_usage {
 
 	lc_cd "${_RELEASE_TOOL_DIR}"
 
-	mkdir -p release-data
+	mkdir --parents release-data
 
 	lc_cd release-data
 

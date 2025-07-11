@@ -22,7 +22,7 @@ function set_up {
 	export _BUNDLES_DIR="${PWD}"
 	export _PRODUCT_VERSION="7.4.3.120-ga120"
 
-	mkdir -p "${_BUNDLES_DIR}/tomcat"
+	mkdir --parents "${_BUNDLES_DIR}/tomcat"
 
 	echo "Apache Tomcat Version 9.9.99" > "${_BUNDLES_DIR}/tomcat/RELEASE-NOTES"
 }

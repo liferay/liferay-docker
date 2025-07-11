@@ -88,11 +88,11 @@ function main {
 function prepare_mount {
 	TEST_DIR=temp-test-$(date "$(date)" "+%Y%m%d%H%M")
 
-	mkdir -p "${TEST_DIR}"
+	mkdir --parents "${TEST_DIR}"
 
 	cp --recursive templates/test/resources/* "${TEST_DIR}"
 
-	mkdir -p "${TEST_DIR}/mnt/liferay/patching"
+	mkdir --parents "${TEST_DIR}/mnt/liferay/patching"
 
 	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL}" ]
 	then

@@ -29,7 +29,7 @@ function check_usage {
 function generate_heap_dump {
 	local date=$(date +'%Y-%m-%d')
 
-	mkdir -p "${HEAP_DUMPS_DIR}/${date}"
+	mkdir --parents "${HEAP_DUMPS_DIR}/${date}"
 
 	local time=$(date +'%H-%M-%S')
 
@@ -41,7 +41,7 @@ function generate_heap_dump {
 function main {
 	check_usage "${@}"
 
-	mkdir -p "${HEAP_DUMPS_DIR}"
+	mkdir --parents "${HEAP_DUMPS_DIR}"
 
 	generate_heap_dump
 

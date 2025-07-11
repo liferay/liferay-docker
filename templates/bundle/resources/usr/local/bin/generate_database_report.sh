@@ -7,7 +7,7 @@ function check_usage {
 
 	_REPORTS_DIRECTORY="${LIFERAY_HOME}/data/reports"
 
-	mkdir -p "${_REPORTS_DIRECTORY}"
+	mkdir --parents "${_REPORTS_DIRECTORY}"
 
 	_REPORTS_FILE="${_REPORTS_DIRECTORY}"/query_report_$(date +'%Y-%m-%d_%H-%M-%S').html
 }

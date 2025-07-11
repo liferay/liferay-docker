@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function main {
-	mkdir -p /opt/liferay/job-queue
+	mkdir --parents /opt/liferay/job-queue
 
 	if [ ! -e "/opt/liferay/job-queue/${1}" ]
 	then

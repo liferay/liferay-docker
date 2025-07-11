@@ -621,7 +621,7 @@ function main {
 
 	export LIFERAY_DOCKER_LOGS_DIR="${LIFERAY_DOCKER_LOGS_DIR}"
 
-	mkdir -p "${LIFERAY_DOCKER_LOGS_DIR}"
+	mkdir --parents "${LIFERAY_DOCKER_LOGS_DIR}"
 
 	build_base_image
 

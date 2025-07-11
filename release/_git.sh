@@ -22,7 +22,7 @@ function clone_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	mkdir -p "${_PROJECTS_DIR}"
+	mkdir --parents "${_PROJECTS_DIR}"
 
 	lc_cd "${_PROJECTS_DIR}"
 

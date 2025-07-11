@@ -32,7 +32,7 @@ function set_up {
 
 	unzip -q liferay-dxp-tomcat-2024.q2.6-1721635298.zip
 
-	mkdir -p "${_RELEASE_ROOT_DIR}/release-data/build/boms"
+	mkdir --parents "${_RELEASE_ROOT_DIR}/release-data/build/boms"
 }
 
 function tear_down {

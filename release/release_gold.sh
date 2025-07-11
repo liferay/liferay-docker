@@ -59,7 +59,7 @@ function check_usage {
 
 	rm --force --recursive "${_PROMOTION_DIR}"
 
-	mkdir -p "${_PROMOTION_DIR}"
+	mkdir --parents "${_PROMOTION_DIR}"
 
 	lc_cd "${_PROMOTION_DIR}"
 
@@ -507,7 +507,7 @@ function test_boms {
 
 	rm --force "${HOME}/.liferay/workspace/releases.json"
 
-	mkdir -p "temp_dir_test_boms"
+	mkdir --parents "temp_dir_test_boms"
 
 	lc_cd "temp_dir_test_boms"
 

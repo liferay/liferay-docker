@@ -15,7 +15,7 @@ function report_jenkins_url {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	mkdir -p "${_BUILD_DIR}/patcher-status/production/osbPatcherStatus/build/jenkins"
+	mkdir --parents "${_BUILD_DIR}/patcher-status/production/osbPatcherStatus/build/jenkins"
 
 	lc_cd "${_BUILD_DIR}/patcher-status/production/osbPatcherStatus/build/jenkins"
 

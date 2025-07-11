@@ -15,7 +15,7 @@ function main {
 
 		exit 1
 	else
-		mkdir -p "${license_dir}/deploy"
+		mkdir --parents "${license_dir}/deploy"
 
 		local license_file_name="trial-dxp-license-${license_start_date}.xml"
 

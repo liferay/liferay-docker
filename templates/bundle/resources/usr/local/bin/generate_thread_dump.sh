@@ -43,7 +43,7 @@ function check_usage {
 function generate_thread_dump {
 	local date=$(date +'%Y-%m-%d')
 
-	mkdir -p "${THREAD_DUMPS_DIR}/${date}"
+	mkdir --parents "${THREAD_DUMPS_DIR}/${date}"
 
 	local id=${1}
 	local time=$(date +'%H-%M-%S')

@@ -44,7 +44,7 @@ function set_up {
 
 	git checkout master &> /dev/null
 
-	mkdir -p "${_PROJECTS_DIR}/liferay-portal-ee/release"
+	mkdir --parents "${_PROJECTS_DIR}/liferay-portal-ee/release"
 }
 
 function tear_down {

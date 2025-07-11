@@ -219,7 +219,7 @@ function lc_download {
 
 	local cache_file_dir="$(dirname "${cache_file}")"
 
-	mkdir -p "${cache_file_dir}"
+	mkdir --parents "${cache_file_dir}"
 
 	lc_log DEBUG "Downloading ${file_url}."
 
@@ -331,7 +331,7 @@ function lc_time_run {
 
 	if [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
 	then
-		mkdir -p "${LIFERAY_COMMON_LOG_DIR}"
+		mkdir --parents "${LIFERAY_COMMON_LOG_DIR}"
 
 		local log_file="${LIFERAY_COMMON_LOG_DIR}/log_${LIFERAY_COMMON_START_TIME}_step_$(lc_next_step)_${run_id}.txt"
 	fi

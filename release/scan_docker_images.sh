@@ -28,7 +28,7 @@ function check_usage {
 
 	LIFERAY_COMMON_LOG_DIR="${_RELEASE_ROOT_DIR}/logs"
 
-	mkdir -p "${LIFERAY_COMMON_LOG_DIR}"
+	mkdir --parents "${LIFERAY_COMMON_LOG_DIR}"
 }
 
 function main {

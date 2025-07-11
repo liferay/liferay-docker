@@ -97,7 +97,7 @@ function main {
 
 		if [ ! -e  "${LIFERAY_THREAD_DUMPS_DIRECTORY}" ]
 		then
-			mkdir -p "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
+			mkdir --parents "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
 		fi
 
 		echo -e "${thread_dump}" > "${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"

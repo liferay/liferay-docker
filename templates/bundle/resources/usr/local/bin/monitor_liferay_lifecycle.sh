@@ -5,7 +5,7 @@ source /usr/local/bin/_liferay_bundle_common.sh
 function generate_thread_dump {
 	local thread_dump=$(jattach $(cat "${LIFERAY_PID}") threaddump)
 
-	mkdir -p "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
+	mkdir --parents "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
 
 	local file_name="${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
 

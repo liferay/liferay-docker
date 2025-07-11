@@ -23,7 +23,7 @@ function set_up {
 
 	common_set_up
 
-	mkdir -p "${_BUILD_DIR}/release"
+	mkdir --parents "${_BUILD_DIR}/release"
 
 	lc_cd test-dependencies
 

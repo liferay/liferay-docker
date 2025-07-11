@@ -186,7 +186,7 @@ function package_portal_dependencies {
 
 		rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
 
-		mkdir -p "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
+		mkdir --parents "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
 
 		for jar in \
 			activation.jar \
@@ -220,7 +220,7 @@ function package_portal_dependencies {
 
 		rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
-		mkdir -p "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
+		mkdir --parents "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
 		for jar in \
 			com.liferay.petra.concurrent.jar \
@@ -260,7 +260,7 @@ function package_release {
 
 	local package_dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 
-	mkdir -p "${package_dir}"
+	mkdir --parents "${package_dir}"
 
 	cp --archive "${_BUNDLES_DIR}"/* "${package_dir}"
 

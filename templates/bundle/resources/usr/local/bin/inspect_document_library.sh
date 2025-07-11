@@ -3,7 +3,7 @@
 function calculate_results {
 	rm --force --recursive "${RESULTS_DIR}"
 
-	mkdir -p "${RESULTS_DIR}"
+	mkdir --parents "${RESULTS_DIR}"
 
 	lcd document_library
 
@@ -16,7 +16,7 @@ function calculate_results {
 			continue
 		fi
 
-		mkdir -p "${RESULTS_DIR}/${company_id}"
+		mkdir --parents "${RESULTS_DIR}/${company_id}"
 
 		lcd "${pwd}/${company_id}/0"
 

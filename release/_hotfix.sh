@@ -7,7 +7,7 @@ function add_file_to_hotfix {
 
 	local file_dir=$(dirname "${file_name}")
 
-	mkdir -p "${_BUILD_DIR}/hotfix/binaries/${file_dir}"
+	mkdir --parents "${_BUILD_DIR}/hotfix/binaries/${file_dir}"
 
 	cp "${_BUNDLES_DIR}/${1}" "${_BUILD_DIR}/hotfix/binaries/${file_dir}"
 }
@@ -190,7 +190,7 @@ function compare_jars {
 
 		if (echo "${jar_descriptions}" | grep --quiet ".class")
 		then
-			mkdir -p "${_BUILD_DIR}/tmp/jar1" "${_BUILD_DIR}/tmp/jar2"
+			mkdir --parents "${_BUILD_DIR}/tmp/jar1" "${_BUILD_DIR}/tmp/jar2"
 
 			while IFS= read -r line
 			do
@@ -374,7 +374,7 @@ function create_documentation {
 function create_hotfix {
 	rm --force --recursive "${_BUILD_DIR}"/hotfix
 
-	mkdir -p "${_BUILD_DIR}"/hotfix
+	mkdir --parents "${_BUILD_DIR}"/hotfix
 
 	echo "Comparing ${_BUNDLES_DIR} and ${_RELEASE_DIR}."
 
@@ -530,7 +530,7 @@ function prepare_release_dir {
 
 	rm --force --recursive "${_RELEASE_DIR}.tmp"
 
-	mkdir -p "${_RELEASE_DIR}.tmp"
+	mkdir --parents "${_RELEASE_DIR}.tmp"
 
 	lc_cd "${_RELEASE_DIR}.tmp"
 
