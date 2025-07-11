@@ -125,7 +125,7 @@ function download {
 }
 
 function get_current_arch {
-	if [ $(uname -m) == "aarch64" ]
+	if [ $(uname --machine) == "aarch64" ]
 	then
 		echo "arm64"
 	else
