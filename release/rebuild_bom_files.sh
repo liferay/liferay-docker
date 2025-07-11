@@ -52,8 +52,8 @@ function checkout_product_version {
 
 	local product_version_tag=$(echo "${_PRODUCT_VERSION}" | sed --regexp-extended "s/-lts//g")
 
-	git branch --delete "${product_version_tag}" 2>/dev/null
-	git tag --delete "${product_version_tag}" 2>/dev/null
+	git branch --delete "${product_version_tag}" 2> /dev/null
+	git tag --delete "${product_version_tag}" 2> /dev/null
 
 	git fetch --no-tags upstream "${product_version_tag}":"${product_version_tag}"
 
