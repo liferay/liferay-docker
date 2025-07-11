@@ -10,7 +10,7 @@ function customize_aliases {
 }
 
 function customize_prompt {
-	PS1="\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\${PWD}\[\e[0m\] \\n\$ "
+	PS1="\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\${PWD}\[\e[0m\]\\n\$ "
 }
 
 configure_jdk
