@@ -28,6 +28,13 @@ function tear_down {
 	unset _RELEASE_ROOT_DIR
 }
 
+function test_rebuild_bom_files_checkout_product_version {
+	_test_rebuild_bom_files_checkout_product_version "2025.q1.14-lts" "2025.q1.14"
+	_test_rebuild_bom_files_checkout_product_version "2025.q2.3" "2025.q2.3"
+
+	lc_cd "${_RELEASE_ROOT_DIR}"
+}
+
 function _test_rebuild_bom_files_checkout_product_version {
 	_PRODUCT_VERSION="${1}"
 
@@ -40,13 +47,6 @@ function _test_rebuild_bom_files_checkout_product_version {
 	local product_version_branch=$(git rev-parse --abbrev-ref HEAD)
 
 	assert_equals "${product_version_branch}" "${2}"
-}
-
-function test_rebuild_bom_files_checkout_product_version {
-	_test_rebuild_bom_files_checkout_product_version "2025.q1.14-lts" "2025.q1.14"
-	_test_rebuild_bom_files_checkout_product_version "2025.q2.3" "2025.q2.3"
-
-	lc_cd "${_RELEASE_ROOT_DIR}"
 }
 
 main
