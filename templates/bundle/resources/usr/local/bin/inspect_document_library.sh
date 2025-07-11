@@ -108,7 +108,7 @@ function check_usage {
 }
 
 function get_regenerated_dir_size {
-	local size=$(du -s "${1}" 2>/dev/null)
+	local size=$(du --summarize "${1}" 2>/dev/null)
 
 	if [ -n "${size}" ]
 	then
