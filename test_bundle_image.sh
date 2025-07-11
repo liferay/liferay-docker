@@ -119,7 +119,7 @@ function prepare_mount {
 
 	if [ -e "${TEST_DIR}/mnt/liferay/scripts" ]
 	then
-		chmod -R +x "${TEST_DIR}/mnt/liferay/scripts"
+		chmod --recursive +x "${TEST_DIR}/mnt/liferay/scripts"
 	fi
 }
 
