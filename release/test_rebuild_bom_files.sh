@@ -38,7 +38,7 @@ function test_rebuild_bom_files_checkout_product_version {
 function _test_rebuild_bom_files_checkout_product_version {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_rebuild_bom_files_checkout_product_version for ${_PRODUCT_VERSION} \n"
+	echo -e "Running _test_rebuild_bom_files_checkout_product_version for ${_PRODUCT_VERSION}.\n"
 
 	checkout_product_version &> /dev/null
 
