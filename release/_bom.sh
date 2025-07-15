@@ -3,6 +3,21 @@
 source ../_release_common.sh
 source ./_product.sh
 
+function copy_file {
+	local dir=$(dirname "${1}" | sed --expression "s#[./]*[^/]*/##")
+
+	if [ "${dir}" == "temp_dir_manage_bom_jar" ]
+	then
+		dir=""
+	fi
+
+	mkdir -p "${2}/${dir}"
+
+	lc_log DEBUG "Copying ${1}."
+
+	cp --archive "${1}" "${2}/${dir}"
+}
+
 function generate_api_jars {
 	mkdir -p "${_BUILD_DIR}/boms"
 
@@ -419,21 +434,6 @@ function generate_poms {
 	lc_time_run generate_pom_release_distro
 }
 
-function _copy_file {
-	local dir=$(dirname "${1}" | sed --expression "s#[./]*[^/]*/##")
-
-	if [ "${dir}" == "temp_dir_manage_bom_jar" ]
-	then
-		dir=""
-	fi
-
-	mkdir -p "${2}/${dir}"
-
-	lc_log DEBUG "Copying ${1}."
-
-	cp --archive "${1}" "${2}/${dir}"
-}
-
 function _copy_source_package {
 
 	#
@@ -515,14 +515,14 @@ function _manage_bom_jar {
 
 		find temp_dir_manage_bom_jar -maxdepth 1 -type f -print0 | while IFS= read -r -d '' current_file
 		do
-			_copy_file "${current_file}" api-jar
+			copy_file "${current_file}" api-jar
 		done
 
 		find temp_dir_manage_bom_jar -name kernel -type d -print0 | while IFS= read -r -d '' current_file
 		do
 			if (echo "${current_file}" | grep "com/liferay/portal/kernel")
 			then
-				_copy_file "${current_file}" api-jar
+				copy_file "${current_file}" api-jar
 			fi
 		done
 
@@ -530,13 +530,13 @@ function _manage_bom_jar {
 		do
 			if (echo "${current_file}" | grep "com/liferay")
 			then
-				_copy_file "${current_file}" api-jar
+				copy_file "${current_file}" api-jar
 			fi
 		done
 
 		find temp_dir_manage_bom_jar -name packageinfo -type f -print0 | while IFS= read -r -d '' current_file
 		do
-			_copy_file "$(dirname "${current_file}")" api-jar
+			copy_file "$(dirname "${current_file}")" api-jar
 		done
 	else
 		rm --force --recursive temp_dir_manage_bom_jar/META-INF/custom-sql

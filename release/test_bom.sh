@@ -42,6 +42,7 @@ function main {
 
 	_PROJECTS_DIR="${PWD}/test-dependencies/actual"
 
+	test_bom_copy_file
 	test_bom_copy_tld
 
 	tear_down
@@ -111,6 +112,35 @@ function tear_down {
 	unset _PROJECTS_DIR
 	unset _RELEASE_ROOT_DIR
 	unset _RELEASE_TOOL_DIR
+}
+
+function test_bom_copy_file {
+	mkdir --parents test-dependencies/actual/test_bom_copy_file_dir
+	mkdir --parents temp_dir_manage_bom_jar/com/example
+
+	for file_path in com/example/file1.txt file2.txt
+	do
+		touch "temp_dir_manage_bom_jar/${file_path}"
+
+		copy_file \
+			"temp_dir_manage_bom_jar/${file_path}" \
+			test-dependencies/actual/test_bom_copy_file_dir
+	done
+
+	mkdir --parents test-dependencies/expected/test_bom_copy_file_dir/com/example
+
+	for file_path in com/example/file1.txt file2.txt
+	do
+		touch "test-dependencies/expected/test_bom_copy_file_dir/${file_path}"
+	done
+
+	assert_equals \
+		"$(ls test-dependencies/actual/test_bom_copy_file_dir)" \
+		"$(ls test-dependencies/expected/test_bom_copy_file_dir)"
+
+	rm --force --recursive temp_dir_manage_bom_jar
+	rm --force --recursive test-dependencies/actual/test_bom_copy_file_dir
+	rm --force --recursive test-dependencies/expected/test_bom_copy_file_dir
 }
 
 function test_bom_copy_tld {
