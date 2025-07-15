@@ -6,7 +6,7 @@ function trigger_ci_test_suite {
 		local release_url="https://releases.liferay.com/dxp/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 
 		local http_response=$(curl \
-			"http://test-1-1/job/test-portal-release/buildWithParameters" \
+			"http://test-1-25/job/test-portal-release/buildWithParameters" \
 			--data-urlencode "CI_TEST_SUITE=${CI_TEST_SUITE}" \
 			--data-urlencode "RUN_SCANCODE_PIPELINE=${RUN_SCANCODE_PIPELINE}" \
 			--data-urlencode "TEST_PORTAL_BRANCH_NAME=$(_get_test_portal_branch_name "${LIFERAY_RELEASE_GIT_REF}")" \
