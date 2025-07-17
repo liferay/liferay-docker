@@ -32,10 +32,9 @@ function tear_down {
 }
 
 function test_build_bundle_image_get_latest_tomcat_version {
+	_test_build_bundle_image_get_latest_tomcat_version "9.0.107" "10.1.40" "10.1.40"
 	_test_build_bundle_image_get_latest_tomcat_version "9.0.83" "" "${_LATEST_TOMCAT_VERSION_TEST}"
-	_test_build_bundle_image_get_latest_tomcat_version "9.0.104" "" "${_LATEST_TOMCAT_VERSION_TEST}"
-	_test_build_bundle_image_get_latest_tomcat_version "9.0.105" "${_LATEST_TOMCAT_VERSION_TEST}" "${_LATEST_TOMCAT_VERSION_TEST}"
-	_test_build_bundle_image_get_latest_tomcat_version "9.0.106" "10.1.40" "10.1.40"
+	_test_build_bundle_image_get_latest_tomcat_version "9.0.9999" "" "9.0.9999"
 }
 
 function test_build_bundle_image_set_parent_image {
