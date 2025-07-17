@@ -35,6 +35,16 @@ function test_build_bundle_image_get_latest_tomcat_version {
 	_test_build_bundle_image_get_latest_tomcat_version "9.0.107" "10.1.40" "10.1.40"
 	_test_build_bundle_image_get_latest_tomcat_version "9.0.83" "" "${_LATEST_TOMCAT_VERSION_TEST}"
 	_test_build_bundle_image_get_latest_tomcat_version "9.0.9999" "" "9.0.9999"
+
+	_LATEST_TOMCAT_VERSION_TEST=$(curl \
+		"https://downloads.apache.org/tomcat/tomcat-10/" \
+		--silent \
+		| grep --only-matching --perl-regexp "10\.\d+\.\d+" \
+		| sort --version-sort \
+		| tail --lines=1)
+
+	_test_build_bundle_image_get_latest_tomcat_version "10.1.40" "" "${_LATEST_TOMCAT_VERSION_TEST}"
+	_test_build_bundle_image_get_latest_tomcat_version "10.1.9999" "" "10.1.9999"
 }
 
 function test_build_bundle_image_set_parent_image {
