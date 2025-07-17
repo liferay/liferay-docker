@@ -34,6 +34,7 @@ function tear_down {
 function test_build_bundle_image_get_latest_tomcat_version {
 	_test_build_bundle_image_get_latest_tomcat_version "9.0.107" "10.1.40" "10.1.40"
 	_test_build_bundle_image_get_latest_tomcat_version "9.0.83" "" "${_LATEST_TOMCAT_VERSION_TEST}"
+	_test_build_bundle_image_get_latest_tomcat_version "9.0.84" "9.0.9999" "9.0.9999"
 	_test_build_bundle_image_get_latest_tomcat_version "9.0.9999" "" "9.0.9999"
 
 	_LATEST_TOMCAT_VERSION_TEST=$(curl \
@@ -44,6 +45,7 @@ function test_build_bundle_image_get_latest_tomcat_version {
 		| tail --lines=1)
 
 	_test_build_bundle_image_get_latest_tomcat_version "10.1.40" "" "${_LATEST_TOMCAT_VERSION_TEST}"
+	_test_build_bundle_image_get_latest_tomcat_version "10.1.41" "10.1.9999" "10.1.9999"
 	_test_build_bundle_image_get_latest_tomcat_version "10.1.9999" "" "10.1.9999"
 }
 
