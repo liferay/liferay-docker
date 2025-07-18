@@ -43,6 +43,7 @@ function main {
 	_PROJECTS_DIR="${PWD}/test-dependencies/actual"
 
 	test_bom_copy_tld
+	test_bom_manage_bom_jar
 
 	tear_down
 }
@@ -121,6 +122,29 @@ function test_bom_copy_tld {
 	assert_equals \
 		"$(ls test-dependencies/actual/META-INF)" \
 		"$(ls test-dependencies/expected/META-INF)"
+}
+
+function test_bom_manage_bom_jar {
+	mkdir api-jar
+
+	mkdir --parents temp_dir_manage_bom_jar/META-INF
+
+	touch temp_dir_manage_bom_jar/META-INF/ECLIPSE_.RSA
+	touch temp_dir_manage_bom_jar/META-INF/ECLIPSE_.SF
+	touch temp_dir_manage_bom_jar/META-INF/test.txt
+
+	manage_bom_jar javax.persistence-2.2.0.jar &> /dev/null
+
+	mkdir --parents test-dependencies/expected/api-jar/META-INF
+
+	touch test-dependencies/expected/api-jar/META-INF/test.txt
+
+	assert_equals \
+		"$(ls api-jar/META-INF)" \
+		"$(ls test-dependencies/expected/api-jar/META-INF)"
+
+	rm --force --recursive api-jar
+	rm --force --recursive test-dependencies/expected/api-jar
 }
 
 function test_bom_generate_pom_release_bom_api_dxp {

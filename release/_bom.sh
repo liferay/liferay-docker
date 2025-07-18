@@ -67,7 +67,7 @@ function generate_api_jars {
 
 		lc_download "https://repository-cdn.liferay.com/nexus/content/groups/public/${group_path}/${name}/${version}/${name}-${version}.jar" "${name}-${version}.jar"
 
-		_manage_bom_jar "${name}-${version}.jar"
+		manage_bom_jar "${name}-${version}.jar"
 
 		rm --force "${name}-${version}.jar"
 	done
@@ -76,17 +76,17 @@ function generate_api_jars {
 	then
 		for portal_jar in portal-kernel support-tomcat
 		do
-			_manage_bom_jar "${_BUNDLES_DIR}/tomcat/lib/ext/${portal_jar}.jar"
+			manage_bom_jar "${_BUNDLES_DIR}/tomcat/lib/ext/${portal_jar}.jar"
 		done
 
 		for portal_jar in portal-impl util-bridges util-java util-slf4j util-taglib
 		do
-			_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib/${portal_jar}.jar"
+			manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib/${portal_jar}.jar"
 		done
 
 		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/lib/ext" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib" -name "com.liferay.*.jar" -type f -print0 | while IFS= read -r -d '' module_jar
 		do
-			_manage_bom_jar "${module_jar}"
+			manage_bom_jar "${module_jar}"
 		done
 
 		for artifact in "commons*.jar" "org.apache.commons.*.jar" "poi*.jar" "spring*.jar"
@@ -97,19 +97,19 @@ function generate_api_jars {
 
 				if (grep $(echo "${module_jar_basename%.jar}:") "${_PROJECTS_DIR}/liferay-portal-ee/lib/development/dependencies.properties" || grep $(echo "${module_jar_basename%.jar}:") "${_PROJECTS_DIR}/liferay-portal-ee/lib/portal/dependencies.properties")
 				then
-					_manage_bom_jar "${module_jar}"
+					manage_bom_jar "${module_jar}"
 				fi
 			done
 		done
 	else
 		for portal_jar in portal-impl portal-kernel support-tomcat util-bridges util-java util-slf4j util-taglib
 		do
-			_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/${portal_jar}.jar"
+			manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/${portal_jar}.jar"
 		done
 
 		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" -name "com.liferay.*.jar" -type f -print0 | while IFS= read -r -d '' module_jar
 		do
-			_manage_bom_jar "${module_jar}"
+			manage_bom_jar "${module_jar}"
 		done
 	fi
 
@@ -474,7 +474,7 @@ function copy_tld {
 	done
 }
 
-function _manage_bom_jar {
+function manage_bom_jar {
 	lc_log DEBUG "Processing ${1} for api jar."
 
 	mkdir -p temp_dir_manage_bom_jar
