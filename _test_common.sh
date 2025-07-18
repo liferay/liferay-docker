@@ -57,9 +57,21 @@ function assert_equals {
 
 	if [ "${_TEST_RESULT}" == "true" ]
 	then
+		if _is_test_server
+		then
+			echo -e "${FUNCNAME[1]} SUCCESS :white_check_mark:\n"
+
+			return
+		fi
+
 		echo -e "${FUNCNAME[1]} \e[1;32mSUCCESS\e[0m\n"
 	else
-		echo -e "${FUNCNAME[1]} \e[1;31mFAILED\e[0m\n"
+		if _is_test_server
+		then
+			echo -e "${FUNCNAME[1]} FAILED :x:\n"
+		else
+			echo -e "${FUNCNAME[1]} \e[1;31mFAILED\e[0m\n"
+		fi
 
 		cat "${assertion_error_file}"
 
