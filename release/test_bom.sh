@@ -44,6 +44,7 @@ function main {
 
 	test_bom_copy_file
 	test_bom_copy_tld
+	test_bom_manage_bom_jar
 
 	tear_down
 }
@@ -251,6 +252,28 @@ function test_bom_generate_pom_release_bom_third_party_portal {
 
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom
+}
+
+function test_bom_manage_bom_jar {
+	mkdir api-jar
+	mkdir --parents temp_dir_manage_bom_jar/META-INF
+
+	touch temp_dir_manage_bom_jar/META-INF/ECLIPSE_.RSA
+	touch temp_dir_manage_bom_jar/META-INF/ECLIPSE_.SF
+	touch temp_dir_manage_bom_jar/META-INF/file1.txt
+
+	manage_bom_jar javax.persistence-2.2.0.jar &> /dev/null
+
+	assert_equals \
+		"$(ls -1 api-jar/META-INF/ECLIPSE_.RSA 2> /dev/null | wc -l)" \
+		"0" \
+		"$(ls -1 api-jar/META-INF/ECLIPSE_.SF 2> /dev/null | wc -l)" \
+		"0" \
+		"$(ls -1 api-jar/META-INF/file1.txt | wc -l)" \
+		"1"
+
+	rm --force --recursive api-jar
+	rm --force --recursive temp_dir_manage_bom_jar/META-INF
 }
 
 main
