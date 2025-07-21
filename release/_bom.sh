@@ -497,8 +497,8 @@ function _manage_bom_jar {
 
 	#rm --force "${name}-${version}.jar"
 
-	if (basename "${1}" | grep --extended-regexp --quiet "^com.liferay." &&
-	   ! basename "${1}" | grep --quiet "com.liferay.jakarta.portlet-api.jar")
+	if (basename "${1}" | grep --extended-regexp --quiet "^com.liferay.") &&
+	   (! basename "${1}" | grep --quiet "com.liferay.jakarta.portlet-api.jar")
 	then
 		local current_file
 
