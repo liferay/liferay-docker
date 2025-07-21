@@ -115,8 +115,8 @@ function tear_down {
 }
 
 function test_bom_copy_file {
-	mkdir --parents test-dependencies/actual/test_bom_copy_file_dir
 	mkdir --parents temp_dir_manage_bom_jar/com/example
+	mkdir --parents temp_dir_test_bom_copy_file
 
 	for file_path in com/example/file1.txt file2.txt
 	do
@@ -124,23 +124,17 @@ function test_bom_copy_file {
 
 		copy_file \
 			"temp_dir_manage_bom_jar/${file_path}" \
-			test-dependencies/actual/test_bom_copy_file_dir
-	done
-
-	mkdir --parents test-dependencies/expected/test_bom_copy_file_dir/com/example
-
-	for file_path in com/example/file1.txt file2.txt
-	do
-		touch "test-dependencies/expected/test_bom_copy_file_dir/${file_path}"
+			temp_dir_test_bom_copy_file
 	done
 
 	assert_equals \
-		"$(ls test-dependencies/actual/test_bom_copy_file_dir)" \
-		"$(ls test-dependencies/expected/test_bom_copy_file_dir)"
+		"$(ls -1 temp_dir_test_bom_copy_file/com/example/file1.txt | wc -l)" \
+		"1" \
+		"$(ls -1 temp_dir_test_bom_copy_file/file2.txt | wc -l)" \
+		"1"
 
 	rm --force --recursive temp_dir_manage_bom_jar
-	rm --force --recursive test-dependencies/actual/test_bom_copy_file_dir
-	rm --force --recursive test-dependencies/expected/test_bom_copy_file_dir
+	rm --force --recursive temp_dir_test_bom_copy_file
 }
 
 function test_bom_copy_tld {
