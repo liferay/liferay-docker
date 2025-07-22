@@ -386,7 +386,7 @@ function reference_new_releases {
 			"${issue_key} Add release references for ${_PRODUCT_VERSION}" \
 			"master" \
 			"pyoo47/liferay-jenkins-ee" \
-			"${issue_key} Add release references for ${_PRODUCT_VERSION}."
+			"${issue_key} Add release references for ${_PRODUCT_VERSION}"
 
 		local exit_code="${?}"
 
