@@ -118,7 +118,7 @@ function generate_api_jars {
 			done
 		done
 	else
-		for portal_jar in portal-impl portal-kernel support-tomcat util-bridges util-java util-slf4j util-taglib
+		for portal_jar in jaxb-api portal-impl portal-kernel support-tomcat util-bridges util-java util-slf4j util-taglib
 		do
 			manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/${portal_jar}.jar"
 		done
