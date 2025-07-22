@@ -110,6 +110,16 @@ function generate_release_notes {
 		paste -sd, > "${_BUILD_DIR}/release/release-notes.txt"
 }
 
+function get_pull_request_url {
+	local pull_request_url="$(\
+		gh pr view liferay-release:"${_TEMP_BRANCH}" \
+			--jq ".url" \
+			--json "url" \
+			--repo "${1}")"
+
+	echo "${pull_request_url}"
+}
+
 function prepare_branch_to_commit {
 	lc_cd "${1}"
 

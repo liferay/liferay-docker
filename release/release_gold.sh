@@ -396,13 +396,7 @@ function reference_new_releases {
 		else
 			lc_log INFO "Pull request with references to the next release was sent successfully."
 
-			local pull_request_url="$(\
-				gh pr view liferay-release:${issue_key} \
-					--jq ".url" \
-					--json "url" \
-					--repo "pyoo47/liferay-jenkins-ee")"
-
-			add_jira_issue_comment "Related pull request: ${pull_request_url}" "${issue_key}"
+			add_jira_issue_comment "Related pull request: $(get_pull_request_url pyoo47/liferay-jenkins-ee)" "${issue_key}"
 		fi
 
 		return "${exit_code}"
