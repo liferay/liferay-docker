@@ -196,17 +196,6 @@ function set_actual_product_version {
 }
 
 function _compare_product_versions {
-	local product_version_1
-
-	if [ -n "${ACTUAL_PRODUCT_VERSION}" ]
-	then
-		product_version_1="${ACTUAL_PRODUCT_VERSION}"
-	else
-		product_version_1=$(_get_product_version)
-	fi
-
-	local product_version_2="${1}"
-
 	local operator_1
 	local operator_2
 
@@ -219,6 +208,17 @@ function _compare_product_versions {
 		operator_1="-gt"
 		operator_2="-lt"
 	fi
+
+	local product_version_1
+
+	if [ -n "${ACTUAL_PRODUCT_VERSION}" ]
+	then
+		product_version_1="${ACTUAL_PRODUCT_VERSION}"
+	else
+		product_version_1=$(_get_product_version)
+	fi
+
+	local product_version_2="${1}"
 
 	if (is_ga_release "${product_version_1}" && is_ga_release "${product_version_2}") ||
 	   (is_u_release "${product_version_1}" && is_u_release "${product_version_2}")
