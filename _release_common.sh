@@ -147,7 +147,7 @@ function is_later_product_version_than {
 }
 
 function is_lts_release {
-	if [[ "$(_get_product_version "${1}")" == *lts* ]]
+	if [[ "$(_get_product_version "${1}")" == *lts ]]
 	then
 		return 0
 	fi
