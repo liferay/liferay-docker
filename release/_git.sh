@@ -111,13 +111,11 @@ function generate_release_notes {
 }
 
 function get_pull_request_url {
-	local pull_request_url="$(\
+	echo "$(\
 		gh pr view liferay-release:"${_TEMP_BRANCH}" \
 			--jq ".url" \
 			--json "url" \
 			--repo "${1}")"
-
-	echo "${pull_request_url}"
 }
 
 function prepare_branch_to_commit {
