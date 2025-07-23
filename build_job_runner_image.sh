@@ -9,7 +9,7 @@ function build_docker_image {
 	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/job-runner:${image_version}-${TIMESTAMP}")
 	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/job-runner")
 
-	if [ "${1}" == "push" ]
+	if [ "${1}" == "push-all" ]
 	then
 		check_docker_buildx
 

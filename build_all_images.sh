@@ -601,16 +601,23 @@ function main {
 
 	check_utils 7z curl docker git java jq sed sort tr unzip yq
 
-	if [[ " ${@} " =~ " --push " ]]
+	if [[ " ${@} " =~ " --push-all " ]]
 	then
-		BUILD_ALL_IMAGES_PUSH="push"
+		BUILD_ALL_IMAGES_PUSH="push-all"
 
 		./release_notes.sh commit
 
 		git push
 	fi
 
-	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] && [ -z "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" ]
+	if [[ " ${@} " =~ " --push " ]]
+	then
+		BUILD_ALL_IMAGES_PUSH="push"
+	fi
+
+	if [ "${BUILD_ALL_IMAGES_PUSH}" == "push" ] ||
+	   [ "${BUILD_ALL_IMAGES_PUSH}" == "push-all" ] &&
+	   [ -z "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" ]
 	then
 		LIFERAY_DOCKER_IMAGE_PLATFORMS=linux/amd64,linux/arm64
 	fi

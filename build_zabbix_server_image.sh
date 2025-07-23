@@ -9,7 +9,7 @@ function build_docker_image {
 	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/zabbix-server:${image_version}-${TIMESTAMP}")
 	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/zabbix-server")
 
-	if [ "${1}" == "push" ]
+	if [ "${1}" == "push-all" ]
 	then
 		check_docker_buildx
 

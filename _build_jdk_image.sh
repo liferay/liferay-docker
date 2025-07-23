@@ -26,7 +26,7 @@ function _build_docker_image {
 	local zulu_amd64_version="LIFERAY_DOCKER_ZULU_AMD64_VERSION"
 	local zulu_arm64_version="LIFERAY_DOCKER_ZULU_ARM64_VERSION"
 
-	if [ "${1}" == "push" ]
+	if [ "${1}" == "push-all" ]
 	then
 		check_docker_buildx
 

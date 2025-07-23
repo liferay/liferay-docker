@@ -419,7 +419,8 @@ function print_help {
 }
 
 function push_docker_image {
-	if [ "${1}" == "push" ]
+	if [ "${1}" == "push" ] ||
+	   [  "${1}" == "push-all" ]
 	then
 		check_docker_buildx
 
