@@ -135,8 +135,8 @@ function generate_api_jars {
 	then
 		lc_download "https://repository-cdn.liferay.com/nexus/service/local/repo_groups/public/content/jakarta/servlet/jakarta.servlet-api/6.0.0/jakarta.servlet-api-6.0.0.jar" "jakarta.servlet-api.jar"
 
-		_manage_bom_jar "${_BUNDLES_DIR}/tomcat/lib/servlet-api.jar"
-		_manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/com.liferay.jakarta.portlet-api.jar"
+		manage_bom_jar "${_BUNDLES_DIR}/tomcat/lib/servlet-api.jar"
+		manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/com.liferay.jakarta.portlet-api.jar"
 		manage_bom_jar "jakarta.servlet-api.jar"
 	fi
 
