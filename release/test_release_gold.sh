@@ -60,7 +60,7 @@ function tear_down {
 
 	git checkout master &> /dev/null
 
-	git branch --list | grep --extended-regexp 'temp-branch-[0-9]{14}' | xargs -r git branch -D &> /dev/null
+	git branch --list | grep --extended-regexp 'temp-branch-[0-9]{14}' | xargs --no-run-if-empty git branch -D &> /dev/null
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_RC_BUILD_TIMESTAMP
