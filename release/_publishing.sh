@@ -250,7 +250,7 @@ function upload_hotfix {
 		lc_log INFO "${_HOTFIX_FILE_NAME} successfully uploaded to lrdcom-vm-1."
 	fi
 
-	for gcp_bucket in "liferay-releases/dxp/hotfix liferay-releases-hotfix"
+	for gcp_bucket in liferay-releases/dxp/hotfix liferay-releases-hotfix
 	do
 		if (gsutil ls "gs://${gcp_bucket}/${_PRODUCT_VERSION}" | grep --quiet "${_HOTFIX_FILE_NAME}")
 		then
