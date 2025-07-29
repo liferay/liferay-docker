@@ -511,6 +511,8 @@ function test_boms {
 
 	lc_cd "temp_dir_test_boms"
 
+	blade update
+
 	if is_quarterly_release
 	then
 		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}"
