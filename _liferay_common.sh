@@ -365,7 +365,7 @@ function lc_time_run {
 			then
 				echo "Full log file is at ${log_file}. Printing the last 100 lines:"
 
-				tail -n 100 "${log_file}"
+				tail --lines=100 "${log_file}"
 			fi
 
 			if (declare -F lc_time_run_error &>/dev/null)

@@ -95,7 +95,7 @@ function _get_latest_product_version {
 			--only-matching \
 			--perl-regexp \
 			"${product_version_regex}" | \
-		tail -n 1
+		tail --lines=1
 }
 
 function _merge_json_snippets {
@@ -250,7 +250,7 @@ function _promote_product_versions {
 		while read -r group_version || [ -n "${group_version}" ]
 		do
 			# shellcheck disable=SC2010
-			last_version=$(ls "${_PROMOTION_DIR}" | grep "${product_name}-${group_version}" | tail -n 1 2>/dev/null)
+			last_version=$(ls "${_PROMOTION_DIR}" | grep "${product_name}-${group_version}" | tail --lines=1 2>/dev/null)
 
 			if [ -n "${last_version}" ]
 			then
