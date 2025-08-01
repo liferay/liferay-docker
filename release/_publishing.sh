@@ -381,7 +381,7 @@ function _update_bundles_yml {
 
 	if is_7_4_ga_release
 	then
-		local ga_bundle_url="releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/"$(curl -fsSL "https://releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle")
+		local ga_bundle_url="releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/"$(curl --fail --location --show-error --silent "https://releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle")
 
 		perl -i -0777pe 's/\s+latest: true(?!7.4.13:)//' "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
 
