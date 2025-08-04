@@ -188,7 +188,7 @@ function _process_products {
 			tr --delete '/' | \
 			uniq)
 		do
-			if [[ $(echo "${product_version}" | grep "7.4") ]] && [[ $(echo "${product_version}" | cut --delimiter 'u' --fields 2) -gt 112 ]]
+			if [[ $(echo "${product_version}" | grep "7.4") ]] && [[ $(echo "${product_version}" | cut --delimiter='u' --fields=2) -gt 112 ]]
 			then
 				continue
 			fi

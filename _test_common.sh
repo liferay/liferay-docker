@@ -33,8 +33,8 @@ function assert_equals {
 
 				while IFS= read -r line
 				do
-					echo "Actual: $(echo "${line}" | cut --delimiter '|' --fields 1 | xargs)" >> "${assertion_error_file}"
-					echo -e "Expected: $(echo "${line}" | cut --delimiter '|' --fields 2 | xargs)\n" >> "${assertion_error_file}"
+					echo "Actual: $(echo "${line}" | cut --delimiter='|' --fields=1 | xargs)" >> "${assertion_error_file}"
+					echo -e "Expected: $(echo "${line}" | cut --delimiter='|' --fields=2 | xargs)\n" >> "${assertion_error_file}"
 				done < "${temp_assertion_error_file}"
 			fi
 

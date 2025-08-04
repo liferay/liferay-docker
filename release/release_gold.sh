@@ -287,12 +287,12 @@ function reference_new_releases {
 		grep "portal.latest.bundle.version\[${product_group_version}" \
 			"build.properties" | \
 			tail -1 | \
-			cut --delimiter '=' --fields 2)"
+			cut --delimiter='=' --fields=2)"
 
 	if [ -z "${previous_product_version}" ]
 	then
 		latest_quarterly_release="true"
-		previous_product_version="$(grep "portal.latest.bundle.version\[master\]=" "build.properties" | cut --delimiter '=' --fields 2)"
+		previous_product_version="$(grep "portal.latest.bundle.version\[master\]=" "build.properties" | cut --delimiter='=' --fields=2)"
 	fi
 
 	for component in osgi sql tools
@@ -336,8 +336,8 @@ function reference_new_releases {
 	local latest_product_group_version="$(\
 		grep "portal.latest.bundle.version\[master\]=" \
 			"build.properties" | \
-			cut --delimiter '=' --fields 2 | \
-			cut --delimiter '.' --fields 1,2)"
+			cut --delimiter='=' --fields=2 | \
+			cut --delimiter='.' --fields=1,2)"
 
 	if [ "${product_group_version}" == "${latest_product_group_version}" ] || [ "${latest_quarterly_release}" == "true" ] 
 	then
@@ -351,8 +351,8 @@ function reference_new_releases {
 		grep "portal.latest.bundle.version" \
 			"build.properties" | \
 			tail -1 | \
-			cut --delimiter '[' --fields 2 | \
-			cut --delimiter ']' --fields 1)"
+			cut --delimiter='[' --fields=2 | \
+			cut --delimiter=']' --fields=1)"
 
 	local quarterly_release_branch="release-$(get_product_group_version)"
 
@@ -518,7 +518,7 @@ function test_boms {
 		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}"
 	else
 		local product_group_version="$(get_product_group_version)"
-		local product_version_suffix=$(echo "${_PRODUCT_VERSION}" | cut --delimiter '-' --fields 2)
+		local product_version_suffix=$(echo "${_PRODUCT_VERSION}" | cut --delimiter='-' --fields=2)
 
 		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${product_group_version}-${product_version_suffix}"
 	fi
