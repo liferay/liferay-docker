@@ -144,7 +144,7 @@ function build_bundle_images {
 			sed 's/.*-u//' | \
 			sed 's/7.4.13.nightly//' | \
 			sort --numeric-sort --reverse | \
-			head --lines 1)
+			head --lines=1)
 
 		local versions=$(echo "${search_output}" | grep '^.*:$' | sed 's/://')
 
