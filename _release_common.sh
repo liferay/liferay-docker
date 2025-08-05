@@ -192,6 +192,15 @@ function is_quarterly_release {
 	return 1
 }
 
+function is_release_candidate {
+	if [ "${LIFERAY_DOCKER_RELEASE_CANDIDATE}" == "true" ]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function is_u_release {
 	if [[ "$(_get_product_version "${1}")" == *-u* ]]
 	then
