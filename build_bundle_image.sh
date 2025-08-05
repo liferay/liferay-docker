@@ -139,6 +139,11 @@ function check_release {
 
 		exit 1
 	fi
+
+	if is_release_candidate
+	then
+		DOCKER_IMAGE_NAME="release-candidates"
+	fi
 }
 
 function check_usage {
@@ -174,7 +179,7 @@ function download_file_from_github {
 }
 
 function download_trial_dxp_license {
-	if [[ ${DOCKER_IMAGE_NAME} == "dxp" ]]
+	if [[ ${DOCKER_LABEL_NAME} == "Liferay DXP" ]]
 	then
 		rm --force --recursive "${TEMP_DIR}/liferay/data/license"
 
@@ -407,6 +412,7 @@ function print_help {
 	echo "    LIFERAY_DOCKER_IMAGE_PLATFORMS (optional): Comma separated Docker image platforms to build when the \"push\" parameter is set"
 	echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API header used to generate the trial license"
 	echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
+	echo "    LIFERAY_DOCKER_RELEASE_CANDIDATE (optional): If set to \"true\", a release candidate will be uploaded to Docker Hub"
 	echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
 	echo "    LIFERAY_DOCKER_REPOSITORY (optional): Docker repository"
 	echo "    LIFERAY_DOCKER_SLIM (optional): If set to \"true\", the image will be smaller"

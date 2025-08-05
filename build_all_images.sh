@@ -68,6 +68,14 @@ function build_bundle_image {
 	local test_hotfix_url=$(get_string $(yq "${query}".test_hotfix_url < bundles.yml))
 	local test_installed_patch=$(get_string $( yq "${query}".test_installed_patch < bundles.yml))
 
+	if is_release_candidate && is_dxp_release
+	then
+		bundle_url="releases-cdn.liferay.com/dxp/release-candidates/${version}/$(curl -fsSL "https://releases-cdn.liferay.com/dxp/release-candidates/${version}/.lfrrelease-tomcat-bundle")"
+	elif is_release_candidate && is_ga_release
+	then
+		bundle_url="releases-cdn.liferay.com/portal/release-candidates/${version}/$(curl -fsSL "https://releases-cdn.liferay.com/portal/release-candidates/${version}/.lfrrelease-tomcat-bundle")"
+	fi
+
 	if [ -z "${bundle_url}" ]
 	then
 		bundle_url="releases-cdn.liferay.com/dxp/${version}/"$(curl --fail --location --show-error --silent "https://releases-cdn.liferay.com/dxp/${version}/.lfrrelease-tomcat-bundle")
@@ -96,7 +104,7 @@ function build_bundle_image {
 	echo "Building Docker image ${image_name} based on ${bundle_url}."
 	echo ""
 
-	LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_LATEST=${latest} LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_SLIM="${slim}" LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LIFERAY_DOCKER_LOGS_DIR}/${build_id}.log"
+	LIFERAY_DOCKER_FIX_PACK_URL=${fix_pack_url} LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_LATEST=${latest} LIFERAY_DOCKER_RELEASE_CANDIDATE="${LIFERAY_DOCKER_RELEASE_CANDIDATE}" LIFERAY_DOCKER_RELEASE_FILE_URL=${bundle_url} LIFERAY_DOCKER_RELEASE_VERSION=${version} LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_SLIM="${slim}" LIFERAY_DOCKER_TEST_HOTFIX_URL=${test_hotfix_url} LIFERAY_DOCKER_TEST_INSTALLED_PATCHES=${test_installed_patch} time ./build_bundle_image.sh "${BUILD_ALL_IMAGES_PUSH}" 2>&1 | tee "${LIFERAY_DOCKER_LOGS_DIR}/${build_id}.log"
 
 	local build_bundle_image_exit_code=${PIPESTATUS[0]}
 
@@ -123,6 +131,15 @@ function build_bundle_images {
 	# LIFERAY_DOCKER_IMAGE_FILTER="7.2.10-dxp-1 " ./build_all_images.sh
 	# LIFERAY_DOCKER_IMAGE_FILTER=7.2.10 ./build_all_images.sh
 	#
+
+	if is_release_candidate
+	then
+		echo "Building bundle images for release candidate ${LIFERAY_DOCKER_IMAGE_FILTER}."
+
+		build_bundle_image "" "false" "${LIFERAY_DOCKER_IMAGE_FILTER}"
+
+		return
+	fi
 
 	local main_keys=$(yq '' < bundles.yml | grep --invert-match '  .*' | sed 's/://')
 
@@ -567,7 +584,7 @@ function get_tag_from_image {
 }
 
 function has_slim_build_criteria {
-	if (is_u_release "${1}" || is_nightly_release "${1}")
+	if (is_candidate_release || is_nightly_release "${1}" || is_u_release "${1}")
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
