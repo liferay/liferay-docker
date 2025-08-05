@@ -29,6 +29,11 @@ function clean_up_test_directory {
 	then
 		rm --force --recursive "${TEST_DIR}"
 	fi
+
+	if [ -d "/opt/dev/projects/github/${TEST_DIR}" ]
+	then
+		rm --force --recursive "/opt/dev/projects/github/${TEST_DIR}"
+	fi
 }
 
 function generate_thread_dump {
