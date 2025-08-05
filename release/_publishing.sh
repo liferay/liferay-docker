@@ -331,18 +331,33 @@ function upload_release {
 }
 
 function upload_to_docker_hub {
-	prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-docker" "liferay-docker"
-
-	if [ "${?}" -ne 0 ]
+	if [ "${1}" == "release-candidate" ] &&
+	   [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
-		lc_log ERROR "Unable to prepare the branch to update bundles.yml."
+		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	_update_bundles_yml
+	lc_cd "$(dirname "${_RELEASE_TOOL_DIR}")"
 
-	LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}" ./build_all_images.sh --push-all
+	if [ "${1}" == "release-candidate" ]
+	then
+		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" ./build_all_images.sh --push
+	else
+		prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-docker" "liferay-docker"
+
+		if [ "${?}" -ne 0 ]
+		then
+			lc_log ERROR "Unable to prepare the branch to update bundles.yml."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+
+		_update_bundles_yml
+
+		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" ./build_all_images.sh --push
+	fi
 
 	local exit_code="${?}"
 
@@ -351,7 +366,7 @@ function upload_to_docker_hub {
 		lc_log ERROR "Unable to build the Docker image."
 	fi
 
-	lc_cd "${_BASE_DIR}"
+	lc_cd "${_RELEASE_ROOT_DIR}"
 
 	return "${exit_code}"
 }
