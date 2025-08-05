@@ -273,6 +273,16 @@ function upload_hotfix {
 }
 
 function upload_opensearch {
+	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
+	then
+		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
+
+		rm --force "${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.api.jar"
+		rm --force "${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.impl.jar"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	gsutil mv -r "${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.api.jar" "gs://liferay-releases/opensearch2/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/com.liferay.portal.search.opensearch2.api.jar"
 	gsutil mv -r "${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.impl.jar" "gs://liferay-releases/opensearch2/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/com.liferay.portal.search.opensearch2.impl.jar"
 }
