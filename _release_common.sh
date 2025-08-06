@@ -133,6 +133,16 @@ function is_early_product_version_than {
 	_compare_product_versions "${1}" "early"
 }
 
+function is_first_quarterly_release {
+	if [[ "$(_get_product_version "${1}")" == *.0* ]] &&
+	   is_quarterly_release "${1}"
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function is_ga_release {
 	if [[ "$(_get_product_version "${1}")" == *-ga* ]]
 	then
