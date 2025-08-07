@@ -109,9 +109,9 @@ function test_releases_json_tag_recommended_product_versions {
 	_tag_recommended_product_versions &> /dev/null
 
 	assert_equals \
-		"$(jq "[.[] | select(.tags[]? == \"recommended\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "ga")")")" \
+		"$(jq "[.[] | select(.tags[]? == \"recommended\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "$(get_latest_product_version "ga")")")" \
 		"true" \
-		"$(jq "[.[] | select(.tags[]? == \"recommended\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "$(_get_latest_product_version "quarterly")")")" \
+		"$(jq "[.[] | select(.tags[]? == \"recommended\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "$(get_latest_product_version "quarterly")")")" \
 		"true"
 }
 
