@@ -111,6 +111,8 @@ function main {
 
 	lc_time_run add_patcher_project_version
 
+	lc_time_run update_salesforce_product_version
+
 	#if [ -d "${_RELEASE_ROOT_DIR}/dev/projects" ]
 	#then
 	#	lc_background_run clone_repository liferay-portal-ee
@@ -604,6 +606,43 @@ function update_release_info_date {
 
 		return "${exit_code}"
 	fi
+}
+
+function update_salesforce_product_version {
+	if ! is_first_quarterly_release
+	then
+		lc_log INFO "Skipping the update of the Salesforce product version."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	local data=$(
+		cat <<- END
+		{
+			"liferayVersion": "$(get_product_group_version)"
+		}
+		END
+	)
+
+	local http_code=$( \
+		curl \
+			"https://us-west2-is-sales-uat-20240208.cloudfunctions.net/liferay-version-api/liferay-versions" \
+			--data "${data}" \
+			--header "Authorization: Bearer $(gcloud auth print-identity-token)" \
+			--header "Content-Type: application/json" \
+			--output /dev/null \
+			--request POST \
+			--silent \
+			--write-out "%{http_code}")
+
+	if [ "${http_code}" != "200" ]
+	then
+		lc_log ERROR "Unable to update the Salesforce product version. HTTP response code was ${http_code}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	lc_log INFO "The Salesforce product version was updated successfully."
 }
 
 main "${@}"
