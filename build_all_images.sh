@@ -68,10 +68,10 @@ function build_bundle_image {
 	local test_hotfix_url=$(get_string $(yq "${query}".test_hotfix_url < bundles.yml))
 	local test_installed_patch=$(get_string $( yq "${query}".test_installed_patch < bundles.yml))
 
-	if is_release_candidate && is_dxp_release
+	if is_dxp_release && is_release_candidate
 	then
 		bundle_url="releases-cdn.liferay.com/dxp/release-candidates/${version}/$(curl -fsSL "https://releases-cdn.liferay.com/dxp/release-candidates/${version}/.lfrrelease-tomcat-bundle")"
-	elif is_release_candidate && is_ga_release
+	elif is_ga_release && is_release_candidate
 	then
 		bundle_url="releases-cdn.liferay.com/portal/release-candidates/${version}/$(curl -fsSL "https://releases-cdn.liferay.com/portal/release-candidates/${version}/.lfrrelease-tomcat-bundle")"
 	fi
