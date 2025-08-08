@@ -10,6 +10,7 @@ source ./_package.sh
 source ./_patcher.sh
 source ./_product.sh
 source ./_publishing.sh
+source ./_releases_json.sh
 
 function check_usage {
 
@@ -67,12 +68,47 @@ function check_usage {
 	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
 }
 
+function handle_automated_build {
+	if [ "${BUILD_CAUSE}" != "TIMERTRIGGER" ] &&
+	   [ "${LIFERAY_RELEASE_TEST_MODE}" != "true" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	lc_log INFO "This build was triggered automatically."
+
+	local latest_quarterly_candidate_product_version="$(get_latest_product_version quarterly-candidate)"
+	local latest_quarterly_product_version="$(get_latest_product_version quarterly)"
+
+	if [ "${latest_quarterly_candidate_product_version}" != "${latest_quarterly_product_version}" ]
+	then
+		lc_log INFO "The latest quarterly release candidate has not been published. Skipping build."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	if [ "$(get_release_patch_version "${latest_quarterly_product_version}")" -gt 11 ]
+	then
+		lc_log INFO "The latest patch release version is greater than 11. Skipping build."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	LIFERAY_RELEASE_GIT_REF="release-$(get_product_group_version "${latest_quarterly_product_version}")"
+	RUN_SCANCODE_PIPELINE=true
+	TRIGGER_CI_TEST_SUITE=true
+
+	lc_log INFO "LIFERAY_RELEASE_GIT_REF is set to ${LIFERAY_RELEASE_GIT_REF}."
+}
+
 function main {
 	export ANT_OPTS="-Xmx10G"
 
-	print_variables
-
 	check_usage
+
+	lc_time_run handle_automated_build
+
+	print_variables
 
 	lc_time_run report_jenkins_url
 
