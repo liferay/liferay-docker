@@ -87,7 +87,7 @@ function _download_product_version_list_html {
 
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
-		product_version_list_html=$(cat "${_RELEASE_ROOT_DIR}/test-dependencies/actual/${1}.html")
+		product_version_list_html=$(cat "${_RELEASE_ROOT_DIR}/test-dependencies/actual/$(basename "${1}").html")
 	else
 		product_version_list_html=$(lc_curl "${product_version_list_url}/")
 	fi

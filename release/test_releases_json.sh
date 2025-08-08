@@ -12,6 +12,7 @@ function main {
 		"${1}"
 	else
 		test_releases_json_add_major_versions
+		test_releases_json_get_latest_product_version
 		test_releases_json_merge_json_snippets
 		test_releases_json_not_process_new_product
 		test_releases_json_process_new_product
@@ -50,6 +51,13 @@ function test_releases_json_add_major_versions {
 		"true" \
 		"$(jq "[.[] | select(.productMajorVersion == \"DXP 2025.Q1 LTS\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "2025.q1.8-lts")")" \
 		"true"
+}
+
+function test_releases_json_get_latest_product_version {
+	_test_releases_json_get_latest_product_version "dxp" "7.3.10-u36"
+	_test_releases_json_get_latest_product_version "ga" "7.4.3.132-ga132"
+	_test_releases_json_get_latest_product_version "quarterly" "2025.q1.8-lts"
+	_test_releases_json_get_latest_product_version "quarterly-candidate" "2025.q1.8-lts"
 }
 
 function test_releases_json_merge_json_snippets {
@@ -113,6 +121,14 @@ function test_releases_json_tag_recommended_product_versions {
 		"true" \
 		"$(jq "[.[] | select(.tags[]? == \"recommended\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "$(get_latest_product_version "quarterly")")")" \
 		"true"
+}
+
+function _test_releases_json_get_latest_product_version {
+	echo -e "Running _test_releases_json_get_latest_product_version for ${1}.\n"
+
+	assert_equals \
+		"$(get_latest_product_version "${1}")" \
+		"${2}"
 }
 
 main "${@}"
