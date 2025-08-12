@@ -102,6 +102,11 @@ function handle_automated_build {
 }
 
 function main {
+	if [[ " ${@} " =~ " --test " ]]
+	then
+		return
+	fi
+
 	export ANT_OPTS="-Xmx10G"
 
 	check_usage
@@ -287,4 +292,4 @@ function print_variables {
 	echo ""
 }
 
-main
+main "${@}"
