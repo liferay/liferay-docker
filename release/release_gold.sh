@@ -626,7 +626,7 @@ function update_salesforce_product_version {
 
 	local http_code=$( \
 		curl \
-			"https://us-west2-is-sales-uat-20240208.cloudfunctions.net/liferay-version-api/liferay-versions" \
+			"https://us-west2-is-sales-prd.cloudfunctions.net/liferay-version-api/liferay-versions" \
 			--data "${data}" \
 			--header "Authorization: Bearer $(gcloud auth print-identity-token)" \
 			--header "Content-Type: application/json" \
