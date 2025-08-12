@@ -39,7 +39,7 @@ function _run_docker_tests {
 
 function _run_release_tests {
 	cd release
-	
+
 	find . -name "test_*.sh" -type f -exec {} \;
 }
 
