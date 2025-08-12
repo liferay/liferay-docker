@@ -15,17 +15,11 @@ function main {
 		test_release_gold_check_usage
 		test_release_gold_get_tag_name
 		test_release_gold_not_prepare_next_release_branch
+		test_release_gold_not_prepare_next_release_branch "false"
+		test_release_gold_not_prepare_next_release_branch "true"
 		test_release_gold_not_update_release_info_date
-
-		export LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="false"
-
-		test_release_gold_not_prepare_next_release_branch
-		test_release_gold_not_update_release_info_date
-
-		LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
-
-		test_release_gold_not_prepare_next_release_branch
-		test_release_gold_not_update_release_info_date
+		test_release_gold_not_update_release_info_date "false"
+		test_release_gold_not_update_release_info_date "true"
 		test_release_gold_prepare_next_release_branch
 		test_release_gold_update_release_info_date
 	else
@@ -102,6 +96,11 @@ function test_release_gold_not_reference_new_releases {
 }
 
 function test_release_gold_not_update_release_info_date {
+	if [ -n "${1}" ]
+	then
+		LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="${1}"
+	fi
+
 	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ]
 	then
 		_test_release_gold_not_update_release_info_date "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
@@ -115,6 +114,8 @@ function test_release_gold_not_update_release_info_date {
 }
 
 function test_release_gold_prepare_next_release_branch {
+	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
+
 	_test_release_gold_prepare_next_release_branch "2024.q1.12" "2024.Q1.13"
 	_test_release_gold_prepare_next_release_branch "2025.q1.0" "2025.Q1.1 LTS"
 }
@@ -156,6 +157,7 @@ function test_release_gold_reference_new_releases {
 }
 
 function test_release_gold_update_release_info_date {
+	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
 	_PRODUCT_VERSION="2024.q2.12"
 
 	update_release_info_date &> /dev/null
