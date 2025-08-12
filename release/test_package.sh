@@ -8,9 +8,14 @@ source ./_package.sh
 function main {
 	set_up
 
-	test_package_generate_javadocs
-	test_package_not_generate_javadocs
-	test_package_portal_dependencies
+	if [ "${#}" -eq 1 ]
+	then
+		"${1}"
+	else
+		test_package_generate_javadocs
+		test_package_not_generate_javadocs
+		test_package_portal_dependencies
+	fi
 
 	tear_down
 }
@@ -104,4 +109,4 @@ function _test_package_not_generate_javadocs {
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
-main
+main "${@}"

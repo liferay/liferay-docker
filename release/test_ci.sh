@@ -7,8 +7,13 @@ source ./_ci.sh
 function main {
 	set_up
 
-	test_ci_get_test_portal_branch_name
-	test_ci_not_trigger_ci_test_suite
+	if [ "${#}" -eq 1 ]
+	then
+		"${1}"
+	else
+		test_ci_get_test_portal_branch_name
+		test_ci_not_trigger_ci_test_suite
+	fi
 
 	tear_down
 }
@@ -39,4 +44,4 @@ function _test_ci_get_test_portal_branch_name {
 	assert_equals "$(_get_test_portal_branch_name "${1}")" "${2}"
 }
 
-main
+main "${@}"

@@ -7,14 +7,24 @@ source ./_product.sh
 function main {
 	set_up
 
-	test_product_add_ckeditor_license
-	test_product_get_java_specification_version
-	test_product_not_add_ckeditor_license
-	test_product_set_product_version_lts
-	test_product_set_product_version_with_parameters
-	test_product_warm_up_tomcat
+	if [ "${#}" -eq 1 ]
+	then
+		if [ "${1}" == "test_product_warm_up_tomcat_already_warmed" ]
+		then
+			test_product_warm_up_tomcat
+		fi
 
-	test_product_warm_up_tomcat_already_warmed
+		"${1}"
+	else
+		test_product_add_ckeditor_license
+		test_product_get_java_specification_version
+		test_product_not_add_ckeditor_license
+		test_product_set_product_version_lts
+		test_product_set_product_version_with_parameters
+		test_product_warm_up_tomcat
+
+		test_product_warm_up_tomcat_already_warmed
+	fi
 
 	tear_down
 }
@@ -155,4 +165,4 @@ function _test_product_set_product_version_with_parameters {
 		"${3}-123456789"
 }
 
-main
+main "${@}"

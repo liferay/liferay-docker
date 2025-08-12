@@ -14,6 +14,7 @@ function check_usage {
 		echo "    LIFERAY_DOCKER_NETWORK_NAME: Docker network name of the CI node container"
 		echo "    LIFERAY_DOCKER_TEST_HOTFIX_URL: URL of the test hotfix to install"
 		echo "    LIFERAY_DOCKER_TEST_INSTALLED_PATCHES: Comma separated list of installed patches (e.g. dxp-4-7210,hotfix-1072-7210)"
+		echo "    LIFERAY_DOCKER_TEST_NAME: Test name (e.g. test_docker_image_files)"
 		echo "    LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL: URL of the test Patching Tool to install"
 		echo ""
 		echo "Example: LIFERAY_DOCKER_IMAGE_ID=liferay/dxp:7.2.10.1-sp1-202001171544 LIFERAY_DOCKER_LOGS_DIR=logs-202306270130 ${0}"
@@ -72,14 +73,26 @@ function main {
 
 	start_container
 
-	test_health_status
+	if [ -n "${LIFERAY_DOCKER_TEST_NAME}" ]
+	then
+		if [ "${LIFERAY_DOCKER_TEST_NAME}" == "test_health_status" ]
+		then
+			"${LIFERAY_DOCKER_TEST_NAME}"
+		else
+			test_health_status
 
-	test_docker_image_files
-	test_docker_image_fix_pack_installed
-	test_docker_image_hotfix_installed
-	test_docker_image_patching_tool_updated
-	test_docker_image_scripts_1
-	test_docker_image_scripts_2
+			"${LIFERAY_DOCKER_TEST_NAME}"
+		fi
+	else
+		test_health_status
+
+		test_docker_image_files
+		test_docker_image_fix_pack_installed
+		test_docker_image_hotfix_installed
+		test_docker_image_patching_tool_updated
+		test_docker_image_scripts_1
+		test_docker_image_scripts_2
+	fi
 
 	generate_thread_dump
 

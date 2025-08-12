@@ -8,7 +8,12 @@ source ./_promotion.sh
 function main {
 	set_up
 
-	test_promotion_generate_distro_jar
+	if [ "${#}" -eq 1 ]
+	then
+		"${1}"
+	else
+		test_promotion_generate_distro_jar
+	fi
 
 	tear_down
 }
@@ -57,4 +62,4 @@ function test_promotion_generate_distro_jar {
 	assert_equals "$(find "${_RELEASE_ROOT_DIR}" -name "release.dxp.distro-${LIFERAY_RELEASE_VERSION}*.jar" | grep --count /)" 1
 }
 
-main
+main "${@}"

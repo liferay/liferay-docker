@@ -5,8 +5,13 @@ source ./_test_common.sh
 source ./build_all_images.sh --test
 
 function main {
-	test_build_all_images_get_latest_available_zulu_version
-	test_build_all_images_has_slim_build_criteria
+	if [ "${#}" -eq 1 ]
+	then
+		"${1}"
+	else
+		test_build_all_images_get_latest_available_zulu_version
+		test_build_all_images_has_slim_build_criteria
+	fi
 }
 
 function test_build_all_images_get_latest_available_zulu_version {
@@ -51,4 +56,4 @@ function _test_build_all_images_has_slim_build_criteria {
 	assert_equals "${?}" "${2}"
 }
 
-main
+main "${@}"

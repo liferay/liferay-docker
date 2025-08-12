@@ -7,12 +7,25 @@ source ./_package.sh
 function main {
 	set_up
 
-	test_release_properties_generate_file_portal
+	if [ "${#}" -eq 1 ]
+	then
+		if [ "${1}" == "test_release_properties_generate_file_dxp" ]
+		then
+			LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+			_PRODUCT_VERSION="7.4.13-u36"
 
-	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
-	_PRODUCT_VERSION="7.4.13-u36"
+			"${1}"
+		else
+			"${1}"
+		fi
+	else
+		test_release_properties_generate_file_portal
 
-	test_release_properties_generate_file_dxp
+		LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+		_PRODUCT_VERSION="7.4.13-u36"
+
+		test_release_properties_generate_file_dxp
+	fi
 
 	tear_down
 }
@@ -52,4 +65,4 @@ function test_release_properties_generate_file_dxp  {
 		"${_PRODUCT_VERSION/-/.}"
 }
 
-main
+main "${@}"

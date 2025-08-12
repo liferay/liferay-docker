@@ -4,7 +4,12 @@ source ./_liferay_common.sh
 source ./_test_common.sh
 
 function main {
-	test_patching_tool_version
+	if [ "${#}" -eq 1 ]
+	then
+		"${1}"
+	else
+		test_patching_tool_version
+	fi
 }
 
 function test_patching_tool_version {
@@ -29,4 +34,4 @@ function _test_patching_tool_version {
 	fi
 }
 
-main
+main "${@}"

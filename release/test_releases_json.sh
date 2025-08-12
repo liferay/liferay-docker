@@ -7,13 +7,17 @@ source ./_releases_json.sh
 function main {
 	set_up
 
-	test_releases_json_add_major_versions
-	test_releases_json_promote_product_versions
-	test_releases_json_tag_recommended_product_versions
-
-	test_releases_json_merge_json_snippets
-	test_releases_json_not_process_new_product
-	test_releases_json_process_new_product
+	if [ "${#}" -eq 1 ]
+	then
+		"${1}"
+	else
+		test_releases_json_add_major_versions
+		test_releases_json_merge_json_snippets
+		test_releases_json_not_process_new_product
+		test_releases_json_process_new_product
+		test_releases_json_promote_product_versions
+		test_releases_json_tag_recommended_product_versions
+	fi
 
 	tear_down
 }
@@ -111,4 +115,4 @@ function test_releases_json_tag_recommended_product_versions {
 		"true"
 }
 
-main
+main "${@}"

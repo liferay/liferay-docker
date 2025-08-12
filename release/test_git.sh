@@ -12,7 +12,12 @@ function main {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	test_git_generate_release_notes
+	if [ "${#}" -eq 1 ]
+	then
+		"${1}"
+	else
+		test_git_generate_release_notes
+	fi
 
 	tear_down
 }
@@ -68,4 +73,4 @@ function test_git_generate_release_notes {
 		"${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
-main
+main "${@}"

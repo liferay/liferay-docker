@@ -7,23 +7,28 @@ source ./release_gold.sh --test
 function main {
 	set_up
 
-	test_release_gold_not_reference_new_releases
-	test_release_gold_reference_new_releases
-
-	if [ -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
+	if [ "${#}" -eq 1 ]
 	then
-		test_release_gold_check_usage
-		test_release_gold_get_tag_name
-		test_release_gold_not_prepare_next_release_branch
-		test_release_gold_not_prepare_next_release_branch "false"
-		test_release_gold_not_prepare_next_release_branch "true"
-		test_release_gold_not_update_release_info_date
-		test_release_gold_not_update_release_info_date "false"
-		test_release_gold_not_update_release_info_date "true"
-		test_release_gold_prepare_next_release_branch
-		test_release_gold_update_release_info_date
+		"${1}"
 	else
-		echo -e "The directory ${_PROJECTS_DIR}/liferay-portal-ee does not exist.\n"
+		test_release_gold_not_reference_new_releases
+		test_release_gold_reference_new_releases
+
+		if [ -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
+		then
+			test_release_gold_check_usage
+			test_release_gold_get_tag_name
+			test_release_gold_not_prepare_next_release_branch
+			test_release_gold_not_prepare_next_release_branch "false"
+			test_release_gold_not_prepare_next_release_branch "true"
+			test_release_gold_not_update_release_info_date
+			test_release_gold_not_update_release_info_date "false"
+			test_release_gold_not_update_release_info_date "true"
+			test_release_gold_prepare_next_release_branch
+			test_release_gold_update_release_info_date
+		else
+			echo -e "The directory ${_PROJECTS_DIR}/liferay-portal-ee does not exist.\n"
+		fi
 	fi
 
 	tear_down
@@ -217,4 +222,4 @@ function _test_release_gold_not_update_release_info_date {
 	assert_equals "${?}" "${2}"
 }
 
-main
+main "${@}"

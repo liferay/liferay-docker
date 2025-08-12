@@ -5,11 +5,26 @@ source ../_test_common.sh
 function main {
 	set_up
 
-	test_scan_docker_images_with_invalid_image
+	
+	if [ "${#}" -eq 1 ]
+	then
+		if [ "${1}" == "test_scan_docker_images_with_invalid_image" ]
+		then
+			"${1}"
 
-	tear_down
+			tear_down
+		else
+			tear_down
 
-	test_scan_docker_images_without_parameters
+			"${1}"
+		fi
+	else
+		test_scan_docker_images_with_invalid_image
+
+		tear_down
+
+		test_scan_docker_images_without_parameters
+	fi
 }
 
 function set_up {
@@ -36,4 +51,4 @@ function test_scan_docker_images_without_parameters {
 		"$(cat test-dependencies/expected/test_scan_docker_images_without_parameters_output.txt)"
 }
 
-main
+main "${@}"

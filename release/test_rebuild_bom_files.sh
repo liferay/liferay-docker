@@ -9,7 +9,12 @@ function main {
 
 	if [ -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
 	then
-		test_rebuild_bom_files_checkout_product_version
+		if [ "${#}" -eq 1 ]
+		then
+			"${1}"
+		else
+			test_rebuild_bom_files_checkout_product_version
+		fi
 	else
 		echo -e "The directory ${_PROJECTS_DIR}/liferay-portal-ee does not exist.\n"
 	fi
@@ -47,4 +52,4 @@ function _test_rebuild_bom_files_checkout_product_version {
 	assert_equals "$(git rev-parse --abbrev-ref HEAD)" "${2}"
 }
 
-main
+main "${@}"

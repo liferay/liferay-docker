@@ -10,7 +10,12 @@ function main {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	test_jdk_set_jdk_version_and_parameters
+	if [ "${#}" -eq 1 ]
+	then
+		"${1}"
+	else
+		test_jdk_set_jdk_version_and_parameters
+	fi
 
 	tear_down
 }
@@ -87,4 +92,4 @@ function _test_jdk_set_jdk_version_and_parameters {
 	JAVA_OPTS="${_CURRENT_JAVA_OPTS}"
 }
 
-main
+main "${@}"

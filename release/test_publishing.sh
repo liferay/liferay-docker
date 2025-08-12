@@ -7,10 +7,15 @@ source ./_publishing.sh
 function main {
 	set_up
 
-	test_publishing_get_patcher_product_version_label
-	test_publishing_get_patcher_project_version
-	test_publishing_get_root_patcher_project_version_name
-	test_publishing_update_bundles_yml
+	if [ "${#}" -eq 1 ]
+	then
+		"${1}"
+	else
+		test_publishing_get_patcher_product_version_label
+		test_publishing_get_patcher_project_version
+		test_publishing_get_root_patcher_project_version_name
+		test_publishing_update_bundles_yml
+	fi
 
 	tear_down
 }
@@ -93,4 +98,4 @@ function _test_publishing_get_root_patcher_project_version_name {
 	assert_equals "$(get_root_patcher_project_version_name)" "${2}"
 }
 
-main
+main "${@}"
