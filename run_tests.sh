@@ -1,8 +1,9 @@
 #!/bin/bash
 
 function main {
-	local changed_files=$(git diff --name-only upstream/master)
 	local test_results=""
+
+	local changed_files=$(git diff --name-only upstream/master)
 
 	if [ -z "${changed_files}" ]
 	then
