@@ -1,5 +1,15 @@
 #!/bin/bash
 
+function get_latest_version_from_url {
+	curl "${1}" \
+		--max-time 10 \
+		--retry 2 \
+		--silent \
+		| grep --only-matching --perl-regexp "${2}" \
+		| sort --version-sort \
+		| tail --lines=1
+}
+
 function get_product_group_version {
 	echo "$(_get_product_version "${1}")" | cut --delimiter='.' --fields=1,2
 }
