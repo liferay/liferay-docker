@@ -198,7 +198,7 @@ function get_latest_tomcat_version {
 			"http://dlcdn.apache.org/tomcat/tomcat-${tomcat_major_version}/" \
 			"${tomcat_major_version}\.\d+\.\d+")
 
-	latest_tomcat_version=$(\
+	latest_tomcat_version=$( \
 		echo -e "${latest_tomcat_version}\n${1}" | \
 		sort --version-sort | \
 		tail -1)
@@ -215,7 +215,7 @@ function get_latest_tomcat_version {
 	then
 		local master_tomcat_version=$(lc_get_property "app.server.properties" "app.server.tomcat.version")
 
-		latest_tomcat_version=$(\
+		latest_tomcat_version=$( \
 			echo -e "${latest_tomcat_version}\n${master_tomcat_version}" | \
 			sort --version-sort | \
 			tail -1)
