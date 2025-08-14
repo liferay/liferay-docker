@@ -382,7 +382,7 @@ function prepare_temp_directory {
 		cp --recursive "${TEMP_DIR}/liferay/tomcat-temp/bin/setenv.sh" "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/bin/setenv.sh"
 		cp --recursive "${TEMP_DIR}/liferay/tomcat-temp/conf" "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/"
 
-		if is_7_3_release
+		if is_7_3_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 		then
 			cp --recursive "${TEMP_DIR}/liferay/tomcat-temp/lib/ext" "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/lib/ext"
 		fi
