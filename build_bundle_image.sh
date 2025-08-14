@@ -215,10 +215,13 @@ function get_latest_tomcat_version {
 	then
 		local master_tomcat_version=$(lc_get_property "app.server.properties" "app.server.tomcat.version")
 
-		latest_tomcat_version=$( \
-			echo -e "${latest_tomcat_version}\n${master_tomcat_version}" | \
-			sort --version-sort | \
-			tail -1)
+		if [[ "$(echo "${master_tomcat_version}" | cut --delimiter='.' --fields=1)" == "${tomcat_major_version}" ]]
+		then
+			latest_tomcat_version=$( \
+				echo -e "${latest_tomcat_version}\n${master_tomcat_version}" | \
+				sort --version-sort | \
+				tail -1)
+		fi
 	fi
 
 	rm --force "app.server.properties"
