@@ -5,7 +5,6 @@ source ../_test_common.sh
 function main {
 	set_up
 
-	
 	if [ "${#}" -eq 1 ]
 	then
 		if [ "${1}" == "test_scan_docker_images_with_invalid_image" ]
