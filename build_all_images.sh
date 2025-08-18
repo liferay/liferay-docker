@@ -622,9 +622,12 @@ function main {
 	then
 		BUILD_ALL_IMAGES_PUSH="push-all"
 
-		./release_notes.sh commit
+		if [ "$(git config --global github.user)" == "brianchandotcom" ]
+		then
+			./release_notes.sh commit
 
-		git push
+			git push
+		fi
 	fi
 
 	if [[ " ${@} " =~ " --push " ]]
