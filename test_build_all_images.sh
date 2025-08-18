@@ -15,6 +15,7 @@ function main {
 		test_build_all_images_has_slim_build_criteria
 		test_build_all_images_is_container_healthy "${_LATEST_RELEASE}"
 		test_build_all_images_is_container_healthy "7.3.10-u36"
+		test_build_all_images_latest_is_not_slim "${_LATEST_RELEASE}"
 	fi
 
 	tear_down
@@ -63,6 +64,14 @@ function test_build_all_images_is_container_healthy {
 	assert_equals \
 		$(_run_container "${1}") \
 		"\"healthy\""
+}
+
+function test_build_all_images_latest_is_not_slim {
+	echo -e "Running test_build_all_images_latest_is_not_slim for version ${1}.\n"
+
+	assert_equals \
+		$(docker images --filter "reference=liferay/dxp:${1}" --format "{{.ID}}") \
+		$(docker images --filter "reference=liferay/dxp:latest" --format "{{.ID}}")
 }
 
 function _run_container {
