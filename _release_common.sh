@@ -144,8 +144,7 @@ function is_early_product_version_than {
 }
 
 function is_first_quarterly_release {
-	if [[ "$(_get_product_version "${1}")" == *.0* ]] &&
-	   is_quarterly_release "${1}"
+	if is_quarterly_release && [[ "$(get_release_patch_version)" -eq 0 ]]
 	then
 		return 0
 	fi
