@@ -639,6 +639,8 @@ function update_salesforce_product_version {
 	then
 		lc_log ERROR "Unable to update the Salesforce product version. HTTP response code was ${http_code}."
 
+		lc_log ERROR "Create a General Request ticket in Jira project Salesforce (SFDC) to ask the inclusion of version $(get_product_group_version) in Salesforce."
+
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
