@@ -316,7 +316,7 @@ function _test_release_common_is_first_quarterly_release {
 
 	echo -e "Running _test_release_common_is_first_quarterly_release for ${_PRODUCT_VERSION}.\n"
 
-	is_first_quarterly_release "${_PRODUCT_VERSION}"
+	is_first_quarterly_release
 
 	assert_equals "${?}" "${2}"
 }
