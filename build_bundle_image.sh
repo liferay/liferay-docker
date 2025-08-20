@@ -121,6 +121,7 @@ function build_docker_image {
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 		--build-arg LABEL_VERSION="${LABEL_VERSION}" \
+		--iidfile "${LIFERAY_DOCKER_LOGS_DIR}/build_bundle_image_id.txt" \
 		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 		"${TEMP_DIR}" || exit 1
 }
