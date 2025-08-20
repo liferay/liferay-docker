@@ -36,15 +36,15 @@ function tear_down {
 	docker rm "liferay-container-7.3.10-u36" > /dev/null
 
 	docker rmi $(docker images --filter "dangling=true" --no-trunc) &> /dev/null
-	docker rmi -f $(docker images "liferay/dxp:${_LATEST_RELEASE}-slim") &> /dev/null
-	docker rmi -f "liferay/jdk11-jdk8:latest" &> /dev/null
-	docker rmi -f "liferay/jdk11:latest" &> /dev/null
-	docker rmi -f "liferay/jdk21-jdk11-jdk8:latest" &> /dev/null
-	docker rmi -f "liferay/jdk21:latest" &> /dev/null
+	docker rmi --force $(docker images "liferay/dxp:${_LATEST_RELEASE}-slim") &> /dev/null
+	docker rmi --force "liferay/jdk11-jdk8:latest" &> /dev/null
+	docker rmi --force "liferay/jdk11:latest" &> /dev/null
+	docker rmi --force "liferay/jdk21-jdk11-jdk8:latest" &> /dev/null
+	docker rmi --force "liferay/jdk21:latest" &> /dev/null
 
 	for file in $(find $(find . -name "logs-20*" -type d) -name "build*image_id.txt" -type f)
 	do
-		docker rmi -f $(cat "${file}" | cut --delimiter=':' --fields=2) &> /dev/null
+		docker rmi --force $(cat "${file}" | cut --delimiter=':' --fields=2) &> /dev/null
 	done
 
 	rm --force --recursive logs-20*
@@ -95,7 +95,7 @@ function _run_container {
 		local license_status=$(docker logs ${container_id} 2> /dev/null | grep --count "License registered for DXP Development")
 		local portal_start=$(docker logs ${container_id} 2> /dev/null | grep --count "Starting Liferay Portal")
 
-		if [ "${health_status}" == "\"healthy\"" ] && ([ ${license_status} -gt 0 ] || [ ${portal_start} -gt 0 ])
+		if [ "${health_status}" == "\"healthy\"" ] && ([ "${license_status}" -gt 0 ] || [ "${portal_start}" -gt 0 ])
 		then
 			echo "${health_status}"
 
