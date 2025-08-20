@@ -35,7 +35,19 @@ function tear_down {
 	docker rm "liferay-container-${_LATEST_RELEASE}" > /dev/null
 	docker rm "liferay-container-7.3.10-u36" > /dev/null
 
-	docker rmi -f $(docker images --format '{{.Repository}}:{{.Tag}} {{.ID}}' | grep '^liferay/' | awk '{print $2}') &> /dev/null
+	docker rmi $(docker images --filter "dangling=true" --no-trunc) &> /dev/null
+	docker rmi -f $(docker images "liferay/dxp:${_LATEST_RELEASE}-slim") &> /dev/null
+	docker rmi -f "liferay/jdk11-jdk8:latest" &> /dev/null
+	docker rmi -f "liferay/jdk11:latest" &> /dev/null
+	docker rmi -f "liferay/jdk21-jdk11-jdk8:latest" &> /dev/null
+	docker rmi -f "liferay/jdk21:latest" &> /dev/null
+
+	for file in $(find $(find . -name "logs-20*" -type d) -name "build*image_id.txt" -type f)
+	do
+		docker rmi -f $(cat "${file}" | cut --delimiter=':' --fields=2) &> /dev/null
+	done
+
+	rm --force --recursive logs-20*
 
 	unset _LATEST_RELEASE
 }
