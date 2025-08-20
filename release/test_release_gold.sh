@@ -157,7 +157,7 @@ function test_release_gold_reference_new_releases {
 	do
 		_test_release_gold_reference_new_releases "${product_version}"
 
-		git restore "test-dependencies/actual/build.properties"
+		git restore "test-dependencies/actual/build-shared.properties"
 	done
 }
 
@@ -206,8 +206,8 @@ function _test_release_gold_reference_new_releases {
 	lc_cd "${_PROJECTS_DIR}/liferay-docker/release"
 
 	assert_equals \
-		"test-dependencies/actual/build.properties" \
-		"test-dependencies/expected/test_release_gold_build_$(echo "${_PRODUCT_VERSION}" | tr '.' '_').properties"
+		"test-dependencies/actual/build-shared.properties" \
+		"test-dependencies/expected/test_release_gold_build_shared_$(echo "${_PRODUCT_VERSION}" | tr '.' '_').properties"
 }
 
 function _test_release_gold_not_update_release_info_date {
