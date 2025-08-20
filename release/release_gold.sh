@@ -15,7 +15,7 @@ function add_property {
 	local new_value="${2}"
 	local search_key="${3}"
 
-	sed --in-place "/${search_key}/a\	\\${new_key}=${new_value}" "build.properties"
+	sed --in-place "/${search_key}/a\	\\${new_key}=${new_value}" "build-shared.properties"
 }
 
 function check_supported_versions {
@@ -287,14 +287,14 @@ function reference_new_releases {
 
 	local previous_product_version="$(\
 		grep "portal.latest.bundle.version\[${product_group_version}" \
-			"build.properties" | \
+			"build-shared.properties" | \
 			tail -1 | \
 			cut --delimiter='=' --fields=2)"
 
 	if [ -z "${previous_product_version}" ]
 	then
 		latest_quarterly_release="true"
-		previous_product_version="$(grep "portal.latest.bundle.version\[master\]=" "build.properties" | cut --delimiter='=' --fields=2)"
+		previous_product_version="$(grep "portal.latest.bundle.version\[master\]=" "build-shared.properties" | cut --delimiter='=' --fields=2)"
 	fi
 
 	for component in osgi sql tools
@@ -337,7 +337,7 @@ function reference_new_releases {
 
 	local latest_product_group_version="$(\
 		grep "portal.latest.bundle.version\[master\]=" \
-			"build.properties" | \
+			"build-shared.properties" | \
 			cut --delimiter='=' --fields=2 | \
 			cut --delimiter='.' --fields=1,2)"
 
@@ -351,7 +351,7 @@ function reference_new_releases {
 
 	local previous_quarterly_release_branch="$(\
 		grep "portal.latest.bundle.version" \
-			"build.properties" | \
+			"build-shared.properties" | \
 			tail -1 | \
 			cut --delimiter='[' --fields=2 | \
 			cut --delimiter=']' --fields=1)"
@@ -384,7 +384,7 @@ function reference_new_releases {
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
 		commit_to_branch_and_send_pull_request \
-			"${_PROJECTS_DIR}/liferay-jenkins-ee/commands/build.properties" \
+			"${_PROJECTS_DIR}/liferay-jenkins-ee/commands/build-shared.properties" \
 			"${issue_key} Add release references for ${_PRODUCT_VERSION}" \
 			"master" \
 			"pyoo47/liferay-jenkins-ee" \
@@ -410,7 +410,7 @@ function replace_property {
 	local new_value="${2}"
 	local search_key="${3}"
 
-	sed --in-place "s/${search_key}/${new_key}=${new_value}/" "build.properties"
+	sed --in-place "s/${search_key}/${new_key}=${new_value}/" "build-shared.properties"
 }
 
 function tag_release {
