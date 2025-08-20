@@ -41,6 +41,8 @@ function check_usage {
 
 	_RELEASE_TOOL_DIR=$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")
 
+	_BASE_DIR="$(dirname "${_RELEASE_TOOL_DIR}")"
+
 	lc_cd "${_RELEASE_TOOL_DIR}"
 
 	mkdir --parents release-data
