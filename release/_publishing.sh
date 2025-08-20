@@ -159,6 +159,53 @@ function init_gcs {
 	gcloud auth activate-service-account --key-file "${LIFERAY_RELEASE_GCS_TOKEN}"
 }
 
+function remove_old_release_candidate_tags {
+	lc_log INFO "Removing old release candidate tags for ${1}."
+
+	local auth_token=$( \
+		curl \
+			"https://hub.docker.com/v2/users/login/" \
+			--data-raw '
+				{
+					"password": "'"${LIFERAY_DOCKER_HUB_TOKEN}"'",
+					"username": "'"${LIFERAY_DOCKER_HUB_USERNAME}"'"
+				}' \
+			--header "Content-Type: application/json" \
+			--silent | \
+			jq --raw-output .token)
+
+	if [ "${auth_token}" == "null" ] || [ -z "${auth_token}" ]
+	then
+		lc_log ERROR "Unable to authenticate on Docker hub."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local tags=$( \
+		curl \
+			"https://hub.docker.com/v2/repositories/liferay/release-candidates/tags?page_size=80" \
+			--header "Authorization: JWT ${auth_token}" \
+			--silent | \
+			jq --raw-output ".results[].name" | \
+			grep "^${1}")
+
+	if [ -z "${tags}" ]
+	then
+		lc_log INFO "No old release candidate tags for ${1} were found."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	for tag in ${tags}
+	do
+		curl \
+			"https://hub.docker.com/v2/repositories/liferay/release-candidates/tags/${tag}/" \
+			--header "Authorization: JWT ${auth_token}" \
+			--request DELETE \
+			--silent
+	done
+}
+
 function upload_bom_file {
 	local nexus_repository_name="${1}"
 
@@ -364,6 +411,11 @@ function upload_to_docker_hub {
 	if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
 		lc_log ERROR "Unable to build the Docker image."
+	fi
+
+	if [ "${1}" == "release-gold" ]
+	then
+		remove_old_release_candidate_tags "${_PRODUCT_VERSION}"
 	fi
 
 	lc_cd "${_RELEASE_ROOT_DIR}"
