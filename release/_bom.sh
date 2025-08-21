@@ -280,6 +280,7 @@ function generate_pom_release_bom {
 
 	for artifact_file in $(
 		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/lib/ext" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF" -name '*.jar' | \
+			grep --extended-regexp --invert-match "(/osgi/state/)" | \
 			sed \
 				--expression 's/\.jar$//' \
 				--expression "s@.*/@@" \
