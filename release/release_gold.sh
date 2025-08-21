@@ -105,9 +105,9 @@ function main {
 
 	lc_time_run generate_releases_json
 
-	lc_time_run test_boms
-
 	lc_time_run reference_new_releases
+
+	lc_time_run test_boms
 
 	lc_time_run update_salesforce_product_version
 
