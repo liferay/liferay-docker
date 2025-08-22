@@ -87,7 +87,14 @@ function test_build_all_images_latest_is_not_slim {
 }
 
 function _run_container {
-	local container_id=$(docker run --detach --name "liferay-container-${1}" "liferay/dxp:${1}")
+	if [ -n "$(docker images -q liferay/dxp:${1})" ]
+	then
+		local container_id=$(docker run --detach --name "liferay-container-${1}" "liferay/dxp:${1}")
+	else
+		echo "failed"
+
+		return
+	fi
 
 	for counter in {1..200}
 	do
