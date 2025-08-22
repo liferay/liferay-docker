@@ -529,8 +529,6 @@ function test_boms {
 
 	export LIFERAY_RELEASES_MIRRORS="https://releases.liferay.com"
 
-	sed --in-place "s/version: \"10.1.0\"/version: \"10.1.2\"/" "temp_dir_test_boms/settings.gradle"
-
 	for module in api mvc-portlet
 	do
 		blade create -t "${module}" "test-${module}"
