@@ -29,11 +29,11 @@ function set_up {
 }
 
 function tear_down {
-	docker stop "liferay-container-${_LATEST_RELEASE}" > /dev/null
-	docker stop "liferay-container-7.3.10-u36" > /dev/null
+	docker stop "liferay-container-${_LATEST_RELEASE}" &> /dev/null
+	docker stop "liferay-container-7.3.10-u36" &> /dev/null
 
-	docker rm "liferay-container-${_LATEST_RELEASE}" > /dev/null
-	docker rm "liferay-container-7.3.10-u36" > /dev/null
+	docker rm "liferay-container-${_LATEST_RELEASE}" &> /dev/null
+	docker rm "liferay-container-7.3.10-u36" &> /dev/null
 
 	docker rmi $(docker images --filter "dangling=true" --no-trunc) &> /dev/null
 	docker rmi --force $(docker images "liferay/dxp:${_LATEST_RELEASE}-slim") &> /dev/null
