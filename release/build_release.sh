@@ -87,13 +87,6 @@ function handle_automated_build {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	if [ "$(get_release_patch_version "${latest_quarterly_product_version}")" -gt 11 ]
-	then
-		lc_log INFO "The latest patch release version is greater than 11. Skipping build."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
 	LIFERAY_RELEASE_GIT_REF="release-$(get_product_group_version "${latest_quarterly_product_version}")"
 	RUN_SCANCODE_PIPELINE=true
 	TRIGGER_CI_TEST_SUITE=true
