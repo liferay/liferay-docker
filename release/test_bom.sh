@@ -31,6 +31,13 @@ function main {
 		if [[ "${1}" == *_dxp ]]
 		then
 			"${1}"
+		elif [[ "${1}" == *_jakarta_dxp ]]
+		then
+			set_up_jakarta_dxp_tests
+
+			"${1}"
+
+			clean_portal_ee
 		elif [[ "${1}" == *_portal ]]
 		then
 			set_up_portal_tests
@@ -43,12 +50,16 @@ function main {
 
 			"${1}"
 		fi
-	else	
+	else
 		test_bom_generate_pom_release_bom_api_dxp
 		test_bom_generate_pom_release_bom_compile_only_dxp
 		test_bom_generate_pom_release_bom_distro_dxp
 		test_bom_generate_pom_release_bom_dxp
 		test_bom_generate_pom_release_bom_third_party_dxp
+
+		set_up_jakarta_dxp_tests
+
+		test_bom_generate_pom_release_bom_jakarta_dxp
 
 		set_up_portal_tests
 
@@ -101,6 +112,28 @@ function set_up {
 
 	unzip -q liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip
 
+	set_up_liferay_portal_ee
+}
+
+function set_up_jakarta_dxp_tests {
+	_PRODUCT_VERSION="7.4.13-u138"
+
+	_ARTIFACT_RC_VERSION="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+
+	rm --force --recursive "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp"
+
+	lc_cd "${_RELEASE_ROOT_DIR}/test-dependencies"
+
+	lc_download \
+		https://releases-cdn.liferay.com/dxp/7.4.13-u138/liferay-dxp-tomcat-7.4.13-u138-1755038551.zip \
+		liferay-dxp-tomcat-7.4.13-u138-1755038551.zip 1> /dev/null
+
+	unzip -q liferay-dxp-tomcat-7.4.13-u138-1755038551.zip
+
+	set_up_liferay_portal_ee
+}
+
+function set_up_liferay_portal_ee {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
 
 	git reset --hard &> /dev/null
@@ -245,6 +278,15 @@ function test_bom_generate_pom_release_bom_dxp {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
 }
 
+function test_bom_generate_pom_release_bom_jakarta_dxp {
+	generate_pom_release_bom &> /dev/null
+
+	assert_equals \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom \
+		test-dependencies/expected/test.bom.jakarta.dxp.release.bom.pom
+
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
+}
 function test_bom_generate_pom_release_bom_portal {
 	generate_pom_release_bom &> /dev/null
 
