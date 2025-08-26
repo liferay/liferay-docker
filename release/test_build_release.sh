@@ -6,6 +6,7 @@ source ./build_release.sh
 function main {
 	set_up
 
+	test_build_release_bundle_smaller_than_1_gb
 	test_build_release_handle_automated_build
 	test_build_release_package_release
 
@@ -33,6 +34,12 @@ function tear_down {
 	unset TRIGGER_CI_TEST_SUITE
 	unset _RELEASE_PACKAGE
 	unset _RELEASE_ROOT_DIR
+}
+
+function test_build_release_bundle_smaller_than_1_gb {
+	assert_equals \
+		"$(( $(ls -l "${_RELEASE_PACKAGE}"/liferay-dxp-tomcat-2025.q1.1-lts-*.7z | awk '{print $5}') < 1100000000))" \
+		"1"
 }
 
 function test_build_release_handle_automated_build {
