@@ -37,6 +37,10 @@ function get_latest_product_version {
 	then
 		product_name="portal"
 		product_version_regex="${product_version_regex}(7\.4\.3\.\d+-ga\d+)"
+	elif [ "${product_version}" == "lts" ]
+	then
+		product_name="dxp"
+		product_version_regex="${product_version_regex}(\d{4}\.q1\.[0-9]+-lts)"
 	elif [ "${product_version}" == "quarterly" ]
 	then
 		product_name="dxp"
