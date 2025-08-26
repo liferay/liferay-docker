@@ -515,6 +515,11 @@ function test_boms {
 
 	lc_cd "temp_dir_test_boms"
 
+	if [ ! -e /usr/local/bin/jpm ]
+	then
+		ln --symbolic /root/jpm/bin/jpm /usr/local/bin/jpm
+	fi
+
 	blade update
 
 	if is_quarterly_release
