@@ -57,8 +57,8 @@ function test_releases_json_get_latest_product_version {
 	_test_releases_json_get_latest_product_version "dxp" "7.3.10-u36"
 	_test_releases_json_get_latest_product_version "ga" "7.4.3.132-ga132"
 	_test_releases_json_get_latest_product_version "lts" "2025.q1.8-lts"
-	_test_releases_json_get_latest_product_version "quarterly" "2025.q1.8-lts"
-	_test_releases_json_get_latest_product_version "quarterly-candidate" "2025.q1.8-lts"
+	_test_releases_json_get_latest_product_version "quarterly" "2025.q2.1"
+	_test_releases_json_get_latest_product_version "quarterly-candidate" "2025.q2.1"
 }
 
 function test_releases_json_merge_json_snippets {
