@@ -273,7 +273,7 @@ function _promote_product_versions {
 }
 
 function _tag_recommended_product_versions {
-	for product_version in "ga" "quarterly"
+	for product_version in "ga" "lts"
 	do
 		local latest_product_version=$(get_latest_product_version "${product_version}")
 
