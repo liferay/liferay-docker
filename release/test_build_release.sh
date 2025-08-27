@@ -32,7 +32,7 @@ function test_build_release_handle_automated_build {
 
 	assert_equals \
 		"${LIFERAY_RELEASE_GIT_REF}" \
-		"release-2025.q1" \
+		"release-2025.q2" \
 		"${RUN_SCANCODE_PIPELINE}" \
 		"true" \
 		"${TRIGGER_CI_TEST_SUITE}" \
