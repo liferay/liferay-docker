@@ -57,9 +57,6 @@ function main {
 		test_bom_generate_pom_release_bom_dxp
 		test_bom_generate_pom_release_bom_third_party_dxp
 
-		set_up_jakarta_dxp_tests
-
-		test_bom_generate_pom_release_bom_jakarta_dxp
 
 		set_up_portal_tests
 
@@ -68,6 +65,10 @@ function main {
 		test_bom_generate_pom_release_bom_distro_portal
 		test_bom_generate_pom_release_bom_portal
 		test_bom_generate_pom_release_bom_third_party_portal
+
+		set_up_jakarta_dxp_tests
+
+		test_bom_generate_pom_release_bom_jakarta_dxp
 
 		clean_portal_ee
 
@@ -116,6 +117,9 @@ function set_up {
 }
 
 function set_up_jakarta_dxp_tests {
+	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+	_BUNDLES_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp"
+
 	_PRODUCT_VERSION="7.4.13-u138"
 
 	_ARTIFACT_RC_VERSION="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
