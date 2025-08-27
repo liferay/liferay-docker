@@ -170,7 +170,7 @@ function _process_new_product {
 					.
 				end
 			)" "${releases_json}" > temp_file.json && mv temp_file.json "${releases_json}"
-	elif is_quarterly_release && [ "$(get_latest_product_version "quarterly")" == "${_PRODUCT_VERSION}" ]
+	elif is_quarterly_release && [ "$(get_latest_product_version "lts")" == "${_PRODUCT_VERSION}" ]
 	then
 		jq "map(
 				if .productGroupVersion | test(\"q\")
