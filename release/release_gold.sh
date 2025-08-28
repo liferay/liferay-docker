@@ -88,6 +88,8 @@ function main {
 
 	init_gcs
 
+	lc_time_run set_jdk_version_and_parameters
+
 	lc_time_run promote_packages
 
 	lc_time_run tag_release
