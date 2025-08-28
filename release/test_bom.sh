@@ -57,7 +57,6 @@ function main {
 		test_bom_generate_pom_release_bom_dxp
 		test_bom_generate_pom_release_bom_third_party_dxp
 
-
 		set_up_portal_tests
 
 		test_bom_generate_pom_release_bom_api_portal
