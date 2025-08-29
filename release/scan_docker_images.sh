@@ -32,6 +32,11 @@ function check_usage {
 }
 
 function main {
+	if [[ " ${@} " =~ " --release-candidate " ]]
+	then
+		return
+	fi
+
 	check_usage
 
 	lc_time_run scan_docker_images
@@ -95,7 +100,9 @@ function scan_docker_images {
 
 	chmod +x ./twistcli
 
-	echo "${LIFERAY_IMAGE_NAMES}" | tr ',' '\n' | while read -r image_name
+	local scan_result=0
+
+	while read -r image_name
 	do
 		lc_log INFO "Scanning ${image_name}."
 
@@ -122,10 +129,20 @@ function scan_docker_images {
 			lc_log INFO "The result of scan for ${image_name} is: FAIL."
 
 			lc_log ERROR "The Docker image ${image_name} has security vulnerabilities."
+
+			scan_result="${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
-	done
+	done < <(echo "${LIFERAY_IMAGE_NAMES}" | tr ',' '\n')
 
 	rm --force ./twistcli
+
+	return "${scan_result}"
 }
 
-main
+function scan_release_candidate_docker_image {
+	LIFERAY_IMAGE_NAMES="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+
+	scan_docker_images
+}
+
+main "${@}"
