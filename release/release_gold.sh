@@ -4,6 +4,7 @@ source ../_liferay_common.sh
 source ../_release_common.sh
 source ./_git.sh
 source ./_github.sh
+source ./_jdk.sh
 source ./_jira.sh
 source ./_product.sh
 source ./_product_info_json.sh
