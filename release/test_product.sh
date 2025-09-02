@@ -120,8 +120,6 @@ function test_product_warm_up_tomcat_already_warmed {
 function _test_product_add_ckeditor_license {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_product_add_ckeditor_license for ${_PRODUCT_VERSION}.\n"
-
 	add_ckeditor_license &> /dev/null
 
 	assert_equals \
@@ -134,8 +132,6 @@ function _test_product_add_ckeditor_license {
 function _test_product_get_java_specification_version {
 	JAVA_HOME="/opt/java/${1}"
 
-	echo -e "Running _test_product_get_java_specification_version for ${JAVA_HOME}.\n"
-
 	assert_equals "$(get_java_specification_version)" "${2}"
 
 	JAVA_HOME="${_CURRENT_JAVA_HOME}"
@@ -144,16 +140,12 @@ function _test_product_get_java_specification_version {
 function _test_product_not_add_ckeditor_license {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_product_not_add_ckeditor_license for ${_PRODUCT_VERSION}.\n"
-
 	add_ckeditor_license &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 function _test_product_set_product_version_with_parameters {
-	echo -e "Running _test_product_set_product_version_with_parameters for ${1}.\n"
-
 	set_product_version "${1}" "123456789" 1> /dev/null
 
 	assert_equals \

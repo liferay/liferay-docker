@@ -206,23 +206,17 @@ function test_release_common_is_u_release {
 function _test_release_common_get_product_group_version {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_release_common_get_product_group_version for ${_PRODUCT_VERSION}.\n"
-
 	assert_equals "$(get_product_group_version)" "${2}"
 }
 
 function _test_release_common_get_release_patch_version {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_release_common_get_release_patch_version for ${_PRODUCT_VERSION}.\n"
-
 	assert_equals "$(get_release_patch_version)" "${2}"
 }
 
 function _test_release_common_get_release_quarter {
 	_PRODUCT_VERSION="${1}"
-
-	echo -e "Running _test_release_common_get_release_quarter for ${1}.\n"
 	
 	assert_equals "$(get_release_quarter)" "${2}"
 }
@@ -230,62 +224,46 @@ function _test_release_common_get_release_quarter {
 function _test_release_common_get_release_version {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_release_common_get_release_version for ${_PRODUCT_VERSION}.\n"
-
 	assert_equals "$(get_release_version)" "${2}"
 }
 
 function _test_release_common_get_release_version_trivial {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_release_common_get_release_version_trivial for ${_PRODUCT_VERSION}.\n"
-
 	assert_equals "$(get_release_version_trivial)" "${2}"
 }
 
 function _test_release_common_is_7_3_ga_release {
-	echo -e "Running _test_release_common_is_7_3_ga_release for ${1}.\n"
-
 	is_7_3_ga_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_7_3_release {
-	echo -e "Running _test_release_common_is_7_3_release for ${1}.\n"
-
 	is_7_3_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_7_3_u_release {
-	echo -e "Running _test_release_common_is_7_3_u_release for ${1}.\n"
-
 	is_7_3_u_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_7_4_ga_release {
-	echo -e "Running _test_release_common_is_7_4_ga_release for ${1}.\n"
-
 	is_7_4_ga_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_7_4_release {
-	echo -e "Running _test_release_common_is_7_4_release for ${1}.\n"
-
 	is_7_4_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_7_4_u_release {
-	echo -e "Running _test_release_common_is_7_4_u_release for ${1}.\n"
-
 	is_7_4_u_release "${1}"
 
 	assert_equals "${?}" "${2}"
@@ -293,8 +271,6 @@ function _test_release_common_is_7_4_u_release {
 
 function _test_release_common_is_dxp_release {
 	LIFERAY_RELEASE_PRODUCT_NAME="${1}"
-
-	echo -e "Running _test_release_common_is_dxp_release for ${LIFERAY_RELEASE_PRODUCT_NAME}.\n"
 
 	is_dxp_release
 
@@ -304,8 +280,6 @@ function _test_release_common_is_dxp_release {
 function _test_release_common_is_early_product_version_than {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_release_common_is_early_product_version_than for ${_PRODUCT_VERSION}.\n"
-
 	is_early_product_version_than "${2}"
 
 	assert_equals "${?}" "${3}"
@@ -314,16 +288,12 @@ function _test_release_common_is_early_product_version_than {
 function _test_release_common_is_first_quarterly_release {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_release_common_is_first_quarterly_release for ${_PRODUCT_VERSION}.\n"
-
 	is_first_quarterly_release
 
 	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_ga_release {
-	echo -e "Running _test_release_common_is_ga_release for ${1}.\n"
-
 	is_ga_release "${1}"
 
 	assert_equals "${?}" "${2}"
@@ -332,24 +302,18 @@ function _test_release_common_is_ga_release {
 function _test_release_common_is_later_product_version_than {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_release_common_is_later_product_version_than for ${_PRODUCT_VERSION}.\n"
-
 	is_later_product_version_than "${2}"
 
 	assert_equals "${?}" "${3}"
 }
 
 function _test_release_common_is_lts_release {
-	echo -e "Running _test_release_common_is_lts_release for ${1}.\n"
-
 	is_lts_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_nightly_release {
-	echo -e "Running _test_release_common_is_nightly_release for ${1}.\n"
-
 	is_nightly_release "${1}"
 
 	assert_equals "${?}" "${2}"
@@ -358,24 +322,18 @@ function _test_release_common_is_nightly_release {
 function _test_release_common_is_portal_release {
 	LIFERAY_RELEASE_PRODUCT_NAME="${1}"
 
-	echo -e "Running _test_release_common_is_portal_release for ${LIFERAY_RELEASE_PRODUCT_NAME}.\n"
-
 	is_portal_release
 
 	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_quarterly_release {
-	echo -e "Running _test_release_common_is_quarterly_release for ${1}.\n"
-
 	is_quarterly_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_u_release {
-	echo -e "Running _test_release_common_is_u_release for ${1}.\n"
-
 	is_u_release "${1}"
 
 	assert_equals "${?}" "${2}"

@@ -71,8 +71,6 @@ function _set_dockerfile {
 }
 
 function _test_build_bundle_image_get_latest_tomcat_version {
-	echo -e "Running _test_build_bundle_image_get_latest_tomcat_version for Tomcat vesion ${1}.\n"
-
 	echo "app.server.tomcat.version=${2}" > app.server.properties
 
 	assert_equals "$(get_latest_tomcat_version "${1}")" "${3}"
@@ -80,8 +78,6 @@ function _test_build_bundle_image_get_latest_tomcat_version {
 
 function _test_build_bundle_image_set_parent_image {
 	LIFERAY_DOCKER_RELEASE_VERSION="${1}"
-
-	echo -e "Running _test_set_parent_image for ${LIFERAY_DOCKER_RELEASE_VERSION}.\n"
 
 	_set_dockerfile "jdk21" "jdk21" "Dockerfile"
 

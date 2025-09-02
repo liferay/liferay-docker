@@ -39,8 +39,6 @@ function test_ci_not_trigger_ci_test_suite {
 }
 
 function _test_ci_get_test_portal_branch_name {
-	echo -e "Running _test_ci_get_test_portal_branch_name for ${1}.\n"
-
 	assert_equals "$(_get_test_portal_branch_name "${1}")" "${2}"
 }
 

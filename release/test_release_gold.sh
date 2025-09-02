@@ -129,15 +129,11 @@ function _test_release_gold_get_tag_name {
 	_ARTIFACT_VERSION="${1}"
 	_PRODUCT_VERSION="${2}"
 
-	echo -e "Running _test_release_gold_get_tag_name for ${3}.\n"
-
 	assert_equals "$(get_tag_name)" "${3}"
 }
 
 function _test_release_gold_prepare_next_release_branch {
 	_PRODUCT_VERSION="${1}"
-
-	echo -e "Running _test_release_gold_prepare_next_release_branch for ${_PRODUCT_VERSION}.\n"
 
 	local current_dir="${PWD}"
 
@@ -175,10 +171,6 @@ function test_release_gold_update_release_info_date {
 function _test_release_gold_not_prepare_next_release_branch {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e \
-		"Running _test_release_gold_not_prepare_next_release_branch for ${_PRODUCT_VERSION} " \
-		"and LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH=${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}.\n"
-
 	prepare_next_release_branch 1> /dev/null
 
 	assert_equals "${?}" "${2}"
@@ -187,8 +179,6 @@ function _test_release_gold_not_prepare_next_release_branch {
 function _test_release_gold_not_reference_new_releases {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_release_gold_not_reference_new_releases for ${_PRODUCT_VERSION}.\n"
-
 	reference_new_releases 1> /dev/null
 
 	assert_equals "${?}" "${2}"
@@ -196,8 +186,6 @@ function _test_release_gold_not_reference_new_releases {
 
 function _test_release_gold_reference_new_releases {
 	_PRODUCT_VERSION="${1}"
-
-	echo -e "Running _test_release_gold_reference_new_releases for ${_PRODUCT_VERSION}.\n"
 
 	lc_cd "test-dependencies/actual"
 
@@ -212,10 +200,6 @@ function _test_release_gold_reference_new_releases {
 
 function _test_release_gold_not_update_release_info_date {
 	_PRODUCT_VERSION="${1}"
-
-	echo -e \
-		"Running _test_release_gold_not_update_release_info_date for ${_PRODUCT_VERSION} " \
-		"and LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH=${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}.\n"
 
 	update_release_info_date 1> /dev/null
 

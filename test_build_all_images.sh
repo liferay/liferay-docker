@@ -116,8 +116,6 @@ function _run_container {
 }
 
 function _test_build_all_images_get_latest_available_zulu_version {
-	echo -e "Running _test_get_latest_available_zulu_version for JDK ${1} ${2}.\n"
-
 	local latest_available_zulu_version=$(get_latest_available_zulu_version "${1}" "${2}")
 
 	assert_equals \
@@ -132,8 +130,6 @@ function _test_build_all_images_get_latest_available_zulu_version {
 }
 
 function _test_build_all_images_has_slim_build_criteria {
-	echo -e "Running _test_build_all_images_has_slim_build_criteria for version ${1}.\n"
-
 	has_slim_build_criteria "${1}"
 
 	assert_equals "${?}" "${2}"

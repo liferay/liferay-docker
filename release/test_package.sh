@@ -92,8 +92,6 @@ function test_package_portal_dependencies {
  function _test_package_generate_javadocs {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _test_package_generate_javadocs for ${_PRODUCT_VERSION}.\n"
-
 	generate_javadocs &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_OK}"
@@ -101,8 +99,6 @@ function test_package_portal_dependencies {
 
 function _test_package_not_generate_javadocs {
 	_PRODUCT_VERSION="${1}"
-
-	echo -e "Running _test_package_not_generate_javadocs for ${_PRODUCT_VERSION}.\n"
 
 	generate_javadocs &> /dev/null
 

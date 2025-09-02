@@ -125,8 +125,6 @@ function test_releases_json_tag_recommended_product_versions {
 }
 
 function _test_releases_json_get_latest_product_version {
-	echo -e "Running _test_releases_json_get_latest_product_version for ${1}.\n"
-
 	assert_equals \
 		"$(get_latest_product_version "${1}")" \
 		"${2}"

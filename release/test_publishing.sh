@@ -68,15 +68,11 @@ function test_publishing_update_bundles_yml {
 function _run_update_bundles_yml {
 	_PRODUCT_VERSION="${1}"
 
-	echo -e "Running _update_bundles_yml for ${_PRODUCT_VERSION}.\n"
-
 	_update_bundles_yml &> /dev/null
 }
 
 function _test_publishing_get_patcher_product_version_label {
 	_PRODUCT_VERSION="${1}"
-
-	echo -e "Running _test_publishing_get_patcher_product_version_label for ${_PRODUCT_VERSION}.\n"
 
 	assert_equals "$(get_patcher_product_version_label)" "${2}"
 }
@@ -85,15 +81,11 @@ function _test_publishing_get_patcher_project_version {
 	_PRODUCT_VERSION="${1}"
 	_ARTIFACT_VERSION="${1}"
 
-	echo -e "Running _test_publishing_get_patcher_project_version for ${_PRODUCT_VERSION}.\n"
-
 	assert_equals "$(get_patcher_project_version)" "${2}"
 }
 
 function _test_publishing_get_root_patcher_project_version_name {
 	_PRODUCT_VERSION="${1}"
-
-	echo -e "Running _test_publishing_get_root_patcher_project_version_name for ${_PRODUCT_VERSION}.\n"
 
 	assert_equals "$(get_root_patcher_project_version_name)" "${2}"
 }
