@@ -1,6 +1,8 @@
 #!/bin/bash
 
 function main {
+	export DISPLAY_SUCCESSFUL_TEST_RESULT="true"
+
 	local test_results=""
 
 	local changed_files=$(git diff --name-only upstream/master)
@@ -31,6 +33,8 @@ function main {
 	then
 		exit 1
 	fi
+
+	unset DISPLAY_SUCCESSFUL_TEST_RESULT
 }
 
 function _run_docker_tests {
