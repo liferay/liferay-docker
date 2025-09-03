@@ -71,16 +71,12 @@ function test_build_all_images_has_slim_build_criteria {
 }
 
 function test_build_all_images_is_container_healthy {
-	echo -e "Running test_build_all_images_is_container_healthy for version ${1}.\n"
-
 	assert_equals \
 		$(_run_container "${1}") \
 		"\"healthy\""
 }
 
 function test_build_all_images_latest_is_not_slim {
-	echo -e "Running test_build_all_images_latest_is_not_slim for version ${1}.\n"
-
 	assert_equals \
 		$(docker images --format "{{.Repository}}:{{.Tag}}" "liferay/dxp:${1}") \
 		"liferay/dxp:${1}" \
