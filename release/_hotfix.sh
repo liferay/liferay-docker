@@ -449,6 +449,8 @@ function create_hotfix {
 			fi
 		fi
 	done
+
+	rm --force --recursive "${_RELEASE_DIR}"
 }
 
 function in_hotfix_scope {
