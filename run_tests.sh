@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function main {
-	export DISPLAY_SUCCESSFUL_TEST_RESULT="true"
+	export DISPLAY_SUCCESSFUL_TEST_RESULT="false"
 
 	local test_results=""
 
