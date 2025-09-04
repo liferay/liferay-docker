@@ -123,6 +123,13 @@ function generate_api_jars {
 			manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/${portal_jar}.jar"
 		done
 
+		local license_dir="${_BUILD_DIR}/boms/api-jar/com/liferay/portal/ee/license"
+
+		if [ -d "${license_dir}" ]
+		then
+			rm --force --recursive "${license_dir}"
+		fi
+
 		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" \( -name "com.liferay.*.jar" -o -name "jakarta*.jar" -o -name "javax*.jar" \) -type f -print0 | while IFS= read -r -d '' module_jar
 		do
 			manage_bom_jar "${module_jar}"
