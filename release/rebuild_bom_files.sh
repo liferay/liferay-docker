@@ -79,9 +79,16 @@ function main {
 
 	lc_time_run checkout_product_version
 
+	lc_time_run set_up_profile
+
 	lc_time_run compile_product
 
 	lc_time_run build_product
+
+	lc_background_run clean_up_ignored_dxp_modules
+	lc_background_run clean_up_ignored_dxp_plugins
+
+	lc_wait
 
 	lc_time_run generate_api_jars
 
