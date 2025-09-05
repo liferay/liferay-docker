@@ -812,6 +812,7 @@ quarterly:
     2025.q1.14-lts:
     2025.q1.15-lts:
     2025.q1.16-lts:
+    2025.q1.17-lts:
     2025.q2.0:
     2025.q2.1:
     2025.q2.2:
@@ -826,7 +827,6 @@ quarterly:
     2025.q2.11:
     2025.q2.12:
     2025.q3.0:
-    2025.q1.17-lts:
         latest: true
 snapshot:
     snapshot-master:
