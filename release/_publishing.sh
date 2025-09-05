@@ -392,7 +392,7 @@ function upload_to_docker_hub {
 	then
 		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" ./build_all_images.sh --push
 	else
-		prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-docker" "liferay-docker"
+		prepare_branch_to_commit "${_BASE_DIR}" "liferay-docker"
 
 		if [ "${?}" -ne 0 ]
 		then
@@ -402,8 +402,6 @@ function upload_to_docker_hub {
 		fi
 
 		_update_bundles_yml
-
-		lc_cd "${_BASE_DIR}"
 
 		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push-all
 	fi
@@ -428,8 +426,8 @@ function upload_to_docker_hub {
 function _update_bundles_yml {
 	local product_version_key="$(echo "${_PRODUCT_VERSION}" | cut --delimiter='-' --fields=1)"
 
-	if (yq eval ".\"${product_version_key}\" | has(\"${_PRODUCT_VERSION}\")" "${_PROJECTS_DIR}/liferay-docker/bundles.yml" | grep --quiet "true") ||
-	   (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${_PROJECTS_DIR}/liferay-docker/bundles.yml" | grep --quiet "true")
+	if (yq eval ".\"${product_version_key}\" | has(\"${_PRODUCT_VERSION}\")" "${_BASE_DIR}/bundles.yml" | grep --quiet "true") ||
+	   (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${_BASE_DIR}/bundles.yml" | grep --quiet "true")
 	then
 		lc_log INFO "The ${_PRODUCT_VERSION} product version was already published."
 
@@ -438,47 +436,47 @@ function _update_bundles_yml {
 
 	if is_quarterly_release
 	then
-		local latest_key=$(yq eval ".quarterly | keys | .[-1]" "${_PROJECTS_DIR}/liferay-docker/bundles.yml")
+		local latest_key=$(yq eval ".quarterly | keys | .[-1]" "${_BASE_DIR}/bundles.yml")
 
-		yq --indent 4 --inplace eval "del(.quarterly.\"${latest_key}\".latest)" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
-		yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+		yq --indent 4 --inplace eval "del(.quarterly.\"${latest_key}\".latest)" "${_BASE_DIR}/bundles.yml"
+		yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${_BASE_DIR}/bundles.yml"
 	fi
 
 	if is_7_3_release
 	then
-		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\" = {}" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\" = {}" "${_BASE_DIR}/bundles.yml"
 	fi
 
 	if is_7_4_u_release
 	then
-		local nightly_bundle_url=$(yq eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url" "${_PROJECTS_DIR}/liferay-docker/bundles.yml")
+		local nightly_bundle_url=$(yq eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url" "${_BASE_DIR}/bundles.yml")
 
-		yq --indent 4 --inplace eval "del(.\"${product_version_key}\".\"${product_version_key}.nightly\")" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
-		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\" = {}" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
-		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url = \"${nightly_bundle_url}\"" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+		yq --indent 4 --inplace eval "del(.\"${product_version_key}\".\"${product_version_key}.nightly\")" "${_BASE_DIR}/bundles.yml"
+		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\" = {}" "${_BASE_DIR}/bundles.yml"
+		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url = \"${nightly_bundle_url}\"" "${_BASE_DIR}/bundles.yml"
 	fi
 
 	if is_7_4_ga_release
 	then
 		local ga_bundle_url="releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/"$(curl --fail --location --show-error --silent "https://releases-cdn.liferay.com/portal/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle")
 
-		perl -i -0777pe 's/\s+latest: true(?!7.4.13:)//' "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+		perl -i -0777pe 's/\s+latest: true(?!7.4.13:)//' "${_BASE_DIR}/bundles.yml"
 
-		sed --in-place "/7.4.13:/i ${product_version_key}:" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+		sed --in-place "/7.4.13:/i ${product_version_key}:" "${_BASE_DIR}/bundles.yml"
 
-		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\".bundle_url = \"${ga_bundle_url}\"" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
-		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\".latest = true" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\".bundle_url = \"${ga_bundle_url}\"" "${_BASE_DIR}/bundles.yml"
+		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${_PRODUCT_VERSION}\".latest = true" "${_BASE_DIR}/bundles.yml"
 	fi
 
-	sed --in-place "/^$/d" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
-	sed --in-place "s/[[:space:]]{}//g" "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+	sed --in-place "/^$/d" "${_BASE_DIR}/bundles.yml"
+	sed --in-place "s/[[:space:]]{}//g" "${_BASE_DIR}/bundles.yml"
 
-	truncate --size=-1 "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+	truncate --size=-1 "${_BASE_DIR}/bundles.yml"
 
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
 		commit_to_branch_and_send_pull_request \
-			"${_PROJECTS_DIR}/liferay-docker/bundles.yml" \
+			"${_BASE_DIR}/bundles.yml" \
 			"Add ${_PRODUCT_VERSION} to bundles.yml." \
 			"master" \
 			"brianchandotcom/liferay-docker" \
