@@ -12,7 +12,7 @@ source ./_patcher.sh
 source ./_product.sh
 source ./_publishing.sh
 source ./_releases_json.sh
-source ./scan_docker_images.sh --release-candidate
+source ./scan_docker_images.sh
 
 function check_usage {
 

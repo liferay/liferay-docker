@@ -32,7 +32,7 @@ function check_usage {
 }
 
 function main {
-	if [[ " ${@} " =~ " --release-candidate " ]]
+	if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
 	then
 		return
 	fi
@@ -145,4 +145,4 @@ function scan_release_candidate_docker_image {
 	scan_docker_images
 }
 
-main "${@}"
+main
