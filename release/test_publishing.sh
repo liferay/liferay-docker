@@ -25,13 +25,13 @@ function set_up {
 
 	export _RELEASE_ROOT_DIR="${PWD}"
 
-	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/actual"
+	export _BASE_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/actual/liferay-docker"
 }
 
 function tear_down {
 	common_tear_down
 
-	git restore "${_PROJECTS_DIR}/liferay-docker/bundles.yml"
+	git restore "${_BASE_DIR}/bundles.yml"
 
 	unset _BASE_DIR
 	unset _RELEASE_ROOT_DIR
