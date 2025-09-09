@@ -2,6 +2,7 @@
 
 source ../_release_common.sh
 source ./_git.sh
+source ./_releases_json.sh
 
 function add_fixed_issues_to_patcher_project_version {
 	lc_download "https://releases.liferay.com/dxp/${_PRODUCT_VERSION}/release-notes.txt" release-notes.txt
@@ -436,10 +437,20 @@ function _update_bundles_yml {
 
 	if is_quarterly_release
 	then
-		local latest_key=$(yq eval ".quarterly | keys | .[-1]" "${_BASE_DIR}/bundles.yml")
+		if [ "$(get_latest_product_version "quarterly")" == "${_PRODUCT_VERSION}" ]
+		then
+			local latest_quarterly_release_key=$(yq eval ".quarterly | keys | .[-1]" "${_BASE_DIR}/bundles.yml")
 
-		yq --indent 4 --inplace eval "del(.quarterly.\"${latest_key}\".latest)" "${_BASE_DIR}/bundles.yml"
-		yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${_BASE_DIR}/bundles.yml"
+			yq --indent 4 --inplace eval "del(.quarterly.\"${latest_quarterly_release_key}\".latest)" "${_BASE_DIR}/bundles.yml"
+			yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${_BASE_DIR}/bundles.yml"
+		else
+			local previous_quarterly_release_key=$(\
+				yq ".quarterly" "${_BASE_DIR}/bundles.yml" | \
+				grep "$(get_product_group_version)" | \
+				tail --lines=1)
+
+			sed --in-place "/${previous_quarterly_release_key}/a\    ${_PRODUCT_VERSION}:" "${_BASE_DIR}/bundles.yml"
+		fi
 	fi
 
 	if is_7_3_release
