@@ -11,6 +11,8 @@
     7.4.13.nightly:
         bundle_url: releases-cdn.liferay.com/dxp/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
 quarterly:
+    2025.q1.0-lts:
+    2025.q1.1-lts:
     2025.q2.0:
     2025.q2.1:
         latest: true
