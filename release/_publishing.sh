@@ -482,7 +482,10 @@ function _update_bundles_yml {
 	sed --in-place "/^$/d" "${_BASE_DIR}/bundles.yml"
 	sed --in-place "s/[[:space:]]{}//g" "${_BASE_DIR}/bundles.yml"
 
-	truncate --size=-1 "${_BASE_DIR}/bundles.yml"
+	if [ -z "$(tail --bytes=1 "${_BASE_DIR}/bundles.yml")" ]
+	then
+		truncate --size=-1 "${_BASE_DIR}/bundles.yml"
+	fi
 
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
