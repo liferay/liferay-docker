@@ -77,8 +77,8 @@ function handle_automated_build {
 
 	lc_log INFO "This build was triggered automatically."
 
-	local latest_quarterly_candidate_product_version="$(get_latest_product_version quarterly-candidate)"
-	local latest_quarterly_product_version="$(get_latest_product_version quarterly)"
+	local latest_quarterly_candidate_product_version="$(get_latest_product_version "quarterly-candidate")"
+	local latest_quarterly_product_version="$(get_latest_product_version "quarterly")"
 
 	if [ "${latest_quarterly_candidate_product_version}" != "${latest_quarterly_product_version}" ]
 	then
