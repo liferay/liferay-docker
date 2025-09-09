@@ -58,9 +58,9 @@ function test_publishing_get_root_patcher_project_version_name {
 function test_publishing_update_bundles_yml {
 	_run_update_bundles_yml "7.4.3.125-ga125"
 
-	_run_update_bundles_yml "7.4.13-u130"
-	_run_update_bundles_yml "2025.q2.1"
 	_run_update_bundles_yml "2025.q1.1-lts"
+	_run_update_bundles_yml "2025.q2.1"
+	_run_update_bundles_yml "7.4.13-u130"
 
 	assert_equals \
 		"${_RELEASE_ROOT_DIR}/test-dependencies/actual/liferay-docker/bundles.yml" \
