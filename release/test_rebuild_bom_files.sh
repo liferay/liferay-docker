@@ -2,7 +2,7 @@
 
 source ../_liferay_common.sh
 source ../_test_common.sh
-source ./rebuild_bom_files.sh --test
+source ./rebuild_bom_files.sh
 
 function main {
 	set_up

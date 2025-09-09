@@ -2,7 +2,7 @@
 
 source ./_release_common.sh
 source ./_test_common.sh
-source ./build_bundle_image.sh --test
+source ./build_bundle_image.sh
 
 function main {
 	set_up

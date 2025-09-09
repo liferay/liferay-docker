@@ -68,7 +68,7 @@ function checkout_product_version {
 }
 
 function main {
-	if [[ " ${@} " =~ " --test " ]]
+	if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
 	then
 		return
 	fi

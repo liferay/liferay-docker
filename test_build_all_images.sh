@@ -2,7 +2,7 @@
 
 source ./_liferay_common.sh
 source ./_test_common.sh
-source ./build_all_images.sh --test
+source ./build_all_images.sh
 
 function main {
 	set_up

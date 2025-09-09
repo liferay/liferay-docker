@@ -68,7 +68,7 @@ function check_usage {
 }
 
 function main {
-	if [[ " ${@} " =~ " --test " ]]
+	if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
 	then
 		return
 	fi

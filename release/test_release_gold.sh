@@ -2,7 +2,7 @@
 
 source ../_liferay_common.sh
 source ../_test_common.sh
-source ./release_gold.sh --test
+source ./release_gold.sh
 
 function main {
 	set_up

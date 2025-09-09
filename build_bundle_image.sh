@@ -227,7 +227,7 @@ function install_fix_pack {
 }
 
 function main {
-	if [[ " ${@} " =~ " --test " ]]
+	if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
 	then
 		return
 	fi

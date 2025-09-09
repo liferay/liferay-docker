@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source ../_test_common.sh
-source ./build_release.sh --test
+source ./build_release.sh
 
 function main {
 	set_up
