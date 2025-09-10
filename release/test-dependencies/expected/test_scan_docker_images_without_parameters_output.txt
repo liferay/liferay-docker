@@ -1,9 +1,0 @@
-Usage: LIFERAY_IMAGE_NAMES=<image name> ./scan_docker_images.sh
-
-The script reads the following environment variables:
-
-    LIFERAY_IMAGE_NAMES: Comma separated list of DXP or Portal Docker images
-    LIFERAY_PRISMA_CLOUD_ACCESS_KEY: Prisma Cloud access key
-    LIFERAY_PRISMA_CLOUD_SECRET: Prisma Cloud secret
-
-Example: LIFERAY_IMAGE_NAMES=liferay/dxp:2025.q1.5-lts,liferay/dxp:2024.q2.2 ./scan_docker_images.sh
