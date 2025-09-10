@@ -575,7 +575,7 @@ function update_release_info_date {
 	fi
 
 	sed \
-		--expression "s/release.info.date=.*/release.info.date=$(date -d "next monday" +"%B %-d, %Y")/" \
+		--expression "s/release.info.date=.*/release.info.date=$(date -d $(echo "${LIFERAY_NEXT_RELEASE_DATE}" | sed "s/[^0-9-]//g") +"%B %-d, %Y")/" \
 		--in-place \
 		release.properties
 
