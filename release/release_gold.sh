@@ -67,16 +67,6 @@ function check_usage {
 	LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
 }
 
-function get_tag_name {
-	if (is_ga_release || is_u_release)
-	then
-		echo "${_PRODUCT_VERSION}"
-	elif is_quarterly_release
-	then
-		echo "${_ARTIFACT_VERSION}"
-	fi
-}
-
 function main {
 	if [[ " ${@} " =~ " --test " ]]
 	then

@@ -17,7 +17,6 @@ function main {
 		if [ -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
 		then
 			test_release_gold_check_usage
-			test_release_gold_get_tag_name
 			test_release_gold_not_prepare_next_release_branch
 			test_release_gold_not_prepare_next_release_branch "false"
 			test_release_gold_not_prepare_next_release_branch "true"
@@ -70,18 +69,6 @@ function test_release_gold_check_usage {
 	assert_equals "$(check_usage)" "$(cat test-dependencies/expected/test_release_gold_check_usage_output.txt)"
 }
 
-function test_release_gold_get_tag_name {
-	_test_release_gold_get_tag_name "2024.q1.12" "2024.q1.12" "2024.q1.12"
-	_test_release_gold_get_tag_name "2025.q1.0" "2025.q1.0-lts" "2025.q1.0"
-	_test_release_gold_get_tag_name "7.4.13.u136" "7.4.13-u136" "7.4.13-u136"
-
-	LIFERAY_RELEASE_PRODUCT_NAME="portal"
-
-	_test_release_gold_get_tag_name "7.4.3.132" "7.4.3.132-ga132" "7.4.3.132-ga132"
-
-	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
-}
-
 function test_release_gold_not_prepare_next_release_branch {
 	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ]
 	then
@@ -123,13 +110,6 @@ function test_release_gold_prepare_next_release_branch {
 
 	_test_release_gold_prepare_next_release_branch "2024.q1.12" "2024.Q1.13"
 	_test_release_gold_prepare_next_release_branch "2025.q1.0" "2025.Q1.1 LTS"
-}
-
-function _test_release_gold_get_tag_name {
-	_ARTIFACT_VERSION="${1}"
-	_PRODUCT_VERSION="${2}"
-
-	assert_equals "$(get_tag_name)" "${3}"
 }
 
 function _test_release_gold_prepare_next_release_branch {
