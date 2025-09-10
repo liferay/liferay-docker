@@ -827,6 +827,7 @@ quarterly:
     2025.q2.11:
     2025.q2.12:
     2025.q3.0:
+    2025.q3.1:
         latest: true
 snapshot:
     snapshot-master:
