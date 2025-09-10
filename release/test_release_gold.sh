@@ -138,6 +138,7 @@ function test_release_gold_reference_new_releases {
 }
 
 function test_release_gold_update_release_info_date {
+	LIFERAY_NEXT_RELEASE_DATE="2025-10-11"
 	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
 	_PRODUCT_VERSION="2024.q2.12"
 
@@ -145,7 +146,7 @@ function test_release_gold_update_release_info_date {
 
 	assert_equals \
 		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.date")" \
-		"$(date -d "next monday" +"%B %-d, %Y")"
+		"October 11, 2025"
 }
 
 function _test_release_gold_not_prepare_next_release_branch {
