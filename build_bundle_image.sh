@@ -186,6 +186,7 @@ function get_latest_tomcat_version {
 		download_file_from_github \
 			"app.server.properties" \
 			"app.server.properties" \
+			"master" \
 			"liferay-portal-ee"
 	fi
 
