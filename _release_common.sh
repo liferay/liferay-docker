@@ -1,5 +1,42 @@
 #!/bin/bash
 
+source ./_liferay_common.sh
+
+function get_latest_product_version {
+	local product_name=""
+	local product_version="${1}"
+	local product_version_regex="(?<=<a href=\")"
+
+	if [ "${product_version}" == "dxp" ]
+	then
+		product_name="dxp"
+		product_version_regex="${product_version_regex}(7\.3\.10-u\d+)"
+	elif [ "${product_version}" == "ga" ]
+	then
+		product_name="portal"
+		product_version_regex="${product_version_regex}(7\.4\.3\.\d+-ga\d+)"
+	elif [ "${product_version}" == "lts" ]
+	then
+		product_name="dxp"
+		product_version_regex="${product_version_regex}(\d{4}\.q1\.[0-9]+-lts)"
+	elif [ "${product_version}" == "quarterly" ]
+	then
+		product_name="dxp"
+		product_version_regex="${product_version_regex}(\d{4}\.q[1-4]\.\d+(-lts)?)"
+	elif [ "${product_version}" == "quarterly-candidate" ]
+	then
+		product_name="dxp/release-candidates"
+		product_version_regex="${product_version_regex}(\d{4}\.q[1-4]\.\d+(-lts)?)"
+	fi
+
+	echo "$(_download_product_version_list_html "${product_name}")" | \
+		grep \
+			--only-matching \
+			--perl-regexp \
+			"${product_version_regex}" | \
+		tail --lines=1
+}
+
 function get_latest_version_from_url {
 	curl "${1}" \
 		--max-time 10 \
@@ -287,6 +324,30 @@ function _compare_product_versions {
 	fi
 
 	return 1
+}
+
+function _download_product_version_list_html {
+	local product_version_list_url="https://releases.liferay.com/${1}"
+
+	lc_log INFO "Downloading product version list from ${product_version_list_url}."
+
+	local product_version_list_html=""
+
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		product_version_list_html=$(cat "${_RELEASE_ROOT_DIR}/test-dependencies/actual/$(basename "${1}").html")
+	else
+		product_version_list_html=$(lc_curl "${product_version_list_url}/")
+	fi
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to download the product version list."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	echo "${product_version_list_html}"
 }
 
 function _get_product_version {

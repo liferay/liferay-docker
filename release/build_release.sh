@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
+source ../_release_common.sh
 source ./_bom.sh
 source ./_ci.sh
 source ./_git.sh

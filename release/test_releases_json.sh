@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
+source ../_release_common.sh
 source ../_test_common.sh
 source ./_releases_json.sh
 
