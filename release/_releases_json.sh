@@ -16,6 +16,7 @@ function generate_releases_json {
 		fi
 	fi
 
+	_add_database_schema_versions
 	_add_major_versions
 	_promote_product_versions
 	_tag_recommended_product_versions
@@ -23,6 +24,43 @@ function generate_releases_json {
 	_merge_json_snippets
 
 	_upload_releases_json
+}
+
+function _add_database_schema_versions {
+    local product_version_json_file
+
+    for product_version_json_file in $(find "${_PROMOTION_DIR}" -maxdepth 1 -type f | grep --extended-regexp "[0-9]{4}-[0-9]{2}-[0-9]{2}-(dxp|portal).*\.json")
+    do
+		local product_version=$(jq --raw-output ".[].url" "${product_version_json_file}" | xargs basename)
+
+        if [ "$(get_product_group_version "${product_version}")" == "7.0" ]
+        then
+            continue
+        fi
+
+		local repository="liferay-portal-ee"
+
+		if [ "$(jq --raw-output ".[].product" "${product_version_json_file}")" == "portal" ]
+		then
+			repository="liferay-portal"
+		fi
+
+		local database_schema_version=$(_get_database_schema_version "${product_version}" "${repository}")
+
+		if [ -z "${database_schema_version}" ]
+		then
+			lc_log ERROR "Unable to get database schema version for ${product_version} release."
+
+			continue
+		fi
+
+        jq "map(
+                . + {databaseSchemaVersion: \"${database_schema_version}\"}
+                | to_entries
+                | sort_by(.key)
+                | from_entries
+        )" "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv "${product_version_json_file}.tmp" "${product_version_json_file}"
+    done
 }
 
 function _add_major_versions {
