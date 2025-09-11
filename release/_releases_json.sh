@@ -90,21 +90,24 @@ function _get_database_schema_version {
 	local product_version=${1}
 	local repository=${2}
 
-	rm --force "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
-
-	download_file_from_github \
-		"PortalUpgradeProcessRegistryImpl.java" \
-		"portal-impl/src/com/liferay/portal/upgrade/$(_get_liferay_upgrade_folder_version "${product_version}")/PortalUpgradeProcessRegistryImpl.java" \
-		"$(get_tag_name "${product_version}")" \
-		"${repository}" &> /dev/null
-
-	if [ "${?}" -ne 0 ]
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
 		rm --force "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
 
-		echo ""
+		download_file_from_github \
+			"PortalUpgradeProcessRegistryImpl.java" \
+			"portal-impl/src/com/liferay/portal/upgrade/$(_get_liferay_upgrade_folder_version "${product_version}")/PortalUpgradeProcessRegistryImpl.java" \
+			"$(get_tag_name "${product_version}")" \
+			"${repository}" &> /dev/null
 
-		return
+		if [ "${?}" -ne 0 ]
+		then
+			rm --force "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
+
+			echo ""
+
+			return
+		fi
 	fi
 
 	local database_schema_version=$(\

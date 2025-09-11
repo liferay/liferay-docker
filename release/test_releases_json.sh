@@ -12,6 +12,7 @@ function main {
 	then
 		"${1}"
 	else
+		test_releases_json_add_database_schema_versions
 		test_releases_json_add_major_versions
 		test_releases_json_get_latest_product_version
 		test_releases_json_merge_json_snippets
@@ -31,6 +32,8 @@ function set_up {
 	export _PROMOTION_DIR="${PWD}"
 	export _RELEASE_ROOT_DIR="${PWD}"
 
+	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
+
 	_process_products &> /dev/null
 }
 
@@ -42,6 +45,27 @@ function tear_down {
 	unset _RELEASE_ROOT_DIR
 
 	rm ./*.json
+}
+
+function test_releases_json_add_database_schema_versions {
+	local current_dir="${PWD}"
+
+    lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
+
+    git fetch upstream tag 2025.q2.1 &> /dev/null
+
+    git show "2025.q2.1:portal-impl/src/com/liferay/portal/upgrade/v7_4_x/PortalUpgradeProcessRegistryImpl.java" > \
+        "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
+
+    git checkout master &> /dev/null
+
+    lc_cd "${current_dir}"
+
+	_add_database_schema_versions &> /dev/null
+
+	assert_equals \
+		"$(jq "[.[] | select(.databaseSchemaVersion == \"32.0.0\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "2025.q2.1")")" \
+		"true"
 }
 
 function test_releases_json_add_major_versions {
