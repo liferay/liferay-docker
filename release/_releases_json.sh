@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ../_common.sh
 source ../_release_common.sh
 
 function generate_releases_json {
@@ -45,6 +46,61 @@ function _add_major_versions {
 				| from_entries
 		)" "${quarterly_release_json_file}" > "${quarterly_release_json_file}.tmp" && mv "${quarterly_release_json_file}.tmp" "${quarterly_release_json_file}"
 	done
+}
+
+function _get_database_schema_version {
+	local product_version=${1}
+	local repository=${2}
+
+	rm --force "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
+
+	download_file_from_github \
+		"PortalUpgradeProcessRegistryImpl.java" \
+		"portal-impl/src/com/liferay/portal/upgrade/$(_get_liferay_upgrade_folder_version "${product_version}")/PortalUpgradeProcessRegistryImpl.java" \
+		"$(get_tag_name "${product_version}")" \
+		"${repository}" &> /dev/null
+
+	if [ "${?}" -ne 0 ]
+	then
+		rm --force "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
+
+		echo ""
+
+		return
+	fi
+
+	local database_schema_version=$(\
+		grep \
+			--only-matching \
+			--perl-regexp "(?<=new Version\()[^)]+(?=\))" \
+			"${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java" | \
+		tail --lines=1 | \
+		cut --delimiter=',' --fields=1,2,3 | \
+		tr ',' '.' | \
+		tr --delete '[:space:]')
+
+	if [ -z "${database_schema_version}" ] ||
+	   [[ ! "${database_schema_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+	then
+		rm --force "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
+
+		echo ""
+
+		return
+	fi
+
+	echo "${database_schema_version}"
+}
+
+function _get_liferay_upgrade_folder_version {
+	local product_version=${1}
+
+	if is_quarterly_release "${product_version}"
+	then
+		echo "v7_4_x"
+	else
+		echo "v$(get_product_group_version "${product_version}" | tr '.' '_')_x"
+	fi
 }
 
 function _merge_json_snippets {
