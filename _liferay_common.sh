@@ -327,7 +327,7 @@ function lc_next_step {
 
 function lc_time_run {
 	local run_id=$(echo "${@}" | tr " /:" "_")
-	local start_time=$(date +%s)
+	local start_time=$(/usr/bin/date +%s)
 
 	if [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
 	then
@@ -347,7 +347,7 @@ function lc_time_run {
 
 	local exit_code=${?}
 
-	local end_time=$(date +%s)
+	local end_time=$(/usr/bin/date +%s)
 
 	if [ "${exit_code}" == "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 	then
@@ -403,7 +403,7 @@ function lc_wait {
 }
 
 function _lc_init {
-	LIFERAY_COMMON_START_TIME=$(date +%s)
+	LIFERAY_COMMON_START_TIME=$(/usr/bin/date +%s)
 	LIFERAY_COMMON_STEP_FILE=$(mktemp)
 
 	trap 'rm --force "${LIFERAY_COMMON_STEP_FILE}"' EXIT ERR SIGINT SIGTERM
