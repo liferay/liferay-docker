@@ -2,60 +2,6 @@
 
 source ../_liferay_common.sh
 
-function check_usage {
-	if [ -z "${LIFERAY_IMAGE_NAMES}" ] ||
-	   [ -z "${LIFERAY_PRISMA_CLOUD_ACCESS_KEY}" ] ||
-	   [ -z "${LIFERAY_PRISMA_CLOUD_SECRET}" ]
-	then
-		print_help
-	fi
-
-	local image_name
-
-	while read -r image_name
-	do
-		if [ -z "$(docker images --quiet "${image_name}" 2> /dev/null)" ]
-		then
-			lc_log ERROR "Unable to find ${image_name} locally."
-
-			exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		fi
-	done <<< "$(echo "${LIFERAY_IMAGE_NAMES}" | tr ',' '\n')"
-
-	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
-
-	_RELEASE_ROOT_DIR="${PWD}"
-
-	LIFERAY_COMMON_LOG_DIR="${_RELEASE_ROOT_DIR}/logs"
-
-	mkdir --parents "${LIFERAY_COMMON_LOG_DIR}"
-}
-
-function main {
-	if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
-	then
-		return
-	fi
-
-	check_usage
-
-	lc_time_run scan_docker_images
-}
-
-function print_help {
-	echo "Usage: LIFERAY_IMAGE_NAMES=<image name> ${0}"
-	echo ""
-	echo "The script reads the following environment variables:"
-	echo ""
-	echo "    LIFERAY_IMAGE_NAMES: Comma separated list of DXP or Portal Docker images"
-	echo "    LIFERAY_PRISMA_CLOUD_ACCESS_KEY: Prisma Cloud access key"
-	echo "    LIFERAY_PRISMA_CLOUD_SECRET: Prisma Cloud secret"
-	echo ""
-	echo "Example: LIFERAY_IMAGE_NAMES=liferay/dxp:2025.q1.5-lts,liferay/dxp:2024.q2.2 ${0}"
-
-	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
-}
-
 function scan_docker_images {
 	local api_url="https://api.eu.prismacloud.io"
 	local data=$(
@@ -144,5 +90,3 @@ function scan_release_candidate_docker_image {
 
 	scan_docker_images
 }
-
-main
