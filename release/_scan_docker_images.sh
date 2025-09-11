@@ -3,6 +3,21 @@
 source ../_liferay_common.sh
 
 function scan_docker_images {
+	if [ -z "${LIFERAY_IMAGE_NAMES}" ]
+	then
+		lc_log ERROR "\${LIFERAY_IMAGE_NAMES} is undefined."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	if [ -z "${LIFERAY_PRISMA_CLOUD_ACCESS_KEY}" ] ||
+	   [ -z "${LIFERAY_PRISMA_CLOUD_SECRET}" ]
+	then
+		lc_log ERROR "Either \${LIFERAY_PRISMA_CLOUD_ACCESS_KEY} or \${LIFERAY_PRISMA_CLOUD_SECRET} is undefined."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
 	local api_url="https://api.eu.prismacloud.io"
 	local data=$(
 		cat <<- END
