@@ -14,6 +14,7 @@ function main {
 	else
 		test_releases_json_add_database_schema_versions
 		test_releases_json_add_major_versions
+		test_releases_json_get_database_schema_versions
 		test_releases_json_get_latest_product_version
 		test_releases_json_get_liferay_upgrade_folder_version
 		test_releases_json_merge_json_snippets
@@ -46,21 +47,11 @@ function tear_down {
 	unset _RELEASE_ROOT_DIR
 
 	rm ./*.json
+	rm ./PortalUpgradeProcessRegistryImpl.java
 }
 
 function test_releases_json_add_database_schema_versions {
-	local current_dir="${PWD}"
-
-    lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
-
-    git fetch upstream tag 2025.q2.1 &> /dev/null
-
-    git show "2025.q2.1:portal-impl/src/com/liferay/portal/upgrade/v7_4_x/PortalUpgradeProcessRegistryImpl.java" > \
-        "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
-
-    git checkout master &> /dev/null
-
-    lc_cd "${current_dir}"
+	_get_portal_upgrade_registry "2025.q2.1"
 
 	_add_database_schema_versions &> /dev/null
 
@@ -77,6 +68,13 @@ function test_releases_json_add_major_versions {
 		"true" \
 		"$(jq "[.[] | select(.productMajorVersion == \"DXP 2025.Q1 LTS\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "2025.q1.8-lts")")" \
 		"true"
+}
+
+function test_releases_json_get_database_schema_versions {
+	_test_releases_json_get_database_schema_versions "2024.q2.13" "31.1.0"
+	_test_releases_json_get_database_schema_versions "2025.q3.0" "33.3.0"
+	_test_releases_json_get_database_schema_versions "7.4.13-u112" "29.2.1"
+	_test_releases_json_get_database_schema_versions "7.4.3.132-ga132" "31.14.0"
 }
 
 function test_releases_json_get_latest_product_version {
@@ -156,6 +154,30 @@ function test_releases_json_tag_recommended_product_versions {
 		"true" \
 		"$(jq "[.[] | select(.tags[]? == \"recommended\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "$(get_latest_product_version "lts")")")" \
 		"true"
+}
+
+function _get_portal_upgrade_registry {
+    local current_dir="${PWD}"
+
+    lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
+
+    git fetch upstream tag "${1}" &> /dev/null
+
+    git show \
+		"${1}:portal-impl/src/com/liferay/portal/upgrade/v7_4_x/PortalUpgradeProcessRegistryImpl.java" > \
+        "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
+    
+    git checkout master &> /dev/null
+
+    lc_cd "${current_dir}"
+}
+
+function _test_releases_json_get_database_schema_versions {
+	_get_portal_upgrade_registry "${1}"
+
+	assert_equals \
+		"$(_get_database_schema_version)" \
+		"${2}"
 }
 
 function _test_releases_json_get_latest_product_version {
