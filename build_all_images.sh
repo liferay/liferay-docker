@@ -141,7 +141,7 @@ function build_bundle_images {
 		return
 	fi
 
-	local main_keys=$(yq '' < bundles.yml | grep --invert-match '  .*' | sed 's/://')
+	local main_keys=$(yq '' < bundles.yml | grep --invert-match '  .*' | sed "s/://")
 
 	local specified_version=${LIFERAY_DOCKER_IMAGE_FILTER}
 
@@ -157,13 +157,13 @@ function build_bundle_images {
 		local latest_7413_version=$( \
 			yq '."7.4.13"' bundles.yml | \
 			grep '^.*:$' | \
-			sed 's/://' | \
-			sed 's/.*-u//' | \
-			sed 's/7.4.13.nightly//' | \
+			sed "s/://" | \
+			sed "s/.*-u//" | \
+			sed "s/7.4.13.nightly//" | \
 			sort --numeric-sort --reverse | \
 			head --lines=1)
 
-		local versions=$(echo "${search_output}" | grep '^.*:$' | sed 's/://')
+		local versions=$(echo "${search_output}" | grep '^.*:$' | sed "s/://")
 
 		for version in ${versions}
 		do
@@ -490,7 +490,7 @@ function get_latest_available_zulu_version {
 function get_latest_docker_hub_version {
 	local token=$(curl --silent "https://auth.docker.io/token?scope=repository:liferay/${1}:pull&service=registry.docker.io" | jq --raw-output '.token')
 
-	local version=$(curl --header "Authorization: Bearer $token" --silent "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep --only-matching '\\"org.label-schema.version\\":\\"[0-9]\.[0-9]\.[0-9]*\\"' | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
+	local version=$(curl --header "Authorization: Bearer $token" --silent "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep --only-matching '\\"org.label-schema.version\\":\\"[0-9]\.[0-9]\.[0-9]*\\"' | head -1 | sed 's/\\"//g' | sed "s:.*\:::")
 
 	version=$(get_tag_from_image "${version}" "liferay/${1}" "org.label-schema.version:[0-9]*.[0-9]*.[0-9]*")
 
@@ -511,7 +511,7 @@ function get_latest_docker_hub_zabbix_server_version {
 		tag="latest"
 	fi
 
-	local version=$(curl --header "Authorization: Bearer $token" --silent "https://registry-1.docker.io/v2/${image_tag}/manifests/${tag}" | grep --only-matching "\\\\\"${label_name}\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
+	local version=$(curl --header "Authorization: Bearer $token" --silent "https://registry-1.docker.io/v2/${image_tag}/manifests/${tag}" | grep --only-matching "\\\\\"${label_name}\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed "s:.*\:::")
 
 	version=$(get_tag_from_image "${version}" "${image_tag}" "${label_name}:[0-9]*.[0-9]*.[0-9]*")
 
@@ -521,7 +521,7 @@ function get_latest_docker_hub_zabbix_server_version {
 function get_latest_docker_hub_zulu_version {
 	local token=$(curl --silent "https://auth.docker.io/token?scope=repository:liferay/${1}:pull&service=registry.docker.io" | jq --raw-output '.token')
 
-	local version=$(curl --header "Authorization: Bearer $token" --silent "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep --only-matching "\\\\\"org.label-schema.zulu${2}_${3}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed 's:.*\:::')
+	local version=$(curl --header "Authorization: Bearer $token" --silent "https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | grep --only-matching "\\\\\"org.label-schema.zulu${2}_${3}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | head -1 | sed 's/\\"//g' | sed "s:.*\:::")
 
 	version=$(get_tag_from_image "${version}" "liferay/${1}" "org.label-schema.zulu${2}_${3}_version:[0-9]*.[0-9]*.[0-9]*")
 
@@ -574,7 +574,7 @@ function get_tag_from_image {
 		then
 			version="0"
 		else
-			version=$(docker image inspect --format '{{index .Config.Labels }}' "${image_name}:latest" | grep --only-matching "${filter}" | sed s/.*://g)
+			version=$(docker image inspect --format '{{index .Config.Labels }}' "${image_name}:latest" | grep --only-matching "${filter}" | sed "s/.*://g")
 		fi
 
 		echo "${version}"
@@ -686,14 +686,14 @@ function validate_bundles_yml {
 	fi
 
 	local dxp_latest_key_counter=0
-	local main_keys=$(yq '' < bundles.yml | grep --invert-match '  .*' | sed 's/://')
+	local main_keys=$(yq '' < bundles.yml | grep --invert-match '  .*' | sed "s/://")
 	local portal_latest_key_counter=0
 
 	for main_key in ${main_keys}
 	do
 		if [ $(yq .\""${main_key}"\".*.latest < bundles.yml | grep "true\|false" -c) -gt 0 ]
 		then
-			local minor_keys=$(yq .\""${main_key}"\" < bundles.yml | grep --invert-match '  .*' | sed 's/://')
+			local minor_keys=$(yq .\""${main_key}"\" < bundles.yml | grep --invert-match '  .*' | sed "s/://")
 
 			for minor_key in ${minor_keys}
 			do

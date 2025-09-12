@@ -113,8 +113,8 @@ function compare_jars {
 		local packaged_file="${3}"
 		local property="${4}"
 
-		local value1=$(unzip -p "${jar1}" "${packaged_file}" | sed --null-data --regexp-extended 's@\r?\n @@g' | grep --word-regexp "${property}")
-		local value2=$(unzip -p "${jar2}" "${packaged_file}" | sed --null-data --regexp-extended 's@\r?\n @@g' | grep --word-regexp "${property}")
+		local value1=$(unzip -p "${jar1}" "${packaged_file}" | sed --null-data --regexp-extended "s@\r?\n @@g" | grep --word-regexp "${property}")
+		local value2=$(unzip -p "${jar2}" "${packaged_file}" | sed --null-data --regexp-extended "s@\r?\n @@g" | grep --word-regexp "${property}")
 
 		if [ "${value1}" == "${value2}" ]
 		then
@@ -584,13 +584,13 @@ function sign_hotfix {
 }
 
 function transform_file_name {
-	local file_name=$(echo "${1}" | sed --expression s#osgi/#OSGI_BASE_PATH/#)
+	local file_name=$(echo "${1}" | sed --expression "s#osgi/#OSGI_BASE_PATH/#")
 
-	file_name=$(echo "${file_name}" | sed --expression s#tomcat/webapps/ROOT#WAR_PATH#)
+	file_name=$(echo "${file_name}" | sed --expression "s#tomcat/webapps/ROOT#WAR_PATH#")
 
 	if is_7_3_release
 	then
-		file_name=$(echo "${file_name}" | sed --expression s#tomcat/lib/ext#GLOBAL_LIB_PATH#)
+		file_name=$(echo "${file_name}" | sed --expression "s#tomcat/lib/ext#GLOBAL_LIB_PATH#")
 	fi
 
 	echo "${file_name}"

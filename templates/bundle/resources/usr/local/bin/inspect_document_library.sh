@@ -112,7 +112,7 @@ function get_regenerated_dir_size {
 
 	if [ -n "${size}" ]
 	then
-		size=$(echo "${size}" | sed --expression s/[^0-9]*//g)
+		size=$(echo "${size}" | sed --expression "s/[^0-9]*//g")
 		size=$((size / 1024))
 
 		local count=$(find "${1}" -type f | wc --lines)

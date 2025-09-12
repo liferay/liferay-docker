@@ -235,10 +235,10 @@ function generate_distro_jar {
 	then
 		if is_lts_release
 		then
-			osgi_version=$(echo "${osgi_version}" | sed 's/.lts//g')
+			osgi_version=$(echo "${osgi_version}" | sed "s/.lts//g")
 		fi
 
-		osgi_version=$(echo "${osgi_version}" | sed 's/q//g')
+		osgi_version=$(echo "${osgi_version}" | sed "s/q//g")
 	fi
 
 	java -jar biz.aQute.bnd-6.4.0.jar remote distro -o "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro" "${osgi_version}"

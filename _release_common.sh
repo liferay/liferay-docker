@@ -100,7 +100,7 @@ function get_release_version_trivial {
 
 	if is_ga_release "${product_version}"
 	then
-		echo "${product_version}" | cut --delimiter='-' --fields=2 | sed 's/ga//'
+		echo "${product_version}" | cut --delimiter='-' --fields=2 | sed "s/ga//"
 	elif is_u_release "${product_version}"
 	then
 		echo "${product_version}" | cut --delimiter='-' --fields=2 | tr --delete 'u'

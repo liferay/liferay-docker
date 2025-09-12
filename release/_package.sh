@@ -95,11 +95,11 @@ function generate_release_properties_file {
 	if is_dxp_release
 	then
 		product_version="DXP ${product_version}"
-		target_platform_version=$(echo "${target_platform_version}" | sed --regexp-extended 's/-u/.u/')
+		target_platform_version=$(echo "${target_platform_version}" | sed --regexp-extended "s/-u/.u/")
 
 		if is_lts_release
 		then
-			target_platform_version=$(echo "${target_platform_version}" | sed --regexp-extended 's/-lts//g')
+			target_platform_version=$(echo "${target_platform_version}" | sed --regexp-extended "s/-lts//g")
 		fi
 
 	elif is_portal_release

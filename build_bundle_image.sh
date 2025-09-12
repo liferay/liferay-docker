@@ -406,7 +406,7 @@ function push_docker_image {
 	then
 		check_docker_buildx
 
-		sed --in-place '1s/FROM /FROM --platform=${TARGETPLATFORM} /g' "${TEMP_DIR}"/Dockerfile
+		sed --in-place "1s/FROM /FROM --platform=${TARGETPLATFORM} /g" "${TEMP_DIR}"/Dockerfile
 
 		docker buildx build \
 			--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
@@ -443,8 +443,8 @@ function set_parent_image {
 			return
 		fi
 
-		sed --in-place 's/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
-		sed --in-place 's/FROM liferay-jdk21/FROM liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
+		sed --in-place "s/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g" "${TEMP_DIR}"/Dockerfile
+		sed --in-place "s/FROM liferay-jdk21/FROM liferay-jdk11/g" "${TEMP_DIR}"/Dockerfile
 	elif [ "$(get_product_group_version "${LIFERAY_DOCKER_RELEASE_VERSION}")" == "7.4" ]
 	then
 		if is_nightly_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
@@ -464,12 +464,12 @@ function set_parent_image {
 			return
 		fi
 
-		sed --in-place 's/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
-		sed --in-place 's/FROM liferay-jdk21/FROM liferay-jdk11/g' "${TEMP_DIR}"/Dockerfile
+		sed --in-place "s/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g" "${TEMP_DIR}"/Dockerfile
+		sed --in-place "s/FROM liferay-jdk21/FROM liferay-jdk11/g" "${TEMP_DIR}"/Dockerfile
 	elif [[ "$(get_product_group_version "${LIFERAY_DOCKER_RELEASE_VERSION}" | tr --delete '.')" -le 73 ]]
 	then
-		sed --in-place 's/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11-jdk8:latest AS liferay-jdk11-jdk8/g' "${TEMP_DIR}"/Dockerfile
-		sed --in-place 's/FROM liferay-jdk21/FROM liferay-jdk11-jdk8/g' "${TEMP_DIR}"/Dockerfile
+		sed --in-place "s/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11-jdk8:latest AS liferay-jdk11-jdk8/g" "${TEMP_DIR}"/Dockerfile
+		sed --in-place "s/FROM liferay-jdk21/FROM liferay-jdk11-jdk8/g" "${TEMP_DIR}"/Dockerfile
 	fi
 }
 

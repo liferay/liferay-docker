@@ -141,8 +141,8 @@ function clean_up_ignored_dxp_modules {
 	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
 
 	(
-		git grep "Liferay-Releng-Bundle: false" | sed --expression s/app.bnd:.*//
-		git ls-files "*/.lfrbuild-releng-ignore" | sed --expression s#/.lfrbuild-releng-ignore##
+		git grep "Liferay-Releng-Bundle: false" | sed --expression "s/app.bnd:.*//"
+		git ls-files "*/.lfrbuild-releng-ignore" | sed --expression "s#/.lfrbuild-releng-ignore##"
 	) | while IFS= read -r ignored_dir
 	do
 		local dxp_dir=""
@@ -378,11 +378,11 @@ function set_artifact_versions {
 	
 		if is_quarterly_release
 		then
-			_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-lts//g')
+			_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed "s/-lts//g")
 		fi
 	elif is_portal_release
 	then
-		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed 's/-ga[0-9]*//g')
+		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed "s/-ga[0-9]*//g")
 	fi
 
 	_ARTIFACT_RC_VERSION="${_ARTIFACT_VERSION}-${2}"
@@ -407,7 +407,7 @@ function set_product_version {
 
 		if (echo "${version_display_name}" | grep --ignore-case --quiet "q")
 		then
-			_PRODUCT_VERSION=$(echo "${version_display_name,,}" | sed 's/ lts/-lts/g')
+			_PRODUCT_VERSION=$(echo "${version_display_name,,}" | sed "s/ lts/-lts/g")
 		else
 			local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
