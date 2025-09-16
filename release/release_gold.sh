@@ -121,43 +121,9 @@ function main {
 }
 
 function prepare_next_release {
-	local product_group_version="$(get_product_group_version)"
-
-	local quarterly_release_branch="release-${product_group_version}"
-
-	lc_time_run prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
-
-	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
-	then
-		lc_log ERROR "Unable to prepare the next release branch."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	local next_release_patch_version=$(get_release_patch_version)
-
-	next_release_patch_version=$((next_release_patch_version + 1))
-
-	if is_lts_release
-	then
-		next_release_patch_version="${next_release_patch_version} LTS"
-	fi
-
-	local product_group_version="$(get_product_group_version)"
-
-	lc_time_run prepare_next_release_branch "${product_group_version}" "${next_release_patch_version}"
-
-	lc_time_run update_release_info_date
-	
-	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
-	then
-		lc_time_run prepare_next_release_pull_request "${product_group_version}" "${next_release_patch_version}" "${quarterly_release_branch}"
-	fi
-}
-
-function prepare_next_release_branch {
-	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ] ||
-	   ! is_quarterly_release
+	if ! is_quarterly_release ||
+	   [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ] ||
+	   [[ "$(get_release_patch_version)" -eq 0 ]]
 	then
 		lc_log INFO "Skipping the preparation of the next release branch."
 
@@ -188,6 +154,41 @@ function prepare_next_release_branch {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	local product_group_version="$(get_product_group_version)"
+
+	local quarterly_release_branch="release-${product_group_version}"
+
+	lc_time_run prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
+
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		lc_log ERROR "Unable to prepare the next release branch."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local next_release_patch_version=$(get_release_patch_version)
+
+	next_release_patch_version=$((next_release_patch_version + 1))
+
+	if is_lts_release
+	then
+		next_release_patch_version="${next_release_patch_version} LTS"
+	fi
+
+	local product_group_version="$(get_product_group_version)"
+
+	lc_time_run prepare_next_release_branch "${product_group_version}" "${next_release_patch_version}"
+
+	lc_time_run prepare_next_update_release_info_date
+	
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
+	then
+		lc_time_run prepare_next_release_pull_request "${product_group_version}" "${next_release_patch_version}" "${quarterly_release_branch}"
+	fi
+}
+
+function prepare_next_release_branch {
 	sed \
 		--expression "s/release.info.version.display.name\[master-private\]=.*/release.info.version.display.name[master-private]=${1^^}.${2}/" \
 		--in-place \
@@ -217,6 +218,13 @@ function prepare_next_release_pull_request {
 	fi
 
 	return "${exit_code}"
+}
+
+function prepare_next_update_release_info_date {
+	sed \
+		--expression "s/release.info.date=.*/release.info.date=$(date -d $(echo "${LIFERAY_NEXT_RELEASE_DATE}" | sed "s/[^0-9-]//g") +"%B %-d, %Y")/" \
+		--in-place \
+		release.properties
 }
 
 function print_help {
@@ -553,23 +561,6 @@ function test_boms {
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
-}
-
-function update_release_info_date {
-	if ! is_quarterly_release ||
-	   [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ] ||
-	   [[ "$(get_release_patch_version)" -eq 0 ]] ||
-	   [[ "$(get_release_year)" -lt 2024 ]]
-	then
-		lc_log INFO "Skipping the release info update."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	sed \
-		--expression "s/release.info.date=.*/release.info.date=$(date -d $(echo "${LIFERAY_NEXT_RELEASE_DATE}" | sed "s/[^0-9-]//g") +"%B %-d, %Y")/" \
-		--in-place \
-		release.properties
 }
 
 function update_salesforce_product_version {
