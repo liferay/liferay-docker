@@ -2,7 +2,7 @@
 
 source ../_liferay_common.sh
 
-function scan_docker_images {
+function _scan_docker_images {
 	if [ -z "${LIFERAY_IMAGE_NAMES}" ]
 	then
 		lc_log ERROR "\${LIFERAY_IMAGE_NAMES} is undefined."
@@ -103,5 +103,5 @@ function scan_docker_images {
 function scan_release_candidate_docker_image {
 	LIFERAY_IMAGE_NAMES="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
-	scan_docker_images
+	_scan_docker_images
 }
