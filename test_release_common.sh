@@ -4,10 +4,13 @@ source ./_release_common.sh
 source ./_test_common.sh
 
 function main {
+	set_up
+
 	if [ "${#}" -eq 1 ]
 	then
 		"${1}"
 	else
+		test_release_common_get_latest_product_version
 		test_release_common_get_product_group_version
 		test_release_common_get_release_patch_version
 		test_release_common_get_release_quarter
@@ -32,8 +35,27 @@ function main {
 		test_release_common_is_u_release
 	fi
 
-	unset _PRODUCT_VERSION
+	tear_down
+}
+
+function set_up {
+	common_set_up
+
+	export _RELEASE_ROOT_DIR="${PWD}/release"
+}
+
+function tear_down {
 	unset ACTUAL_PRODUCT_VERSION
+	unset LIFERAY_RELEASE_TEST_MODE
+	unset _PRODUCT_VERSION
+}
+
+function test_release_common_get_latest_product_version {
+	_test_release_common_get_latest_product_version "dxp" "7.3.10-u36"
+	_test_release_common_get_latest_product_version "ga" "7.4.3.132-ga132"
+	_test_release_common_get_latest_product_version "lts" "2025.q1.8-lts"
+	_test_release_common_get_latest_product_version "quarterly" "2025.q2.1"
+	_test_release_common_get_latest_product_version "quarterly-candidate" "2025.q2.1"
 }
 
 function test_release_common_get_product_group_version {
@@ -209,6 +231,12 @@ function test_release_common_is_u_release {
 	_test_release_common_is_u_release "7.3.10-u2" "0"
 	_test_release_common_is_u_release "7.4.0-ga1" "1"
 	_test_release_common_is_u_release "7.4.13-u1" "0"
+}
+
+function _test_release_common_get_latest_product_version {
+	assert_equals \
+		"$(get_latest_product_version "${1}")" \
+		"${2}"
 }
 
 function _test_release_common_get_product_group_version {
