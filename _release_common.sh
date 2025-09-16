@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source ./_liferay_common.sh
-
 function get_latest_product_version {
 	local product_name=""
 	local product_version="${1}"
@@ -29,7 +27,22 @@ function get_latest_product_version {
 		product_version_regex="${product_version_regex}(\d{4}\.q[1-4]\.\d+(-lts)?)"
 	fi
 
-	echo "$(_download_product_version_list_html "${product_name}")" | \
+	local product_version_list_html
+
+	#
+	# Define product_version_list_html in a separate line to capture the exit code.
+	#
+
+	product_version_list_html=$(_download_product_version_list_html "${product_name}")
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to download the product version list."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	echo "${product_version_list_html}" | \
 		grep \
 			--only-matching \
 			--perl-regexp \
@@ -340,8 +353,6 @@ function _compare_product_versions {
 function _download_product_version_list_html {
 	local product_version_list_url="https://releases.liferay.com/${1}"
 
-	lc_log INFO "Downloading product version list from ${product_version_list_url}."
-
 	local product_version_list_html=""
 
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
@@ -353,8 +364,6 @@ function _download_product_version_list_html {
 
 	if [ "${?}" -ne 0 ]
 	then
-		lc_log ERROR "Unable to download the product version list."
-
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 

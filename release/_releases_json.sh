@@ -226,7 +226,22 @@ function _process_new_product {
 function _process_products {
 	for product_name in "dxp" "portal"
 	do
-		for product_version in $(echo -en "$(_download_product_version_list_html "${product_name}")" | \
+		local product_version_list_html
+
+		#
+		# Define product_version_list_html in a separate line to capture the exit code.
+		#
+
+		product_version_list_html=$(_download_product_version_list_html "${product_name}")
+
+		if [ "${?}" -ne 0 ]
+		then
+			lc_log ERROR "Unable to download the product version list."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+
+		for product_version in $(echo -en "${product_version_list_html}" | \
 			grep \
 				--extended-regexp \
 				--only-matching \
