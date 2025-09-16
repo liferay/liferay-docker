@@ -117,7 +117,7 @@ function _test_release_gold_prepare_next_release_branch {
 
 	local current_dir="${PWD}"
 
-	prepare_next_release_branch &> /dev/null
+	prepare_next_release &> /dev/null
 
 	assert_equals \
 		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[master-private]")" \
@@ -142,7 +142,7 @@ function test_release_gold_update_release_info_date {
 	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
 	_PRODUCT_VERSION="2024.q2.12"
 
-	update_release_info_date &> /dev/null
+	prepare_next_release &> /dev/null
 
 	assert_equals \
 		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.date")" \
