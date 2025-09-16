@@ -27,8 +27,9 @@ function main {
 }
 
 function set_up {
+	common_set_up
+
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
-	export LIFERAY_RELEASE_TEST_MODE="true"
 	export _PRODUCT_VERSION="7.4.13-u128"
 	export _PROMOTION_DIR="${PWD}"
 	export _RELEASE_ROOT_DIR="${PWD}"
