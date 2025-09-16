@@ -2,6 +2,12 @@
 
 source ../_liferay_common.sh
 
+function scan_release_candidate_docker_image {
+	LIFERAY_IMAGE_NAMES="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+
+	_scan_docker_images
+}
+
 function _scan_docker_images {
 	if [ -z "${LIFERAY_IMAGE_NAMES}" ]
 	then
@@ -98,10 +104,4 @@ function _scan_docker_images {
 	rm --force ./twistcli
 
 	return "${scan_result}"
-}
-
-function scan_release_candidate_docker_image {
-	LIFERAY_IMAGE_NAMES="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
-
-	_scan_docker_images
 }
