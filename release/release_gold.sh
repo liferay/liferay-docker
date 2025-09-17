@@ -149,7 +149,7 @@ function prepare_next_release {
 		rm --force --recursive releases.json
 	fi
 
-	if [ "${_PRODUCT_VERSION}" != "${latest_quarterly_product_version}" ]
+	if [ "${_PRODUCT_VERSION%-lts}" != "${latest_quarterly_product_version}" ]
 	then
 		lc_log INFO "The ${_PRODUCT_VERSION} version is not the latest quarterly release. Skipping the preparation of the next release branch."
 
