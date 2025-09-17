@@ -40,8 +40,9 @@ function set_up {
 }
 
 function tear_down {
+	common_tear_down
+
 	unset LIFERAY_RELEASE_PRODUCT_NAME
-	unset LIFERAY_RELEASE_TEST_MODE
 	unset _PRODUCT_VERSION
 	unset _PROMOTION_DIR
 	unset _RELEASE_ROOT_DIR
