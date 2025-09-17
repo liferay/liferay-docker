@@ -42,6 +42,8 @@ function build_docker_image {
 function main {
 	delete_local_images "${LIFERAY_DOCKER_REPOSITORY}/batch"
 
+	make_logs_directory
+
 	make_temp_directory templates/batch
 
 	log_in_to_docker_hub

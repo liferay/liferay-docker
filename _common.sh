@@ -187,6 +187,17 @@ function log_in_to_docker_hub {
 	fi
 }
 
+function make_logs_directory {
+	if [ -z "${LIFERAY_DOCKER_LOGS_DIR}" ]
+	then
+		LIFERAY_DOCKER_LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
+
+		export LIFERAY_DOCKER_LOGS_DIR="${LIFERAY_DOCKER_LOGS_DIR}"
+
+		mkdir --parents "${LIFERAY_DOCKER_LOGS_DIR}"
+	fi
+}
+
 function make_temp_directory {
 	CURRENT_DATE=$(date)
 

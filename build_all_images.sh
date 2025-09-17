@@ -644,11 +644,7 @@ function main {
 
 	validate_bundles_yml
 
-	LIFERAY_DOCKER_LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
-
-	export LIFERAY_DOCKER_LOGS_DIR="${LIFERAY_DOCKER_LOGS_DIR}"
-
-	mkdir --parents "${LIFERAY_DOCKER_LOGS_DIR}"
+	make_logs_directory
 
 	build_base_image
 
