@@ -29,10 +29,6 @@ function get_latest_product_version {
 
 	local product_version_list_html
 
-	#
-	# Define product_version_list_html in a separate line to capture the exit code.
-	#
-
 	product_version_list_html=$(_download_product_version_list_html "${product_name}")
 
 	if [ "${?}" -ne 0 ]

@@ -228,10 +228,6 @@ function _process_products {
 	do
 		local product_version_list_html
 
-		#
-		# Define product_version_list_html in a separate line to capture the exit code.
-		#
-
 		product_version_list_html=$(_download_product_version_list_html "${product_name}")
 
 		if [ "${?}" -ne 0 ]
@@ -266,10 +262,6 @@ function _process_product_version {
 	lc_log INFO "Processing ${product_name} ${product_version}."
 
 	local release_properties_file
-
-	#
-	# Define release_properties_file in a separate line to capture the exit code.
-	#
 
 	release_properties_file=$(lc_download "https://releases.liferay.com/${product_name}/${product_version}/release.properties")
 
