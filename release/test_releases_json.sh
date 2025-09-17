@@ -73,6 +73,8 @@ function test_releases_json_add_major_versions {
 }
 
 function test_releases_json_get_database_schema_versions {
+	_test_releases_json_get_database_schema_versions "7.0.4-ga5" ""
+
 	_test_releases_json_get_database_schema_versions "2024.q2.13" "31.1.0"
 	_test_releases_json_get_database_schema_versions "2025.q3.0" "33.3.0"
 	_test_releases_json_get_database_schema_versions "7.4.13-u112" "29.2.1"
@@ -167,7 +169,10 @@ function _get_portal_upgrade_registry {
 }
 
 function _test_releases_json_get_database_schema_versions {
-	_get_portal_upgrade_registry "${1}"
+	if [ "${1}" != "7.0.4-ga5" ]
+	then
+		_get_portal_upgrade_registry "${1}"
+	fi
 
 	assert_equals \
 		"$(_get_database_schema_version)" \
