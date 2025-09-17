@@ -353,7 +353,7 @@ function _download_product_version_list_html {
 	then
 		product_version_list_html=$(cat "${_RELEASE_ROOT_DIR}/test-dependencies/actual/$(basename "${1}").html")
 	else
-		product_version_list_html=$(lc_curl "https://releases.liferay.com/${1}/")
+		product_version_list_html=$(lc_curl "https://releases.liferay.com/${1}")
 	fi
 
 	if [ "${?}" -ne 0 ]
