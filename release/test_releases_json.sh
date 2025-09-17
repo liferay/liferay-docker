@@ -44,6 +44,7 @@ function tear_down {
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _PRODUCT_VERSION
+	unset _PROJECTS_DIR
 	unset _PROMOTION_DIR
 	unset _RELEASE_ROOT_DIR
 
