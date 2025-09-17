@@ -127,8 +127,8 @@ function download {
 function download_file_from_github {
 	local file_name=${1}
 	local file_path=${2}
-	local repository_name=${4}
 	local ref=${3}
+	local repository_name=${4}
 
 	local http_response=$(\
 		curl \
