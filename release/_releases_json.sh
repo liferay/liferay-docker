@@ -114,7 +114,7 @@ function _get_database_schema_version {
 		grep \
 			--only-matching \
 			--perl-regexp "(?<=new Version\()[^)]+(?=\))" \
-			"${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java" | \
+			"${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java" 2> /dev/null | \
 		tail --lines=1 | \
 		cut --delimiter=',' --fields=1,2,3 | \
 		tr ',' '.' | \
