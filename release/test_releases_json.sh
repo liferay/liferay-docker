@@ -60,6 +60,8 @@ function test_releases_json_add_database_schema_versions {
 	assert_equals \
 		"$(jq "[.[] | select(.databaseSchemaVersion == \"32.0.0\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "2025.q2.1")")" \
 		"true"
+
+	rm --force "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
 }
 
 function test_releases_json_add_major_versions {
