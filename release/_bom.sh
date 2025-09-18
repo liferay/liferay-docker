@@ -368,6 +368,82 @@ function generate_pom_release_bom_compile_only {
 	) >> "${pom_file_name}"
 }
 
+function generate_pom_release_bom_test {
+	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_RC_VERSION}.pom"
+
+	lc_log DEBUG "Generating ${pom_file_name}."
+
+	sed \
+		--expression "s/__ARTIFACT_ID__/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test/" \
+		--expression "s/__ARTIFACT_RC_VERSION__/${_ARTIFACT_RC_VERSION}/" \
+		--expression "s/__GITHUB_REPOSITORY__/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/" \
+		--expression "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
+		--expression "w ${pom_file_name}" \
+		"${_RELEASE_TOOL_DIR}/templates/release.bom.pom.tpl" > /dev/null
+
+	echo "" >> "${pom_file_name}"
+
+	local dependencies_list=(
+		biz.aQute.bnd:biz.aQute.bndlib
+		com.liferay.portal:com.liferay.portal.test
+		com.liferay.portal:com.liferay.portal.test.integration:6.0.36
+		com.liferay:com.liferay.arquillian.extension.junit.bridge
+		com.liferay:com.liferay.arquillian.extension.junit.bridge.connector
+		com.liferay:org.apache.logging.log4j
+		com.liferay:org.apache.logging.log4j.core
+		junit:junit:4.13.1
+		org.apache.aries.jmx:org.apache.aries.jmx.core:1.1.8
+		org.slf4j:log4j-over-slf4j:1.7.25
+	)
+
+	local sorted_dependencies_list=($(printf '%s\n' "${dependencies_list[@]}" | sort --field-separator=':' --key=2,2))
+
+	local artifact_urls=""
+
+	for file in \
+		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/portal-test.properties" \
+		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/test/arquillian-extension-junit-bridge-connector/artifact.properties" \
+		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/test/arquillian-extension-junit-bridge/artifact.properties" \
+		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/third-party/biz-aQute-bndlib/artifact.properties" \
+		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/third-party/org-apache-logging-log4j-core/artifact.properties" \
+		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/third-party/org-apache-logging-log4j/artifact.properties"
+	do
+		artifact_urls+=$(awk -F= '/^artifact.url=/ { print $2 }' "$file")
+		artifact_urls+=$'\n'
+	done
+
+	for dependency in "${sorted_dependencies_list[@]}"
+	do
+		local artifact_id=$(echo "${dependency}" | cut --delimiter=':' --fields=2)
+		local group_id=$(echo "${dependency}" | cut --delimiter=':' --fields=1)
+		local version=$(echo "${dependency}" | cut --delimiter=':' --fields=3)
+
+		if [ -z "${version}" ]
+		then
+			local artifact_url=$(echo "${artifact_urls}" | grep "/${artifact_id}-")
+
+			version=$( \
+				basename "${artifact_url}" | \
+				sed --expression 's/\.jar$//' | \
+				cut --delimiter='-' --fields=2-)
+		fi
+
+		(
+			echo -e "\t\t\t<dependency>"
+			echo -e "\t\t\t\t<groupId>${group_id}</groupId>"
+			echo -e "\t\t\t\t<artifactId>${artifact_id}</artifactId>"
+			echo -e "\t\t\t\t<version>${version}</version>"
+			echo -e "\t\t\t</dependency>"
+		) >> "${pom_file_name}"
+	done
+
+	(
+		echo -e "\t\t</dependencies>"
+		echo -e "\t</dependencyManagement>"
+		echo "</project>"
+	) >> "${pom_file_name}"
+}
+
 function generate_pom_release_bom_third_party {
 	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom"
 
@@ -450,6 +526,7 @@ function generate_poms {
 	lc_time_run generate_pom_release_api
 	lc_time_run generate_pom_release_bom
 	lc_time_run generate_pom_release_bom_compile_only
+	lc_time_run generate_pom_release_bom_test
 	lc_time_run generate_pom_release_bom_third_party
 	lc_time_run generate_pom_release_distro
 }
