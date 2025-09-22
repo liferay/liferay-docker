@@ -379,7 +379,7 @@ function generate_pom_release_bom_test {
 		--expression "s/__GITHUB_REPOSITORY__/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/" \
 		--expression "s/__PRODUCT_VERSION__/${_PRODUCT_VERSION}/" \
 		--expression "w ${pom_file_name}" \
-		"${_RELEASE_TOOL_DIR}/templates/release.bom.pom.tpl" > /dev/null
+		"${_RELEASE_TOOL_DIR}/templates/release.bom.test.pom.tpl" > /dev/null
 
 	echo "" >> "${pom_file_name}"
 
