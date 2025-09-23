@@ -185,11 +185,11 @@ function main {
 
 	local oauth2_token_response=$(\
 		curl \
-			-H "Content-type: application/x-www-form-urlencoded" \
-			-X POST \
-			-d "client_id=${oauth2_client_id}&client_secret=${oauth2_client_secret}&grant_type=client_credentials" \
-			-s \
-			-w "%output{$http_code_output}%{http_code}" \
+			--data "client_id=${oauth2_client_id}&client_secret=${oauth2_client_secret}&grant_type=client_credentials" \
+			--header "Content-type: application/x-www-form-urlencoded" \
+			--request POST \
+			--silent \
+			--write-out "%output{$http_code_output}%{http_code}" \
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}")
 
@@ -231,14 +231,14 @@ function main {
 
 		local put_response=$(\
 			curl \
-				-H "Accept: application/json" \
-				-H "Authorization: Bearer ${oauth2_access_token}" \
-				-H "Content-Type: multipart/form-data" \
-				-X PUT \
-				-F "file=@/opt/liferay/site-initializer/site-initializer.zip;type=application/zip" \
-				-F "site=${site}" \
-				-s \
-				-w "%output{$http_code_output}%{http_code}" \
+				--form "file=@/opt/liferay/site-initializer/site-initializer.zip;type=application/zip" \
+				--form "site=${site}" \
+				--header "Accept: application/json" \
+				--header "Authorization: Bearer ${oauth2_access_token}" \
+				--header "Content-Type: multipart/form-data" \
+				--request PUT \
+				--silent \
+				--write-out "%output{$http_code_output}%{http_code}" \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}")
 
@@ -308,13 +308,13 @@ function main {
 
 		local post_response=$(\
 			curl \
-				-H "Accept: application/json" \
-				-H "Authorization: Bearer ${oauth2_access_token}" \
-				-H "Content-Type: application/json" \
-				-X POST \
-				-d @/tmp/liferay_batch_entrypoint.items.json \
-				-s \
-				-w "%output{$http_code_output}%{http_code}" \
+				--data @/tmp/liferay_batch_entrypoint.items.json \
+				--header "Accept: application/json" \
+				--header "Authorization: Bearer ${oauth2_access_token}" \
+				--header "Content-Type: application/json" \
+				--request POST \
+				--silent \
+				--write-out "%output{$http_code_output}%{http_code}" \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters}")
 
@@ -347,11 +347,11 @@ function main {
 
 			local status_response=$(\
 				curl \
-					-H "accept: application/json" \
-					-H "Authorization: Bearer ${oauth2_access_token}" \
-					-X 'GET' \
-					-s \
-					-w "%output{$http_code_output}%{http_code}" \
+					--header "accept: application/json" \
+					--header "Authorization: Bearer ${oauth2_access_token}" \
+					--request 'GET' \
+					--silent \
+					--write-out "%output{$http_code_output}%{http_code}" \
 					${LIFERAY_BATCH_CURL_OPTIONS} \
 					"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}")
 
