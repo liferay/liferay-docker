@@ -193,9 +193,7 @@ function main {
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}")
 
-	local http_code="$(cat $http_code_output)"
-
-	if ! check_http_code "${http_code}"
+	if ! check_http_code "$(cat ${http_code_output})"
 	then
 		echo "Unable to get OAuth 2 token response: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}"
 
@@ -244,9 +242,7 @@ function main {
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}")
 
-		local http_code="$(cat $http_code_output)"
-
-		if ! check_http_code "${http_code}"
+		if ! check_http_code "$(cat ${http_code_output})"
 		then
 			echo "Unable to PUT resource: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}"
 
@@ -322,9 +318,7 @@ function main {
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters}")
 
-		local http_code="$(cat $http_code_output)"
-
-		if ! check_http_code "${http_code}"
+		if ! check_http_code "$(cat ${http_code_output})"
 		then
 			echo "Unable to POST resource: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}"
 
@@ -361,9 +355,7 @@ function main {
 					${LIFERAY_BATCH_CURL_OPTIONS} \
 					"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}")
 
-			local http_code="$(cat $http_code_output)"
-
-			if ! check_http_code "${http_code}"
+			if ! check_http_code "$(cat ${http_code_output})"
 			then
 				echo "Unable to get status for import task with external reference code ${external_reference_code}: ${status_response}"
 
