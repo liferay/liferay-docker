@@ -54,7 +54,7 @@ function main {
 			--header "Content-type: application/x-www-form-urlencoded" \
 			--request POST \
 			--silent \
-			--write-out "%output{$http_status_code_output}%{http_status_code}" \
+			--write-out "%output{$http_status_code_output}%{http_code}" \
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}")
 
@@ -105,7 +105,7 @@ function main {
 				--header "Content-Type: multipart/form-data" \
 				--request PUT \
 				--silent \
-				--write-out "%output{$http_status_code_output}%{http_status_code}" \
+				--write-out "%output{$http_status_code_output}%{http_code}" \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}")
 
@@ -183,7 +183,7 @@ function main {
 				--header "Content-Type: application/json" \
 				--request POST \
 				--silent \
-				--write-out "%output{$http_status_code_output}%{http_status_code}" \
+				--write-out "%output{$http_status_code_output}%{http_code}" \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters}")
 
@@ -222,7 +222,7 @@ function main {
 					--header "Authorization: Bearer ${oauth2_access_token}" \
 					--request 'GET' \
 					--silent \
-					--write-out "%output{$http_status_code_output}%{http_status_code}" \
+					--write-out "%output{$http_status_code_output}%{http_code}" \
 					${LIFERAY_BATCH_CURL_OPTIONS} \
 					"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}")
 
