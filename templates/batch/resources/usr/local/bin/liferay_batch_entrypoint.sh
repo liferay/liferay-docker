@@ -46,7 +46,7 @@ function main {
 	echo "OAuth Token URI: ${oauth2_token_uri}"
 	echo ""
 
-	local http_status_code_output=$(mktemp)
+	local http_status_code_file=$(mktemp)
 
 	local oauth2_token_response=$(\
 		curl \
@@ -54,11 +54,11 @@ function main {
 			--header "Content-type: application/x-www-form-urlencoded" \
 			--request POST \
 			--silent \
-			--write-out "%output{$http_status_code_output}%{http_code}" \
+			--write-out "%output{${http_status_code_file}}%{http_code}" \
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}")
 
-	local http_status_code="$(cat ${http_status_code_output})"
+	local http_status_code="$(cat ${http_status_code_file})"
 
 	if [[ "${http_status_code}" -ge 400 ]]
 	then
@@ -94,7 +94,7 @@ function main {
 
 		local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${site}")
 
-		local http_status_code_output=$(mktemp)
+		local http_status_code_file=$(mktemp)
 
 		local put_response=$(\
 			curl \
@@ -105,11 +105,11 @@ function main {
 				--header "Content-Type: multipart/form-data" \
 				--request PUT \
 				--silent \
-				--write-out "%output{$http_status_code_output}%{http_code}" \
+				--write-out "%output{${http_status_code_file}}%{http_code}" \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}")
 
-		local http_status_code="$(cat ${http_status_code_output})"
+		local http_status_code="$(cat ${http_status_code_file})"
 
 		if [[ "${http_status_code}" -ge 400 ]]
 		then
@@ -173,7 +173,7 @@ function main {
 
 		echo "Parameters: ${parameters}"
 
-		local http_status_code_output=$(mktemp)
+		local http_status_code_file=$(mktemp)
 
 		local post_response=$(\
 			curl \
@@ -183,11 +183,11 @@ function main {
 				--header "Content-Type: application/json" \
 				--request POST \
 				--silent \
-				--write-out "%output{$http_status_code_output}%{http_code}" \
+				--write-out "%output{${http_status_code_file}}%{http_code}" \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters}")
 
-		local http_status_code="$(cat ${http_status_code_output})"
+		local http_status_code="$(cat ${http_status_code_file})"
 
 		if [[ "${http_status_code}" -ge 400 ]]
 		then
@@ -214,7 +214,7 @@ function main {
 
 		until [ "${status}" == "COMPLETED" ] || [ "${status}" == "FAILED" ] || [ "${status}" == "NOT_FOUND" ]
 		do
-			local http_status_code_output=$(mktemp)
+			local http_status_code_file=$(mktemp)
 
 			local get_response=$(\
 				curl \
@@ -222,7 +222,7 @@ function main {
 					--header "Authorization: Bearer ${oauth2_access_token}" \
 					--request 'GET' \
 					--silent \
-					--write-out "%output{$http_status_code_output}%{http_code}" \
+					--write-out "%output{${http_status_code_file}}%{http_code}" \
 					${LIFERAY_BATCH_CURL_OPTIONS} \
 					"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}")
 
