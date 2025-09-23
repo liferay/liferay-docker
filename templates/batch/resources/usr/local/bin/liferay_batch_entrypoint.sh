@@ -62,9 +62,7 @@ function main {
 
 	if [[ "${http_status_code}" -ge 400 ]]
 	then
-		echo "Unable to get OAuth 2 token response from: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}"
-
-		echo "HTTP ${http_status_code} Error"
+		echo "POST ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri} errored with HTTP status ${http_status_code}."
 
 		exit 1
 	fi
@@ -115,9 +113,7 @@ function main {
 
 		if [[ "${http_status_code}" -ge 400 ]]
 		then
-			echo "Unable to PUT resource: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}"
-
-			echo "HTTP ${http_status_code} Error"
+			echo "PUT ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code} errored with HTTP status ${http_status_code}."
 
 			exit 1
 		fi
@@ -127,7 +123,7 @@ function main {
 
 		if [ ! -n "${put_response}" ]
 		then
-			echo "Received empty PUT response. Please check Liferay logs for more information."
+			echo "Received empty PUT response. Check Liferay logs for more information."
 
 			exit 1
 		fi
@@ -195,9 +191,7 @@ function main {
 
 		if [[ "${http_status_code}" -ge 400 ]]
 		then
-			echo "Unable to POST resource: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}"
-
-			echo "HTTP ${http_status_code} Error"
+			echo "POST ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters} errored with HTTP status ${http_status_code}."
 
 			exit 1
 		fi
@@ -207,7 +201,7 @@ function main {
 
 		if [ ! -n "${post_response}" ]
 		then
-			echo "Received empty POST response. Please check Liferay logs for more information."
+			echo "Received empty POST response. Check Liferay logs for more information."
 
 			rm /tmp/liferay_batch_entrypoint.items.json
 
@@ -222,7 +216,7 @@ function main {
 		do
 			local http_status_code_output=$(mktemp)
 
-			local status_response=$(\
+			local get_response=$(\
 				curl \
 					--header "accept: application/json" \
 					--header "Authorization: Bearer ${oauth2_access_token}" \
@@ -234,14 +228,12 @@ function main {
 
 			if [[ "${http_status_code}" -ge 400 ]]
 			then
-				echo "Unable to get status for import task with external reference code ${external_reference_code}: ${status_response}"
-
-				echo "HTTP ${http_status_code} Error"
+				echo "GET ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code} errored with HTTP status ${http_status_code}."
 
 				exit 1
 			fi
 
-			status=$(jq --raw-output '.executeStatus//.status' <<< "${status_response}")
+			status=$(jq --raw-output '.executeStatus//.status' <<< "${get_response}")
 
 			echo "Execute Status: ${status}"
 		done
@@ -250,7 +242,7 @@ function main {
 
 		if [ "${status}" == "FAILED" ]
 		then
-			echo "Batch import task process failed. Please check Liferay logs for more information."
+			echo "Batch import task failed. Check Liferay logs for more information."
 
 			exit 1
 		fi
