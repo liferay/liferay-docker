@@ -6,6 +6,7 @@ function check_http_code {
 	if [[ "${http_code}" == "000" ]]
 	then
 		echo "Error executing curl command. Please check arguments."
+
 		return 1
 	elif [[ "${http_code}" -ge 400 ]]
 	then
@@ -129,6 +130,7 @@ function check_http_code {
 		else
 			echo "HTTP ${http_code} Error"
 		fi
+
 		return 1
 	fi
 }
@@ -196,6 +198,7 @@ function main {
 	if ! check_http_code "${http_code}"
 	then
 		echo "Unable to get OAuth 2 token response: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}"
+
 		exit 1
 	fi
 
@@ -246,6 +249,7 @@ function main {
 		if ! check_http_code "${http_code}"
 		then
 			echo "Unable to PUT resource: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}"
+
 			exit 1
 		fi
 
@@ -323,6 +327,7 @@ function main {
 		if ! check_http_code "${http_code}"
 		then
 			echo "Unable to POST resource: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}"
+
 			exit 1
 		fi
 
@@ -361,6 +366,7 @@ function main {
 			if ! check_http_code "${http_code}"
 			then
 				echo "Unable to get status for import task with external reference code ${external_reference_code}: ${status_response}"
+
 				exit 1
 			fi
 
@@ -374,6 +380,7 @@ function main {
 		if [ "${status}" == "FAILED" ]
 		then
 			echo "Batch import task process failed. Please check Liferay logs for more information."
+
 			exit 1
 		fi
 	done
