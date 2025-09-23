@@ -1,140 +1,5 @@
 #!/bin/bash
 
-function check_http_code {
-	local http_code="${1}"
-
-	if [[ "${http_code}" == "000" ]]
-	then
-		echo "Error executing curl command. Please check arguments."
-
-		return 1
-	elif [[ "${http_code}" -ge 400 ]]
-	then
-		if [[ "${http_code}" -eq 400 ]]
-		then
-			echo "HTTP 400 Bad Request"
-		elif [[ "${http_code}" -eq 401 ]]
-		then
-			echo "HTTP 401 Unauthorized"
-		elif [[ "${http_code}" -eq 403 ]]
-		then
-			echo "HTTP 403 Forbidden"
-		elif [[ "${http_code}" -eq 404 ]]
-		then
-			echo "HTTP 404 Not Found"
-		elif [[ "${http_code}" -eq 405 ]]
-		then
-			echo "HTTP 405 Method Not Allowed"
-		elif [[ "${http_code}" -eq 406 ]]
-		then
-			echo "HTTP 406 Not Acceptable"
-		elif [[ "${http_code}" -eq 407 ]]
-		then
-			echo "HTTP 407 Proxy Authentication Required"
-		elif [[ "${http_code}" -eq 408 ]]
-		then
-			echo "HTTP 408 Request Timeout"
-		elif [[ "${http_code}" -eq 409 ]]
-		then
-			echo "HTTP 409 Conflict"
-		elif [[ "${http_code}" -eq 410 ]]
-		then
-			echo "HTTP 410 Gone"
-		elif [[ "${http_code}" -eq 411 ]]
-		then
-			echo "HTTP 411 Length Required"
-		elif [[ "${http_code}" -eq 412 ]]
-		then
-			echo "HTTP 412 Precondition Failed"
-		elif [[ "${http_code}" -eq 413 ]]
-		then
-			echo "HTTP 413 Payload Too Large"
-		elif [[ "${http_code}" -eq 414 ]]
-		then
-			echo "HTTP 414 URI Too Long"
-		elif [[ "${http_code}" -eq 415 ]]
-		then
-			echo "HTTP 415 Unsupported Media Type"
-		elif [[ "${http_code}" -eq 416 ]]
-		then
-			echo "HTTP 416 Range Not Satisfiable"
-		elif [[ "${http_code}" -eq 417 ]]
-		then
-			echo "HTTP 417 Expectation Failed"
-		elif [[ "${http_code}" -eq 418 ]]
-		then
-			echo "HTTP 418 I'm a teapot"
-		elif [[ "${http_code}" -eq 421 ]]
-		then
-			echo "HTTP 421 Misdirected Request"
-		elif [[ "${http_code}" -eq 422 ]]
-		then
-			echo "HTTP 422 Unprocessable Entity"
-		elif [[ "${http_code}" -eq 423 ]]
-		then
-			echo "HTTP 423 Locked"
-		elif [[ "${http_code}" -eq 424 ]]
-		then
-			echo "HTTP 424 Failed Dependency"
-		elif [[ "${http_code}" -eq 425 ]]
-		then
-			echo "HTTP 425 Too Early"
-		elif [[ "${http_code}" -eq 426 ]]
-		then
-			echo "HTTP 426 Upgrade Required"
-		elif [[ "${http_code}" -eq 428 ]]
-		then
-			echo "HTTP 428 Precondition Required"
-		elif [[ "${http_code}" -eq 429 ]]
-		then
-			echo "HTTP 429 Too Many Requests"
-		elif [[ "${http_code}" -eq 431 ]]
-		then
-			echo "HTTP 431 Request Header Fields Too Large"
-		elif [[ "${http_code}" -eq 451 ]]
-		then
-			echo "HTTP 451 Unavailable For Legal Reasons"
-		elif [[ "${http_code}" -eq 500 ]]
-		then
-			echo "HTTP 500 Internal Server Error"
-		elif [[ "${http_code}" -eq 501 ]]
-		then
-			echo "HTTP 501 Not Implemented"
-		elif [[ "${http_code}" -eq 502 ]]
-		then
-			echo "HTTP 502 Bad Gateway"
-		elif [[ "${http_code}" -eq 503 ]]
-		then
-			echo "HTTP 503 Service Unavailable"
-		elif [[ "${http_code}" -eq 504 ]]
-		then
-			echo "HTTP 504 Gateway Timeout"
-		elif [[ "${http_code}" -eq 505 ]]
-		then
-			echo "HTTP 505 HTTP Version Not Supported"
-		elif [[ "${http_code}" -eq 506 ]]
-		then
-			echo "HTTP 506 Variant Also Negotiates"
-		elif [[ "${http_code}" -eq 507 ]]
-		then
-			echo "HTTP 507 Insufficient Storage"
-		elif [[ "${http_code}" -eq 508 ]]
-		then
-			echo "HTTP 508 Loop Detected"
-		elif [[ "${http_code}" -eq 510 ]]
-		then
-			echo "HTTP 510 Not Extended"
-		elif [[ "${http_code}" -eq 511 ]]
-		then
-			echo "HTTP 511 Network Authentication Required"
-		else
-			echo "HTTP ${http_code} Error"
-		fi
-
-		return 1
-	fi
-}
-
 function main {
 	if [ ! -n "${LIFERAY_BATCH_OAUTH_APP_ERC}" ]
 	then
@@ -193,9 +58,13 @@ function main {
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}")
 
-	if ! check_http_code "$(cat ${http_code_output})"
+	local http_code="$(cat ${http_code_output})"
+
+	if [[ "${http_code}" -ge 400 ]]
 	then
-		echo "Unable to get OAuth 2 token response: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}"
+		echo "Unable to get OAuth 2 token response from: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}"
+
+		echo "HTTP ${http_code} Error"
 
 		exit 1
 	fi
@@ -242,9 +111,13 @@ function main {
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}")
 
-		if ! check_http_code "$(cat ${http_code_output})"
+		local http_code="$(cat ${http_code_output})"
+
+		if [[ "${http_code}" -ge 400 ]]
 		then
 			echo "Unable to PUT resource: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}"
+
+			echo "HTTP ${http_code} Error"
 
 			exit 1
 		fi
@@ -318,9 +191,13 @@ function main {
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters}")
 
-		if ! check_http_code "$(cat ${http_code_output})"
+		local http_code="$(cat ${http_code_output})"
+
+		if [[ "${http_code}" -ge 400 ]]
 		then
 			echo "Unable to POST resource: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}"
+
+			echo "HTTP ${http_code} Error"
 
 			exit 1
 		fi
@@ -355,9 +232,11 @@ function main {
 					${LIFERAY_BATCH_CURL_OPTIONS} \
 					"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}")
 
-			if ! check_http_code "$(cat ${http_code_output})"
+			if [[ "${http_code}" -ge 400 ]]
 			then
 				echo "Unable to get status for import task with external reference code ${external_reference_code}: ${status_response}"
+
+				echo "HTTP ${http_code} Error"
 
 				exit 1
 			fi
