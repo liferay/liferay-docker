@@ -46,7 +46,7 @@ function main {
 	echo "OAuth Token URI: ${oauth2_token_uri}"
 	echo ""
 
-	local http_code_output=$(mktemp)
+	local http_status_code_output=$(mktemp)
 
 	local oauth2_token_response=$(\
 		curl \
@@ -54,17 +54,17 @@ function main {
 			--header "Content-type: application/x-www-form-urlencoded" \
 			--request POST \
 			--silent \
-			--write-out "%output{$http_code_output}%{http_code}" \
+			--write-out "%output{$http_status_code_output}%{http_status_code}" \
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}")
 
-	local http_code="$(cat ${http_code_output})"
+	local http_status_code="$(cat ${http_status_code_output})"
 
-	if [[ "${http_code}" -ge 400 ]]
+	if [[ "${http_status_code}" -ge 400 ]]
 	then
 		echo "Unable to get OAuth 2 token response from: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}"
 
-		echo "HTTP ${http_code} Error"
+		echo "HTTP ${http_status_code} Error"
 
 		exit 1
 	fi
@@ -96,7 +96,7 @@ function main {
 
 		local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${site}")
 
-		local http_code_output=$(mktemp)
+		local http_status_code_output=$(mktemp)
 
 		local put_response=$(\
 			curl \
@@ -107,17 +107,17 @@ function main {
 				--header "Content-Type: multipart/form-data" \
 				--request PUT \
 				--silent \
-				--write-out "%output{$http_code_output}%{http_code}" \
+				--write-out "%output{$http_status_code_output}%{http_status_code}" \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}")
 
-		local http_code="$(cat ${http_code_output})"
+		local http_status_code="$(cat ${http_status_code_output})"
 
-		if [[ "${http_code}" -ge 400 ]]
+		if [[ "${http_status_code}" -ge 400 ]]
 		then
 			echo "Unable to PUT resource: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}"
 
-			echo "HTTP ${http_code} Error"
+			echo "HTTP ${http_status_code} Error"
 
 			exit 1
 		fi
@@ -177,7 +177,7 @@ function main {
 
 		echo "Parameters: ${parameters}"
 
-		local http_code_output=$(mktemp)
+		local http_status_code_output=$(mktemp)
 
 		local post_response=$(\
 			curl \
@@ -187,17 +187,17 @@ function main {
 				--header "Content-Type: application/json" \
 				--request POST \
 				--silent \
-				--write-out "%output{$http_code_output}%{http_code}" \
+				--write-out "%output{$http_status_code_output}%{http_status_code}" \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters}")
 
-		local http_code="$(cat ${http_code_output})"
+		local http_status_code="$(cat ${http_status_code_output})"
 
-		if [[ "${http_code}" -ge 400 ]]
+		if [[ "${http_status_code}" -ge 400 ]]
 		then
 			echo "Unable to POST resource: ${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}"
 
-			echo "HTTP ${http_code} Error"
+			echo "HTTP ${http_status_code} Error"
 
 			exit 1
 		fi
@@ -220,7 +220,7 @@ function main {
 
 		until [ "${status}" == "COMPLETED" ] || [ "${status}" == "FAILED" ] || [ "${status}" == "NOT_FOUND" ]
 		do
-			local http_code_output=$(mktemp)
+			local http_status_code_output=$(mktemp)
 
 			local status_response=$(\
 				curl \
@@ -228,15 +228,15 @@ function main {
 					--header "Authorization: Bearer ${oauth2_access_token}" \
 					--request 'GET' \
 					--silent \
-					--write-out "%output{$http_code_output}%{http_code}" \
+					--write-out "%output{$http_status_code_output}%{http_status_code}" \
 					${LIFERAY_BATCH_CURL_OPTIONS} \
 					"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}")
 
-			if [[ "${http_code}" -ge 400 ]]
+			if [[ "${http_status_code}" -ge 400 ]]
 			then
 				echo "Unable to get status for import task with external reference code ${external_reference_code}: ${status_response}"
 
-				echo "HTTP ${http_code} Error"
+				echo "HTTP ${http_status_code} Error"
 
 				exit 1
 			fi
