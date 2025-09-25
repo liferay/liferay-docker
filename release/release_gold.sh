@@ -164,7 +164,7 @@ function prepare_next_release {
 	then
 		lc_log ERROR "Unable to prepare the next release branch."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	local next_release_patch_version=$(get_release_patch_version)
