@@ -38,7 +38,7 @@ function main {
 			"${1}"
 
 			clean_portal_ee
-		elif [[ "${1}" == *_portal* ]]
+		elif [[ "${1}" == *_portal ]]
 		then
 			set_up_portal_tests
 
@@ -55,7 +55,7 @@ function main {
 		test_bom_generate_pom_release_bom_compile_only_dxp
 		test_bom_generate_pom_release_bom_distro_dxp
 		test_bom_generate_pom_release_bom_dxp
-		test_bom_generate_pom_release_bom_dxp_test
+		test_bom_generate_pom_release_bom_test_dxp
 		test_bom_generate_pom_release_bom_third_party_dxp
 
 		set_up_portal_tests
@@ -64,7 +64,7 @@ function main {
 		test_bom_generate_pom_release_bom_compile_only_portal
 		test_bom_generate_pom_release_bom_distro_portal
 		test_bom_generate_pom_release_bom_portal
-		test_bom_generate_pom_release_bom_portal_test
+		test_bom_generate_pom_release_bom_test_portal
 		test_bom_generate_pom_release_bom_third_party_portal
 
 		set_up_jakarta_dxp_tests
@@ -283,7 +283,7 @@ function test_bom_generate_pom_release_bom_dxp {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_bom_generate_pom_release_bom_dxp_test {
+function test_bom_generate_pom_release_bom_test_dxp {
 	generate_pom_release_bom_test
 
 	assert_equals \
@@ -312,7 +312,7 @@ function test_bom_generate_pom_release_bom_portal {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_bom_generate_pom_release_bom_portal_test {
+function test_bom_generate_pom_release_bom_test_portal {
 	generate_pom_release_bom_test
 
 	assert_equals \
