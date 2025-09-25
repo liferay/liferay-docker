@@ -130,24 +130,12 @@ function prepare_next_release {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
-	then
-		rm --force --recursive releases.json
-
-		LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download "https://releases.liferay.com/releases.json" releases.json
-	fi
-
 	local product_group_version="$(get_product_group_version)"
 
 	local latest_quarterly_product_version="$(\
 		jq --raw-output ".[] | \
 			select(.productGroupVersion == \"${product_group_version}\" and .promoted == \"true\") | \
-			.targetPlatformVersion" releases.json)"
-
-	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
-	then
-		rm --force --recursive releases.json
-	fi
+			.targetPlatformVersion" ${_PROMOTION_DIR}/*releases.json)"
 
 	if [ "$(get_tag_name)" != "${latest_quarterly_product_version}" ]
 	then
