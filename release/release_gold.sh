@@ -113,7 +113,7 @@ function main {
 
 	lc_time_run clean_portal_repository
 
-	prepare_next_release
+	lc_time_run prepare_next_release
 
 	lc_time_run add_patcher_project_version
 
@@ -158,7 +158,7 @@ function prepare_next_release {
 
 	local quarterly_release_branch="release-${product_group_version}"
 
-	lc_time_run prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
+	prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
 
 	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
@@ -178,13 +178,13 @@ function prepare_next_release {
 
 	local product_group_version="$(get_product_group_version)"
 
-	lc_time_run prepare_next_release_branch "${product_group_version}" "${next_release_patch_version}"
+	prepare_next_release_branch "${product_group_version}" "${next_release_patch_version}"
 
-	lc_time_run prepare_next_update_release_info_date
+	prepare_next_update_release_info_date
 	
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
-		lc_time_run prepare_next_release_pull_request "${quarterly_release_branch}"
+		prepare_next_release_pull_request "${quarterly_release_branch}"
 	fi
 }
 
