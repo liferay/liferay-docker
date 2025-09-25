@@ -158,7 +158,10 @@ function prepare_next_release {
 
 	local quarterly_release_branch="release-${product_group_version}"
 
-	prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
+	then
+		prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
+	fi
 
 	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
