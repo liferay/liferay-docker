@@ -57,6 +57,46 @@ function add_jira_issue_comment {
 	_invoke_jira_api "https://liferay.atlassian.net/rest/api/3/issue/${2}/comment" "${data}"
 }
 
+function add_jira_issue_comment_with_mention {
+	local data=$(
+		cat <<- END
+		{
+			"body": {
+				"content": [
+					{
+						"content": [
+							{
+								"text": "${1}",
+								"type": "text"
+							},
+							{
+								"attrs": {
+									"id": "557058:fa80bc56-9933-4ce6-a738-f92c755deff4",
+									"text": "@username"
+								},
+								"type": "mention"
+							},
+							{
+								"attrs": {
+									"id": "6061b27b610003006801f4df",
+									"text": "@username"
+								},
+								"type": "mention"
+							}
+						],
+						"type": "paragraph"
+					}
+				],
+				"type": "doc",
+				"version": 1
+			}
+		}
+		END
+	)
+
+	_invoke_jira_api "https://liferay.atlassian.net/rest/api/3/issue/${2}/comment" "${data}"
+}
+
 function _invoke_jira_api {
 	local http_response=$(curl \
 		"${1}" \
