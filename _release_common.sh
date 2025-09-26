@@ -60,6 +60,17 @@ function get_product_group_version {
 	echo "$(_get_product_version "${1}")" | cut --delimiter='.' --fields=1,2
 }
 
+function get_product_version_without_lts_suffix {
+	local product_version=$(_get_product_version "${1}")
+
+	if is_quarterly_release "${product_version}"
+	then
+		echo "${product_version}" | sed "s/-lts//g"
+	else
+		echo "${product_version}"
+	fi
+}
+
 function get_release_patch_version {
 	local product_version="$(_get_product_version "${1}")"
 
@@ -109,17 +120,6 @@ function get_release_version_trivial {
 
 function get_release_year {
 	echo "$(_get_product_version "${1}")" | cut --delimiter='.' --fields=1
-}
-
-function get_tag_name {
-	local product_version=$(_get_product_version "${1}")
-
-	if is_quarterly_release "${product_version}"
-	then
-		echo "${product_version}" | sed "s/-lts//g"
-	else
-		echo "${product_version}"
-	fi
 }
 
 function has_ssh_connection {

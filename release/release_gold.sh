@@ -137,7 +137,7 @@ function prepare_next_release {
 			select(.productGroupVersion == \"${product_group_version}\" and .promoted == \"true\") | \
 			.targetPlatformVersion" ${_PROMOTION_DIR}/*releases.json)"
 
-	if [ "$(get_tag_name)" != "${latest_quarterly_product_version}" ]
+	if [ "$(get_product_version_without_lts_suffix)" != "${latest_quarterly_product_version}" ]
 	then
 		lc_log INFO "The ${_PRODUCT_VERSION} version is not the latest quarterly release. Skipping the preparation of the next release branch."
 
@@ -464,7 +464,7 @@ function tag_release {
 		repository=liferay-portal
 	fi
 
-	local tag_name="$(get_tag_name)"
+	local tag_name="$(get_product_version_without_lts_suffix)"
 
 	for repository_owner in brianchandotcom liferay
 	do

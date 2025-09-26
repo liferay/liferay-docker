@@ -97,7 +97,7 @@ function _get_database_schema_version {
 		download_file_from_github \
 			"PortalUpgradeProcessRegistryImpl.java" \
 			"portal-impl/src/com/liferay/portal/upgrade/$(_get_liferay_upgrade_folder_version "${product_version}")/PortalUpgradeProcessRegistryImpl.java" \
-			"$(get_tag_name "${product_version}")" \
+			"$(get_product_version_without_lts_suffix "${product_version}")" \
 			"${repository}" &> /dev/null
 
 		if [ "${?}" -ne 0 ]

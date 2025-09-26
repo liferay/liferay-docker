@@ -12,12 +12,12 @@ function main {
 	else
 		test_release_common_get_latest_product_version
 		test_release_common_get_product_group_version
+		test_release_common_get_product_version_without_lts_suffix
 		test_release_common_get_release_patch_version
 		test_release_common_get_release_quarter
 		test_release_common_get_release_version
 		test_release_common_get_release_version_trivial
 		test_release_common_get_release_year
-		test_release_common_get_tag_name
 		test_release_common_is_7_3_ga_release
 		test_release_common_is_7_3_release
 		test_release_common_is_7_3_u_release
@@ -63,6 +63,13 @@ function test_release_common_get_product_group_version {
 	_test_release_common_get_product_group_version "7.4.13.nightly" "7.4"
 }
 
+function test_release_common_get_product_version_without_lts_suffix {
+	_test_release_common_get_product_version_without_lts_suffix "2024.q1.12" "2024.q1.12"
+	_test_release_common_get_product_version_without_lts_suffix "2025.q1.0-lts" "2025.q1.0"
+	_test_release_common_get_product_version_without_lts_suffix "7.4.13-u136" "7.4.13-u136"
+	_test_release_common_get_product_version_without_lts_suffix "7.4.3.132-ga132" "7.4.3.132-ga132"
+}
+
 function test_release_common_get_release_patch_version {
 	_test_release_common_get_release_patch_version "2023.q4.3" "3"
 	_test_release_common_get_release_patch_version "2024.q3.7" "7"
@@ -98,13 +105,6 @@ function test_release_common_get_release_year {
 	_PRODUCT_VERSION="2025.q1.0-lts"
 
 	assert_equals "$(get_release_year)" "2025"
-}
-
-function test_release_common_get_tag_name {
-	_test_release_common_get_tag_name "2024.q1.12" "2024.q1.12"
-	_test_release_common_get_tag_name "2025.q1.0-lts" "2025.q1.0"
-	_test_release_common_get_tag_name "7.4.13-u136" "7.4.13-u136"
-	_test_release_common_get_tag_name "7.4.3.132-ga132" "7.4.3.132-ga132"
 }
 
 function test_release_common_is_7_3_ga_release {
@@ -245,6 +245,10 @@ function _test_release_common_get_product_group_version {
 	assert_equals "$(get_product_group_version)" "${2}"
 }
 
+function _test_release_common_get_product_version_without_lts_suffix {
+	assert_equals "$(get_product_version_without_lts_suffix "${1}")" "${2}"
+}
+
 function _test_release_common_get_release_patch_version {
 	_PRODUCT_VERSION="${1}"
 
@@ -267,10 +271,6 @@ function _test_release_common_get_release_version_trivial {
 	_PRODUCT_VERSION="${1}"
 
 	assert_equals "$(get_release_version_trivial)" "${2}"
-}
-
-function _test_release_common_get_tag_name {
-	assert_equals "$(get_tag_name "${1}")" "${2}"
 }
 
 function _test_release_common_is_7_3_ga_release {
