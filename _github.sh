@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ../_liferay_common.sh
+source ./_liferay_common.sh
 
 function download_file_from_github {
 	local file_name=${1}
