@@ -457,14 +457,14 @@ function tag_release {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	local product_version_without_lts_suffix="$(get_product_version_without_lts_suffix)"
+
 	local repository=liferay-portal-ee
 
 	if is_portal_release
 	then
 		repository=liferay-portal
 	fi
-
-	local tag_name="$(get_product_version_without_lts_suffix)"
 
 	for repository_owner in brianchandotcom liferay
 	do
@@ -473,7 +473,7 @@ function tag_release {
 			{
 				"message": "",
 				"object": "${git_hash}",
-				"tag": "${tag_name}",
+				"tag": "${product_version_without_lts_suffix}",
 				"type": "commit"
 			}
 			END
@@ -481,7 +481,7 @@ function tag_release {
 
 		if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
-			lc_log ERROR "Unable to create tag ${tag_name} in ${repository_owner}/${repository}."
+			lc_log ERROR "Unable to create tag ${product_version_without_lts_suffix} in ${repository_owner}/${repository}."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
@@ -490,7 +490,7 @@ function tag_release {
 			cat <<- END
 			{
 				"message": "",
-				"ref": "refs/tags/${tag_name}",
+				"ref": "refs/tags/${product_version_without_lts_suffix}",
 				"sha": "${git_hash}"
 			}
 			END
@@ -498,7 +498,7 @@ function tag_release {
 
 		if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
-			lc_log ERROR "Unable to create tag reference for ${tag_name} in ${repository_owner}/${repository}."
+			lc_log ERROR "Unable to create tag reference for ${product_version_without_lts_suffix} in ${repository_owner}/${repository}."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
