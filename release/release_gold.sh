@@ -144,30 +144,26 @@ function prepare_next_release {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local quarterly_release_branch="release-${product_group_version}"
-
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
+		local quarterly_release_branch="release-${product_group_version}"
+
 		prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
+
+		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		then
+			lc_log ERROR "Unable to prepare the next release branch."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
 	fi
 
-	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
-	then
-		lc_log ERROR "Unable to prepare the next release branch."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	local next_release_patch_version=$(get_release_patch_version)
-
-	next_release_patch_version=$((next_release_patch_version + 1))
+	local next_release_patch_version=$(($(get_release_patch_version) + 1))
 
 	if is_lts_release
 	then
 		next_release_patch_version="${next_release_patch_version} LTS"
 	fi
-
-	local product_group_version="$(get_product_group_version)"
 
 	prepare_next_release_branch "${product_group_version}" "${next_release_patch_version}"
 
@@ -180,15 +176,13 @@ function prepare_next_release {
 }
 
 function prepare_next_release_branch {
-	sed \
-		--expression "s/release.info.version.display.name\[master-private\]=.*/release.info.version.display.name[master-private]=${1^^}.${2}/" \
-		--in-place \
-		"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
-
-	sed \
-		--expression "s/release.info.version.display.name\[release-private\]=.*/release.info.version.display.name[release-private]=${1^^}.${2}/" \
-		--in-place \
-		"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
+	for branch in master-private release-private
+	do
+		sed \
+			--expression "s/release.info.version.display.name\[${branch}\]=.*/release.info.version.display.name[${branch}]=${1^^}.${2}/" \
+			--in-place \
+			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
+	done
 }
 
 function prepare_next_release_pull_request {
