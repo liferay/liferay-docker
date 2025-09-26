@@ -17,9 +17,9 @@ function main {
 		if [ -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
 		then
 			test_release_gold_check_usage
-			test_release_gold_not_prepare_next_release
-			test_release_gold_prepare_next_release_branch
-			test_release_gold_prepare_next_update_release_info_date
+			test_release_gold_not_prepare_next_release_branch
+			test_release_gold_set_next_release_date
+			test_release_gold_set_next_release_version_display_name
 		else
 			echo -e "The directory ${_PROJECTS_DIR}/liferay-portal-ee does not exist.\n"
 		fi
@@ -64,45 +64,22 @@ function test_release_gold_check_usage {
 	assert_equals "$(check_usage)" "$(cat test-dependencies/expected/test_release_gold_check_usage_output.txt)"
 }
 
-function test_release_gold_not_prepare_next_release {
+function test_release_gold_not_prepare_next_release_branch {
 	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ]
 	then
-		_test_release_gold_not_prepare_next_release "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		_test_release_gold_not_prepare_next_release_branch "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	_test_release_gold_not_prepare_next_release "2024.q2.0" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_release_gold_not_prepare_next_release "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_release_gold_not_prepare_next_release "7.4.13-u101" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_release_gold_not_prepare_next_release "7.4.3.125-ga125" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_release_gold_not_prepare_next_release_branch "2024.q2.0" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_release_gold_not_prepare_next_release_branch "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_release_gold_not_prepare_next_release_branch "7.4.13-u101" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_release_gold_not_prepare_next_release_branch "7.4.3.125-ga125" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 function test_release_gold_not_reference_new_releases {
 	_test_release_gold_not_reference_new_releases "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_release_gold_not_reference_new_releases "7.4.13-u101" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_release_gold_not_reference_new_releases "7.4.3.125-ga125" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-}
-
-function test_release_gold_prepare_next_release_branch {
-	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
-
-	_test_release_gold_prepare_next_release_branch "2024.q1" "13" "2024.Q1.13"
-	_test_release_gold_prepare_next_release_branch "2025.q1" "2 LTS" "2025.Q1.2 LTS"
-}
-
-function _test_release_gold_prepare_next_release_branch {
-	_PRODUCT_VERSION="${1}"
-
-	local current_dir="${PWD}"
-
-	prepare_next_release_branch "${1}" "${2}" &> /dev/null
-
-	assert_equals \
-		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[master-private]")" \
-		"${3}" \
-		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[release-private]")" \
-		"${3}"
-
-	lc_cd "${current_dir}"
 }
 
 function test_release_gold_reference_new_releases {
@@ -114,12 +91,12 @@ function test_release_gold_reference_new_releases {
 	done
 }
 
-function test_release_gold_prepare_next_update_release_info_date {
+function test_release_gold_set_next_release_date {
 	LIFERAY_NEXT_RELEASE_DATE="2025-10-11"
 
 	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee" 2> /dev/null
 
-	prepare_next_update_release_info_date &> /dev/null
+	set_next_release_date &> /dev/null
 
 	lc_cd "${_PROJECTS_DIR}/liferay-docker/release"
 
@@ -128,10 +105,17 @@ function test_release_gold_prepare_next_update_release_info_date {
 		"October 11, 2025"
 }
 
-function _test_release_gold_not_prepare_next_release {
+function test_release_gold_set_next_release_version_display_name {
+	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
+
+	_test_release_gold_set_next_release_version_display_name "2024.q1" "13" "2024.Q1.13"
+	_test_release_gold_set_next_release_version_display_name "2025.q1" "2 LTS" "2025.Q1.2 LTS"
+}
+
+function _test_release_gold_not_prepare_next_release_branch {
 	_PRODUCT_VERSION="${1}"
 
-	prepare_next_release 1> /dev/null
+	prepare_next_release_branch 1> /dev/null
 
 	assert_equals "${?}" "${2}"
 }
@@ -156,6 +140,22 @@ function _test_release_gold_reference_new_releases {
 	assert_equals \
 		"test-dependencies/actual/build-shared.properties" \
 		"test-dependencies/expected/test_release_gold_build_shared_$(echo "${_PRODUCT_VERSION}" | tr '.' '_').properties"
+}
+
+function _test_release_gold_set_next_release_version_display_name {
+	_PRODUCT_VERSION="${1}"
+
+	local current_dir="${PWD}"
+
+	set_next_release_version_display_name "${1}" "${2}" &> /dev/null
+
+	assert_equals \
+		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[master-private]")" \
+		"${3}" \
+		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[release-private]")" \
+		"${3}"
+
+	lc_cd "${current_dir}"
 }
 
 main "${@}"

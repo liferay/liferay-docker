@@ -113,14 +113,14 @@ function main {
 
 	lc_time_run clean_portal_repository
 
-	lc_time_run prepare_next_release
+	lc_time_run prepare_next_release_branch
 
 	lc_time_run add_patcher_project_version
 
 	lc_time_run upload_to_docker_hub "release-gold"
 }
 
-function prepare_next_release {
+function prepare_next_release_branch {
 	if ! is_quarterly_release ||
 	   [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ] ||
 	   [[ "$(get_release_patch_version)" -eq 0 ]]
@@ -165,24 +165,14 @@ function prepare_next_release {
 		next_release_patch_version="${next_release_patch_version} LTS"
 	fi
 
-	prepare_next_release_branch "${product_group_version}" "${next_release_patch_version}"
+	set_next_release_version_display_name "${product_group_version}" "${next_release_patch_version}"
 
-	prepare_next_update_release_info_date
+	set_next_release_date
 	
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
 		prepare_next_release_pull_request "${quarterly_release_branch}"
 	fi
-}
-
-function prepare_next_release_branch {
-	for branch in master-private release-private
-	do
-		sed \
-			--expression "s/release.info.version.display.name\[${branch}\]=.*/release.info.version.display.name[${branch}]=${1^^}.${2}/" \
-			--in-place \
-			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
-	done
 }
 
 function prepare_next_release_pull_request {
@@ -222,13 +212,6 @@ function prepare_next_release_pull_request {
 	fi
 
 	return "${exit_code}"
-}
-
-function prepare_next_update_release_info_date {
-	sed \
-		--expression "s/release.info.date=.*/release.info.date=$(date -d $(echo "${LIFERAY_NEXT_RELEASE_DATE}" | sed "s/[^0-9-]//g") +"%B %-d, %Y")/" \
-		--in-place \
-		"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
 }
 
 function print_help {
@@ -423,6 +406,23 @@ function replace_property {
 	local search_key="${3}"
 
 	sed --in-place "s/${search_key}/${new_key}=${new_value}/" "build-shared.properties"
+}
+
+function set_next_release_date {
+	sed \
+		--expression "s/release.info.date=.*/release.info.date=$(date -d $(echo "${LIFERAY_NEXT_RELEASE_DATE}" | sed "s/[^0-9-]//g") +"%B %-d, %Y")/" \
+		--in-place \
+		"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
+}
+
+function set_next_release_version_display_name {
+	for branch in master-private release-private
+	do
+		sed \
+			--expression "s/release.info.version.display.name\[${branch}\]=.*/release.info.version.display.name[${branch}]=${1^^}.${2}/" \
+			--in-place \
+			"${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
+	done
 }
 
 function tag_release {
