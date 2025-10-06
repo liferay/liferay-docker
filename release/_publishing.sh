@@ -331,8 +331,26 @@ function upload_opensearch {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gsutil mv -r "${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.api.jar" "gs://liferay-releases/opensearch2/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/com.liferay.portal.search.opensearch2.api.jar"
-	gsutil mv -r "${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.impl.jar" "gs://liferay-releases/opensearch2/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/com.liferay.portal.search.opensearch2.impl.jar"
+	local release_dir_name="${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
+
+	if is_release_output_nightly
+	then
+		release_dir_name="nightly"
+	fi
+
+	for module in api impl
+	do
+		gsutil mv \
+			"${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.${module}.jar" \
+			"gs://liferay-releases/opensearch2/${release_dir_name}/com.liferay.portal.search.opensearch2.${component}.jar"
+
+		if [ "${?}" -ne 0 ]
+		then
+			lc_log ERROR "Unable to upload com.liferay.portal.search.opensearch2.${module}.jar."
+	
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+	done
 }
 
 function upload_release {
