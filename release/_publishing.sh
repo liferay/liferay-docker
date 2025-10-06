@@ -430,6 +430,9 @@ function upload_to_docker_hub {
 	if [ "${1}" == "release-candidate" ]
 	then
 		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" ./build_all_images.sh --push
+	elif [ "${1}" == "release-nightly" ]
+	then
+		LIFERAY_DOCKER_IMAGE_FILTER="7.4.13.nightly" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push
 	else
 		prepare_branch_to_commit "${_BASE_DIR}" "liferay-docker"
 
