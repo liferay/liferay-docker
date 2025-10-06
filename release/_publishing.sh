@@ -371,14 +371,34 @@ function upload_release {
 
 		ssh_connection="true"
 
-		ssh root@lrdcom-vm-1 rm --recursive "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-*"
+		if is_release_output_nightly
+		then
+			ssh root@lrdcom-vm-1 rm --recursive "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly/*"
+		else
+			ssh root@lrdcom-vm-1 rm --recursive "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-*"
 
-		ssh root@lrdcom-vm-1 mkdir --parents "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+			ssh root@lrdcom-vm-1 mkdir --parents "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+		fi
+
 	else
 		lc_log INFO "Skipping lrdcom-vm-1."
 	fi
 
-	gsutil rm -r "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-*"
+	local destination_bucket=""
+	local destination_dir=""
+
+	if is_release_output_nightly
+	then
+		gsutil rm -r "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly/"
+
+		destination_bucket="gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly/"
+		destination_dir="/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly"
+	else
+		gsutil rm -r "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-*"
+
+		destination_bucket="gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
+		destination_dir="/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+	fi
 
 	for file in $(ls --almost-all --ignore "*.jar*" --ignore "*.pom*")
 	do
@@ -386,11 +406,11 @@ function upload_release {
 		then
 			echo "Copying ${file}."
 
-			gsutil cp "${_BUILD_DIR}/release/${file}" "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
+			gsutil cp "${_BUILD_DIR}/release/${file}" "${destination_bucket}"
 
 			if [ "${ssh_connection}" == "true" ]
 			then
-				scp "${file}" root@lrdcom-vm-1:"/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+				scp "${file}" root@lrdcom-vm-1:"${destination_dir}"
 			fi
 		fi
 	done
