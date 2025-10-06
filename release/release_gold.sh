@@ -302,7 +302,7 @@ function reference_new_releases {
 
 	add_property \
 		"plugins.war.zip.url\[${_PRODUCT_VERSION}\]" \
-		"http://release-1/1/userContent/liferay-release-tool/7413/plugins.war.latest.zip" \
+		"http://release-master/1/userContent/liferay-release-tool/7413/plugins.war.latest.zip" \
 		"plugins.war.zip.url\[${previous_product_version}\]="
 
 	add_property \
