@@ -417,8 +417,7 @@ function upload_release {
 }
 
 function upload_to_docker_hub {
-	if [ "$(get_release_output)" == "release-candidate" ] &&
-	   [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
+	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
 
