@@ -71,6 +71,15 @@ function get_product_version_without_lts_suffix {
 	fi
 }
 
+function get_release_output {
+	if [ -z "${LIFERAY_RELEASE_OUTPUT}" ]
+	then
+		LIFERAY_RELEASE_OUTPUT="release"
+	fi
+
+	echo "${LIFERAY_RELEASE_OUTPUT}"
+}
+
 function get_release_patch_version {
 	local product_version="$(_get_product_version "${1}")"
 
@@ -260,15 +269,6 @@ function is_quarterly_release {
 
 function is_release_candidate {
 	if [ "${LIFERAY_DOCKER_RELEASE_CANDIDATE}" == "true" ]
-	then
-		return 0
-	fi
-
-	return 1
-}
-
-function is_release_output_nightly {
-	if [ "${LIFERAY_RELEASE_OUTPUT}" == "nightly" ]
 	then
 		return 0
 	fi
