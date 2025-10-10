@@ -36,6 +36,8 @@ function check_usage {
 		print_help
 	fi
 
+	LIFERAY_RELEASE_OUTPUT="release"
+
 	if [ -z "${LIFERAY_RELEASE_PRODUCT_NAME}" ]
 	then
 		LIFERAY_RELEASE_PRODUCT_NAME=dxp
@@ -117,7 +119,7 @@ function main {
 
 	lc_time_run add_patcher_project_version
 
-	lc_time_run upload_to_docker_hub "release-gold"
+	lc_time_run upload_to_docker_hub
 }
 
 function prepare_next_release_branch {
