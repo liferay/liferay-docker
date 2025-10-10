@@ -13,6 +13,7 @@ function main {
 		test_release_common_get_latest_product_version
 		test_release_common_get_product_group_version
 		test_release_common_get_product_version_without_lts_suffix
+		test_release_common_get_release_output
 		test_release_common_get_release_patch_version
 		test_release_common_get_release_quarter
 		test_release_common_get_release_version
@@ -68,6 +69,12 @@ function test_release_common_get_product_version_without_lts_suffix {
 	_test_release_common_get_product_version_without_lts_suffix "2025.q1.0-lts" "2025.q1.0"
 	_test_release_common_get_product_version_without_lts_suffix "7.4.13-u136" "7.4.13-u136"
 	_test_release_common_get_product_version_without_lts_suffix "7.4.3.132-ga132" "7.4.3.132-ga132"
+}
+
+function test_release_common_get_release_output {
+	_test_release_common_get_release_output "hotfix" "hotfix"
+	_test_release_common_get_release_output "nightly" "nightly"
+	_test_release_common_get_release_output "" "release"
 }
 
 function test_release_common_get_release_patch_version {
@@ -247,6 +254,14 @@ function _test_release_common_get_product_group_version {
 
 function _test_release_common_get_product_version_without_lts_suffix {
 	assert_equals "$(get_product_version_without_lts_suffix "${1}")" "${2}"
+}
+
+function _test_release_common_get_release_output {
+	LIFERAY_RELEASE_OUTPUT="${1}"
+
+	assert_equals "$(get_release_output)" "${2}"
+
+	unset LIFERAY_RELEASE_OUTPUT
 }
 
 function _test_release_common_get_release_patch_version {
