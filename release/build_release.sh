@@ -73,7 +73,7 @@ function check_usage {
 function handle_automated_build {
 	if [ "${BUILD_CAUSE}" != "TIMERTRIGGER" ] &&
 	   [ "${LIFERAY_RELEASE_TEST_MODE}" != "true" ] ||
-	   is_release_output_nightly
+	   [ "$(get_release_output)" == "nightly" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -140,8 +140,8 @@ function main {
 
 	lc_time_run set_jdk_version_and_parameters
 
-	if [ "${LIFERAY_RELEASE_OUTPUT}" != "hotfix" ] ||
-	   is_release_output_nightly
+	if [ "$(get_release_output)" == "release" ] ||
+	   [ "$(get_release_output)" == "nightly" ]
 	then
 		lc_time_run set_artifact_versions "${_PRODUCT_VERSION}" "${_BUILD_TIMESTAMP}"
 
@@ -158,7 +158,7 @@ function main {
 		lc_time_run build_product
 	fi
 
-	if is_release_output_nightly
+	if [ "$(get_release_output)" == "nightly" ]
 	then
 		lc_time_run deploy_opensearch
 
@@ -179,7 +179,7 @@ function main {
 		lc_time_run upload_release
 
 		lc_time_run upload_to_docker_hub "release-nightly"
-	elif [ "${LIFERAY_RELEASE_OUTPUT}" != "hotfix" ]
+	elif [ "$(get_release_output)" != "hotfix" ]
 	then
 		lc_time_run add_ckeditor_license
 

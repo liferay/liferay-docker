@@ -333,7 +333,7 @@ function upload_opensearch {
 
 	local release_dir_name="${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
 
-	if is_release_output_nightly
+	if [ "$(get_release_output)" == "nightly" ]
 	then
 		release_dir_name="nightly"
 	fi
@@ -371,7 +371,7 @@ function upload_release {
 
 		ssh_connection="true"
 
-		if is_release_output_nightly
+		if [ "$(get_release_output)" == "nightly" ]
 		then
 			ssh root@lrdcom-vm-1 rm --recursive "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly/*"
 		else
@@ -387,7 +387,7 @@ function upload_release {
 	local destination_bucket=""
 	local destination_dir=""
 
-	if is_release_output_nightly
+	if [ "$(get_release_output)" == "nightly" ]
 	then
 		gsutil rm -r "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly/"
 

@@ -332,7 +332,7 @@ function package_release {
 
 	package_portal_dependencies
 
-	if is_release_output_nightly
+	if [ "$(get_release_output)" == "nightly" ]
 	then
 		package_nightly_release
 	else
