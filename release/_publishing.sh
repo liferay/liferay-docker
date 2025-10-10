@@ -342,7 +342,7 @@ function upload_opensearch {
 	do
 		gsutil mv \
 			"${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.${module}.jar" \
-			"gs://liferay-releases/opensearch2/${release_dir_name}/com.liferay.portal.search.opensearch2.${component}.jar"
+			"gs://liferay-releases/opensearch2/${release_dir_name}/com.liferay.portal.search.opensearch2.${module}.jar"
 
 		if [ "${?}" -ne 0 ]
 		then
