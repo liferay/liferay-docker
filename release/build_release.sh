@@ -140,8 +140,8 @@ function main {
 
 	lc_time_run set_jdk_version_and_parameters
 
-	if [ "$(get_release_output)" == "release" ] ||
-	   [ "$(get_release_output)" == "nightly" ]
+	if [ "$(get_release_output)" == "nightly" ] ||
+	   [ "$(get_release_output)" == "release" ]
 	then
 		lc_time_run set_artifact_versions "${_PRODUCT_VERSION}" "${_BUILD_TIMESTAMP}"
 

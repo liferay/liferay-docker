@@ -72,9 +72,9 @@ function test_release_common_get_product_version_without_lts_suffix {
 }
 
 function test_release_common_get_release_output {
+	_test_release_common_get_release_output "" "release"
 	_test_release_common_get_release_output "hotfix" "hotfix"
 	_test_release_common_get_release_output "nightly" "nightly"
-	_test_release_common_get_release_output "" "release"
 }
 
 function test_release_common_get_release_patch_version {
