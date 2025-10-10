@@ -74,7 +74,7 @@ function get_product_version_without_lts_suffix {
 function get_release_output {
 	if [ -z "${LIFERAY_RELEASE_OUTPUT}" ]
 	then
-		LIFERAY_RELEASE_OUTPUT="release"
+		LIFERAY_RELEASE_OUTPUT="release-candidate"
 	fi
 
 	echo "${LIFERAY_RELEASE_OUTPUT}"
