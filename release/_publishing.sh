@@ -417,7 +417,7 @@ function upload_release {
 }
 
 function upload_to_docker_hub {
-	if [ "${1}" == "release-candidate" ] &&
+	if [ "$(get_release_output)" == "release-candidate" ] &&
 	   [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -427,10 +427,10 @@ function upload_to_docker_hub {
 
 	lc_cd "${_BASE_DIR}"
 
-	if [ "${1}" == "release-candidate" ]
+	if [ "$(get_release_output)" == "release-candidate" ]
 	then
 		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" ./build_all_images.sh --push
-	elif [ "${1}" == "release-nightly" ]
+	elif [ "$(get_release_output)" == "nightly" ]
 	then
 		LIFERAY_DOCKER_IMAGE_FILTER="7.4.13.nightly" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push
 	else
@@ -455,7 +455,7 @@ function upload_to_docker_hub {
 		lc_log ERROR "Unable to build the Docker image."
 	fi
 
-	if [ "${1}" == "release-gold" ]
+	if [ "$(get_release_output)" == "release" ]
 	then
 		remove_old_release_candidate_tags "${_PRODUCT_VERSION}"
 	fi
