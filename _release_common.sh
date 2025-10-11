@@ -3,28 +3,28 @@
 function get_latest_product_version {
 	local product_name=""
 	local product_version="${1}"
-	local product_version_regex="(?<=<a href=\")"
+	local product_version_regex="(?<=<a href=\"/"
 
 	if [ "${product_version}" == "dxp" ]
 	then
 		product_name="dxp"
-		product_version_regex="${product_version_regex}(7\.3\.10-u\d+)"
+		product_version_regex="${product_version_regex}${product_name}/)(7\.3\.10-u\d+)"
 	elif [ "${product_version}" == "ga" ]
 	then
 		product_name="portal"
-		product_version_regex="${product_version_regex}(7\.4\.3\.\d+-ga\d+)"
+		product_version_regex="${product_version_regex}${product_name}/)(7\.4\.3\.\d+-ga\d+)"
 	elif [ "${product_version}" == "lts" ]
 	then
 		product_name="dxp"
-		product_version_regex="${product_version_regex}(\d{4}\.q1\.[0-9]+-lts)"
+		product_version_regex="${product_version_regex}${product_name}/)(\d{4}\.q1\.[0-9]+-lts)"
 	elif [ "${product_version}" == "quarterly" ]
 	then
 		product_name="dxp"
-		product_version_regex="${product_version_regex}(\d{4}\.q[1-4]\.\d+(-lts)?)"
+		product_version_regex="${product_version_regex}${product_name}/)(\d{4}\.q[1-4]\.\d+(-lts)?)"
 	elif [ "${product_version}" == "quarterly-candidate" ]
 	then
 		product_name="dxp/release-candidates"
-		product_version_regex="${product_version_regex}(\d{4}\.q[1-4]\.\d+(-lts)?)"
+		product_version_regex="${product_version_regex}${product_name}/)(\d{4}\.q[1-4]\.\d+(-lts)?)"
 	fi
 
 	local product_version_list_html
@@ -43,6 +43,7 @@ function get_latest_product_version {
 			--only-matching \
 			--perl-regexp \
 			"${product_version_regex}" | \
+		sort --version-sort | \
 		tail --lines=1
 }
 
