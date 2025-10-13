@@ -534,6 +534,8 @@ function test_boms {
 
 	blade update
 
+	export LIFERAY_RELEASES_MIRRORS="https://releases.liferay.com"
+
 	if is_quarterly_release
 	then
 		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}"
@@ -543,8 +545,6 @@ function test_boms {
 
 		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${product_group_version}-${product_version_suffix}"
 	fi
-
-	export LIFERAY_RELEASES_MIRRORS="https://releases.liferay.com"
 
 	for module in api mvc-portlet
 	do
