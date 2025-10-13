@@ -3,8 +3,28 @@
     "product": "dxp",
     "productGroupVersion": "2025.q2",
     "productMajorVersion": "DXP 2025.Q2",
-    "productVersion": "DXP 2025.Q2.1",
+    "productVersion": "DXP 2025.Q2.8",
     "promoted": "true",
+    "releaseKey": "dxp-2025.q2.8",
+    "targetPlatformVersion": "2025.q2.8",
+    "url": "https://releases-cdn.liferay.com/dxp/2025.q2.8"
+  },
+  {
+    "product": "dxp",
+    "productGroupVersion": "2025.q2",
+    "productMajorVersion": "DXP 2025.Q2",
+    "productVersion": "DXP 2025.Q2.7",
+    "promoted": "false",
+    "releaseKey": "dxp-2025.q2.7",
+    "targetPlatformVersion": "2025.q2.7",
+    "url": "https://releases-cdn.liferay.com/dxp/2025.q2.7"
+  },
+  {
+    "product": "dxp",
+    "productGroupVersion": "2025.q2",
+    "productMajorVersion": "DXP 2025.Q2",
+    "productVersion": "DXP 2025.Q2.1",
+    "promoted": "false",
     "releaseKey": "dxp-2025.q2.1",
     "targetPlatformVersion": "2025.q2.1",
     "url": "https://releases-cdn.liferay.com/dxp/2025.q2.1"
@@ -158,17 +178,8 @@
   {
     "product": "portal",
     "productGroupVersion": "7.2",
-    "productVersion": "Portal 7.2 GA2",
-    "promoted": "true",
-    "releaseKey": "portal-7.2-ga2",
-    "targetPlatformVersion": "7.2.1-1",
-    "url": "https://releases-cdn.liferay.com/portal/7.2.1-ga2"
-  },
-  {
-    "product": "portal",
-    "productGroupVersion": "7.2",
     "productVersion": "Portal 7.2 GA1",
-    "promoted": "false",
+    "promoted": "true",
     "releaseKey": "portal-7.2-ga1",
     "targetPlatformVersion": "7.2.0",
     "url": "https://releases-cdn.liferay.com/portal/7.2.0-ga1"
