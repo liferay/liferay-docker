@@ -49,7 +49,7 @@ function tear_down {
 	unset _RELEASE_ROOT_DIR
 
 	rm ./*.json
-	rm ./PortalUpgradeProcessRegistryImpl.java
+	rm --force ./PortalUpgradeProcessRegistryImpl.java
 }
 
 function test_releases_json_add_database_schema_versions {
