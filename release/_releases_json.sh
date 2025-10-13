@@ -228,7 +228,7 @@ function _process_products {
 	do
 		local product_version_list_html
 
-		product_version_list_html=$(_download_product_version_list_html "${product_name}")
+		product_version_list_html=$(download_product_version_list_html "${product_name}")
 
 		if [ "${?}" -ne 0 ]
 		then

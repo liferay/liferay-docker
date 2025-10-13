@@ -1,5 +1,23 @@
 #!/bin/bash
 
+function download_product_version_list_html {
+	local product_version_list_html=""
+
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		product_version_list_html=$(cat "${_RELEASE_ROOT_DIR}/test-dependencies/actual/$(basename "${1}").html")
+	else
+		product_version_list_html=$(lc_curl "https://releases.liferay.com/${1}/")
+	fi
+
+	if [ "${?}" -ne 0 ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	echo "${product_version_list_html}"
+}
+
 function get_latest_product_version {
 	local product_name=""
 	local product_version="${1}"
@@ -29,7 +47,7 @@ function get_latest_product_version {
 
 	local product_version_list_html
 
-	product_version_list_html=$(_download_product_version_list_html "${product_name}")
+	product_version_list_html=$(download_product_version_list_html "${product_name}")
 
 	if [ "${?}" -ne 0 ]
 	then
@@ -354,24 +372,6 @@ function _compare_product_versions {
 	fi
 
 	return 1
-}
-
-function _download_product_version_list_html {
-	local product_version_list_html=""
-
-	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
-	then
-		product_version_list_html=$(cat "${_RELEASE_ROOT_DIR}/test-dependencies/actual/$(basename "${1}").html")
-	else
-		product_version_list_html=$(lc_curl "https://releases.liferay.com/${1}/")
-	fi
-
-	if [ "${?}" -ne 0 ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	echo "${product_version_list_html}"
 }
 
 function _get_product_version {
