@@ -178,8 +178,17 @@
   {
     "product": "portal",
     "productGroupVersion": "7.2",
-    "productVersion": "Portal 7.2 GA1",
+    "productVersion": "Portal 7.2 GA2",
     "promoted": "true",
+    "releaseKey": "portal-7.2-ga2",
+    "targetPlatformVersion": "7.2.1-1",
+    "url": "https://releases-cdn.liferay.com/portal/7.2.1-ga2"
+  },
+  {
+    "product": "portal",
+    "productGroupVersion": "7.2",
+    "productVersion": "Portal 7.2 GA1",
+    "promoted": "false",
     "releaseKey": "portal-7.2-ga1",
     "targetPlatformVersion": "7.2.0",
     "url": "https://releases-cdn.liferay.com/portal/7.2.0-ga1"
