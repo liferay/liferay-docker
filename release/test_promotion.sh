@@ -35,7 +35,7 @@ function set_up {
 		https://releases-cdn.liferay.com/dxp/2024.q2.6/liferay-dxp-tomcat-2024.q2.6-1721635298.zip \
 		liferay-dxp-tomcat-2024.q2.6-1721635298.zip 1> /dev/null
 
-	unzip -q liferay-dxp-tomcat-2024.q2.6-1721635298.zip
+	unzip -oq liferay-dxp-tomcat-2024.q2.6-1721635298.zip
 
 	mkdir --parents "${_RELEASE_ROOT_DIR}/release-data/build/boms"
 }

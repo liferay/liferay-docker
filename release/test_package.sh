@@ -36,7 +36,7 @@ function set_up {
 		https://releases.liferay.com/dxp/7.3.10-u36/liferay-dxp-tomcat-7.3.10-u36-1706652128.zip \
 		liferay-dxp-tomcat-7.3.10-u36-1706652128.zip 1> /dev/null
 
-	unzip -q liferay-dxp-tomcat-7.3.10-u36-1706652128.zip -d "${_BUILD_DIR}/release"
+	unzip -oq liferay-dxp-tomcat-7.3.10-u36-1706652128.zip -d "${_BUILD_DIR}/release"
 
 	lc_cd ..
 }
@@ -76,8 +76,8 @@ function test_package_portal_dependencies {
 
 	package_portal_dependencies
 
-	unzip -q "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
-	unzip -q "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
+	unzip -oq "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
+	unzip -oq "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
 
 	assert_equals \
 		"$(ls -1 liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION})" \

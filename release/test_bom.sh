@@ -104,7 +104,7 @@ function set_up {
 		https://releases-cdn.liferay.com/dxp/2024.q2.6/liferay-dxp-tomcat-2024.q2.6-1721635298.zip \
 		liferay-dxp-tomcat-2024.q2.6-1721635298.zip 1> /dev/null
 
-	unzip -q liferay-dxp-tomcat-2024.q2.6-1721635298.zip
+	unzip -oq liferay-dxp-tomcat-2024.q2.6-1721635298.zip
 
 	export _BUNDLES_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp"
 
@@ -112,7 +112,7 @@ function set_up {
 		https://releases-cdn.liferay.com/portal/7.4.3.120-ga120/liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip \
 		liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip 1> /dev/null
 
-	unzip -q liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip
+	unzip -oq liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip
 
 	set_up_liferay_portal_ee
 }
@@ -133,7 +133,7 @@ function set_up_jakarta_dxp_tests {
 		https://releases-cdn.liferay.com/dxp/7.4.13-u138/liferay-dxp-tomcat-7.4.13-u138-1755038551.zip \
 		liferay-dxp-tomcat-7.4.13-u138-1755038551.zip 1> /dev/null
 
-	unzip -q liferay-dxp-tomcat-7.4.13-u138-1755038551.zip
+	unzip -oq liferay-dxp-tomcat-7.4.13-u138-1755038551.zip
 
 	set_up_liferay_portal_ee
 }
