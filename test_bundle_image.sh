@@ -174,11 +174,13 @@ function start_container {
 			CONTAINER_HOSTNAME=$(docker network inspect bridge --format='{{(index .IPAM.Config 0).Gateway}}')
 			CONTAINER_HTTP_PORT=8081
 
-			echo -e "web.server.host=${CONTAINER_HOSTNAME}\nweb.server.http.port=8081" > portal-ext.properties
+			echo -e "web.server.host=${CONTAINER_HOSTNAME}\nweb.server.http.port=8081" > "${TEST_DIR}/portal-ext.properties"
+
+			cp --recursive "${TEST_DIR}" "/opt/dev/projects/github/liferay-docker"
 
 			test_dir="/mnt/pd/liferay-docker/${TEST_DIR}"
 
-			parameters="--env=LIFERAY_DOCKER_TEST_MODE=true --hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME} --publish=8081:8080 --volume=${test_dir}/mnt:/mnt:rw --volume=/mnt/pd/liferay-docker/portal-ext.properties:/opt/liferay/portal-ext.properties"
+			parameters="--env=LIFERAY_DOCKER_TEST_MODE=true --hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME} --publish=8081:8080 --volume=${test_dir}/mnt:/mnt:rw --volume=${test_dir}/portal-ext.properties:/opt/liferay/portal-ext.properties"
 		else
 			CONTAINER_HOSTNAME=portal-container
 			CONTAINER_HTTP_PORT=8080
