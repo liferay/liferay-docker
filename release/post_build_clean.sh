@@ -16,4 +16,8 @@ do
 	docker rmi --force $(cat "${file}" | cut --delimiter=':' --fields=2) &> /dev/null
 done
 
-find . -maxdepth 1 -type d -name "logs-20*" -mtime +6 -exec rm --force --recursive {} \;
+for dir in "logs-20*" "temp-*"
+do
+	find . -maxdepth 1 -type d -name "${dir}" -mtime +6 -exec rm --force --recursive {} \; &> /dev/null
+	find /opt/dev/projects/github/liferay-docker -maxdepth 1 -type d -name "${dir}" -mtime +6 -exec rm --force --recursive {} \; &> /dev/null
+done
