@@ -431,7 +431,12 @@ function upload_to_docker_hub {
 		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" ./build_all_images.sh --push
 	elif [ "$(get_release_output)" == "nightly" ]
 	then
-		LIFERAY_DOCKER_IMAGE_FILTER="7.4.13.nightly" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push
+		if [ "$(date +%w)" -eq 3 ]
+		then
+			LIFERAY_DOCKER_DEVELOPER_MODE="true" LIFERAY_DOCKER_IMAGE_FILTER="7.4.13.nightly" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push-all
+		else
+			LIFERAY_DOCKER_IMAGE_FILTER="7.4.13.nightly" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push
+		fi
 	else
 		prepare_branch_to_commit "${_BASE_DIR}" "liferay-docker"
 
