@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $(date +%w) != 2 ]
+then
+	exit 0
+fi
+
 docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | \
 	grep --extended-regexp ":.*(-slim).*" | \
 	awk '{print $2}' | \
