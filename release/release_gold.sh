@@ -94,15 +94,6 @@ function main {
 
 	promote_boms xanadu
 
-	if (! is_quarterly_release && ! is_7_4_release)
-	then
-		lc_log INFO "Do not update product_info.json for quarterly and 7.4 releases."
-
-		lc_time_run generate_product_info_json
-
-		lc_time_run upload_product_info_json
-	fi
-
 	lc_time_run generate_releases_json
 
 	lc_time_run reference_new_releases
