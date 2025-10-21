@@ -1,23 +1,12 @@
 #!/bin/bash
 
-while true
-do
-	git pull origin master
+function main {
+	export LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true"
+	export LIFERAY_RELEASE_GIT_REF="master"
+	export LIFERAY_RELEASE_OUTPUT="nightly"
+	export LIFERAY_RELEASE_UPLOAD="true"
 
-	if [ $(date +%w) == 0 ]
-	then
-		docker system prune --all --force
+	./build_release.sh
+}
 
-		git clean -dfx
-
-		LIFERAY_DOCKER_DEVELOPER_MODE=true LIFERAY_DOCKER_IMAGE_FILTER=7.4.13.nightly ./build_all_images.sh --push-all
-	else
-		LIFERAY_DOCKER_IMAGE_FILTER=7.4.13.nightly ./build_all_images.sh --push-all
-	fi
-
-	echo ""
-	echo `date`
-	echo ""
-
-	sleep 1d
-done
+main
