@@ -30,7 +30,12 @@ function main {
 
 	for dir in "logs-20*" "temp-*"
 	do
-		find . /opt/dev/projects/github/liferay-docker -maxdepth 1 -type d -name "${dir}" -mtime +6 -exec rm --force --recursive {} \; &> /dev/null
+		find . /opt/dev/projects/github/liferay-docker \
+			-maxdepth 1 \
+			-mtime +6 \
+			-name "${dir}" \
+			-type d \
+			-exec rm --force --recursive {} \; &> /dev/null
 	done
 }
 
