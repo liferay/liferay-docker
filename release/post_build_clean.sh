@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ../_liferay_common.sh
+source ./_liferay_common.sh
 
 function main {
 	if [ $(date +%w) != 2 ]
