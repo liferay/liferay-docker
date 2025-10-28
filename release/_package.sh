@@ -117,7 +117,7 @@ function generate_release_properties_file {
 		echo "bundle.url=https://releases-cdn.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/${bundle_file_name}"
 		echo "git.hash.liferay-docker=${_BUILDER_SHA}"
 		echo "git.hash.liferay-portal-ee=${_GIT_SHA}"
-		echo "git.tag=${_PRODUCT_VERSION}"
+		echo "git.tag=$(get_product_version_without_lts_suffix)"
 		echo "liferay.docker.image=liferay/${LIFERAY_RELEASE_PRODUCT_NAME}:${_PRODUCT_VERSION}"
 		echo "liferay.docker.tags=${_PRODUCT_VERSION}"
 		echo "liferay.product.version=${product_version}"
