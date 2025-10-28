@@ -7,7 +7,6 @@ source ./_git.sh
 source ./_jdk.sh
 source ./_jira.sh
 source ./_product.sh
-source ./_product_info_json.sh
 source ./_promotion.sh
 source ./_releases_json.sh
 
