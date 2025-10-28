@@ -142,8 +142,8 @@ function _test_package_generate_release_properties_file {
 		release.properties \
 		test-dependencies/expected/release_$(echo "${_PRODUCT_VERSION}").properties
 
-	rm --force --recursive "${_BUNDLES_DIR}/tomcat"
 	rm --force "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z.sha512"
+	rm --force --recursive "${_BUNDLES_DIR}/tomcat"
 	rm --force release.properties
 }
 
