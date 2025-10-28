@@ -84,7 +84,7 @@ function generate_release_properties_file {
 	then
 		lc_log DEBUG "Unable to determine the Tomcat version."
 
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	local bundle_file_name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z"
