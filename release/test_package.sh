@@ -13,7 +13,9 @@ function main {
 		"${1}"
 	else
 		test_package_generate_javadocs
+		test_package_generate_release_properties_file
 		test_package_not_generate_javadocs
+		test_package_not_generate_release_properties_file
 		test_package_portal_dependencies
 	fi
 
@@ -62,11 +64,32 @@ function test_package_generate_javadocs {
 	_test_package_generate_javadocs "7.4.3.132-ga132"
 }
 
+function test_package_generate_release_properties_file {
+	_BUNDLES_DIR="${_BUILD_DIR}"
+
+	_test_package_generate_release_properties_file "2025.q1.18-lts" "9.0.107" "2025-10-10"
+	_test_package_generate_release_properties_file "2025.q2.0" "9.0.104" "2025-05-22"
+
+	LIFERAY_RELEASE_PRODUCT_NAME="portal"
+
+	_test_package_generate_release_properties_file "7.4.3.132-ga132" "9.0.98" "2025-02-18"
+
+	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+}
+
 function test_package_not_generate_javadocs {
 	_test_package_not_generate_javadocs "2025.q2.0"
 	_test_package_not_generate_javadocs "2025.q3.1"
 	_test_package_not_generate_javadocs "2026.q1.1-lts"
 	_test_package_not_generate_javadocs "7.4.13-u136"
+}
+
+function test_package_not_generate_release_properties_file {
+	_BUNDLES_DIR=""
+
+	generate_release_properties_file &> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
 function test_package_portal_dependencies {
@@ -89,13 +112,40 @@ function test_package_portal_dependencies {
 	rm --force "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
 }
 
- function _test_package_generate_javadocs {
+function _test_package_generate_javadocs {
 	_PRODUCT_VERSION="${1}"
 
 	generate_javadocs &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_OK}"
  }
+
+function _test_package_generate_release_properties_file {
+	_BUILDER_SHA="test1234"
+	_GIT_SHA="test1234"
+	_PRODUCT_VERSION="${1}"
+
+	echo "test1234" > "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z.sha512"
+
+	mkdir --parents "${_BUNDLES_DIR}/tomcat"
+
+	echo "Apache Tomcat Version ${2}" > "${_BUNDLES_DIR}/tomcat/RELEASE-NOTES"
+
+	generate_release_properties_file &> /dev/null
+
+	sed \
+		--expression "s/release.date=.*/release.date=${3}/" \
+		--in-place \
+		release.properties
+
+	assert_equals \
+		release.properties \
+		test-dependencies/expected/release_$(echo "${_PRODUCT_VERSION}").properties
+
+	rm --force --recursive "${_BUNDLES_DIR}/tomcat"
+	rm --force "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z.sha512"
+	rm --force release.properties
+}
 
 function _test_package_not_generate_javadocs {
 	_PRODUCT_VERSION="${1}"
