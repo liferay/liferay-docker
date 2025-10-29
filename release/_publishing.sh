@@ -449,7 +449,7 @@ function upload_to_docker_hub {
 
 		_update_bundles_yml
 
-		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push
+		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push-all
 	fi
 
 	local exit_code="${?}"
