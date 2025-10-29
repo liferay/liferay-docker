@@ -3,13 +3,6 @@
 source ./_liferay_common.sh
 
 function main {
-	if [ $(date +%w) != 2 ]
-	then
-		lc_log INFO "Skipping post build cleaning."
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_OK}"
-	fi
-
 	lc_log INFO "Cleaning build."
 
 	docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | \
