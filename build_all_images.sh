@@ -622,8 +622,7 @@ function main {
 	then
 		BUILD_ALL_IMAGES_PUSH="push-all"
 
-		if [ "$(git config --global github.user)" == "brianchandotcom" ] ||
-		   ([ "$(git config --global user.name)" == "liferay-release" ] && [[ "$(hostname)" =~ ^release-slave-[1-4]$ ]])
+		if [ "$(git config --global github.user)" == "brianchandotcom" ]
 		then
 			./release_notes.sh commit
 
