@@ -298,11 +298,6 @@ function reference_new_releases {
 	done
 
 	add_property \
-		"plugins.war.zip.url\[${_PRODUCT_VERSION}\]" \
-		"http://release-master.liferay.com/userContent/liferay-release-tool/7413/plugins.war.latest.zip" \
-		"plugins.war.zip.url\[${previous_product_version}\]="
-
-	add_property \
 		"	portal.bundle.tomcat\[${_PRODUCT_VERSION}\]" \
 		"${base_url}/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}.7z" \
 		"portal.bundle.tomcat\[${previous_product_version}\]="
