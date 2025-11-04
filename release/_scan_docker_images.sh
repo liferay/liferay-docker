@@ -5,6 +5,11 @@ source ../_liferay_common.sh
 function scan_release_candidate_docker_image {
 	LIFERAY_IMAGE_NAMES="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
+	if [ "$(get_release_output)" == "nightly" ]
+	then
+		LIFERAY_IMAGE_NAMES="liferay/dxp:7.4.13.nightly"
+	fi
+
 	_scan_docker_images
 }
 
