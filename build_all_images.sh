@@ -70,10 +70,15 @@ function build_bundle_image {
 
 	if is_dxp_release && is_release_candidate
 	then
-		bundle_url="releases-cdn.liferay.com/dxp/release-candidates/${version}/$(curl -fsSL "https://releases-cdn.liferay.com/dxp/release-candidates/${version}/.lfrrelease-tomcat-bundle")"
+		bundle_url="releases-cdn.liferay.com/dxp/release-candidates/${version}/$(curl --fail --location --show-error --silent "https://releases-cdn.liferay.com/dxp/release-candidates/${version}/.lfrrelease-tomcat-bundle")"
 	elif is_ga_release && is_release_candidate
 	then
-		bundle_url="releases-cdn.liferay.com/portal/release-candidates/${version}/$(curl -fsSL "https://releases-cdn.liferay.com/portal/release-candidates/${version}/.lfrrelease-tomcat-bundle")"
+		bundle_url="releases-cdn.liferay.com/portal/release-candidates/${version}/$(curl --fail --location --show-error --silent "https://releases-cdn.liferay.com/portal/release-candidates/${version}/.lfrrelease-tomcat-bundle")"
+	fi
+
+	if is_nightly_release "${version}"
+	then
+		bundle_url="releases-cdn.liferay.com/dxp/nightly/$(curl --fail --location --show-error --silent "https://releases.liferay.com/dxp/nightly/.lfrrelease-tomcat-bundle")"
 	fi
 
 	if [ -z "${bundle_url}" ]
