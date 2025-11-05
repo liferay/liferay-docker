@@ -1,4 +1,5 @@
 #!/bin/bash
+
 source ../_liferay_common.sh
 
 function main {
