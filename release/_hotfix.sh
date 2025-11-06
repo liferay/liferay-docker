@@ -138,7 +138,7 @@ function compare_jars {
 			grep --invert-match "__liferay__/index.js" | \
 			grep --invert-match "_jsp.class" | \
 			grep --invert-match "_jsp.java" | \
-			grep --invert-match "_jsp\$1.class" | \
+			grep --invert-match "_jsp\$[0-9]\+\.class"
 			grep --invert-match "index.js.map" | \
 			grep --invert-match "pom.properties" | \
 			grep --invert-match "previous-compilation-data.bin" | \
