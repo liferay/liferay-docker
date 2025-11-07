@@ -203,11 +203,11 @@ function main {
 
 		lc_time_run upload_release
 
-		lc_time_run trigger_ci_test_suite
-
 		lc_time_run upload_to_docker_hub
 
 		lc_time_run scan_release_candidate_docker_image
+
+		lc_time_run trigger_ci_test_suite
 	elif [ "$(get_release_output)" == "hotfix" ]
 	then
 		lc_time_run prepare_release_dir
