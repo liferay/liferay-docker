@@ -5,38 +5,46 @@ function trigger_ci_test_suite {
 	then
 		local release_url="https://releases.liferay.com/dxp/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 
-		local http_response=$(curl \
-			"http://test-1-25/job/test-portal-release/buildWithParameters" \
-			--data-urlencode "CI_TEST_SUITE=${CI_TEST_SUITE}" \
-			--data-urlencode "RUN_SCANCODE_PIPELINE=${RUN_SCANCODE_PIPELINE}" \
-			--data-urlencode "TEST_PORTAL_BRANCH_NAME=$(_get_test_portal_branch_name "${LIFERAY_RELEASE_GIT_REF}")" \
-			--data-urlencode "TEST_PORTAL_BUILD_PROFILE=${LIFERAY_RELEASE_PRODUCT_NAME}" \
-			--data-urlencode "TEST_PORTAL_RELEASE_GIT_ID=${_GIT_SHA}" \
-			--data-urlencode "TEST_PORTAL_RELEASE_OSGI_URL=${release_url}liferay-dxp-osgi-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
-			--data-urlencode "TEST_PORTAL_RELEASE_SQL_URL=${release_url}liferay-dxp-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
-			--data-urlencode "TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" \
-			--data-urlencode "TEST_PORTAL_RELEASE_TOOLS_URL=${release_url}liferay-dxp-tools-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
-			--data-urlencode "TEST_PORTAL_RELEASE_VERSION=${_PRODUCT_VERSION}" \
-			--data-urlencode "TEST_PORTAL_RELEASE_WAR_URL=${release_url}liferay-dxp-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.war" \
-			--data-urlencode "TEST_PORTAL_REPOSITORY_NAME=liferay-portal-ee" \
-			--data-urlencode "TEST_PORTAL_USER_BRANCH_NAME=${LIFERAY_RELEASE_GIT_REF}" \
-			--data-urlencode "TEST_PORTAL_USER_NAME=brianchandotcom" \
-			--fail \
-			--max-time 10 \
-			--request "POST" \
-			--retry 3 \
-			--silent \
-			--user "${LIFERAY_RELEASE_JENKINS_USER}:${JENKINS_API_TOKEN}" \
-			--write-out "%{http_code}")
+		for ci_slave_number in {41..48}
+		do
+			local http_response=$(curl \
+				"https://test-1-${ci_slave_number}.liferay.com/job/test-portal-release/buildWithParameters" \
+				--data-urlencode "CI_TEST_SUITE=${CI_TEST_SUITE}" \
+				--data-urlencode "RUN_SCANCODE_PIPELINE=${RUN_SCANCODE_PIPELINE}" \
+				--data-urlencode "TEST_PORTAL_BRANCH_NAME=$(_get_test_portal_branch_name "${LIFERAY_RELEASE_GIT_REF}")" \
+				--data-urlencode "TEST_PORTAL_BUILD_PROFILE=${LIFERAY_RELEASE_PRODUCT_NAME}" \
+				--data-urlencode "TEST_PORTAL_RELEASE_GIT_ID=${_GIT_SHA}" \
+				--data-urlencode "TEST_PORTAL_RELEASE_OSGI_URL=${release_url}liferay-dxp-osgi-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
+				--data-urlencode "TEST_PORTAL_RELEASE_SQL_URL=${release_url}liferay-dxp-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
+				--data-urlencode "TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" \
+				--data-urlencode "TEST_PORTAL_RELEASE_TOOLS_URL=${release_url}liferay-dxp-tools-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
+				--data-urlencode "TEST_PORTAL_RELEASE_VERSION=${_PRODUCT_VERSION}" \
+				--data-urlencode "TEST_PORTAL_RELEASE_WAR_URL=${release_url}liferay-dxp-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.war" \
+				--data-urlencode "TEST_PORTAL_REPOSITORY_NAME=liferay-portal-ee" \
+				--data-urlencode "TEST_PORTAL_USER_BRANCH_NAME=${LIFERAY_RELEASE_GIT_REF}" \
+				--data-urlencode "TEST_PORTAL_USER_NAME=brianchandotcom" \
+				--fail \
+				--max-time 10 \
+				--request "POST" \
+				--retry 3 \
+				--silent \
+				--user "${LIFERAY_RELEASE_JENKINS_USER}:${JENKINS_API_TOKEN}" \
+				--write-out "%{http_code}")
 
-		if [ "${http_response}" == "201" ]
-		then
-			lc_log INFO "Test build triggered."
-		else
-			lc_log ERROR "Unable to trigger the test build."
+			if [ "${http_response}" == "201" ]
+			then
+				lc_log INFO "Test build triggered on test-1-${ci_slave_number}.liferay.com."
 
-			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		fi
+				break
+			else
+				lc_log ERROR "Unable to trigger the test build on test-1-${ci_slave_number}.liferay.com."
+
+				if [ "${ci_slave_number}" == "48" ]
+				then
+					return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+				fi
+			fi
+		done
 	else
 		lc_log INFO "Skipping the test build job."
 
