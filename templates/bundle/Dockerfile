@@ -68,7 +68,7 @@ HEALTHCHECK \
 	--interval=4s \
 	--start-period=10s \
 	--timeout=1m \
-	CMD curl -fsS "http://localhost:8080/c/portal/layout" || exit 1
+	CMD curl --cookie-jar "/tmp/healthcheck" --cookie "/tmp/healthcheck" --fail --show-error --silent "http://localhost:8080/c/portal/layout" || exit 1
 
 LABEL com.liferay.patching-tool-version="${LABEL_LIFERAY_PATCHING_TOOL_VERSION}"
 LABEL com.liferay.tomcat.version="${LABEL_LIFERAY_TOMCAT_VERSION}"
