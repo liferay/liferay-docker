@@ -97,6 +97,35 @@ function _download_product_by_external_reference_code {
 	fi
 }
 
+function _get_latest_product_virtual_settings_file_entry_json_index {
+	local product_virtual_settings_file_entries_response=${1}
+
+	local latest_product_virtual_settings_file_entry_json_index=$(\
+		echo "${product_virtual_settings_file_entries_response}" | \
+		jq ".items
+			| to_entries
+			| map(
+				select(
+					(.value.version // \"\")
+					| test(\"Q[1-4]|7[.][0-4]\")
+				)
+			)
+			| max_by([
+				(.value.version | test(\"Q\")),
+				(.value.version | split(\", \") | max)
+			])
+			| .key?")
+
+	if [ "${latest_product_virtual_settings_file_entry_json_index}" == "null" ]
+	then
+		echo ""
+
+		return
+	fi
+
+	echo "${latest_product_virtual_settings_file_entry_json_index}"
+}
+
 function _get_product_by_external_reference_code {
 	local product_external_reference_code="${1}"
 
