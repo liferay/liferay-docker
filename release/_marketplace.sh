@@ -95,10 +95,10 @@ function _deploy_product_zip_file {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	if (unzip -l "${product_zip_file_path}" | grep "client-extension" &>/dev/null)
+	if (unzip -l "${product_zip_file_path}" | grep "client-extension" &> /dev/null)
 	then
 		cp "${product_zip_file_path}" "${_BUNDLES_DIR}/deploy"
-	elif (unzip -l "${product_zip_file_path}" | grep "\.lpkg$" &>/dev/null)
+	elif (unzip -l "${product_zip_file_path}" | grep "\.lpkg$" &> /dev/null)
 	then
 		unzip \
 			-d "${_BUNDLES_DIR}/deploy" \
@@ -107,7 +107,7 @@ function _deploy_product_zip_file {
 			-q \
 			"${product_zip_file_path}" "*.lpkg" \
 			-x "*/*" 2> /dev/null
-	elif (unzip -l "${product_zip_file_path}" | grep "\.zip$" &>/dev/null)
+	elif (unzip -l "${product_zip_file_path}" | grep "\.zip$" &> /dev/null)
 	then
 		unzip \
 			-d "${_BUNDLES_DIR}/deploy" \
@@ -313,7 +313,7 @@ function _check_product_compatibility {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	if (echo "${modules_info}" | grep --extended-regexp --invert-match "Active|Resolved" &>/dev/null)
+	if (echo "${modules_info}" | grep --extended-regexp --invert-match "Active|Resolved" &> /dev/null)
 	then
 		lc_log ERROR "One or more modules of ${product_name} are not compatible with release ${_PRODUCT_VERSION}:"
 
