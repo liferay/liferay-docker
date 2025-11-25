@@ -2,6 +2,47 @@
 
 source ../_liferay_common.sh
 
+function _deploy_product_zip_file {
+	local product_zip_file_path=${1}
+
+	if [ ! -f "${product_zip_file_path}" ]
+	then
+		lc_log ERROR "The product zip file ${product_zip_file_path} does not exist."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	if (unzip -l "${product_zip_file_path}" | grep "client-extension" &>/dev/null)
+	then
+		cp "${product_zip_file_path}" "${_BUNDLES_DIR}/deploy"
+	elif (unzip -l "${product_zip_file_path}" | grep "\.lpkg$" &>/dev/null)
+	then
+		unzip \
+			-d "${_BUNDLES_DIR}/deploy" \
+			-j \
+			-o \
+			-q \
+			"${product_zip_file_path}" "*.lpkg" \
+			-x "*/*" 2> /dev/null
+	elif (unzip -l "${product_zip_file_path}" | grep "\.zip$" &>/dev/null)
+	then
+		unzip \
+			-d "${_BUNDLES_DIR}/deploy" \
+			-j \
+			-o \
+			-q \
+			"${product_zip_file_path}" "*.zip" \
+			-x "*/*" 2> /dev/null
+	fi
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to deploy $(basename "${product_zip_file_path}") to ${_BUNDLES_DIR}/deploy."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function _download_product {
 	local product_download_url=${1}
 	local product_file_name=${2}
