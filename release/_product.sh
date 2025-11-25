@@ -479,6 +479,11 @@ function start_tomcat {
 		sleep 3
 	done
 
+	if [ "${1}" == "print-startup-logs" ]
+	then
+		cat ../logs/catalina.out
+	fi
+
 	if (! curl --fail --max-time 3 --output /dev/null --silent http://localhost:8080)
 	then
 		lc_log ERROR "Unable to start Tomcat in 90 seconds."
@@ -552,7 +557,12 @@ function warm_up_tomcat {
 
 	export LIFERAY_CLEAN_OSGI_STATE=true
 
-	start_tomcat
+	if [ "${1}" == "print-startup-logs" ]
+	then
+		start_tomcat "print-startup-logs"
+	else
+		start_tomcat
+	fi
 
 	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then

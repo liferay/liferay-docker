@@ -1,6 +1,83 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
+source ../_release_common.sh
+source ./_product.sh
+
+function check_marketplace_products_compatibility {
+	if ! is_first_quarterly_release
+	then
+		lc_log INFO "Marketplace products compatibility should not be checked on the ${_PRODUCT_VERSION} release."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	_set_liferay_marketplace_oauth2_token
+
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	mkdir --parents "${_BUILD_DIR}/marketplace"
+
+	declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
+		["adyen"]="f05ab2d6-1d54-c72d-988a-91fcd5669ef3"
+		["drools"]="15099181"
+		["liferaycommerceminium4globalcss"]="bee3adc0-891c-5828-c4f6-3d244135c972"
+		["liferaypaypalbatch"]="a1946869-212f-0793-d703-b623d0f149a6"
+		["liferayupscommerceshippingengine"]="f1cb4b5e-fbdd-7f70-df5d-9f1a736784b2"
+		["opensearch"]="ea19fdc8-b908-690d-9f90-15edcdd23a87"
+		["punchout"]="175496027"
+		["solr"]="30536632"
+		["stripe"]="6a02a832-083b-f08c-888a-0a59d7c09119"
+	)
+
+	for liferay_marketplace_product_name in $(printf "%s\n" "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}" | sort --ignore-case)
+	do
+		lc_log INFO "Downloading product ${liferay_marketplace_product_name}."
+
+		_download_product_by_external_reference_code "${LIFERAY_MARKETPLACE_PRODUCTS[${liferay_marketplace_product_name}]}" "${liferay_marketplace_product_name}"
+
+		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+
+		lc_log INFO "Deploying product zip file ${liferay_marketplace_product_name}.zip to ${_BUNDLES_DIR}/deploy."
+
+		_deploy_product_zip_file "${_BUILD_DIR}/marketplace/${liferay_marketplace_product_name}.zip"
+
+		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+	done
+
+	rm --force "${_BUILD_DIR}/warm-up-tomcat"
+
+	_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE="${_BUILD_DIR}/log_$(date +%s)_marketplace_products_deployment.txt"
+
+	warm_up_tomcat "print-startup-logs" > "${_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
+
+	echo "include-and-override=portal-developer.properties" > "${_BUNDLES_DIR}/portal-ext.properties"
+
+	start_tomcat "print-startup-logs" >> "${_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
+
+	for liferay_marketplace_product_name in $(printf "%s\n" "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}" | sort --ignore-case)
+	do
+		_check_product_compatibility "${LIFERAY_MARKETPLACE_PRODUCTS[${liferay_marketplace_product_name}]}" "${liferay_marketplace_product_name}"
+
+		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		then
+			stop_tomcat &> /dev/null
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+	done
+
+	stop_tomcat &> /dev/null
+}
 
 function _deploy_product_zip_file {
 	local product_zip_file_path=${1}

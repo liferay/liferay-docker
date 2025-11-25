@@ -7,6 +7,7 @@ source ./_ci.sh
 source ./_git.sh
 source ./_hotfix.sh
 source ./_jdk.sh
+source ./_marketplace_products.sh
 source ./_package.sh
 source ./_patcher.sh
 source ./_product.sh
@@ -202,6 +203,8 @@ function main {
 		fi
 
 		lc_time_run upload_release
+
+		lc_time_run check_marketplace_products_compatibility
 
 		lc_time_run trigger_ci_test_suite
 
