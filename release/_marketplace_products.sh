@@ -208,6 +208,62 @@ function _set_liferay_marketplace_oauth2_token {
 	_LIFERAY_MARKETPLACE_OAUTH2_TOKEN=$(echo "${liferay_marketplace_oauth2_token_response}" | jq --raw-output ".access_token")
 }
 
+function _check_product_compatibility {
+	local product_external_reference_code=${1}
+	local product_name=${2}
+
+	lc_log INFO "Checking the compatibility of product ${product_name} with ${_PRODUCT_VERSION} release."
+
+	if [ ! -f "${_BUILD_DIR}/marketplace/${product_name}.zip" ]
+	then
+		lc_log ERROR "Unable to check compatibility for product ${product_name} because the product zip file ${product_name}.zip was not downloaded."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local modules_info=$(blade sh lb -s | grep "${product_name}")
+
+	if [ -z "${modules_info}" ]
+	then
+		lc_log ERROR "Unable to check compatibility for product ${product_name}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	if (echo "${modules_info}" | grep --extended-regexp --invert-match "Active|Resolved" &>/dev/null)
+	then
+		lc_log ERROR "One or more modules of ${product_name} are not compatible with release ${_PRODUCT_VERSION}:"
+
+		while IFS= read -r module_info
+		do
+			local module_name=$(\
+				echo "${module_info}" | \
+				cut --delimiter "|" --fields=4 | \
+				sed "s/ (.*)//" | \
+				xargs)
+
+			lc_log ERROR "Module ${module_name} is not compatible with release ${_PRODUCT_VERSION}."
+
+			local module_id=$(echo "${module_info}" | cut --delimiter "|" --fields=1 | xargs)
+
+			lc_log INFO "OSGI diagnostics: $(blade sh diag "${module_id}" | tail --lines=+3 | xargs)"
+
+			if (grep --quiet "${module_name}" "${_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}")
+			then
+				lc_log INFO "Deployment logs for ${module_name}:"
+
+				cat "${_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}" | grep "${module_name}"
+			fi
+		done <<< "${modules_info}"
+
+		return
+	fi
+
+	lc_log INFO "Module ${product_name} is compatible with release ${_PRODUCT_VERSION}. Updating list of supported versions."
+
+	_update_product_supported_versions "${product_external_reference_code}" "${product_name}"
+}
+
 function _update_product_supported_versions {
 	local product_external_reference_code=${1}
 	local product_name=${2}
