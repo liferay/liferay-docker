@@ -2,7 +2,7 @@
 
 source ../_liferay_common.sh
 source ../_test_common.sh
-source ./_marketplace_products.sh
+source ./_marketplace.sh
 
 function main {
 	if [ "${#}" -eq 1 ]
