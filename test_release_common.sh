@@ -10,6 +10,7 @@ function main {
 	then
 		"${1}"
 	else
+		test_release_common_get_due_date
 		test_release_common_get_latest_product_version
 		test_release_common_get_product_group_version
 		test_release_common_get_product_version_without_lts_suffix
@@ -49,6 +50,16 @@ function tear_down {
 	unset ACTUAL_PRODUCT_VERSION
 	unset LIFERAY_RELEASE_TEST_MODE
 	unset _PRODUCT_VERSION
+}
+
+function test_release_common_get_due_date {
+	_test_release_common_get_due_date "1" "2024-02-28" "2024-02-29"
+	_test_release_common_get_due_date "1" "2024-02-29" "2024-03-01"
+	_test_release_common_get_due_date "1" "2025-01-31" "2025-02-03"
+	_test_release_common_get_due_date "1" "2025-06-06" "2025-06-09"
+	_test_release_common_get_due_date "1" "2025-12-31" "2026-01-01"
+	_test_release_common_get_due_date "2" "2025-06-04" "2025-06-06"
+	_test_release_common_get_due_date "3" "2025-06-05" "2025-06-10"
 }
 
 function test_release_common_get_latest_product_version {
@@ -239,6 +250,12 @@ function test_release_common_is_u_release {
 	_test_release_common_is_u_release "7.3.10-u2" "0"
 	_test_release_common_is_u_release "7.4.0-ga1" "1"
 	_test_release_common_is_u_release "7.4.13-u1" "0"
+}
+
+function _test_release_common_get_due_date {
+	assert_equals \
+		"$(get_due_date "${1}" "${2}")" \
+		"${3}"
 }
 
 function _test_release_common_get_latest_product_version {
