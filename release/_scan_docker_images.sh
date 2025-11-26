@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
+source ./_jira.sh
 
 function scan_release_candidate_docker_image {
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
@@ -16,6 +17,33 @@ function scan_release_candidate_docker_image {
 	fi
 
 	_scan_docker_images
+}
+
+function _notify_info_sec {
+	if ! is_quarterly_release || [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
+	then
+		lc_log INFO "Skipping InfoSec notification."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	local issue_key="$( \
+		add_jira_issue_with_description \
+			"Sec R&D-Sec Engineering" \
+			"Hi team, The ${1} scan had the following output: ${2}" \
+			"${due_date}" \
+			"Request" \
+			"LRINFOSEC" \
+			"${1} - Release Candidate | Prisma Cloud Scan Vulnerabilities")"
+
+	if [[ "${issue_key}" != LRINFOSEC-* ]]
+	then
+		lc_log ERROR "Unable to create a Jira issue for ${1}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	else
+		lc_log INFO "Jira issue ${issue_key} created successfully for ${1}."
+	fi
 }
 
 function _scan_docker_images {
