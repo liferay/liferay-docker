@@ -307,7 +307,7 @@ function lc_log {
 
 	if [ "${level}" != "DEBUG" ] || [ "${LIFERAY_COMMON_LOG_LEVEL}" == "DEBUG" ]
 	then
-		echo "$(lc_date) [${level}] ${message}"
+		echo -e "$(lc_date) [${level}] ${message}"
 	fi
 }
 

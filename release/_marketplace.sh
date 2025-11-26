@@ -50,7 +50,7 @@ function check_marketplace_products_compatibility {
 			fi
 		fi
 
-		lc_log INFO "Deploying product zip file ${liferay_marketplace_product_name}.zip to ${_BUNDLES_DIR}/deploy."
+		lc_log INFO "Deploying product zip file ${liferay_marketplace_product_name}.zip to ${_BUNDLES_DIR}/deploy.\n"
 
 		_deploy_product_zip_file "${_BUILD_DIR}/marketplace/${liferay_marketplace_product_name}.zip"
 
@@ -311,7 +311,7 @@ function _check_product_compatibility {
 
 	if [ ! -f "${_BUILD_DIR}/marketplace/${product_name}.zip" ]
 	then
-		lc_log ERROR "Unable to check compatibility for product ${product_name} because the product zip file ${product_name}.zip was not downloaded."
+		lc_log ERROR "Unable to check compatibility for product ${product_name} because the product zip file ${product_name}.zip was not downloaded.\n"
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -320,7 +320,7 @@ function _check_product_compatibility {
 
 	if [ -z "${modules_info}" ]
 	then
-		lc_log ERROR "Unable to check compatibility for product ${product_name}."
+		lc_log ERROR "Unable to check compatibility for product ${product_name}.\n"
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -350,6 +350,8 @@ function _check_product_compatibility {
 				cat "${_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}" | grep "${module_name}"
 			fi
 		done <<< "${modules_info}"
+
+		echo ""
 
 		return
 	fi
@@ -390,13 +392,13 @@ function _update_product_supported_versions {
 
 		if [[ "${http_status_code}" -ge 400 ]]
 		then
-			lc_log ERROR "Unable to update the list of supported versions for product ${product_name}. HTTP status: ${http_status_code}."
+			lc_log ERROR "Unable to update the list of supported versions for product ${product_name}. HTTP status: ${http_status_code}.\n"
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
 
-		lc_log INFO "The supported versions list was successfully updated for product ${product_name} to include the ${product_virtual_file_entry_target_version} release."
+		lc_log INFO "The supported versions list was successfully updated for product ${product_name} to include the ${product_virtual_file_entry_target_version} release.\n"
 	else
-		lc_log INFO "The supported versions list for product ${product_name} already contains the ${product_virtual_file_entry_target_version} release."
+		lc_log INFO "The supported versions list for product ${product_name} already contains the ${product_virtual_file_entry_target_version} release.\n"
 	fi
 }
