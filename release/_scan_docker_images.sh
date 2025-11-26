@@ -130,10 +130,18 @@ function _scan_docker_images {
 		   [[ ${scan_output} == *"Vulnerability threshold check results: PASS"* ]]
 		then
 			lc_log INFO "The result of scan for ${image_name} is: PASS."
-		else
+		elif [[ ${scan_output} == *"Compliance threshold check results: FAIL"* ]] ||
+			 [[ ${scan_output} == *"Vulnerability threshold check results: FAIL"* ]]
+		then
 			lc_log INFO "The result of scan for ${image_name} is: FAIL."
 
 			lc_log ERROR "The Docker image ${image_name} has security vulnerabilities."
+
+			_notify_info_sec "${image_name}" "${scan_output}"
+
+			scan_result="${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		else
+			lc_log ERROR "Unable to determine the result of scan for ${image_name}."
 
 			scan_result="${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
