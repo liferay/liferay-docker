@@ -461,6 +461,8 @@ function start_tomcat {
 	rm --force --recursive "${_BUNDLES_DIR}/tomcat/temp"
 	rm --force --recursive "${_BUNDLES_DIR}/tomcat/work"
 
+	local current_dir="${PWD}"
+
 	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
 
 	./catalina.sh start &>/dev/null
@@ -499,9 +501,13 @@ function start_tomcat {
 
 		sleep 20
 	fi
+
+	lc_cd "${current_dir}"
 }
 
 function stop_tomcat {
+	local current_dir="${PWD}"
+
 	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
 
 	lc_log INFO "Stopping Tomcat."
@@ -538,6 +544,8 @@ function stop_tomcat {
 
 	rm --force --recursive ../logs/*
 	rm --force --recursive ../../logs/*
+
+	lc_cd "${current_dir}"
 }
 
 function update_release_info_date {
