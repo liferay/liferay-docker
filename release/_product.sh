@@ -463,7 +463,7 @@ function start_tomcat {
 
 	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
 
-	./catalina.sh start
+	./catalina.sh start &>/dev/null
 
 	lc_log INFO "Waiting for Tomcat to start up..."
 
@@ -506,7 +506,7 @@ function stop_tomcat {
 
 	lc_log INFO "Stopping Tomcat."
 
-	./catalina.sh stop
+	./catalina.sh stop &>/dev/null
 
 	local backslash_and_slash_regex="\\\\\/"
 	local slash_regex="\/"
