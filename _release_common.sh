@@ -18,6 +18,29 @@ function download_product_version_list_html {
 	echo "${product_version_list_html}"
 }
 
+function get_due_date {
+	local number_of_working_days="${1}"
+
+	local date=$(date +%Y-%m-%d)
+
+	if [ -n "${2}" ]
+	then
+		date="${2}"
+	fi
+
+	while [ "${number_of_working_days}" -gt 0 ]
+	do
+		date=$(date --date "${date} +1 day" +%Y-%m-%d)
+
+		if [ $(date --date "${date}" +%u) -le 5 ]
+		then
+			number_of_working_days=$((number_of_working_days - 1))
+		fi
+	done
+
+	echo "${date}"
+}
+
 function get_latest_product_version {
 	local product_name=""
 	local product_version="${1}"
