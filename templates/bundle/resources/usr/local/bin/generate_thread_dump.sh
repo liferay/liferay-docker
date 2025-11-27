@@ -50,9 +50,9 @@ function generate_thread_dump {
 
 	echo "[Liferay] Generating ${THREAD_DUMPS_DIR}/${date}/thread_dump-${HOSTNAME}-${time}-${id}.txt.gz"
 
-	local thread_dump=$(jattach $(cat "${LIFERAY_PID}") threaddump)
-
-	echo "${thread_dump}" | gzip > "${THREAD_DUMPS_DIR}/${date}/thread_dump-${HOSTNAME}-${time}-${id}.txt.gz"
+	jattach $(cat "${LIFERAY_PID}") threaddump \
+	  | gzip \
+	  > "${THREAD_DUMPS_DIR}/${date}/thread_dump-${HOSTNAME}-${time}-${id}.txt.gz"
 }
 
 function main {

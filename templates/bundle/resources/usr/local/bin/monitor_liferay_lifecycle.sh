@@ -3,13 +3,9 @@
 source /usr/local/bin/_liferay_bundle_common.sh
 
 function generate_thread_dump {
-	local thread_dump=$(jattach $(cat "${LIFERAY_PID}") threaddump)
-
 	mkdir --parents "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
 
 	local file_name="${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
-
-	echo "${thread_dump}" > "${file_name}"
 
 	# https://docs.cloud.google.com/logging/quotas#:~:text=Size%20of%20a,256%C2%A0KB1
 	# >  Size of a LogEntry:	256 KB (1)
@@ -17,7 +13,9 @@ function generate_thread_dump {
 	#
 	# Let's keep the limit smaller (100KB) for other log fields to fit and prefix with line number for sorting
 	local line_length_limit=102400
-	echo "${thread_dump}" \
+
+	jattach $(cat "${LIFERAY_PID}") threaddump \
+	  | tee "${file_name}" \
 	  | gzip \
 	  | base64 --wrap $line_length_limit - \
 	  | awk '{print "Line #" NR " of b64(gzip(thread dump)): " $0}' \
