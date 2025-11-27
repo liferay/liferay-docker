@@ -52,7 +52,7 @@ function generate_thread_dump {
 
 	local thread_dump=$(jattach $(cat "${LIFERAY_PID}") threaddump)
 
-	echo -e "${thread_dump}" | gzip > "${THREAD_DUMPS_DIR}/${date}/thread_dump-${HOSTNAME}-${time}-${id}.txt.gz"
+	echo "${thread_dump}" | gzip > "${THREAD_DUMPS_DIR}/${date}/thread_dump-${HOSTNAME}-${time}-${id}.txt.gz"
 }
 
 function main {

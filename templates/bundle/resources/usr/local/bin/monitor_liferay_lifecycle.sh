@@ -9,7 +9,7 @@ function generate_thread_dump {
 
 	local file_name="${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
 
-	echo -e "${thread_dump}" > "${file_name}"
+	echo "${thread_dump}" > "${file_name}"
 
 	# https://docs.cloud.google.com/logging/quotas#:~:text=Size%20of%20a,256%C2%A0KB1
 	# >  Size of a LogEntry:	256 KB (1)
