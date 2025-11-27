@@ -191,7 +191,7 @@ function _download_product {
 	local product_download_url=${1}
 	local product_file_name=${2}
 
-	local http_status_code=$(\
+	local http_code=$(\
 		curl \
 			"https://marketplace-uat.liferay.com/${product_download_url}" \
 			--header "Authorization: Bearer ${_LIFERAY_MARKETPLACE_OAUTH2_TOKEN}" \
@@ -201,9 +201,9 @@ function _download_product {
 			--silent \
 			--write-out "%{http_code}")
 
-	if [[ "${http_status_code}" -ge 400 ]]
+	if [[ "${http_code}" -ge 400 ]]
 	then
-		lc_log ERROR "Unable to download product ${product_file_name}. HTTP status: ${http_status_code}."
+		lc_log ERROR "Unable to download product ${product_file_name}. HTTP code: ${http_code}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -273,7 +273,7 @@ function _get_latest_product_virtual_settings_file_entry_json_index {
 function _get_product_by_external_reference_code {
 	local product_external_reference_code="${1}"
 
-	local http_status_code_file=$(mktemp)
+	local http_code_file=$(mktemp)
 
 	local product_response=$(\
 		curl \
@@ -281,20 +281,20 @@ function _get_product_by_external_reference_code {
 			--header "Authorization: Bearer ${_LIFERAY_MARKETPLACE_OAUTH2_TOKEN}" \
 			--request GET \
 			--silent \
-			--write-out "%output{${http_status_code_file}}%{http_code}")
+			--write-out "%output{${http_code_file}}%{http_code}")
 
-	local http_status_code=$(cat "${http_status_code_file}")
+	local http_code=$(cat "${http_code_file}")
 
-	if [[ "${http_status_code}" -ge 400 ]]
+	if [[ "${http_code}" -ge 400 ]]
 	then
 		echo ""
 
-		rm --force "${http_status_code_file}"
+		rm --force "${http_code_file}"
 
 		return
 	fi
 
-	rm --force "${http_status_code_file}"
+	rm --force "${http_code_file}"
 
 	echo "${product_response}"
 }
@@ -311,7 +311,7 @@ function _get_product_virtual_settings_file_entries_by_external_reference_code {
 
 	local product_virtual_settings_id=$(echo "${product_response}" | jq --raw-output ".productVirtualSettings.id")
 
-	local http_status_code_file=$(mktemp)
+	local http_code_file=$(mktemp)
 
 	local product_virtual_settings_file_entries_response=$(\
 		curl \
@@ -319,26 +319,26 @@ function _get_product_virtual_settings_file_entries_by_external_reference_code {
 			--header "Authorization: Bearer ${_LIFERAY_MARKETPLACE_OAUTH2_TOKEN}" \
 			--request GET \
 			--silent \
-			--write-out "%output{${http_status_code_file}}%{http_code}")
+			--write-out "%output{${http_code_file}}%{http_code}")
 
-	local http_status_code=$(cat "${http_status_code_file}")
+	local http_code=$(cat "${http_code_file}")
 
-	if [[ "${http_status_code}" -ge 400 ]]
+	if [[ "${http_code}" -ge 400 ]]
 	then
 		echo ""
 
-		rm --force "${http_status_code_file}"
+		rm --force "${http_code_file}"
 
 		return
 	fi
 
-	rm --force "${http_status_code_file}"
+	rm --force "${http_code_file}"
 
 	echo "${product_virtual_settings_file_entries_response}"
 }
 
 function _set_liferay_marketplace_oauth2_token {
-	local http_status_code_file=$(mktemp)
+	local http_code_file=$(mktemp)
 
 	local liferay_marketplace_oauth2_token_response=$(\
 		curl \
@@ -346,20 +346,20 @@ function _set_liferay_marketplace_oauth2_token {
 			--data "client_id=${LIFERAY_MARKETPLACE_OAUTH2_CLIENT_ID}&client_secret=${LIFERAY_MARKETPLACE_OAUTH2_CLIENT_SECRET}&grant_type=client_credentials" \
 			--request POST \
 			--silent \
-			--write-out "%output{${http_status_code_file}}%{http_code}")
+			--write-out "%output{${http_code_file}}%{http_code}")
 
-	local http_status_code=$(cat "${http_status_code_file}")
+	local http_code=$(cat "${http_code_file}")
 
-	if [[ "${http_status_code}" -ge 400 ]]
+	if [[ "${http_code}" -ge 400 ]]
 	then
-		lc_log ERROR "Unable to get Liferay Marketplace OAuth2 token. HTTP status: ${http_status_code}."
+		lc_log ERROR "Unable to get Liferay Marketplace OAuth2 token. HTTP code: ${http_code}."
 
-		rm --force "${http_status_code_file}"
+		rm --force "${http_code_file}"
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	rm --force "${http_status_code_file}"
+	rm --force "${http_code_file}"
 
 	_LIFERAY_MARKETPLACE_OAUTH2_TOKEN=$(echo "${liferay_marketplace_oauth2_token_response}" | jq --raw-output ".access_token")
 }
@@ -380,7 +380,7 @@ function _update_product_supported_versions {
 	then
 		local latest_product_virtual_file_entry_id=$(echo "${product_virtual_settings_file_entries_response}" | jq --raw-output ".items[${latest_product_virtual_settings_file_entry_json_index}].id")
 
-		local http_status_code=$(\
+		local http_code=$(\
 			curl \
 				"https://marketplace-uat.liferay.com/o/headless-commerce-admin-catalog/v1.0/product-virtual-settings-file-entries/${latest_product_virtual_file_entry_id}" \
 				--form "productVirtualSettingsFileEntry={\"version\": \"${latest_product_virtual_file_entry_version}, ${product_virtual_file_entry_target_version}\"};type=application/json" \
@@ -390,9 +390,9 @@ function _update_product_supported_versions {
 				--silent \
 				--write-out "%{http_code}")
 
-		if [[ "${http_status_code}" -ge 400 ]]
+		if [[ "${http_code}" -ge 400 ]]
 		then
-			lc_log ERROR "Unable to update the list of supported versions for product ${product_name}. HTTP status: ${http_status_code}.\n"
+			lc_log ERROR "Unable to update the list of supported versions for product ${product_name}. HTTP code: ${http_code}.\n"
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
