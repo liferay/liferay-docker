@@ -6,6 +6,8 @@ source ./build_release.sh
 function main {
 	set_up
 
+	test_build_release_main_function
+
 	test_build_release_bundle_smaller_than_1_gb
 	test_build_release_handle_automated_build
 	test_build_release_package_release
@@ -15,8 +17,6 @@ function main {
 
 function set_up {
 	common_set_up
-
-	LIFERAY_RELEASE_GIT_REF=2025.q1.1 ./build_release.sh --integration-test > /dev/null
 
 	export LIFERAY_RELEASE_GIT_REF="release-test"
 	export RUN_SCANCODE_PIPELINE="false"
@@ -52,6 +52,12 @@ function test_build_release_handle_automated_build {
 		"true" \
 		"${TRIGGER_CI_TEST_SUITE}" \
 		"true"
+}
+
+function test_build_release_main_function {
+	LIFERAY_RELEASE_GIT_REF=2025.q1.1 ./build_release.sh --integration-test > /dev/null
+
+	assert_equals "${?}" "0"
 }
 
 function test_build_release_package_release {
