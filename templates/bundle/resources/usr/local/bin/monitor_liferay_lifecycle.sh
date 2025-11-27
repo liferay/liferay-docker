@@ -11,7 +11,17 @@ function generate_thread_dump {
 
 	echo -e "${thread_dump}" > "${file_name}"
 
-	echo '"{'$(cat "${file_name}")'"}' > /proc/1/fd/1
+	# https://docs.cloud.google.com/logging/quotas#:~:text=Size%20of%20a,256%C2%A0KB1
+	# >  Size of a LogEntry:	256 KB (1)
+	# >  (1) This approximate limit is based on internal data sizes, not the actual REST API request size.
+	#
+	# Let's keep the limit smaller (100KB) for other log fields to fit and prefix with line number for sorting
+	local line_length_limit=102400
+	echo "${thread_dump}" \
+	  | gzip \
+	  | base64 --wrap $line_length_limit - \
+	  | awk '{print "Line #" NR " of b64(gzip(thread dump)): " $0}' \
+	  > /proc/1/fd/1
 
 	lecho "Generated a thread dump at ${file_name}."
 }
