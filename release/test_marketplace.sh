@@ -15,7 +15,7 @@ function main {
 	else
 		set_up
 
-		test_marketplace_check_marketplace_products_compatibility
+		test_marketplace_check_liferay_marketplace_products_compatibility
 		test_marketplace_get_latest_product_virtual_settings_file_entry_json_index
 
 		tear_down
@@ -63,12 +63,12 @@ function tear_down {
 	unset _RELEASE_ROOT_DIR
 }
 
-function test_marketplace_check_marketplace_products_compatibility {
+function test_marketplace_check_liferay_marketplace_products_compatibility {
 	declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
 		["liferaycommerceminium4globalcss"]="bee3adc0-891c-5828-c4f6-3d244135c972"
 	)
 
-	check_marketplace_products_compatibility &> /dev/null
+	check_liferay_marketplace_products_compatibility &> /dev/null
 
 	assert_equals \
 		"${?}" "0" \

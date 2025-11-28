@@ -4,10 +4,10 @@ source ../_liferay_common.sh
 source ../_release_common.sh
 source ./_product.sh
 
-function check_marketplace_products_compatibility {
+function check_liferay_marketplace_products_compatibility {
 	if ! is_first_quarterly_release
 	then
-		lc_log INFO "Marketplace products compatibility should not be checked on the ${_PRODUCT_VERSION} release."
+		lc_log INFO "The compatibility of Liferay Marketplace products should not be checked on the ${_PRODUCT_VERSION} release."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -40,7 +40,7 @@ function check_marketplace_products_compatibility {
 	do
 		if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 		then
-			lc_log INFO "Downloading product ${liferay_marketplace_product_name}."
+			lc_log INFO "Downloading Liferay Marketplace product ${liferay_marketplace_product_name}."
 
 			_download_product_by_external_reference_code "${LIFERAY_MARKETPLACE_PRODUCTS[${liferay_marketplace_product_name}]}" "${liferay_marketplace_product_name}"
 
@@ -50,9 +50,9 @@ function check_marketplace_products_compatibility {
 			fi
 		fi
 
-		lc_log INFO "Deploying product zip file ${liferay_marketplace_product_name}.zip to ${_BUNDLES_DIR}/deploy.\n"
+		lc_log INFO "Deploying Liferay Marketplace product zip file ${liferay_marketplace_product_name}.zip to ${_BUNDLES_DIR}/deploy.\n"
 
-		_deploy_product_zip_file "${_BUILD_DIR}/marketplace/${liferay_marketplace_product_name}.zip"
+		_deploy_liferay_marketplace_product_zip_file "${_BUILD_DIR}/marketplace/${liferay_marketplace_product_name}.zip"
 
 		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 		then
@@ -62,17 +62,17 @@ function check_marketplace_products_compatibility {
 
 	rm --force "${_BUILD_DIR}/warm-up-tomcat"
 
-	_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE="${_BUILD_DIR}/log_$(date +%s)_marketplace_products_deployment.txt"
+	_LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE="${_BUILD_DIR}/log_$(date +%s)_liferay_marketplace_products_deployment.txt"
 
-	warm_up_tomcat "print-startup-logs" > "${_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
+	warm_up_tomcat "print-startup-logs" > "${_LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
 
 	echo "include-and-override=portal-developer.properties" > "${_BUNDLES_DIR}/portal-ext.properties"
 
-	start_tomcat "print-startup-logs" >> "${_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
+	start_tomcat "print-startup-logs" >> "${_LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
 
 	for liferay_marketplace_product_name in $(printf "%s\n" "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}" | sort --ignore-case)
 	do
-		_check_product_compatibility "${LIFERAY_MARKETPLACE_PRODUCTS[${liferay_marketplace_product_name}]}" "${liferay_marketplace_product_name}"
+		_check_liferay_marketplace_product_compatibility "${LIFERAY_MARKETPLACE_PRODUCTS[${liferay_marketplace_product_name}]}" "${liferay_marketplace_product_name}"
 
 		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 		then
@@ -85,15 +85,15 @@ function check_marketplace_products_compatibility {
 	stop_tomcat &> /dev/null
 }
 
-function _check_product_compatibility {
+function _check_liferay_marketplace_product_compatibility {
 	local product_external_reference_code=${1}
 	local product_name=${2}
 
-	lc_log INFO "Checking the compatibility of product ${product_name} with ${_PRODUCT_VERSION} release."
+	lc_log INFO "Checking the compatibility of Liferay Marketplace product ${product_name} with ${_PRODUCT_VERSION} release."
 
 	if [ ! -f "${_BUILD_DIR}/marketplace/${product_name}.zip" ]
 	then
-		lc_log ERROR "Unable to check compatibility for product ${product_name} because the product zip file ${product_name}.zip was not downloaded.\n"
+		lc_log ERROR "Unable to check the compatibility of Liferay Marketplace product ${product_name} because the product zip file ${product_name}.zip was not downloaded.\n"
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -102,14 +102,14 @@ function _check_product_compatibility {
 
 	if [ -z "${modules_info}" ]
 	then
-		lc_log ERROR "Unable to check compatibility for product ${product_name}.\n"
+		lc_log ERROR "Unable to check the compatibility of Liferay Marketplace product ${product_name}.\n"
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	if (echo "${modules_info}" | grep --extended-regexp --invert-match "Active|Resolved" &> /dev/null)
 	then
-		lc_log ERROR "One or more modules of ${product_name} are not compatible with release ${_PRODUCT_VERSION}:"
+		lc_log ERROR "One or more modules of Liferay Marketplace product ${product_name} are not compatible with release ${_PRODUCT_VERSION}:"
 
 		while IFS= read -r module_info
 		do
@@ -125,11 +125,11 @@ function _check_product_compatibility {
 
 			lc_log INFO "OSGI diagnostics: $(blade sh diag "${module_id}" | tail --lines=+3 | xargs)"
 
-			if (grep --quiet "${module_name}" "${_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}")
+			if (grep --quiet "${module_name}" "${_LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}")
 			then
 				lc_log INFO "Deployment logs for ${module_name}:"
 
-				cat "${_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}" | grep "${module_name}"
+				cat "${_LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}" | grep "${module_name}"
 			fi
 		done <<< "${modules_info}"
 
@@ -146,42 +146,42 @@ function _check_product_compatibility {
 	fi
 }
 
-function _deploy_product_zip_file {
-	local product_zip_file_path=${1}
+function _deploy_liferay_marketplace_product_zip_file {
+	local liferay_marketplace_product_zip_file_path=${1}
 
-	if [ ! -f "${product_zip_file_path}" ]
+	if [ ! -f "${liferay_marketplace_product_zip_file_path}" ]
 	then
-		lc_log ERROR "The product zip file ${product_zip_file_path} does not exist."
+		lc_log ERROR "The Liferay Marketplace product zip file ${liferay_marketplace_product_zip_file_path} does not exist."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	if (unzip -l "${product_zip_file_path}" | grep "client-extension" &> /dev/null)
+	if (unzip -l "${liferay_marketplace_product_zip_file_path}" | grep "client-extension" &> /dev/null)
 	then
-		cp "${product_zip_file_path}" "${_BUNDLES_DIR}/deploy"
-	elif (unzip -l "${product_zip_file_path}" | grep "\.lpkg$" &> /dev/null)
+		cp "${liferay_marketplace_product_zip_file_path}" "${_BUNDLES_DIR}/deploy"
+	elif (unzip -l "${liferay_marketplace_product_zip_file_path}" | grep "\.lpkg$" &> /dev/null)
 	then
 		unzip \
 			-d "${_BUNDLES_DIR}/deploy" \
 			-j \
 			-o \
 			-q \
-			"${product_zip_file_path}" "*.lpkg" \
+			"${liferay_marketplace_product_zip_file_path}" "*.lpkg" \
 			-x "*/*" 2> /dev/null
-	elif (unzip -l "${product_zip_file_path}" | grep "\.zip$" &> /dev/null)
+	elif (unzip -l "${liferay_marketplace_product_zip_file_path}" | grep "\.zip$" &> /dev/null)
 	then
 		unzip \
 			-d "${_BUNDLES_DIR}/deploy" \
 			-j \
 			-o \
 			-q \
-			"${product_zip_file_path}" "*.zip" \
+			"${liferay_marketplace_product_zip_file_path}" "*.zip" \
 			-x "*/*" 2> /dev/null
 	fi
 
 	if [ "${?}" -ne 0 ]
 	then
-		lc_log ERROR "Unable to deploy $(basename "${product_zip_file_path}") to ${_BUNDLES_DIR}/deploy."
+		lc_log ERROR "Unable to deploy $(basename "${liferay_marketplace_product_zip_file_path}") to ${_BUNDLES_DIR}/deploy."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -271,7 +271,7 @@ function _get_latest_product_virtual_settings_file_entry_json_index {
 }
 
 function _get_product_by_external_reference_code {
-	local product_external_reference_code="${1}"
+	local product_external_reference_code=${1}
 
 	local http_code_file=$(mktemp)
 

@@ -204,7 +204,7 @@ function main {
 
 		lc_time_run upload_release
 
-		lc_time_run check_marketplace_products_compatibility
+		lc_time_run check_liferay_marketplace_products_compatibility
 
 		lc_time_run trigger_ci_test_suite
 
