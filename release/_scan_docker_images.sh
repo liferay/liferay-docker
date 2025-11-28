@@ -30,7 +30,7 @@ function _notify_info_sec {
 	local issue_key="$( \
 		add_jira_issue_with_description \
 			"Sec R&D-Sec Engineering" \
-			"Hi team, The ${1} scan had the following output: ${2}" \
+			"Hi team, the Prisma Cloud Scan of image ${1} had the following output: ${2}" \
 			"${get_due_date}" \
 			"Request" \
 			"LRINFOSEC" \
