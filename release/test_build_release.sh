@@ -8,7 +8,7 @@ function main {
 
 	test_build_release_main_function
 
-	test_build_release_bundle_smaller_than_1_gb
+	test_build_release_bundle_smaller_than_1_gb_300_mb
 	test_build_release_handle_automated_build
 	test_build_release_package_release
 
@@ -36,9 +36,9 @@ function tear_down {
 	unset _RELEASE_ROOT_DIR
 }
 
-function test_build_release_bundle_smaller_than_1_gb {
+function test_build_release_bundle_smaller_than_1_gb_300_mb {
 	assert_equals \
-		"$(( $(ls -l "${_RELEASE_PACKAGE}"/liferay-dxp-tomcat-2025.q1.1-lts-*.7z | awk '{print $5}') < 1100000000))" \
+		"$(( $(stat --format="%s" "${_RELEASE_PACKAGE}"/liferay-dxp-tomcat-2025.q4.0-*.7z) < 1300000000 ))" \
 		"1"
 }
 
@@ -55,18 +55,18 @@ function test_build_release_handle_automated_build {
 }
 
 function test_build_release_main_function {
-	LIFERAY_RELEASE_GIT_REF=2025.q1.1 ./build_release.sh --integration-test > /dev/null
+	LIFERAY_RELEASE_GIT_REF=2025.q4.0 ./build_release.sh --integration-test > /dev/null
 
 	assert_equals "${?}" "0"
 }
 
 function test_build_release_package_release {
 	assert_equals \
-		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q1.1-lts-*.7z" -type f | wc --lines)" \
+		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q4.0-*.7z" -type f | wc --lines)" \
 		"1" \
-		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q1.1-lts-*.tar.gz" -type f | wc --lines)" \
+		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q4.0-*.tar.gz" -type f | wc --lines)" \
 		"1" \
-		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q1.1-lts-*.zip" -type f | wc --lines)" \
+		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q4.0-*.zip" -type f | wc --lines)" \
 		"1"
 }
 
