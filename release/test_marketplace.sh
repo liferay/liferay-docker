@@ -7,16 +7,11 @@ source ./_marketplace.sh
 function main {
 	if [ "${#}" -eq 1 ]
 	then
-		if [[ "${1}" == *_compatibility ]]
-		then
-			set_up
+		set_up
 
-			"${1}"
+		"${1}"
 
-			tear_down
-		else
-			"${1}"
-		fi
+		tear_down
 	else
 		set_up
 
@@ -81,7 +76,7 @@ function test_marketplace_check_marketplace_products_compatibility {
 }
 
 function test_marketplace_get_latest_product_virtual_settings_file_entry_json_index {
-	_test_marketplace_get_latest_product_virtual_settings_file_entry_json_index "2025.Q1" "2"
+	_test_marketplace_get_latest_product_virtual_settings_file_entry_json_index "2026.Q2" "2"
 	_test_marketplace_get_latest_product_virtual_settings_file_entry_json_index "7.4" "2"
 	_test_marketplace_get_latest_product_virtual_settings_file_entry_json_index "empty_version" ""
 }
