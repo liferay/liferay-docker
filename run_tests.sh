@@ -12,11 +12,11 @@ function main {
 
 	if [ -z "${changed_files}" ]
 	then
-		test_results=$(_run_docker_tests && _run_release_tests)
+		test_results=$((_run_docker_tests && _run_release_tests) 2>&1 | tee /dev/stderr)
 	else
 		if (echo "${changed_files}" | grep --extended-regexp "^[^/]+\.sh$" --quiet)
 		then
-			test_results=$(_run_docker_tests)
+			test_results=$(_run_docker_tests 2>&1 | tee /dev/stderr)
 		fi
 
 		if (echo "${changed_files}" | grep --extended-regexp "^release/.*\.sh$|^release/test-dependencies/.*" --quiet)
@@ -26,11 +26,9 @@ function main {
 				test_results+=$'\n'
 			fi
 
-			test_results+=$(_run_release_tests)
+			test_results+=$(_run_release_tests 2>&1 | tee /dev/stderr)
 		fi
 	fi
-
-	echo "${test_results}"
 
 	if [[ "${test_results}" == *"FAILED"* ]]
 	then
