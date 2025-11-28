@@ -1,7 +1,10 @@
 #!/bin/bash
 
 function main {
-	export DISPLAY_SUCCESSFUL_TEST_RESULT="false"
+	if [ -z "${DISPLAY_SUCCESSFUL_TEST_RESULT}" ]
+	then
+		export DISPLAY_SUCCESSFUL_TEST_RESULT="false"
+	fi
 
 	local test_results=""
 
