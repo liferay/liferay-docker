@@ -213,16 +213,16 @@ function _download_product_by_external_reference_code {
 	local product_external_reference_code=${1}
 	local product_file_name=${2}
 
-	local product_virtual_settings_file_entries_response=$(_get_product_virtual_settings_file_entries_by_external_reference_code "${product_external_reference_code}")
+	local product_virtual_settings_file_entries=$(_get_product_virtual_settings_file_entries_by_external_reference_code "${product_external_reference_code}")
 
-	if [ -z "${product_virtual_settings_file_entries_response}" ]
+	if [ -z "${product_virtual_settings_file_entries}" ]
 	then
 		lc_log ERROR "Unable to get product virtual settings file entries."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local latest_product_virtual_settings_file_entry_json_index=$(_get_latest_product_virtual_settings_file_entry_json_index "${product_virtual_settings_file_entries_response}")
+	local latest_product_virtual_settings_file_entry_json_index=$(_get_latest_product_virtual_settings_file_entry_json_index "${product_virtual_settings_file_entries}")
 
 	if [ -z "${latest_product_virtual_settings_file_entry_json_index}" ]
 	then
@@ -231,7 +231,7 @@ function _download_product_by_external_reference_code {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local product_download_url="$(echo "${product_virtual_settings_file_entries_response}" | jq --raw-output ".items[${latest_product_virtual_settings_file_entry_json_index}].src" | sed "s|^/||")"
+	local product_download_url="$(echo "${product_virtual_settings_file_entries}" | jq --raw-output ".items[${latest_product_virtual_settings_file_entry_json_index}].src" | sed "s|^/||")"
 
 	_download_product "${product_download_url}" "${product_file_name}.zip"
 
@@ -242,10 +242,10 @@ function _download_product_by_external_reference_code {
 }
 
 function _get_latest_product_virtual_settings_file_entry_json_index {
-	local product_virtual_settings_file_entries_response=${1}
+	local product_virtual_settings_file_entries=${1}
 
 	local latest_product_virtual_settings_file_entry_json_index=$(\
-		echo "${product_virtual_settings_file_entries_response}" | \
+		echo "${product_virtual_settings_file_entries}" | \
 		jq ".items
 			| to_entries
 			| map(
@@ -275,7 +275,7 @@ function _get_product_by_external_reference_code {
 
 	local http_code_file=$(mktemp)
 
-	local product_response=$(\
+	local product=$(\
 		curl \
 			"https://marketplace-uat.liferay.com/o/headless-commerce-admin-catalog/v1.0/products/by-externalReferenceCode/${product_external_reference_code}?nestedFields=productVirtualSettings%2Cattachments" \
 			--header "Authorization: Bearer ${_LIFERAY_MARKETPLACE_OAUTH2_TOKEN}" \
@@ -296,24 +296,24 @@ function _get_product_by_external_reference_code {
 
 	rm --force "${http_code_file}"
 
-	echo "${product_response}"
+	echo "${product}"
 }
 
 function _get_product_virtual_settings_file_entries_by_external_reference_code {
 	local product_external_reference_code=${1}
 
-	local product_response=$(_get_product_by_external_reference_code "${product_external_reference_code}")
+	local product=$(_get_product_by_external_reference_code "${product_external_reference_code}")
 
-	if [ -z "${product_response}" ]
+	if [ -z "${product}" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local product_virtual_settings_id=$(echo "${product_response}" | jq --raw-output ".productVirtualSettings.id")
+	local product_virtual_settings_id=$(echo "${product}" | jq --raw-output ".productVirtualSettings.id")
 
 	local http_code_file=$(mktemp)
 
-	local product_virtual_settings_file_entries_response=$(\
+	local product_virtual_settings_file_entries=$(\
 		curl \
 			"https://marketplace-uat.liferay.com/o/headless-commerce-admin-catalog/v1.0/product-virtual-settings/${product_virtual_settings_id}/product-virtual-settings-file-entries?pageSize=20" \
 			--header "Authorization: Bearer ${_LIFERAY_MARKETPLACE_OAUTH2_TOKEN}" \
@@ -334,7 +334,7 @@ function _get_product_virtual_settings_file_entries_by_external_reference_code {
 
 	rm --force "${http_code_file}"
 
-	echo "${product_virtual_settings_file_entries_response}"
+	echo "${product_virtual_settings_file_entries}"
 }
 
 function _set_liferay_marketplace_oauth2_token {
@@ -368,17 +368,17 @@ function _update_product_supported_versions {
 	local product_external_reference_code=${1}
 	local product_name=${2}
 
-	local product_virtual_settings_file_entries_response=$(_get_product_virtual_settings_file_entries_by_external_reference_code "${product_external_reference_code}")
+	local product_virtual_settings_file_entries=$(_get_product_virtual_settings_file_entries_by_external_reference_code "${product_external_reference_code}")
 
-	local latest_product_virtual_settings_file_entry_json_index=$(_get_latest_product_virtual_settings_file_entry_json_index "${product_virtual_settings_file_entries_response}")
+	local latest_product_virtual_settings_file_entry_json_index=$(_get_latest_product_virtual_settings_file_entry_json_index "${product_virtual_settings_file_entries}")
 
-	local latest_product_virtual_file_entry_version=$(echo "${product_virtual_settings_file_entries_response}" | jq --raw-output ".items[${latest_product_virtual_settings_file_entry_json_index}].version")
+	local latest_product_virtual_file_entry_version=$(echo "${product_virtual_settings_file_entries}" | jq --raw-output ".items[${latest_product_virtual_settings_file_entry_json_index}].version")
 
 	local product_virtual_file_entry_target_version=$(get_product_group_version | tr "." " " | tr "[:lower:]" "[:upper:]")
 
 	if [[ "${latest_product_virtual_file_entry_version}" != *"${product_virtual_file_entry_target_version}"* ]]
 	then
-		local latest_product_virtual_file_entry_id=$(echo "${product_virtual_settings_file_entries_response}" | jq --raw-output ".items[${latest_product_virtual_settings_file_entry_json_index}].id")
+		local latest_product_virtual_file_entry_id=$(echo "${product_virtual_settings_file_entries}" | jq --raw-output ".items[${latest_product_virtual_settings_file_entry_json_index}].id")
 
 		local http_code=$(\
 			curl \
