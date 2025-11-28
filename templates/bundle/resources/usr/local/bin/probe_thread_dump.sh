@@ -98,8 +98,7 @@ function main {
 			mkdir --parents "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
 		fi
 
-		jattach $(cat "${LIFERAY_PID}") threaddump \
-			> "${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
+		jattach $(cat "${LIFERAY_PID}") threaddump > "${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
 
 	fi
 
