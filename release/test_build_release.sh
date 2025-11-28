@@ -8,6 +8,13 @@ function main {
 
 	test_build_release_main_function
 
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		tear_down
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
 	test_build_release_bundle_smaller_than_1_gb_300_mb
 	test_build_release_handle_automated_build
 	test_build_release_package_release
@@ -57,7 +64,14 @@ function test_build_release_handle_automated_build {
 function test_build_release_main_function {
 	LIFERAY_RELEASE_GIT_REF=2025.q4.0 ./build_release.sh --integration-test > /dev/null
 
-	assert_equals "${?}" "0"
+	local exit_code="${?}"
+
+	assert_equals "${exit_code}" "0"
+
+	if [ "${exit_code}" -ne 0 ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 }
 
 function test_build_release_package_release {
