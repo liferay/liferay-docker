@@ -15,11 +15,11 @@ function generate_thread_dump {
 	local line_length_limit=102400
 
 	jattach $(cat "${LIFERAY_PID}") threaddump \
-	  | tee "${file_name}" \
-	  | gzip \
-	  | base64 --wrap $line_length_limit - \
-	  | awk '{print "Line #" NR " of b64(gzip(thread dump)): " $0}' \
-	  > /proc/1/fd/1
+		| tee "${file_name}" \
+		| gzip \
+		| base64 --wrap $line_length_limit - \
+		| awk '{print "Line #" NR " of b64(gzip(thread dump)): " $0}' \
+		> /proc/1/fd/1
 
 	lecho "Generated a thread dump at ${file_name}."
 }
