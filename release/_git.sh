@@ -193,6 +193,11 @@ function update_portal_repository {
 		fi
 	fi
 
+	if (! git remote get-url brianchandotcom &>/dev/null)
+	then
+		git remote add brianchandotcom git@github.com:brianchandotcom/liferay-portal-ee.git
+	fi
+
 	if [ -n "$(git ls-remote upstream refs/tags/"${LIFERAY_RELEASE_GIT_REF}")" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} tag exists on remote."
