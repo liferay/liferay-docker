@@ -3,6 +3,11 @@
 source ../_liferay_common.sh
 
 function scan_release_candidate_docker_image {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	LIFERAY_IMAGE_NAMES="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	if [ "$(get_release_output)" == "nightly" ]

@@ -1,6 +1,11 @@
 #!/bin/bash
 
 function trigger_ci_test_suite {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	if [ "${TRIGGER_CI_TEST_SUITE}" = "true" ]
 	then
 		local release_url="https://releases.liferay.com/dxp/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"

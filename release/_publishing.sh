@@ -232,6 +232,11 @@ function upload_bom_file {
 }
 
 function upload_boms {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	local nexus_repository_name="${1}"
 
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ] && [ "${nexus_repository_name}" == "xanadu" ]
@@ -321,6 +326,11 @@ function upload_hotfix {
 }
 
 function upload_opensearch {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -354,6 +364,11 @@ function upload_opensearch {
 }
 
 function upload_release {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -417,6 +432,11 @@ function upload_release {
 }
 
 function upload_to_docker_hub {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."

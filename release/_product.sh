@@ -309,6 +309,11 @@ function deploy_elasticsearch_sidecar {
 }
 
 function deploy_opensearch {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	lc_cd "${_BUNDLES_DIR}/osgi/portal"
 
 	if [ -e "com.liferay.portal.search.opensearch2.api.jar" ] &&
