@@ -6,7 +6,7 @@ source ./build_release.sh
 function main {
 	set_up
 
-	test_build_release_main_function
+	test_build_release_main
 
 	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
@@ -17,7 +17,7 @@ function main {
 
 	test_build_release_bundle_smaller_than_1_gb_300_mb
 	test_build_release_handle_automated_build
-	test_build_release_package_release
+	test_build_release_has_packaged_bundles
 
 	tear_down
 }
@@ -61,8 +61,18 @@ function test_build_release_handle_automated_build {
 		"true"
 }
 
-function test_build_release_main_function {
-	LIFERAY_RELEASE_GIT_REF=2025.q4.0 ./build_release.sh --integration-test > /dev/null
+function test_build_release_has_packaged_bundles {
+	assert_equals \
+		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q4.0-*.7z" -type f | wc --lines)" \
+		"1" \
+		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q4.0-*.tar.gz" -type f | wc --lines)" \
+		"1" \
+		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q4.0-*.zip" -type f | wc --lines)" \
+		"1"
+}
+
+function test_build_release_main {
+	LIFERAY_RELEASE_GIT_REF=2025.q4.0 ./build_release.sh &> /dev/null
 
 	local exit_code="${?}"
 
@@ -72,16 +82,6 @@ function test_build_release_main_function {
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
-}
-
-function test_build_release_package_release {
-	assert_equals \
-		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q4.0-*.7z" -type f | wc --lines)" \
-		"1" \
-		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q4.0-*.tar.gz" -type f | wc --lines)" \
-		"1" \
-		"$(find "${_RELEASE_PACKAGE}" -name "liferay-dxp-tomcat-2025.q4.0-*.zip" -type f | wc --lines)" \
-		"1"
 }
 
 main
