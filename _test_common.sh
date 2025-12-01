@@ -87,7 +87,7 @@ function assert_equals {
 }
 
 function common_set_up {
-	LIFERAY_RELEASE_TEST_MODE="true"
+	export LIFERAY_RELEASE_TEST_MODE="true"
 }
 
 function common_tear_down {
