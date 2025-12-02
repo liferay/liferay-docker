@@ -1,8 +1,8 @@
 FROM --platform=${TARGETPLATFORM} liferay/jdk21:latest AS liferay-jdk21
 
-COPY resources/etc/created-date /etc/created-date
-
 ARG OPTIONAL_PACKAGES
+
+COPY resources/etc/created-date /etc/created-date
 
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bc ffmpeg file fonts-dejavu ghostscript google-perftools libtcnative-1 ${OPTIONAL_PACKAGES} && \
