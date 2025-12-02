@@ -72,7 +72,7 @@ function check_usage {
 }
 
 function handle_automated_build {
-	if [ "${BUILD_CAUSE}" != "TIMERTRIGGER" ] && [ "$(get_release_output)" == "nightly" ]
+	if [ "${BUILD_CAUSE}" != "TIMERTRIGGER" ] || [ "$(get_release_output)" == "nightly" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
