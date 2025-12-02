@@ -111,6 +111,16 @@ function build_docker_image {
 
 	remove_temp_dockerfile_target_platform
 
+	LIFERAY_IMAGEMAGICK_PERIOD_ENABLED="false"
+
+	set_actual_product_version "${LIFERAY_DOCKER_RELEASE_VERSION}"
+
+	if is_early_product_version_than "2025.q2.9"
+	then
+		LIFERAY_IMAGEMAGICK_PERIOD_ENABLED="true"
+		OPTIONAL_PACKAGES="gifsicle imagemagick"
+	fi
+
 	docker build \
 		--build-arg LABEL_BUILD_DATE=$(date "${CURRENT_DATE}" "+%Y-%m-%dT%H:%M:%SZ") \
 		--build-arg LABEL_LIFERAY_PATCHING_TOOL_VERSION="${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" \
@@ -122,6 +132,8 @@ function build_docker_image {
 		--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 		--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 		--build-arg LABEL_VERSION="${LABEL_VERSION}" \
+		--build-arg LIFERAY_IMAGEMAGICK_PERIOD_ENABLED="${LIFERAY_IMAGEMAGICK_PERIOD_ENABLED}" \
+		--build-arg OPTIONAL_PACKAGES="${OPTIONAL_PACKAGES}" \
 		--iidfile "${LIFERAY_DOCKER_LOGS_DIR}/build_bundle_image_id.txt" \
 		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 		"${TEMP_DIR}" || exit 1
@@ -422,6 +434,8 @@ function push_docker_image {
 			--build-arg LABEL_VCS_REF=$(git rev-parse HEAD) \
 			--build-arg LABEL_VCS_URL="https://github.com/liferay/liferay-docker" \
 			--build-arg LABEL_VERSION="${LABEL_VERSION}" \
+			--build-arg LIFERAY_IMAGEMAGICK_PERIOD_ENABLED="${LIFERAY_IMAGEMAGICK_PERIOD_ENABLED}" \
+			--build-arg OPTIONAL_PACKAGES="${OPTIONAL_PACKAGES}" \
 			--builder "liferay-buildkit" \
 			--platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
 			--push \
