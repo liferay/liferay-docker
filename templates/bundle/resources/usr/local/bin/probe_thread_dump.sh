@@ -99,7 +99,6 @@ function main {
 		fi
 
 		jattach $(cat "${LIFERAY_PID}") threaddump > "${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
-
 	fi
 
 	exit ${exit_code}
