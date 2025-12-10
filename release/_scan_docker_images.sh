@@ -31,7 +31,7 @@ function _notify_info_sec {
 		add_jira_issue_with_description \
 			"Sec R&D-Sec Engineering" \
 			"Hi team, the Prisma Cloud Scan of image ${1} had the following output: ${2}" \
-			"${get_due_date}" \
+			"$(get_due_date "3")" \
 			"Request" \
 			"LRINFOSEC" \
 			"${1} - Release Candidate | Prisma Cloud Scan Vulnerabilities")"
