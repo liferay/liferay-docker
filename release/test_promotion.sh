@@ -19,7 +19,7 @@ function set_up {
 }
 
 function tear_down {
-	find "${_PROMOTION_DIR}" -maxdepth 1 -type f -regex ".*\.pom.*" -delete
+	find "${_PROMOTION_DIR}" -maxdepth 1 -path "${_PROMOTION_DIR}/release.dxp.*.pom*" -type f -delete
 }
 
 function test_promotion_prepare_poms_for_promotion {
