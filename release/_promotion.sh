@@ -48,7 +48,13 @@ function prepare_poms_for_promotion {
 	local nexus_repository_name="${1}"
 	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
 
-	for pom_name in "release.${LIFERAY_RELEASE_PRODUCT_NAME}.api" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro"
+	for pom_name in \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.api" \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom" \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only" \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test" \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party" \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro"
 	do
 		if [ -n "${nexus_repository_name}" ]
 		then
