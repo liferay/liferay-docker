@@ -66,7 +66,7 @@ function prepare_poms_for_promotion {
 		fi
 	done
 
-	sed --in-place "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_ARTIFACT_VERSION}</version>#" ./*.pom
+	sed --in-place "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_ARTIFACT_VERSION}</version>#" "${_PROMOTION_DIR}"/*.pom
 }
 
 function promote_boms {
