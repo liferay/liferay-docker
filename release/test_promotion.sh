@@ -13,6 +13,7 @@ function main {
 		"${1}"
 	else
 		test_promotion_generate_distro_jar
+		test_promotion_prepare_poms_for_promotion
 	fi
 
 	tear_down
@@ -60,6 +61,44 @@ function test_promotion_generate_distro_jar {
 	generate_distro_jar &> /dev/null
 
 	assert_equals "$(find "${_RELEASE_ROOT_DIR}" -name "release.dxp.distro-${LIFERAY_RELEASE_VERSION}*.jar" | grep --count /)" 1
+}
+
+function test_promotion_prepare_poms_for_promotion {
+	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+	_ARTIFACT_RC_VERSION=2025.q4.2-1765184167
+	_ARTIFACT_VERSION=2025.q4.2
+	_PROMOTION_DIR="${PWD}/test-dependencies"
+
+	for pom_name in \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.api" \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom" \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only" \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test" \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party" \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro"
+	do
+		touch "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom"
+		touch "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom.MD5"
+		touch "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom.sha512"
+	done
+
+	prepare_poms_for_promotion
+
+	assert_equals \
+		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"3" \
+		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"3" \
+		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"3" \
+		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"3" \
+		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"3" \
+		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"3"
+
+	find "${_PROMOTION_DIR}" -maxdepth 1 -type f -regex ".*\.pom.*" -delete
 }
 
 main "${@}"
