@@ -51,6 +51,10 @@ function main {
 			"${1}"
 		fi
 	else
+		test_bom_generate_distro_jar
+
+		lc_cd "${_RELEASE_ROOT_DIR}"
+
 		test_bom_generate_pom_release_bom_api_dxp
 		test_bom_generate_pom_release_bom_compile_only_dxp
 		test_bom_generate_pom_release_bom_distro_dxp
@@ -88,8 +92,11 @@ function set_up {
 	export _RELEASE_ROOT_DIR="${PWD}"
 
 	export _ARTIFACT_RC_VERSION="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+	export _BUILD_DIR="${_RELEASE_ROOT_DIR}/release-data/build"
 	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
 	export _RELEASE_TOOL_DIR="${_RELEASE_ROOT_DIR}"
+
+	mkdir --parents "${_RELEASE_ROOT_DIR}/release-data/build/boms"
 
 	if [ ! -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
 	then
@@ -164,6 +171,7 @@ function set_up_portal_tests {
 
 function tear_down {
 	rm --force --recursive "${_BUNDLES_DIR}"
+	rm --force --recursive "${_RELEASE_ROOT_DIR}/release-data/build/boms"
 	rm --force --recursive "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp"
 	rm --force "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp-tomcat-2024.q2.6-1721635298.zip"
 	rm --force "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-portal-tomcat-7.4.3.120-ga120-1718225443.zip"
@@ -172,6 +180,7 @@ function tear_down {
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _ARTIFACT_RC_VERSION
+	unset _BUILD_DIR
 	unset _BUILD_TIMESTAMP
 	unset _BUNDLES_DIR
 	unset _PRODUCT_VERSION
@@ -211,6 +220,14 @@ function test_bom_copy_tld {
 	assert_equals \
 		"$(ls test-dependencies/actual/META-INF)" \
 		"$(ls test-dependencies/expected/META-INF)"
+}
+
+function test_bom_generate_distro_jar {
+	generate_distro_jar &> /dev/null
+
+	assert_equals \
+		"$(find "${_RELEASE_ROOT_DIR}" -name "release.dxp.distro-${LIFERAY_RELEASE_VERSION}*.jar" | grep --count /)" \
+		1
 }
 
 function test_bom_generate_pom_release_bom_api_dxp {
