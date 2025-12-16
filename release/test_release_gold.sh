@@ -57,10 +57,10 @@ function tear_down {
 
 	git branch --list | grep --extended-regexp 'temp-branch-[0-9]{14}' | xargs --no-run-if-empty git branch -D &> /dev/null
 
+	unset LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_RC_BUILD_TIMESTAMP
 	unset _PROJECTS_DIR
-	unset LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH
 }
 
 function test_release_gold_check_usage {

@@ -119,7 +119,7 @@ function main {
 
 function prepare_next_release_branch {
 	if ! is_quarterly_release ||
-		[ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ]
+	   ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true")
 	then
 		lc_log INFO "Skipping the preparation of the next release branch."
 
