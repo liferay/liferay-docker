@@ -119,8 +119,7 @@ function main {
 
 function prepare_next_release_branch {
 	if ! is_quarterly_release ||
-	   [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ] ||
-	   [[ "$(get_release_patch_version)" -eq 0 ]]
+		[ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ]
 	then
 		lc_log INFO "Skipping the preparation of the next release branch."
 
@@ -129,20 +128,21 @@ function prepare_next_release_branch {
 
 	local product_group_version="$(get_product_group_version)"
 
-	local latest_quarterly_product_version="$(\
-		jq --raw-output ".[] | \
-			select(.productGroupVersion == \"${product_group_version}\" and .promoted == \"true\") | \
-			.targetPlatformVersion" ${_PROMOTION_DIR}/*releases.json)"
-
-	if [ "$(get_product_version_without_lts_suffix)" != "${latest_quarterly_product_version}" ]
-	then
-		lc_log INFO "The ${_PRODUCT_VERSION} is not the latest quarterly release. Skipping the preparation of the next release branch."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
+		local latest_quarterly_product_version=$( \
+			jq --raw-output "[.[] | \
+				select(.productGroupVersion == \"${product_group_version}\" and .promoted == \"true\") | \
+				.targetPlatformVersion] | last" ${_PROMOTION_DIR}/*releases.json | \
+				tr -d '[:space:]')
+
+		if [ "$(get_product_version_without_lts_suffix)" != "${latest_quarterly_product_version}" ]
+		then
+			lc_log INFO "The ${_PRODUCT_VERSION} is not the latest quarterly release. Skipping the preparation of the next release branch."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+
 		local quarterly_release_branch="release-${product_group_version}"
 
 		prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
