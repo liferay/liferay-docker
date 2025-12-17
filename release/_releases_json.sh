@@ -19,6 +19,7 @@ function generate_releases_json {
 	_add_database_schema_versions
 	_add_major_versions
 	_promote_product_versions
+	_tag_jakarta_product_versions
 	_tag_recommended_product_versions
 
 	_merge_json_snippets
@@ -314,6 +315,24 @@ function _promote_product_versions {
 				lc_log INFO "No product version found to promote for ${product_name}-${group_version}."
 			fi
 		done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
+	done
+}
+
+function _tag_jakarta_product_versions {
+	local product_version_json_file
+
+	find "${_PROMOTION_DIR}" -maxdepth 1 -type f -name "*.json" | while read -r product_version_json_file
+	do
+		jq 'map(
+				(.productGroupVersion) as $currentProductGroupVersion |
+
+				if ($currentProductGroupVersion | ($currentProductGroupVersion >= "2025.Q3")
+				then
+					.tags = ((.tags // []) + ["jakarta"] | unique | sort)
+					| to_entries
+					| sort_by(.key)
+					| from_entries
+				)' "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv "${product_version_json_file}.tmp" "${product_version_json_file}"
 	done
 }
 
