@@ -34,7 +34,7 @@ function set_up {
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export LIFERAY_RELEASE_RC_BUILD_TIMESTAMP="1695892964"
 	export _PROJECTS_DIR="${PWD}"/../..
-	export _PROMOTION_DIR="{PWD}/test-dependencies/expected"
+	export _PROMOTION_DIR="${PWD}"/test-dependencies/expected
 
 	cp test-dependencies/actual/releases.json .
 }
