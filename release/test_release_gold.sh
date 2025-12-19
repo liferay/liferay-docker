@@ -31,7 +31,6 @@ function main {
 function set_up {
 	common_set_up
 
-	export LIFERAY_NEXT_RELEASE_DATE="2025-10-11"
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export LIFERAY_RELEASE_RC_BUILD_TIMESTAMP="1695892964"
 	export _PROJECTS_DIR="${PWD}"/../..
@@ -68,12 +67,7 @@ function test_release_gold_check_usage {
 }
 
 function test_release_gold_not_prepare_next_release_branch {
-	if [ ! $(echo "${LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH}" | grep --ignore-case "true") ]
-	then
-		_test_release_gold_prepare_next_release_branch "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	_test_release_gold_prepare_next_release_branch "2024.q2.0" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_release_gold_prepare_next_release_branch "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_release_gold_prepare_next_release_branch "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_release_gold_prepare_next_release_branch "7.4.13-u101" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_release_gold_prepare_next_release_branch "7.4.3.125-ga125" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
