@@ -71,6 +71,10 @@ function test_release_gold_not_prepare_next_release_branch {
 	_test_release_gold_prepare_next_release_branch "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_release_gold_prepare_next_release_branch "7.4.13-u101" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_release_gold_prepare_next_release_branch "7.4.3.125-ga125" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+
+	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
+
+	_test_release_gold_prepare_next_release_branch "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 function test_release_gold_not_reference_new_releases {
