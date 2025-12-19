@@ -59,6 +59,7 @@ function tear_down {
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_RC_BUILD_TIMESTAMP
 	unset _PROJECTS_DIR
+	unset _PROMOTION_DIR
 }
 
 function test_release_gold_check_usage {
