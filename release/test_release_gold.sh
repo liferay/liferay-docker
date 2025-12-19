@@ -56,7 +56,6 @@ function tear_down {
 
 	git branch --list | grep --extended-regexp 'temp-branch-[0-9]{14}' | xargs --no-run-if-empty git branch -D &> /dev/null
 
-	unset LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_RC_BUILD_TIMESTAMP
 	unset _PROJECTS_DIR
@@ -80,7 +79,7 @@ function test_release_gold_not_reference_new_releases {
 }
 
 function test_release_gold_prepare_next_release_branch {
-	export LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
+	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
 
 	_test_release_gold_prepare_next_release_branch "2025.q2.0" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
