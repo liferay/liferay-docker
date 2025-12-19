@@ -34,7 +34,6 @@ function set_up {
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export LIFERAY_RELEASE_RC_BUILD_TIMESTAMP="1695892964"
 	export _PROJECTS_DIR="${PWD}"/../..
-	export _PROMOTION_DIR="${PWD}"/test-dependencies/expected
 
 	cp test-dependencies/actual/releases.json .
 }
@@ -59,7 +58,6 @@ function tear_down {
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_RC_BUILD_TIMESTAMP
 	unset _PROJECTS_DIR
-	unset _PROMOTION_DIR
 }
 
 function test_release_gold_check_usage {
@@ -73,6 +71,7 @@ function test_release_gold_not_prepare_next_release_branch {
 	_test_release_gold_prepare_next_release_branch "7.4.3.125-ga125" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 
 	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
+	_PROMOTION_DIR="${PWD}"/test-dependencies/expected
 
 	_test_release_gold_prepare_next_release_branch "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
