@@ -321,7 +321,7 @@ function _promote_product_versions {
 function _tag_jakarta_product_versions {
 	local product_version_json_file
 
-	find "${_PROMOTION_DIR}" -maxdepth 1 -type f -name "*.json" | while read -r product_version_json_file
+	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r product_version_json_file
 	do
 		jq 'map(
 			if (.productGroupVersion? | (contains("q") and . >= "2025.q3"))
