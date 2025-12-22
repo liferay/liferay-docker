@@ -22,6 +22,8 @@ function generate_releases_json {
 	_tag_jakarta_product_versions
 	_tag_recommended_product_versions
 
+	_sort_all_release_json_properties
+
 	_merge_json_snippets
 
 	_upload_releases_json
@@ -318,6 +320,17 @@ function _promote_product_versions {
 	done
 }
 
+function _sort_all_release_json_properties {
+	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r release_json_file
+	do
+		jq 'map(
+				to_entries
+				| sort_by(.key)
+				| from_entries
+			)' "$release_json_file" > "$release_json_file.tmp" && mv --force "$release_json_file.tmp" "$release_json_file"
+	done
+}
+
 function _tag_jakarta_product_versions {
 	lc_log INFO "Tagging product versions with Jakarta support."
 
@@ -329,9 +342,6 @@ function _tag_jakarta_product_versions {
 				if (.productGroupVersion? | (contains("q") and . >= "2025.q3"))
 				then
 					.tags = ((.tags // []) + ["jakarta"] | unique | sort)
-					| to_entries
-					| sort_by(.key)
-					| from_entries
 				end
 			)' "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv --force "${product_version_json_file}.tmp" "${product_version_json_file}"
 	done
@@ -352,10 +362,7 @@ function _tag_recommended_product_versions {
 
 			jq 'map(
 					.tags = ((.tags // []) + ["recommended"] | unique | sort)
-					| to_entries
-					| sort_by(.key)
-					| from_entries
-				)' "${latest_product_version_json_file}" > "${latest_product_version_json_file}.tmp" && mv "${latest_product_version_json_file}.tmp" "${latest_product_version_json_file}"
+			)' "${latest_product_version_json_file}" > "${latest_product_version_json_file}.tmp" && mv "${latest_product_version_json_file}.tmp" "${latest_product_version_json_file}"
 		else
 			lc_log INFO "Unable to get latest product version JSON file for ${product_version}."
 		fi
