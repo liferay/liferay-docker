@@ -72,11 +72,14 @@ function check_usage {
 }
 
 function handle_automated_build {
-	if [ "$(get_release_output)" == "hotfix" ] ||
-	   [ "$(get_release_output)" == "nightly" ] ||
-	   [ "${BUILD_CAUSE}" != "TIMERTRIGGER" ]
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" != "true" ]
 	then
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		if [ "$(get_release_output)" == "hotfix" ] ||
+		   [ "$(get_release_output)" == "nightly" ] ||
+		   [ "${BUILD_CAUSE}" != "TIMERTRIGGER" ]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
 	fi
 
 	lc_log INFO "This build was triggered automatically."
