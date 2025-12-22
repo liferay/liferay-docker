@@ -319,6 +319,8 @@ function _promote_product_versions {
 }
 
 function _tag_jakarta_product_versions {
+	lc_log INFO "Tagging product versions with Jakarta support."
+
 	local product_version_json_file
 
 	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r product_version_json_file
