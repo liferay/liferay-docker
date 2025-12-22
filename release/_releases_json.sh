@@ -324,14 +324,14 @@ function _tag_jakarta_product_versions {
 	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r product_version_json_file
 	do
 		jq 'map(
-			if (.productGroupVersion? | (contains("q") and . >= "2025.q3"))
-			then
-				.tags = ((.tags // []) + ["jakarta"] | unique | sort)
-				| to_entries
-				| sort_by(.key)
-				| from_entries
-			end
-		)' "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv --force "${product_version_json_file}.tmp" "${product_version_json_file}"
+				if (.productGroupVersion? | (contains("q") and . >= "2025.q3"))
+				then
+					.tags = ((.tags // []) + ["jakarta"] | unique | sort)
+					| to_entries
+					| sort_by(.key)
+					| from_entries
+				end
+			)' "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv --force "${product_version_json_file}.tmp" "${product_version_json_file}"
 	done
 }
 
