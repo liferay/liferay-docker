@@ -199,7 +199,7 @@ function _test_releases_json_tag_jakarta_quarterly {
 
 	local filename="test-release-${version//./-}.json"
 
-	jq -n --arg ver "DXP ${version^^}" '[{productVersion: $ver}]' > "${filename}"
+	echo "[{\"productGroupVersion\": \"${version}\"}]" > "${filename}"
 
 	_tag_jakarta_product_versions
 
@@ -209,4 +209,5 @@ function _test_releases_json_tag_jakarta_quarterly {
 
 	rm --force "${filename}"
 }
+
 main "${@}"
