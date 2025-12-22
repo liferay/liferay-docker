@@ -93,9 +93,9 @@ function test_releases_json_get_liferay_upgrade_folder_version {
 }
 
 function test_releases_json_tag_jakarta_product_versions {
-	_test_releases_json_tag_jakarta_product_versions "2025.q2.5" "false"
-	_test_releases_json_tag_jakarta_product_versions "2025.q3.1" "true"
-	_test_releases_json_tag_jakarta_product_versions "2026.q1.0" "true"
+	_test_releases_json_tag_jakarta_product_versions "2025.q2" "false"
+	_test_releases_json_tag_jakarta_product_versions "2025.q3" "true"
+	_test_releases_json_tag_jakarta_product_versions "2026.q1" "true"
 }
 
 function test_releases_json_merge_json_snippets {
@@ -195,19 +195,19 @@ function _test_releases_json_get_liferay_upgrade_folder_version {
 }
 
 function _test_releases_json_tag_jakarta_product_versions {
-	local version="${1}"
+	local product_group_version="${1}"
 
-	local filename="test-release-${version//./-}.json"
+	local product_group_version_json="${product_group_version//./-}.json"
 
-	echo "[{\"productGroupVersion\": \"${version}\"}]" > "${filename}"
+	echo "[{\"productGroupVersion\": \"${product_group_version}\"}]" > "${product_group_version_json}"
 
 	_tag_jakarta_product_versions
 
 	assert_equals \
-		"$(jq -r ".[0].tags | contains([\"jakarta\"])" "${filename}")" \
+		"$(jq -r ".[0].tags | contains([\"jakarta\"])" "${product_group_version_json}")" \
 		"${2}"
 
-	rm --force "${filename}"
+	rm --force "${product_group_version_json}"
 }
 
 main "${@}"
