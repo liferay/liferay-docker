@@ -349,12 +349,12 @@ function _tag_recommended_product_versions {
 		then
 			lc_log INFO "Tagging ${latest_product_version_json_file} as recommended."
 
-			jq "map(
-					(. + {tags: [\"recommended\"]})
+			jq 'map(
+					.tags = ((.tags // []) + ["recommended"] | unique | sort)
 					| to_entries
 					| sort_by(.key)
 					| from_entries
-				)" "${latest_product_version_json_file}" > "${latest_product_version_json_file}.tmp" && mv "${latest_product_version_json_file}.tmp" "${latest_product_version_json_file}"
+				)' "${latest_product_version_json_file}" > "${latest_product_version_json_file}.tmp" && mv "${latest_product_version_json_file}.tmp" "${latest_product_version_json_file}"
 		else
 			lc_log INFO "Unable to get latest product version JSON file for ${product_version}."
 		fi
