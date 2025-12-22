@@ -114,6 +114,7 @@ function _scan_docker_images {
 		local scan_output=$(\
 			./twistcli images scan \
 				--address "${console_url}" \
+				--details \
 				--docker-address "$(\
 					find \
 						/run/user/$(id --user) \
