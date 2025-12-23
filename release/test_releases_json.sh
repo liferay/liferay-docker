@@ -204,7 +204,7 @@ function _test_releases_json_tag_jakarta_product_versions {
 	_tag_jakarta_product_versions
 
 	assert_equals \
-		"$(jq -r ".[0].tags | contains([\"jakarta\"])" "${product_group_version_json}")" \
+		"$(jq -r "(.[0].tags // []) | contains([\"jakarta\"])" "${product_group_version_json}")" \
 		"${2}"
 
 	rm --force "${product_group_version_json}"
