@@ -321,6 +321,8 @@ function _promote_product_versions {
 }
 
 function _sort_all_release_json_properties {
+	local release_json_file
+
 	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r release_json_file
 	do
 		jq 'map(
@@ -362,7 +364,7 @@ function _tag_recommended_product_versions {
 
 			jq 'map(
 					.tags = ((.tags // []) + ["recommended"] | unique | sort)
-			)' "${latest_product_version_json_file}" > "${latest_product_version_json_file}.tmp" && mv "${latest_product_version_json_file}.tmp" "${latest_product_version_json_file}"
+				)' "${latest_product_version_json_file}" > "${latest_product_version_json_file}.tmp" && mv "${latest_product_version_json_file}.tmp" "${latest_product_version_json_file}"
 		else
 			lc_log INFO "Unable to get latest product version JSON file for ${product_version}."
 		fi
