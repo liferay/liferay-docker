@@ -50,6 +50,8 @@ function test_build_release_bundle_smaller_than_1_gb_300_mb {
 }
 
 function test_build_release_handle_automated_build {
+	BUILD_CAUSE="TIMERTRIGGER"
+
 	handle_automated_build &> /dev/null
 
 	assert_equals \
@@ -59,6 +61,8 @@ function test_build_release_handle_automated_build {
 		"true" \
 		"${TRIGGER_CI_TEST_SUITE}" \
 		"true"
+
+	unset BUILD_CAUSE
 }
 
 function test_build_release_has_packaged_bundles {
