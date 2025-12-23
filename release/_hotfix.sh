@@ -160,7 +160,7 @@ function compare_jars {
 			#
 			grep --invert-match "META-INF/system.packages.extra.mf" | \
 			#
-			# Print only the relevant fields uncompressed size, compression method, checksum and name
+			# Print only the relevant fields: uncompressed size, compression method, checksum and name
 			#
 			awk '{print $1, $2, $7, $8}'
 	}
