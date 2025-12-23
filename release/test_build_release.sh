@@ -34,6 +34,8 @@ function set_up {
 }
 
 function tear_down {
+	common_tear_down
+
 	rm --force --recursive "${_RELEASE_ROOT_DIR}/release-data"
 
 	unset LIFERAY_RELEASE_GIT_REF
