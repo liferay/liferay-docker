@@ -134,7 +134,7 @@ function test_releases_json_process_new_product {
 
 	_tag_recommended_product_versions &> /dev/null
 
-	_sort_all_release_json_attributes
+	_sort_all_releases_json_attributes
 
 	_merge_json_snippets &> /dev/null
 

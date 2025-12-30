@@ -22,7 +22,7 @@ function generate_releases_json {
 	_tag_jakarta_product_versions
 	_tag_recommended_product_versions
 
-	_sort_all_release_json_attributes
+	_sort_all_releases_json_attributes
 
 	_merge_json_snippets
 
@@ -320,7 +320,7 @@ function _promote_product_versions {
 	done
 }
 
-function _sort_all_release_json_attributes {
+function _sort_all_releases_json_attributes {
 	lc_log INFO "Sorting all releases.json attributes."
 
 	local release_json_file
