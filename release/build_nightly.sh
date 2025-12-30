@@ -5,7 +5,7 @@ source ../_liferay_common.sh
 function main {
 	while true
 	do
-		./post_build_clean.sh
+		docker system prune --all --force &> /dev/null
 
 		LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" LIFERAY_RELEASE_GIT_REF="master" LIFERAY_RELEASE_OUTPUT="nightly" LIFERAY_RELEASE_UPLOAD="true" ./build_release.sh
 
