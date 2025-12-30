@@ -199,11 +199,11 @@ function _test_releases_json_get_liferay_upgrade_folder_version {
 function _test_releases_json_tag_jakarta_product_versions {
 	local product_group_version="${1}"
 
-	local product_group_version_json="${product_group_version//./-}.json"
+	local product_group_version_json="$(echo "${product_group_version}" | tr '.' '-').json"
 
 	echo "[{\"productGroupVersion\": \"${product_group_version}\"}]" > "${product_group_version_json}"
 
-	_tag_jakarta_product_versions
+	_tag_jakarta_product_versions &> /dev/null
 
 	assert_equals \
 		"$(jq -r "(.[0].tags // []) | contains([\"jakarta\"])" "${product_group_version_json}")" \

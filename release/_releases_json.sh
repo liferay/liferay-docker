@@ -325,11 +325,11 @@ function _sort_all_release_json_attributes {
 
 	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r release_json_file
 	do
-		jq 'map(
+		jq "map(
 				to_entries
 				| sort_by(.key)
 				| from_entries
-			)' "$release_json_file" > "$release_json_file.tmp" && mv --force "$release_json_file.tmp" "$release_json_file"
+			)" "${release_json_file}" > "${release_json_file}.tmp" && mv "${release_json_file}.tmp" "${release_json_file}"
 	done
 }
 
@@ -340,12 +340,12 @@ function _tag_jakarta_product_versions {
 
 	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r product_version_json_file
 	do
-		jq 'map(
-				if (.productGroupVersion? | (contains("q") and . >= "2025.q3"))
+		jq "map(
+				if (.productGroupVersion? | (contains(\"q\") and . >= \"2025.q3\"))
 				then
-					.tags = ((.tags // []) + ["jakarta"] | unique | sort)
+					.tags = ((.tags // []) + [\"jakarta\"] | unique | sort)
 				end
-			)' "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv --force "${product_version_json_file}.tmp" "${product_version_json_file}"
+			)" "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv "${product_version_json_file}.tmp" "${product_version_json_file}"
 	done
 }
 
@@ -362,9 +362,9 @@ function _tag_recommended_product_versions {
 		then
 			lc_log INFO "Tagging ${latest_product_version_json_file} as recommended."
 
-			jq 'map(
-					.tags = ((.tags // []) + ["recommended"] | unique | sort)
-				)' "${latest_product_version_json_file}" > "${latest_product_version_json_file}.tmp" && mv "${latest_product_version_json_file}.tmp" "${latest_product_version_json_file}"
+			jq "map(
+					.tags = ((.tags // []) + [\"recommended\"] | unique | sort)
+				)" "${latest_product_version_json_file}" > "${latest_product_version_json_file}.tmp" && mv "${latest_product_version_json_file}.tmp" "${latest_product_version_json_file}"
 		else
 			lc_log INFO "Unable to get latest product version JSON file for ${product_version}."
 		fi
