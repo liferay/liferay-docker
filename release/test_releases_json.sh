@@ -199,7 +199,7 @@ function _test_releases_json_get_liferay_upgrade_folder_version {
 function _test_releases_json_tag_jakarta_product_versions {
 	local product_group_version="${1}"
 
-	local product_group_version_json="$(echo "${product_group_version}" | tr '.' '-').json"
+	local product_group_version_json=$(echo "${product_group_version}" | tr '.' '-').json
 
 	echo "[{\"productGroupVersion\": \"${product_group_version}\"}]" > "${product_group_version_json}"
 
