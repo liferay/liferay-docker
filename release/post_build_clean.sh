@@ -5,8 +5,6 @@ source ./_liferay_common.sh
 function main {
 	lc_log INFO "Cleaning build."
 
-	docker system prune --all --force &> /dev/null
-
 	for dir in "logs-20*" "temp-*"
 	do
 		find . /opt/dev/projects/github/liferay-docker \
@@ -23,6 +21,8 @@ function main {
 	   [ "${current_job}" == "build-release-nightly" ] ||
 	   [ "${current_job}" == "release-gold" ]
 	then
+		docker system prune --all --force &> /dev/null
+
 		rm --force --recursive downloads
 		rm --force --recursive release/release-data
 	elif [ "${current_job}" == "source-code-sharing" ]
