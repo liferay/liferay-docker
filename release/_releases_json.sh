@@ -321,6 +321,8 @@ function _promote_product_versions {
 }
 
 function _sort_all_release_json_attributes {
+	lc_log INFO "Sorting all releases.json attributes."
+
 	local release_json_file
 
 	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r release_json_file
