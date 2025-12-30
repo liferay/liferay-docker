@@ -22,7 +22,7 @@ function generate_releases_json {
 	_tag_jakarta_product_versions
 	_tag_recommended_product_versions
 
-	_sort_all_release_json_properties
+	_sort_all_release_json_attributes
 
 	_merge_json_snippets
 
@@ -320,7 +320,7 @@ function _promote_product_versions {
 	done
 }
 
-function _sort_all_release_json_properties {
+function _sort_all_release_json_attributes {
 	local release_json_file
 
 	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r release_json_file
