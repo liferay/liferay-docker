@@ -3,9 +3,9 @@
 source ./_liferay_common.sh
 
 function main {
-	lc_log INFO "Cleaning build."
-
 	local current_job=$(basename "${PWD}")
+
+	lc_log INFO "Cleaning workspace for job ${current_job}."
 
 	if [ "${current_job}" == "build-release" ] ||
 	   [ "${current_job}" == "build-release-nightly" ] ||
