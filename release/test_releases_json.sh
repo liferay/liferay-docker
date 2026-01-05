@@ -92,12 +92,6 @@ function test_releases_json_get_liferay_upgrade_folder_version {
 	_test_releases_json_get_liferay_upgrade_folder_version "7.4.3.132-ga132" "v7_4_x"
 }
 
-function test_releases_json_tag_jakarta_product_versions {
-	_test_releases_json_tag_jakarta_product_versions "2025.q2" "false"
-	_test_releases_json_tag_jakarta_product_versions "2025.q3" "true"
-	_test_releases_json_tag_jakarta_product_versions "2026.q1" "true"
-}
-
 function test_releases_json_merge_json_snippets {
 	local json_files_count=$(
 		ls "${_PROMOTION_DIR}" | \
@@ -151,6 +145,12 @@ function test_releases_json_promote_product_versions {
 		"true"
 		"$(jq "[.[] | select(.promoted == \"true\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "7.4.3.132-ga132")")" \
 		"true"
+}
+
+function test_releases_json_tag_jakarta_product_versions {
+	_test_releases_json_tag_jakarta_product_versions "2025.q2" "false"
+	_test_releases_json_tag_jakarta_product_versions "2025.q3" "true"
+	_test_releases_json_tag_jakarta_product_versions "2026.q1" "true"
 }
 
 function test_releases_json_tag_recommended_product_versions {
