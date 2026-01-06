@@ -3,20 +3,49 @@
 source ../_liferay_common.sh
 source ./_jira.sh
 
-function scan_release_candidate_docker_image {
-	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+function check_usage {
+	if [ -z "${LIFERAY_IMAGE_NAMES}" ]
+	then
+		print_help
+	fi
+}
+
+function main {
+	if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
 	then
 		return
 	fi
 
-	LIFERAY_IMAGE_NAMES="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+	check_usage
+
+	lc_time_run _scan_docker_images
+}
+
+function set_liferay_docker_image_name_to_scan {
+	export LIFERAY_IMAGE_NAMES="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	if [ "$(get_release_output)" == "nightly" ]
 	then
 		LIFERAY_IMAGE_NAMES="liferay/dxp:7.4.13.nightly"
 	fi
 
-	_scan_docker_images
+	lc_log INFO "Liferay Docker images to scan: ${LIFERAY_IMAGE_NAMES}"
+
+	echo "LIFERAY_IMAGE_NAMES=${LIFERAY_IMAGE_NAMES}" > "/tmp/liferay_docker_image_name_to_scan.properties"
+}
+
+function print_help {
+	echo "Usage: LIFERAY_IMAGE_NAMES=<<image_name>> ${0}"
+	echo ""
+	echo "The script reads the following environment variables:"
+	echo ""
+	echo "    LIFERAY_IMAGE_NAMES: Liferay Docker image names to scan"
+	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set to \"nightly\" for nightly builds. The default is \"release-candidates\"."
+	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to notify info sec"
+	echo ""
+	echo "Example: LIFERAY_IMAGE_NAMES=liferay/release-candidates:2025.q1.12-123456789 ${0}"
+
+	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
 
 function _notify_info_sec {
@@ -111,6 +140,8 @@ function _scan_docker_images {
 	do
 		lc_log INFO "Scanning ${image_name}."
 
+		docker pull "${image_name}"
+
 		local scan_output=$(\
 			./twistcli images scan \
 				--address "${console_url}" \
@@ -145,3 +176,5 @@ function _scan_docker_images {
 
 	return "${scan_result}"
 }
+
+main "${@}"
