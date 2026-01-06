@@ -35,7 +35,7 @@ function set_up {
 	export _BUILD_DIR="${PWD}"
 	export _BUNDLES_DIR="${PWD}/test-dependencies/liferay-dxp"
 	export _CURRENT_JAVA_HOME="${JAVA_HOME}"
-	export _PROJECTS_DIR="/home/me/dev/projects/liferay-docker/release/test-dependencies/actual"
+	export _PROJECTS_DIR="${PWD}/test-dependencies/actual"
 
 	lc_cd test-dependencies
 
