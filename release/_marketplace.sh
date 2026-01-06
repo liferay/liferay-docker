@@ -26,12 +26,12 @@ function check_liferay_marketplace_products_compatibility {
 		declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
 			["adyen"]="f05ab2d6-1d54-c72d-988a-91fcd5669ef3"
 			["drools"]="15099181"
-			["liferaycommerceminium4globalcss"]="bee3adc0-891c-5828-c4f6-3d244135c972"
+			["liferaycommerceminium4globalcss"]="ebcf98b3-9844-b783-757a-579944b18b00"
 			["liferaypaypalbatch"]="a1946869-212f-0793-d703-b623d0f149a6"
 			["liferayupscommerceshippingengine"]="f1cb4b5e-fbdd-7f70-df5d-9f1a736784b2"
 			["opensearch"]="ea19fdc8-b908-690d-9f90-15edcdd23a87"
 			["punchout"]="175496027"
-			["solr"]="30536632"
+			["solr"]="30867681"
 			["stripe"]="6a02a832-083b-f08c-888a-0a59d7c09119"
 		)
 	fi
