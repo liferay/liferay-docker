@@ -39,13 +39,13 @@ function main {
 }
 
 function _run_docker_tests {
-	find . -maxdepth 1 -name "test_*.sh" ! -name "test_bundle_image.sh" -type f -exec {} \;
+	find . -maxdepth 1 -name "test_*.sh" ! -name "test_bundle_image.sh" -type f | sort | xargs --max-args=1 /bin/bash
 }
 
 function _run_release_tests {
 	cd release
 
-	find . -name "test_*.sh" -type f -exec {} \;
+	find . -name "test_*.sh" -type f | sort | xargs --max-args=1 /bin/bash
 }
 
 main
