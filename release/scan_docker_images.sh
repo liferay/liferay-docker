@@ -22,7 +22,7 @@ function main {
 	lc_time_run _scan_docker_images
 }
 
-function set_liferay_docker_image_name_to_scan {
+function set_liferay_docker_image_name {
 	export LIFERAY_DOCKER_IMAGE_NAME="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	if [ "$(get_release_output)" == "nightly" ]
@@ -30,13 +30,13 @@ function set_liferay_docker_image_name_to_scan {
 		LIFERAY_DOCKER_IMAGE_NAME="liferay/dxp:7.4.13.nightly"
 	fi
 
-	lc_log INFO "Liferay Docker image to scan: ${LIFERAY_DOCKER_IMAGE_NAME}"
+	lc_log INFO "Setting Liferay Docker image name to ${LIFERAY_DOCKER_IMAGE_NAME}"
 
-	echo "LIFERAY_DOCKER_IMAGE_NAME=${LIFERAY_DOCKER_IMAGE_NAME}" > "/tmp/liferay_docker_image_name_to_scan.properties"
+	echo "LIFERAY_DOCKER_IMAGE_NAME=${LIFERAY_DOCKER_IMAGE_NAME}" > "/tmp/liferay_docker_image_name.properties"
 }
 
 function print_help {
-	echo "Usage: LIFERAY_DOCKER_IMAGE_NAME=<<image_name>> ${0}"
+	echo "Usage: LIFERAY_DOCKER_IMAGE_NAME=<<liferay_docker_image_name>> ${0}"
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
@@ -137,11 +137,11 @@ function _scan_docker_images {
 
 	local scan_result=0
 
-	while read -r image_name
+	while read -r liferay_docker_image_name
 	do
-		lc_log INFO "Scanning ${image_name}."
+		lc_log INFO "Scanning ${liferay_docker_image_name}."
 
-		docker pull "${image_name}"
+		docker pull "${liferay_docker_image_name}"
 
 		local scan_output=$(\
 			./twistcli images scan \
@@ -152,22 +152,22 @@ function _scan_docker_images {
 						-name docker.sock 2> /dev/null)" \
 				--password "${LIFERAY_PRISMA_CLOUD_SECRET}" \
 				--user "${LIFERAY_PRISMA_CLOUD_ACCESS_KEY}" \
-				"${image_name}")
+				"${liferay_docker_image_name}")
 
-		lc_log INFO "Scan output for ${image_name}:"
+		lc_log INFO "Scan output for ${liferay_docker_image_name}:"
 
 		lc_log INFO "${scan_output}"
 
 		if [[ ${scan_output} == *"Compliance threshold check results: PASS"* ]] &&
 		   [[ ${scan_output} == *"Vulnerability threshold check results: PASS"* ]]
 		then
-			lc_log INFO "The result of scan for ${image_name} is: PASS."
+			lc_log INFO "The result of scan for ${liferay_docker_image_name} is: PASS."
 		else
-			lc_log INFO "The result of scan for ${image_name} is: FAIL."
+			lc_log INFO "The result of scan for ${liferay_docker_image_name} is: FAIL."
 
-			lc_log ERROR "The Docker image ${image_name} has security vulnerabilities."
+			lc_log ERROR "The Liferay Docker image ${liferay_docker_image_name} has security vulnerabilities."
 
-			_notify_info_sec "${image_name}" "${scan_output}"
+			_notify_info_sec "${liferay_docker_image_name}" "${scan_output}"
 
 			scan_result="${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi

@@ -213,7 +213,7 @@ function main {
 
 		lc_time_run upload_to_docker_hub
 
-		lc_time_run set_liferay_docker_image_name_to_scan
+		lc_time_run set_liferay_docker_image_name
 	elif [ "$(get_release_output)" == "hotfix" ]
 	then
 		lc_time_run prepare_release_dir
