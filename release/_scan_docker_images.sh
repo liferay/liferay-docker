@@ -5,7 +5,7 @@ source ../_release_common.sh
 source ./_jira.sh
 
 function check_usage {
-	if [ -z "${LIFERAY_IMAGE_NAMES}" ]
+	if [ -z "${LIFERAY_DOCKER_IMAGE_NAME}" ]
 	then
 		print_help
 	fi
@@ -23,34 +23,34 @@ function main {
 }
 
 function set_liferay_docker_image_name_to_scan {
-	export LIFERAY_IMAGE_NAMES="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+	export LIFERAY_DOCKER_IMAGE_NAME="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	if [ "$(get_release_output)" == "nightly" ]
 	then
-		LIFERAY_IMAGE_NAMES="liferay/dxp:7.4.13.nightly"
+		LIFERAY_DOCKER_IMAGE_NAME="liferay/dxp:7.4.13.nightly"
 	fi
 
-	lc_log INFO "Liferay Docker images to scan: ${LIFERAY_IMAGE_NAMES}"
+	lc_log INFO "Liferay Docker image to scan: ${LIFERAY_DOCKER_IMAGE_NAME}"
 
-	echo "LIFERAY_IMAGE_NAMES=${LIFERAY_IMAGE_NAMES}" > "/tmp/liferay_docker_image_name_to_scan.properties"
+	echo "LIFERAY_DOCKER_IMAGE_NAME=${LIFERAY_DOCKER_IMAGE_NAME}" > "/tmp/liferay_docker_image_name_to_scan.properties"
 }
 
 function print_help {
-	echo "Usage: LIFERAY_IMAGE_NAMES=<<image_name>> ${0}"
+	echo "Usage: LIFERAY_DOCKER_IMAGE_NAME=<<image_name>> ${0}"
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
-	echo "    LIFERAY_IMAGE_NAMES: Liferay Docker image names to scan"
+	echo "    LIFERAY_DOCKER_IMAGE_NAME: Liferay Docker image name to scan"
 	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set to \"nightly\" for nightly builds. The default is \"release-candidates\"."
 	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to notify info sec"
 	echo ""
-	echo "Example: LIFERAY_IMAGE_NAMES=liferay/release-candidates:2025.q1.12-123456789 ${0}"
+	echo "Example: LIFERAY_DOCKER_IMAGE_NAME=liferay/release-candidates:2025.q1.12-123456789 ${0}"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
 
 function _notify_info_sec {
-	if ! is_quarterly_release_docker_image "${LIFERAY_IMAGE_NAMES}" || [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
+	if ! is_quarterly_release_docker_image "${LIFERAY_DOCKER_IMAGE_NAME}" || [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Skipping InfoSec notification."
 
@@ -77,9 +77,9 @@ function _notify_info_sec {
 }
 
 function _scan_docker_images {
-	if [ -z "${LIFERAY_IMAGE_NAMES}" ]
+	if [ -z "${LIFERAY_DOCKER_IMAGE_NAME}" ]
 	then
-		lc_log ERROR "\${LIFERAY_IMAGE_NAMES} is undefined."
+		lc_log ERROR "\${LIFERAY_DOCKER_IMAGE_NAME} is undefined."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -171,7 +171,7 @@ function _scan_docker_images {
 
 			scan_result="${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
-	done < <(echo "${LIFERAY_IMAGE_NAMES}" | tr ',' '\n')
+	done < <(echo "${LIFERAY_DOCKER_IMAGE_NAME}" | tr ',' '\n')
 
 	rm --force ./twistcli
 
