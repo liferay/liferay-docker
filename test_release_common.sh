@@ -34,6 +34,7 @@ function main {
 		test_release_common_is_nightly_release
 		test_release_common_is_portal_release
 		test_release_common_is_quarterly_release
+		test_release_common_is_quarterly_release_docker_image
 		test_release_common_is_u_release
 	fi
 
@@ -245,6 +246,13 @@ function test_release_common_is_quarterly_release {
 	_test_release_common_is_quarterly_release "7.4.3.112-ga112" "1"
 }
 
+function test_release_common_is_quarterly_release_docker_image {
+	_test_release_common_is_quarterly_release_docker_image "liferay/dxp:7.4.13-u134" "1"
+	_test_release_common_is_quarterly_release_docker_image "liferay/dxp:7.4.13.nightly" "1"
+	_test_release_common_is_quarterly_release_docker_image "liferay/portal:2025.q2.5-123456789" "0"
+	_test_release_common_is_quarterly_release_docker_image "liferay/release-candidates:2025.q1.12-123456789" "0"
+}
+
 function test_release_common_is_u_release {
 	_test_release_common_is_u_release "2025.q1.0-lts" "1"
 	_test_release_common_is_u_release "7.3.10-u2" "0"
@@ -402,6 +410,12 @@ function _test_release_common_is_portal_release {
 
 function _test_release_common_is_quarterly_release {
 	is_quarterly_release "${1}"
+
+	assert_equals "${?}" "${2}"
+}
+
+function _test_release_common_is_quarterly_release_docker_image {
+	is_quarterly_release_docker_image "${1}"
 
 	assert_equals "${?}" "${2}"
 }
