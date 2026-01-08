@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
+source ../_release_common.sh
 source ./_jira.sh
 
 function check_usage {
@@ -49,7 +50,7 @@ function print_help {
 }
 
 function _notify_info_sec {
-	if ! is_quarterly_release || [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
+	if ! is_quarterly_release_docker_image "${LIFERAY_IMAGE_NAMES}" || [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Skipping InfoSec notification."
 

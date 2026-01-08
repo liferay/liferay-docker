@@ -309,6 +309,15 @@ function is_quarterly_release {
 	return 1
 }
 
+function is_quarterly_release_docker_image {
+	if is_quarterly_release $(echo "${1}" | cut --delimiter=':' --fields=2 | cut --delimiter='-' --fields=1)
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function is_release_candidate {
 	if [ "${LIFERAY_DOCKER_RELEASE_CANDIDATE}" == "true" ]
 	then
