@@ -249,7 +249,7 @@ function test_release_common_is_quarterly_release {
 function test_release_common_is_quarterly_release_docker_image {
 	_test_release_common_is_quarterly_release_docker_image "liferay/dxp:7.4.13-u134" "1"
 	_test_release_common_is_quarterly_release_docker_image "liferay/dxp:7.4.13.nightly" "1"
-	_test_release_common_is_quarterly_release_docker_image "liferay/portal:2025.q2.5-123456789" "0"
+	_test_release_common_is_quarterly_release_docker_image "liferay/dxp:2025.q2.5-123456789" "0"
 	_test_release_common_is_quarterly_release_docker_image "liferay/release-candidates:2025.q1.12-123456789" "0"
 }
 
