@@ -6,7 +6,8 @@ source /usr/local/bin/_liferay_common.sh
 function main {
 	if [ "${JAVA_VERSION}" == "zulu21" ] && [ ! -e "/opt/liferay/data/.elasticsearch.initialized" ]
 	then
-		rm --force --recursive /opt/liferay/data/elasticsearch[0-9]*
+		rm --force --recursive /opt/liferay/data/elasticsearch[0-9]
+		rm --force --recursive /opt/liferay/data/elasticsearch[0-9][0-9]
 
 		touch /opt/liferay/data/.elasticsearch.initialized
 	fi
