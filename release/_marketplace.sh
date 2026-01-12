@@ -31,7 +31,6 @@ function check_liferay_marketplace_products_compatibility {
 			["liferayupscommerceshippingengine"]="f1cb4b5e-fbdd-7f70-df5d-9f1a736784b2"
 			["opensearch"]="ea19fdc8-b908-690d-9f90-15edcdd23a87"
 			["punchout"]="175496027"
-			["solr"]="30867681"
 			["stripe"]="6a02a832-083b-f08c-888a-0a59d7c09119"
 		)
 	fi
