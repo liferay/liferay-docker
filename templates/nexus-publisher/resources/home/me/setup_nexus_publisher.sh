@@ -31,6 +31,8 @@ cat <<EOF > ${repository_name}/build.me.properties
 
 	nodejs.npm.access.token=${LIFERAY_NEXUS_PUBLISHER_NODEJS_NPM_ACCESS_TOKEN}
 
+	release.versions.test.other.dir=${user.home}/dev/projects/liferay-portal-7.2.x
+
 	sonatype.release.hostname=repository.liferay.com
 	sonatype.release.password=${LIFERAY_NEXUS_PUBLISHER_SONATYPE_PASSWORD}
 	sonatype.release.realm=Sonatype Nexus Repository Manager
