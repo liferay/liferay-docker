@@ -1,0 +1,71 @@
+function customize_aliases {
+	alias cdt="cd ~/dev/projects/liferay-portal"
+	alias g="git"
+	alias la="ls -la --group-directories-first"
+}
+
+function customize_path {
+	export ANT_HOME="/usr/share/ant"
+	export ANT_OPTS="-Xmx6144m"
+}
+
+function customize_prompt {
+	PS1="\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\] \$(parse_git_current_branch_with_parentheses)\n\$ "
+}
+
+function disable_history {
+	unset HISTFILE
+}
+
+function execute_gradlew {
+	if [ -e gradlew ]
+	then
+		./gradlew ${@}
+	elif [ -e ../gradlew ]
+	then
+		../gradlew ${@}
+	elif [ -e ../../gradlew ]
+	then
+		../../gradlew ${@}
+	elif [ -e ../../../gradlew ]
+	then
+		../../../gradlew ${@}
+	elif [ -e ../../../../gradlew ]
+	then
+		../../../../gradlew ${@}
+	elif [ -e ../../../../../gradlew ]
+	then
+		../../../../../gradlew ${@}
+	elif [ -e ../../../../../../gradlew ]
+	then
+		../../../../../../gradlew ${@}
+	elif [ -e ../../../../../../../gradlew ]
+	then
+		../../../../../../../gradlew ${@}
+	elif [ -e ../../../../../../../../gradlew ]
+	then
+		../../../../../../../../gradlew ${@}
+	elif [ -e ../../../../../../../../../gradlew ]
+	then
+		../../../../../../../../../gradlew ${@}
+	else
+		echo "Unable to find locate Gradle wrapper."
+	fi
+}
+
+function gw {
+	execute_gradlew "${@//\//:}" --daemon
+}
+
+function parse_git_current_branch {
+	git rev-parse --abbrev-ref HEAD 2>/dev/null
+}
+
+function parse_git_current_branch_with_parentheses {
+	parse_git_current_branch | sed 's/.*/(&)/'
+}
+
+customize_aliases
+customize_path
+customize_prompt
+disable_history

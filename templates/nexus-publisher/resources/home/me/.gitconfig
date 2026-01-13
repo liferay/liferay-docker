@@ -1,0 +1,43 @@
+[alias]
+	br = branch
+	ci = commit
+	co = checkout
+	cp = cherry-pick
+	dc = diff --cached
+	df = diff
+	pl = pull
+	rb = rebase
+	st = status
+[color]
+	ui = auto
+[core]
+	abbrev = 7
+	autocrlf = false
+	bare = false
+	commentChar = >
+	editor = nano
+	filemode = true
+	hideDotFiles = dotGitOnly
+	logallrefupdates = true
+	repositoryformatversion = 0
+[credential]
+	helper = cache --timeout=86400
+[filter "lfs"]
+	clean = git-lfs clean %f
+	required = true
+	smudge = git-lfs smudge %f
+[gc]
+	auto = 0
+	autodetach = false
+[github]
+	oauth-token = GITHUB_OATH_TOKEN
+	user = GITHUB_USER
+[merge]
+	renameLimit = 1000
+[pull]
+	rebase = true
+[push]
+	default = matching
+[user]
+	email = USER_EMAIL
+	name = USER_NAME

@@ -1,0 +1,238 @@
+#!/bin/bash
+
+#
+# Usage:
+#
+# publish_to_nexus
+# publish_to_nexus fast
+# publish_to_nexus force com.liferay.data.engine.rest.api com.liferay.data.engine.rest.impl com.liferay.data.engine.spi com.liferay.document.library.repository.authorization.api com.liferay.document.library.repository.cmis.api com.liferay.document.library.repository.cmis.impl com.liferay.layout.api com.liferay.marketplace.api com.liferay.oauth2.provider.api com.liferay.oauth2.provider.service com.liferay.product.navigation.user.personal.bar.web com.liferay.site.api com.liferay.site.item.selector.web
+#
+
+set -e
+
+REPO_DIR=${PWD}
+REPO_NAME=$(basename ${PWD})
+
+function ant {
+	${ANT_HOME}/bin/ant "$@"
+
+	if [[ $? -ne 0 ]]
+	then
+		exit 1
+	fi
+}
+
+function force_publish {
+	for module_symbolic_name in "${@}"
+	do
+		if [ "${module_symbolic_name}" == "force" ]
+		then
+			continue
+		fi
+
+		git grep --files-with-matches "Name: ${module_symbolic_name}$" **bnd.bnd | while read -r line
+		do
+			local module_dir=${line::-8}
+
+			../gradlew :${module_dir//\//:}:writeArtifactPublishCommands -DwriteArtifactPublishCommands.force=true -q
+
+			../build/artifacts-publish-commands/artifacts-publish-commands.sh
+		done
+	done
+}
+
+function main {
+	#rm -fr build/releng/git-results
+
+	if [ ${REPO_NAME} == "liferay-portal" ] ||
+	   [ ${REPO_NAME} == "liferay-portal-7.0.x" ] ||
+	   [ ${REPO_NAME} == "liferay-portal-7.1.x" ] ||
+	   [ ${REPO_NAME} == "liferay-portal-7.2.x" ] ||
+	   [ ${REPO_NAME} == "liferay-portal-7.3.x" ]
+	then
+		local branch=master
+
+		if [[ ${REPO_NAME} == *portal-* ]]
+		then
+			branch=${REPO_NAME: -5}
+		fi
+
+		if [ "${1}" == "force" ]
+		then
+			cd modules
+
+			force_publish ${@}
+		else
+			rm -f print_log modules/apps/printDependentArtifact.log
+			rm -f print_log modules/core/printDependentArtifact.log
+			rm -f print_log modules/dxp/apps/printDependentArtifact.log
+
+			prepare_portal_repository ${branch} ${1}
+
+			ant publish-portal-release
+
+			publish_portal_modules ${branch} core
+
+			publish_portal_modules ${branch} apps
+			publish_portal_modules ${branch} dxp/apps
+
+			cd portal-kernel && ant deploy install-portal-snapshot && cd ../portal-impl && ant deploy install-portal-snapshot && cd ../util-java && ant deploy install-portal-snapshot && cd ../util-taglib && ant deploy install-portal-snapshot && cd ..
+
+			print_log modules/apps/printDependentArtifact.log
+			print_log modules/core/printDependentArtifact.log
+			print_log modules/dxp/apps/printDependentArtifact.log
+
+			local git_hash=`git rev-parse HEAD`
+
+			local portal_build_version=7.3.10
+
+			if [ ${branch} == "7.0.x" ]
+			then
+				portal_build_version=7.0.10
+			elif [ ${branch} == "7.1.x" ]
+			then
+				portal_build_version=7.1.10
+			elif [ ${branch} == "7.2.x" ]
+			then
+				portal_build_version=7.2.10
+			elif [ ${branch} == "7.3.x" ]
+			then
+				portal_build_version=7.3.10
+			fi
+
+			echo ""
+			echo "To publish, run: curl http://cloud-10-0-120-1/job/fixpack-builder-kickoff/buildWithParameters --data \"gitCommitID=${git_hash}&portalBuildVersion=${portal_build_version}&token=5DvEW3hHu9\""
+		fi
+
+		git push origin $(parse_git_current_branch)
+
+		if [ "${branch}" != "master" ]
+		then
+			git push upstream ${branch}
+		fi
+	else
+		echo "${REPO_DIR} is an invalid directory for publishing to Nexus."
+	fi
+}
+
+function parse_git_current_branch {
+	git rev-parse --abbrev-ref HEAD 2>/dev/null
+}
+
+function prepare_portal_repository {
+	local branch=${1}
+	local fast=${2}
+
+	if [ -e tools/gradle-* ]
+	then
+		./gradlew --stop
+	fi
+
+	if [ "${fast}" != "fast" ]
+	then
+		rm -fr ~/.liferay && rm -fr ~/.m2 && rm -fr .m2 && rm -fr .bnd && git clean -d -f -x tools/sdk && git clean -d -f -x
+	fi
+
+	echo "app.server.parent.dir=/home/me/dev/bundles/${branch}" > app.server.me.properties
+
+	if [ ! -e ../liferay-portal-ee/build.me.properties ]
+	then
+		echo "The file liferay-portal-ee/build.me.properties does not exist."
+
+		exit 1
+	fi
+
+	cp ../liferay-portal-ee/build.me.properties . && sed -i "s/master/${branch}/" build.me.properties
+
+	if [ "${fast}" != "fast" ]
+	then
+		ant setup-profile-dxp
+	fi
+
+	ant compile deploy-additional-jars
+
+	cd portal-kernel && ant deploy install-portal-snapshot
+
+	cd ../portal-impl && ant deploy install-portal-snapshot
+
+	cd ../portal-test && ant install-portal-snapshot
+
+	if [ -e ../portal-test-integration ]
+	then
+		cd ../portal-test-integration && ant install-portal-snapshot
+	fi
+
+	cd ../support-tomcat && ant deploy
+
+	cd ../util-bridges && ant deploy && ant install-portal-snapshot
+
+	cd ../util-java && ant deploy && ant install-portal-snapshot
+
+	cd ../util-slf4j && ant deploy
+
+	cd ../util-taglib && ant deploy && ant install-portal-snapshot
+
+	cd ../modules/core && ../../gradlew deploy
+
+	cd ../..
+
+	if [ -n "$(git status --porcelain)" ]
+	then
+		echo "There are baseline changes. Please fix them and try again.";
+
+		exit 1
+	fi
+}
+
+function print_log {
+	local file_name=${1}
+
+	echo ""
+	echo ${file_name}
+	echo ""
+
+	cat ${file_name}
+
+	rm ${file_name}
+}
+
+function publish_portal_modules {
+	local branch=${1}
+	local subdir=${2}
+
+	for i in `seq 1 100`
+	do
+		cd ${REPO_DIR}/portal-impl && ant format-source-bnd
+
+		cd ..
+
+		if [ -n "$(git status **bnd.bnd **packageinfo --porcelain)" ]
+		then
+			echo "There are source formatter changes. Please fix them and try again.";
+
+			exit 1
+		fi
+
+		if [ -n "$(git status --porcelain | grep -v printDependentArtifact.log)" ]
+		then
+			git commit -m "build.gradle auto SF" -a
+		fi
+
+		cd ${REPO_DIR}/modules/${subdir}
+
+		rm -f build/artifacts-publish-commands/artifacts-publish-commands.sh
+
+		time ${REPO_DIR}/gradlew writeArtifactPublishCommands printDependentArtifact -DprintDependentArtifact.ignore.project.regex="^(alphabetagamma-.*|osb-.*)$" -DwriteArtifactPublishCommands.ignore.project.regex="^(alphabetagamma-.*|osb-.*)$" -DwriteArtifactPublishCommands.skipReadOnly=true -q > printDependentArtifact.log
+
+		if [ -e build/artifacts-publish-commands/artifacts-publish-commands.sh ]
+		then
+			./build/artifacts-publish-commands/artifacts-publish-commands.sh
+		else
+			break
+		fi
+	done
+
+	cd ${REPO_DIR}
+}
+
+main ${@}
