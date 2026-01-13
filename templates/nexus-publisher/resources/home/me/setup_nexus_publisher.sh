@@ -12,10 +12,10 @@ function clone_repository {
 cat <<EOF > ${repository_name}/.git/config
 [remote "origin"]
 	fetch = +refs/heads/*:refs/remotes/origin/*
-	url = https://github.com/brianchandotcom/${repository_name}.git
+	url = https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/brianchandotcom/${repository_name}.git
 [remote "upstream"]
 	fetch = +refs/heads/*:refs/remotes/upstream/*
-	url = https://github.com/liferay/${repository_name}.git
+	url = https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/liferay/${repository_name}.git
 EOF
 
 	truncate --size -1 ${repository_name}/.git/config
