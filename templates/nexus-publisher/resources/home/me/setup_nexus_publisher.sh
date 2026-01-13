@@ -7,7 +7,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 function clone_repository {
 	local repository_name=${1}
 
-	git clone --depth 1 https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/brianchandotcom/${repository_name}.git
+	git clone https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/brianchandotcom/${repository_name}.git
 
 cat <<EOF > ${repository_name}/.git/config
 [remote "origin"]

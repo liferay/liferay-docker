@@ -1,6 +1,7 @@
 function customize_aliases {
 	alias cdt="cd ~/dev/projects/liferay-portal"
 	alias g="git"
+	alias gpull="git_pull"
 	alias la="ls -la --group-directories-first"
 }
 
@@ -51,6 +52,11 @@ function execute_gradlew {
 	else
 		echo "Unable to find locate Gradle wrapper."
 	fi
+}
+
+function git_pull {
+	git pull origin $(parse_git_current_branch)
+	git pull upstream $(parse_git_current_branch)
 }
 
 function gw {
