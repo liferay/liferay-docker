@@ -158,7 +158,7 @@ function _scan_docker_images {
 
 		lc_log INFO "${scan_output}"
 
-			scan_output=$(echo "${scan_output}" | perl -pe 's/\e\[[0-9;]*[mGJK]//g')
+		scan_output=$(echo "${scan_output}" | perl -pe 's/\e\[[0-9;]*[mGJK]//g')
 
 		if [[ ${scan_output} == *"Compliance threshold check results: PASS"* ]] &&
 		   [[ ${scan_output} == *"Vulnerability threshold check results: PASS"* ]]
