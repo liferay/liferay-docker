@@ -158,8 +158,6 @@ function _scan_docker_images {
 
 		lc_log INFO "${scan_output}"
 
-		scan_output=$(echo "${scan_output}" | perl -pe 's/\e\[[0-9;]*[mGJK]//g')
-
 		if [[ ${scan_output} == *"Compliance threshold check results: PASS"* ]] &&
 		   [[ ${scan_output} == *"Vulnerability threshold check results: PASS"* ]]
 		then
@@ -168,6 +166,8 @@ function _scan_docker_images {
 			lc_log INFO "The result of scan for ${liferay_docker_image_name} is: FAIL."
 
 			lc_log ERROR "The Liferay Docker image ${liferay_docker_image_name} has security vulnerabilities."
+
+			scan_output=$(echo "${scan_output}" | perl -pe 's/\e\[[0-9;]*[mGJK]//g')
 
 			_notify_info_sec "${liferay_docker_image_name}" "${scan_output}"
 
