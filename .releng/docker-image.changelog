@@ -2020,3 +2020,10 @@ docker.image.git.id-9.0.101=fb2846cbde8f7c8028700043a5081aa5d22e1186
 
 docker.image.change.log-9.0.102=LPD-75598 DOCKER-298
 docker.image.git.id-9.0.102=c99a04e84c15af619c0de9b384a1f27b945dbca7
+
+#
+# Liferay Docker Image Version 9.0.103
+#
+
+docker.image.change.log-9.0.103=LPD-76074
+docker.image.git.id-9.0.103=52e52dc2996e0bfeebd4091549ac12c37edfd436
