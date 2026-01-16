@@ -62,7 +62,7 @@ function add_licensing {
 		-Djava.lib.dir="${JAVA_HOME}/jre/lib" \
 		-Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee \
 		-Dportal.release.edition.private=true \
-		-f build-release-license.xml
+		-file build-release-license.xml
 }
 
 function build_product {
@@ -368,7 +368,7 @@ function obfuscate_licensing {
 		-Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee \
 		-Dportal.kernel.dir="${_PROJECTS_DIR}"/liferay-portal-ee/portal-kernel \
 		-Dportal.release.edition.private=true \
-		-f build-release-license.xml obfuscate-portal
+		-file build-release-license.xml obfuscate-portal
 }
 
 function set_artifact_versions {

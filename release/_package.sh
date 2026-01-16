@@ -64,7 +64,7 @@ function generate_javadocs {
 			-Dportal.dir="${_PROJECTS_DIR}/liferay-portal-ee" \
 			-Dportal.release.edition.private="${portal_release_edition_private}" \
 			-Dtstamp.value="${_BUILD_TIMESTAMP}" \
-			-f "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
+			-file "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
 
 		if [ "${?}" -ne 0 ]
 		then
