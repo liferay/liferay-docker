@@ -16,6 +16,7 @@ function main {
 		test_package_generate_release_properties_file
 		test_package_not_generate_javadocs
 		test_package_not_generate_release_properties_file
+		test_package_package_wars
 		test_package_portal_dependencies
 	fi
 
@@ -24,9 +25,11 @@ function main {
 
 function set_up {
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
-	export _BUILD_DIR="${PWD}/test-dependencies"
+	export _RELEASE_ROOT_DIR="${PWD}"
+
+	export _BUILD_DIR="${_RELEASE_ROOT_DIR}/test-dependencies"
 	export _BUILD_TIMESTAMP="1234567890"
-	export _PROJECTS_DIR="${PWD}/test-dependencies/expected"
+	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
 
 	common_set_up
 
@@ -40,14 +43,23 @@ function set_up {
 
 	unzip -oq liferay-dxp-tomcat-7.3.10-u36-1706652128.zip -d "${_BUILD_DIR}/release"
 
+	mkdir --parents "${_BUILD_DIR}/test_package_package_wars"
+
+	lc_download \
+		https://releases.liferay.com/dxp/2025.q3.0/liferay-dxp-tomcat-2025.q3.0-1756231955.zip \
+		liferay-dxp-tomcat-2025.q3.0-1756231955.zip 1> /dev/null
+
+	unzip -oq liferay-dxp-tomcat-2025.q3.0-1756231955.zip -d "${_BUILD_DIR}/test_package_package_wars"
+
 	lc_cd ..
 }
 
 function tear_down {
 	common_tear_down
 
-	rm --force "${_BUILD_DIR}/liferay-dxp-tomcat-7.3.10-u36-1706652128.zip"
+	rm --force "${_BUILD_DIR}/"liferay-dxp-tomcat-*.zip
 	rm --force --recursive "${_BUILD_DIR}/release"
+	rm --force --recursive "${_BUILD_DIR}/test_package_package_wars"
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
@@ -92,8 +104,40 @@ function test_package_not_generate_release_properties_file {
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
+function test_package_package_wars {
+	_BUNDLES_DIR="${_BUILD_DIR}/test_package_package_wars/liferay-dxp"
+	_PRODUCT_VERSION="2026.q1.0-lts"
+
+	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
+
+	git fetch upstream master --no-tags --quiet
+
+	git checkout master --force --quiet
+
+	git reset --hard FETCH_HEAD --quiet
+
+	lc_cd "${_BUNDLES_DIR}/tomcat/webapps/ROOT"
+
+	_package_wars &> /dev/null
+
+	local web_app_specification_version=$(\
+		unzip -p \
+			"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}-weblogic-${_BUILD_TIMESTAMP}.war" \
+			WEB-INF/web.xml | \
+		xmllint --xpath "string(//*[local-name()=\"web-app\"]/@version)" -)
+
+	assert_equals \
+		"$(ls -1 "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.war" | wc --lines)" \
+		"1" \
+		"$(ls -1 "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}-weblogic-${_BUILD_TIMESTAMP}.war" | wc --lines)" \
+		"1" \
+		"${web_app_specification_version}" \
+		"5.0"
+}
+
 function test_package_portal_dependencies {
 	_PRODUCT_VERSION="7.3.10-u36"
+	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/expected"
 
 	lc_cd "${_BUILD_DIR}/release"
 
