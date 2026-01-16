@@ -21,60 +21,6 @@ function generate_checksum_files {
 	done
 }
 
-function generate_javadocs {
-	if is_7_4_u_release
-	then
-		lc_log INFO "Javadocs should not be generated for ${_PRODUCT_VERSION}."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	if is_quarterly_release
-	then
-		if is_early_product_version_than "2025.q3.0" || [[ "$(get_release_patch_version)" -ne 0 ]]
-		then
-			lc_log INFO "Javadocs should not be generated for ${_PRODUCT_VERSION}."
-
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-		fi
-	fi
-
-	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
-	then
-		lc_log INFO "Generating javadocs for ${_PRODUCT_VERSION}."
-
-		git reset --hard && git clean -dfx
-
-		git fetch --no-tags upstream "refs/tags/${_PRODUCT_VERSION}:refs/tags/${_PRODUCT_VERSION}"
-
-		git checkout "tags/${_PRODUCT_VERSION}"
-
-		local portal_release_edition_private="true"
-
-		if is_portal_release
-		then
-			portal_release_edition_private="false"
-		fi
-
-		ant \
-			-Ddist.dir="${_BUILD_DIR}/release" \
-			-Dliferay.product.name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}" \
-			-Dlp.version="${_PRODUCT_VERSION}" \
-			-Dpatch.doc="true" \
-			-Dportal.dir="${_PROJECTS_DIR}/liferay-portal-ee" \
-			-Dportal.release.edition.private="${portal_release_edition_private}" \
-			-Dtstamp.value="${_BUILD_TIMESTAMP}" \
-			-file "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
-
-		if [ "${?}" -ne 0 ]
-		then
-			lc_log ERROR "Unable to generate javadocs."
-
-			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		fi
-	fi
-}
-
 function generate_release_properties_file {
 	local tomcat_version=$(grep --extended-regexp --only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${_BUNDLES_DIR}/tomcat/RELEASE-NOTES")
 
@@ -177,7 +123,92 @@ function package_boms {
 	rm --force .touch
 }
 
-function package_common_release {
+function package_release {
+	if is_portal_release
+	then
+		rm --force --recursive "${_BUNDLES_DIR}/routes/default/dxp"
+	fi
+
+	rm --force --recursive "${_BUILD_DIR}/release"
+
+	local package_dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+
+	mkdir --parents "${package_dir}"
+
+	cp --archive "${_BUNDLES_DIR}"/* "${package_dir}"
+
+	echo "${_GIT_SHA}" > "${package_dir}"/.githash
+	echo "${_PRODUCT_VERSION}" > "${package_dir}"/.liferay-version
+
+	touch "${package_dir}"/.liferay-home
+
+	lc_cd "${_BUILD_DIR}/release"
+
+	_package_portal_dependencies
+
+	if [ "$(get_release_output)" == "nightly" ]
+	then
+		_package_nightly_release
+	else
+		_package_common_release
+	fi
+}
+
+function _generate_javadocs {
+	if is_7_4_u_release
+	then
+		lc_log INFO "Javadocs should not be generated for ${_PRODUCT_VERSION}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	if is_quarterly_release
+	then
+		if is_early_product_version_than "2025.q3.0" || [[ "$(get_release_patch_version)" -ne 0 ]]
+		then
+			lc_log INFO "Javadocs should not be generated for ${_PRODUCT_VERSION}."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+	fi
+
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
+	then
+		lc_log INFO "Generating javadocs for ${_PRODUCT_VERSION}."
+
+		git reset --hard && git clean -dfx
+
+		git fetch --no-tags upstream "refs/tags/${_PRODUCT_VERSION}:refs/tags/${_PRODUCT_VERSION}"
+
+		git checkout "tags/${_PRODUCT_VERSION}"
+
+		local portal_release_edition_private="true"
+
+		if is_portal_release
+		then
+			portal_release_edition_private="false"
+		fi
+
+		ant \
+			-Ddist.dir="${_BUILD_DIR}/release" \
+			-Dliferay.product.name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}" \
+			-Dlp.version="${_PRODUCT_VERSION}" \
+			-Dpatch.doc="true" \
+			-Dportal.dir="${_PROJECTS_DIR}/liferay-portal-ee" \
+			-Dportal.release.edition.private="${portal_release_edition_private}" \
+			-Dtstamp.value="${_BUILD_TIMESTAMP}" \
+			-file "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
+
+		if [ "${?}" -ne 0 ]
+		then
+			lc_log ERROR "Unable to generate javadocs."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+	fi
+}
+
+function _package_common_release {
 	7z a "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" liferay-${LIFERAY_RELEASE_PRODUCT_NAME}
 
 	echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" > "${_BUILD_DIR}"/release/.lfrrelease-tomcat-bundle
@@ -217,10 +248,10 @@ function package_common_release {
 
 	rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 
-	generate_javadocs
+	_generate_javadocs
 }
 
-function package_nightly_release {
+function _package_nightly_release {
 	7z a "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-7.4.13.nightly-${_BUILD_TIMESTAMP}.7z" \
 		"liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 
@@ -238,7 +269,7 @@ function package_nightly_release {
 	rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 }
 
-function package_portal_dependencies {
+function _package_portal_dependencies {
 	if is_7_3_release
 	then
 
@@ -309,37 +340,6 @@ function package_portal_dependencies {
 		zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 
 		rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
-	fi
-}
-
-function package_release {
-	if is_portal_release
-	then
-		rm --force --recursive "${_BUNDLES_DIR}/routes/default/dxp"
-	fi
-
-	rm --force --recursive "${_BUILD_DIR}/release"
-
-	local package_dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
-
-	mkdir --parents "${package_dir}"
-
-	cp --archive "${_BUNDLES_DIR}"/* "${package_dir}"
-
-	echo "${_GIT_SHA}" > "${package_dir}"/.githash
-	echo "${_PRODUCT_VERSION}" > "${package_dir}"/.liferay-version
-
-	touch "${package_dir}"/.liferay-home
-
-	lc_cd "${_BUILD_DIR}/release"
-
-	package_portal_dependencies
-
-	if [ "$(get_release_output)" == "nightly" ]
-	then
-		package_nightly_release
-	else
-		package_common_release
 	fi
 }
 

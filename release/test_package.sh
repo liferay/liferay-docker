@@ -141,7 +141,7 @@ function test_package_portal_dependencies {
 
 	lc_cd "${_BUILD_DIR}/release"
 
-	package_portal_dependencies
+	_package_portal_dependencies
 
 	unzip -oq "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
 	unzip -oq "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
@@ -159,7 +159,7 @@ function test_package_portal_dependencies {
 function _test_package_generate_javadocs {
 	_PRODUCT_VERSION="${1}"
 
-	generate_javadocs &> /dev/null
+	_generate_javadocs &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_OK}"
  }
@@ -194,7 +194,7 @@ function _test_package_generate_release_properties_file {
 function _test_package_not_generate_javadocs {
 	_PRODUCT_VERSION="${1}"
 
-	generate_javadocs &> /dev/null
+	_generate_javadocs &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
