@@ -201,7 +201,7 @@ function package_common_release {
 		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/portal/ccpp.jar WEB-INF/lib
 	fi
 
-	zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.war" ./*
+	_package_wars
 
 	lc_cd "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 
@@ -340,5 +340,26 @@ function package_release {
 		package_nightly_release
 	else
 		package_common_release
+	fi
+}
+
+function _package_wars {
+	local tomcat_war_name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.war"
+
+	zip -qr "${_BUILD_DIR}/release/${tomcat_war_name}" ./*
+
+	if (is_quarterly_release && ! is_early_product_version_than "2026.q1.0-lts")
+	then
+		ant \
+			-Dapp.server.shielded-container-lib.portal.dir="${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" \
+			-Dapp.server.type=weblogic \
+			-Dapp.server.weblogic.portal.dir="${_BUNDLES_DIR}/tomcat/webapps/ROOT" \
+			-file "${_PROJECTS_DIR}/liferay-portal-ee/build.xml" update-app-server-scripts
+
+		zip \
+			-q \
+			-r \
+			"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}-weblogic-${_BUILD_TIMESTAMP}.war" ./* \
+			-x "${tomcat_war_name}"
 	fi
 }
