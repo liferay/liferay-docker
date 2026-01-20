@@ -102,7 +102,7 @@ function _scan_docker_images {
 		END
 	)
 
-	local auth_response=$(\
+	local auth_response=$( \
 		curl \
 			"${api_url}/login" \
 			--data "${data}" \
@@ -143,10 +143,10 @@ function _scan_docker_images {
 
 		docker pull "${liferay_docker_image_name}"
 
-		local scan_output=$(\
+		local scan_output=$( \
 			./twistcli images scan \
 				--address "${console_url}" \
-				--docker-address "$(\
+				--docker-address "$( \
 					find \
 						/run/user/$(id --user) \
 						-name docker.sock 2> /dev/null)" \

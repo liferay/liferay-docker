@@ -115,7 +115,7 @@ function generate_release_notes {
 }
 
 function get_pull_request_url {
-	echo "$(\
+	echo "$( \
 		gh pr view liferay-release:"${_TEMP_BRANCH}" \
 			--jq ".url" \
 			--json "url" \

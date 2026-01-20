@@ -522,7 +522,7 @@ function stop_tomcat {
 	local backslash_and_slash_regex="\\\\\/"
 	local slash_regex="\/"
 
-	local tomcat_dir_regex=$(\
+	local tomcat_dir_regex=$( \
 		echo "${_BUNDLES_DIR}/tomcat" | \
 		sed --expression "s/${slash_regex}/${backslash_and_slash_regex}/g")
 

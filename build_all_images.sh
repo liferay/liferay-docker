@@ -509,7 +509,7 @@ function build_zabbix_web_image {
 }
 
 function get_latest_available_zulu_version {
-	local version=$(\
+	local version=$( \
 		curl \
 			--header 'accept: */*' \
 			--location \

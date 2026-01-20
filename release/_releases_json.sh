@@ -113,7 +113,7 @@ function _get_database_schema_version {
 		fi
 	fi
 
-	local database_schema_version=$(\
+	local database_schema_version=$( \
 		grep \
 			--only-matching \
 			--perl-regexp "(?<=new Version\()[^)]+(?=\))" \

@@ -8,7 +8,7 @@ function download_file_from_github {
 	local ref=${3}
 	local repository_name=${4}
 
-	local http_response=$(\
+	local http_response=$( \
 		curl \
 			"https://api.github.com/repos/liferay/${repository_name}/contents/${file_path}?ref=${ref}" \
 			--header "Accept: application/vnd.github.v3.raw" \
@@ -39,7 +39,7 @@ function invoke_github_api_post {
 }
 
 function _invoke_github_api {
-	local curl_response=$(\
+	local curl_response=$( \
 		curl \
 			"https://api.github.com/repos/${1}/${2}" \
 			--data "${3}" \

@@ -35,7 +35,7 @@ function main {
 		exit "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local jira_api_response=$(\
+	local jira_api_response=$( \
 		curl \
 			"https://liferay.atlassian.net/rest/api/3/search?fields=issuekey&jql=labels%20%3D%20release-blocker%20and%20project%20%3D%20%22PUBLIC%20-%20Liferay%20Product%20Delivery%22%20and%20status%20%21%3D%20Closed" \
 			--fail \

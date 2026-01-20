@@ -48,7 +48,7 @@ function main {
 
 	local http_status_code_file=$(mktemp)
 
-	local oauth2_token_response=$(\
+	local oauth2_token_response=$( \
 		curl \
 			--data "client_id=${oauth2_client_id}&client_secret=${oauth2_client_secret}&grant_type=client_credentials" \
 			--header "Content-type: application/x-www-form-urlencoded" \
@@ -96,7 +96,7 @@ function main {
 
 		local http_status_code_file=$(mktemp)
 
-		local put_response=$(\
+		local put_response=$( \
 			curl \
 				--form "file=@/opt/liferay/site-initializer/site-initializer.zip;type=application/zip" \
 				--form "site=${site}" \
@@ -175,7 +175,7 @@ function main {
 
 		local http_status_code_file=$(mktemp)
 
-		local post_response=$(\
+		local post_response=$( \
 			curl \
 				--data @/tmp/liferay_batch_entrypoint.items.json \
 				--header "Accept: application/json" \
@@ -216,7 +216,7 @@ function main {
 		do
 			local http_status_code_file=$(mktemp)
 
-			local get_response=$(\
+			local get_response=$( \
 				curl \
 					--header "accept: application/json" \
 					--header "Authorization: Bearer ${oauth2_access_token}" \

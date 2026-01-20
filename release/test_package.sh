@@ -120,7 +120,7 @@ function test_package_package_wars {
 
 	_package_wars &> /dev/null
 
-	local web_app_specification_version=$(\
+	local web_app_specification_version=$( \
 		unzip -p \
 			"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}-weblogic-${_BUILD_TIMESTAMP}.war" \
 			WEB-INF/web.xml | \

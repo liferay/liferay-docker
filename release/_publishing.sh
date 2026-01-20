@@ -67,7 +67,7 @@ function add_patcher_project_version {
 
 	local patcher_project_version="$(get_patcher_project_version)"
 
-	local add_by_name_response=$(\
+	local add_by_name_response=$( \
 		curl \
 			"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/addByName" \
 			--data-raw "combinedBranch=true&committish=${patcher_project_version}&fixedIssues=&name=${patcher_project_version}&productVersionLabel=$(get_patcher_product_version_label)&repositoryName=liferay-portal-ee&rootPatcherProjectVersionName=$(get_root_patcher_project_version_name)" \
@@ -509,7 +509,7 @@ function _update_bundles_yml {
 			yq --indent 4 --inplace eval "del(.quarterly.\"${latest_quarterly_release_key}\".latest)" "${_BASE_DIR}/bundles.yml"
 			yq --indent 4 --inplace eval ".quarterly.\"${_PRODUCT_VERSION}\".latest = true" "${_BASE_DIR}/bundles.yml"
 		else
-			local previous_quarterly_release_key=$(\
+			local previous_quarterly_release_key=$( \
 				yq ".quarterly" "${_BASE_DIR}/bundles.yml" | \
 				grep "$(get_product_group_version)" | \
 				tail --lines=1)
