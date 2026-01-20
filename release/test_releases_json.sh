@@ -164,19 +164,19 @@ function test_releases_json_tag_recommended_product_versions {
 }
 
 function _get_portal_upgrade_registry {
-    local current_dir="${PWD}"
+	local current_dir="${PWD}"
 
-    lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
+	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
-    git fetch upstream tag "${1}" &> /dev/null
+	git fetch upstream tag "${1}" &> /dev/null
 
-    git show \
+	git show \
 		"${1}:portal-impl/src/com/liferay/portal/upgrade/v7_4_x/PortalUpgradeProcessRegistryImpl.java" > \
-        "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
-    
-    git checkout master &> /dev/null
+		"${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
 
-    lc_cd "${current_dir}"
+	git checkout master &> /dev/null
+
+	lc_cd "${current_dir}"
 }
 
 function _test_releases_json_get_database_schema_versions {
