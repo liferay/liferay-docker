@@ -147,6 +147,36 @@ function _get_liferay_upgrade_folder_version {
 	fi
 }
 
+function _get_supported_product_group_versions {
+	local supported_product_group_versions=$( \
+		ls "${_PROMOTION_DIR}" | \
+		grep \
+			--extended-regexp \
+			--only-matching \
+			"(7+\.[2-4]+(\.q[1-4])?|20[0-9][0-9]\.q[1-4])" | \
+		sort --unique)
+
+	local latest_product_version=$( \
+		echo "${supported_product_group_versions}" | \
+		grep ".q" | \
+		tail --lines=1)
+
+	local quarter=$(get_release_quarter "${latest_product_version}")
+	local year=$(get_release_year "${latest_product_version}")
+
+	if [ "${quarter}" -lt 4 ]
+	then
+		quarter=$((quarter + 1))
+	else
+		quarter=1
+		year=$((year + 1))
+	fi
+
+	supported_product_group_versions+=$'\n'"${year}.q${quarter}"
+
+	echo "${supported_product_group_versions}" | sort
+}
+
 function _merge_json_snippets {
 	if (! jq --slurp add $(ls ./*.json | sort --reverse) > releases.json)
 	then
@@ -316,7 +346,7 @@ function _promote_product_versions {
 			else
 				lc_log INFO "No product version found to promote for ${product_name}-${group_version}."
 			fi
-		done < "${_RELEASE_ROOT_DIR}/supported-${product_name}-versions.txt"
+		done < <(_get_supported_product_group_versions)
 	done
 }
 
