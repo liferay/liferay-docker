@@ -16,6 +16,7 @@ function main {
 
 		if [ -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
 		then
+			test_release_gold_check_supported_versions
 			test_release_gold_check_usage
 			test_release_gold_not_prepare_next_release_branch
 			test_release_gold_set_next_release_date
@@ -58,6 +59,14 @@ function tear_down {
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_RC_BUILD_TIMESTAMP
 	unset _PROJECTS_DIR
+}
+
+function test_release_gold_check_supported_versions {
+	_test_release_gold_check_supported_versions "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_release_gold_check_supported_versions "2025.q5.0" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	_test_release_gold_check_supported_versions "7.0.6-ga7" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	_test_release_gold_check_supported_versions "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_release_gold_check_supported_versions "7.4.3.125-ga125" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
 function test_release_gold_check_usage {
@@ -116,6 +125,14 @@ function test_release_gold_set_next_release_version_display_name {
 
 	_test_release_gold_set_next_release_version_display_name "2024.q1" "13" "2024.Q1.13"
 	_test_release_gold_set_next_release_version_display_name "2025.q1" "2 LTS" "2025.Q1.2 LTS"
+}
+
+function _test_release_gold_check_supported_versions {
+	_PRODUCT_VERSION="${1}"
+
+	check_supported_versions &> /dev/null
+
+	assert_equals "${?}" "${2}"
 }
 
 function _test_release_gold_not_reference_new_releases {
