@@ -21,11 +21,11 @@ function add_property {
 function check_supported_versions {
 	local supported_version="$(get_product_group_version)"
 
-	if [ -z $(grep "${supported_version}" "${_RELEASE_ROOT_DIR}"/supported-"${LIFERAY_RELEASE_PRODUCT_NAME}"-versions.txt) ]
+	if [[ ! "${supported_version}" =~ ^(7\.[2-4]|20[0-9][0-9]\.q[1-4])$ ]]
 	then
-		lc_log ERROR "Unable to find ${supported_version} in supported-${LIFERAY_RELEASE_PRODUCT_NAME}-versions.txt."
+		lc_log ERROR "${supported_version} is not a supported group version."
 
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
@@ -81,7 +81,7 @@ function main {
 
 	check_usage
 
-	check_supported_versions
+	lc_time_run check_supported_versions
 
 	init_gcs
 
