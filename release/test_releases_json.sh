@@ -16,6 +16,7 @@ function main {
 		test_releases_json_add_major_versions
 		test_releases_json_get_database_schema_versions
 		test_releases_json_get_liferay_upgrade_folder_version
+		test_releases_json_get_supported_product_group_versions
 		test_releases_json_merge_json_snippets
 		test_releases_json_not_process_new_product
 		test_releases_json_process_new_product
@@ -37,6 +38,19 @@ function set_up {
 
 	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
 
+	mkdir --parents "./test_release_json_dir"
+
+	for file_name in \
+		"2020-05-17-dxp-7.1.10.6" \
+		"2022-05-17-dxp-7.2.10.6" \
+		"2024-05-17-dxp-7.4.10.6" \
+		"2025-11-08-dxp-2025.q1.2" \
+		"2026-11-08-dxp-2026.q3.5" \
+		"2026-12-08-dxp-2026.q4.0"
+	do
+		touch "./test_release_json_dir/${file_name}.json"
+	done
+
 	_process_products &> /dev/null
 }
 
@@ -49,8 +63,9 @@ function tear_down {
 	unset _PROMOTION_DIR
 	unset _RELEASE_ROOT_DIR
 
-	rm ./*.json
+	rm --force --recursive ./test_release_json_dir
 	rm --force ./PortalUpgradeProcessRegistryImpl.java
+	rm ./*.json
 }
 
 function test_releases_json_add_database_schema_versions {
@@ -90,6 +105,16 @@ function test_releases_json_get_liferay_upgrade_folder_version {
 	_test_releases_json_get_liferay_upgrade_folder_version "7.2.10.8" "v7_2_x"
 	_test_releases_json_get_liferay_upgrade_folder_version "7.3.10-u36" "v7_3_x"
 	_test_releases_json_get_liferay_upgrade_folder_version "7.4.3.132-ga132" "v7_4_x"
+}
+
+function test_releases_json_get_supported_product_group_versions {
+	_PROMOTION_DIR="./test_release_json_dir"
+
+	_test_releases_json_get_supported_product_group_versions "" "2025.q1\n2026.q3\n2026.q4\n2027.q1\n7.2\n7.4"
+	_test_releases_json_get_supported_product_group_versions "2022-05-17-dxp-7.2.10.6.json" "2025.q1\n2026.q3\n2026.q4\n2027.q1\n7.4"
+	_test_releases_json_get_supported_product_group_versions "2026-12-08-dxp-2026.q4.0.json" "2025.q1\n2026.q3\n2026.q4\n7.4"
+
+	_PROMOTION_DIR="${_RELEASE_ROOT_DIR}"
 }
 
 function test_releases_json_merge_json_snippets {
@@ -194,6 +219,14 @@ function _test_releases_json_get_liferay_upgrade_folder_version {
 	assert_equals \
 		"$(_get_liferay_upgrade_folder_version "${1}")" \
 		"${2}"
+}
+
+function _test_releases_json_get_supported_product_group_versions {
+	rm --force "${_RELEASE_ROOT_DIR}/test_release_json_dir/${1}" 2> /dev/null
+
+	assert_equals \
+		"$(_get_supported_product_group_versions)" \
+		"$(echo -e "${2}")"
 }
 
 function _test_releases_json_tag_jakarta_product_versions {
