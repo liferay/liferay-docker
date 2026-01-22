@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ./_common.sh
+source ./_env_common.sh
 
 function check_usage {
 	if [ ! -n "${LIFERAY_DOCKER_IMAGE_ID}" ] || [ ! -n "${LIFERAY_DOCKER_LOGS_DIR}" ]
@@ -159,7 +160,7 @@ function start_container {
 
 	if [ -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
-		if [[ "${LIFERAY_DOCKER_NETWORK_NAME}" == release-1* ]]
+		if is_ci_slave "${LIFERAY_DOCKER_NETWORK_NAME}"
 		then
 			CONTAINER_HOSTNAME=portal-container
 			CONTAINER_HTTP_PORT=8080
@@ -169,7 +170,7 @@ function start_container {
 			mv "${PWD}/${TEST_DIR}" "/opt/dev/projects/github"
 
 			parameters="--env=LIFERAY_DOCKER_TEST_MODE=true --hostname=${CONTAINER_HOSTNAME} --name=${CONTAINER_HOSTNAME} --network=${LIFERAY_DOCKER_NETWORK_NAME} --publish=8081:8080 --volume=/data/${LIFERAY_DOCKER_NETWORK_NAME}/liferay/${TEST_DIR}/mnt:/mnt:rw --volume=/data/${LIFERAY_DOCKER_NETWORK_NAME}/liferay/portal-ext.properties:/opt/liferay/portal-ext.properties"
-		elif [[ "${LIFERAY_DOCKER_NETWORK_NAME}" == release-slave* ]]
+		elif is_release_slave "${LIFERAY_DOCKER_NETWORK_NAME}"
 		then
 			CONTAINER_HOSTNAME=$(docker network inspect bridge --format='{{(index .IPAM.Config 0).Gateway}}')
 			CONTAINER_HTTP_PORT=8081
