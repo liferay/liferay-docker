@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ./_env_common.sh
+
 function assert_equals {
 	local arguments=()
 
@@ -60,7 +62,7 @@ function assert_equals {
 	then
 		_display_test_initial_message
 
-		if _is_test_server
+		if is_ci_slave
 		then
 			echo -e "${FUNCNAME[1]} SUCCESS :white_check_mark:\n"
 
@@ -72,7 +74,7 @@ function assert_equals {
 	then
 		_display_test_initial_message
 
-		if _is_test_server
+		if is_ci_slave
 		then
 			echo -e "${FUNCNAME[1]} FAILED :x:\n"
 		else
@@ -107,15 +109,6 @@ function _display_test_initial_message {
 	then
 		echo -e "\n### Running tests from $(echo ${BASH_SOURCE[2]} | sed --regexp-extended "s/\.\///g") ###\n"
 	fi
-}
-
-function _is_test_server {
-	if [[ "$(hostname)" =~ ^test-[0-9]+-[0-9]+(-[0-9]+)? ]]
-	then
-		return 0
-	fi
-
-	return 1
 }
 
 main

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ./_common.sh
+source ./_env_common.sh
 source ./_liferay_common.sh
 source ./_release_common.sh
 
@@ -657,7 +658,7 @@ function main {
 		BUILD_ALL_IMAGES_PUSH="push-all"
 
 		if [ "$(git config --global github.user)" == "brianchandotcom" ] ||
-		   ([ "$(git config --global user.name)" == "liferay-release" ] && [[ "$(hostname)" =~ ^release-slave-[1-4]$ ]])
+		   ([ "$(git config --global user.name)" == "liferay-release" ] && is_release_slave)
 		then
 			./release_notes.sh commit
 
