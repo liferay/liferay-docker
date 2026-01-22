@@ -9,12 +9,19 @@ function main {
 
 	if [ "${#}" -eq 1 ]
 	then
-		"${1}"
+		if [ "${1}" == "test_build_all_images_is_container_healthy" ]
+		then
+			"${1}"
+		else
+			test_build_all_images_is_container_healthy
+
+			"${1}"
+		fi
 	else
+		test_build_all_images_is_container_healthy
+
 		test_build_all_images_get_latest_available_zulu_version
 		test_build_all_images_has_slim_build_criteria
-		test_build_all_images_is_container_healthy "${_LATEST_RELEASE}"
-		test_build_all_images_is_container_healthy "7.3.10-u36"
 		test_build_all_images_latest_is_not_slim "${_LATEST_RELEASE}"
 	fi
 
@@ -23,33 +30,22 @@ function main {
 
 function set_up {
 	export _LATEST_RELEASE=$(yq eval ".quarterly | keys | .[-1]" "${PWD}/bundles.yml")
-
-	LIFERAY_DOCKER_IMAGE_FILTER="${_LATEST_RELEASE}" LIFERAY_DOCKER_SLIM="true" ./build_all_images.sh &> /dev/null
-	LIFERAY_DOCKER_IMAGE_FILTER="7.3.10-u36" ./build_all_images.sh &> /dev/null
 }
 
 function tear_down {
-	docker stop "liferay-container-${_LATEST_RELEASE}" &> /dev/null
-
 	docker rm "liferay-container-${_LATEST_RELEASE}" &> /dev/null
-
-	docker stop "liferay-container-7.3.10-u36" &> /dev/null
-
 	docker rm "liferay-container-7.3.10-u36" &> /dev/null
-
 	docker rmi $(docker images --filter "dangling=true" --no-trunc) &> /dev/null
-	docker rmi --force $(docker images "liferay/dxp:${_LATEST_RELEASE}-slim") &> /dev/null
 	docker rmi --force "liferay/jdk11-jdk8:latest" &> /dev/null
 	docker rmi --force "liferay/jdk11:latest" &> /dev/null
 	docker rmi --force "liferay/jdk21-jdk11-jdk8:latest" &> /dev/null
 	docker rmi --force "liferay/jdk21:latest" &> /dev/null
+	docker rmi --force $(docker images "liferay/dxp:${_LATEST_RELEASE}-slim") &> /dev/null
 
-	for file in $(find $(find . -name "logs-20*" -type d) -name "build*image_id.txt" -type f)
+	for file in $(find $(find . -name "logs-*" -type d) -name "build*image_id.txt" -type f)
 	do
 		docker rmi --force $(cat "${file}" | cut --delimiter=':' --fields=2) &> /dev/null
 	done
-
-	rm --force --recursive logs-20*
 
 	unset _LATEST_RELEASE
 }
@@ -73,9 +69,8 @@ function test_build_all_images_has_slim_build_criteria {
 }
 
 function test_build_all_images_is_container_healthy {
-	assert_equals \
-		$(_run_container "${1}") \
-		"\"healthy\""
+	_test_build_all_images_is_container_healthy "${_LATEST_RELEASE}" "true"
+	_test_build_all_images_is_container_healthy "7.3.10-u36" "false"
 }
 
 function test_build_all_images_latest_is_not_slim {
@@ -84,35 +79,6 @@ function test_build_all_images_latest_is_not_slim {
 		"liferay/dxp:${1}" \
 		$(docker images --filter "reference=liferay/dxp:${1}" --format "{{.ID}}") \
 		$(docker images --filter "reference=liferay/dxp:latest" --format "{{.ID}}")
-}
-
-function _run_container {
-	if [ -n "$(docker images -q liferay/dxp:${1})" ]
-	then
-		local container_id=$(docker run --detach --name "liferay-container-${1}" "liferay/dxp:${1}")
-	else
-		echo "failed"
-
-		return
-	fi
-
-	for counter in {1..200}
-	do
-		local health_status=$(docker inspect --format="{{json .State.Health.Status}}" "${container_id}")
-		local license_status=$(docker logs ${container_id} 2> /dev/null | grep --count "License registered for DXP Development")
-		local portal_start=$(docker logs ${container_id} 2> /dev/null | grep --count "Starting Liferay Portal")
-
-		if [ "${health_status}" == "\"healthy\"" ] && ([ "${license_status}" -gt 0 ] || [ "${portal_start}" -gt 0 ])
-		then
-			echo "${health_status}"
-
-			return
-		fi
-
-		sleep 3
-	done
-
-	echo "failed"
 }
 
 function _test_build_all_images_get_latest_available_zulu_version {
@@ -133,6 +99,16 @@ function _test_build_all_images_has_slim_build_criteria {
 	has_slim_build_criteria "${1}"
 
 	assert_equals "${?}" "${2}"
+}
+
+function _test_build_all_images_is_container_healthy {
+	LIFERAY_DOCKER_IMAGE_FILTER="${1}" LIFERAY_DOCKER_SLIM="${2}" ./build_all_images.sh &> /dev/null
+
+	assert_equals \
+		"$(grep --count "\[test_health_status\] SUCCESS" logs-*/"${1}".log)" \
+		"1"
+
+	rm --force --recursive logs-*
 }
 
 main "${@}"
