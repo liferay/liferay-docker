@@ -369,10 +369,6 @@ function prepare_temp_directory {
 		rm --force --recursive "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/temp/safeToDelete.tmp"
 		rm --force --recursive "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/webapps"
 
-		cp --recursive "${TEMP_DIR}/liferay/tomcat-temp/LICENSE" "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/LICENSE"
-		cp --recursive "${TEMP_DIR}/liferay/tomcat-temp/NOTICE" "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/NOTICE"
-		cp --recursive "${TEMP_DIR}/liferay/tomcat-temp/RELEASE-NOTES" "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/RELEASE-NOTES"
-		cp --recursive "${TEMP_DIR}/liferay/tomcat-temp/bin/catalina-tasks.xml" "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/bin/catalina-tasks.xml"
 		cp --recursive "${TEMP_DIR}/liferay/tomcat-temp/bin/setenv.bat" "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/bin/setenv.bat"
 		cp --recursive "${TEMP_DIR}/liferay/tomcat-temp/bin/setenv.sh" "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/bin/setenv.sh"
 		cp --recursive "${TEMP_DIR}/liferay/tomcat-temp/conf" "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}/"
