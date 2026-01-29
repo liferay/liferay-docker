@@ -153,7 +153,7 @@ function _get_supported_product_group_versions {
 		grep \
 			--extended-regexp \
 			--only-matching \
-			"(7+\.[2-4]+(\.q[1-4])?|20[0-9][0-9]\.q[1-4])" | \
+			"(7\.[2-4]|20[0-9][0-9]\.q[1-4])" | \
 		sort --unique)
 
 	local latest_product_version=$( \
