@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./_env_common.sh
+source "$(dirname "${BASH_SOURCE[0]}")/_env_common.sh"
 
 function assert_equals {
 	local arguments=()
