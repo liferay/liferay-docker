@@ -1,6 +1,7 @@
 function customize_aliases {
 	alias cdt="cd ~/dev/projects/liferay-portal"
 	alias g="git"
+	alias gcprel="git_cherry_pick_rel ${@}"
 	alias gfpr="git_fetch_pr ${1}"
 	alias gpull="git_pull"
 	alias la="ls -la --group-directories-first"
@@ -53,6 +54,22 @@ function execute_gradlew {
 	else
 		echo "Unable to find locate Gradle wrapper."
 	fi
+}
+
+function git_cherry_pick_rel {
+	for hash in $(git rev-list ${1}..${2} --grep="prep next" --reverse)
+	do
+		git cherry-pick ${hash}
+
+		if [ $? == 1 ]
+		then
+			git cherry-pick --skip
+
+			continue
+		fi
+
+		git commit --amend --no-edit -m "$(git log -1 --pretty=%B | sed 's/artifact:ignore //')"
+	done
 }
 
 function git_fetch_pr {
