@@ -1,6 +1,7 @@
 function customize_aliases {
 	alias cdt="cd ~/dev/projects/liferay-portal"
 	alias g="git"
+	alias gfpr="git_fetch_pr ${1}"
 	alias gpull="git_pull"
 	alias la="ls -la --group-directories-first"
 }
@@ -51,6 +52,18 @@ function execute_gradlew {
 		../../../../../../../../../gradlew ${@}
 	else
 		echo "Unable to find locate Gradle wrapper."
+	fi
+}
+
+function git_fetch_pr {
+	if [[ "${1}" != */github\.com/* ]] ||
+	   [[ "${1}" != */pull/* ]]
+	then
+		echo "URL ${1} does not point to a GitHub pull request."
+	else
+		IFS='/' read -r -a github_pr_parts <<< "${1}"
+
+		git fetch --no-tags https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/${github_pr_parts[3]}/${github_pr_parts[4]}.git pull/${github_pr_parts[6]}/head:pr-${github_pr_parts[6]}
 	fi
 }
 
