@@ -20,6 +20,14 @@ function main {
 			-type d \
 			-exec rm --force --recursive {} \; &> /dev/null
 
+		find /tmp \
+			-mindepth 1 \
+			-mmin +180 \
+			-regextype posix-extended \
+			-regex ".*/(dart-sass|yarn).*" \
+			-type d \
+			-exec rm --force --recursive {} \; &> /dev/null
+
 		rm --force --recursive downloads
 		rm --force --recursive release/release-data
 	elif [ "${current_job}" == "source-code-sharing" ]
