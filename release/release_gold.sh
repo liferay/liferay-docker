@@ -131,7 +131,7 @@ function prepare_next_release_branch {
 	local latest_quarterly_product_version=$( \
 		jq --raw-output "[.[] | \
 			select(.productGroupVersion == \"${product_group_version}\" and .promoted == \"true\") | \
-			.targetPlatformVersion] | last" ${_PROMOTION_DIR}/*releases.json | \
+			.targetPlatformVersion] | last" "${_PROMOTION_DIR}/releases.json" | \
 			tr -d '[:space:]')
 
 	if [ "$(get_product_version_without_lts_suffix)" != "${latest_quarterly_product_version}" ]
