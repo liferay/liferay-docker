@@ -31,6 +31,7 @@ function main {
 		test_release_common_is_early_product_version_than
 		test_release_common_is_ga_release
 		test_release_common_is_later_product_version_than
+		test_release_common_is_latest_product_version_by_releases_json
 		test_release_common_is_lts_release
 		test_release_common_is_nightly_release
 		test_release_common_is_portal_release
@@ -45,13 +46,18 @@ function main {
 function set_up {
 	common_set_up
 
+	export _PROMOTION_DIR="${PWD}/release/test-dependencies/expected"
 	export _RELEASE_ROOT_DIR="${PWD}/release"
 }
 
 function tear_down {
 	unset ACTUAL_PRODUCT_VERSION
+	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_TEST_MODE
 	unset _PRODUCT_VERSION
+	unset _PROMOTION_DIR
+
+	git restore .
 }
 
 function test_release_common_get_due_date {
@@ -229,6 +235,15 @@ function test_release_common_is_later_product_version_than {
 	_test_release_common_is_later_product_version_than "7.4.3.132-ga132" "7.4.3.120-ga120" "0"
 }
 
+function test_release_common_is_latest_product_version_by_releases_json {
+	_test_release_common_is_latest_product_version_by_releases_json "dxp" "2025.q2.7" "1"
+	_test_release_common_is_latest_product_version_by_releases_json "dxp" "2025.q2.8" "0"
+	_test_release_common_is_latest_product_version_by_releases_json "dxp" "7.4.13-u111" "1"
+	_test_release_common_is_latest_product_version_by_releases_json "dxp" "7.4.13-u112" "0"
+	_test_release_common_is_latest_product_version_by_releases_json "portal" "7.4.3.129-ga129" "1"
+	_test_release_common_is_latest_product_version_by_releases_json "portal" "7.4.3.132-ga132" "0"
+}
+
 function test_release_common_is_lts_release {
 	_test_release_common_is_lts_release "2023.q4.3" "1"
 	_test_release_common_is_lts_release "2024.q3.7" "1"
@@ -398,6 +413,15 @@ function _test_release_common_is_later_product_version_than {
 	_PRODUCT_VERSION="${1}"
 
 	is_later_product_version_than "${2}"
+
+	assert_equals "${?}" "${3}"
+}
+
+function _test_release_common_is_latest_product_version_by_releases_json {
+	LIFERAY_RELEASE_PRODUCT_NAME="${1}"
+	_PRODUCT_VERSION="${2}"
+
+	is_latest_product_version_by_releases_json "${_PROMOTION_DIR}"
 
 	assert_equals "${?}" "${3}"
 }
