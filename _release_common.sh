@@ -173,6 +173,17 @@ function get_release_year {
 	echo "$(_get_product_version "${1}")" | cut --delimiter='.' --fields=1
 }
 
+function get_target_platform_version {
+	local product_version=$(_get_product_version "${1}")
+
+	if is_quarterly_release "${product_version}"
+	then
+		echo "${product_version}" | sed "s/-lts//"
+	else
+		echo "${product_version}" | sed "s/-u/.u/" | cut --delimiter='-' --fields=1
+	fi	
+}
+
 function has_ssh_connection {
 	ssh "root@${1}" "exit" &> /dev/null
 
