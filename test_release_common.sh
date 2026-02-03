@@ -20,6 +20,7 @@ function main {
 		test_release_common_get_release_version
 		test_release_common_get_release_version_trivial
 		test_release_common_get_release_year
+		test_release_common_get_target_platform_version
 		test_release_common_is_7_3_ga_release
 		test_release_common_is_7_3_release
 		test_release_common_is_7_3_u_release
@@ -125,6 +126,13 @@ function test_release_common_get_release_year {
 	_PRODUCT_VERSION="2025.q1.0-lts"
 
 	assert_equals "$(get_release_year)" "2025"
+}
+
+function test_release_common_get_target_platform_version {
+	_test_release_common_get_target_platform_version "2024.q4.2" "2024.q4.2"
+	_test_release_common_get_target_platform_version "2025.q1.0-lts" "2025.q1.0"
+	_test_release_common_get_target_platform_version "7.4.13-u75" "7.4.13.u75"
+	_test_release_common_get_target_platform_version "7.4.3.129-ga129" "7.4.3.129"
 }
 
 function test_release_common_is_7_3_ga_release {
@@ -312,6 +320,12 @@ function _test_release_common_get_release_version_trivial {
 	_PRODUCT_VERSION="${1}"
 
 	assert_equals "$(get_release_version_trivial)" "${2}"
+}
+
+function _test_release_common_get_target_platform_version {
+	_PRODUCT_VERSION="${1}"
+
+	assert_equals "$(get_target_platform_version)" "${2}"
 }
 
 function _test_release_common_is_7_3_ga_release {
