@@ -36,22 +36,13 @@ function generate_release_properties_file {
 	local bundle_file_name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z"
 
 	local product_version="${_PRODUCT_VERSION^^}"
-	local target_platform_version="${_PRODUCT_VERSION}"
 
 	if is_dxp_release
 	then
 		product_version="DXP ${product_version}"
-		target_platform_version=$(echo "${target_platform_version}" | sed --regexp-extended "s/-u/.u/")
-
-		if is_lts_release
-		then
-			target_platform_version=$(echo "${target_platform_version}" | sed --regexp-extended "s/-lts//g")
-		fi
-
 	elif is_portal_release
 	then
 		product_version="Portal ${product_version}"
-		target_platform_version=$(echo "${_PRODUCT_VERSION}" | cut --delimiter='-' --fields=1)
 	fi
 
 	product_version="${product_version/-/ }"
@@ -68,7 +59,7 @@ function generate_release_properties_file {
 		echo "liferay.docker.tags=${_PRODUCT_VERSION}"
 		echo "liferay.product.version=${product_version}"
 		echo "release.date=$(date +"%Y-%m-%d")"
-		echo "target.platform.version=${target_platform_version}"
+		echo "target.platform.version=$(get_target_platform_version)"
 	) > release.properties
 }
 
