@@ -26,6 +26,7 @@ function check_liferay_marketplace_products_compatibility {
 		declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
 			["adyen"]="f05ab2d6-1d54-c72d-988a-91fcd5669ef3"
 			["drools"]="15099181"
+			["hubspot"]="53d5501f-abd7-b579-af7f-56b8b15966d0"
 			["liferaycommerceminium4globalcss"]="ebcf98b3-9844-b783-757a-579944b18b00"
 			["liferaypaypalbatch"]="a1946869-212f-0793-d703-b623d0f149a6"
 			["liferayupscommerceshippingengine"]="f1cb4b5e-fbdd-7f70-df5d-9f1a736784b2"
