@@ -658,7 +658,8 @@ function main {
 		BUILD_ALL_IMAGES_PUSH="push-all"
 
 		if [ "$(git config --global github.user)" == "brianchandotcom" ] ||
-		   ([ "$(git config --global user.name)" == "liferay-release" ] && is_release_slave)
+		   ([ "$(git config --global user.name)" == "liferay-release" ] && 
+		   [ "$(get_environment_type)" == "ci_slave" ])
 		then
 			./release_notes.sh commit
 

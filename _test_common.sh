@@ -62,7 +62,7 @@ function assert_equals {
 	then
 		_display_test_initial_message
 
-		if is_ci_slave
+		if [ "$(get_environment_type)" == "ci_slave" ]
 		then
 			echo -e "${FUNCNAME[1]} SUCCESS :white_check_mark:\n"
 
@@ -74,7 +74,7 @@ function assert_equals {
 	then
 		_display_test_initial_message
 
-		if is_ci_slave
+		if [ "$(get_environment_type)" == "ci_slave" ]
 		then
 			echo -e "${FUNCNAME[1]} FAILED :x:\n"
 		else
