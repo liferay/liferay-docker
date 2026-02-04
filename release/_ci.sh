@@ -8,7 +8,7 @@ function trigger_ci_test_suite {
 
 	if [ "${TRIGGER_CI_TEST_SUITE}" = "true" ]
 	then
-		local release_url="https://releases.liferay.com/dxp/release-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
+		local release_url="https://storage.cloud.google.com/liferay-releases-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 
 		for ci_slave_number in {41..48}
 		do
