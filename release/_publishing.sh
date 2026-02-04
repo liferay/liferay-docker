@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ../_env_common.sh
 source ../_release_common.sh
 source ./_git.sh
 source ./_releases_json.sh
@@ -150,8 +151,16 @@ function get_root_patcher_project_version_name {
 }
 
 function init_gcs {
-	if [ ! -n "${LIFERAY_RELEASE_GCS_TOKEN}" ]
+	if [ -z "${LIFERAY_RELEASE_GCS_TOKEN}" ]
 	then
+		if [ "$(get_environment_type)" == "local" ] &&
+		   [ "${LIFERAY_RELEASE_UPLOAD}" == "true" ]
+		then
+			lc_log ERROR "The LIFERAY_RELEASE_GCS_TOKEN variable is required for local environments."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_GCS_TOKEN."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
