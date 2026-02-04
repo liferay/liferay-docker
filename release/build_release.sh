@@ -142,6 +142,8 @@ function main {
 
 	lc_time_run set_product_version
 
+	lc_time_run set_general_availability_date
+
 	lc_time_run set_jdk_version_and_parameters
 
 	if [ "$(get_release_output)" == "nightly" ] ||
@@ -270,6 +272,7 @@ function print_help {
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_RELEASE_GCS_TOKEN (optional): *.json file containing the token to authenticate with Google Cloud Storage"
+	echo "    LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE: General availability date of the release. Optional for internal bi-weekly and patch releases."
 	echo "    LIFERAY_RELEASE_GIT_REF: Git SHA to build from"
 	echo "    LIFERAY_RELEASE_HOTFIX_BUILD_ID (optional): Build ID on Patcher"
 	echo "    LIFERAY_RELEASE_HOTFIX_FIXED_ISSUES (optional): Comma delimited list of fixed issues in the hotfix"
@@ -302,6 +305,18 @@ function print_variables {
 
 	echo "${environment}./build_release.sh"
 	echo ""
+}
+
+function set_general_availability_date {
+	if [ -z "${LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE}" ] && is_first_quarterly_release
+	then
+		print_help
+	fi
+
+	if [ -z "${LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE}" ]
+	then
+		LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE=$(date +%Y-%m-%d)
+	fi
 }
 
 main "${@}"
