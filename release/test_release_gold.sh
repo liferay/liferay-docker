@@ -18,6 +18,7 @@ function main {
 		then
 			test_release_gold_check_supported_versions
 			test_release_gold_check_usage
+			test_release_gold_is_latest_product_version_by_releases_json
 			test_release_gold_not_prepare_next_release_branch
 			test_release_gold_set_next_release_date
 			test_release_gold_set_next_release_version_display_name
@@ -35,6 +36,7 @@ function set_up {
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export LIFERAY_RELEASE_RC_BUILD_TIMESTAMP="1695892964"
 	export _PROJECTS_DIR="${PWD}"/../..
+	export _PROMOTION_DIR="${PWD}/test-dependencies/expected"
 
 	cp test-dependencies/actual/releases.json .
 }
@@ -59,6 +61,7 @@ function tear_down {
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_RC_BUILD_TIMESTAMP
 	unset _PROJECTS_DIR
+	unset _PROMOTION_DIR
 }
 
 function test_release_gold_check_supported_versions {
@@ -71,6 +74,15 @@ function test_release_gold_check_supported_versions {
 
 function test_release_gold_check_usage {
 	assert_equals "$(check_usage)" "$(cat test-dependencies/expected/test_release_gold_check_usage_output.txt)"
+}
+
+function test_release_gold_is_latest_product_version_by_releases_json {
+	_test_release_gold_is_latest_product_version_by_releases_json "dxp" "2025.q2.7" "1"
+	_test_release_gold_is_latest_product_version_by_releases_json "dxp" "2025.q2.8" "0"
+	_test_release_gold_is_latest_product_version_by_releases_json "dxp" "7.4.13-u111" "1"
+	_test_release_gold_is_latest_product_version_by_releases_json "dxp" "7.4.13-u112" "0"
+	_test_release_gold_is_latest_product_version_by_releases_json "portal" "7.4.3.129-ga129" "1"
+	_test_release_gold_is_latest_product_version_by_releases_json "portal" "7.4.3.132-ga132" "0"
 }
 
 function test_release_gold_not_prepare_next_release_branch {
@@ -133,6 +145,15 @@ function _test_release_gold_check_supported_versions {
 	check_supported_versions &> /dev/null
 
 	assert_equals "${?}" "${2}"
+}
+
+function _test_release_gold_is_latest_product_version_by_releases_json {
+	LIFERAY_RELEASE_PRODUCT_NAME="${1}"
+	_PRODUCT_VERSION="${2}"
+
+	is_latest_product_version_by_releases_json "${_PROMOTION_DIR}"
+
+	assert_equals "${?}" "${3}"
 }
 
 function _test_release_gold_not_reference_new_releases {

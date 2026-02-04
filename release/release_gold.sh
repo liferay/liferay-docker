@@ -73,6 +73,21 @@ function check_usage {
 	LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
 }
 
+function is_latest_product_version_by_releases_json {
+	local latest_product_version=$( \
+		jq --raw-output "[.[] | \
+			select(.product == \"${LIFERAY_RELEASE_PRODUCT_NAME}\" and .productGroupVersion == \"$(get_product_group_version)\" and .promoted == \"true\") | \
+			.targetPlatformVersion] | last" "${1}/releases.json" | \
+		tr -d '[:space:]')
+
+	if [ "$(get_target_platform_version)" == "${latest_product_version}" ]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function main {
 	if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
 	then
