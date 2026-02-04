@@ -32,23 +32,12 @@ function report_jenkins_url {
 		echo "}"
 	) > "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}"
 
-	if (has_ssh_connection "test-3-1")
-	then
-		echo "Pushing patcher status to test-3-1."
-
-		rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}/patcher-status/" test-3-1::patcher/
-
-		ssh test-3-1 "chown --recursive 501:501 /mnt/mfs-hdd1-172.16.168/patcher"
-	else
-		echo "Unable to connect to test-3-1."
-
-		cp \
-			--preserve \
-			--recursive \
-			--verbose \
-			"${_BUILD_DIR}/patcher-status/production/" \
-			/mnt/patcher-shared/patcher/
-	fi
+	cp \
+		--preserve \
+		--recursive \
+		--verbose \
+		"${_BUILD_DIR}/patcher-status/production/" \
+		/mnt/patcher-shared/patcher/
 }
 
 function report_patcher_status {
@@ -78,21 +67,10 @@ function report_patcher_status {
 
 	cat "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}"
 
-	if (has_ssh_connection "test-3-1")
-	then
-		echo "Pushing patcher status to test-3-1."
-
-		rsync -Dlprtvz --chown=501:501 --no-perms "${_BUILD_DIR}/patcher-status/" test-3-1::patcher/
-
-		ssh test-3-1 "chown --recursive 501:501 /mnt/mfs-hdd1-172.16.168/patcher"
-	else
-		echo "Unable to connect to test-3-1."
-
-		cp \
-			--preserve \
-			--recursive \
-			--verbose \
-			"${_BUILD_DIR}/patcher-status/production/" \
-			/mnt/patcher-shared/patcher/
-	fi
+	cp \
+		--preserve \
+		--recursive \
+		--verbose \
+		"${_BUILD_DIR}/patcher-status/production/" \
+		/mnt/patcher-shared/patcher/
 }

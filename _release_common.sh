@@ -184,17 +184,6 @@ function get_target_platform_version {
 	fi	
 }
 
-function has_ssh_connection {
-	ssh "root@${1}" "exit" &> /dev/null
-
-	if [ "${?}" -eq 0 ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
-	fi
-
-	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-}
-
 function is_7_3_ga_release {
 	if [[ "$(_get_product_version "${1}")" == 7.3.*-ga* ]]
 	then

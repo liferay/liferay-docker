@@ -83,20 +83,6 @@ function promote_boms {
 }
 
 function promote_packages {
-	ssh root@lrdcom-vm-1 "exit" &> /dev/null
-
-	if [ "${?}" -eq 0 ]
-	then
-		if (ssh root@lrdcom-vm-1 ls --directory "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}" | grep --quiet "${_PRODUCT_VERSION}" &>/dev/null)
-		then
-			lc_log INFO "Release was already published."
-
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-		fi
-
-		ssh root@lrdcom-vm-1 cp --archive "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/release-candidates/${_PRODUCT_VERSION}-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}" "/www/releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
-	fi
-
 	if (gsutil ls "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}" | grep "${_PRODUCT_VERSION}")
 	then
 		lc_log INFO "Skipping the upload of ${_PRODUCT_VERSION} to GCP because it already exists."
