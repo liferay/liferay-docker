@@ -262,6 +262,8 @@ function main {
 		lc_time_run report_patcher_status
 	fi
 
+	lc_time_run clear_gcs_auth
+
 	local end_time=$(date +%s)
 
 	local seconds=$((end_time - _BUILD_TIMESTAMP))

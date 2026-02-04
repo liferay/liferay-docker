@@ -114,6 +114,22 @@ function check_url {
 	fi
 }
 
+function clear_gcs_auth {
+	if [ "$(get_environment_type)" == "local" ] &&
+	   [ "${LIFERAY_RELEASE_UPLOAD}" == "true" ]
+	then
+		gcloud auth revoke
+
+		lc_log INFO "GCS authentication cleared."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	fi
+
+	lc_log INFO "Skipping GCS authentication cleanup."
+
+	return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+}
+
 function get_patcher_product_version_label {
 	if is_7_3_release
 	then
@@ -165,6 +181,8 @@ function init_gcs {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
+
+	gcloud auth revoke
 
 	gcloud auth activate-service-account --key-file "${LIFERAY_RELEASE_GCS_TOKEN}"
 }
