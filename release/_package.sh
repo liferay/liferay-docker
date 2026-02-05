@@ -24,7 +24,7 @@ function generate_checksum_files {
 function generate_release_properties_file {
 	local tomcat_version=$(grep --extended-regexp --only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${_BUNDLES_DIR}/tomcat/RELEASE-NOTES")
 
-	tomcat_version="${tomcat_version/Apache Tomcat Version /}"
+	tomcat_version=$(echo "${tomcat_version}" | sed "s/Apache Tomcat Version //")
 
 	if [ -z "${tomcat_version}" ]
 	then
@@ -35,7 +35,7 @@ function generate_release_properties_file {
 
 	local bundle_file_name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z"
 
-	local product_version="${_PRODUCT_VERSION^^}"
+	local product_version=$(echo "${_PRODUCT_VERSION}" | tr "[:lower:]" "[:upper:]")
 
 	if is_dxp_release
 	then
@@ -45,7 +45,7 @@ function generate_release_properties_file {
 		product_version="Portal ${product_version}"
 	fi
 
-	product_version="${product_version/-/ }"
+	product_version=$(echo "${product_version}" | sed "s/-/ /")
 
 	(
 		echo "app.server.tomcat.version=${tomcat_version}"
