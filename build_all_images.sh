@@ -78,7 +78,7 @@ function build_bundle_image {
 			product_name="portal"
 		fi
 
-		bundle_url="releases-cdn.liferay.com/${product_name}/release-candidates/${version}/$(curl --fail --location --show-error --silent "https://releases-cdn.liferay.com/${product_name}/release-candidates/${version}/.lfrrelease-tomcat-bundle")"
+		bundle_url="gs://liferay-releases-candidates/${version}/$(gsutil cat "gs://liferay-releases-candidates/${version}/.lfrrelease-tomcat-bundle")"
 	fi
 
 	if is_nightly_release "${version}"
