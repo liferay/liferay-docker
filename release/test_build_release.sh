@@ -110,7 +110,7 @@ function test_build_release_not_handle_automated_build {
 }
 
 function test_build_release_main {
-	LIFERAY_RELEASE_GIT_REF=2025.q4.1 ./build_release.sh
+	LIFERAY_RELEASE_GIT_REF=2025.q4.1 ./build_release.sh &> /dev/null
 
 	local exit_code="${?}"
 
