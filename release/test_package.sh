@@ -26,6 +26,7 @@ function main {
 function set_up {
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _BUILD_TIMESTAMP="1234567890"
+	export _PRODUCT_VERSION
 	export _RELEASE_ROOT_DIR="${PWD}"
 
 	export _BUILD_DIR="${_RELEASE_ROOT_DIR}/test-dependencies"
