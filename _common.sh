@@ -95,12 +95,13 @@ function download {
 		return
 	fi
 
-	if [[ "${file_url}" != http*://* ]]
+	if [[ "${file_url}" != gs://* ]] && [[ "${file_url}" != http*://* ]]
 	then
 		file_url="https://${file_url}"
 	fi
 
-	if [[ "${file_url}" != http://mirrors.*.liferay.com* ]] &&
+	if [[ "${file_url}" != gs://liferay-releases-candidates/* ]] &&
+	   [[ "${file_url}" != http://mirrors.*.liferay.com* ]] &&
 	   [[ "${file_url}" != https://dlcdn.apache.org/* ]] &&
 	   [[ "${file_url}" != https://release-1* ]] &&
 	   [[ "${file_url}" != https://release.liferay.com* ]] &&
@@ -121,7 +122,19 @@ function download {
 
 	mkdir --parents $(dirname "${file_name}")
 
-	curl $(echo "${LIFERAY_DOCKER_CURL_OPTIONS}") --fail --location --output "${file_name}" "${file_url}" || exit 2
+	if [[ "${file_url}" == gs://* ]]
+	then
+		gsutil cp "${file_url}" "${file_name}"
+
+		if [ "${?}" -ne 0 ]
+		then
+			echo "Unable to download ${file_url}."
+
+			exit 2
+		fi
+	else
+		curl $(echo "${LIFERAY_DOCKER_CURL_OPTIONS}") --fail --location --output "${file_name}" "${file_url}" || exit 2
+	fi
 }
 
 function get_current_arch {
