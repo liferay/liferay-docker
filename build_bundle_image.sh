@@ -321,12 +321,15 @@ function prepare_temp_directory {
 
 	local download_dir=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
 
-	download_dir=${download_dir#*com/}
-	download_dir=${download_dir#*com/}
-	download_dir=${download_dir#*gs://}
-	download_dir=${download_dir#*liferay-release-tool/}
-	download_dir=${download_dir#*private/ee/}
-	download_dir=downloads/${download_dir}
+	download_dir=$( \
+		echo "${download_dir}" |
+		sed \
+			--expression "s/.*com\///" \
+			--expression "s/.*gs:\/\///" \
+			--expression "s/.*liferay-release-tool\///" \
+			--expression "s/.*private\/ee\///")
+
+	download_dir="downloads/${download_dir}"
 
 	download "${download_dir}/${RELEASE_FILE_NAME}" "${LIFERAY_DOCKER_RELEASE_FILE_URL}"
 
