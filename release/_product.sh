@@ -323,11 +323,18 @@ function deploy_opensearch {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
-		lc_log INFO "Deploying the OpenSearch connector."
+		if [ -d "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2" ]
+		then
+			lc_log INFO "Deploying the OpenSearch connector."
 
-		lc_cd "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2"
+			lc_cd "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2"
 
-		"${_PROJECTS_DIR}/liferay-portal-ee/gradlew" clean deploy
+			"${_PROJECTS_DIR}/liferay-portal-ee/gradlew" clean deploy
+		else
+			lc_log INFO "The OpenSearch connector doesn't exist, skipping its deployment."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
 	fi
 }
 

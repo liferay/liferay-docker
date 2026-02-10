@@ -341,6 +341,13 @@ function upload_opensearch {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	if [ ! -d "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2" ]
+	then
+		lc_log INFO "The OpenSearch connector doesn't exist, skipping its download."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local release_dir_name="${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
 
 	if [ "$(get_release_output)" == "nightly" ]
