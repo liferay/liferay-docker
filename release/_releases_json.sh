@@ -376,6 +376,8 @@ function _tag_jakarta_product_versions {
 				if (.productGroupVersion? | (contains(\"q\") and . >= \"2025.q3\"))
 				then
 					.tags = ((.tags // []) + [\"jakarta\"] | unique | sort)
+				else
+					.
 				end
 			)" "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv "${product_version_json_file}.tmp" "${product_version_json_file}"
 	done
