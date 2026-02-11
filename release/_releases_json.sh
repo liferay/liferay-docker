@@ -329,24 +329,24 @@ function _promote_product_versions {
 function _sort_all_releases_json_attributes {
 	lc_log INFO "Sorting all releases.json attributes."
 
-	local release_json_file
+	local json_file
 
-	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r release_json_file
+	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r json_file
 	do
 		jq "map(
 				to_entries
 				| sort_by(.key)
 				| from_entries
-			)" "${release_json_file}" > "${release_json_file}.tmp" && mv "${release_json_file}.tmp" "${release_json_file}"
+			)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
 	done
 }
 
 function _tag_jakarta_product_versions {
 	lc_log INFO "Tagging product versions with Jakarta support."
 
-	local product_version_json_file
+	local json_file
 
-	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r product_version_json_file
+	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r json_file
 	do
 		jq "map(
 				if (.productGroupVersion? | (contains(\"q\") and . >= \"2025.q3\"))
@@ -355,7 +355,7 @@ function _tag_jakarta_product_versions {
 				else
 					.
 				end
-			)" "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv "${product_version_json_file}.tmp" "${product_version_json_file}"
+			)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
 	done
 }
 
