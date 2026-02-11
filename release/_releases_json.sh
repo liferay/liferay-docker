@@ -59,10 +59,7 @@ function _add_database_schema_versions {
 
 		jq "map(
 				. + {databaseSchemaVersion: \"${database_schema_version}\"}
-				| to_entries
-				| sort_by(.key)
-				| from_entries
-		)" "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv "${product_version_json_file}.tmp" "${product_version_json_file}"
+			)" "${product_version_json_file}" > "${product_version_json_file}.tmp" && mv "${product_version_json_file}.tmp" "${product_version_json_file}"
 	done
 }
 
@@ -82,10 +79,7 @@ function _add_major_versions {
 
 		jq "map(
 				. + {productMajorVersion: \"${product_major_version}\"}
-				| to_entries
-				| sort_by(.key)
-				| from_entries
-		)" "${quarterly_release_json_file}" > "${quarterly_release_json_file}.tmp" && mv "${quarterly_release_json_file}.tmp" "${quarterly_release_json_file}"
+			)" "${quarterly_release_json_file}" > "${quarterly_release_json_file}.tmp" && mv "${quarterly_release_json_file}.tmp" "${quarterly_release_json_file}"
 	done
 }
 
@@ -357,7 +351,7 @@ function _tag_jakarta_product_versions {
 		jq "map(
 				if (.productGroupVersion? | (contains(\"q\") and . >= \"2025.q3\"))
 				then
-					.tags = ((.tags // []) + [\"jakarta\"] | unique | sort)
+					.tags = ((.tags // []) + [\"jakarta\"] | unique)
 				else
 					.
 				end
