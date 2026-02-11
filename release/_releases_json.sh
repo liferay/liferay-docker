@@ -368,24 +368,23 @@ function _tag_jakarta_product_versions {
 }
 
 function _tag_recommended_product_versions {
-	for product_version in "ga" "lts"
+	local latest_ga_product_version=$(get_latest_product_version "ga")
+	local latest_lts_product_version=$(get_latest_product_version "lts")
+
+	lc_log INFO "Tagging ${latest_ga_product_version} and ${latest_lts_product_version} as recommended."
+
+	local json_file
+
+	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r json_file
 	do
-		local latest_product_version=$(get_latest_product_version "${product_version}")
-
-		lc_log INFO "Latest product version for ${product_version} release is ${latest_product_version}."
-
-		local latest_product_version_json_file=$(find "${_PROMOTION_DIR}" -type f -name "*${latest_product_version}.json")
-
-		if [ -f "${latest_product_version_json_file}" ]
-		then
-			lc_log INFO "Tagging ${latest_product_version_json_file} as recommended."
-
-			jq "map(
-					.tags = ((.tags // []) + [\"recommended\"] | unique | sort)
-				)" "${latest_product_version_json_file}" > "${latest_product_version_json_file}.tmp" && mv "${latest_product_version_json_file}.tmp" "${latest_product_version_json_file}"
-		else
-			lc_log INFO "Unable to get latest product version JSON file for ${product_version}."
-		fi
+		jq "map(
+				if (.url? | (endswith(\"${latest_ga_product_version}\") or endswith(\"${latest_lts_product_version}\")))
+				then
+					.tags = ((.tags // []) + [\"recommended\"] | unique)
+				else
+					.
+				end
+			)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
 	done
 }
 
