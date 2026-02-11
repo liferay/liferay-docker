@@ -18,6 +18,7 @@ function main {
 		test_releases_json_get_general_availability_date
 		test_releases_json_get_liferay_upgrade_folder_version
 		test_releases_json_get_supported_product_group_versions
+		test_releases_json_is_supported_product_version
 		test_releases_json_merge_json_snippets
 		test_releases_json_not_process_new_product
 		test_releases_json_process_new_product
@@ -127,6 +128,17 @@ function test_releases_json_get_supported_product_group_versions {
 	_test_releases_json_get_supported_product_group_versions "2026-12-08-dxp-2026.q4.0.json" "2025.q1\n2026.q3\n2026.q4\n7.4"
 
 	_PROMOTION_DIR="${_RELEASE_ROOT_DIR}"
+}
+
+function test_releases_json_is_supported_product_version {
+	_test_releases_json_is_supported_product_version "2026-02-10" "2023.q3.0" "1"
+	_test_releases_json_is_supported_product_version "2026-02-10" "2023.q4.9" "1"
+	_test_releases_json_is_supported_product_version "2027-03-12" "2024.q1.1" "0"
+	_test_releases_json_is_supported_product_version "2027-03-13" "2024.q1.1" "1"
+	_test_releases_json_is_supported_product_version "2027-08-31" "7.4.13-u92" "0"
+	_test_releases_json_is_supported_product_version "2027-09-01" "7.4.13-u92" "1"
+	_test_releases_json_is_supported_product_version "2028-02-17" "2025.q2.0" "1"
+	_test_releases_json_is_supported_product_version "2028-02-18" "2025.q1.0-lts" "0"
 }
 
 function test_releases_json_merge_json_snippets {
@@ -245,6 +257,14 @@ function _test_releases_json_get_supported_product_group_versions {
 	assert_equals \
 		"$(_get_supported_product_group_versions)" \
 		"$(echo -e "${2}")"
+}
+
+function _test_releases_json_is_supported_product_version {
+	LIFERAY_RELEASE_TEST_DATE="${1}"
+
+	_is_supported_product_version "${2}"
+
+	assert_equals "${?}" "${3}"
 }
 
 function _test_releases_json_tag_jakarta_product_versions {

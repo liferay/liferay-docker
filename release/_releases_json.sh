@@ -210,6 +210,60 @@ function _get_supported_product_group_versions {
 	echo "${supported_product_group_versions}" | sort
 }
 
+function _is_supported_product_version {
+	local product_version=${1}
+
+	local general_availability_date=""
+	local years=""
+
+	if is_quarterly_release "${product_version}"
+	then
+		if [[ $(get_release_year "${product_version}") -eq 2023 ]]
+		then
+			return 1
+		fi
+
+		local product_group_version=$(get_product_group_version "${product_version}")
+
+		if [ "${product_group_version}" == "2024.q1" ]
+		then
+			general_availability_date=$(_get_general_availability_date "dxp" "2024.q1.1")
+			years=3
+		elif is_lts_release "${product_version}"
+		then
+			general_availability_date=$(_get_general_availability_date "dxp" "${product_group_version}.0-lts")
+			years=3
+		else
+			general_availability_date=$(_get_general_availability_date "dxp" "${product_group_version}.0")
+			years=1
+		fi
+	elif [ "${product_version}" == "7.4.13-u92" ]
+	then
+		general_availability_date=$(_get_general_availability_date "dxp" "7.4.13-u92")
+		years=4
+	fi
+
+	if [[ ! "${general_availability_date}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]
+	then
+		return 1
+	fi
+
+	local end_of_premium_support_date=$(date --date "${general_availability_date} +${years} year -1 day" +%Y-%m-%d)
+	local today=$(date +%Y-%m-%d)
+
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		today="${LIFERAY_RELEASE_TEST_DATE}"
+	fi
+
+	if [[ "${today}" > "${end_of_premium_support_date}" ]]
+	then
+		return 1
+	fi
+
+	return 0
+}
+
 function _merge_json_snippets {
 	if (! jq --slurp add $(ls "${_PROMOTION_DIR}"/*.json | sort --reverse) > "${_PROMOTION_DIR}/releases.json")
 	then
