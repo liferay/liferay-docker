@@ -86,7 +86,7 @@ function test_releases_json_add_database_schema_versions {
 }
 
 function test_releases_json_add_major_versions {
-	_add_major_versions
+	_add_major_versions &> /dev/null
 
 	assert_equals \
 		"$(jq "[.[] | select(.productMajorVersion == \"DXP 2024.Q4\")] | length == 1" "$(ls "${_PROMOTION_DIR}" | grep "2024.q4.5")")" \
@@ -290,7 +290,7 @@ function _test_releases_json_tag_jakarta_product_versions {
 	_tag_jakarta_product_versions &> /dev/null
 
 	assert_equals \
-		"$(jq -r "(.[0].tags // []) | contains([\"jakarta\"])" "${product_group_version_json}")" \
+		"$(jq --raw-output "(.[0].tags // []) | contains([\"jakarta\"])" "${product_group_version_json}")" \
 		"${2}"
 
 	rm --force "${product_group_version_json}"
