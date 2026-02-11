@@ -30,6 +30,8 @@ function generate_releases_json {
 }
 
 function _add_database_schema_versions {
+	lc_log INFO "Adding database schema versions."
+
 	local product_version_json_file
 
 	for product_version_json_file in $(find "${_PROMOTION_DIR}" -maxdepth 1 -type f | grep --extended-regexp "[0-9]{4}-[0-9]{2}-[0-9]{2}-(dxp|portal).*\.json")
@@ -278,9 +280,13 @@ function _process_product_version {
 
 	if [ "${exit_code}" == "${LIFERAY_COMMON_EXIT_CODE_MISSING_RESOURCE}" ]
 	then
+		lc_log INFO "Skipping ${product_name} ${product_version} because the release.properties file is missing."
+
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	elif [ "${exit_code}" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
+		lc_log ERROR "Unable to process ${product_name} ${product_version}."
+
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
@@ -288,6 +294,8 @@ function _process_product_version {
 
 	if [ -z "${release_date}" ]
 	then
+		lc_log INFO "Skipping ${product_name} ${product_version} because the general availability date is missing."
+
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
