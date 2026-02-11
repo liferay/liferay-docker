@@ -285,14 +285,10 @@ function _process_new_product {
 		fi
 	fi
 
-	local releases_json=""
+	local releases_json="${_PROMOTION_DIR}/0000-00-00-releases.json"
 
-	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
-		releases_json="${_PROMOTION_DIR}/releases.json"
-	else
-		releases_json="${_PROMOTION_DIR}/0000-00-00-releases.json"
-
 		if [ ! -f "${releases_json}" ]
 		then
 			lc_log INFO "Downloading https://releases.liferay.com/releases.json to ${releases_json}."
@@ -508,6 +504,11 @@ function _tag_supported_product_versions {
 }
 
 function _upload_releases_json {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	ssh root@lrdcom-vm-1 "exit" &> /dev/null
 
 	if [ "${?}" -eq 0 ]

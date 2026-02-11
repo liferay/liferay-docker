@@ -166,25 +166,27 @@ function test_releases_json_not_process_new_product {
 }
 
 function test_releases_json_process_new_product {
-	_PRODUCT_VERSION="2024.q4.7"
+	LIFERAY_RELEASE_TEST_DATE="2026-02-10"
+	_PRODUCT_VERSION="2025.q3.0"
+	_PROMOTION_DIR="./test_releases_json_process_new_product"
 
-	_process_products &> /dev/null
+	mkdir --parents "${_PROMOTION_DIR}"
 
-	_process_new_product &> /dev/null
+	generate_releases_json "regenerate" &> /dev/null
 
-	_add_major_versions &> /dev/null
+	rm --force "${_PROMOTION_DIR}"/*dxp*.json "${_PROMOTION_DIR}"/*portal*.json
 
-	_promote_product_versions &> /dev/null
+	mv "${_PROMOTION_DIR}/releases.json" "${_PROMOTION_DIR}/0000-00-00-releases.json"
 
-	_tag_recommended_product_versions &> /dev/null
-
-	_sort_all_releases_json_attributes &> /dev/null
-
-	_merge_json_snippets &> /dev/null
+    generate_releases_json &> /dev/null
 
 	assert_equals \
 		"${_PROMOTION_DIR}/releases.json" \
 		"${_RELEASE_ROOT_DIR}/test-dependencies/expected/releases.json"
+
+	rm --force --recursive "${_PROMOTION_DIR}"
+
+	_PROMOTION_DIR="${_RELEASE_ROOT_DIR}"
 }
 
 function test_releases_json_promote_product_versions {
