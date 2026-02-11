@@ -70,7 +70,7 @@ function tear_down {
 
 	rm --force --recursive ./test_release_json_dir
 	rm --force ./PortalUpgradeProcessRegistryImpl.java
-	rm ./*.json
+	rm --force ./*.json
 }
 
 function test_releases_json_add_database_schema_versions {
@@ -155,8 +155,6 @@ function test_releases_json_merge_json_snippets {
 	assert_equals \
 		"${json_files_count}" \
 		"$(jq length "${_PROMOTION_DIR}/releases.json")"
-
-	rm ./*dxp*.json ./*portal*.json
 }
 
 function test_releases_json_not_process_new_product {
