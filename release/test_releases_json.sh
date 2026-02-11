@@ -15,6 +15,7 @@ function main {
 		test_releases_json_add_database_schema_versions
 		test_releases_json_add_major_versions
 		test_releases_json_get_database_schema_versions
+		test_releases_json_get_general_availability_date
 		test_releases_json_get_liferay_upgrade_folder_version
 		test_releases_json_get_supported_product_group_versions
 		test_releases_json_merge_json_snippets
@@ -32,6 +33,7 @@ function set_up {
 	common_set_up
 
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+	export LIFERAY_RELEASE_TEST_DATE
 	export _PRODUCT_VERSION="7.4.13-u128"
 	export _PROMOTION_DIR="${PWD}"
 	export _RELEASE_ROOT_DIR="${PWD}"
@@ -58,6 +60,7 @@ function tear_down {
 	common_tear_down
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
+	unset LIFERAY_RELEASE_TEST_DATE
 	unset _PRODUCT_VERSION
 	unset _PROJECTS_DIR
 	unset _PROMOTION_DIR
@@ -97,6 +100,15 @@ function test_releases_json_get_database_schema_versions {
 	_test_releases_json_get_database_schema_versions "2025.q3.0" "33.3.0"
 	_test_releases_json_get_database_schema_versions "7.4.13-u112" "29.2.1"
 	_test_releases_json_get_database_schema_versions "7.4.3.132-ga132" "31.14.0"
+}
+
+function test_releases_json_get_general_availability_date {
+	_test_releases_json_get_general_availability_date "dxp" "2025.q1.0-lts" "2025-02-19"
+	_test_releases_json_get_general_availability_date "dxp" "2025.q1.1-lts" "2025-02-24"
+	_test_releases_json_get_general_availability_date "dxp" "7.4.13-u145" "2025-12-20"
+	_test_releases_json_get_general_availability_date "dxp" "7.4.13-u146" "2026-02-02"
+	_test_releases_json_get_general_availability_date "dxp" "7.4.13-u92" "2023-09-01"
+	_test_releases_json_get_general_availability_date "portal" "7.4.3.132-ga132" "2025-02-18"
 }
 
 function test_releases_json_get_liferay_upgrade_folder_version {
@@ -213,6 +225,12 @@ function _test_releases_json_get_database_schema_versions {
 	assert_equals \
 		"$(_get_database_schema_version)" \
 		"${2}"
+}
+
+function _test_releases_json_get_general_availability_date {
+	assert_equals \
+		"$(_get_general_availability_date "${1}" "${2}")" \
+		"${3}"
 }
 
 function _test_releases_json_get_liferay_upgrade_folder_version {

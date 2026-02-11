@@ -132,6 +132,43 @@ function _get_database_schema_version {
 	echo "${database_schema_version}"
 }
 
+function _get_general_availability_date {
+	local product_name=${1}
+	local product_version=${2}
+
+	local release_properties_file
+
+	release_properties_file=$(lc_download "https://releases.liferay.com/${product_name}/${product_version}/release.properties")
+
+	if [ "${?}" -ne 0 ]
+	then
+		echo ""
+
+		return
+	fi
+
+	local date_key="release.date"
+
+	set_actual_product_version "${product_version}"
+
+	if (is_7_4_u_release "${product_version}" && is_later_product_version_than "7.4.13-u145") ||
+	   (is_quarterly_release "${product_version}" && ! is_early_product_version_than "2026.q1.0-lts")
+	then
+		date_key="general.availability.date"
+	fi
+
+	local general_availability_date=$(lc_get_property "${release_properties_file}" "${date_key}")
+
+	if [ -z "${general_availability_date}" ]
+	then
+		echo ""
+
+		return
+	fi
+
+	echo "${general_availability_date}"
+}
+
 function _get_liferay_upgrade_folder_version {
 	local product_version=${1}
 
@@ -290,16 +327,16 @@ function _process_product_version {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local release_date=$(lc_get_property "${release_properties_file}" release.date)
+	local general_availability_date=$(_get_general_availability_date "${product_name}" "${product_version}")
 
-	if [ -z "${release_date}" ]
+	if [[ ! "${general_availability_date}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]
 	then
 		lc_log INFO "Skipping ${product_name} ${product_version} because the general availability date is missing."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	tee "${_PROMOTION_DIR}/${release_date}-${product_name}-${product_version}.json" <<- END
+	tee "${_PROMOTION_DIR}/${general_availability_date}-${product_name}-${product_version}.json" <<- END
 	[
 	    {
 	        "product": "${product_name}",
