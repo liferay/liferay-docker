@@ -25,6 +25,7 @@ function main {
 		test_releases_json_promote_product_versions
 		test_releases_json_tag_jakarta_product_versions
 		test_releases_json_tag_recommended_product_versions
+		test_releases_json_tag_supported_product_versions
 	fi
 
 	tear_down
@@ -212,6 +213,18 @@ function test_releases_json_tag_recommended_product_versions {
 		"true"
 }
 
+function test_releases_json_tag_supported_product_versions {
+	LIFERAY_RELEASE_TEST_DATE="2026-02-10"
+
+	_test_releases_json_tag_supported_product_versions "2024.q1.1" "true"
+	_test_releases_json_tag_supported_product_versions "2024.q2.0" "false"
+	_test_releases_json_tag_supported_product_versions "2024.q4.23" "false"
+	_test_releases_json_tag_supported_product_versions "2025.q1.0-lts" "true"
+	_test_releases_json_tag_supported_product_versions "2025.q2.0" "true"
+	_test_releases_json_tag_supported_product_versions "7.4.13-u91" "false"
+	_test_releases_json_tag_supported_product_versions "7.4.13-u92" "true"
+}
+
 function _get_portal_upgrade_registry {
 	local current_dir="${PWD}"
 
@@ -281,6 +294,22 @@ function _test_releases_json_tag_jakarta_product_versions {
 		"${2}"
 
 	rm --force "${product_group_version_json}"
+}
+
+function _test_releases_json_tag_supported_product_versions {
+	local product_version="${1}"
+
+	local product_version_json_file=$(echo "${product_version}" | tr '.' '-').json
+
+	echo "[{\"url\": \"https://releases-cdn.liferay.com/dxp/${product_version}\"}]" > "${product_version_json_file}"
+
+	_tag_supported_product_versions &> /dev/null
+
+	assert_equals \
+		"$(jq --raw-output "(.[0].tags // []) | contains([\"supported\"])" "${product_version_json_file}")" \
+		"${2}"
+
+	rm --force "${product_version_json_file}"
 }
 
 main "${@}"

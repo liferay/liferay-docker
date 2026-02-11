@@ -21,6 +21,7 @@ function generate_releases_json {
 	_promote_product_versions
 	_tag_jakarta_product_versions
 	_tag_recommended_product_versions
+	_tag_supported_product_versions
 
 	_sort_all_releases_json_attributes
 
@@ -476,6 +477,33 @@ function _tag_recommended_product_versions {
 					.
 				end
 			)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
+	done
+}
+
+function _tag_supported_product_versions {
+	lc_log INFO "Tagging product versions with active premium support."
+
+	local json_file
+
+	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r json_file
+	do
+		jq --raw-output ".[].url" "${json_file}" | while read -r product_version_json_url
+		do
+			local product_version=$(basename "${product_version_json_url}")
+
+			if ([ "${product_version}" == "7.4.13-u92" ] || is_quarterly_release "${product_version}") &&
+			   _is_supported_product_version "${product_version}"
+			then
+				jq "map(
+						if (.url? | (endswith(\"${product_version}\")))
+						then
+							.tags = ((.tags // []) + [\"supported\"] | unique)
+						else
+							.
+						end
+					)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
+			fi
+		done
 	done
 }
 
