@@ -172,7 +172,7 @@ function _get_supported_product_group_versions {
 }
 
 function _merge_json_snippets {
-	if (! jq --slurp add $(ls ./*.json | sort --reverse) > releases.json)
+	if (! jq --slurp add $(ls "${_PROMOTION_DIR}"/*.json | sort --reverse) > "${_PROMOTION_DIR}/releases.json")
 	then
 		lc_log ERROR "Detected invalid JSON."
 
@@ -291,7 +291,7 @@ function _process_product_version {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	tee "${release_date}-${product_name}-${product_version}.json" <<- END
+	tee "${_PROMOTION_DIR}/${release_date}-${product_name}-${product_version}.json" <<- END
 	[
 	    {
 	        "product": "${product_name}",
@@ -318,7 +318,7 @@ function _promote_product_versions {
 			then
 				lc_log INFO "Promoting ${last_version}."
 
-				sed --in-place 's/"promoted": "false"/"promoted": "true"/' "${last_version}"
+				sed --in-place 's/"promoted": "false"/"promoted": "true"/' "${_PROMOTION_DIR}/${last_version}"
 			else
 				lc_log INFO "No product version found to promote for ${product_name}-${group_version}."
 			fi
