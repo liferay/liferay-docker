@@ -229,29 +229,11 @@ function _process_new_product {
 			else
 				.
 			end
-		)" "${releases_json}" > temp_file.json && mv temp_file.json "${releases_json}"
+		)" "${releases_json}" > "${releases_json}.tmp" && mv "${releases_json}.tmp" "${releases_json}"
 
-	if (is_7_3_release || is_7_4_release)
-	then
-		jq "map(
-				if .product == \"${LIFERAY_RELEASE_PRODUCT_NAME}\" and .productGroupVersion == \"${product_group_version}\"
-				then
-					del(.tags)
-				else
-					.
-				end
-			)" "${releases_json}" > temp_file.json && mv temp_file.json "${releases_json}"
-	elif is_quarterly_release && [ "$(get_latest_product_version "lts")" == "${_PRODUCT_VERSION}" ]
-	then
-		jq "map(
-				if .productGroupVersion | test(\"q\")
-				then
-					del(.tags)
-				else
-					.
-				end
-			)" "${releases_json}" > temp_file.json && mv temp_file.json "${releases_json}"
-	fi
+	jq "map(
+			del(.tags)
+		)" "${releases_json}" > "${releases_json}.tmp" && mv "${releases_json}.tmp" "${releases_json}"
 
 	_process_product_version "${LIFERAY_RELEASE_PRODUCT_NAME}" "${_PRODUCT_VERSION}"
 }
