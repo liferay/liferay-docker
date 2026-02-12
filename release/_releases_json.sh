@@ -427,14 +427,14 @@ function _sort_all_releases_json_attributes {
 
 	local json_file
 
-	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r json_file
+	while read -r json_file
 	do
 		jq "map(
 				to_entries
 				| sort_by(.key)
 				| from_entries
 			)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
-	done
+	done < <(find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f)
 }
 
 function _tag_jakarta_product_versions {
@@ -442,7 +442,7 @@ function _tag_jakarta_product_versions {
 
 	local json_file
 
-	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r json_file
+	while read -r json_file
 	do
 		jq "map(
 				if (.productGroupVersion? | (contains(\"q\") and . >= \"2025.q3\"))
@@ -452,7 +452,7 @@ function _tag_jakarta_product_versions {
 					.
 				end
 			)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
-	done
+	done < <(find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f)
 }
 
 function _tag_recommended_product_versions {
@@ -463,7 +463,7 @@ function _tag_recommended_product_versions {
 
 	local json_file
 
-	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r json_file
+	while read -r json_file
 	do
 		jq "map(
 				if (.url? | (endswith(\"${latest_ga_product_version}\") or endswith(\"${latest_lts_product_version}\")))
@@ -473,7 +473,7 @@ function _tag_recommended_product_versions {
 					.
 				end
 			)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
-	done
+	done < <(find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f)
 }
 
 function _tag_supported_product_versions {
@@ -481,11 +481,11 @@ function _tag_supported_product_versions {
 
 	local json_file
 
-	find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f | while read -r json_file
+	while read -r json_file
 	do
-		jq --raw-output ".[].url" "${json_file}" | while read -r product_version_json_url
+		while read -r product_version_url
 		do
-			local product_version=$(basename "${product_version_json_url}")
+			local product_version=$(basename "${product_version_url}")
 
 			if ([ "${product_version}" == "7.4.13-u92" ] || is_quarterly_release "${product_version}") &&
 			   _is_supported_product_version "${product_version}"
@@ -499,8 +499,8 @@ function _tag_supported_product_versions {
 						end
 					)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
 			fi
-		done
-	done
+		done < <(jq --raw-output ".[].url" "${json_file}")
+	done < <(find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f)
 }
 
 function _upload_releases_json {
