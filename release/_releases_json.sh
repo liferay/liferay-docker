@@ -160,7 +160,7 @@ function _get_general_availability_date {
 
 	local general_availability_date=$(lc_get_property "${release_properties_file}" "${date_key}")
 
-	if [ -z "${general_availability_date}" ]
+	if [[ ! "${general_availability_date}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]
 	then
 		echo ""
 
@@ -244,7 +244,7 @@ function _is_supported_product_version {
 		years=4
 	fi
 
-	if [[ ! "${general_availability_date}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]
+	if [ -z "${general_availability_date}" ]
 	then
 		return 1
 	fi
@@ -382,7 +382,7 @@ function _process_product_version {
 
 	local general_availability_date=$(_get_general_availability_date "${product_name}" "${product_version}")
 
-	if [[ ! "${general_availability_date}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]
+	if [ -z "${general_availability_date}" ]
 	then
 		lc_log INFO "Skipping ${product_name} ${product_version} because the general availability date is missing."
 
