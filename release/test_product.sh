@@ -17,6 +17,7 @@ function main {
 		"${1}"
 	else
 		test_product_add_ckeditor_license
+		test_product_deploy_opensearch
 		test_product_get_java_specification_version
 		test_product_not_add_ckeditor_license
 		test_product_set_product_version_lts
@@ -65,6 +66,12 @@ function test_product_add_ckeditor_license {
 	_test_product_add_ckeditor_license "2025.q2.0"
 	_test_product_add_ckeditor_license "2025.q4.0"
 	_test_product_add_ckeditor_license "2026.q1.0-lts"
+}
+
+function test_product_deploy_opensearch {
+	deploy_opensearch 1> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 function test_product_get_java_specification_version {

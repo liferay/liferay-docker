@@ -15,6 +15,7 @@ function main {
 		test_publishing_get_patcher_project_version
 		test_publishing_get_root_patcher_project_version_name
 		test_publishing_update_bundles_yml
+		test_publishing_upload_opensearch
 	fi
 
 	tear_down
@@ -23,6 +24,7 @@ function main {
 function set_up {
 	common_set_up
 
+	export LIFERAY_RELEASE_UPLOAD="true"
 	export _RELEASE_ROOT_DIR="${PWD}"
 
 	export _BASE_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/actual/liferay-docker"
@@ -33,6 +35,7 @@ function tear_down {
 
 	git restore "${_BASE_DIR}/bundles.yml"
 
+	unset LIFERAY_RELEASE_UPLOAD
 	unset _BASE_DIR
 	unset _RELEASE_ROOT_DIR
 }
@@ -65,6 +68,12 @@ function test_publishing_update_bundles_yml {
 	assert_equals \
 		"${_RELEASE_ROOT_DIR}/test-dependencies/actual/liferay-docker/bundles.yml" \
 		"${_RELEASE_ROOT_DIR}/test-dependencies/expected/test_publishing_bundles.yml"
+}
+
+function test_publishing_upload_opensearch {
+	upload_opensearch 1> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 function _run_update_bundles_yml {

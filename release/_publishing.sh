@@ -326,11 +326,6 @@ function upload_hotfix {
 }
 
 function upload_opensearch {
-	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
-	then
-		return
-	fi
-
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -346,6 +341,11 @@ function upload_opensearch {
 		lc_log INFO "The OpenSearch connector doesn't exist, skipping its download."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
 	fi
 
 	local release_dir_name="${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}"
