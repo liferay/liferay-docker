@@ -338,7 +338,7 @@ function upload_opensearch {
 
 	if [ ! -d "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2" ]
 	then
-		lc_log INFO "The OpenSearch connector doesn't exist, skipping its download."
+		lc_log DEBUG "The OpenSearch connector doesn't exist, skipping its download."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

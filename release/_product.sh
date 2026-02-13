@@ -331,7 +331,7 @@ function deploy_opensearch {
 
 			"${_PROJECTS_DIR}/liferay-portal-ee/gradlew" clean deploy
 		else
-			lc_log INFO "The OpenSearch connector doesn't exist, skipping its deployment."
+			lc_log DEBUG "The OpenSearch connector doesn't exist, skipping its deployment."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
