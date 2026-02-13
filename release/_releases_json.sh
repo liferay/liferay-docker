@@ -310,8 +310,6 @@ function _process_new_product {
 			if .product == \"${LIFERAY_RELEASE_PRODUCT_NAME}\" and .productGroupVersion == \"${product_group_version}\"
 			then
 				.promoted = \"false\"
-			else
-				.
 			end
 		)" "${releases_json}" > "${releases_json}.tmp" && mv "${releases_json}.tmp" "${releases_json}"
 
@@ -450,8 +448,6 @@ function _tag_jakarta_product_versions {
 				if (.productGroupVersion? | (contains(\"q\") and . >= \"2025.q3\"))
 				then
 					.tags = ((.tags // []) + [\"jakarta\"] | unique)
-				else
-					.
 				end
 			)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
 	done < <(find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f)
@@ -471,8 +467,6 @@ function _tag_recommended_product_versions {
 				if (.url? | (endswith(\"${latest_ga_product_version}\") or endswith(\"${latest_lts_product_version}\")))
 				then
 					.tags = ((.tags // []) + [\"recommended\"] | unique)
-				else
-					.
 				end
 			)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
 	done < <(find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f)
@@ -496,8 +490,6 @@ function _tag_supported_product_versions {
 						if (.url? | (endswith(\"${product_version}\")))
 						then
 							.tags = ((.tags // []) + [\"supported\"] | unique)
-						else
-							.
 						end
 					)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
 			fi
