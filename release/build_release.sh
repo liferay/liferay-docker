@@ -308,6 +308,11 @@ function print_variables {
 }
 
 function set_general_availability_date {
+	if [ "$(get_release_output)" != "release-candidate" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	if [ -z "${LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE}" ] && is_first_quarterly_release
 	then
 		print_help
