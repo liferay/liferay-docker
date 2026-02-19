@@ -22,7 +22,7 @@ LABEL org.label-schema.version="${LABEL_VERSION}"
 
 RUN apt-get update && \
 	\
-	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes ant git nano && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes ant git nano ncurses-term && \
 	\
 	apt-get upgrade --yes && \
 	\
