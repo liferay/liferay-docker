@@ -17,5 +17,7 @@ function get_environment_type {
 	elif [[ "${target_host}" =~ ^liferay-* ]]
 	then
 		echo "local"
+	else
+		echo ""
 	fi
 }
