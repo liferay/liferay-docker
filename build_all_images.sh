@@ -659,7 +659,7 @@ function main {
 
 		if [ "$(git config --global github.user)" == "brianchandotcom" ] ||
 		   ([ "$(git config --global user.name)" == "liferay-release" ] && 
-		   [ "$(get_environment_type)" == "ci_slave" ])
+		   [ "$(get_environment_type)" == "release_slave" ])
 		then
 			./release_notes.sh commit
 
