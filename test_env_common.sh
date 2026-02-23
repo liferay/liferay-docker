@@ -4,12 +4,7 @@ source ./_env_common.sh
 source ./_test_common.sh
 
 function main {
-	if [ "${#}" -eq 1 ]
-	then
-		"${1}"
-	else
-		test_env_common_get_environment_type
-	fi
+	test_env_common_get_environment_type
 }
 
 function test_env_common_get_environment_type {
@@ -23,4 +18,4 @@ function _test_env_common_get_environment_type {
 	assert_equals "$(get_environment_type "${1}")" "${2}"
 }
 
-main "${@}"
+main
