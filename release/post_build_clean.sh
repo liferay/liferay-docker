@@ -22,7 +22,6 @@ function main {
 
 		find /tmp \
 			-mindepth 1 \
-			-mmin +180 \
 			-regextype posix-extended \
 			-regex ".*/(dart-sass|yarn).*" \
 			-type d \
