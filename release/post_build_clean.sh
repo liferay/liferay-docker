@@ -33,6 +33,12 @@ function main {
 	then
 		rm --force --recursive narwhal/source_code_sharing/liferay-portal-ee
 	fi
+
+	lc_cd /opt/dev/projects/github/liferay-portal-ee
+
+	git clean -dfx &> /dev/null
+
+	git gc &> /dev/null
 }
 
 main
