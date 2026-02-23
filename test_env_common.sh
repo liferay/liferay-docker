@@ -10,6 +10,7 @@ function main {
 function test_env_common_get_environment_type {
 	_test_env_common_get_environment_type "liferay-123" "local"
 	_test_env_common_get_environment_type "release-slave-1" "release_slave"
+	_test_env_common_get_environment_type "release-slave-2" "release_slave"
 	_test_env_common_get_environment_type "release-slave-5" ""
 	_test_env_common_get_environment_type "test-1-2-3" "ci_slave"
 }
