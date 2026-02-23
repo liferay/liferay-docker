@@ -50,7 +50,7 @@ function set_up {
 }
 
 function tear_down {
-	unset ACTUAL_PRODUCT_VERSION
+	unset _ACTUAL_PRODUCT_VERSION
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_TEST_MODE
 	unset _PRODUCT_VERSION

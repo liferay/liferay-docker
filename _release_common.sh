@@ -344,15 +344,15 @@ function is_u_release {
 }
 
 function set_actual_product_version {
-	ACTUAL_PRODUCT_VERSION="${1}"
+	_ACTUAL_PRODUCT_VERSION="${1}"
 }
 
 function _compare_product_versions {
 	local product_version_1
 
-	if [ -n "${ACTUAL_PRODUCT_VERSION}" ]
+	if [ -n "${_ACTUAL_PRODUCT_VERSION}" ]
 	then
-		product_version_1="${ACTUAL_PRODUCT_VERSION}"
+		product_version_1="${_ACTUAL_PRODUCT_VERSION}"
 	else
 		product_version_1=$(_get_product_version)
 	fi
