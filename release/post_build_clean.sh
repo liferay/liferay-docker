@@ -11,6 +11,22 @@ function main {
 	   [ "${current_job}" == "build-release-nightly" ] ||
 	   [ "${current_job}" == "release-gold" ]
 	then
+		local buildkit_container_name=$(docker ps --filter "name=buildkit" --format "{{.Names}}")
+
+		if [ -n "${buildkit_container_name}" ]
+		then
+			docker stop "${buildkit_container_name}" &> /dev/null
+
+			docker rm --force "${buildkit_container_name}" &> /dev/null
+		fi
+
+		local buildkit_volume_name=$(docker volume ls --filter "name=buildkit" --format "{{.Name}}")
+
+		if [ -n "${buildkit_volume_name}" ]
+		then
+			docker volume rm --force "${buildkit_volume_name}" &> /dev/null
+		fi
+
 		docker system prune --all --force &> /dev/null
 
 		find . /opt/dev/projects/github/liferay-docker \
