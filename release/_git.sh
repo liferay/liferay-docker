@@ -203,16 +203,16 @@ function update_portal_repository {
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} tag exists on remote."
 
 		git fetch --force upstream tag "${LIFERAY_RELEASE_GIT_REF}"
-	elif [ -n "$(git ls-remote brianchandotcom refs/heads/"${LIFERAY_RELEASE_GIT_REF}")" ]
-	then
-		echo "${LIFERAY_RELEASE_GIT_REF} branch exists on brianchandotcom's remote."
-
-		git fetch --force --update-head-ok brianchandotcom "${LIFERAY_RELEASE_GIT_REF}:${LIFERAY_RELEASE_GIT_REF}"
 	elif [ -n "$(git ls-remote upstream refs/heads/"${LIFERAY_RELEASE_GIT_REF}")" ]
 	then
 		echo "${LIFERAY_RELEASE_GIT_REF} branch exists on remote."
 
 		git fetch --force --update-head-ok upstream "${LIFERAY_RELEASE_GIT_REF}:${LIFERAY_RELEASE_GIT_REF}"
+	elif [ -n "$(git ls-remote brianchandotcom refs/heads/"${LIFERAY_RELEASE_GIT_REF}")" ]
+	then
+		echo "${LIFERAY_RELEASE_GIT_REF} branch exists on brianchandotcom's remote."
+
+		git fetch --force --update-head-ok brianchandotcom "${LIFERAY_RELEASE_GIT_REF}:${LIFERAY_RELEASE_GIT_REF}"
 	else
 		lc_log ERROR "${LIFERAY_RELEASE_GIT_REF} does not exist."
 
