@@ -521,6 +521,7 @@ function test_boms {
 	fi
 
 	rm --force "${HOME}/.liferay/workspace/releases.json"
+	rm --force "${HOME}/.liferay-common-cache/releases.liferay.com/releases.json"
 
 	mkdir --parents "temp_dir_test_boms"
 
