@@ -520,8 +520,8 @@ function test_boms {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	rm --force "${HOME}/.liferay/workspace/releases.json"
 	rm --force "${HOME}/.liferay-common-cache/releases.liferay.com/releases.json"
+	rm --force "${HOME}/.liferay/workspace/releases.json"
 
 	mkdir --parents "temp_dir_test_boms"
 
