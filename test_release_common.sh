@@ -186,8 +186,8 @@ function test_release_common_is_dxp_release {
 
 function test_release_common_is_early_product_version_than {
 	_test_release_common_is_early_product_version_than "2023.q3.3" "2025.q2.0" "0"
-	_test_release_common_is_early_product_version_than "2024.q4.7" "2025.q1.0" "0"
-	_test_release_common_is_early_product_version_than "2025.q1.0" "2025.q1.1" "0"
+	_test_release_common_is_early_product_version_than "2024.q4.7" "2025.q1.0-lts" "0"
+	_test_release_common_is_early_product_version_than "2025.q1.0-lts" "2025.q1.1-lts" "0"
 	_test_release_common_is_early_product_version_than "2025.q1.1-lts" "2025.q1.0-lts" "1"
 	_test_release_common_is_early_product_version_than "7.3.10-u35" "7.3.10-u36" "0"
 	_test_release_common_is_early_product_version_than "7.3.10-u36" "7.3.10-u35" "1"
@@ -230,9 +230,9 @@ function test_release_common_is_ga_release {
 }
 
 function test_release_common_is_later_product_version_than {
-	_test_release_common_is_later_product_version_than "2025.q1.0" "2024.q4.7" "0"
+	_test_release_common_is_later_product_version_than "2025.q1.0-lts" "2024.q4.7" "0"
 	_test_release_common_is_later_product_version_than "2025.q1.0-lts" "2025.q1.1-lts" "1"
-	_test_release_common_is_later_product_version_than "2025.q1.1" "2025.q1.0" "0"
+	_test_release_common_is_later_product_version_than "2025.q1.1-lts" "2025.q1.0-lts" "0"
 	_test_release_common_is_later_product_version_than "2025.q2.0" "2023.q3.3" "0"
 	_test_release_common_is_later_product_version_than "7.3.10-u35" "7.3.10-u36" "1"
 	_test_release_common_is_later_product_version_than "7.3.10-u36" "7.3.10-u35" "0"
