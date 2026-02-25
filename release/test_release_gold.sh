@@ -11,12 +11,12 @@ function main {
 	then
 		"${1}"
 	else
-		test_release_gold_not_reference_new_releases
-		test_release_gold_reference_new_releases
 		test_release_gold_check_supported_versions
 		test_release_gold_check_usage
 		test_release_gold_is_latest_product_version_by_releases_json
 		test_release_gold_not_prepare_next_release_branch
+		test_release_gold_not_reference_new_releases
+		test_release_gold_reference_new_releases
 		test_release_gold_set_next_release_date
 		test_release_gold_set_next_release_version_display_name
 		test_release_gold_test_boms
