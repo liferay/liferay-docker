@@ -64,8 +64,9 @@ function tear_down {
 
 function test_product_add_ckeditor_license {
 	_test_product_add_ckeditor_license "2025.q2.0"
+	_test_product_add_ckeditor_license "2025.q3.10"
 	_test_product_add_ckeditor_license "2025.q4.0"
-	_test_product_add_ckeditor_license "2026.q1.0-lts"
+	_test_product_add_ckeditor_license "2025.q4.9"
 }
 
 function test_product_deploy_opensearch {
@@ -85,6 +86,8 @@ function test_product_not_add_ckeditor_license {
 	_test_product_not_add_ckeditor_license "2023.q1.0"
 	_test_product_not_add_ckeditor_license "2024.q2.0"
 	_test_product_not_add_ckeditor_license "2025.q1.0-lts"
+	_test_product_not_add_ckeditor_license "2026.q1.0-lts"
+	_test_product_not_add_ckeditor_license "2026.q2.0"
 	_test_product_not_add_ckeditor_license "7.4.13-u134"
 	_test_product_not_add_ckeditor_license "7.4.3.129-ga129"
 }
