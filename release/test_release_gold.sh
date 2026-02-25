@@ -25,6 +25,8 @@ function main {
 		else
 			echo -e "The directory ${_PROJECTS_DIR}/liferay-portal-ee does not exist.\n"
 		fi
+
+		test_release_gold_test_boms
 	fi
 
 	tear_down
@@ -137,6 +139,18 @@ function test_release_gold_set_next_release_version_display_name {
 
 	_test_release_gold_set_next_release_version_display_name "2024.q1" "13" "2024.Q1.13"
 	_test_release_gold_set_next_release_version_display_name "2025.q1" "2 LTS" "2025.Q1.2 LTS"
+}
+
+function test_release_gold_test_boms {
+	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+	_PRODUCT_VERSION="2025.q1.2-lts"
+
+	cp test-dependencies/actual/releases.json "${HOME}/.liferay/workspace/releases.json"
+	cp test-dependencies/actual/releases.json "${HOME}/.liferay-common-cache/releases.liferay.com/releases.json"
+
+	test_boms &> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
 function _test_release_gold_check_supported_versions {
