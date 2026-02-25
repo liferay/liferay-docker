@@ -262,6 +262,10 @@ function is_early_product_version_than {
 	_compare_product_versions "${1}" "early"
 }
 
+function is_equals_or_later_product_version_than {
+	_compare_product_versions "${1}" "equals_or_later"
+}
+
 function is_first_quarterly_release {
 	if is_quarterly_release && [[ "$(get_release_patch_version)" -eq 0 ]]
 	then
@@ -359,7 +363,7 @@ function _compare_product_versions {
 	then
 		operator_1="-lt"
 		operator_2="-gt"
-	elif [ "${2}" == "later" ]
+	elif [ "${2}" == "equals_or_later" ] || [ "${2}" == "later" ]
 	then
 		operator_1="-gt"
 		operator_2="-lt"
@@ -375,6 +379,12 @@ function _compare_product_versions {
 	fi
 
 	local product_version_2="${1}"
+
+	if [ "${2}" == "equals_or_later" ] &&
+	   [ "${product_version_1}" == "${product_version_2}" ]
+	then
+		return 0
+	fi
 
 	if (is_ga_release "${product_version_1}" && is_ga_release "${product_version_2}") ||
 	   (is_u_release "${product_version_1}" && is_u_release "${product_version_2}")
