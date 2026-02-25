@@ -10,9 +10,9 @@ function add_ckeditor_license {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if is_early_product_version_than "2025.q2.0"
+	if (is_early_product_version_than "2025.q2.0" || is_equals_or_later_product_version_than "2026.q1.0-lts")
 	then
-		lc_log INFO "The quarterly release is earlier than 2025.q2."
+		lc_log INFO "The product version is outside the 2025.q2 - 2025.q4 release window."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
