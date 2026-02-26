@@ -356,19 +356,6 @@ function set_actual_product_version {
 }
 
 function _compare_product_versions {
-	local operator_1
-	local operator_2
-
-	if [ "${2}" == "early" ]
-	then
-		operator_1="-lt"
-		operator_2="-gt"
-	elif [ "${2}" == "equals_or_later" ] || [ "${2}" == "later" ]
-	then
-		operator_1="-gt"
-		operator_2="-lt"
-	fi
-
 	local product_version_1
 
 	if [ -n "${ACTUAL_PRODUCT_VERSION}" ]
@@ -384,6 +371,19 @@ function _compare_product_versions {
 	   [ "${product_version_1}" == "${product_version_2}" ]
 	then
 		return 0
+	fi
+
+	local operator_1
+	local operator_2
+
+	if [ "${2}" == "early" ]
+	then
+		operator_1="-lt"
+		operator_2="-gt"
+	elif [ "${2}" == "equals_or_later" ] || [ "${2}" == "later" ]
+	then
+		operator_1="-gt"
+		operator_2="-lt"
 	fi
 
 	if (is_ga_release "${product_version_1}" && is_ga_release "${product_version_2}") ||
