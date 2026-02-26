@@ -206,9 +206,9 @@ function test_release_common_is_equals_or_later_product_version_than {
 	_test_release_common_is_equals_or_later_product_version_than "2026.q1.0-lts" "2026.q1.0-lts" "0"
 	_test_release_common_is_equals_or_later_product_version_than "7.4.13-u133" "7.4.13-u134" "1"
 	_test_release_common_is_equals_or_later_product_version_than "7.4.13-u134" "7.4.13-u134" "0"
-	_test_release_common_is_equals_or_later_product_version_than "7.4.13-u134" "7.4.13-u135" "1"
+	_test_release_common_is_equals_or_later_product_version_than "7.4.13-u135" "7.4.13-u134" "0"
 	_test_release_common_is_equals_or_later_product_version_than "7.4.3.120-ga120" "7.4.3.132-ga132" "1"
-	_test_release_common_is_equals_or_later_product_version_than "7.4.3.132-ga131" "7.4.3.132-ga132" "1"
+	_test_release_common_is_equals_or_later_product_version_than "7.4.3.120-ga132" "7.4.3.132-ga120" "0"
 	_test_release_common_is_equals_or_later_product_version_than "7.4.3.132-ga132" "7.4.3.132-ga132" "0"
 }
 
