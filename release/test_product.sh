@@ -17,6 +17,7 @@ function main {
 		"${1}"
 	else
 		test_product_add_ckeditor_license
+		test_product_clean_up_ignored_dxp_plugins
 		test_product_deploy_opensearch
 		test_product_get_java_specification_version
 		test_product_not_add_ckeditor_license
@@ -52,6 +53,7 @@ function set_up {
 function tear_down {
 	rm --force "${_BUILD_DIR}/test-dependencies/liferay-dxp-tomcat-2024.q2.6-1721635298.zip"
 	rm --force "${_BUILD_DIR}/warm-up-tomcat"
+	rm --force --recursive "${_BUILD_DIR}/test-dependencies/actual/bundle"
 	rm --force --recursive "${_BUNDLES_DIR}"
 
 	unset LIFERAY_CKEDITOR_LICENSE_KEY
@@ -67,6 +69,36 @@ function test_product_add_ckeditor_license {
 	_test_product_add_ckeditor_license "2025.q3.10"
 	_test_product_add_ckeditor_license "2025.q4.0"
 	_test_product_add_ckeditor_license "2025.q4.9"
+}
+
+function test_product_clean_up_ignored_dxp_plugins {
+	_BUNDLES_DIR="${PWD}/test-dependencies/actual/bundle"
+
+	mkdir --parents "${_BUNDLES_DIR}/osgi/portal-war"
+
+	files=(
+		documentum-hook-test.war
+		fjord-theme.war
+		minium-theme.war
+		opensocial-portlet-test.war
+		porygon-theme.war
+		saml-hook-test.war
+		sharepoint-hook-test.war
+		social-bookmarks-hook-test.war
+		speedwell-theme.war
+		test.war
+		westeros-bank-theme.war
+	)
+
+	for file in "${files[@]}"
+	do
+		touch "${_BUNDLES_DIR}/osgi/portal-war/${file}"
+	done
+	
+	_test_product_clean_up_ignored_dxp_plugins "2025.q1.0-lts" "11"
+	_test_product_clean_up_ignored_dxp_plugins "2026.q1.0-lts" "1"
+
+	export _BUNDLES_DIR="${PWD}/test-dependencies/liferay-dxp"
 }
 
 function test_product_deploy_opensearch {
@@ -137,6 +169,15 @@ function _test_product_add_ckeditor_license {
 		"licenseKey=\"${LIFERAY_CKEDITOR_LICENSE_KEY}\""
 
 	rm --force "${_BUNDLES_DIR}/osgi/configs/com.liferay.frontend.editor.ckeditor.web.internal.configuration.CKEditor5Configuration.config"
+}
+
+function _test_product_clean_up_ignored_dxp_plugins {
+	_PRODUCT_VERSION="${1}"
+
+	clean_up_ignored_dxp_plugins &> /dev/null
+
+	assert_equals \
+		"$(ls -1 ${_BUNDLES_DIR}/osgi/portal-war | wc --lines)" "${2}"
 }
 
 function _test_product_get_java_specification_version {
