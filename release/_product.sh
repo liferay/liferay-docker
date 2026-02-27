@@ -181,26 +181,24 @@ function clean_up_ignored_dxp_modules {
 }
 
 function clean_up_ignored_dxp_plugins {
+	if ! is_equals_or_later_product_version_than "2026.q1.0-lts"
+	then
+		lc_log INFO "Skipping the clean up of ignored DXP plugins because the product version is earlier than 2026.q1.0-lts."
 
-	#
-	# TODO Some modules are needed for master.
-	#
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 
-	return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-
-	lc_cd "${_BUNDLES_DIR}/osgi/war"
+	lc_cd "${_BUNDLES_DIR}/osgi/portal-war"
 
 	rm --force --verbose documentum-hook-*.war
 	rm --force --verbose fjord-theme.war
 	rm --force --verbose minium-theme.war
 	rm --force --verbose opensocial-portlet-*.war
 	rm --force --verbose porygon-theme.war
-	rm --force --verbose powwow-portlet-*.war
 	rm --force --verbose saml-hook-*.war
 	rm --force --verbose sharepoint-hook-*.war
 	rm --force --verbose social-bookmarks-hook-*.war
 	rm --force --verbose speedwell-theme.war
-	rm --force --verbose tasks-portlet-*.war
 	rm --force --verbose westeros-bank-theme.war
 }
 
