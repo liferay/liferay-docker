@@ -76,21 +76,18 @@ function test_product_clean_up_ignored_dxp_plugins {
 
 	mkdir --parents "${_BUNDLES_DIR}/osgi/portal-war"
 
-	files=(
-		documentum-hook-test.war
-		fjord-theme.war
-		minium-theme.war
-		opensocial-portlet-test.war
-		porygon-theme.war
-		saml-hook-test.war
-		sharepoint-hook-test.war
-		social-bookmarks-hook-test.war
-		speedwell-theme.war
-		test.war
+	for file in \
+		documentum-hook-test.war \
+		fjord-theme.war \
+		minium-theme.war \
+		opensocial-portlet-test.war \
+		porygon-theme.war \
+		saml-hook-test.war \
+		sharepoint-hook-test.war \
+		social-bookmarks-hook-test.war \
+		speedwell-theme.war \
+		test.war \
 		westeros-bank-theme.war
-	)
-
-	for file in "${files[@]}"
 	do
 		touch "${_BUNDLES_DIR}/osgi/portal-war/${file}"
 	done
