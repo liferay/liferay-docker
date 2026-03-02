@@ -313,6 +313,8 @@ function set_general_availability_date {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE=$(echo "${LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE}" | sed "s/[^0-9-]//g")
+
 	if [ -z "${LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE}" ] && is_first_quarterly_release
 	then
 		print_help
