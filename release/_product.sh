@@ -181,7 +181,7 @@ function clean_up_ignored_dxp_modules {
 }
 
 function clean_up_ignored_dxp_plugins {
-	if ! is_equals_or_later_product_version_than "2026.q1.0-lts"
+	if is_early_product_version_than "2026.q1.0-lts"
 	then
 		lc_log INFO "Skipping the clean up of ignored DXP plugins because the product version is earlier than 2026.q1.0-lts."
 
