@@ -91,7 +91,7 @@ function test_product_clean_up_ignored_dxp_plugins {
 	do
 		touch "${_BUNDLES_DIR}/osgi/portal-war/${file}"
 	done
-	
+
 	_test_product_clean_up_ignored_dxp_plugins "2025.q1.0-lts" "11"
 	_test_product_clean_up_ignored_dxp_plugins "2026.q1.0-lts" "1"
 
