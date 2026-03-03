@@ -181,25 +181,31 @@ function clean_up_ignored_dxp_modules {
 }
 
 function clean_up_ignored_dxp_plugins {
-	if is_early_product_version_than "2026.q1.0-lts"
+	if ! is_quarterly_release ||
+	   (is_quarterly_release && is_early_product_version_than "2026.q1.0-lts")
 	then
-		lc_log INFO "Skipping the clean up of ignored DXP plugins because the product version is earlier than 2026.q1.0-lts."
+		lc_log INFO "Skipping the clean up of ignored DXP plugins."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_BUNDLES_DIR}/osgi/portal-war"
+	if [ -d "${_BUNDLES_DIR}/osgi/portal-war" ]
+	then
+		lc_cd "${_BUNDLES_DIR}/osgi/portal-war"
 
-	rm --force --verbose documentum-hook-*.war
-	rm --force --verbose fjord-theme.war
-	rm --force --verbose minium-theme.war
-	rm --force --verbose opensocial-portlet-*.war
-	rm --force --verbose porygon-theme.war
-	rm --force --verbose saml-hook-*.war
-	rm --force --verbose sharepoint-hook-*.war
-	rm --force --verbose social-bookmarks-hook-*.war
-	rm --force --verbose speedwell-theme.war
-	rm --force --verbose westeros-bank-theme.war
+		lc_log INFO "Cleaning up ignored DXP plugins."
+
+		rm --force --verbose documentum-hook-*.war
+		rm --force --verbose fjord-theme.war
+		rm --force --verbose minium-theme.war
+		rm --force --verbose opensocial-portlet-*.war
+		rm --force --verbose porygon-theme.war
+		rm --force --verbose saml-hook-*.war
+		rm --force --verbose sharepoint-hook-*.war
+		rm --force --verbose social-bookmarks-hook-*.war
+		rm --force --verbose speedwell-theme.war
+		rm --force --verbose westeros-bank-theme.war
+	fi
 }
 
 function compile_product {
