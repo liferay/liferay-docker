@@ -1,20 +1,20 @@
 #!/bin/bash
 
 function get_environment_type {
-	local target_host=${1}
+	local host=${1}
 
-	if [ -z "${target_host}" ]
+	if [ -z "${host}" ]
 	then
-		target_host=$(hostname)
+		host=$(hostname)
 	fi
 
-	if [[ "${target_host}" =~ ^test-[0-9]+-[0-9]+-[0-9]+$ ]]
+	if [[ "${host}" =~ ^test-[0-9]+-[0-9]+-[0-9]+$ ]]
 	then
 		echo "ci_slave"
-	elif [[ "${target_host}" =~ ^release-slave-[1-2]$ ]]
+	elif [[ "${host}" =~ ^release-slave-[1-2]$ ]]
 	then
 		echo "release_slave"
-	elif [[ "${target_host}" =~ ^liferay-* ]]
+	elif [[ "${host}" =~ ^liferay-* ]]
 	then
 		echo "local"
 	else
