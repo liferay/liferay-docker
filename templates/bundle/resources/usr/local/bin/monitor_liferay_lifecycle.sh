@@ -67,9 +67,38 @@ function main {
 		then
 			if [ "${started}" == "true" ]
 			then
-				generate_thread_dump
+                if [ "${SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_ENABLED}" == "true" ] && [ -n "${SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]
+                then
+                    local tomcat_thread_active_count=$(curl \
+						"http://localhost:15000/metrics" \
+						--max-time 2 \
+						--silent \
+						| grep "^catalina_executor_activecount" \
+						| cut --delimiter=' ' --fields=2 \
+						| cut --delimiter='.' --fields=1)
 
-				update_container_status fail,http-response-error,curl-return-code-${exit_code}
+					lecho "The Tomcat thread active count is ${tomcat_thread_active_count}."
+
+					if [[ "${tomcat_thread_active_count}" =~ ^[0-9]+$ ]] && [ "${tomcat_thread_active_count}" -ge "${SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]
+					then
+						lecho "Checking the JVM thread state of the Liferay service."
+
+						(/usr/local/bin/get_thread_state.sh)
+
+						local thread_state_exit_code=${?}
+
+						if [ ${thread_state_exit_code} -gt 1 ]
+						then
+							generate_thread_dump
+
+							update_container_status fail,http-response-error,curl-return-code-${exit_code},threads-are-same
+						fi
+					fi
+                else
+					generate_thread_dump
+
+					update_container_status fail,http-response-error,curl-return-code-${exit_code}
+				fi
 			fi
 		elif [ -n "${LIFERAY_CONTAINER_STATUS_REQUEST_CONTENT}" ]
 		then
@@ -85,7 +114,7 @@ function main {
 			fi
 		fi
 
-		if [ ${exit_code} -eq 0 ]
+		if [[ ${exit_code} -eq 0 || ( -n ${thread_state_exit_code} && ${thread_state_exit_code} -lt 2 ) ]]
 		then
 			fail_count=0
 

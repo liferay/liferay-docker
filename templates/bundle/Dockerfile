@@ -5,7 +5,7 @@ ARG OPTIONAL_PACKAGES
 COPY resources/etc/created-date /etc/created-date
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bc ffmpeg file fonts-dejavu ghostscript google-perftools libtcnative-1 ${OPTIONAL_PACKAGES} && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bc ffmpeg file fonts-dejavu gawk ghostscript google-perftools libtcnative-1 ${OPTIONAL_PACKAGES} && \
 	apt-get upgrade --yes && \
 	apt-get clean
 
@@ -65,6 +65,9 @@ ENV LIFERAY_SETUP_PERIOD_WIZARD_PERIOD_ADD_PERIOD_SAMPLE_PERIOD_DATA=false
 ENV LIFERAY_SETUP_PERIOD_WIZARD_PERIOD_ENABLED=false
 ENV LIFERAY_TERMS_PERIOD_OF_PERIOD_USE_PERIOD_REQUIRED=false
 ENV LIFERAY_USERS_PERIOD_REMINDER_PERIOD_QUERIES_PERIOD_ENABLED=false
+
+ENV SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_ENABLED=false
+ENV SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD=
 
 EXPOSE 8000 8009 8080 11311
 
