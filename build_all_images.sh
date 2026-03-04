@@ -11,7 +11,7 @@ function build_base_image {
 	if [[ $(get_latest_docker_hub_version "base") == $(./release_notes.sh get-version) ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
-		echo "Docker image Base is up to date."
+		echo "Docker image Base is up to date!"
 
 		return
 	fi
