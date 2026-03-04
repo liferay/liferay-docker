@@ -46,6 +46,8 @@ function main {
 
 		rm --force --recursive downloads
 		rm --force --recursive release/release-data
+
+		_clean_up_repository "liferay-binaries-cache-2020"
 	elif [ "${current_job}" == "source-code-sharing" ]
 	then
 		rm --force --recursive narwhal/source_code_sharing/liferay-portal-ee
@@ -61,7 +63,11 @@ function main {
 			-exec rm --force --recursive {} \; &> /dev/null
 	fi
 
-	lc_cd /opt/dev/projects/github/liferay-portal-ee
+	_clean_up_repository "liferay-portal-ee"
+}
+
+function _clean_up_repository {
+	lc_cd "/opt/dev/projects/github/${1}"
 
 	git clean -dfx &> /dev/null
 
