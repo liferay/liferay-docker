@@ -48,15 +48,17 @@ function main {
 		rm --force --recursive release/release-data
 	elif [ "${current_job}" == "source-code-sharing" ]
 	then
-		local hotfix_cache_dir="${HOME}/.liferay-common-cache/liferay-releases-hotfix"
-
-		if [ -d "${hotfix_cache_dir}" ] &&
-		   [ $(du --bytes --summarize "${hotfix_cache_dir}" | cut --fields=1) -gt 10737418240 ]
-		then
-			rm --force --recursive "${hotfix_cache_dir}"
-		fi
-
 		rm --force --recursive narwhal/source_code_sharing/liferay-portal-ee
+	fi
+
+	local liferay_common_cache_dir="${HOME}/.liferay-common-cache"
+
+	if [ -d "${liferay_common_cache_dir}" ] &&
+	   [ $(du --bytes --summarize "${liferay_common_cache_dir}" | cut --fields=1) -gt 10737418240 ]
+	then
+		find "${liferay_common_cache_dir}" \
+			-mindepth 1 \
+			-exec rm --force --recursive {} \; &> /dev/null
 	fi
 
 	lc_cd /opt/dev/projects/github/liferay-portal-ee
