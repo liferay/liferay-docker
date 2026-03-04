@@ -7,7 +7,8 @@ function main {
 
 	lc_log INFO "Cleaning workspace for job ${current_job}."
 
-	if [ "${current_job}" == "build-release" ] ||
+	if [ "${current_job}" == "build-hotfix" ] ||
+	   [ "${current_job}" == "build-release" ] ||
 	   [ "${current_job}" == "build-release-nightly" ] ||
 	   [ "${current_job}" == "release-gold" ]
 	then
