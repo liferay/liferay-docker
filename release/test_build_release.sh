@@ -16,13 +16,25 @@ function main {
 	test_build_release_not_handle_automated_build
 	test_build_release_print_help
 
-	tear_down
+	test_build_hotfix_main || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+
+	test_build_hotfix_has_packaged_hotfix
+
+	_clean_up_release_data
+
+	LIFERAY_RELEASE_GIT_REF="fix-pack-fix-263630758"
+	_PRODUCT_VERSION="7.3.10-u36"
+
+	test_build_hotfix_main || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+
+	test_build_hotfix_has_packaged_hotfix
 }
 
 function set_up {
 	common_set_up
 
-	export LIFERAY_RELEASE_GIT_REF="release-test"
+	export LIFERAY_RELEASE_GIT_REF="2025.q4.1"
+	export LIFERAY_RELEASE_HOTFIX_ID="12345"
 	export RUN_SCANCODE_PIPELINE="false"
 	export TRIGGER_CI_TEST_SUITE="false"
 	export _PRODUCT_VERSION="2025.q4.1"
@@ -34,13 +46,36 @@ function set_up {
 function tear_down {
 	common_tear_down
 
-	rm --force --recursive "${_RELEASE_ROOT_DIR}/release-data"
+	_clean_up_release_data
 
 	unset LIFERAY_RELEASE_GIT_REF
 	unset RUN_SCANCODE_PIPELINE
 	unset TRIGGER_CI_TEST_SUITE
 	unset _RELEASE_PACKAGE
 	unset _RELEASE_ROOT_DIR
+}
+
+function test_build_hotfix_has_packaged_hotfix {
+	local hotfix_zip_file="${_RELEASE_ROOT_DIR}/release-data/build/liferay-dxp-${_PRODUCT_VERSION}-hotfix-${LIFERAY_RELEASE_HOTFIX_ID}.zip"
+
+	assert_equals \
+		"$(ls -1 "${hotfix_zip_file}" | wc --lines)" \
+		"1"
+
+	rm --force "${hotfix_zip_file}"
+}
+
+function test_build_hotfix_main {
+	LIFERAY_RELEASE_OUTPUT="hotfix" ./build_release.sh &> /dev/null
+
+	local exit_code="${?}"
+
+	assert_equals "${exit_code}" "0"
+
+	if [ "${exit_code}" -ne 0 ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 }
 
 function test_build_release_bundle_smaller_than_1_gb_300_mb {
@@ -122,6 +157,10 @@ function test_build_release_print_help {
 	_test_build_release_print_help "2025.q2.0"
 	_test_build_release_print_help "2025.q3.0"
 	_test_build_release_print_help "2025.q4.0"
+}
+
+function _clean_up_release_data {
+	rm --force --recursive "${_RELEASE_ROOT_DIR}/release-data"
 }
 
 function _test_build_release_not_handle_automated_build {
