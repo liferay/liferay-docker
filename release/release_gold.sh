@@ -112,8 +112,6 @@ function main {
 
 	lc_time_run reference_new_releases
 
-	lc_time_run test_boms
-
 	lc_time_run update_salesforce_product_version
 
 	if [ -d "${_RELEASE_ROOT_DIR}/dev/projects" ]
@@ -130,6 +128,8 @@ function main {
 	lc_time_run add_patcher_project_version
 
 	lc_time_run upload_to_docker_hub
+
+	lc_time_run test_boms
 }
 
 function prepare_next_release_branch {
