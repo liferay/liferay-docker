@@ -545,6 +545,14 @@ function test_boms {
 			--refresh-releases
 	fi
 
+	lc_log DEBUG "Searching for ${_PRODUCT_VERSION} in .liferay-common-cache/releases.liferay.com/releases.json."
+
+	grep "${_PRODUCT_VERSION}" "${HOME}/.liferay-common-cache/releases.liferay.com/releases.json"
+
+	lc_log DEBUG "Searching for ${_PRODUCT_VERSION} in .liferay/workspace/releases.json"
+
+	grep "${_PRODUCT_VERSION}" "${HOME}/.liferay/workspace/releases.json"
+
 	for module in api mvc-portlet
 	do
 		blade create -t "${module}" "test-${module}"
