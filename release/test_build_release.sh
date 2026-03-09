@@ -6,14 +6,9 @@ source ./build_release.sh
 function main {
 	set_up
 
-	test_build_release_main
+	trap tear_down EXIT
 
-	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
-	then
-		tear_down
-
-		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
+	test_build_release_main || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 
 	test_build_release_bundle_smaller_than_1_gb_300_mb
 	test_build_release_handle_automated_build
