@@ -86,6 +86,7 @@ function test_build_release_bundle_smaller_than_1_gb_300_mb {
 
 function test_build_release_handle_automated_build {
 	BUILD_CAUSE="TIMERTRIGGER"
+	LIFERAY_RELEASE_GIT_REF="release-test"
 
 	handle_automated_build &> /dev/null
 
@@ -98,6 +99,8 @@ function test_build_release_handle_automated_build {
 		"true"
 
 	unset BUILD_CAUSE
+
+	LIFERAY_RELEASE_GIT_REF="${_PRODUCT_VERSION}"
 }
 
 function test_build_release_has_packaged_bundles {
@@ -157,6 +160,8 @@ function test_build_release_print_help {
 	_test_build_release_print_help "2025.q2.0"
 	_test_build_release_print_help "2025.q3.0"
 	_test_build_release_print_help "2025.q4.0"
+
+	_PRODUCT_VERSION="${LIFERAY_RELEASE_GIT_REF}"
 }
 
 function _clean_up_release_data {
