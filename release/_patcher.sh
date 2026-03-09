@@ -7,6 +7,11 @@ function lc_time_run_error {
 }
 
 function report_jenkins_url {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	if [ -z "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}" ] ||
 	   [ -z "${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}" ]
 	then
@@ -47,6 +52,11 @@ function report_jenkins_url {
 }
 
 function report_patcher_status {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	lc_cd "${_BUILD_DIR}"/patcher-status/production/osbPatcherStatus/build/jenkins
 
 	(

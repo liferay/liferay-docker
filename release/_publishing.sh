@@ -267,6 +267,11 @@ function upload_boms {
 }
 
 function upload_hotfix {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
