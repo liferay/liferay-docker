@@ -533,12 +533,16 @@ function test_boms {
 
 	if is_quarterly_release
 	then
-		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}" --refresh-releases
+		blade init \
+			--liferay-version "${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}" \
+			--refresh-releases
 	else
 		local product_group_version="$(get_product_group_version)"
 		local product_version_suffix=$(echo "${_PRODUCT_VERSION}" | cut --delimiter='-' --fields=2)
 
-		blade init -v "${LIFERAY_RELEASE_PRODUCT_NAME}-${product_group_version}-${product_version_suffix}" --refresh-releases
+		blade init \
+			--liferay-version "${LIFERAY_RELEASE_PRODUCT_NAME}-${product_group_version}-${product_version_suffix}" \
+			--refresh-releases
 	fi
 
 	for module in api mvc-portlet
