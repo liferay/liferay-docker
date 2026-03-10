@@ -384,7 +384,8 @@ function generate_pom_release_bom_test {
 	echo "" >> "${pom_file_name}"
 
 	local dependencies_list=(
-		biz.aQute.bnd:biz.aQute.bndlib
+		biz.aQute.bnd:biz.aQute.bnd:3.5.0
+		biz.aQute.bnd:biz.aQute.bndlib:3.5.0
 		com.liferay.portal:com.liferay.portal.test
 		com.liferay.portal:com.liferay.portal.test.integration:6.0.36
 		com.liferay:com.liferay.arquillian.extension.junit.bridge
