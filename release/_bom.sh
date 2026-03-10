@@ -369,6 +369,13 @@ function generate_pom_release_bom_compile_only {
 }
 
 function generate_pom_release_bom_test {
+	if ! is_quarterly_release
+	then
+		lc_log INFO "The test BOM should be generated only for quarterly releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
