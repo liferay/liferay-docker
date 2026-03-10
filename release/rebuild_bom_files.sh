@@ -96,7 +96,7 @@ function main {
 
 	lc_time_run generate_distro_jar
 
-	lc_time_run generate_poms
+	generate_poms
 
 	rm --force --recursive "${_BUILD_DIR}/release"
 
