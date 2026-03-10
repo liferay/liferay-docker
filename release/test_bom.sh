@@ -63,7 +63,6 @@ function main {
 		test_bom_generate_pom_release_bom_compile_only_portal
 		test_bom_generate_pom_release_bom_distro_portal
 		test_bom_generate_pom_release_bom_portal
-		test_bom_generate_pom_release_bom_test_portal
 		test_bom_generate_pom_release_bom_third_party_portal
 
 		set_up_jakarta_dxp_tests
@@ -75,6 +74,7 @@ function main {
 		test_bom_copy_file
 		test_bom_copy_tld
 		test_bom_manage_bom_jar
+		test_bom_not_generate_pom_release_bom_test
 	fi
 
 	tear_down
@@ -317,16 +317,6 @@ function test_bom_generate_pom_release_bom_portal {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
 }
 
-function test_bom_generate_pom_release_bom_test_portal {
-	generate_pom_release_bom_test
-
-	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_RC_VERSION}.pom \
-		test-dependencies/expected/test.bom.portal.release.bom.test.pom
-
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_RC_VERSION}.pom
-}
-
 function test_bom_generate_pom_release_bom_third_party_dxp {
 	generate_pom_release_bom_compile_only
 
@@ -373,6 +363,16 @@ function test_bom_manage_bom_jar {
 
 	rm --force --recursive api-jar
 	rm --force --recursive temp_dir_manage_bom_jar/META-INF
+}
+
+function test_bom_not_generate_pom_release_bom_test {
+	_PRODUCT_VERSION="7.4.13-u147"
+
+	generate_pom_release_bom_test &> /dev/null
+
+	assert_equals \
+		"${?}" \
+		"${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 main "${@}"
