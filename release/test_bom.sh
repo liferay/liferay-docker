@@ -56,6 +56,7 @@ function main {
 		test_bom_generate_pom_release_bom_dxp
 		test_bom_generate_pom_release_bom_test_dxp
 		test_bom_generate_pom_release_bom_third_party_dxp
+		test_bom_not_generate_pom_release_bom_test_dxp
 
 		set_up_portal_tests
 
@@ -74,7 +75,6 @@ function main {
 		test_bom_copy_file
 		test_bom_copy_tld
 		test_bom_manage_bom_jar
-		test_bom_not_generate_pom_release_bom_test
 	fi
 
 	tear_down
@@ -365,7 +365,7 @@ function test_bom_manage_bom_jar {
 	rm --force --recursive temp_dir_manage_bom_jar/META-INF
 }
 
-function test_bom_not_generate_pom_release_bom_test {
+function test_bom_not_generate_pom_release_bom_test_dxp {
 	_PRODUCT_VERSION="7.4.13-u147"
 
 	generate_pom_release_bom_test &> /dev/null
