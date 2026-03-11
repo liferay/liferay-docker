@@ -79,20 +79,18 @@ function test_product_clean_up_ignored_dxp_plugins {
 	for file in \
 		documentum-hook-test.war \
 		fjord-theme.war \
-		minium-theme.war \
 		opensocial-portlet-test.war \
 		porygon-theme.war \
 		saml-hook-test.war \
 		sharepoint-hook-test.war \
 		social-bookmarks-hook-test.war \
-		speedwell-theme.war \
 		test.war \
 		westeros-bank-theme.war
 	do
 		touch "${_BUNDLES_DIR}/osgi/portal-war/${file}"
 	done
 
-	_test_product_clean_up_ignored_dxp_plugins "2025.q1.0-lts" "11"
+	_test_product_clean_up_ignored_dxp_plugins "2025.q1.0-lts" "9"
 	_test_product_clean_up_ignored_dxp_plugins "2026.q1.0-lts" "1"
 
 	export _BUNDLES_DIR="${PWD}/test-dependencies/liferay-dxp"
