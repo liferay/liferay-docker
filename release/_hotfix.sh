@@ -457,6 +457,11 @@ function create_hotfix {
 }
 
 function in_hotfix_scope {
+	if (echo "${1}" | grep --quiet "^glowroot/plugins")
+	then
+		return 0
+	fi
+
 	if (echo "${1}" | grep --quiet "^osgi/") && (! echo "${1}" | grep --quiet "^osgi/state")
 	then
 		return 0
