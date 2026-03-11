@@ -197,13 +197,11 @@ function clean_up_ignored_dxp_plugins {
 
 		rm --force --verbose documentum-hook-*.war
 		rm --force --verbose fjord-theme.war
-		rm --force --verbose minium-theme.war
 		rm --force --verbose opensocial-portlet-*.war
 		rm --force --verbose porygon-theme.war
 		rm --force --verbose saml-hook-*.war
 		rm --force --verbose sharepoint-hook-*.war
 		rm --force --verbose social-bookmarks-hook-*.war
-		rm --force --verbose speedwell-theme.war
 		rm --force --verbose westeros-bank-theme.war
 	fi
 }
