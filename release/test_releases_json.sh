@@ -26,6 +26,7 @@ function main {
 		test_releases_json_tag_jakarta_product_versions
 		test_releases_json_tag_recommended_product_versions
 		test_releases_json_tag_supported_product_versions
+		test_releases_json_tag_test_bom_product_versions
 	fi
 
 	tear_down
@@ -225,6 +226,13 @@ function test_releases_json_tag_supported_product_versions {
 	_test_releases_json_tag_supported_product_versions "7.4.13-u92" "true"
 }
 
+function test_releases_json_tag_test_bom_product_versions {
+	_test_releases_json_tag_test_bom_product_versions "2024.q1" "true"
+	_test_releases_json_tag_test_bom_product_versions "2025.q4" "true"
+	_test_releases_json_tag_test_bom_product_versions "2026.q1" "true"
+	_test_releases_json_tag_test_bom_product_versions "7.4" "false"
+}
+
 function _get_portal_upgrade_registry {
 	local current_dir="${PWD}"
 
@@ -310,6 +318,22 @@ function _test_releases_json_tag_supported_product_versions {
 		"${2}"
 
 	rm --force "${product_version_json_file}"
+}
+
+function _test_releases_json_tag_test_bom_product_versions {
+	local product_group_version="${1}"
+
+	local product_group_version_json=$(echo "${product_group_version}" | tr '.' '-').json
+
+	echo "[{\"productGroupVersion\": \"${product_group_version}\"}]" > "${product_group_version_json}"
+
+	_tag_test_bom_product_versions &> /dev/null
+
+	assert_equals \
+		"$(jq --raw-output "(.[0].tags // []) | contains([\"testBom\"])" "${product_group_version_json}")" \
+		"${2}"
+
+	rm --force "${product_group_version_json}"
 }
 
 main "${@}"
