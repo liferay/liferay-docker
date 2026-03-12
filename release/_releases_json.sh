@@ -22,6 +22,7 @@ function generate_releases_json {
 	_tag_jakarta_product_versions
 	_tag_recommended_product_versions
 	_tag_supported_product_versions
+	_tag_test_bom_product_versions
 
 	_sort_all_releases_json_attributes
 
@@ -494,6 +495,22 @@ function _tag_supported_product_versions {
 					)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
 			fi
 		done < <(jq --raw-output ".[].url" "${json_file}")
+	done < <(find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f)
+}
+
+function _tag_test_bom_product_versions {
+	lc_log INFO "Tagging product versions with test BOM support."
+
+	local json_file
+
+	while read -r json_file
+	do
+		jq "map(
+				if .productGroupVersion? | contains(\"q\")
+				then
+					.tags = ((.tags // []) + [\"testBom\"] | unique)
+				end
+			)" "${json_file}" > "${json_file}.tmp" && mv "${json_file}.tmp" "${json_file}"
 	done < <(find "${_PROMOTION_DIR}" -maxdepth 1 -name "*.json" -type f)
 }
 
