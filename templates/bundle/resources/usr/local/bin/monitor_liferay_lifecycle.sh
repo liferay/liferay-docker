@@ -67,9 +67,9 @@ function main {
 		then
 			if [ "${started}" == "true" ]
 			then
-                if [ "${SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_ENABLED}" == "true" ] && [ -n "${SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]
-                then
-                    local tomcat_thread_active_count=$(curl \
+				if [ "${SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_ENABLED}" == "true" ] && [ -n "${SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]
+				then
+					local tomcat_thread_active_count=$(curl \
 						"http://localhost:15000/metrics" \
 						--max-time 2 \
 						--silent \
@@ -94,7 +94,7 @@ function main {
 							update_container_status fail,http-response-error,curl-return-code-${exit_code},threads-are-same
 						fi
 					fi
-                else
+				else
 					generate_thread_dump
 
 					update_container_status fail,http-response-error,curl-return-code-${exit_code}
