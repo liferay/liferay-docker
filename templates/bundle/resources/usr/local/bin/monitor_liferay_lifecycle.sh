@@ -3,9 +3,9 @@
 source /usr/local/bin/_liferay_bundle_common.sh
 
 function generate_thread_dump {
-	mkdir --parents "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
+	mkdir --parents "${SRE_LIFERAY_THREAD_DUMPS_DIRECTORY}"
 
-	local file_name="${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
+	local file_name="${SRE_LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
 
 	jattach $(cat "${LIFERAY_PID}") threaddump \
 		| tee "${file_name}" \

@@ -88,16 +88,16 @@ function start_liferay {
 }
 
 function start_interval_thread_dump {
-	if [ ! -n "${LIFERAY_DOCKER_THREAD_DUMP_INTERVAL_FILE}" ]
+	if [ ! -n "${SRE_LIFERAY_THREAD_DUMP_INTERVAL_FILE}" ]
 	then
 		return
 	fi
 
 	while true
 	do
-		if [ -s "${LIFERAY_DOCKER_THREAD_DUMP_INTERVAL_FILE}" ]
+		if [ -s "${SRE_LIFERAY_THREAD_DUMP_INTERVAL_FILE}" ]
 		then
-			local sleep=$(cat "${LIFERAY_DOCKER_THREAD_DUMP_INTERVAL_FILE}")
+			local sleep=$(cat "${SRE_LIFERAY_THREAD_DUMP_INTERVAL_FILE}")
 
 			if ! [ "${sleep}" -gt 3 ] &>/dev/null
 			then

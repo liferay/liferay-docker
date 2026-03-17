@@ -93,12 +93,12 @@ function main {
 	then
 		echo -e "${curl_content}"
 
-		if [ ! -e  "${LIFERAY_THREAD_DUMPS_DIRECTORY}" ]
+		if [ ! -e  "${SRE_LIFERAY_THREAD_DUMPS_DIRECTORY}" ]
 		then
-			mkdir --parents "${LIFERAY_THREAD_DUMPS_DIRECTORY}"
+			mkdir --parents "${SRE_LIFERAY_THREAD_DUMPS_DIRECTORY}"
 		fi
 
-		jattach $(cat "${LIFERAY_PID}") threaddump > "${LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
+		jattach $(cat "${LIFERAY_PID}") threaddump > "${SRE_LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
 	fi
 
 	exit ${exit_code}
