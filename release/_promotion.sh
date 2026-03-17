@@ -56,6 +56,12 @@ function prepare_poms_for_promotion {
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party" \
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro"
 	do
+		if ! is_quarterly_release &&
+		   [ "${pom_name}" == "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test" ]
+		then
+			continue
+		fi
+
 		if [ -n "${nexus_repository_name}" ]
 		then
 			_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${pom_name}/${_ARTIFACT_RC_VERSION}/${pom_name}-${_ARTIFACT_RC_VERSION}.pom" "${_PROMOTION_DIR}/${pom_name}-${_ARTIFACT_VERSION}.pom"
