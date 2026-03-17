@@ -41,7 +41,7 @@ function filter_threads {
 function main {
 	for i in {1..3}
 	do
-		jcmd "$(cat "${LIFERAY_PID}")" Thread.print > "${LIFERAY_HOME}/dump_${i}.tdump"
+		jcmd "$(cat ${LIFERAY_PID})" Thread.print > "${LIFERAY_HOME}/dump_${i}.tdump"
 
 		if [ "${i}" -lt 3 ]
 		then
