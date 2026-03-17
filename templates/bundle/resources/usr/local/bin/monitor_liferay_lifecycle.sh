@@ -58,6 +58,7 @@ function main {
 		fi
 
 		local curl_content
+		local thread_state_exit_code=""
 
 		curl_content=$(curl --connect-timeout "${LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT}" --connect-to ":80:localhost:8080" --fail --max-time "${curl_max_time}" --show-error --silent "${LIFERAY_CONTAINER_STATUS_REQUEST_URL}" 2>/dev/null)
 
@@ -85,7 +86,7 @@ function main {
 
 						(/usr/local/bin/get_thread_state.sh)
 
-						local thread_state_exit_code=${?}
+						thread_state_exit_code=${?}
 
 						if [ ${thread_state_exit_code} -gt 1 ]
 						then
