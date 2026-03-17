@@ -218,7 +218,6 @@ function upload_bom_file {
 
 	local component_name="${file_name/%-*}"
 
-
 	if [ "${nexus_repository_name}" == "liferay-public-releases" ]
 	then
 		local file_url="${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/${component_name}/${_ARTIFACT_VERSION}/${file_name}"
