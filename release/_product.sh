@@ -421,7 +421,7 @@ function set_product_version {
 
 		if (echo "${version_display_name}" | grep --ignore-case --quiet "q")
 		then
-			_PRODUCT_VERSION=$(echo "${version_display_name,,}" | sed "s/ lts/-lts/g")
+			_PRODUCT_VERSION=$(echo "${version_display_name}" | tr "[:upper:]" "[:lower:]" | sed "s/ lts/-lts/g")
 
 			_add_lts_suffix_to_product_version
 		else
