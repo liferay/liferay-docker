@@ -216,7 +216,7 @@ function upload_bom_file {
 
 	local file_name=$(basename "${file_path}")
 
-	local component_name=$(echo "${file_name}" | cut --delimiter "-" --fields=1)
+	local component_name=$(echo "${file_name}" | cut --delimiter='-' --fields=1)
 
 	if [ "${nexus_repository_name}" == "liferay-public-releases" ]
 	then
