@@ -422,6 +422,8 @@ function set_product_version {
 		if (echo "${version_display_name}" | grep --ignore-case --quiet "q")
 		then
 			_PRODUCT_VERSION=$(echo "${version_display_name,,}" | sed "s/ lts/-lts/g")
+
+			_add_lts_suffix_to_product_version
 		else
 			local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
@@ -440,13 +442,7 @@ function set_product_version {
 	else
 		_PRODUCT_VERSION="${1}"
 
-		if [[ "$(get_release_year)" -gt 2024 ]] && [[ "$(get_release_quarter)" -eq 1 ]]
-		then
-			if ! is_lts_release
-			then
-				_PRODUCT_VERSION="${_PRODUCT_VERSION}-lts"
-			fi
-		fi
+		_add_lts_suffix_to_product_version
 
 		set_artifact_versions "${_PRODUCT_VERSION}" "${2}"
 	fi
@@ -599,4 +595,19 @@ function warm_up_tomcat {
 	fi
 
 	touch "${_BUILD_DIR}/warm-up-tomcat"
+}
+
+function _add_lts_suffix_to_product_version {
+	if ! is_quarterly_release
+	then
+		return
+	fi
+
+	if [[ "$(get_release_year)" -gt 2024 ]] && [[ "$(get_release_quarter)" -eq 1 ]]
+	then
+		if ! is_lts_release
+		then
+			_PRODUCT_VERSION="${_PRODUCT_VERSION}-lts"
+		fi
+	fi
 }
