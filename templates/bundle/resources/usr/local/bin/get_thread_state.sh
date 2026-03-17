@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function compare {
+function _compare {
 	local total=0
 	local match=0
 
@@ -20,7 +20,7 @@ function compare {
 	fi
 }
 
-function filter_threads {
+function _filter_threads {
 	awk '
 	BEGIN { capture=0; stack="" }
 	/^"/ {
@@ -51,7 +51,7 @@ function main {
 
 	for i in {1..3}
 	do
-		filter_threads "${LIFERAY_HOME}/dump_${i}.tdump" | parse_threads > "${LIFERAY_HOME}/filter_${i}.tdump"
+		_filter_threads "${LIFERAY_HOME}/dump_${i}.tdump" | _parse_threads > "${LIFERAY_HOME}/filter_${i}.tdump"
 		if [ ! -s "${LIFERAY_HOME}/filter_${i}.tdump" ]
 		then
 			echo "Lifecycle monitor: Empty filtered thread found in filter_${i}.tdump."
@@ -61,7 +61,7 @@ function main {
 
 	for i in {1..2}
 	do
-		comparison[$i]=$(compare "${LIFERAY_HOME}/filter_1.tdump" "${LIFERAY_HOME}/filter_$((i+1)).tdump")
+		comparison[$i]=$(_compare "${LIFERAY_HOME}/filter_1.tdump" "${LIFERAY_HOME}/filter_$((i+1)).tdump")
 		echo "Lifecycle monitor: Match dump_1 & dump_$((i+1)): ${comparison[$i]}%."
 	done
 
@@ -83,7 +83,7 @@ function main {
 	fi
 }
 
-function parse_threads {
+function _parse_threads {
 	awk -v tmpdir="${LIFERAY_HOME}" '
 	BEGIN { RS=""; FS="\n" }
 	{
