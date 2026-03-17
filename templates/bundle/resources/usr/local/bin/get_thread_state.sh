@@ -38,6 +38,41 @@ function _filter_threads {
 	' "${1}"
 }
 
+function _parse_threads {
+	awk -v tmpdir="${LIFERAY_HOME}" '
+	BEGIN { RS=""; FS="\n" }
+	{
+		if ($1 ~ /catalina-exec-|http-nio-8081-exec/) {
+			state=""
+			stack=""
+			stack_lines=0
+			for (i=1; i<=NF; i++) {
+				stack = stack $i "\n"
+				if ($i ~ /java\.lang\.Thread\.State:/) {
+					if (match($i, /java\.lang\.Thread\.State:\s*([A-Z_]+)/, m)) {
+						state = m[1]
+					}
+				}
+				if ($i ~ /^\s*at /) stack_lines++
+			}
+			if (stack_lines <= 30) next
+			tmpfile = sprintf("%s/.tmpstack_%d", tmpdir, NR)
+			print stack > tmpfile
+			close(tmpfile)
+			cmd = "sha256sum \"" tmpfile "\""
+			cmd | getline hashline
+			close(cmd)
+			split(hashline, parts, " ")
+			hash = parts[1]
+			system("rm -f \"" tmpfile "\"")
+			if (match($1, /"(catalina-exec-[^"]+|http-nio-8081-exec[^"]+)"/, m)) {
+				tname = m[1]
+				print tname, state, hash
+			}
+		}
+	}'
+}
+
 function main {
 	for i in {1..3}
 	do
@@ -81,41 +116,6 @@ function main {
 		echo "Lifecycle monitor: Both comparisons below threshold."
 		exit 0
 	fi
-}
-
-function _parse_threads {
-	awk -v tmpdir="${LIFERAY_HOME}" '
-	BEGIN { RS=""; FS="\n" }
-	{
-		if ($1 ~ /catalina-exec-|http-nio-8081-exec/) {
-			state=""
-			stack=""
-			stack_lines=0
-			for (i=1; i<=NF; i++) {
-				stack = stack $i "\n"
-				if ($i ~ /java\.lang\.Thread\.State:/) {
-					if (match($i, /java\.lang\.Thread\.State:\s*([A-Z_]+)/, m)) {
-						state = m[1]
-					}
-				}
-				if ($i ~ /^\s*at /) stack_lines++
-			}
-			if (stack_lines <= 30) next
-			tmpfile = sprintf("%s/.tmpstack_%d", tmpdir, NR)
-			print stack > tmpfile
-			close(tmpfile)
-			cmd = "sha256sum \"" tmpfile "\""
-			cmd | getline hashline
-			close(cmd)
-			split(hashline, parts, " ")
-			hash = parts[1]
-			system("rm -f \"" tmpfile "\"")
-			if (match($1, /"(catalina-exec-[^"]+|http-nio-8081-exec[^"]+)"/, m)) {
-				tname = m[1]
-				print tname, state, hash
-			}
-		}
-	}'
 }
 
 main
