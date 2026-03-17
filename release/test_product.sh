@@ -17,6 +17,7 @@ function main {
 		"${1}"
 	else
 		test_product_add_ckeditor_license
+		test_product_add_lts_suffix_to_product_version
 		test_product_clean_up_ignored_dxp_plugins
 		test_product_deploy_opensearch
 		test_product_get_java_specification_version
@@ -69,6 +70,15 @@ function test_product_add_ckeditor_license {
 	_test_product_add_ckeditor_license "2025.q3.10"
 	_test_product_add_ckeditor_license "2025.q4.0"
 	_test_product_add_ckeditor_license "2025.q4.9"
+}
+
+function test_product_add_lts_suffix_to_product_version {
+	_test_product_add_lts_suffix_to_product_version "2025.q1.0" "2025.q1.0-lts"
+	_test_product_add_lts_suffix_to_product_version "2026.q1.0-lts" "2026.q1.0-lts"
+	_test_product_add_lts_suffix_to_product_version "2026.q1.0" "2026.q1.0-lts"
+	_test_product_add_lts_suffix_to_product_version "2026.q2.0" "2026.q2.0"
+	_test_product_add_lts_suffix_to_product_version "2026.q4.0" "2026.q4.0"
+	_test_product_add_lts_suffix_to_product_version "7.4.13-u148" "7.4.13-u148"
 }
 
 function test_product_clean_up_ignored_dxp_plugins {
@@ -164,6 +174,16 @@ function _test_product_add_ckeditor_license {
 		"licenseKey=\"${LIFERAY_CKEDITOR_LICENSE_KEY}\""
 
 	rm --force "${_BUNDLES_DIR}/osgi/configs/com.liferay.frontend.editor.ckeditor.web.internal.configuration.CKEditor5Configuration.config"
+}
+
+function _test_product_add_lts_suffix_to_product_version {
+	_PRODUCT_VERSION="${1}"
+
+	_add_lts_suffix_to_product_version &> /dev/null
+
+	assert_equals \
+		"${_PRODUCT_VERSION}" \
+		"${2}"
 }
 
 function _test_product_clean_up_ignored_dxp_plugins {
