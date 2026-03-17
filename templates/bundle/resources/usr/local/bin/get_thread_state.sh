@@ -7,9 +7,18 @@ function _compare {
 	while read -r name state hash
 	do
 		((total++))
-		found=$(awk -v n="${name}" -v s="${state}" -v h="${hash}" \
-			'$1==n && $2==s && $3==h {print}' "${2}")
-		[[ -n "${found}" ]] && ((match++))
+
+		found=$(awk \
+			-v n="${name}" \
+			-v s="${state}" \
+			-v h="${hash}" \
+			'$1==n && $2==s && $3==h {print}' \
+			"${2}")
+
+		if [ -n "${found}" ]
+		then
+			((match++))
+		fi
 	done < "${1}"
 
 	if (( total == 0 ))
@@ -86,10 +95,13 @@ function main {
 
 	for i in {1..3}
 	do
-		_filter_threads "${LIFERAY_HOME}/dump_${i}.tdump" | _parse_threads > "${LIFERAY_HOME}/filter_${i}.tdump"
+		_filter_threads "${LIFERAY_HOME}/dump_${i}.tdump" | \
+			_parse_threads > "${LIFERAY_HOME}/filter_${i}.tdump"
+
 		if [ ! -s "${LIFERAY_HOME}/filter_${i}.tdump" ]
 		then
 			echo "Lifecycle monitor: Empty filtered thread found in filter_${i}.tdump."
+
 			exit 0
 		fi
 	done
@@ -97,23 +109,28 @@ function main {
 	for i in {1..2}
 	do
 		comparison[$i]=$(_compare "${LIFERAY_HOME}/filter_1.tdump" "${LIFERAY_HOME}/filter_$((i+1)).tdump")
+
 		echo "Lifecycle monitor: Match dump_1 & dump_$((i+1)): ${comparison[$i]}%."
 	done
 
 	if (( "${comparison[1]}" == 100 && "${comparison[2]}" == 100 ))
 	then
 		echo "Lifecycle monitor: All dumps match perfectly."
+
 		exit 2
 	elif (( "${comparison[1]}" >= 90 && "${comparison[2]}" >= 90 ))
 	then
 		echo "Lifecycle monitor: Baseline matches >=90% with both dumps."
+
 		exit 2
 	elif (( "${comparison[1]}" >= 90 || "${comparison[2]}" >= 90 ))
 	then
 		echo "Lifecycle monitor: Only one comparison met >=90% threshold."
+
 		exit 1
 	else
 		echo "Lifecycle monitor: Both comparisons below threshold."
+
 		exit 0
 	fi
 }
