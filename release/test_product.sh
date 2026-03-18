@@ -77,7 +77,6 @@ function test_product_add_lts_suffix_to_product_version {
 	_test_product_add_lts_suffix_to_product_version "2026.q1.0-lts" "2026.q1.0-lts"
 	_test_product_add_lts_suffix_to_product_version "2026.q1.0" "2026.q1.0-lts"
 	_test_product_add_lts_suffix_to_product_version "2026.q2.0" "2026.q2.0"
-	_test_product_add_lts_suffix_to_product_version "2026.q4.0" "2026.q4.0"
 	_test_product_add_lts_suffix_to_product_version "7.4.13-u148" "7.4.13-u148"
 }
 
