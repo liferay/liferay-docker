@@ -25,7 +25,7 @@ function _compare {
 	then
 		echo 0
 	else
-		echo $(( "${match}" * 100 / "${total}" ))
+		echo $(("${match}" * 100 / "${total}"))
 	fi
 }
 
