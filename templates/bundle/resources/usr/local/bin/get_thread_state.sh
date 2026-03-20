@@ -32,7 +32,7 @@ function _compare {
 function _filter_threads {
 	awk '
 	BEGIN {
-		capture=0;
+		capture=0
 		stack=""
 	}
 	/^"/ {
@@ -52,13 +52,17 @@ function _filter_threads {
 	}
 
 	capture && /^$/ {
-		print stack;
-		capture=0;
+		print stack
+
+		capture=0
+
 		stack=""
 	}
 
 	END {
-		if (capture) print stack
+		if (capture) {
+			print stack
+		}
 	}
 	' "${1}"
 }
@@ -66,14 +70,14 @@ function _filter_threads {
 function _parse_threads {
 	awk -v tmpdir="${LIFERAY_HOME}" '
 	BEGIN {
-		RS=""
 		FS="\n"
+		RS=""
 	}
 	{
 		if ($1 ~ /catalina-exec-|http-nio-8081-exec/) {
-			state=""
 			stack=""
 			stack_lines=0
+			state=""
 
 			for (i=1; i<=NF; i++) {
 				stack = stack $i "\n"
@@ -84,10 +88,14 @@ function _parse_threads {
 					}
 				}
 
-				if ($i ~ /^\s*at /) stack_lines++
+				if ($i ~ /^\s*at /) {
+					stack_lines++
+				}
 			}
 
-			if (stack_lines <= 30) next
+			if (stack_lines <= 30) {
+				next
+			}
 
 			tmpfile = sprintf("%s/.tmpstack_%d", tmpdir, NR)
 
@@ -109,6 +117,7 @@ function _parse_threads {
 
 			if (match($1, /"(catalina-exec-[^"]+|http-nio-8081-exec[^"]+)"/, m)) {
 				name = m[1]
+
 				print hash, name, state
 			}
 		}
