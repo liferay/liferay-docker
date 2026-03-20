@@ -51,7 +51,7 @@ function _filter_threads {
 		stack = stack $0 "\n"
 	}
 
-	capture && /^$/ { 
+	capture && /^$/ {
 		print stack;
 		capture=0;
 		stack=""
