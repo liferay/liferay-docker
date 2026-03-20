@@ -21,98 +21,98 @@ function _compare {
 		fi
 	done < "${1}"
 
-    if (( "${total}" == 0 ))
-    then
-        echo 0
-    else
-        echo $(( "${match}" * 100 / "${total}" ))
-    fi
+	if (( "${total}" == 0 ))
+	then
+		echo 0
+	else
+		echo $(( "${match}" * 100 / "${total}" ))
+	fi
 }
 
 function _filter_threads {
-    awk '
-    BEGIN {
-        capture=0;
-        stack=""
-    }
-    /^"/ {
-        if ($0 ~ /catalina-exec-/ || $0 ~ /http-nio-8081-exec/) {
-            capture=1
+	awk '
+	BEGIN {
+		capture=0;
+		stack=""
+	}
+	/^"/ {
+		if ($0 ~ /catalina-exec-/ || $0 ~ /http-nio-8081-exec/) {
+			capture=1
 
-            sub(/#.*/, "", $0)
+			sub(/#.*/, "", $0)
 
-            stack = $0 "\n"
-        } else {
-            capture=0
-        }
-    }
+			stack = $0 "\n"
+		} else {
+			capture=0
+		}
+	}
 
-    capture && !/^"/ {
-        stack = stack $0 "\n"
-    }
+	capture && !/^"/ {
+		stack = stack $0 "\n"
+	}
 
-    capture && /^$/ { 
-        print stack;
-        capture=0;
-        stack=""
-    }
+	capture && /^$/ { 
+		print stack;
+		capture=0;
+		stack=""
+	}
 
-    END {
-        if (capture) print stack
-    }
-    ' "${1}"
+	END {
+		if (capture) print stack
+	}
+	' "${1}"
 }
 
 function _parse_threads {
-    awk -v tmpdir="${LIFERAY_HOME}" '
-    BEGIN {
-        RS=""
-        FS="\n"
-    }
-    {
-        if ($1 ~ /catalina-exec-|http-nio-8081-exec/) {
-            state=""
-            stack=""
-            stack_lines=0
+	awk -v tmpdir="${LIFERAY_HOME}" '
+	BEGIN {
+		RS=""
+		FS="\n"
+	}
+	{
+		if ($1 ~ /catalina-exec-|http-nio-8081-exec/) {
+			state=""
+			stack=""
+			stack_lines=0
 
-            for (i=1; i<=NF; i++) {
-                stack = stack $i "\n"
+			for (i=1; i<=NF; i++) {
+				stack = stack $i "\n"
 
-                if ($i ~ /java\.lang\.Thread\.State:/) {
-                    if (match($i, /java\.lang\.Thread\.State:\s*([A-Z_]+)/, m)) {
-                        state = m[1]
-                    }
-                }
+				if ($i ~ /java\.lang\.Thread\.State:/) {
+					if (match($i, /java\.lang\.Thread\.State:\s*([A-Z_]+)/, m)) {
+						state = m[1]
+					}
+				}
 
-                if ($i ~ /^\s*at /) stack_lines++
-            }
+				if ($i ~ /^\s*at /) stack_lines++
+			}
 
-            if (stack_lines <= 30) next
+			if (stack_lines <= 30) next
 
-            tmpfile = sprintf("%s/.tmpstack_%d", tmpdir, NR)
+			tmpfile = sprintf("%s/.tmpstack_%d", tmpdir, NR)
 
-            print stack > tmpfile
+			print stack > tmpfile
 
-            close(tmpfile)
+			close(tmpfile)
 
-            cmd = "sha256sum \"" tmpfile "\""
+			cmd = "sha256sum \"" tmpfile "\""
 
-            cmd | getline hashline
+			cmd | getline hashline
 
-            close(cmd)
+			close(cmd)
 
-            split(hashline, parts, " ")
+			split(hashline, parts, " ")
 
-            hash = parts[1]
+			hash = parts[1]
 
-            system("rm -f \"" tmpfile "\"")
+			system("rm -f \"" tmpfile "\"")
 
-            if (match($1, /"(catalina-exec-[^"]+|http-nio-8081-exec[^"]+)"/, m)) {
-                name = m[1]
-                print hash, name, state
-            }
-        }
-    }'
+			if (match($1, /"(catalina-exec-[^"]+|http-nio-8081-exec[^"]+)"/, m)) {
+				name = m[1]
+				print hash, name, state
+			}
+		}
+	}'
 }
 
 function main {
