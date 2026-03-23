@@ -82,8 +82,8 @@ function _parse_threads {
 					stack = stack $i "\n"
 
 					if ($i ~ /java\.lang\.Thread\.State:/) {
-						if (match($i, /java\.lang\.Thread\.State:\s*([A-Z_]+)/, m)) {
-							state = m[1]
+						if (match($i, /java\.lang\.Thread\.State:\s*([A-Z_]+)/, matches)) {
+							state = matches[1]
 						}
 					}
 
@@ -114,8 +114,8 @@ function _parse_threads {
 
 				system("rm -f \"" tmpfile "\"")
 
-				if (match($1, /"(catalina-exec-[^"]+|http-nio-8081-exec[^"]+)"/, m)) {
-					name = m[1]
+				if (match($1, /"(catalina-exec-[^"]+|http-nio-8081-exec[^"]+)"/, matches)) {
+					name = matches[1]
 
 					print hash, name, state
 				}
