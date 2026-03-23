@@ -55,7 +55,6 @@ function _filter_threads {
 			print stack
 
 			capture=0
-
 			stack=""
 		}
 
