@@ -6,7 +6,7 @@ function _compare {
 
 	while read -r hash name state
 	do
-		((total++))
+		total=$((total + 1))
 
 		found=$(awk \
 			-v h="${hash}" \
@@ -17,7 +17,7 @@ function _compare {
 
 		if [ -n "${found}" ]
 		then
-			((match++))
+			match=$((match + 1))
 		fi
 	done < "${1}"
 
