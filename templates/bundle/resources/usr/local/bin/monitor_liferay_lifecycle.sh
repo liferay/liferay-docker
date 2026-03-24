@@ -3,9 +3,9 @@
 source /usr/local/bin/_liferay_bundle_common.sh
 
 function generate_thread_dump {
-	mkdir --parents "${SRE_LIFERAY_THREAD_DUMPS_DIRECTORY}"
+	mkdir --parents "${LIFERAY_CONTAINER_THREAD_DUMPS_DIRECTORY}"
 
-	local file_name="${SRE_LIFERAY_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
+	local file_name="${LIFERAY_CONTAINER_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
 
 	jattach $(cat "${LIFERAY_PID}") threaddump \
 		| tee "${file_name}" \
@@ -68,7 +68,7 @@ function main {
 		then
 			if [ "${started}" == "true" ]
 			then
-				if [ "${SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_ENABLED}" == "true" ] && [ -n "${SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]
+				if [ "${LIFERAY_CONTAINER_TOMCAT_THREAD_ACTIVE_COUNT_ENABLED}" == "true" ] && [ -n "${LIFERAY_CONTAINER_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]
 				then
 					local tomcat_thread_active_count=$(curl \
 						"http://localhost:15000/metrics" \
@@ -80,7 +80,7 @@ function main {
 
 					lecho "The Tomcat thread active count is ${tomcat_thread_active_count}."
 
-					if [[ "${tomcat_thread_active_count}" =~ ^[0-9]+$ ]] && [ "${tomcat_thread_active_count}" -ge "${SRE_LIFERAY_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]
+					if [[ "${tomcat_thread_active_count}" =~ ^[0-9]+$ ]] && [ "${tomcat_thread_active_count}" -ge "${LIFERAY_CONTAINER_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]
 					then
 						lecho "Checking the JVM thread state of the Liferay service."
 
