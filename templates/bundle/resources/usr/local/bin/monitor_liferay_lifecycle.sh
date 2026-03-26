@@ -147,14 +147,14 @@ function main {
 
 			if [ "${module_count}" -eq 0 ]
 			then
-				echo "No modules are available that match: ${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}"
+				lecho "No modules are available that match: ${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}"
 			elif [ "${module_count}" -eq "${active_count}" ]
 			then
 				update_container_status live
 
 				modules_active=true
 			else
-				echo "Modules pending activation:"
+				lecho "Modules pending activation:"
 
 				echo "${telnet_content}" | grep --extended-regexp "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep --invert-match ACTIVE
 			fi
