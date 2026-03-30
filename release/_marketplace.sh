@@ -397,6 +397,37 @@ function _update_product_supported_versions {
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
 
+		local data=$(
+			cat <<- END
+			{
+				"specificationKey": "liferay-version",
+				"value": {
+					"en_US": "${product_virtual_file_entry_target_version}"
+				}
+			}
+			END
+		)
+
+		http_code=$( \
+			curl \
+				"https://marketplace.liferay.com/o/headless-commerce-admin-catalog/v1.0/products/by-externalReferenceCode/${product_external_reference_code}/product-specifications" \
+				--header "Authorization: Bearer ${_LIFERAY_MARKETPLACE_OAUTH2_TOKEN}" \
+				--header "Content-Type: application/json" \
+				--header "accept: application/json" \
+				--header "x-csrf-token: ${LIFERAY_MARKETPLACE_CSRF_TOKEN}" \
+				--output /dev/null \
+				--request POST \
+				--silent \
+				--data "${data}" \
+				--write-out "%{http_code}")
+
+		if [[ "${http_code}" -ge 400 ]]
+		then
+			lc_log ERROR "Unable to update the list of supported versions in the product specifications for product ${product_name}. HTTP code: ${http_code}.\n"
+
+			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		fi
+
 		lc_log INFO "The supported versions list was successfully updated for product ${product_name} to include the ${product_virtual_file_entry_target_version} release.\n"
 	else
 		lc_log INFO "The supported versions list for product ${product_name} already contains the ${product_virtual_file_entry_target_version} release.\n"
