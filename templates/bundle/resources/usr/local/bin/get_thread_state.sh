@@ -1,8 +1,61 @@
 #!/bin/bash
 
+function main {
+	for i in {1..3}
+	do
+		jcmd "$(cat ${LIFERAY_PID})" Thread.print > "${LIFERAY_HOME}/dump_${i}.tdump"
+
+		if [ "${i}" -lt 3 ]
+		then
+			sleep 5
+		fi
+	done
+
+	for i in {1..3}
+	do
+		_filter_threads "${LIFERAY_HOME}/dump_${i}.tdump" | \
+			_parse_threads > "${LIFERAY_HOME}/filter_${i}.tdump"
+
+		if [ ! -s "${LIFERAY_HOME}/filter_${i}.tdump" ]
+		then
+			echo "Lifecycle monitor: Empty filtered thread found in filter_${i}.tdump."
+
+			exit 0
+		fi
+	done
+
+	for i in {1..2}
+	do
+		comparison[$i]=$(_compare "${LIFERAY_HOME}/filter_1.tdump" "${LIFERAY_HOME}/filter_$((i+1)).tdump")
+
+		echo "Lifecycle monitor: Match dump_1 & dump_$((i+1)): ${comparison[$i]}%."
+	done
+
+	if (( "${comparison[1]}" == 100 && "${comparison[2]}" == 100 ))
+	then
+		echo "Lifecycle monitor: All dumps match perfectly."
+
+		exit 2
+	elif (( "${comparison[1]}" >= 90 && "${comparison[2]}" >= 90 ))
+	then
+		echo "Lifecycle monitor: Baseline matches >=90% with both dumps."
+
+		exit 2
+	elif (( "${comparison[1]}" >= 90 || "${comparison[2]}" >= 90 ))
+	then
+		echo "Lifecycle monitor: Only one comparison met >=90% threshold."
+
+		exit 1
+	else
+		echo "Lifecycle monitor: Both comparisons below threshold."
+
+		exit 0
+	fi
+}
+
 function _compare {
-	local total=0
 	local match=0
+	local total=0
 
 	while read -r hash name state
 	do
@@ -122,59 +175,6 @@ function _parse_threads {
 			}
 		}
 	'
-}
-
-function main {
-	for i in {1..3}
-	do
-		jcmd "$(cat ${LIFERAY_PID})" Thread.print > "${LIFERAY_HOME}/dump_${i}.tdump"
-
-		if [ "${i}" -lt 3 ]
-		then
-			sleep 5
-		fi
-	done
-
-	for i in {1..3}
-	do
-		_filter_threads "${LIFERAY_HOME}/dump_${i}.tdump" | \
-			_parse_threads > "${LIFERAY_HOME}/filter_${i}.tdump"
-
-		if [ ! -s "${LIFERAY_HOME}/filter_${i}.tdump" ]
-		then
-			echo "Lifecycle monitor: Empty filtered thread found in filter_${i}.tdump."
-
-			exit 0
-		fi
-	done
-
-	for i in {1..2}
-	do
-		comparison[$i]=$(_compare "${LIFERAY_HOME}/filter_1.tdump" "${LIFERAY_HOME}/filter_$((i+1)).tdump")
-
-		echo "Lifecycle monitor: Match dump_1 & dump_$((i+1)): ${comparison[$i]}%."
-	done
-
-	if (( "${comparison[1]}" == 100 && "${comparison[2]}" == 100 ))
-	then
-		echo "Lifecycle monitor: All dumps match perfectly."
-
-		exit 2
-	elif (( "${comparison[1]}" >= 90 && "${comparison[2]}" >= 90 ))
-	then
-		echo "Lifecycle monitor: Baseline matches >=90% with both dumps."
-
-		exit 2
-	elif (( "${comparison[1]}" >= 90 || "${comparison[2]}" >= 90 ))
-	then
-		echo "Lifecycle monitor: Only one comparison met >=90% threshold."
-
-		exit 1
-	else
-		echo "Lifecycle monitor: Both comparisons below threshold."
-
-		exit 0
-	fi
 }
 
 main
