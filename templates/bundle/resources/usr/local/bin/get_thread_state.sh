@@ -18,7 +18,7 @@ function main {
 
 		if [ ! -s "${LIFERAY_HOME}/filter_${i}.tdump" ]
 		then
-			echo "Lifecycle monitor: Empty filtered thread found in filter_${i}.tdump."
+			echo "Lifecycle monitor: empty filtered thread found in filter_${i}.tdump."
 
 			exit 0
 		fi
@@ -28,26 +28,26 @@ function main {
 	do
 		comparison[$i]=$(_compare "${LIFERAY_HOME}/filter_1.tdump" "${LIFERAY_HOME}/filter_$((i+1)).tdump")
 
-		echo "Lifecycle monitor: Match dump_1 & dump_$((i+1)): ${comparison[$i]}%."
+		echo "Lifecycle monitor: match dump_1 & dump_$((i+1)): ${comparison[$i]}%."
 	done
 
 	if (( "${comparison[1]}" == 100 && "${comparison[2]}" == 100 ))
 	then
-		echo "Lifecycle monitor: All dumps match perfectly."
+		echo "Lifecycle monitor: all dumps match perfectly."
 
 		exit 2
 	elif (( "${comparison[1]}" >= 90 && "${comparison[2]}" >= 90 ))
 	then
-		echo "Lifecycle monitor: Baseline matches >=90% with both dumps."
+		echo "Lifecycle monitor: baseline matches >=90% with both dumps."
 
 		exit 2
 	elif (( "${comparison[1]}" >= 90 || "${comparison[2]}" >= 90 ))
 	then
-		echo "Lifecycle monitor: Only one comparison met >=90% threshold."
+		echo "Lifecycle monitor: only one comparison met >=90% threshold."
 
 		exit 1
 	else
-		echo "Lifecycle monitor: Both comparisons below threshold."
+		echo "Lifecycle monitor: both comparisons below threshold."
 
 		exit 0
 	fi
