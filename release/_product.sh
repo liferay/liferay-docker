@@ -59,6 +59,7 @@ function add_licensing {
 
 	ant \
 		-Dext.dir=. \
+		-Dfree.tier.ignored.version="$(_is_free_tier_ignored_version)" \
 		-Djava.lib.dir="${JAVA_HOME}/jre/lib" \
 		-Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee \
 		-Dportal.release.edition.private=true \
@@ -609,5 +610,14 @@ function _add_lts_suffix_to_product_version {
 		then
 			_PRODUCT_VERSION="${_PRODUCT_VERSION}-lts"
 		fi
+	fi
+}
+
+function _is_free_tier_ignored_version {
+	if [ "$(get_release_version)" == "2026.q1.2-lts" ]
+	then
+		echo "true"
+	else
+		echo "false"
 	fi
 }
