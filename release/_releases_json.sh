@@ -519,6 +519,11 @@ function _tag_test_bom_product_versions {
 }
 
 function _upload_releases_json {
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		return
+	fi
+
 	lc_log INFO "Backing up to gs://liferay-releases/releases.json.BACKUP."
 
 	gsutil cp "gs://liferay-releases/releases.json" "gs://liferay-releases/releases.json.BACKUP"
