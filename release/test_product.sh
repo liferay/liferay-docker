@@ -21,6 +21,7 @@ function main {
 		test_product_clean_up_ignored_dxp_plugins
 		test_product_deploy_opensearch
 		test_product_get_java_specification_version
+		test_product_is_free_tier_ignored_version
 		test_product_not_add_ckeditor_license
 		test_product_set_product_version_lts
 		test_product_set_product_version_with_parameters
@@ -118,6 +119,11 @@ function test_product_get_java_specification_version {
 	_test_product_get_java_specification_version "zulu8" "1.8"
 }
 
+function test_product_is_free_tier_ignored_version {
+	_test_product_is_free_tier_ignored_version "2026.q1.0-lts" "false"
+	_test_product_is_free_tier_ignored_version "2026.q1.2-lts" "true"
+}
+
 function test_product_not_add_ckeditor_license {
 	_test_product_not_add_ckeditor_license "2023.q1.0"
 	_test_product_not_add_ckeditor_license "2024.q2.0"
@@ -200,6 +206,14 @@ function _test_product_get_java_specification_version {
 	assert_equals "$(get_java_specification_version)" "${2}"
 
 	JAVA_HOME="${_CURRENT_JAVA_HOME}"
+}
+
+function _test_product_is_free_tier_ignored_version {
+	_PRODUCT_VERSION="${1}"
+
+	assert_equals \
+		"$(_is_free_tier_ignored_version)" \
+		"${2}"
 }
 
 function _test_product_not_add_ckeditor_license {
