@@ -156,10 +156,10 @@ function test_build_release_main {
 }
 
 function test_build_release_print_help {
-	_test_build_release_print_help "2025.q1.0-lts"
-	_test_build_release_print_help "2025.q2.0"
-	_test_build_release_print_help "2025.q3.0"
-	_test_build_release_print_help "2025.q4.0"
+	_test_build_release_print_help "2025.q1.0-lts" "2025.q1.0"
+	_test_build_release_print_help "2025.q2.0" "2025.q2.0"
+	_test_build_release_print_help "2025.q3.0" "2025.q3.0"
+	_test_build_release_print_help "2025.q4.0" "2025.q4.0"
 
 	_PRODUCT_VERSION="${LIFERAY_RELEASE_GIT_REF}"
 }
@@ -179,7 +179,7 @@ function _test_build_release_not_handle_automated_build {
 function _test_build_release_print_help {
 	_PRODUCT_VERSION="${1}"
 
-	LIFERAY_RELEASE_GIT_REF="${_PRODUCT_VERSION}" ./build_release.sh &> /dev/null
+	LIFERAY_RELEASE_GIT_REF="${2}" ./build_release.sh  &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
