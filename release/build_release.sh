@@ -122,7 +122,6 @@ function main {
 
 	if [ "${_PROJECTS_DIR}" == "${_RELEASE_ROOT_DIR}/dev/projects" ]
 	then
-		lc_background_run clone_repository liferay-binaries-cache-2020
 		lc_background_run clone_repository liferay-portal-ee
 		lc_background_run clone_repository liferay-release-tool-ee
 
