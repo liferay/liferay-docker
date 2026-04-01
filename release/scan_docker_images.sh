@@ -49,6 +49,15 @@ function print_help {
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
 
+function _is_info_sec_issue_created {
+	if [[ "${LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY}" == LRINFOSEC-* ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function _notify_info_sec {
 	if ! is_quarterly_release_docker_image "${LIFERAY_DOCKER_IMAGE_NAME}" || [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
@@ -66,7 +75,7 @@ function _notify_info_sec {
 			"LRINFOSEC" \
 			"${1} - Release Candidate | Prisma Cloud Scan Vulnerabilities")"
 
-	if [[ "${LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY}" != LRINFOSEC-* ]]
+	if ! _is_info_sec_issue_created
 	then
 		lc_log ERROR "Unable to create a Jira issue for ${1}."
 
@@ -177,12 +186,19 @@ function _scan_docker_images {
 				"https://\S+prismacloud.io\S+" | \
 			head --lines=1)
 
+		local info_sec_issue_message=""
+
+		if _is_info_sec_issue_created
+		then
+			info_sec_issue_message="*InfoSec ticket:* https://liferay.atlassian.net/browse/${LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY}"
+		fi
+
 		cat <<- END > scan_failure_slack_message.txt
 		*Affected release:* \`$(echo "${LIFERAY_DOCKER_IMAGE_NAME}" | sed "s/.*://")\`
 
 		*Prisma Cloud scan result:* ${prisma_cloud_link}
 
-		*InfoSec ticket:* https://liferay.atlassian.net/browse/${LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY}
+		${info_sec_issue_message}
 		END
 
 		scan_result="${LIFERAY_COMMON_EXIT_CODE_BAD}"
