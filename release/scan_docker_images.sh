@@ -169,6 +169,22 @@ function _scan_docker_images {
 
 		_notify_info_sec "${LIFERAY_DOCKER_IMAGE_NAME}" "${scan_output}"
 
+		local prisma_cloud_link=$( \
+			echo "${scan_output}" | \
+			grep \
+				--extended-regexp \
+				--only-matching \
+				"https://\S+prismacloud.io\S+" | \
+			head --lines=1)
+
+		cat <<- END > scan_failure_slack_message.txt
+		*Affected release:* \`$(echo "${LIFERAY_DOCKER_IMAGE_NAME}" | sed "s/.*://")\`
+
+		*Prisma Cloud scan result:* ${prisma_cloud_link}
+
+		*InfoSec ticket:* https://liferay.atlassian.net/browse/${LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY}
+		END
+
 		scan_result="${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
