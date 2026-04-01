@@ -59,7 +59,7 @@ function _is_info_sec_issue_created {
 }
 
 function _notify_info_sec {
-	if ! is_quarterly_release_docker_image "${LIFERAY_DOCKER_IMAGE_NAME}" || [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
+	if ! is_quarterly_release_docker_image "${1}" || [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Skipping InfoSec notification."
 
