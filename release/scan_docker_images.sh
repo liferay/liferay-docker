@@ -57,7 +57,7 @@ function _notify_info_sec {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local issue_key="$( \
+	LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY="$( \
 		add_jira_issue_with_description \
 			"Sec R&D-Sec Engineering" \
 			"Hi team, the Prisma Cloud Scan of image ${1} had the following output: ${2}" \
@@ -66,13 +66,13 @@ function _notify_info_sec {
 			"LRINFOSEC" \
 			"${1} - Release Candidate | Prisma Cloud Scan Vulnerabilities")"
 
-	if [[ "${issue_key}" != LRINFOSEC-* ]]
+	if [[ "${LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY}" != LRINFOSEC-* ]]
 	then
 		lc_log ERROR "Unable to create a Jira issue for ${1}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	else
-		lc_log INFO "Jira issue ${issue_key} created successfully for ${1}."
+		lc_log INFO "Jira issue ${LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY} created successfully for ${1}."
 	fi
 }
 
