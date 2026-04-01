@@ -59,7 +59,7 @@ function _is_info_sec_jira_issue_created {
 }
 
 function _notify_info_sec {
-	if ! is_quarterly_release_docker_image "${1}" || [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
+	if ! is_quarterly_release_docker_image "${LIFERAY_DOCKER_IMAGE_NAME}" || [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Skipping InfoSec notification."
 
@@ -69,19 +69,19 @@ function _notify_info_sec {
 	LIFERAY_INFO_SEC_JIRA_ISSUE_KEY="$( \
 		add_jira_issue_with_description \
 			"Sec R&D-Sec Engineering" \
-			"Hi team, the Prisma Cloud Scan of image ${1} had the following output: ${2}" \
+			"Hi team, the Prisma Cloud Scan of image ${LIFERAY_DOCKER_IMAGE_NAME} had the following output: ${2}" \
 			"$(get_due_date "3")" \
 			"Request" \
 			"LRINFOSEC" \
-			"${1} - Release Candidate | Prisma Cloud Scan Vulnerabilities")"
+			"${LIFERAY_DOCKER_IMAGE_NAME} - Release Candidate | Prisma Cloud Scan Vulnerabilities")"
 
 	if ! _is_info_sec_jira_issue_created
 	then
-		lc_log ERROR "Unable to create a Jira issue for ${1}."
+		lc_log ERROR "Unable to create a Jira issue for ${LIFERAY_DOCKER_IMAGE_NAME}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	else
-		lc_log INFO "Jira issue ${LIFERAY_INFO_SEC_JIRA_ISSUE_KEY} created successfully for ${1}."
+		lc_log INFO "Jira issue ${LIFERAY_INFO_SEC_JIRA_ISSUE_KEY} created successfully for ${LIFERAY_DOCKER_IMAGE_NAME}."
 	fi
 }
 
@@ -176,7 +176,7 @@ function _scan_docker_image {
 
 		scan_output=$(echo "${scan_output}" | perl -pe 's/\e\[[0-9;]*[mGJK]//g')
 
-		_notify_info_sec "${LIFERAY_DOCKER_IMAGE_NAME}" "${scan_output}"
+		_notify_info_sec "${scan_output}"
 
 		local info_sec_jira_issue_message=""
 
