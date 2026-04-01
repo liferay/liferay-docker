@@ -365,6 +365,13 @@ function _set_liferay_marketplace_oauth2_token {
 }
 
 function _update_product_supported_versions {
+	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
+	then
+		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local product_external_reference_code=${1}
 	local product_name=${2}
 
