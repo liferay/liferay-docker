@@ -198,6 +198,8 @@ function _download_product {
 			--location \
 			--output "${_BUILD_DIR}/marketplace/${product_file_name}" \
 			--request GET \
+			--retry 3 \
+			--retry-delay 10 \
 			--silent \
 			--write-out "%{http_code}")
 
@@ -280,6 +282,8 @@ function _get_product_by_external_reference_code {
 			"https://marketplace.liferay.com/o/headless-commerce-admin-catalog/v1.0/products/by-externalReferenceCode/${product_external_reference_code}?nestedFields=productVirtualSettings%2Cattachments" \
 			--header "Authorization: Bearer ${_LIFERAY_MARKETPLACE_OAUTH2_TOKEN}" \
 			--request GET \
+			--retry 3 \
+			--retry-delay 10 \
 			--silent \
 			--write-out "%output{${http_code_file}}%{http_code}")
 
@@ -318,6 +322,8 @@ function _get_product_virtual_settings_file_entries_by_external_reference_code {
 			"https://marketplace.liferay.com/o/headless-commerce-admin-catalog/v1.0/product-virtual-settings/${product_virtual_settings_id}/product-virtual-settings-file-entries?pageSize=20" \
 			--header "Authorization: Bearer ${_LIFERAY_MARKETPLACE_OAUTH2_TOKEN}" \
 			--request GET \
+			--retry 3 \
+			--retry-delay 10 \
 			--silent \
 			--write-out "%output{${http_code_file}}%{http_code}")
 
@@ -345,6 +351,8 @@ function _set_liferay_marketplace_oauth2_token {
 			"https://marketplace.liferay.com/o/oauth2/token" \
 			--data "client_id=${LIFERAY_MARKETPLACE_OAUTH2_CLIENT_ID}&client_secret=${LIFERAY_MARKETPLACE_OAUTH2_CLIENT_SECRET}&grant_type=client_credentials" \
 			--request POST \
+			--retry 3 \
+			--retry-delay 10 \
 			--silent \
 			--write-out "%output{${http_code_file}}%{http_code}")
 
@@ -394,6 +402,8 @@ function _update_product_supported_versions {
 				--header "Authorization: Bearer ${_LIFERAY_MARKETPLACE_OAUTH2_TOKEN}" \
 				--output /dev/null \
 				--request PATCH \
+				--retry 3 \
+				--retry-delay 10 \
 				--silent \
 				--write-out "%{http_code}")
 
@@ -424,6 +434,8 @@ function _update_product_supported_versions {
 				--header "x-csrf-token: ${LIFERAY_MARKETPLACE_CSRF_TOKEN}" \
 				--output /dev/null \
 				--request POST \
+				--retry 3 \
+				--retry-delay 10 \
 				--silent \
 				--data "${data}" \
 				--write-out "%{http_code}")
