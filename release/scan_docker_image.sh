@@ -19,7 +19,7 @@ function main {
 
 	check_usage
 
-	lc_time_run _scan_docker_images
+	lc_time_run _scan_docker_image
 }
 
 function set_liferay_docker_image_name {
@@ -85,7 +85,7 @@ function _notify_info_sec {
 	fi
 }
 
-function _scan_docker_images {
+function _scan_docker_image {
 	if [ -z "${LIFERAY_DOCKER_IMAGE_NAME}" ]
 	then
 		lc_log ERROR "\${LIFERAY_DOCKER_IMAGE_NAME} is undefined."

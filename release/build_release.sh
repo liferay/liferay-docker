@@ -13,7 +13,7 @@ source ./_patcher.sh
 source ./_product.sh
 source ./_publishing.sh
 source ./_releases_json.sh
-source ./scan_docker_images.sh
+source ./scan_docker_image.sh
 
 function check_usage {
 
