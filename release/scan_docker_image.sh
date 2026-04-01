@@ -50,7 +50,7 @@ function print_help {
 }
 
 function _is_info_sec_issue_created {
-	if [[ "${LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY}" == LRINFOSEC-* ]]
+	if [[ "${LIFERAY_INFO_SEC_JIRA_ISSUE_KEY}" == LRINFOSEC-* ]]
 	then
 		return 0
 	fi
@@ -66,7 +66,7 @@ function _notify_info_sec {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY="$( \
+	LIFERAY_INFO_SEC_JIRA_ISSUE_KEY="$( \
 		add_jira_issue_with_description \
 			"Sec R&D-Sec Engineering" \
 			"Hi team, the Prisma Cloud Scan of image ${1} had the following output: ${2}" \
@@ -81,7 +81,7 @@ function _notify_info_sec {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	else
-		lc_log INFO "Jira issue ${LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY} created successfully for ${1}."
+		lc_log INFO "Jira issue ${LIFERAY_INFO_SEC_JIRA_ISSUE_KEY} created successfully for ${1}."
 	fi
 }
 
@@ -190,7 +190,7 @@ function _scan_docker_image {
 
 		if _is_info_sec_issue_created
 		then
-			info_sec_issue_message="*InfoSec ticket:* https://liferay.atlassian.net/browse/${LIFERAY_DOCKER_IMAGE_SCAN_ISSUE_KEY}"
+			info_sec_issue_message="*InfoSec ticket:* https://liferay.atlassian.net/browse/${LIFERAY_INFO_SEC_JIRA_ISSUE_KEY}"
 		fi
 
 		cat <<- END > scan_failure_slack_message.txt
