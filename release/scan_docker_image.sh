@@ -178,6 +178,13 @@ function _scan_docker_image {
 
 		_notify_info_sec "${LIFERAY_DOCKER_IMAGE_NAME}" "${scan_output}"
 
+		local info_sec_issue_message=""
+
+		if _is_info_sec_issue_created
+		then
+			info_sec_issue_message="*InfoSec ticket:* https://liferay.atlassian.net/browse/${LIFERAY_INFO_SEC_JIRA_ISSUE_KEY}"
+		fi
+
 		local prisma_cloud_link=$( \
 			echo "${scan_output}" | \
 			grep \
@@ -185,13 +192,6 @@ function _scan_docker_image {
 				--only-matching \
 				"https://\S+prismacloud.io\S+" | \
 			head --lines=1)
-
-		local info_sec_issue_message=""
-
-		if _is_info_sec_issue_created
-		then
-			info_sec_issue_message="*InfoSec ticket:* https://liferay.atlassian.net/browse/${LIFERAY_INFO_SEC_JIRA_ISSUE_KEY}"
-		fi
 
 		cat <<- END > scan_failure_slack_message.txt
 		*Affected release:* \`$(echo "${LIFERAY_DOCKER_IMAGE_NAME}" | sed "s/.*://")\`
