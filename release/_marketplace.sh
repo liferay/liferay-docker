@@ -205,7 +205,7 @@ function _download_product {
 
 	if [[ "${http_code}" -ge 400 ]]
 	then
-		lc_log ERROR "Unable to download product ${product_file_name}. HTTP code: ${http_code}."
+		lc_log ERROR "Unable to download product ${product_file_name}. HTTP response code was ${http_code}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -360,7 +360,7 @@ function _set_liferay_marketplace_oauth2_token {
 
 	if [[ "${http_code}" -ge 400 ]]
 	then
-		lc_log ERROR "Unable to get Liferay Marketplace OAuth2 token. HTTP code: ${http_code}."
+		lc_log ERROR "Unable to get Liferay Marketplace OAuth2 token. HTTP response code was ${http_code}."
 
 		rm --force "${http_code_file}"
 
@@ -409,7 +409,7 @@ function _update_product_supported_versions {
 
 		if [[ "${http_code}" -ge 400 ]]
 		then
-			lc_log ERROR "Unable to update the list of supported versions for product ${product_name}. HTTP code: ${http_code}.\n"
+			lc_log ERROR "Unable to update the list of supported versions for product ${product_name}. HTTP response code was ${http_code}.\n"
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
@@ -442,7 +442,7 @@ function _update_product_supported_versions {
 
 		if [[ "${http_code}" -ge 400 ]]
 		then
-			lc_log ERROR "Unable to update the list of supported versions in the product specifications for product ${product_name}. HTTP code: ${http_code}.\n"
+			lc_log ERROR "Unable to update the list of supported versions in the product specifications for product ${product_name}. HTTP response code was ${http_code}.\n"
 
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
