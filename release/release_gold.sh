@@ -98,8 +98,6 @@ function main {
 
 	lc_time_run check_supported_versions
 
-	init_gcs
-
 	lc_time_run set_jdk_version_and_parameters
 
 	lc_time_run promote_packages
