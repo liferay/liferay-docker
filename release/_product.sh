@@ -614,7 +614,9 @@ function _add_lts_suffix_to_product_version {
 }
 
 function _is_free_tier_ignored_version {
-	if [ "$(get_release_version)" == "2026.q1.2-lts" ]
+	local free_tier_ignored_versions=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/release.properties" "free.tier.ignored.versions")
+
+	if (echo "${free_tier_ignored_versions}" | grep --quiet "${_PRODUCT_VERSION}")
 	then
 		echo "true"
 	else
