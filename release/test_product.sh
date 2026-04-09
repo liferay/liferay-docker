@@ -121,7 +121,9 @@ function test_product_get_java_specification_version {
 
 function test_product_is_free_tier_ignored_version {
 	_test_product_is_free_tier_ignored_version "2026.q1.0-lts" "false"
+	_test_product_is_free_tier_ignored_version "2026.q1.1-lts" "false"
 	_test_product_is_free_tier_ignored_version "2026.q1.2-lts" "true"
+	_test_product_is_free_tier_ignored_version "2026.q1.3-lts" "true"
 }
 
 function test_product_not_add_ckeditor_license {
