@@ -499,14 +499,17 @@ function tag_release {
 
 	if is_7_4_u_release
 	then
-		local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | sed --regexp-extended "s/-u/\./")"
+		for repository in liferay-portal liferay-portal-ee
+		do
+			local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | sed --regexp-extended "s/-u/\./")"
 
-		if [ $(invoke_github_api_delete "brianchandotcom" "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-		then
-			lc_log ERROR "Unable to delete temp branch ${temp_branch} in ${LIFERAY_RELEASE_REPOSITORY_OWNER}/${repository}."
+			if [ $(invoke_github_api_delete "brianchandotcom" "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+			then
+				lc_log ERROR "Unable to delete temp branch ${temp_branch} in brianchandotcom/${repository}."
 
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-		fi
+				return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+			fi
+		done
 	fi
 }
 
