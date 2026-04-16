@@ -479,7 +479,7 @@ function tag_release {
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
 
-		lc_log INFO "Tag ${product_version_without_lts_suffix} created successfully in ${repository_owner}/${repository}."
+		lc_log INFO "Tag ${product_version_without_lts_suffix} was created successfully in ${repository_owner}/${repository}."
 
 		local ref_data=$(
 			cat <<- END
@@ -498,7 +498,7 @@ function tag_release {
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
 
-		lc_log INFO "Tag reference for ${product_version_without_lts_suffix} created successfully in ${repository_owner}/${repository}."
+		lc_log INFO "Tag reference for ${product_version_without_lts_suffix} was created successfully in ${repository_owner}/${repository}."
 	done
 
 	if is_7_4_u_release
@@ -514,7 +514,7 @@ function tag_release {
 				return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 			fi
 
-			lc_log INFO "Temp branch ${temp_branch} deleted successfully in brianchandotcom/${repository}."
+			lc_log INFO "Temp branch ${temp_branch} was deleted successfully in brianchandotcom/${repository}."
 		done
 	fi
 }
