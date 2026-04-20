@@ -434,7 +434,7 @@ function tag_release {
 
 	local release_properties_file=$(lc_download "https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/release.properties")
 
-	if [ $? -ne 0 ]
+	if [ "${?}" -ne 0 ]
 	then
 		lc_log ERROR "Unable to download release.properties."
 
@@ -452,54 +452,14 @@ function tag_release {
 
 	local product_version_without_lts_suffix="$(get_product_version_without_lts_suffix)"
 
-	local repository=liferay-portal-ee
+	_create_tag "${git_hash}" "${product_version_without_lts_suffix}" "liferay-portal-ee" "brianchandotcom" || return "${?}"
 
-	if is_portal_release
+	_create_tag "${git_hash}" "${product_version_without_lts_suffix}" "liferay-portal-ee" "liferay" || return "${?}"
+
+	if is_first_quarterly_release
 	then
-		repository=liferay-portal
+		_create_tag "${git_hash}" "${product_version_without_lts_suffix}" "liferay-portal" "liferay" || return "${?}"
 	fi
-
-	for repository_owner in brianchandotcom liferay
-	do
-		local tag_data=$(
-			cat <<- END
-			{
-				"message": "",
-				"object": "${git_hash}",
-				"tag": "${product_version_without_lts_suffix}",
-				"type": "commit"
-			}
-			END
-		)
-
-		if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-		then
-			lc_log ERROR "Unable to create tag ${product_version_without_lts_suffix} in ${repository_owner}/${repository}."
-
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-		fi
-
-		lc_log INFO "Tag ${product_version_without_lts_suffix} was created successfully in ${repository_owner}/${repository}."
-
-		local ref_data=$(
-			cat <<- END
-			{
-				"message": "",
-				"ref": "refs/tags/${product_version_without_lts_suffix}",
-				"sha": "${git_hash}"
-			}
-			END
-		)
-
-		if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
-		then
-			lc_log ERROR "Unable to create tag reference for ${product_version_without_lts_suffix} in ${repository_owner}/${repository}."
-
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-		fi
-
-		lc_log INFO "Tag reference for ${product_version_without_lts_suffix} was created successfully in ${repository_owner}/${repository}."
-	done
 
 	if is_7_4_u_release
 	then
@@ -623,6 +583,52 @@ function update_salesforce_product_version {
 	fi
 
 	lc_log INFO "The Salesforce product version was updated successfully."
+}
+
+function _create_tag {
+	local git_hash="${1}"
+	local product_version_without_lts_suffix="${2}"
+	local repository="${3}"
+	local repository_owner="${4}"
+
+	local tag_data=$(
+		cat <<- END
+		{
+			"message": "",
+			"object": "${git_hash}",
+			"tag": "${product_version_without_lts_suffix}",
+			"type": "commit"
+		}
+		END
+	)
+
+	if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+	then
+		lc_log ERROR "Unable to create tag ${product_version_without_lts_suffix} in ${repository_owner}/${repository}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	lc_log INFO "Tag ${product_version_without_lts_suffix} was created successfully in ${repository_owner}/${repository}."
+
+	local ref_data=$(
+		cat <<- END
+		{
+			"message": "",
+			"ref": "refs/tags/${product_version_without_lts_suffix}",
+			"sha": "${git_hash}"
+		}
+		END
+	)
+
+	if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+	then
+		lc_log ERROR "Unable to create tag reference for ${product_version_without_lts_suffix} in ${repository_owner}/${repository}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	lc_log INFO "Tag reference for ${product_version_without_lts_suffix} was created successfully in ${repository_owner}/${repository}."
 }
 
 main "${@}"
