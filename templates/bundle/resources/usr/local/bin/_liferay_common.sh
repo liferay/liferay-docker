@@ -255,7 +255,7 @@ function lc_wait {
 	do
 		wait "${pid}"
 
-		local exit_code=$?
+		local exit_code="${?}"
 
 		if [ "${exit_code}" -ne 0 ]
 		then

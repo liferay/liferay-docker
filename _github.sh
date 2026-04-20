@@ -29,13 +29,13 @@ function download_file_from_github {
 function invoke_github_api_delete {
 	_invoke_github_api "${1}" "${2}" "${3}" "DELETE"
 
-	echo $?
+	echo "${?}"
 }
 
 function invoke_github_api_post {
 	_invoke_github_api "${1}" "${2}" "${3}" "POST"
 
-	echo $?
+	echo "${?}"
 }
 
 function _invoke_github_api {

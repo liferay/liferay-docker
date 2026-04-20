@@ -80,13 +80,13 @@ function main {
 
 	curl_content=$(curl --connect-timeout "${CONNECTION_TIMEOUT}" --fail --max-time "${TIMEOUT}" --show-error --silent --url "${DOMAIN}:${PORT}" "${DOMAIN}:${PORT}${FILE_PATH}")
 
-	local exit_code=$?
+	local exit_code="${?}"
 
 	if [ -n "${CONTENT}" ]
 	then
 		curl_content=$(echo "${curl_content}" | grep" ${CONTENT}")
 
-		exit_code=$?
+		exit_code="${?}"
 	fi
 
 	if [ ${exit_code} -gt 1 ]

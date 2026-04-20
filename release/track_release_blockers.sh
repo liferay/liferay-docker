@@ -46,7 +46,7 @@ function main {
 			--silent \
 			--user "${JIRA_USER}:${JIRA_TOKEN}")
 
-	if [ $? -ne 0 ]
+	if [ "${?}" -ne 0 ]
 	then
 		lc_log ERROR "Unable to get a list of blockers from Jira."
 

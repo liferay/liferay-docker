@@ -605,7 +605,7 @@ function get_tag_from_image {
 	then
 		docker pull "${image_name}:latest" >/dev/null
 
-		if [ $? -gt 0 ]
+		if [ "${?}" -gt 0 ]
 		then
 			version="0"
 		else

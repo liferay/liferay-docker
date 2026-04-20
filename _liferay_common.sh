@@ -385,7 +385,7 @@ function lc_wait {
 	do
 		wait "${pid}"
 
-		local exit_code=$?
+		local exit_code="${?}"
 
 		if [ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_OK}" ] && [ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then

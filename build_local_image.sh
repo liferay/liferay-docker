@@ -29,7 +29,7 @@ function build_docker_image {
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
 			"${TEMP_DIR}"
 
-		exit $?
+		exit "${?}"
 	fi
 
 	remove_temp_dockerfile_target_platform

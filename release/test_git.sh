@@ -7,7 +7,7 @@ source ./_git.sh
 function main {
 	set_up
 
-	if [ $? -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

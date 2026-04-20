@@ -302,7 +302,7 @@ function test_page {
 
 	content=$(curl --fail --location --max-time 60 --show-error --silent "${1}")
 
-	local exit_code=$?
+	local exit_code="${?}"
 
 	if [ ${exit_code} -gt 0 ]
 	then

@@ -8,7 +8,7 @@ fi
 function check_docker_buildx {
 	docker buildx inspect > /dev/null 2>&1
 
-	if [ $? -gt 0 ]
+	if [ "${?}" -gt 0 ]
 	then
 		echo "Docker Buildx is not available."
 
@@ -340,7 +340,7 @@ function test_docker_image {
 	then
 		./test_bundle_image.sh
 
-		if [ $? -gt 0 ]
+		if [ "${?}" -gt 0 ]
 		then
 			echo "Testing failed, exiting."
 
