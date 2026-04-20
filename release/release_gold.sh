@@ -429,7 +429,7 @@ function tag_release {
 	then
 		lc_log INFO "Set the environment variable \"LIFERAY_RELEASE_GITHUB_PAT\"."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	local release_properties_file=$(lc_download "https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/release.properties")
@@ -438,7 +438,7 @@ function tag_release {
 	then
 		lc_log ERROR "Unable to download release.properties."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	local git_hash=$(lc_get_property "${release_properties_file}" git.hash.liferay-portal-ee)
@@ -447,7 +447,7 @@ function tag_release {
 	then
 		lc_log ERROR "Unable to get property \"git.hash.liferay-portal-ee.\""
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	local product_version_without_lts_suffix="$(get_product_version_without_lts_suffix)"
@@ -467,11 +467,11 @@ function tag_release {
 		do
 			local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | sed --regexp-extended "s/-u/\./")"
 
-			if [ $(invoke_github_api_delete "brianchandotcom" "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+			if [ $(invoke_github_api_delete "brianchandotcom" "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 			then
 				lc_log ERROR "Unable to delete temp branch ${temp_branch} in brianchandotcom/${repository}."
 
-				return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+				return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 			fi
 
 			lc_log INFO "Temp branch ${temp_branch} was deleted successfully in brianchandotcom/${repository}."
@@ -602,11 +602,11 @@ function _create_tag {
 		END
 	)
 
-	if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+	if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
 		lc_log ERROR "Unable to create tag ${product_version_without_lts_suffix} in ${repository_owner}/${repository}."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	lc_log INFO "Tag ${product_version_without_lts_suffix} was created successfully in ${repository_owner}/${repository}."
@@ -621,11 +621,11 @@ function _create_tag {
 		END
 	)
 
-	if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+	if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
 		lc_log ERROR "Unable to create tag reference for ${product_version_without_lts_suffix} in ${repository_owner}/${repository}."
 
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	lc_log INFO "Tag reference for ${product_version_without_lts_suffix} was created successfully in ${repository_owner}/${repository}."

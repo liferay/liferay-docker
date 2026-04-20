@@ -55,7 +55,7 @@ function _invoke_github_api {
 
 	if ! [[ $(echo "${curl_response}" | awk '/^HTTP/{print $2}') =~ ^2 ]]
 	then
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	return "${LIFERAY_COMMON_EXIT_CODE_OK}"
