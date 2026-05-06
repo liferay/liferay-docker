@@ -21,39 +21,21 @@ function disable_history {
 }
 
 function execute_gradlew {
-	if [ -e gradlew ]
-	then
-		./gradlew ${@}
-	elif [ -e ../gradlew ]
-	then
-		../gradlew ${@}
-	elif [ -e ../../gradlew ]
-	then
-		../../gradlew ${@}
-	elif [ -e ../../../gradlew ]
-	then
-		../../../gradlew ${@}
-	elif [ -e ../../../../gradlew ]
-	then
-		../../../../gradlew ${@}
-	elif [ -e ../../../../../gradlew ]
-	then
-		../../../../../gradlew ${@}
-	elif [ -e ../../../../../../gradlew ]
-	then
-		../../../../../../gradlew ${@}
-	elif [ -e ../../../../../../../gradlew ]
-	then
-		../../../../../../../gradlew ${@}
-	elif [ -e ../../../../../../../../gradlew ]
-	then
-		../../../../../../../../gradlew ${@}
-	elif [ -e ../../../../../../../../../gradlew ]
-	then
-		../../../../../../../../../gradlew ${@}
-	else
-		echo "Unable to find locate Gradle wrapper."
-	fi
+	local gradlew_dir="."
+
+	while [ ! -e "${gradlew_dir}/gradlew" ]
+	do
+		gradlew_dir="${gradlew_dir}/.."
+
+		if [ "$(cd "${gradlew_dir}" && pwd)" = "/" ]
+		then
+			echo "Unable to locate Gradle wrapper."
+
+			return 1
+		fi
+	done
+
+	"${gradlew_dir}/gradlew" "${@}"
 }
 
 function git_cherry_pick_rel {
@@ -90,7 +72,7 @@ function git_pull {
 }
 
 function gw {
-	execute_gradlew "${@//\//:}" --daemon
+	execute_gradlew "${1//\//:}" "${@:2}" --daemon
 }
 
 function parse_git_current_branch {
