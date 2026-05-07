@@ -7,9 +7,12 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 function clone_repository {
 	local repository_name=${1}
 
-	git clone https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/brianchandotcom/${repository_name}.git
+	if [ ! -e ${repository_name} ]
+	then
+		git clone https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/brianchandotcom/${repository_name}.git
+	fi
 
-cat <<EOF > ${repository_name}/.git/config
+	cat <<EOF | head --bytes=-1 > ${repository_name}/.git/config
 [remote "origin"]
 	fetch = +refs/heads/*:refs/remotes/origin/*
 	url = https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/brianchandotcom/${repository_name}.git
@@ -18,9 +21,7 @@ cat <<EOF > ${repository_name}/.git/config
 	url = https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/liferay/${repository_name}.git
 EOF
 
-	truncate --size -1 ${repository_name}/.git/config
-
-cat <<EOF > ${repository_name}/build.me.properties
+	cat <<EOF | head --bytes=-1 > ${repository_name}/build.me.properties
 	build.repository.private.password=${LIFERAY_NEXUS_PUBLISHER_SONATYPE_PASSWORD}
 	build.repository.private.username=${LIFERAY_NEXUS_PUBLISHER_SONATYPE_USERNAME}
 
@@ -31,7 +32,7 @@ cat <<EOF > ${repository_name}/build.me.properties
 
 	nodejs.npm.access.token=${LIFERAY_NEXUS_PUBLISHER_NODEJS_NPM_ACCESS_TOKEN}
 
-	release.versions.test.other.dir=${user.home}/dev/projects/liferay-portal-7.2.x
+	release.versions.test.other.dir=${HOME}/dev/projects/liferay-portal-7.2.x
 
 	sonatype.release.hostname=repository.liferay.com
 	sonatype.release.password=${LIFERAY_NEXUS_PUBLISHER_SONATYPE_PASSWORD}
@@ -45,8 +46,6 @@ cat <<EOF > ${repository_name}/build.me.properties
 	sonatype.snapshot.url=https://repository.liferay.com/nexus/content/repositories/liferay-public-snapshots
 	sonatype.snapshot.username=${LIFERAY_NEXUS_PUBLISHER_SONATYPE_USERNAME}
 EOF
-
-	truncate --size -1 ${repository_name}/build.me.properties
 }
 
 function main {
