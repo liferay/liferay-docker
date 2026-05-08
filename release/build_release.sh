@@ -210,13 +210,13 @@ function main {
 
 		lc_time_run upload_release
 
-		lc_time_run check_liferay_marketplace_products_compatibility
-
 		lc_time_run trigger_ci_test_suite
 
 		lc_time_run upload_to_docker_hub
 
 		lc_time_run set_liferay_docker_image_name
+
+		lc_time_run check_liferay_marketplace_products_compatibility
 	elif [ "$(get_release_output)" == "hotfix" ]
 	then
 		lc_time_run prepare_release_dir
