@@ -101,6 +101,19 @@ function get_latest_version_from_url {
 		| tail --lines=1
 }
 
+function get_premium_support_q1_lts_release_branches {
+	local today=$(date +%Y-%m-%d)
+
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ] && [ -n "${LIFERAY_RELEASE_TEST_DATE}" ]
+	then
+		today="${LIFERAY_RELEASE_TEST_DATE}"
+	fi
+
+	local year=$(date --date "${today}" +%Y)
+
+	echo "release-$((year - 2)).q1 release-$((year - 1)).q1 release-${year}.q1"
+}
+
 function get_product_group_version {
 	echo "$(_get_product_version "${1}")" | cut --delimiter='.' --fields=1,2
 }
