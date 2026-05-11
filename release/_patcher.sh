@@ -11,6 +11,13 @@ function report_jenkins_url {
 	then
 		return
 	fi
+	
+	if [ "${LIFERAY_RELEASE_DEVELOPMENT_MODE}" == "true" ]
+	then
+		lc_log INFO "Skipping the patcher status report because LIFERAY_RELEASE_DEVELOPMENT_MODE is set to \"true\"."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 
 	if [ -z "${LIFERAY_RELEASE_HOTFIX_BUILD_ID}" ] ||
 	   [ -z "${LIFERAY_RELEASE_PATCHER_REQUEST_KEY}" ]
@@ -44,6 +51,13 @@ function report_patcher_status {
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
 		return
+	fi
+
+	if [ "${LIFERAY_RELEASE_DEVELOPMENT_MODE}" == "true" ]
+	then
+		lc_log INFO "Skipping the patcher status report because LIFERAY_RELEASE_DEVELOPMENT_MODE is set to \"true\"."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	lc_cd "${_BUILD_DIR}"/patcher-status/production/osbPatcherStatus/build/jenkins
