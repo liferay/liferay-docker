@@ -319,7 +319,7 @@ function print_variables {
 		grep --regexp="^LIFERAY_RELEASE" | \
 		tr "\n" " ")
 
-	echo "${environment}./build_release.sh"
+	echo "${environment}LIFERAY_RELEASE_DEVELOPMENT_MODE=true ./build_release.sh"
 	echo ""
 }
 
