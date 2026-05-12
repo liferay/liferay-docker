@@ -72,6 +72,13 @@ function check_usage {
 	fi
 
 	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
+
+	LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal-ee"
+
+	if [ -n "${LIFERAY_REPOSITORY_OWNER}" ]
+	then
+		LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal"
+	fi
 }
 
 function handle_automated_build {
@@ -122,7 +129,7 @@ function main {
 
 	if [ "${_PROJECTS_DIR}" == "${_RELEASE_ROOT_DIR}/dev/projects" ]
 	then
-		lc_background_run clone_repository liferay-portal-ee
+		lc_background_run clone_repository "${LIFERAY_PORTAL_REPOSITORY_NAME}"
 		lc_background_run clone_repository liferay-release-tool-ee
 
 		lc_wait
