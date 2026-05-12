@@ -20,7 +20,7 @@ function add_hotfix_testing_code {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	if (! git show "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" &>/dev/null)
 	then
@@ -264,7 +264,7 @@ function copy_release_info_date {
 
 	build_date=${build_date#Liferay-Portal-Build-Date: }
 
-	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	sed \
 		--expression "s/release.info.date=.*/release.info.date=$(date -d "${build_date}" +"%B %d, %Y")/" \

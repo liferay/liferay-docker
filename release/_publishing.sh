@@ -301,7 +301,7 @@ function upload_opensearch {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [ ! -d "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2" ]
+	if [ ! -d "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/apps/portal-search-opensearch2" ]
 	then
 		lc_log DEBUG "Skipping download because OpenSearch connector does not exist."
 

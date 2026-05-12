@@ -55,13 +55,13 @@ function add_licensing {
 
 	git log -1
 
-	lc_cd "$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
+	lc_cd "$(lc_get_property "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/release.properties" "release.tool.dir")"
 
 	ant \
 		-Dext.dir=. \
 		-Dfree.tier.ignored.version="$(_is_free_tier_ignored_version)" \
 		-Djava.lib.dir="${JAVA_HOME}/jre/lib" \
-		-Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee \
+		-Dportal.dir="${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}" \
 		-Dportal.release.edition.private=true \
 		-file build-release-license.xml
 }
@@ -79,13 +79,13 @@ function build_product {
 
 	rm --force --recursive "${_BUNDLES_DIR}"
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	ant deploy
 
 	ant deploy-portal-license-enterprise-app
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules"
 
 	ant build-app-jar-release
 
@@ -119,7 +119,7 @@ function build_product {
 }
 
 function build_sql {
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/sql
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/sql"
 
 	if [ -e "create/create-postgresql.sql" ]
 	then
@@ -139,7 +139,7 @@ function clean_up_ignored_dxp_modules {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules"
 
 	(
 		git grep "Liferay-Releng-Bundle: false" | sed --expression "s/app.bnd:.*//"
@@ -216,7 +216,7 @@ function compile_product {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	echo "baseline.jar.report.level=off" > "build.${USER}.properties"
 
@@ -235,8 +235,8 @@ function copy_copyright {
 
 	mkdir license
 
-	cp "${_PROJECTS_DIR}"/liferay-portal-ee/copyright.txt license
-	cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/versions.html license
+	cp "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/copyright.txt" license
+	cp "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/versions.html" license
 }
 
 function decrement_module_versions {
@@ -248,7 +248,7 @@ function decrement_module_versions {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	find . -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd_bnd_file
 	do
@@ -292,13 +292,13 @@ function deploy_elasticsearch_sidecar {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [ -e "${_PROJECTS_DIR}"/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl ]
+	if [ -e "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl" ]
 	then
-		lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl
+		lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/apps/portal-search-elasticsearch7/portal-search-elasticsearch7-impl"
 
-		if ("${_PROJECTS_DIR}"/liferay-portal-ee/gradlew tasks | grep --quiet deploySidecar)
+		if ("${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/gradlew" tasks | grep --quiet deploySidecar)
 		then
-			"${_PROJECTS_DIR}"/liferay-portal-ee/gradlew deploySidecar
+			"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/gradlew" deploySidecar
 		else
 			echo "The Gradle task \"deploySidecar\" does not exist in portal-search-elasticsearch7-impl."
 
@@ -326,13 +326,13 @@ function deploy_opensearch {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	else
-		if [ -d "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2" ]
+		if [ -d "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/apps/portal-search-opensearch2" ]
 		then
 			lc_log INFO "Deploying the OpenSearch connector."
 
-			lc_cd "${_PROJECTS_DIR}/liferay-portal-ee/modules/apps/portal-search-opensearch2"
+			lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/apps/portal-search-opensearch2"
 
-			"${_PROJECTS_DIR}/liferay-portal-ee/gradlew" clean deploy
+			"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/gradlew" clean deploy
 		else
 			lc_log DEBUG "Skipping deployment because OpenSearch connector does not exist."
 
@@ -369,14 +369,14 @@ function obfuscate_licensing {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_PROJECTS_DIR}/liferay-release-tool-ee/$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.dir")"
+	lc_cd "${_PROJECTS_DIR}/liferay-release-tool-ee/$(lc_get_property "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/release.properties" "release.tool.dir")"
 
 	ant \
 		-Dext.dir=. \
 		-Djava.lib.dir="${JAVA_HOME}/jre/lib" \
 		-Djava.specification.version="$(get_java_specification_version)" \
-		-Dportal.dir="${_PROJECTS_DIR}"/liferay-portal-ee \
-		-Dportal.kernel.dir="${_PROJECTS_DIR}"/liferay-portal-ee/portal-kernel \
+		-Dportal.dir="${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}" \
+		-Dportal.kernel.dir="${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/portal-kernel" \
 		-Dportal.release.edition.private=true \
 		-file build-release-license.xml obfuscate-portal
 }
@@ -406,7 +406,7 @@ function set_artifact_versions {
 function set_product_version {
 	if [ "${#@}" -eq 0 ]
 	then
-		lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+		lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 		local major_version=$(lc_get_property release.properties "release.info.version.major")
 		local minor_version=$(lc_get_property release.properties "release.info.version.minor")
@@ -452,7 +452,7 @@ function set_product_version {
 }
 
 function set_up_profile {
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
@@ -560,7 +560,7 @@ function stop_tomcat {
 }
 
 function update_release_info_date {
-	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	sed \
 		--expression "s/release.info.date=.*/release.info.date=$(date +"%B %d, %Y")/" \
@@ -614,7 +614,7 @@ function _add_lts_suffix_to_product_version {
 }
 
 function _is_free_tier_ignored_version {
-	local free_tier_ignored_versions=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/release.properties" "free.tier.ignored.versions")
+	local free_tier_ignored_versions=$(lc_get_property "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/release.properties" "free.tier.ignored.versions")
 
 	if (echo "${free_tier_ignored_versions}" | grep --quiet "${_PRODUCT_VERSION}")
 	then

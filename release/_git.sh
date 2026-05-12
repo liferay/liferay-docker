@@ -3,7 +3,7 @@
 source ../_release_common.sh
 
 function clean_portal_repository {
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	if [ -e "${_BUILD_DIR}"/built.sha ] &&
 	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
@@ -98,7 +98,7 @@ function generate_release_notes {
 		ga_version=${_PRODUCT_VERSION%%-u*}-ga1
 	fi
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	git log "tags/${ga_version}..HEAD" --pretty="%s %H" | \
 		sed --expression "/c394bcbc1c36af47e66678c470d623568d3f1e88/c\LPD-27038/" | \
@@ -151,7 +151,7 @@ function prepare_branch_to_commit {
 }
 
 function set_git_sha {
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	_GIT_SHA=$(git rev-parse HEAD)
 	_GIT_SHA_SHORT=$(git rev-parse --short HEAD)
@@ -160,14 +160,14 @@ function set_git_sha {
 function update_portal_repository {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	local checkout_ref="${LIFERAY_RELEASE_GIT_REF}"
 
-	if [ -e "${_BUILD_DIR}"/liferay-portal-ee.sha ] &&
-	   [ $(cat "${_BUILD_DIR}"/liferay-portal-ee.sha) == "${LIFERAY_RELEASE_GIT_REF}" ]
+	if [ -e "${_BUILD_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}.sha" ] &&
+	   [ $(cat "${_BUILD_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}.sha") == "${LIFERAY_RELEASE_GIT_REF}" ]
 	then
-		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already checked out in ${_PROJECTS_DIR}/liferay-portal-ee."
+		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already checked out in ${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -225,7 +225,7 @@ function update_portal_repository {
 
 	git status
 
-	echo "${LIFERAY_RELEASE_GIT_REF}" > "${_BUILD_DIR}"/liferay-portal-ee.sha
+	echo "${LIFERAY_RELEASE_GIT_REF}" > "${_BUILD_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}.sha"
 }
 
 function update_release_tool_repository {
@@ -242,11 +242,11 @@ function update_release_tool_repository {
 
 	git reset --hard && git clean -dfx
 
-	local release_tool_sha=$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.tool.sha")
+	local release_tool_sha=$(lc_get_property "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/release.properties" "release.tool.sha")
 
 	if [ ! -n "${release_tool_sha}" ]
 	then
-		lc_log ERROR "The property \"release.tool.sha\" is missing from liferay-portal-ee/release.properties."
+		lc_log ERROR "The property \"release.tool.sha\" is missing from ${LIFERAY_PORTAL_REPOSITORY_NAME}/release.properties."
 
 		return 1
 	fi

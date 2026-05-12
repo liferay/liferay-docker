@@ -62,7 +62,7 @@ function generate_release_properties_file {
 		echo "bundle.checksum.sha512=$(cat "${bundle_file_name}.sha512")"
 		echo "bundle.url=https://releases-cdn.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/${bundle_file_name}"
 		echo "git.hash.liferay-docker=${_BUILDER_SHA}"
-		echo "git.hash.liferay-portal-ee=${_GIT_SHA}"
+		echo "git.hash.${LIFERAY_PORTAL_REPOSITORY_NAME}=${_GIT_SHA}"
 		echo "git.tag=$(get_product_version_without_lts_suffix)"
 		echo "liferay.docker.image=liferay/${LIFERAY_RELEASE_PRODUCT_NAME}:${_PRODUCT_VERSION}"
 		echo "liferay.docker.tags=${_PRODUCT_VERSION}"
@@ -193,7 +193,7 @@ function _generate_javadocs {
 			-Dliferay.product.name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}" \
 			-Dlp.version="${_PRODUCT_VERSION}" \
 			-Dpatch.doc="true" \
-			-Dportal.dir="${_PROJECTS_DIR}/liferay-portal-ee" \
+			-Dportal.dir="${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}" \
 			-Dportal.release.edition.private="${portal_release_edition_private}" \
 			-Dtstamp.value="${_BUILD_TIMESTAMP}" \
 			-file "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
@@ -228,7 +228,7 @@ function _package_common_release {
 
 	if is_7_3_release
 	then
-		cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/portal/ccpp.jar WEB-INF/lib
+		cp "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/portal/ccpp.jar" WEB-INF/lib
 	fi
 
 	_package_wars
@@ -237,7 +237,7 @@ function _package_common_release {
 
 	zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tools-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" tools
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	cp --archive sql liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql
 
@@ -299,7 +299,7 @@ function _package_portal_dependencies {
 				jar_dir="development"
 			fi
 
-			cp "${_PROJECTS_DIR}"/liferay-portal-ee/lib/"${jar_dir}"/"${jar}" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
+			cp "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/${jar_dir}/${jar}" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
 		done
 
 		zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
@@ -354,7 +354,7 @@ function _package_wars {
 			-Dapp.server.shielded-container-lib.portal.dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" \
 			-Dapp.server.type=weblogic \
 			-Dapp.server.weblogic.portal.dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/tomcat/webapps/ROOT" \
-			-file "${_PROJECTS_DIR}/liferay-portal-ee/build.xml" update-app-server-scripts
+			-file "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/build.xml" update-app-server-scripts
 
 		zip \
 			-q \

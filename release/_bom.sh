@@ -25,7 +25,7 @@ function generate_api_jars {
 
 	mkdir --parents api-jar api-sources-jar
 
-	local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed --expression "s/,/\\n/g")
+	local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed --expression "s/,/\\n/g")
 
 	#
 	# TODO Remove if block when 2023.q3 support is dropped
@@ -33,7 +33,7 @@ function generate_api_jars {
 
 	if [ -z "${enforce_version_artifacts}" ]
 	then
-		local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/modules/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed --expression "s/,/\\n/g")
+		local enforce_version_artifacts=$(lc_get_property "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/source-formatter.properties" source.check.GradleDependencyArtifactsCheck.enforceVersionArtifacts | sed --expression "s/,/\\n/g")
 	fi
 
 	if [ -z "${enforce_version_artifacts}" ]
@@ -111,7 +111,7 @@ function generate_api_jars {
 			do
 				local module_jar_basename=$(basename "${module_jar}")
 
-				if (grep $(echo "${module_jar_basename%.jar}:") "${_PROJECTS_DIR}/liferay-portal-ee/lib/development/dependencies.properties" || grep $(echo "${module_jar_basename%.jar}:") "${_PROJECTS_DIR}/liferay-portal-ee/lib/portal/dependencies.properties")
+				if (grep $(echo "${module_jar_basename%.jar}:") "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/development/dependencies.properties" || grep $(echo "${module_jar_basename%.jar}:") "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/portal/dependencies.properties")
 				then
 					manage_bom_jar "${module_jar}"
 				fi
@@ -167,7 +167,7 @@ function generate_api_jars {
 }
 
 function generate_api_source_jar {
-	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
+	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	_copy_source_package ./portal-kernel/src/com/liferay
 
@@ -281,7 +281,7 @@ function generate_pom_release_bom {
 
 	echo "" >> "${pom_file_name}"
 
-	find "${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng" -name '*.properties' -print0 | \
+	find "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng" -name '*.properties' -print0 | \
 		xargs -0 awk -F= '/^artifact.url=/  { print $2 }' \
 		> /tmp/artifact_urls.txt
 
@@ -351,7 +351,7 @@ function generate_pom_release_bom_compile_only {
 
 	echo  "" >> "${pom_file_name}"
 
-	cut --delimiter='=' --fields=2 "${_PROJECTS_DIR}/liferay-portal-ee/modules/releng-pom-compile-only-dependencies.properties" | \
+	cut --delimiter='=' --fields=2 "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/releng-pom-compile-only-dependencies.properties" | \
 		while IFS=: read -r group_id artifact_id version
 		do
 			echo -e "\t\t\t<dependency>"
@@ -409,12 +409,12 @@ function generate_pom_release_bom_test {
 	local artifact_urls=""
 
 	for file in \
-		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/portal-test.properties" \
-		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/test/arquillian-extension-junit-bridge-connector/artifact.properties" \
-		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/test/arquillian-extension-junit-bridge/artifact.properties" \
-		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/third-party/biz-aQute-bndlib/artifact.properties" \
-		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/third-party/org-apache-logging-log4j-core/artifact.properties" \
-		"${_PROJECTS_DIR}/liferay-portal-ee/modules/.releng/third-party/org-apache-logging-log4j/artifact.properties"
+		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng/portal-test.properties" \
+		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng/test/arquillian-extension-junit-bridge-connector/artifact.properties" \
+		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng/test/arquillian-extension-junit-bridge/artifact.properties" \
+		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng/third-party/biz-aQute-bndlib/artifact.properties" \
+		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng/third-party/org-apache-logging-log4j-core/artifact.properties" \
+		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng/third-party/org-apache-logging-log4j/artifact.properties"
 	do
 		artifact_urls+=$(awk -F= '/^artifact.url=/ { print $2 }' "$file")
 		artifact_urls+=$'\n'
@@ -472,11 +472,11 @@ function generate_pom_release_bom_third_party {
 
 	local dependencies_properties
 
-	IFS=$'\n' read -d '' -ra dependencies_properties < "${_PROJECTS_DIR}/liferay-portal-ee/lib/development/dependencies.properties"
+	IFS=$'\n' read -d '' -ra dependencies_properties < "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/development/dependencies.properties"
 
 	local portal_dependencies_properties
 
-	IFS=$'\n' read -d '' -ra portal_dependencies_properties < "${_PROJECTS_DIR}/liferay-portal-ee/lib/portal/dependencies.properties"
+	IFS=$'\n' read -d '' -ra portal_dependencies_properties < "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/portal/dependencies.properties"
 
 	dependencies_properties+=("${portal_dependencies_properties[@]}")
 
@@ -569,7 +569,7 @@ function copy_tld {
 		arguments+="-name \"${tld}\""
 	done
 
-	for file in $(eval find "${_PROJECTS_DIR}/liferay-portal-ee" \
+	for file in $(eval find "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}" \
 		"${arguments}" -type f | \
 			grep \
 				--extended-regexp "(/build/|/classes/|/gradleTest/|/sdk/|/test/|/testIntegration/)" \
