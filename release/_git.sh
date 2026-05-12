@@ -193,26 +193,33 @@ function update_portal_repository {
 		fi
 	fi
 
-	if (! git remote get-url brianchandotcom &>/dev/null)
+	local repository_owner="brianchandotcom"
+
+	if [ -n "${LIFERAY_REPOSITORY_OWNER}" ]
 	then
-		git remote add brianchandotcom git@github.com:brianchandotcom/liferay-portal-ee.git
+		repository_owner="liferay-ai-hub"
 	fi
 
-	if [ -n "$(git ls-remote upstream refs/tags/"${LIFERAY_RELEASE_GIT_REF}")" ]
+	if (! git remote get-url "${repository_owner}" &>/dev/null)
+	then
+		git remote add "${repository_owner}" "git@github.com:${repository_owner}/${LIFERAY_PORTAL_REPOSITORY_NAME}.git"
+	fi
+
+	if [ -z "${LIFERAY_REPOSITORY_OWNER}" ] && [ -n "$(git ls-remote upstream refs/tags/"${LIFERAY_RELEASE_GIT_REF}")" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} tag exists on remote."
 
 		git fetch --force upstream tag "${LIFERAY_RELEASE_GIT_REF}"
-	elif [ -n "$(git ls-remote upstream refs/heads/"${LIFERAY_RELEASE_GIT_REF}")" ]
+	elif [ -z "${LIFERAY_REPOSITORY_OWNER}" ] && [ -n "$(git ls-remote upstream refs/heads/"${LIFERAY_RELEASE_GIT_REF}")" ]
 	then
 		echo "${LIFERAY_RELEASE_GIT_REF} branch exists on remote."
 
 		git fetch --force --update-head-ok upstream "${LIFERAY_RELEASE_GIT_REF}:${LIFERAY_RELEASE_GIT_REF}"
-	elif [ -n "$(git ls-remote brianchandotcom refs/heads/"${LIFERAY_RELEASE_GIT_REF}")" ]
+	elif [ -n "$(git ls-remote "${repository_owner}" refs/heads/"${LIFERAY_RELEASE_GIT_REF}")" ]
 	then
-		echo "${LIFERAY_RELEASE_GIT_REF} branch exists on brianchandotcom's remote."
+		echo "${LIFERAY_RELEASE_GIT_REF} branch exists on ${repository_owner}'s remote."
 
-		git fetch --force --update-head-ok brianchandotcom "${LIFERAY_RELEASE_GIT_REF}:${LIFERAY_RELEASE_GIT_REF}"
+		git fetch --force --update-head-ok "${repository_owner}" "${LIFERAY_RELEASE_GIT_REF}:${LIFERAY_RELEASE_GIT_REF}"
 	else
 		lc_log ERROR "${LIFERAY_RELEASE_GIT_REF} does not exist."
 
