@@ -25,10 +25,22 @@ function main {
 
 	check_usage
 
+	if is_latest_release_candidate_published
+	then
+		local skip_branch="release-$(get_product_group_version "$(get_latest_product_version "quarterly")")"
+	fi
+
 	local exit_code="${LIFERAY_COMMON_EXIT_CODE_OK}"
 
 	for branch in $(get_premium_support_q1_lts_release_branches)
 	do
+		if [ "${branch}" == "${skip_branch}" ]
+		then
+			lc_log INFO "Skipping ${branch} because it is covered by the automated build."
+
+			continue
+		fi
+
 		if ! trigger_build_release "${branch}"
 		then
 			exit_code="${LIFERAY_COMMON_EXIT_CODE_BAD}"
