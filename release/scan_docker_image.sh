@@ -23,6 +23,13 @@ function main {
 }
 
 function set_liferay_docker_image_name {
+	if is_ai_hub_release
+	then
+		lc_log INFO "Docker image scanning should not be done for AI Hub releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	export LIFERAY_DOCKER_IMAGE_NAME="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	if [ "$(get_release_output)" == "nightly" ]
