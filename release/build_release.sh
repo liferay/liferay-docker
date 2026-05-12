@@ -99,17 +99,14 @@ function handle_automated_build {
 
 	lc_log INFO "This build was triggered automatically."
 
-	local latest_quarterly_candidate_product_version="$(get_latest_product_version "quarterly-candidate")"
-	local latest_quarterly_product_version="$(get_latest_product_version "quarterly")"
-
-	if [ "${latest_quarterly_candidate_product_version}" != "${latest_quarterly_product_version}" ]
+	if ! is_latest_release_candidate_published
 	then
 		lc_log INFO "The latest quarterly release candidate has not been published. Skipping build."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	LIFERAY_RELEASE_GIT_REF="release-$(get_product_group_version "${latest_quarterly_product_version}")"
+	LIFERAY_RELEASE_GIT_REF="release-$(get_product_group_version "$(get_latest_product_version "quarterly")")"
 	RUN_SCANCODE_PIPELINE=true
 	TRIGGER_CI_TEST_SUITE=true
 

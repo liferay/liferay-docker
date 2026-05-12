@@ -305,6 +305,18 @@ function is_later_product_version_than {
 	_compare_product_versions "${1}" "later"
 }
 
+function is_latest_release_candidate_published {
+	local latest_quarterly_candidate_product_version="$(get_latest_product_version "quarterly-candidate")"
+	local latest_quarterly_product_version="$(get_latest_product_version "quarterly")"
+
+	if [ "${latest_quarterly_candidate_product_version}" == "${latest_quarterly_product_version}" ]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function is_lts_release {
 	if [[ "$(_get_product_version "${1}")" == *lts ]]
 	then
