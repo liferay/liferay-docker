@@ -241,6 +241,15 @@ function is_7_4_u_release {
 	return 1
 }
 
+function is_ai_hub_release {
+	if [ "${LIFERAY_AI_HUB_RELEASE}" == "true" ]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function is_dxp_release {
 	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
 	then

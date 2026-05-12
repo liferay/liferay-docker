@@ -75,7 +75,7 @@ function check_usage {
 
 	LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal-ee"
 
-	if [ -n "${LIFERAY_REPOSITORY_OWNER}" ]
+	if is_ai_hub_release
 	then
 		LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal"
 	fi
