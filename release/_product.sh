@@ -448,6 +448,11 @@ function set_product_version {
 		set_artifact_versions "${_PRODUCT_VERSION}" "${2}"
 	fi
 
+	if is_ai_hub_release
+	then
+		_PRODUCT_VERSION="${_PRODUCT_VERSION}-ai-hub"
+	fi
+
 	lc_log INFO "Product Version: ${_PRODUCT_VERSION}"
 }
 
