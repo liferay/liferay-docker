@@ -242,7 +242,10 @@ function is_7_4_u_release {
 }
 
 function is_ai_hub_release {
-	if [ "${LIFERAY_AI_HUB_RELEASE}" == "true" ]
+	if [ -n "${LIFERAY_AI_HUB_RELEASE}" ] && [ "${LIFERAY_AI_HUB_RELEASE}" == "true" ]
+	then
+		return 0
+	elif [[ "$(_get_product_version "${1}")" == *ai-hub* ]]
 	then
 		return 0
 	fi

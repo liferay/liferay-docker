@@ -23,13 +23,6 @@ function main {
 }
 
 function set_liferay_docker_image_name {
-	if is_ai_hub_release
-	then
-		lc_log INFO "Docker image scanning should not be done for AI Hub releases."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
 	export LIFERAY_DOCKER_IMAGE_NAME="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	if [ "$(get_release_output)" == "nightly" ]
@@ -98,6 +91,13 @@ function _scan_docker_image {
 		lc_log ERROR "\${LIFERAY_DOCKER_IMAGE_NAME} is undefined."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	if is_ai_hub_release "${LIFERAY_DOCKER_IMAGE_NAME}"
+	then
+		lc_log INFO "Skipping Docker image scan for ${LIFERAY_DOCKER_IMAGE_NAME}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
 	if [ -z "${LIFERAY_PRISMA_CLOUD_ACCESS_KEY}" ] ||
