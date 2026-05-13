@@ -24,6 +24,7 @@ function main {
 }
 
 function set_up {
+	export LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal-ee"
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _BUILD_TIMESTAMP="1234567890"
 	export _PRODUCT_VERSION
@@ -43,6 +44,7 @@ function tear_down {
 	rm --force "${_BUILD_DIR}/"liferay-dxp-tomcat-*.zip
 	rm --force --recursive "${_BUILD_DIR}/release"
 
+	unset LIFERAY_PORTAL_REPOSITORY_NAME
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
 	unset _BUILD_TIMESTAMP

@@ -81,6 +81,7 @@ function main {
 }
 
 function set_up {
+	export LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal-ee"
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _BUILD_TIMESTAMP=12345
 	export _PRODUCT_VERSION="2024.q2.6"
@@ -166,6 +167,7 @@ function tear_down {
 
 	git clean -dfx &> /dev/null
 
+	unset LIFERAY_PORTAL_REPOSITORY_NAME
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _ARTIFACT_RC_VERSION
 	unset _BUILD_DIR

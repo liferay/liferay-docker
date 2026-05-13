@@ -23,6 +23,7 @@ function main {
 }
 
 function set_up {
+	export LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal-ee"
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _PRODUCT_VERSION="2024.q2.0"
 
@@ -53,6 +54,7 @@ function set_up {
 }
 
 function tear_down {
+	unset LIFERAY_PORTAL_REPOSITORY_NAME
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
 	unset _PRODUCT_VERSION
