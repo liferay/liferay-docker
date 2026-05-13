@@ -12,9 +12,9 @@ function report_jenkins_url {
 		return
 	fi
 	
-	if [ "${LIFERAY_RELEASE_DEVELOPMENT_MODE}" == "true" ]
+	if [ "${LIFERAY_RELEASE_DEVELOPER_MODE}" == "true" ]
 	then
-		lc_log INFO "Skipping the patcher status report because LIFERAY_RELEASE_DEVELOPMENT_MODE is set to \"true\"."
+		lc_log INFO "Skipping the patcher status report because LIFERAY_RELEASE_DEVELOPER_MODE is set to \"true\"."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -53,9 +53,9 @@ function report_patcher_status {
 		return
 	fi
 
-	if [ "${LIFERAY_RELEASE_DEVELOPMENT_MODE}" == "true" ]
+	if [ "${LIFERAY_RELEASE_DEVELOPER_MODE}" == "true" ]
 	then
-		lc_log INFO "Skipping the patcher status report because LIFERAY_RELEASE_DEVELOPMENT_MODE is set to \"true\"."
+		lc_log INFO "Skipping the patcher status report because LIFERAY_RELEASE_DEVELOPER_MODE is set to \"true\"."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

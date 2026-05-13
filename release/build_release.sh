@@ -21,7 +21,7 @@ function check_usage {
 	# TODO Remove once all systems are using LIFERAY_RELEASE_GIT_REF instead of LIFERAY_RELEASE_GIT_SHA
 	#
 
-	if [ "${LIFERAY_RELEASE_DEVELOPMENT_MODE}" == "true" ]
+	if [ "${LIFERAY_RELEASE_DEVELOPER_MODE}" == "true" ]
 	then
 		LIFERAY_RELEASE_UPLOAD="false"
 	fi
@@ -286,7 +286,7 @@ function print_help {
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
-	echo "    LIFERAY_RELEASE_DEVELOPMENT_MODE (optional): Set this to \"true\" to run the script as a local development build. Forces LIFERAY_RELEASE_UPLOAD to \"false\"."
+	echo "    LIFERAY_RELEASE_DEVELOPER_MODE (optional): Set this to \"true\" to run the script as a local development build. Forces LIFERAY_RELEASE_UPLOAD to \"false\"."
 	echo "    LIFERAY_RELEASE_GCS_TOKEN (optional): *.json file containing the token to authenticate with Google Cloud Storage"
 	echo "    LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE (optional): General availability date"
 	echo "    LIFERAY_RELEASE_GIT_REF: Git SHA to build from"
@@ -319,7 +319,7 @@ function print_variables {
 		grep --regexp="^LIFERAY_RELEASE" | \
 		tr "\n" " ")
 
-	echo "${environment}LIFERAY_RELEASE_DEVELOPMENT_MODE=true ./build_release.sh"
+	echo "${environment}LIFERAY_RELEASE_DEVELOPER_MODE=true ./build_release.sh"
 	echo ""
 }
 
