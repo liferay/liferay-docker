@@ -25,9 +25,9 @@ function trigger_ci_test_suite {
 				--data-urlencode "TEST_PORTAL_RELEASE_TOOLS_URL=${release_url}liferay-dxp-tools-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
 				--data-urlencode "TEST_PORTAL_RELEASE_VERSION=${_PRODUCT_VERSION}" \
 				--data-urlencode "TEST_PORTAL_RELEASE_WAR_URL=${release_url}liferay-dxp-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.war" \
-				--data-urlencode "TEST_PORTAL_REPOSITORY_NAME=liferay-portal-ee" \
+				--data-urlencode "TEST_PORTAL_REPOSITORY_NAME=${LIFERAY_PORTAL_REPOSITORY_NAME}" \
 				--data-urlencode "TEST_PORTAL_USER_BRANCH_NAME=${LIFERAY_RELEASE_GIT_REF}" \
-				--data-urlencode "TEST_PORTAL_USER_NAME=brianchandotcom" \
+				--data-urlencode "TEST_PORTAL_USER_NAME=${LIFERAY_PORTAL_REPOSITORY_OWNER}" \
 				--fail \
 				--max-time 10 \
 				--request "POST" \

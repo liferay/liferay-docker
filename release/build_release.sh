@@ -74,10 +74,12 @@ function check_usage {
 	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
 
 	LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal-ee"
+	LIFERAY_PORTAL_REPOSITORY_OWNER="brianchandotcom"
 
 	if is_ai_hub_release
 	then
 		LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal"
+		LIFERAY_PORTAL_REPOSITORY_OWNER="liferay-ai-hub"
 	fi
 }
 
