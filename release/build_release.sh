@@ -121,8 +121,6 @@ function main {
 		return
 	fi
 
-	export ANT_OPTS="-Xmx10G"
-
 	check_usage
 
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
