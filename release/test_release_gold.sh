@@ -155,12 +155,16 @@ function _test_release_gold_check_supported_versions {
 }
 
 function _test_release_gold_is_latest_product_version_by_releases_json {
+	local current_product_name="${LIFERAY_RELEASE_PRODUCT_NAME}"
+
 	LIFERAY_RELEASE_PRODUCT_NAME="${1}"
 	_PRODUCT_VERSION="${2}"
 
 	is_latest_product_version_by_releases_json "${_PROMOTION_DIR}"
 
 	assert_equals "${?}" "${3}"
+
+	LIFERAY_RELEASE_PRODUCT_NAME="${current_product_name}"
 }
 
 function _test_release_gold_not_reference_new_releases {
