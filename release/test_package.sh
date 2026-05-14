@@ -35,24 +35,6 @@ function set_up {
 	common_set_up
 
 	mkdir --parents "${_BUILD_DIR}/release"
-
-	lc_cd test-dependencies
-
-	lc_download \
-		https://releases.liferay.com/dxp/7.3.10-u36/liferay-dxp-tomcat-7.3.10-u36-1706652128.zip \
-		liferay-dxp-tomcat-7.3.10-u36-1706652128.zip 1> /dev/null
-
-	unzip -oq liferay-dxp-tomcat-7.3.10-u36-1706652128.zip -d "${_BUILD_DIR}/release"
-
-	mkdir --parents "${_BUILD_DIR}/test_package_package_wars"
-
-	lc_download \
-		https://releases.liferay.com/dxp/2025.q3.0/liferay-dxp-tomcat-2025.q3.0-1756231955.zip \
-		liferay-dxp-tomcat-2025.q3.0-1756231955.zip 1> /dev/null
-
-	unzip -oq liferay-dxp-tomcat-2025.q3.0-1756231955.zip -d "${_BUILD_DIR}/test_package_package_wars"
-
-	lc_cd ..
 }
 
 function tear_down {
@@ -60,7 +42,6 @@ function tear_down {
 
 	rm --force "${_BUILD_DIR}/"liferay-dxp-tomcat-*.zip
 	rm --force --recursive "${_BUILD_DIR}/release"
-	rm --force --recursive "${_BUILD_DIR}/test_package_package_wars"
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
@@ -109,7 +90,6 @@ function test_package_not_generate_release_properties_file {
 }
 
 function test_package_package_wars {
-	_BUNDLES_DIR="${_BUILD_DIR}/test_package_package_wars/liferay-dxp"
 	_PRODUCT_VERSION="2026.q1.0-lts"
 
 	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
@@ -120,7 +100,13 @@ function test_package_package_wars {
 
 	git reset --hard FETCH_HEAD --quiet
 
-	lc_cd "${_BUNDLES_DIR}/tomcat/webapps/ROOT"
+	lc_download \
+		https://releases.liferay.com/dxp/2025.q3.0/liferay-dxp-tomcat-2025.q3.0-1756231955.zip \
+		liferay-dxp-tomcat-2025.q3.0-1756231955.zip 1> /dev/null
+
+	unzip -oq liferay-dxp-tomcat-2025.q3.0-1756231955.zip -d "${_BUILD_DIR}/release"
+
+	lc_cd "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/tomcat/webapps/ROOT"
 
 	_package_wars &> /dev/null
 
@@ -137,11 +123,21 @@ function test_package_package_wars {
 		"1" \
 		"${web_app_specification_version}" \
 		"5.0"
+
+	rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 }
 
 function test_package_portal_dependencies {
 	_PRODUCT_VERSION="7.3.10-u36"
 	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/expected"
+
+	lc_cd "${_BUILD_DIR}"
+
+	lc_download \
+		https://releases.liferay.com/dxp/7.3.10-u36/liferay-dxp-tomcat-7.3.10-u36-1706652128.zip \
+		liferay-dxp-tomcat-7.3.10-u36-1706652128.zip 1> /dev/null
+
+	unzip -oq liferay-dxp-tomcat-7.3.10-u36-1706652128.zip -d "${_BUILD_DIR}/release"
 
 	lc_cd "${_BUILD_DIR}/release"
 
@@ -158,6 +154,7 @@ function test_package_portal_dependencies {
 
 	rm --force "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
 	rm --force "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
+	rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 }
 
 function _test_package_generate_javadocs {
