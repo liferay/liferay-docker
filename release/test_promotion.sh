@@ -15,11 +15,14 @@ function set_up {
 	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	_ARTIFACT_RC_VERSION=2025.q4.2-1765184167
 	_ARTIFACT_VERSION=2025.q4.2
+	_PRODUCT_VERSION=2025.q4.2
 	_PROMOTION_DIR="${PWD}/test-dependencies"
 }
 
 function tear_down {
 	find "${_PROMOTION_DIR}" -maxdepth 1 -path "${_PROMOTION_DIR}/release.dxp.*.pom*" -type f -delete
+
+	unset _PRODUCT_VERSION
 }
 
 function test_promotion_prepare_poms_for_promotion {
