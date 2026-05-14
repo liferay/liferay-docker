@@ -318,7 +318,9 @@ function set_general_availability_date {
 
 	if [ -z "${LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE}" ] && is_first_quarterly_release
 	then
-		print_help
+		lc_log ERROR "Set the environment variable \"LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE\" when building the first quarterly release, as 2026.q1.0-lts."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	if [ -z "${LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE}" ]
