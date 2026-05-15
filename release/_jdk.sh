@@ -51,6 +51,8 @@ function set_jdk_version_and_parameters {
 
 	export JAVA_HOME="/opt/java/${jdk_version}"
 
+	lc_log INFO "Java release:\n $(cat "${JAVA_HOME}/release")"
+
 	if [[ "${jdk_version}" == *"8"* ]] && [[ ! "${JAVA_OPTS}" =~ "-XX:MaxPermSize" ]]
 	then
 		JAVA_OPTS="${JAVA_OPTS} -XX:MaxPermSize=256m"
