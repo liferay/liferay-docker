@@ -36,7 +36,7 @@ function main {
 	do
 		if [ "${branch}" == "${skip_branch}" ]
 		then
-			lc_log INFO "Skipping ${branch} because it is covered by the automated build."
+			lc_log INFO "Skipping ${branch} because it is covered by the automated build associated to the latest quarterly release."
 
 			continue
 		fi
