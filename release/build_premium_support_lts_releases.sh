@@ -41,7 +41,7 @@ function main {
 			continue
 		fi
 
-		if ! trigger_build_release "${branch}"
+		if ! _trigger_build_release "${branch}"
 		then
 			exit_code="${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
@@ -50,7 +50,7 @@ function main {
 	return "${exit_code}"
 }
 
-function trigger_build_release {
+function _trigger_build_release {
 	local branch="${1}"
 
 	local http_code=$(curl \
