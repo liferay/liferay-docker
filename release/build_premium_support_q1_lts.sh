@@ -70,7 +70,7 @@ function trigger_build_release {
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
-	lc_log ERROR "Unable to trigger build-release for ${branch}. HTTP response: ${http_response}."
+	lc_log ERROR "Unable to trigger build-release for ${branch}. HTTP response code was ${http_response}."
 
 	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
