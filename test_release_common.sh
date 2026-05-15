@@ -12,7 +12,7 @@ function main {
 	else
 		test_release_common_get_due_date
 		test_release_common_get_latest_product_version
-		test_release_common_get_premium_support_q1_lts_release_branches
+		test_release_common_get_premium_support_lts_release_branches
 		test_release_common_get_product_group_version
 		test_release_common_get_product_version_without_lts_suffix
 		test_release_common_get_release_output
@@ -75,10 +75,10 @@ function test_release_common_get_latest_product_version {
 	_test_release_common_get_latest_product_version "quarterly-candidate" "2025.q2.8"
 }
 
-function test_release_common_get_premium_support_q1_lts_release_branches {
-	_test_release_common_get_premium_support_q1_lts_release_branches "2026-01-15" "release-2024.q1 release-2025.q1 release-2026.q1"
-	_test_release_common_get_premium_support_q1_lts_release_branches "2027-08-01" "release-2025.q1 release-2026.q1 release-2027.q1"
-	_test_release_common_get_premium_support_q1_lts_release_branches "2028-07-01" "release-2026.q1 release-2027.q1 release-2028.q1"
+function test_release_common_get_premium_support_lts_release_branches {
+	_test_release_common_get_premium_support_lts_release_branches "2026-01-15" "release-2024.q1 release-2025.q1 release-2026.q1"
+	_test_release_common_get_premium_support_lts_release_branches "2027-08-01" "release-2025.q1 release-2026.q1 release-2027.q1"
+	_test_release_common_get_premium_support_lts_release_branches "2028-07-01" "release-2026.q1 release-2027.q1 release-2028.q1"
 }
 
 function test_release_common_get_product_group_version {
@@ -313,11 +313,11 @@ function _test_release_common_get_latest_product_version {
 		"${2}"
 }
 
-function _test_release_common_get_premium_support_q1_lts_release_branches {
+function _test_release_common_get_premium_support_lts_release_branches {
 	LIFERAY_RELEASE_TEST_DATE="${1}"
 
 	assert_equals \
-		"$(get_premium_support_q1_lts_release_branches)" \
+		"$(get_premium_support_lts_release_branches)" \
 		"${2}"
 
 	unset LIFERAY_RELEASE_TEST_DATE

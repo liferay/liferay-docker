@@ -32,7 +32,7 @@ function main {
 
 	local exit_code="${LIFERAY_COMMON_EXIT_CODE_OK}"
 
-	for branch in $(get_premium_support_q1_lts_release_branches)
+	for branch in $(get_premium_support_lts_release_branches)
 	do
 		if [ "${branch}" == "${skip_branch}" ]
 		then

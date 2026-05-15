@@ -101,7 +101,7 @@ function get_latest_version_from_url {
 		| tail --lines=1
 }
 
-function get_premium_support_q1_lts_release_branches {
+function get_premium_support_lts_release_branches {
 	local today=$(date +%Y-%m-%d)
 
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ] && [ -n "${LIFERAY_RELEASE_TEST_DATE}" ]
