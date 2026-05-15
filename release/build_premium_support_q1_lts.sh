@@ -10,8 +10,8 @@ function check_usage {
 		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
-		echo "    JENKINS_API_TOKEN: API token of the Jenkins user that triggers build-release"
-		echo "    LIFERAY_RELEASE_JENKINS_USER: Jenkins user that triggers build-release"
+		echo "    JENKINS_API_TOKEN: API token of the Jenkins user that triggers the job build-release"
+		echo "    LIFERAY_RELEASE_JENKINS_USER: Jenkins user that triggers the job build-release"
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 	fi
