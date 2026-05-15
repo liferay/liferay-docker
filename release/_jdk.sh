@@ -12,6 +12,11 @@ function set_jdk_version_and_parameters {
 		then
 			jdk_version="openjdk17"
 		fi
+
+		if is_equals_or_later_product_version_than "2026.q1.4"
+		then
+			jdk_version="jdk17"
+		fi
 	fi
 
 	if is_ga_release
