@@ -55,10 +55,7 @@ function trigger_build_release {
 
 	local http_response=$(curl \
 		"https://release-master.liferay.com/job/build-release/buildWithParameters" \
-		--data-urlencode "CI_TEST_SUITE=portal-release-acceptance" \
 		--data-urlencode "LIFERAY_RELEASE_GIT_REF=${branch}" \
-		--data-urlencode "RUN_SCANCODE_PIPELINE=true" \
-		--data-urlencode "TRIGGER_CI_TEST_SUITE=true" \
 		--max-time 10 \
 		--request "POST" \
 		--retry 3 \
