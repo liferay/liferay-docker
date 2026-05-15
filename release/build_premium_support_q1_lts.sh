@@ -53,7 +53,7 @@ function main {
 function trigger_build_release {
 	local branch="${1}"
 
-	local http_response=$(curl \
+	local http_code=$(curl \
 		"https://release-master.liferay.com/job/build-release/buildWithParameters" \
 		--data-urlencode "LIFERAY_RELEASE_GIT_REF=${branch}" \
 		--max-time 10 \
@@ -63,14 +63,14 @@ function trigger_build_release {
 		--user "${LIFERAY_RELEASE_JENKINS_USER}:${JENKINS_API_TOKEN}" \
 		--write-out "%{http_code}")
 
-	if [ "${http_response}" == "201" ]
+	if [ "${http_code}" == "201" ]
 	then
 		lc_log INFO "Triggered build-release for ${branch}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
-	lc_log ERROR "Unable to trigger build-release for ${branch}. HTTP response code was ${http_response}."
+	lc_log ERROR "Unable to trigger build-release for ${branch}. HTTP response code was ${http_code}."
 
 	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
