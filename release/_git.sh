@@ -86,7 +86,7 @@ function commit_to_branch_and_send_pull_request {
 function generate_release_notes {
 	if is_ai_hub_release
 	then
-		lc_log INFO "Release notes should not be generated for ${_PRODUCT_VERSION}."
+		lc_log INFO "Release notes should not be generated for AI Hub releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

@@ -156,7 +156,7 @@ function package_release {
 function _generate_javadocs {
 	if (is_7_4_u_release || is_ai_hub_release)
 	then
-		lc_log INFO "Javadocs should not be generated for ${_PRODUCT_VERSION}."
+		lc_log INFO "Javadocs should not be generated for internal and AI Hub releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

@@ -95,7 +95,7 @@ function _scan_docker_image {
 
 	if is_ai_hub_release "${LIFERAY_DOCKER_IMAGE_NAME}"
 	then
-		lc_log INFO "Skipping Docker image scan for ${LIFERAY_DOCKER_IMAGE_NAME}."
+		lc_log INFO "Skipping Docker image scan for AI Hub releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
