@@ -11,7 +11,7 @@ function report_jenkins_url {
 	then
 		return
 	fi
-	
+
 	if [ "${LIFERAY_RELEASE_DEVELOPER_MODE}" == "true" ]
 	then
 		lc_log INFO "Skipping the Jenkins URL report because LIFERAY_RELEASE_DEVELOPER_MODE is set to \"true\"."
