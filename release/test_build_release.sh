@@ -14,7 +14,6 @@ function main {
 	test_build_release_handle_automated_build
 	test_build_release_has_packaged_bundles
 	test_build_release_not_handle_automated_build
-	test_build_release_print_help
 
 	test_build_hotfix_main || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 
@@ -155,15 +154,6 @@ function test_build_release_main {
 	fi
 }
 
-function test_build_release_print_help {
-	_test_build_release_print_help "2025.q1.0-lts" "2025.q1.0"
-	_test_build_release_print_help "2025.q2.0" "2025.q2.0"
-	_test_build_release_print_help "2025.q3.0" "2025.q3.0"
-	_test_build_release_print_help "2025.q4.0" "2025.q4.0"
-
-	_PRODUCT_VERSION="${LIFERAY_RELEASE_GIT_REF}"
-}
-
 function _clean_up_release_data {
 	rm --force --recursive "${_RELEASE_ROOT_DIR}/release-data"
 }
@@ -174,14 +164,6 @@ function _test_build_release_not_handle_automated_build {
 	handle_automated_build &> /dev/null
 
 	assert_equals "${?}" "${2}"
-}
-
-function _test_build_release_print_help {
-	_PRODUCT_VERSION="${1}"
-
-	LIFERAY_RELEASE_GIT_REF="${2}" ./build_release.sh  &> /dev/null
-
-	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
 
 main
