@@ -63,7 +63,14 @@ function main {
 			-exec rm --force --recursive {} \; &> /dev/null
 	fi
 
-	_clean_up_repository "liferay-portal-ee"
+	local liferay_portal_repository_name="liferay-portal-ee"
+
+	if [ ! -f "${PWD}/release-data/build/${liferay_portal_repository_name}.sha" ]
+	then
+		liferay_portal_repository_name="liferay-portal"
+	fi
+
+	_clean_up_repository "${liferay_portal_repository_name}"
 }
 
 function _clean_up_repository {
