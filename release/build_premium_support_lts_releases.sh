@@ -25,6 +25,10 @@ function main {
 
 	check_usage
 
+	_process_premium_support_lts_release_branches
+}
+
+function _process_premium_support_lts_release_branches {
 	if is_latest_release_candidate_published
 	then
 		local skip_branch="release-$(get_product_group_version "$(get_latest_product_version "quarterly")")"
@@ -52,6 +56,13 @@ function main {
 
 function _trigger_build_release {
 	local branch="${1}"
+
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		echo "${branch}"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 
 	local http_code=$(curl \
 		"https://release-master.liferay.com/job/build-release/buildWithParameters" \
