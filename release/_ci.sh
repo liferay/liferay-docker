@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../_release_common.sh
+
 function trigger_ci_test_suite {
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
@@ -60,7 +62,7 @@ function trigger_ci_test_suite {
 function _get_test_portal_branch_name {
 	local branch_name="${1}"
 
-	if (echo "${branch_name}" | grep --quiet "7.4")
+	if [[ "${branch_name}" == *7.4* ]] || is_ai_hub_release
 	then
 		echo "master"
 	else

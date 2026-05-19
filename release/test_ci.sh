@@ -19,10 +19,12 @@ function main {
 }
 
 function set_up {
+	export LIFERAY_AI_HUB_RELEASE="false"
 	export TRIGGER_CI_TEST_SUITE="false"
 }
 
 function tear_down {
+	unset LIFERAY_AI_HUB_RELEASE
 	unset TRIGGER_CI_TEST_SUITE
 }
 
@@ -30,6 +32,10 @@ function test_ci_get_test_portal_branch_name {
 	_test_ci_get_test_portal_branch_name "release-2025.q1" "release-2025.q1"
 	_test_ci_get_test_portal_branch_name "release-7.4.13.135" "master"
 	_test_ci_get_test_portal_branch_name "release-7.4.3.132-ga132" "master"
+
+	LIFERAY_AI_HUB_RELEASE="true"
+
+	_test_ci_get_test_portal_branch_name "release-ai-hub" "master"
 }
 
 function test_ci_not_trigger_ci_test_suite {
