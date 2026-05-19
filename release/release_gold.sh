@@ -540,7 +540,11 @@ function test_boms {
 
 	lc_cd ".."
 
-	pgrep --full --list-name temp_dir_test_boms | awk '{print $1}' | xargs --no-run-if-empty kill -9
+	pgrep \
+		--full \
+		--list-name temp_dir_test_boms \
+		| awk '{print $1}' \
+		| xargs --no-run-if-empty kill -9
 
 	rm --force --recursive "temp_dir_test_boms"
 

@@ -155,7 +155,9 @@ function test_build_release_main {
 }
 
 function _clean_up_release_data {
-	pgrep --full --list-name "${_RELEASE_ROOT_DIR}/release-data" \
+	pgrep \
+		--full \
+		--list-name "${_RELEASE_ROOT_DIR}/release-data" \
 		| awk '{print $1}' \
 		| xargs --no-run-if-empty kill -9
 

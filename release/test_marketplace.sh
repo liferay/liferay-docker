@@ -51,7 +51,11 @@ function set_up {
 function tear_down {
 	common_tear_down
 
-	pgrep --full --list-name "${_BUNDLES_DIR}" | awk '{print $1}' | xargs --no-run-if-empty kill -9
+	pgrep \
+		--full \
+		--list-name "${_BUNDLES_DIR}" \
+		| awk '{print $1}' \
+		| xargs --no-run-if-empty kill -9
 
 	rm --force --recursive "${_BUILD_DIR}"
 	rm --force --recursive "${_BUNDLES_DIR}"

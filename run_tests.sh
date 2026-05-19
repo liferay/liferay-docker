@@ -35,11 +35,19 @@ function main {
 function _run_docker_tests {
 	if [ -z "${1}" ]
 	then
-		find . -maxdepth 1 -name "test_*.sh" ! -name "test_bundle_image.sh" -type f | sort | xargs --max-args=1 /bin/bash
+		find . \
+			-maxdepth 1 \
+			-name "test_*.sh" ! -name "test_bundle_image.sh" \
+			-type f \
+			| sort \
+			| xargs --max-args=1 /bin/bash
 	else
 		for changed_file in $(echo "${1}" | grep --extended-regexp "^[^/]+\.sh$")
 		do
-			find . -name "test_$(basename ${changed_file} | sed "s/^_//")" -type f | xargs --max-args=1 /bin/bash
+			find . \
+				-name "test_$(basename ${changed_file} | sed "s/^_//")" \
+				-type f \
+				| xargs --max-args=1 /bin/bash
 		done
 	fi
 }
@@ -49,11 +57,18 @@ function _run_release_tests {
 
 	if [ -z "${1}" ]
 	then
-		find . -name "test_*.sh" -type f | sort | xargs --max-args=1 /bin/bash
+		find . \
+			-name "test_*.sh" \
+			-type f \
+			| sort \
+			| xargs --max-args=1 /bin/bash
 	else
 		for changed_file in $(echo "${1}" | grep --extended-regexp "^release/.*\.sh$|^release/test-dependencies/.*")
 		do
-			find . -name "test_$(basename ${changed_file} | sed "s/^_//")" ! -name "test_build_release.sh" -type f | xargs --max-args=1 /bin/bash
+			find . \
+				-name "test_$(basename ${changed_file} | sed "s/^_//")" ! -name "test_build_release.sh" \
+				-type f \
+				| xargs --max-args=1 /bin/bash
 		done
 
 		/bin/bash test_build_release.sh
