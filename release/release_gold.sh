@@ -71,6 +71,8 @@ function check_usage {
 	lc_cd "${_PROMOTION_DIR}"
 
 	LIFERAY_COMMON_LOG_DIR="${_PROMOTION_DIR%/*}"
+
+	LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal-ee"
 }
 
 function is_latest_product_version_by_releases_json {
