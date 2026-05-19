@@ -33,6 +33,7 @@ function main {
 		test_release_common_is_equals_or_later_product_version_than
 		test_release_common_is_ga_release
 		test_release_common_is_later_product_version_than
+		test_release_common_is_latest_release_candidate_published
 		test_release_common_is_lts_release
 		test_release_common_is_nightly_release
 		test_release_common_is_portal_release
@@ -261,6 +262,30 @@ function test_release_common_is_later_product_version_than {
 	_test_release_common_is_later_product_version_than "7.4.3.132-ga132" "7.4.3.120-ga120" "0"
 }
 
+function test_release_common_is_latest_release_candidate_published {
+	_test_release_common_is_latest_release_candidate_published "0"
+
+	local latest_release_candidate=$(
+		cat <<- END
+		<li>
+			<a href="/dxp/release-candidates/2025.q2.9-1754280641" class="icon icon-directory" title="2025.q2.9-1754280641">
+				<span class="name">2025.q2.9-1754280641</span>
+				<span class="size"></span>
+				<span class="date">12/23/2025 12:32:16 PM</span>
+			</a>
+		</li>
+		END
+	)
+
+	latest_release_candidate="${latest_release_candidate//$'\n'/\\n}"
+
+	sed --in-place "/<\/ul>/i \\${latest_release_candidate}" release/test-dependencies/actual/release-candidates.html
+
+	_test_release_common_is_latest_release_candidate_published "1"
+
+	git restore release/test-dependencies/actual/release-candidates.html
+}
+
 function test_release_common_is_lts_release {
 	_test_release_common_is_lts_release "2023.q4.3" "1"
 	_test_release_common_is_lts_release "2024.q3.7" "1"
@@ -451,6 +476,12 @@ function _test_release_common_is_later_product_version_than {
 	is_later_product_version_than "${2}"
 
 	assert_equals "${?}" "${3}"
+}
+
+function _test_release_common_is_latest_release_candidate_published {
+	is_latest_release_candidate_published 2> /dev/null
+
+	assert_equals "${?}" "${1}"
 }
 
 function _test_release_common_is_lts_release {
