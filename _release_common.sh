@@ -309,6 +309,9 @@ function is_latest_release_candidate_published {
 	local latest_quarterly_candidate_product_version="$(get_latest_product_version "quarterly-candidate")"
 	local latest_quarterly_product_version="$(get_latest_product_version "quarterly")"
 
+	lc_log INFO "Latest quarterly release candidate product version: ${latest_quarterly_candidate_product_version}" >&2
+	lc_log INFO "Latest quarterly release product version: ${latest_quarterly_product_version}" >&2
+
 	if [ "${latest_quarterly_candidate_product_version}" == "${latest_quarterly_product_version}" ]
 	then
 		return 0
