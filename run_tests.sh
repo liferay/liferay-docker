@@ -63,7 +63,7 @@ function _run_release_tests {
 			| sort \
 			| xargs --max-args=1 /bin/bash
 	else
-		for changed_file in $(echo "${1}" | grep --extended-regexp "^release/.*\.sh$|^release/test-dependencies/.*")
+		for changed_file in $(echo "${1}" | grep --extended-regexp "^release/.*\.sh$")
 		do
 			find . \
 				-name "test_$(basename ${changed_file} | sed "s/^_//")" ! -name "test_build_release.sh" \
