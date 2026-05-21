@@ -45,15 +45,7 @@ function generate_release_properties_file {
 
 	local product_version=$(echo "${_PRODUCT_VERSION}" | tr "[:lower:]" "[:upper:]")
 
-	if is_dxp_release
-	then
-		product_version="DXP ${product_version}"
-	elif is_portal_release
-	then
-		product_version="Portal ${product_version}"
-	fi
-
-	product_version=$(echo "${product_version}" | sed "s/-/ /")
+	product_version=$(echo "DXP ${product_version}" | sed "s/-/ /")
 
 	(
 		echo "${date_key}=${LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE}"
@@ -72,13 +64,6 @@ function generate_release_properties_file {
 }
 
 function install_patching_tool {
-	if is_portal_release
-	then
-		lc_log INFO "Patching Tool should not be installed."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
 
 	lc_cd "${_BUNDLES_DIR}"
@@ -123,11 +108,6 @@ function package_boms {
 }
 
 function package_release {
-	if is_portal_release
-	then
-		rm --force --recursive "${_BUNDLES_DIR}/routes/default/dxp"
-	fi
-
 	rm --force --recursive "${_BUILD_DIR}/release"
 
 	local package_dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
@@ -181,20 +161,13 @@ function _generate_javadocs {
 
 		git checkout "tags/${_PRODUCT_VERSION}"
 
-		local portal_release_edition_private="true"
-
-		if is_portal_release
-		then
-			portal_release_edition_private="false"
-		fi
-
 		ant \
 			-Ddist.dir="${_BUILD_DIR}/release" \
 			-Dliferay.product.name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}" \
 			-Dlp.version="${_PRODUCT_VERSION}" \
 			-Dpatch.doc="true" \
 			-Dportal.dir="${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}" \
-			-Dportal.release.edition.private="${portal_release_edition_private}" \
+			-Dportal.release.edition.private="true" \
 			-Dtstamp.value="${_BUILD_TIMESTAMP}" \
 			-file "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
 

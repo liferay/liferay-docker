@@ -76,13 +76,6 @@ function generate_release_notes {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if is_portal_release
-	then
-		lc_log INFO "The product is set to \"portal.\""
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
 	local ga_version=7.4.13-ga1
 
 	if ! is_quarterly_release
@@ -233,13 +226,6 @@ function update_portal_repository {
 
 function update_release_tool_repository {
 	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
-
-	if is_portal_release
-	then
-		lc_log INFO "The product is set to \"portal.\""
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
 
 	lc_cd "${_PROJECTS_DIR}"/liferay-release-tool-ee
 
