@@ -23,7 +23,6 @@ function main {
 		test_release_common_get_release_version_trivial
 		test_release_common_get_release_year
 		test_release_common_get_target_platform_version
-		test_release_common_is_7_3_ga_release
 		test_release_common_is_7_3_release
 		test_release_common_is_7_3_u_release
 		test_release_common_is_7_4_release
@@ -145,13 +144,6 @@ function test_release_common_get_target_platform_version {
 	_test_release_common_get_target_platform_version "7.4.13-u149-ai-hub" "7.4.13.u149"
 	_test_release_common_get_target_platform_version "7.4.13-u75" "7.4.13.u75"
 	_test_release_common_get_target_platform_version "7.4.3.129-ga129" "7.4.3.129"
-}
-
-function test_release_common_is_7_3_ga_release {
-	_test_release_common_is_7_3_ga_release "7.3.10-ga1" "0"
-	_test_release_common_is_7_3_ga_release "7.3.7-ga8" "0"
-	_test_release_common_is_7_3_ga_release "7.4.13-u132" "1"
-	_test_release_common_is_7_3_ga_release "7.4.3.132-ga132" "1"
 }
 
 function test_release_common_is_7_3_release {
@@ -352,12 +344,6 @@ function _test_release_common_get_target_platform_version {
 	_PRODUCT_VERSION="${1}"
 
 	assert_equals "$(get_target_platform_version)" "${2}"
-}
-
-function _test_release_common_is_7_3_ga_release {
-	is_7_3_ga_release "${1}"
-
-	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_7_3_release {
