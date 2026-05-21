@@ -40,16 +40,12 @@ function check_usage {
 		print_help
 	fi
 
+	LIFERAY_RELEASE_PRODUCT_NAME=dxp
 	_BUILD_TIMESTAMP=$(date +%s)
 
 	if [ -z "${LIFERAY_RELEASE_HOTFIX_ID}" ]
 	then
 		LIFERAY_RELEASE_HOTFIX_ID=${_BUILD_TIMESTAMP}
-	fi
-
-	if [ -z "${LIFERAY_RELEASE_PRODUCT_NAME}" ]
-	then
-		LIFERAY_RELEASE_PRODUCT_NAME=dxp
 	fi
 
 	_RELEASE_TOOL_DIR=$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")
@@ -301,7 +297,6 @@ function print_help {
 	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set this to \"hotfix\" to build a hotfix instead of a release"
 	echo "    LIFERAY_RELEASE_PATCHER_REQUEST_KEY (optional): Request key from Patcher that is used to report back statuses to Patcher"
 	echo "    LIFERAY_RELEASE_PATCHER_USER_ID (optional): User ID of the patcher user who started the build"
-	echo "    LIFERAY_RELEASE_PRODUCT_NAME (optional): Set to \"portal\" for CE. The default is \"DXP\"."
 	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to upload artifacts"
 	echo ""
 	echo "Example: LIFERAY_RELEASE_GIT_REF=release-2023.q3 ${0}"
