@@ -19,14 +19,6 @@ function set_jdk_version_and_parameters {
 		fi
 	fi
 
-	if is_ga_release
-	then
-		if [[ "$(get_release_version_trivial)" -ge 132 ]]
-		then
-			jdk_version="openjdk17"
-		fi
-	fi
-
 	if [[ "$(get_release_version)" == "7.4.13" ]] &&
 	   [[ "$(get_release_version_trivial)" -ge 132 ]]
 	then

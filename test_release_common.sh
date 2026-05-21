@@ -30,7 +30,6 @@ function main {
 		test_release_common_is_7_4_u_release
 		test_release_common_is_early_product_version_than
 		test_release_common_is_equals_or_later_product_version_than
-		test_release_common_is_ga_release
 		test_release_common_is_later_product_version_than
 		test_release_common_is_latest_release_candidate_published
 		test_release_common_is_lts_release
@@ -223,14 +222,6 @@ function test_release_common_is_first_quarterly_release {
 	_test_release_common_is_first_quarterly_release "7.4.13-u134" "1"
 }
 
-function test_release_common_is_ga_release {
-	_test_release_common_is_ga_release "2025.q1.0-lts" "1"
-	_test_release_common_is_ga_release "7.3.10-ga2" "0"
-	_test_release_common_is_ga_release "7.4.0-ga1" "0"
-	_test_release_common_is_ga_release "7.4.13-u134" "1"
-	_test_release_common_is_ga_release "7.4.3.132-ga132" "0"
-}
-
 function test_release_common_is_later_product_version_than {
 	_test_release_common_is_later_product_version_than "2025.q1.0-lts" "2024.q4.7" "0"
 	_test_release_common_is_later_product_version_than "2025.q1.0-lts" "2025.q1.1-lts" "1"
@@ -413,12 +404,6 @@ function _test_release_common_is_first_quarterly_release {
 	_PRODUCT_VERSION="${1}"
 
 	is_first_quarterly_release
-
-	assert_equals "${?}" "${2}"
-}
-
-function _test_release_common_is_ga_release {
-	is_ga_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }

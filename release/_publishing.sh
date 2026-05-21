@@ -62,13 +62,6 @@ function add_fixed_issues_to_patcher_project_version {
 }
 
 function add_patcher_project_version {
-	if [[ "${_PRODUCT_VERSION}" == *ga* ]]
-	then
-		lc_log INFO "Skipping the add patcher project version step for ${_PRODUCT_VERSION}."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
 	local patcher_project_version="$(get_patcher_project_version)"
 
 	local add_by_name_response=$( \

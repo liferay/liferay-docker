@@ -156,15 +156,7 @@ function get_release_quarter {
 function get_release_version {
 	local product_version="$(_get_product_version "${1}")"
 
-	if is_ga_release "${product_version}"
-	then
-		if is_7_3_ga_release "${product_version}"
-		then
-			echo "${product_version}" | cut --delimiter='.' --fields=1,2,3 | cut --delimiter='-' --fields=1
-		else
-			echo "${product_version}" | cut --delimiter='.' --fields=1,2,3
-		fi
-	elif is_u_release "${product_version}"
+	if is_u_release "${product_version}"
 	then
 		echo "${product_version}" | cut --delimiter='-' --fields=1
 	elif is_quarterly_release "${product_version}"
@@ -176,10 +168,7 @@ function get_release_version {
 function get_release_version_trivial {
 	local product_version="$(_get_product_version "${1}")"
 
-	if is_ga_release "${product_version}"
-	then
-		echo "${product_version}" | cut --delimiter='-' --fields=2 | sed "s/ga//"
-	elif is_u_release "${product_version}"
+	if is_u_release "${product_version}"
 	then
 		echo "${product_version}" | cut --delimiter='-' --fields=2 | tr --delete 'u'
 	fi
@@ -267,15 +256,6 @@ function is_equals_or_later_product_version_than {
 
 function is_first_quarterly_release {
 	if is_quarterly_release && [[ "$(get_release_patch_version)" -eq 0 ]]
-	then
-		return 0
-	fi
-
-	return 1
-}
-
-function is_ga_release {
-	if [[ "$(_get_product_version "${1}")" == *-ga* ]]
 	then
 		return 0
 	fi
@@ -391,8 +371,7 @@ function _compare_product_versions {
 		operator_2="-lt"
 	fi
 
-	if (is_ga_release "${product_version_1}" && is_ga_release "${product_version_2}") ||
-	   (is_u_release "${product_version_1}" && is_u_release "${product_version_2}")
+	if (is_u_release "${product_version_1}" && is_u_release "${product_version_2}")
 	then
 		if [ "$(get_release_version_trivial ${product_version_1})" "${operator_1}" "$(get_release_version_trivial ${product_version_2})" ]
 		then

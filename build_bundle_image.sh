@@ -287,14 +287,7 @@ function main {
 function prepare_slim_image {
 	rm --force --recursive "${TEMP_DIR}/liferay/elasticsearch-sidecar"
 
-	local product_name="dxp"
-
-	if is_ga_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
-	then
-		product_name="portal"
-	fi
-
-	local release_dir_name="${product_name}/${LIFERAY_DOCKER_RELEASE_VERSION}"
+	local release_dir_name="dxp/${LIFERAY_DOCKER_RELEASE_VERSION}"
 
 	if is_nightly_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 	then

@@ -71,13 +71,6 @@ function build_bundle_image {
 
 	if is_release_candidate
 	then
-		local product_name="dxp"
-
-		if is_ga_release "${version}"
-		then
-			product_name="portal"
-		fi
-
 		bundle_url="gs://liferay-releases-candidates/${version}/$(gsutil cat "gs://liferay-releases-candidates/${version}/.lfrrelease-tomcat-bundle")"
 	fi
 
@@ -622,14 +615,6 @@ function has_slim_build_criteria {
 	if (is_release_candidate "${1}" || is_u_release "${1}")
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	if is_ga_release "${1}"
-	then
-		if (( "$(get_release_version_trivial "${1}")" <= 132 ))
-		then
-			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-		fi
 	fi
 
 	if is_quarterly_release "${1}"
