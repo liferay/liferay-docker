@@ -14,6 +14,9 @@ function get_environment_type {
 	elif [[ "${host}" =~ ^release-slave-[1-2]$ ]]
 	then
 		echo "release_slave"
+	elif [[ "${host}" =~ ^patcher-prod-[0-9]+$ ]]
+	then
+		echo "patcher_prod_slave"
 	elif [[ "${host}" =~ ^liferay-* ]]
 	then
 		echo "local"

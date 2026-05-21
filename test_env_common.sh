@@ -9,6 +9,8 @@ function main {
 
 function test_env_common_get_environment_type {
 	_test_env_common_get_environment_type "liferay-123" "local"
+	_test_env_common_get_environment_type "patcher-prod-2" "patcher_prod_slave"
+	_test_env_common_get_environment_type "patcher-prod-10" "patcher_prod_slave"
 	_test_env_common_get_environment_type "release-slave-1" "release_slave"
 	_test_env_common_get_environment_type "release-slave-2" "release_slave"
 	_test_env_common_get_environment_type "release-slave-5" ""
