@@ -320,8 +320,7 @@ function _package_wars {
 
 	zip -qr "${_BUILD_DIR}/release/${tomcat_war_name}" ./*
 
-	if (is_7_4_ga_release && is_later_product_version_than "7.4.3.132-ga132") ||
-	   (is_quarterly_release && is_equals_or_later_product_version_than "2026.q1.0-lts")
+	if (is_quarterly_release && is_equals_or_later_product_version_than "2026.q1.0-lts")
 	then
 		ant \
 			-Dapp.server.shielded-container-lib.portal.dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" \

@@ -26,7 +26,6 @@ function main {
 		test_release_common_is_7_3_ga_release
 		test_release_common_is_7_3_release
 		test_release_common_is_7_3_u_release
-		test_release_common_is_7_4_ga_release
 		test_release_common_is_7_4_release
 		test_release_common_is_7_4_u_release
 		test_release_common_is_early_product_version_than
@@ -168,13 +167,6 @@ function test_release_common_is_7_3_u_release {
 	_test_release_common_is_7_3_u_release "7.3.7-ga8" "1"
 	_test_release_common_is_7_3_u_release "7.4.13-u132" "1"
 	_test_release_common_is_7_3_u_release "7.4.3.132-ga132" "1"
-}
-
-function test_release_common_is_7_4_ga_release {
-	_test_release_common_is_7_4_ga_release "7.3.10-u36" "1"
-	_test_release_common_is_7_4_ga_release "7.3.7-ga8" "1"
-	_test_release_common_is_7_4_ga_release "7.4.13-u132" "1"
-	_test_release_common_is_7_4_ga_release "7.4.3.132-ga132" "0"
 }
 
 function test_release_common_is_7_4_release {
@@ -385,12 +377,6 @@ function _test_release_common_is_7_3_release {
 
 function _test_release_common_is_7_3_u_release {
 	is_7_3_u_release "${1}"
-
-	assert_equals "${?}" "${2}"
-}
-
-function _test_release_common_is_7_4_ga_release {
-	is_7_4_ga_release "${1}"
 
 	assert_equals "${?}" "${2}"
 }

@@ -227,15 +227,6 @@ function is_7_3_u_release {
 	return 1
 }
 
-function is_7_4_ga_release {
-	if [[ "$(_get_product_version "${1}")" == 7.4.*-ga* ]]
-	then
-		return 0
-	fi
-
-	return 1
-}
-
 function is_7_4_release {
 	if [[ "$(_get_product_version "${1}")" == 7.4* ]]
 	then
