@@ -8,18 +8,18 @@ function get_environment_type {
 		host=$(hostname)
 	fi
 
-	if [[ "${host}" =~ ^test-[0-9]+-[0-9]+-[0-9]+$ ]]
+	if [[ "${host}" =~ ^liferay-* ]]
 	then
-		echo "ci_slave"
-	elif [[ "${host}" =~ ^release-slave-[1-2]$ ]]
-	then
-		echo "release_slave"
+		echo "local"
 	elif [[ "${host}" =~ ^patcher-prod-[0-9]+$ ]]
 	then
 		echo "patcher_prod_slave"
-	elif [[ "${host}" =~ ^liferay-* ]]
+	elif [[ "${host}" =~ ^release-slave-[1-2]$ ]]
 	then
-		echo "local"
+		echo "release_slave"
+	elif [[ "${host}" =~ ^test-[0-9]+-[0-9]+-[0-9]+$ ]]
+	then
+		echo "ci_slave"
 	else
 		echo ""
 	fi
