@@ -887,4 +887,4 @@ quarterly:
         latest: true
 snapshot:
     snapshot-master:
-        bundle_url: releases.liferay.com/portal/snapshot-master/latest/liferay-portal-tomcat-master.7z
+        bundle_url: releases.liferay.com/portal/snapshot-master-private/latest/liferay-portal-tomcat-master-private.7z
