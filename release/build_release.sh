@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ../_env_common.sh
 source ../_liferay_common.sh
 source ../_release_common.sh
 source ./_bom.sh
@@ -119,6 +120,11 @@ function main {
 	if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
 	then
 		return
+	fi
+
+	if [ "$(get_environment_type)" != "local" ]
+	then
+		export ANT_OPTS="-Xmx10G"
 	fi
 
 	check_usage
