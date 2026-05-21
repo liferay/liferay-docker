@@ -266,15 +266,6 @@ function is_ai_hub_release {
 	return 1
 }
 
-function is_dxp_release {
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "dxp" ]
-	then
-		return 0
-	fi
-
-	return 1
-}
-
 function is_early_product_version_than {
 	_compare_product_versions "${1}" "early"
 }
@@ -331,15 +322,6 @@ function is_lts_release {
 
 function is_nightly_release {
 	if [[ "$(_get_product_version "${1}")" == *nightly ]]
-	then
-		return 0
-	fi
-
-	return 1
-}
-
-function is_portal_release {
-	if [ "${LIFERAY_RELEASE_PRODUCT_NAME}" == "portal" ]
 	then
 		return 0
 	fi

@@ -29,7 +29,6 @@ function main {
 		test_release_common_is_7_4_ga_release
 		test_release_common_is_7_4_release
 		test_release_common_is_7_4_u_release
-		test_release_common_is_dxp_release
 		test_release_common_is_early_product_version_than
 		test_release_common_is_equals_or_later_product_version_than
 		test_release_common_is_ga_release
@@ -37,7 +36,6 @@ function main {
 		test_release_common_is_latest_release_candidate_published
 		test_release_common_is_lts_release
 		test_release_common_is_nightly_release
-		test_release_common_is_portal_release
 		test_release_common_is_quarterly_release
 		test_release_common_is_quarterly_release_docker_image
 		test_release_common_is_u_release
@@ -194,11 +192,6 @@ function test_release_common_is_7_4_u_release {
 	_test_release_common_is_7_4_u_release "7.4.13-u149-ai-hub" "0"
 }
 
-function test_release_common_is_dxp_release {
-	_test_release_common_is_dxp_release "dxp" "0"
-	_test_release_common_is_dxp_release "portal" "1"
-}
-
 function test_release_common_is_early_product_version_than {
 	_test_release_common_is_early_product_version_than "2023.q3.3" "2025.q2.0" "0"
 	_test_release_common_is_early_product_version_than "2024.q4.7" "2025.q1.0-lts" "0"
@@ -285,11 +278,6 @@ function test_release_common_is_nightly_release {
 	_test_release_common_is_nightly_release "7.4.13-u134" "1"
 	_test_release_common_is_nightly_release "7.4.13.nightly" "0"
 	_test_release_common_is_nightly_release "7.4.3.132-ga132" "1"
-}
-
-function test_release_common_is_portal_release {
-	_test_release_common_is_portal_release "dxp" "1"
-	_test_release_common_is_portal_release "portal" "0"
 }
 
 function test_release_common_is_quarterly_release {
@@ -419,14 +407,6 @@ function _test_release_common_is_7_4_u_release {
 	assert_equals "${?}" "${2}"
 }
 
-function _test_release_common_is_dxp_release {
-	LIFERAY_RELEASE_PRODUCT_NAME="${1}"
-
-	is_dxp_release
-
-	assert_equals "${?}" "${2}"
-}
-
 function _test_release_common_is_early_product_version_than {
 	_PRODUCT_VERSION="${1}"
 
@@ -479,14 +459,6 @@ function _test_release_common_is_lts_release {
 
 function _test_release_common_is_nightly_release {
 	is_nightly_release "${1}"
-
-	assert_equals "${?}" "${2}"
-}
-
-function _test_release_common_is_portal_release {
-	LIFERAY_RELEASE_PRODUCT_NAME="${1}"
-
-	is_portal_release
 
 	assert_equals "${?}" "${2}"
 }
