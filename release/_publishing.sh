@@ -32,10 +32,12 @@ function add_fixed_issues_to_patcher_project_version {
 
 		IFS=',' fixed_issues="${fixed_issues_array[*]:start_index:fixed_issues_array_part_length}"
 
+		echo -n "fixedIssues=${fixed_issues}&patcherProjectVersionId=${1}" > fixed-issues-payload.txt
+
 		local update_fixed_issues_response=$(curl \
 			"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/updateFixedIssues" \
-			--data-raw "fixedIssues=${fixed_issues}&patcherProjectVersionId=${1}" \
-			--max-time 10 \
+			--data-binary @fixed-issues-payload.txt \
+			--max-time 60 \
 			--retry 3 \
 			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 
@@ -47,7 +49,7 @@ function add_fixed_issues_to_patcher_project_version {
 
 			lc_log ERROR "${update_fixed_issues_response}"
 
-			rm --force release-notes.txt
+			rm --force fixed-issues-payload.txt release-notes.txt
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
@@ -55,7 +57,7 @@ function add_fixed_issues_to_patcher_project_version {
 
 	lc_log INFO "Added fixed issues to Liferay Patcher project ${2}."
 
-	rm --force release-notes.txt
+	rm --force fixed-issues-payload.txt release-notes.txt
 }
 
 function add_patcher_project_version {
