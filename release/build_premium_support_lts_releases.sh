@@ -4,14 +4,14 @@ source ../_liferay_common.sh
 source ../_release_common.sh
 
 function check_usage {
-	if [ -z "${JENKINS_API_TOKEN}" ] || [ -z "${LIFERAY_RELEASE_JENKINS_USER}" ]
+	if [ -z "${JENKINS_ADMIN_API_TOKEN}" ] || [ -z "${LIFERAY_RELEASE_JENKINS_ADMIN}" ]
 	then
 		echo "Usage: ${0}"
 		echo ""
 		echo "The script reads the following environment variables:"
 		echo ""
-		echo "    JENKINS_API_TOKEN: API token of the Jenkins user that triggers the job build-release"
-		echo "    LIFERAY_RELEASE_JENKINS_USER: Jenkins user that triggers the job build-release"
+		echo "    JENKINS_ADMIN_API_TOKEN: API token of the Jenkins user that triggers the job build-release"
+		echo "    LIFERAY_RELEASE_JENKINS_ADMIN: Jenkins user that triggers the job build-release"
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 	fi
@@ -71,7 +71,7 @@ function _trigger_build_release {
 		--request "POST" \
 		--retry 3 \
 		--silent \
-		--user "${LIFERAY_RELEASE_JENKINS_USER}:${JENKINS_API_TOKEN}" \
+		--user "${LIFERAY_RELEASE_JENKINS_ADMIN}:${JENKINS_ADMIN_API_TOKEN}" \
 		--write-out "%{http_code}")
 
 	if [ "${http_code}" == "201" ]
