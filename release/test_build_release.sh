@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../_test_common.sh
+source ../test/_test_util.sh
 source ./build_release.sh
 
 function main {
@@ -118,21 +119,7 @@ function test_build_release_not_handle_automated_build {
 
 	BUILD_CAUSE="TIMERTRIGGER"
 
-	local latest_release_candidate=$(
-		cat <<- END
-		<li>
-			<a href="/dxp/release-candidates/2025.q2.9-1754280641" class="icon icon-directory" title="2025.q2.9-1754280641">
-				<span class="name">2025.q2.9-1754280641</span>
-				<span class="size"></span>
-				<span class="date">12/23/2025 12:32:16 PM</span>
-			</a>
-		</li>
-		END
-	)
-
-	latest_release_candidate="${latest_release_candidate//$'\n'/\\n}"
-
-	sed --in-place "/<\/ul>/i \\${latest_release_candidate}" test-dependencies/actual/release-candidates.html
+	add_release_to_test_dependency "2025.q2.9-1234567890" "test-dependencies/actual/release-candidates.html"
 
 	_test_build_release_not_handle_automated_build "release-candidate" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 

@@ -2,6 +2,7 @@
 
 source ./_release_common.sh
 source ./_test_common.sh
+source ./test/_test_util.sh
 
 function main {
 	set_up
@@ -265,21 +266,7 @@ function test_release_common_is_later_product_version_than {
 function test_release_common_is_latest_release_candidate_published {
 	_test_release_common_is_latest_release_candidate_published "0"
 
-	local latest_release_candidate=$(
-		cat <<- END
-		<li>
-			<a href="/dxp/release-candidates/2025.q2.9-1754280641" class="icon icon-directory" title="2025.q2.9-1754280641">
-				<span class="name">2025.q2.9-1754280641</span>
-				<span class="size"></span>
-				<span class="date">12/23/2025 12:32:16 PM</span>
-			</a>
-		</li>
-		END
-	)
-
-	latest_release_candidate="${latest_release_candidate//$'\n'/\\n}"
-
-	sed --in-place "/<\/ul>/i \\${latest_release_candidate}" release/test-dependencies/actual/release-candidates.html
+	add_release_to_test_dependency "2025.q2.9-1234567890" "release/test-dependencies/actual/release-candidates.html"
 
 	_test_release_common_is_latest_release_candidate_published "1"
 

@@ -2,6 +2,7 @@
 
 source ../_liferay_common.sh
 source ../_test_common.sh
+source ../test/_test_util.sh
 source ./build_premium_support_lts_releases.sh
 
 function main {
@@ -32,58 +33,16 @@ function test_build_premium_support_lts_releases_process_premium_support_lts_rel
 
 	LIFERAY_RELEASE_TEST_DATE="2026-06-01"
 
-	local latest_release=$(
-		cat <<- END
-		<li>
-			<a href="/dxp/2026.q1.9" class="icon icon-directory" title="2026.q1.9">
-				<span class="name">2026.q1.9</span>
-				<span class="size"></span>
-				<span class="date">06/01/2026 12:00:00 PM</span>
-			</a>
-		</li>
-		END
-	)
+	add_release_to_test_dependency "2026.q1.9" "test-dependencies/actual/dxp.html"
 
-	latest_release="${latest_release//$'\n'/\\n}"
-
-	sed --in-place "/<\/ul>/i \\${latest_release}" test-dependencies/actual/dxp.html
-
-	local latest_release_candidate=$(
-		cat <<- END
-		<li>
-			<a href="/dxp/release-candidates/2026.q1.9-1812345678" class="icon icon-directory" title="2026.q1.9-1812345678">
-				<span class="name">2026.q1.9-1812345678</span>
-				<span class="size"></span>
-				<span class="date">06/01/2026 12:00:00 PM</span>
-			</a>
-		</li>
-		END
-	)
-
-	latest_release_candidate="${latest_release_candidate//$'\n'/\\n}"
-
-	sed --in-place "/<\/ul>/i \\${latest_release_candidate}" test-dependencies/actual/release-candidates.html
+	add_release_to_test_dependency "2026.q1.9-1234567890" "test-dependencies/actual/release-candidates.html"
 
 	_test_build_premium_support_lts_releases_process_premium_support_lts_release_branches \
 		"$(echo -e 'release-2024.q1\nrelease-2025.q1')"
 
 	git restore test-dependencies/actual/dxp.html test-dependencies/actual/release-candidates.html
 
-	latest_release_candidate=$(
-		cat <<- END
-		<li>
-			<a href="/dxp/release-candidates/2025.q2.9-1754280641" class="icon icon-directory" title="2025.q2.9-1754280641">
-				<span class="name">2025.q2.9-1754280641</span>
-				<span class="size"></span>
-				<span class="date">12/23/2025 12:32:16 PM</span>
-			</a>
-		</li>
-		END
-	)
-
-	latest_release_candidate="${latest_release_candidate//$'\n'/\\n}"
-
-	sed --in-place "/<\/ul>/i \\${latest_release_candidate}" test-dependencies/actual/release-candidates.html
+	add_release_to_test_dependency "2025.q2.9-1234567890" "test-dependencies/actual/release-candidates.html"
 
 	_test_build_premium_support_lts_releases_process_premium_support_lts_release_branches \
 		"$(echo -e 'release-2024.q1\nrelease-2025.q1\nrelease-2026.q1')"
