@@ -514,6 +514,11 @@ function test_boms {
 			--refresh-releases
 	fi
 
+	if [ "$(get_product_group_version)" == "2024.q1" ]
+	then
+		sed --in-place "/com.liferay.gradle.plugins.workspace/s/version: \"[^\"]*\"/version: \"14.0.1\"/" settings.gradle
+	fi
+
 	lc_log DEBUG "Searching for ${_PRODUCT_VERSION} in .liferay-common-cache/releases.liferay.com/releases.json."
 
 	grep "${_PRODUCT_VERSION}" "${HOME}/.liferay-common-cache/releases.liferay.com/releases.json"
