@@ -489,7 +489,6 @@ function test_boms {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	rm --force "${HOME}/.liferay-common-cache/releases.liferay.com/releases.json"
 	rm --force "${HOME}/.liferay/workspace/releases.json"
 
 	mkdir --parents "temp_dir_test_boms"
@@ -518,10 +517,6 @@ function test_boms {
 	then
 		sed --in-place "/com.liferay.gradle.plugins.workspace/s/version: \"[^\"]*\"/version: \"14.0.1\"/" settings.gradle
 	fi
-
-	lc_log DEBUG "Searching for ${_PRODUCT_VERSION} in .liferay-common-cache/releases.liferay.com/releases.json."
-
-	grep "${_PRODUCT_VERSION}" "${HOME}/.liferay-common-cache/releases.liferay.com/releases.json"
 
 	lc_log DEBUG "Searching for ${_PRODUCT_VERSION} in .liferay/workspace/releases.json"
 

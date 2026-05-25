@@ -219,7 +219,6 @@ function _test_release_gold_test_boms {
 	set_jdk_version_and_parameters &> /dev/null
 
 	cp test-dependencies/actual/releases.json "${HOME}/.liferay/workspace/releases.json"
-	cp test-dependencies/actual/releases.json "${HOME}/.liferay-common-cache/releases.liferay.com/releases.json"
 
 	test_boms &> /dev/null
 
