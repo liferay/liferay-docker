@@ -30,6 +30,9 @@ function set_up {
 
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export LIFERAY_RELEASE_RC_BUILD_TIMESTAMP="1695892964"
+	export _CURRENT_JAVA_HOME="${JAVA_HOME}"
+	export _CURRENT_JAVA_OPTS="${JAVA_OPTS}"
+	export _CURRENT_PATH="${PATH}"
 	export _PROJECTS_DIR="${PWD}"/../..
 	export _PROMOTION_DIR="${PWD}/test-dependencies/expected"
 
@@ -55,6 +58,9 @@ function tear_down {
 
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_RC_BUILD_TIMESTAMP
+	unset _CURRENT_JAVA_HOME
+	unset _CURRENT_JAVA_OPTS
+	unset _CURRENT_PATH
 	unset _PROJECTS_DIR
 	unset _PROMOTION_DIR
 }
@@ -135,15 +141,8 @@ function test_release_gold_set_next_release_version_display_name {
 }
 
 function test_release_gold_test_boms {
-	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
-	_PRODUCT_VERSION="2025.q1.2-lts"
-
-	cp test-dependencies/actual/releases.json "${HOME}/.liferay/workspace/releases.json"
-	cp test-dependencies/actual/releases.json "${HOME}/.liferay-common-cache/releases.liferay.com/releases.json"
-
-	test_boms &> /dev/null
-
-	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_release_gold_test_boms "2024.q1.27"
+	_test_release_gold_test_boms "2025.q1.2-lts"
 }
 
 function _test_release_gold_check_supported_versions {
@@ -211,6 +210,24 @@ function _test_release_gold_set_next_release_version_display_name {
 		"${3}"
 
 	lc_cd "${current_dir}"
+}
+
+function _test_release_gold_test_boms {
+	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+	_PRODUCT_VERSION="${1}"
+
+	set_jdk_version_and_parameters &> /dev/null
+
+	cp test-dependencies/actual/releases.json "${HOME}/.liferay/workspace/releases.json"
+	cp test-dependencies/actual/releases.json "${HOME}/.liferay-common-cache/releases.liferay.com/releases.json"
+
+	test_boms &> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+
+	JAVA_HOME="${_CURRENT_JAVA_HOME}"
+	JAVA_OPTS="${_CURRENT_JAVA_OPTS}"
+	PATH="${_CURRENT_PATH}"
 }
 
 main "${@}"
