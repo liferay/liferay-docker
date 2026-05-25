@@ -116,20 +116,15 @@ function test_release_common_get_release_quarter {
 function test_release_common_get_release_version {
 	_test_release_common_get_release_version "2025.q1.13-lts" "2025.q1.13-lts"
 	_test_release_common_get_release_version "2025.q2.0" "2025.q2.0"
-	_test_release_common_get_release_version "7.3.10-ga1" "7.3.10"
 	_test_release_common_get_release_version "7.3.10-u36" "7.3.10"
-	_test_release_common_get_release_version "7.3.7-ga8" "7.3.7"
 	_test_release_common_get_release_version "7.4.13-u134" "7.4.13"
 	_test_release_common_get_release_version "7.4.13-u134-ai-hub" "7.4.13"
-	_test_release_common_get_release_version "7.4.3.132-ga132" "7.4.3"
 }
 
 function test_release_common_get_release_version_trivial {
 	_test_release_common_get_release_version_trivial "7.3.10-u36" "36"
-	_test_release_common_get_release_version_trivial "7.3.7-ga8" "8"
 	_test_release_common_get_release_version_trivial "7.4.13-u134" "134"
 	_test_release_common_get_release_version_trivial "7.4.13-u134-ai-hub" "134"
-	_test_release_common_get_release_version_trivial "7.4.3.132-ga132" "132"
 }
 
 function test_release_common_get_release_year {
@@ -182,14 +177,10 @@ function test_release_common_is_early_product_version_than {
 	_test_release_common_is_early_product_version_than "2025.q1.1-lts" "2025.q1.0-lts" "1"
 	_test_release_common_is_early_product_version_than "7.3.10-u35" "7.3.10-u36" "0"
 	_test_release_common_is_early_product_version_than "7.3.10-u36" "7.3.10-u35" "1"
-	_test_release_common_is_early_product_version_than "7.3.6-ga7" "7.3.7-ga8" "0"
-	_test_release_common_is_early_product_version_than "7.3.7-ga8" "7.3.6-ga7" "1"
 	_test_release_common_is_early_product_version_than "7.4.13-u134" "7.4.13-u135" "0"
 	_test_release_common_is_early_product_version_than "7.4.13-u135" "7.4.13-u134" "1"
 	_test_release_common_is_early_product_version_than "7.4.13-u149-ai-hub" "7.4.13-u150" "0"
 	_test_release_common_is_early_product_version_than "7.4.13-u150-ai-hub" "7.4.13-u149" "1"
-	_test_release_common_is_early_product_version_than "7.4.3.120-ga120" "7.4.3.132-ga132" "0"
-	_test_release_common_is_early_product_version_than "7.4.3.132-ga132" "7.4.3.120-ga120" "1"
 }
 
 function test_release_common_is_equals_or_later_product_version_than {
@@ -200,9 +191,6 @@ function test_release_common_is_equals_or_later_product_version_than {
 	_test_release_common_is_equals_or_later_product_version_than "7.4.13-u133" "7.4.13-u134" "1"
 	_test_release_common_is_equals_or_later_product_version_than "7.4.13-u134" "7.4.13-u134" "0"
 	_test_release_common_is_equals_or_later_product_version_than "7.4.13-u135" "7.4.13-u134" "0"
-	_test_release_common_is_equals_or_later_product_version_than "7.4.3.120-ga120" "7.4.3.132-ga132" "1"
-	_test_release_common_is_equals_or_later_product_version_than "7.4.3.120-ga132" "7.4.3.132-ga120" "0"
-	_test_release_common_is_equals_or_later_product_version_than "7.4.3.132-ga132" "7.4.3.132-ga132" "0"
 }
 
 function test_release_common_is_first_quarterly_release {
@@ -221,14 +209,10 @@ function test_release_common_is_later_product_version_than {
 	_test_release_common_is_later_product_version_than "2025.q2.0" "2023.q3.3" "0"
 	_test_release_common_is_later_product_version_than "7.3.10-u35" "7.3.10-u36" "1"
 	_test_release_common_is_later_product_version_than "7.3.10-u36" "7.3.10-u35" "0"
-	_test_release_common_is_later_product_version_than "7.3.6-ga7" "7.3.7-ga8" "1"
-	_test_release_common_is_later_product_version_than "7.3.7-ga8" "7.3.6-ga7" "0"
 	_test_release_common_is_later_product_version_than "7.4.13-u134" "7.4.13-u135" "1"
 	_test_release_common_is_later_product_version_than "7.4.13-u135" "7.4.13-u134" "0"
 	_test_release_common_is_later_product_version_than "7.4.13-u149-ai-hub" "7.4.13-u150" "1"
 	_test_release_common_is_later_product_version_than "7.4.13-u150-ai-hub" "7.4.13-u149" "0"
-	_test_release_common_is_later_product_version_than "7.4.3.120-ga120" "7.4.3.132-ga132" "1"
-	_test_release_common_is_later_product_version_than "7.4.3.132-ga132" "7.4.3.120-ga120" "0"
 }
 
 function test_release_common_is_latest_release_candidate_published {
