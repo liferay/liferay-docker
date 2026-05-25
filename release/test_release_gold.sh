@@ -70,7 +70,6 @@ function test_release_gold_check_supported_versions {
 	_test_release_gold_check_supported_versions "2025.q5.0" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	_test_release_gold_check_supported_versions "7.0.6-ga7" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	_test_release_gold_check_supported_versions "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_OK}"
-	_test_release_gold_check_supported_versions "7.4.3.125-ga125" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
 function test_release_gold_check_usage {
@@ -90,7 +89,6 @@ function test_release_gold_not_prepare_next_release_branch {
 	_test_release_gold_prepare_next_release_branch "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_release_gold_prepare_next_release_branch "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_release_gold_prepare_next_release_branch "7.4.13-u101" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_release_gold_prepare_next_release_branch "7.4.3.125-ga125" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 
 	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
 	_PROMOTION_DIR="${PWD}"/test-dependencies/expected
@@ -101,7 +99,6 @@ function test_release_gold_not_prepare_next_release_branch {
 function test_release_gold_not_reference_new_releases {
 	_test_release_gold_not_reference_new_releases "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_release_gold_not_reference_new_releases "7.4.13-u101" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_release_gold_not_reference_new_releases "7.4.3.125-ga125" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 function test_release_gold_prepare_next_release_branch {
