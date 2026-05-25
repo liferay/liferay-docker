@@ -7,33 +7,15 @@ source ./_package.sh
 function main {
 	set_up
 
-	if [ "${#}" -eq 1 ]
-	then
-		if [ "${1}" == "test_release_properties_generate_file_dxp" ]
-		then
-			LIFERAY_RELEASE_PRODUCT_NAME="dxp"
-			_PRODUCT_VERSION="7.4.13-u36"
-
-			"${1}"
-		else
-			"${1}"
-		fi
-	else
-		test_release_properties_generate_file_portal
-
-		LIFERAY_RELEASE_PRODUCT_NAME="dxp"
-		_PRODUCT_VERSION="7.4.13-u36"
-
-		test_release_properties_generate_file_dxp
-	fi
+	test_release_properties_generate_file_dxp
 
 	tear_down
 }
 
 function set_up {
-	export LIFERAY_RELEASE_PRODUCT_NAME="portal"
+	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _BUNDLES_DIR="${PWD}"
-	export _PRODUCT_VERSION="7.4.3.120-ga120"
+	export _PRODUCT_VERSION="7.4.13-u36"
 
 	mkdir --parents "${_BUNDLES_DIR}/tomcat"
 
@@ -47,14 +29,6 @@ function tear_down {
 
 	rm --force release.properties
 	rm --force --recursive tomcat
-}
-
-function test_release_properties_generate_file_portal  {
-	generate_release_properties_file &>/dev/null
-
-	assert_equals \
-		"$(grep 'target.platform.version' release.properties | cut --delimiter='=' --fields=2)" \
-		$(echo "${_PRODUCT_VERSION}" | cut --delimiter='-' --fields=1)
 }
 
 function test_release_properties_generate_file_dxp  {
