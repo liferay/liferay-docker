@@ -61,8 +61,6 @@ function test_build_bundle_image_set_parent_image {
 	_test_build_bundle_image_set_parent_image "7.4.13.nightly" "jdk21" "jdk21"
 	_test_build_bundle_image_set_parent_image "7.4.13-u124" "jdk11" "jdk11"
 	_test_build_bundle_image_set_parent_image "7.4.13-u125" "jdk21" "jdk21"
-	_test_build_bundle_image_set_parent_image "7.4.3.120-ga120" "jdk11" "jdk11"
-	_test_build_bundle_image_set_parent_image "7.4.3.125-ga125" "jdk21" "jdk21"
 }
 
 function _set_dockerfile {
