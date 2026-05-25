@@ -518,7 +518,7 @@ function test_boms {
 		sed --in-place "/com.liferay.gradle.plugins.workspace/s/version: \"[^\"]*\"/version: \"14.0.1\"/" settings.gradle
 	fi
 
-	lc_log DEBUG "Searching for ${_PRODUCT_VERSION} in .liferay/workspace/releases.json"
+	lc_log INFO "Searching for ${_PRODUCT_VERSION} in .liferay/workspace/releases.json"
 
 	grep "${_PRODUCT_VERSION}" "${HOME}/.liferay/workspace/releases.json"
 
