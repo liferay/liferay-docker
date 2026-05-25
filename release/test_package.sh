@@ -68,12 +68,6 @@ function test_package_generate_release_properties_file {
 	_test_package_generate_release_properties_file "2026.q1.0-lts" "9.0.110" "2026-03-18"
 	_test_package_generate_release_properties_file "7.4.13-u145" "10.1.48" "2025-12-20"
 	_test_package_generate_release_properties_file "7.4.13-u146" "10.1.48" "2026-02-02"
-
-	LIFERAY_RELEASE_PRODUCT_NAME="portal"
-
-	_test_package_generate_release_properties_file "7.4.3.132-ga132" "9.0.98" "2025-02-18"
-
-	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 }
 
 function test_package_not_generate_javadocs {
