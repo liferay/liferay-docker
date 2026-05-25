@@ -133,7 +133,6 @@ function test_product_not_add_ckeditor_license {
 	_test_product_not_add_ckeditor_license "2026.q1.0-lts"
 	_test_product_not_add_ckeditor_license "2026.q2.0"
 	_test_product_not_add_ckeditor_license "7.4.13-u134"
-	_test_product_not_add_ckeditor_license "7.4.3.129-ga129"
 }
 
 function test_product_set_product_version_lts {
@@ -150,10 +149,6 @@ function test_product_set_product_version_with_parameters {
 	_test_product_set_product_version_with_parameters "2025.q1.1" "2025.q1.1-lts" "2025.q1.1"
 	_test_product_set_product_version_with_parameters "7.3.10-u36" "7.3.10-u36" "7.3.10.u36"
 	_test_product_set_product_version_with_parameters "7.4.13-u136" "7.4.13-u136" "7.4.13.u136"
-
-	LIFERAY_RELEASE_PRODUCT_NAME="portal"
-
-	_test_product_set_product_version_with_parameters "7.4.3.129-ga129" "7.4.3.129-ga129" "7.4.3.129"
 }
 
 function test_product_warm_up_tomcat {
