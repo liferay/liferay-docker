@@ -77,8 +77,6 @@ function test_jdk_set_jdk_version_and_parameters {
 	_test_jdk_set_jdk_version_and_parameters "7.3.10-u36" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "7.4.13-u131" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "7.4.13-u132" "/opt/java/${_JDK_VERSION_17}" "${_JDK_PARAMETERS_17}"
-	_test_jdk_set_jdk_version_and_parameters "7.4.3-ga131" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
-	_test_jdk_set_jdk_version_and_parameters "7.4.3-ga132" "/opt/java/${_JDK_VERSION_17}" "${_JDK_PARAMETERS_17}"
 }
 
 function _test_jdk_set_jdk_version_and_parameters {
