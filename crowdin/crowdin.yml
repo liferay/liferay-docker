@@ -1,0 +1,69 @@
+api_token_env: CROWDIN_API_TOKEN
+base_path: .
+files:
+    -   dest: /Language.properties
+        escape_quotes: 0
+        escape_special_characters: 0
+        languages_mapping: &languages_mapping
+            locale:
+                ar: ar
+                bg: bg
+                ca: ca
+                cs: cs
+                da: da
+                de: de
+                el: el
+                en-AU: en_AU
+                en-GB: en_GB
+                es-AR: es_AR
+                es-CO: es_CO
+                es-ES: es
+                es-MX: es_MX
+                et: et
+                eu: eu
+                fa: fa
+                fi: fi
+                fr: fr
+                fr-CA: fr_CA
+                gl: gl
+                he: iw
+                hi: hi_IN
+                hr: hr
+                hu: hu
+                id: in
+                it: it
+                ja: ja
+                km: km
+                ko: ko
+                lo: lo
+                nb: nb
+                nl: nl
+                nl-BE: nl_BE
+                pl: pl
+                pt-BR: pt_BR
+                pt-PT: pt_PT
+                ro: ro
+                ru: ru
+                sk: sk
+                sl: sl
+                sr: sr_RS
+                sr-CS: sr_RS_latin
+                sv-SE: sv
+                ta: ta_IN
+                th: th
+                tr: tr
+                uk: uk
+                vi: vi
+                zh-CN: zh_CN
+                zh-TW: zh_TW
+        skip_untranslated_strings: 1
+        source: /modules/apps/portal-language/portal-language-lang/src/main/resources/content/Language.properties
+        translation: /modules/apps/portal-language/portal-language-lang/src/main/resources/content/%file_name%_%locale%.%file_extension%
+    -   escape_quotes: 0
+        escape_special_characters: 0
+        languages_mapping: *languages_mapping
+        skip_untranslated_strings: 1
+        source: "**/app.bnd-localization/bundle.properties"
+        translation: /**/app.bnd-localization/%file_name%_%locale%.%file_extension%
+preserve_hierarchy: 1
+project_id_env: CROWDIN_PROJECT_ID
