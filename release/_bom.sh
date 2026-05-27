@@ -404,7 +404,7 @@ function generate_pom_release_bom_test {
 		org.slf4j:log4j-over-slf4j:1.7.25
 	)
 
-	local sorted_dependencies_list=($(printf '%s\n' "${dependencies_list[@]}" | sort --field-separator=':' --key=2,2))
+	local sorted_dependencies_list=($(printf "%s\n" "${dependencies_list[@]}" | sort --field-separator=':' --key=2,2))
 
 	local artifact_urls=""
 
