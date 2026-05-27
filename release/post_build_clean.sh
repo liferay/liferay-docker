@@ -48,6 +48,11 @@ function main {
 		rm --force --recursive release/release-data
 
 		_clean_up_repository "liferay-binaries-cache-2020"
+	elif [ "${current_job}" == "crowdin-sync" ]
+	then
+		rm --force --recursive crowdin/logs
+
+		_clean_up_repository "liferay-portal"
 	elif [ "${current_job}" == "source-code-sharing" ]
 	then
 		rm --force --recursive narwhal/source_code_sharing/liferay-portal-ee
