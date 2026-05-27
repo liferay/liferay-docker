@@ -34,12 +34,12 @@ function add_fixed_issues_to_patcher_project_version {
 
 		local update_fixed_issues_response=$( \
 			printf "%s" "fixedIssues=${fixed_issues}&patcherProjectVersionId=${1}" | \
-				curl \
-					"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/updateFixedIssues" \
-					--data-binary @- \
-					--max-time 60 \
-					--retry 3 \
-					--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
+			curl \
+				"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/updateFixedIssues" \
+				--data-binary @- \
+				--max-time 60 \
+				--retry 3 \
+				--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
 
 		if [ $(echo "${update_fixed_issues_response}" | jq --raw-output '.status') -eq 200 ]
 		then
