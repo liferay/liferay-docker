@@ -3,6 +3,8 @@
 source ./_liferay_common.sh
 
 function main {
+	local workspace_dir="${PWD}"
+
 	local current_job=$(basename "${PWD}")
 
 	lc_log INFO "Cleaning workspace for job ${current_job}."
@@ -44,18 +46,31 @@ function main {
 			-type d \
 			-exec rm --force --recursive {} \; &> /dev/null
 
-		rm --force --recursive downloads
-		rm --force --recursive release/release-data
+		local liferay_portal_repository_name=""
 
-		_clean_up_repository "liferay-binaries-cache-2020"
+		if [ -f "${workspace_dir}/release/release-data/build/liferay-portal-ee.sha" ]
+		then
+			liferay_portal_repository_name="liferay-portal-ee"
+		elif [ -f "${workspace_dir}/release/release-data/build/liferay-portal.sha" ]
+		then
+			liferay_portal_repository_name="liferay-portal"
+		fi
+
+		for repository_name in liferay-binaries-cache-2020 "${liferay_portal_repository_name}"
+		do
+			_clean_up_repository "${repository_name}"
+		done
+
+		rm --force --recursive "${workspace_dir}/downloads"
+		rm --force --recursive "${workspace_dir}/release/release-data"
 	elif [ "${current_job}" == "crowdin-sync" ]
 	then
-		rm --force --recursive crowdin/logs
+		rm --force --recursive "${workspace_dir}/crowdin/logs"
 
 		_clean_up_repository "liferay-portal"
 	elif [ "${current_job}" == "source-code-sharing" ]
 	then
-		rm --force --recursive narwhal/source_code_sharing/liferay-portal-ee
+		rm --force --recursive "${workspace_dir}/narwhal/source_code_sharing/liferay-portal-ee"
 	fi
 
 	local liferay_common_cache_dir="${HOME}/.liferay-common-cache"
@@ -67,18 +82,14 @@ function main {
 			-mindepth 1 \
 			-exec rm --force --recursive {} \; &> /dev/null
 	fi
-
-	local liferay_portal_repository_name="liferay-portal-ee"
-
-	if [ ! -f "${PWD}/release-data/build/${liferay_portal_repository_name}.sha" ]
-	then
-		liferay_portal_repository_name="liferay-portal"
-	fi
-
-	_clean_up_repository "${liferay_portal_repository_name}"
 }
 
 function _clean_up_repository {
+	if [ -z "${1}" ]
+	then
+		return
+	fi
+
 	lc_cd "/opt/dev/projects/github/${1}"
 
 	git clean -dfx &> /dev/null
