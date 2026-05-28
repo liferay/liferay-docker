@@ -17,6 +17,14 @@ function set_jdk_version_and_parameters {
 		then
 			jdk_version="zulu-17.0.18+8"
 		fi
+
+		for release_version in 2024.q1.26-lts 2024.q1.27-lts 2025.q1.23-lts 2025.q1.24-lts
+		do
+			if [[ "$(get_release_version)" == "${release_version}" ]]
+			then
+				jdk_version="zulu-17.0.18+8"
+			fi
+		done
 	fi
 
 	if [[ "$(get_release_version)" == "7.4.13" ]] &&

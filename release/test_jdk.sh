@@ -108,9 +108,13 @@ function test_jdk_set_jdk_version_and_parameters {
 	LIFERAY_RELEASE_TEST_ALTERNATIVE_PATH="${_TEST_JDK_DIR}/alternative_jdk"
 	LIFERAY_RELEASE_TEST_DEFAULT_PATH="${_TEST_JDK_DIR}/default_jdk"
 
+	_test_jdk_set_jdk_version_and_parameters "2024.q1.26-lts" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "2024.q1.27-lts" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2024.q2.0" "zulu8" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "2024.q3.0" "zulu8" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "2025.q1.0-lts" "open-jdk-17.0.2" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "2025.q1.23-lts" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "2025.q1.24-lts" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2026.q1.3-lts" "open-jdk-17.0.2" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2026.q1.4-lts" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2026.q2.0" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
