@@ -18,6 +18,7 @@ function main {
 	else
 		test_jdk_get_current_jdk_arch
 		test_jdk_get_jdk_download_url
+		test_jdk_resolve_jdk_install
 		test_jdk_set_jdk_version_and_parameters
 	fi
 
@@ -58,12 +59,27 @@ function set_up {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
+
+	export _TEST_JDK_DIR="test-dependencies/test_jdk"
+
+	local jdk_version
+
+	for jdk_version in open-jdk-17.0.2 zulu-17.0.18+8 zulu8
+	do
+		mkdir --parents "${_TEST_JDK_DIR}/default_jdk/${jdk_version}"
+	done
+
+	mkdir --parents "${_TEST_JDK_DIR}/alternative_jdk/zulu-17.0.18+8"
 }
 
 function tear_down {
 	JAVA_HOME="${_CURRENT_JAVA_HOME}"
 	PATH="${_CURRENT_PATH}"
 
+	rm --force --recursive "${_TEST_JDK_DIR}"
+
+	unset LIFERAY_RELEASE_TEST_ALTERNATIVE_PATH
+	unset LIFERAY_RELEASE_TEST_DEFAULT_PATH
 	unset LIFERAY_RELEASE_TEST_MACHINE
 	unset LIFERAY_RELEASE_TEST_MODE
 	unset _CURRENT_JAVA_HOME
@@ -73,6 +89,7 @@ function tear_down {
 	unset _JDK_PARAMETERS_17
 	unset _JDK_VERSION_8
 	unset _JDK_VERSION_17
+	unset _TEST_JDK_DIR
 }
 
 function test_jdk_get_current_jdk_arch {
@@ -97,6 +114,21 @@ function test_jdk_get_jdk_download_url {
 		"https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=x64&bundle_type=jdk&ext=tar.gz&hw_bitness=64&java_version=17.0.18&javafx=false&os=linux"
 }
 
+function test_jdk_resolve_jdk_install {
+	LIFERAY_RELEASE_TEST_ALTERNATIVE_PATH="${_TEST_JDK_DIR}/alternative_jdk"
+	LIFERAY_RELEASE_TEST_DEFAULT_PATH="${_TEST_JDK_DIR}/default_jdk"
+
+	_test_jdk_resolve_jdk_install "open-jdk-17.0.2" "${_TEST_JDK_DIR}/default_jdk/open-jdk-17.0.2"
+	_test_jdk_resolve_jdk_install "zulu-17.0.18+8" "${_TEST_JDK_DIR}/default_jdk/zulu-17.0.18+8"
+	_test_jdk_resolve_jdk_install "zulu8" "${_TEST_JDK_DIR}/default_jdk/zulu8"
+
+	rm --force --recursive "${_TEST_JDK_DIR}/default_jdk/zulu-17.0.18+8"
+
+	_test_jdk_resolve_jdk_install "zulu-17.0.18+8" "${_TEST_JDK_DIR}/alternative_jdk/zulu-17.0.18+8"
+
+	mkdir "${_TEST_JDK_DIR}/default_jdk/zulu-17.0.18+8"
+}
+
 function test_jdk_set_jdk_version_and_parameters {
 	_test_jdk_set_jdk_version_and_parameters "2024.q2.0" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "2024.q3.0" "/opt/java/${_JDK_VERSION_8}" "${JAVA_OPTS}"
@@ -117,6 +149,10 @@ function _test_jdk_get_current_jdk_arch {
 
 function _test_jdk_get_jdk_download_url {
 	assert_equals "$(_get_jdk_download_url "${1}" "${2}")" "${3}"
+}
+
+function _test_jdk_resolve_jdk_install {
+	assert_equals "$(_resolve_jdk_install "${1}")" "${2}"
 }
 
 function _test_jdk_set_jdk_version_and_parameters {
