@@ -17,6 +17,7 @@ function main {
 		"${1}"
 	else
 		test_jdk_get_current_jdk_arch
+		test_jdk_get_jdk_download_url
 		test_jdk_set_jdk_version_and_parameters
 	fi
 
@@ -81,6 +82,21 @@ function test_jdk_get_current_jdk_arch {
 	_test_jdk_get_current_jdk_arch "x86_64" "x64"
 }
 
+function test_jdk_get_jdk_download_url {
+	_test_jdk_get_jdk_download_url \
+		"aarch64" "open-jdk-17.0.2" \
+		"https://download.oracle.com/java/17/archive/jdk-17.0.2_linux-aarch64_bin.tar.gz"
+	_test_jdk_get_jdk_download_url \
+		"x64" "open-jdk-17.0.2" \
+		"https://download.oracle.com/java/17/archive/jdk-17.0.2_linux-x64_bin.tar.gz"
+	_test_jdk_get_jdk_download_url \
+		"aarch64" "zulu-17.0.18+8" \
+		"https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=aarch64&bundle_type=jdk&ext=tar.gz&hw_bitness=64&java_version=17.0.18&javafx=false&os=linux"
+	_test_jdk_get_jdk_download_url \
+		"x64" "zulu-17.0.18+8" \
+		"https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=x64&bundle_type=jdk&ext=tar.gz&hw_bitness=64&java_version=17.0.18&javafx=false&os=linux"
+}
+
 function test_jdk_set_jdk_version_and_parameters {
 	_test_jdk_set_jdk_version_and_parameters "2024.q2.0" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "2024.q3.0" "/opt/java/${_JDK_VERSION_8}" "${JAVA_OPTS}"
@@ -97,6 +113,10 @@ function _test_jdk_get_current_jdk_arch {
 	LIFERAY_RELEASE_TEST_MACHINE="${1}"
 
 	assert_equals "$(_get_current_jdk_arch)" "${2}"
+}
+
+function _test_jdk_get_jdk_download_url {
+	assert_equals "$(_get_jdk_download_url "${1}" "${2}")" "${3}"
 }
 
 function _test_jdk_set_jdk_version_and_parameters {
