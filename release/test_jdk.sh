@@ -1,4 +1,6 @@
 #!/bin/bash
+
+source ../_liferay_common.sh
 source ../_test_common.sh
 source ./_jdk.sh
 
@@ -14,6 +16,7 @@ function main {
 	then
 		"${1}"
 	else
+		test_jdk_get_current_jdk_arch
 		test_jdk_set_jdk_version_and_parameters
 	fi
 
@@ -21,6 +24,8 @@ function main {
 }
 
 function set_up {
+	common_set_up
+
 	if [ -z "${JAVA_OPTS}" ]
 	then
 		JAVA_OPTS="-XX:+IgnoreUnrecognizedVMOptions -XX:MaxPermSize=256m -Xmx2048m"
@@ -58,6 +63,8 @@ function tear_down {
 	JAVA_HOME="${_CURRENT_JAVA_HOME}"
 	PATH="${_CURRENT_PATH}"
 
+	unset LIFERAY_RELEASE_TEST_MACHINE
+	unset LIFERAY_RELEASE_TEST_MODE
 	unset _CURRENT_JAVA_HOME
 	unset _CURRENT_JAVA_OPTS
 	unset _CURRENT_PATH
@@ -65,6 +72,13 @@ function tear_down {
 	unset _JDK_PARAMETERS_17
 	unset _JDK_VERSION_8
 	unset _JDK_VERSION_17
+}
+
+function test_jdk_get_current_jdk_arch {
+	_test_jdk_get_current_jdk_arch "aarch64" "aarch64"
+	_test_jdk_get_current_jdk_arch "amd64" "x64"
+	_test_jdk_get_current_jdk_arch "arm64" "aarch64"
+	_test_jdk_get_current_jdk_arch "x86_64" "x64"
 }
 
 function test_jdk_set_jdk_version_and_parameters {
@@ -77,6 +91,12 @@ function test_jdk_set_jdk_version_and_parameters {
 	_test_jdk_set_jdk_version_and_parameters "7.3.10-u36" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "7.4.13-u131" "/opt/java/${_JDK_VERSION_8}" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "7.4.13-u132" "/opt/java/${_JDK_VERSION_17}" "${_JDK_PARAMETERS_17}"
+}
+
+function _test_jdk_get_current_jdk_arch {
+	LIFERAY_RELEASE_TEST_MACHINE="${1}"
+
+	assert_equals "$(_get_current_jdk_arch)" "${2}"
 }
 
 function _test_jdk_set_jdk_version_and_parameters {
