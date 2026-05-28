@@ -60,6 +60,78 @@ function set_jdk_version_and_parameters {
 	export PATH="${JAVA_HOME}/bin:${PATH}"
 }
 
+function _download_jdk {
+	local arch
+
+	arch=$(_get_current_jdk_arch)
+
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		lc_log ERROR "Unable to get the current architecture."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local jdk_version="${1}"
+
+	local download_url
+
+	download_url=$(_get_jdk_download_url "${arch}" "${jdk_version}")
+
+	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		lc_log ERROR "Unable to get the JDK download url."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local target_dir="${HOME}/.liferay/java/${jdk_version}"
+
+	if [ -w "/opt/java" ]
+	then
+		target_dir="/opt/java/${jdk_version}"
+	fi
+
+	lc_log INFO "Downloading JDK ${jdk_version} to ${target_dir}."
+
+	local archive_path="${target_dir}.tar.gz"
+
+	mkdir --parents "${target_dir}"
+
+	if ! curl \
+			"${download_url}" \
+			--fail \
+			--location \
+			--max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" \
+			--output "${archive_path}" \
+			--retry 3 \
+			--retry-delay 10 \
+			--show-error \
+			--silent
+	then
+		lc_log ERROR "Unable to download ${download_url}."
+
+		rm --force --recursive "${archive_path}" "${target_dir}"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	if ! tar \
+			--directory "${target_dir}" \
+			--extract \
+			--file "${archive_path}" \
+			--strip-components=1
+	then
+		lc_log ERROR "Unable to extract ${archive_path}."
+
+		rm --force --recursive "${archive_path}" "${target_dir}"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	rm --force "${archive_path}"
+}
+
 function _get_current_jdk_arch {
 	local machine=$(uname --machine)
 
