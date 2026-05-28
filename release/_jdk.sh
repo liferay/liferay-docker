@@ -107,3 +107,32 @@ function _get_jdk_download_url {
 
 	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
+
+function _resolve_jdk_install {
+	local jdk_version="${1}"
+
+	local alternative_path="${HOME}/.liferay/java/${jdk_version}"
+	local default_path="/opt/java/${jdk_version}"
+
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		alternative_path="${LIFERAY_RELEASE_TEST_ALTERNATIVE_PATH}/${jdk_version}"
+		default_path="${LIFERAY_RELEASE_TEST_DEFAULT_PATH}/${jdk_version}"
+	fi
+
+	if [ -d "${default_path}" ]
+	then
+		echo "${default_path}"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	fi
+
+	if [ -d "${alternative_path}" ]
+	then
+		echo "${alternative_path}"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	fi
+
+	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+}
