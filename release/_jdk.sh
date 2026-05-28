@@ -10,38 +10,40 @@ function set_jdk_version_and_parameters {
 	then
 		if [[ "$(get_release_year)" -ge 2025 ]]
 		then
-			jdk_version="openjdk17"
+			jdk_version="open-jdk-17.0.2"
 		fi
 
-		if is_equals_or_later_product_version_than "2026.q1.4"
+		if is_equals_or_later_product_version_than "2026.q1.4-lts"
 		then
-			jdk_version="jdk17"
+			jdk_version="zulu-17.0.18+8"
 		fi
 	fi
 
 	if [[ "$(get_release_version)" == "7.4.13" ]] &&
 	   [[ "$(get_release_version_trivial)" -ge 132 ]]
 	then
-		jdk_version="openjdk17"
+		jdk_version="open-jdk-17.0.2"
 	fi
 
-	if [ ! -d "/opt/java/${jdk_version}" ]
+	local java_home=$(_resolve_jdk_install "${jdk_version}")
+
+	if [ -z "${java_home}" ] && [ "${jdk_version}" != "zulu8" ]
+	then
+		_download_jdk "${jdk_version}"
+
+		java_home=$(_resolve_jdk_install "${jdk_version}")
+	fi
+
+	if [ -z "${java_home}" ]
 	then
 		lc_log INFO "JDK ${jdk_version} is not installed."
 
-		jdk_version=$(echo "${jdk_version}" | sed --regexp-extended "s/(openjdk|zulu)/jdk/g")
-
-		if [ ! -d "/opt/java/${jdk_version}" ]
-		then
-			lc_log INFO "JDK ${jdk_version} is not installed."
-
-			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		fi
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	lc_log INFO "Using JDK ${jdk_version} for release ${_PRODUCT_VERSION}."
 
-	export JAVA_HOME="/opt/java/${jdk_version}"
+	export JAVA_HOME="${java_home}"
 
 	lc_log INFO "Java release:\n $(cat "${JAVA_HOME}/release")"
 
