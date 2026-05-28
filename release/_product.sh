@@ -333,7 +333,7 @@ function get_java_specification_version {
 		echo "1.8"
 	fi
 
-	if (echo "${JAVA_HOME}" | grep --extended-regexp "jdk17|openjdk17" &> /dev/null)
+	if (echo "${JAVA_HOME}" | grep --extended-regexp "open-jdk-17|zulu-17" &> /dev/null)
 	then
 		echo "17"
 	fi
