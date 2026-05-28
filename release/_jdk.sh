@@ -59,3 +59,28 @@ function set_jdk_version_and_parameters {
 
 	export PATH="${JAVA_HOME}/bin:${PATH}"
 }
+
+function _get_current_jdk_arch {
+	local machine=$(uname --machine)
+
+	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
+	then
+		machine="${LIFERAY_RELEASE_TEST_MACHINE}"
+	fi
+
+	if [ "${machine}" == "aarch64" ] || [ "${machine}" == "arm64" ]
+	then
+		echo "aarch64"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	fi
+
+	if [ "${machine}" == "amd64" ] || [ "${machine}" == "x86_64" ]
+	then
+		echo "x64"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	fi
+
+	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+}
