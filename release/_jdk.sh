@@ -84,3 +84,26 @@ function _get_current_jdk_arch {
 
 	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
+
+function _get_jdk_download_url {
+	local arch="${1}"
+	local jdk_version="${2}"
+
+	if [[ "${jdk_version}" == open-jdk-17* ]]
+	then
+		local java_version=$(echo "${jdk_version}" | sed --regexp-extended "s/^open-jdk-//")
+
+		echo "https://download.oracle.com/java/$(echo "${java_version}" | cut --delimiter='.' --fields=1)/archive/jdk-${java_version}_linux-${arch}_bin.tar.gz"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	fi
+
+	if [[ "${jdk_version}" == zulu-17* ]]
+	then
+		echo "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=${arch}&bundle_type=jdk&ext=tar.gz&hw_bitness=64&java_version=$(echo "${jdk_version}" | sed --regexp-extended "s/^zulu-//; s/\+.*$//")&javafx=false&os=linux"
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	fi
+
+	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+}
