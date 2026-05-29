@@ -225,7 +225,7 @@ function prepare_next_release_pull_request {
 
 	if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
-		lc_log ERROR "Unable to send the pull request to the release branch."
+		lc_log ERROR "Unable to send pull request to the release branch."
 	else
 		lc_log INFO "The next release branch was prepared successfully."
 
