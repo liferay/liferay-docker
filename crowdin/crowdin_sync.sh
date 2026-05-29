@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ../_gh_pr.sh
 source ../_liferay_common.sh
 source ../release/_git.sh
 
@@ -22,64 +23,20 @@ function check_usage {
 	fi
 }
 
-function close_existing_pull_request {
-	lc_log INFO "Checking for existing open pull requests."
+function close_existing_crowdin_pull_requests {
+	local repository_owner
 
 	for repository_owner in brianchandotcom liferay-release
 	do
-		local existing_pull_request=$(gh pr list \
-			--jq ".[0]" \
-			--json "number" \
-			--repo "${repository_owner}/liferay-portal" \
-			--search "head:crowdin-translations" \
-			--state "open")
+		close_pull_request \
+			"head:crowdin-translations" \
+			"${repository_owner}/liferay-portal"
 
-		if [ -z "${existing_pull_request}" ]
+		if [ "${?}" -ne 0 ]
 		then
-			lc_log INFO "No existing pull request found in ${repository_owner}/liferay-portal."
-
-			continue
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
-
-		local pull_request_number=$( \
-			echo "${existing_pull_request}" | jq --raw-output ".number")
-
-		lc_log INFO "Closing existing pull request #${pull_request_number}."
-
-		gh pr close "${pull_request_number}" --repo "${repository_owner}/liferay-portal"
 	done
-}
-
-function create_pull_request {
-	lc_log INFO "Creating pull request with new translations."
-
-	if ! git remote get-url liferay-release &> /dev/null
-	then
-		git remote add liferay-release "git@github.com:liferay-release/liferay-portal.git"
-	fi
-
-	git push liferay-release "${_TEMP_BRANCH}"
-
-	if [ "${?}" -ne 0 ]
-	then
-		lc_log ERROR "Unable to push branch ${_TEMP_BRANCH} to liferay-release/liferay-portal."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	gh pr create \
-		--base "master" \
-		--body "This pull request was automatically created by the Release team." \
-		--head "liferay-release:${_TEMP_BRANCH}" \
-		--repo "liferay-release/liferay-portal" \
-		--title "LPD-91206 Update Translations"
-
-	if [ "${?}" -ne 0 ]
-	then
-		lc_log ERROR "Unable to create pull request with new translations."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
 }
 
 function download_translations {
@@ -108,7 +65,7 @@ function main {
 
 	check_usage
 
-	lc_time_run close_existing_pull_request
+	lc_time_run close_existing_crowdin_pull_requests
 
 	if [ "${_PROJECTS_DIR}" == "${_CROWDIN_DIR}" ]
 	then
@@ -134,7 +91,15 @@ function main {
 		exit "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_time_run create_pull_request
+	lc_time_run push_branch_to_liferay_release_fork \
+		"${_TEMP_BRANCH}" \
+		"liferay-portal"
+
+	lc_time_run create_pull_request \
+		"master" \
+		"${_TEMP_BRANCH}" \
+		"liferay-release/liferay-portal" \
+		"LPD-91206 Update Translations"
 }
 
 function merge_and_commit_translations {
@@ -165,9 +130,7 @@ function merge_and_commit_translations {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	echo "${merged_files}" | xargs git add
-
-	git commit --message "LPD-91206 Update Translations"
+	commit_changes "${merged_files}" "LPD-91206 Update Translations"
 
 	_CREATE_PULL_REQUEST=true
 }

@@ -57,30 +57,15 @@ function clone_repository {
 	git remote --verbose
 }
 
-function commit_to_branch_and_send_pull_request {
-	git add "${1}"
+function commit_changes {
+	local file
+
+	while IFS= read -r file
+	do
+		git add "${file}"
+	done <<< "${1}"
 
 	git commit --message "${2}"
-
-	local repository_name=$(echo "${4}" | cut --delimiter='/' --fields=2)
-
-	git push --force "git@github.com:liferay-release/${repository_name}.git" "${_TEMP_BRANCH}"
-
-	gh pr create \
-		--base "${3}" \
-		--body "This pull request was automatically created by the Release team." \
-		--head "liferay-release:${_TEMP_BRANCH}" \
-		--repo "${4}" \
-		--title "${5}"
-
-	local exit_code="${?}"
-
-	lc_cd "${_BASE_DIR}"
-
-	if [ "${exit_code}" -ne 0 ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
 }
 
 function generate_release_notes {
@@ -121,14 +106,6 @@ function generate_release_notes {
 		paste --delimiters=',' --serial > "${_BUILD_DIR}/release/release-notes.txt"
 }
 
-function get_pull_request_url {
-	echo "$( \
-		gh pr view liferay-release:"${_TEMP_BRANCH}" \
-			--jq ".url" \
-			--json "url" \
-			--repo "${1}")"
-}
-
 function prepare_branch_to_commit {
 	lc_cd "${1}"
 
@@ -153,6 +130,25 @@ function prepare_branch_to_commit {
 
 	if [ "$(git rev-parse --abbrev-ref HEAD)" != "${_TEMP_BRANCH}" ]
 	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
+function push_branch_to_liferay_release_fork {
+	local branch_name=${1}
+	local repository_name=${2}
+
+	if ! git remote get-url liferay-release &> /dev/null
+	then
+		git remote add liferay-release "git@github.com:liferay-release/${repository_name}.git"
+	fi
+
+	git push --force "liferay-release" "${branch_name}"
+
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to push branch ${branch_name} to liferay-release/${repository_name}."
+
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }

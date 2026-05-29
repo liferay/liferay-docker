@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ../_gh_pr.sh
 source ../_github.sh
 source ../_liferay_common.sh
 source ../_release_common.sh
@@ -182,6 +183,8 @@ function prepare_next_release_branch {
 }
 
 function prepare_next_release_pull_request {
+	local base_branch=${1}
+
 	local issue_key="$( \
 		add_jira_issue \
 			"712020:69064438-1c54-4f6a-8740-64505ce4ebed" \
@@ -199,22 +202,36 @@ function prepare_next_release_pull_request {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	commit_to_branch_and_send_pull_request \
+	commit_changes \
 		"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
-		"${issue_key} prep next" \
-		"${1}" \
-		"brianchandotcom/liferay-portal-ee" \
-		"${issue_key} prep next | ${1}"
+		"${issue_key} prep next"
+
+	push_branch_to_liferay_release_fork "${_TEMP_BRANCH}" "liferay-portal-ee"
 
 	local exit_code="${?}"
 
+	if [ "${exit_code}" -eq 0 ]
+	then
+		create_pull_request \
+			"${base_branch}" \
+			"${_TEMP_BRANCH}" \
+			"brianchandotcom/liferay-portal-ee" \
+			"${issue_key} prep next | ${base_branch}"
+
+		exit_code="${?}"
+	fi
+
+	lc_cd "${_BASE_DIR}"
+
 	if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
-		lc_log ERROR "Unable to commit to the release branch."
+		lc_log ERROR "Unable to send the pull request to the release branch."
 	else
 		lc_log INFO "The next release branch was prepared successfully."
 
-		add_jira_issue_comment_with_mention "Related pull request: $(get_pull_request_url brianchandotcom/liferay-portal-ee). cc " "${issue_key}"
+		add_jira_issue_comment_with_mention \
+			"Related pull request: $(get_pull_request_url ${_TEMP_BRANCH} brianchandotcom/liferay-portal-ee). cc " \
+			"${issue_key}"
 	fi
 
 	return "${exit_code}"
@@ -379,14 +396,26 @@ function reference_new_releases {
 
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
-		commit_to_branch_and_send_pull_request \
+		commit_changes \
 			"${_PROJECTS_DIR}/liferay-jenkins-ee/commands/build-shared.properties" \
-			"${issue_key} Add release references for ${_PRODUCT_VERSION}" \
-			"master" \
-			"pyoo47/liferay-jenkins-ee" \
 			"${issue_key} Add release references for ${_PRODUCT_VERSION}"
 
+		push_branch_to_liferay_release_fork "${_TEMP_BRANCH}" "liferay-jenkins-ee"
+
 		local exit_code="${?}"
+
+		if [ "${exit_code}" -eq 0 ]
+		then
+			create_pull_request \
+				"master" \
+				"${_TEMP_BRANCH}" \
+				"pyoo47/liferay-jenkins-ee" \
+				"${issue_key} Add release references for ${_PRODUCT_VERSION}"
+
+			exit_code="${?}"
+		fi
+
+		lc_cd "${_BASE_DIR}"
 
 		if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 		then
@@ -394,7 +423,9 @@ function reference_new_releases {
 		else
 			lc_log INFO "Pull request with references to the next release was sent successfully."
 
-			add_jira_issue_comment "Related pull request: $(get_pull_request_url pyoo47/liferay-jenkins-ee)" "${issue_key}"
+			add_jira_issue_comment \
+				"Related pull request: $(get_pull_request_url ${_TEMP_BRANCH} pyoo47/liferay-jenkins-ee)" \
+				"${issue_key}"
 		fi
 
 		return "${exit_code}"

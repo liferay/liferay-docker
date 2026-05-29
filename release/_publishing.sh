@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../_env_common.sh
+source ../_gh_pr.sh
 source ../_release_common.sh
 source ./_git.sh
 source ./_releases_json.sh
@@ -499,14 +500,28 @@ function _update_bundles_yml {
 
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
-		commit_to_branch_and_send_pull_request \
+		commit_changes \
 			"${_BASE_DIR}/bundles.yml" \
-			"Add ${_PRODUCT_VERSION} to bundles.yml." \
-			"master" \
-			"brianchandotcom/liferay-docker" \
 			"Add ${_PRODUCT_VERSION} to bundles.yml."
 
-		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		push_branch_to_liferay_release_fork "${_TEMP_BRANCH}" "liferay-docker"
+
+		local exit_code="${?}"
+
+		if [ "${exit_code}" -eq 0 ]
+		then
+			create_pull_request \
+				"master" \
+				"${_TEMP_BRANCH}" \
+				"brianchandotcom/liferay-docker" \
+				"Add ${_PRODUCT_VERSION} to bundles.yml."
+
+			exit_code="${?}"
+		fi
+
+		lc_cd "${_BASE_DIR}"
+
+		if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 		then
 			lc_log ERROR "Unable to send pull request to brianchandotcom/liferay-docker."
 
