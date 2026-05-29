@@ -7,6 +7,8 @@ source ./_product.sh
 function main {
 	set_up
 
+	trap tear_down EXIT
+
 	if [ "${#}" -eq 1 ]
 	then
 		if [ "${1}" == "test_product_warm_up_tomcat_already_warmed" ]
@@ -29,8 +31,6 @@ function main {
 
 		test_product_warm_up_tomcat_already_warmed
 	fi
-
-	tear_down
 }
 
 function set_up {
