@@ -46,19 +46,19 @@ function main {
 			-type d \
 			-exec rm --force --recursive {} \; &> /dev/null
 
-		local liferay_portal_repository_name=""
+		local liferay_repository=""
 
 		if [ -f "${workspace_dir}/release/release-data/build/liferay-portal-ee.sha" ]
 		then
-			liferay_portal_repository_name="liferay-portal-ee"
+			liferay_repository="liferay-portal-ee"
 		elif [ -f "${workspace_dir}/release/release-data/build/liferay-portal.sha" ]
 		then
-			liferay_portal_repository_name="liferay-portal"
+			liferay_repository="liferay-portal"
 		fi
 
-		for repository_name in liferay-binaries-cache-2020 "${liferay_portal_repository_name}"
+		for repository in liferay-binaries-cache-2020 "${liferay_repository}"
 		do
-			_clean_up_repository "${repository_name}"
+			_clean_up_repository "${repository}"
 		done
 
 		rm --force --recursive "${workspace_dir}/downloads"
