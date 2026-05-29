@@ -74,13 +74,13 @@ function build_product {
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
-	ant deploy
+	$(_set_cpu_limit) ant deploy
 
-	ant deploy-portal-license-enterprise-app
+	$(_set_cpu_limit) ant deploy-portal-license-enterprise-app
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules"
 
-	ant build-app-jar-release
+	$(_set_cpu_limit) ant build-app-jar-release
 
 	#
 	# Workaround until we implement LPS-182849.
@@ -206,7 +206,7 @@ function compile_product {
 
 	echo "baseline.jar.report.level=off" > "build.${USER}.properties"
 
-	ant clean compile
+	$(_set_cpu_limit) ant clean compile
 }
 
 function copy_copyright {
@@ -591,4 +591,15 @@ function _is_free_tier_ignored_version {
 	else
 		echo "false"
 	fi
+}
+
+function _set_cpu_limit {
+	if [ "$(get_environment_type)" != "local" ]
+	then
+		return
+	fi
+
+	local max_cores_allowed=$(($(nproc) * 75 / 100))
+
+	echo "taskset --cpu-list 0-$((max_cores_allowed - 1)) nice --adjustment 10"
 }
