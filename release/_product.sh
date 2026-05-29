@@ -399,9 +399,8 @@ function set_product_version {
 
 			_add_lts_suffix_to_product_version
 		else
-			local trivial=$(lc_get_property release.properties "release.info.version.trivial")
-
 			local bug_fix=$(lc_get_property release.properties "release.info.version.bug.fix[${branch}-private]")
+			local trivial=$(lc_get_property release.properties "release.info.version.trivial")
 
 			_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}-u${trivial}"
 		fi
