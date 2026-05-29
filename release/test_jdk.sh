@@ -49,6 +49,8 @@ function set_up {
 }
 
 function tear_down {
+	common_tear_down
+
 	JAVA_HOME="${_CURRENT_JAVA_HOME}"
 	JAVA_OPTS="${_CURRENT_JAVA_OPTS}"
 	PATH="${_CURRENT_PATH}"
@@ -58,7 +60,6 @@ function tear_down {
 	unset LIFERAY_RELEASE_TEST_ALTERNATIVE_PATH
 	unset LIFERAY_RELEASE_TEST_DEFAULT_PATH
 	unset LIFERAY_RELEASE_TEST_MACHINE
-	unset LIFERAY_RELEASE_TEST_MODE
 	unset _CURRENT_JAVA_HOME
 	unset _CURRENT_JAVA_OPTS
 	unset _CURRENT_PATH
