@@ -24,12 +24,12 @@ function main {
 		test_results+=$(_run_release_tests "${changed_files}" 2>&1 | tee /dev/stderr)
 	fi
 
+	unset DISPLAY_SUCCESSFUL_TEST_RESULT
+
 	if [[ "${test_results}" == *"FAILED"* ]]
 	then
 		exit 1
 	fi
-
-	unset DISPLAY_SUCCESSFUL_TEST_RESULT
 }
 
 function _run_docker_tests {
