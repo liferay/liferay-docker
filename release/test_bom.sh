@@ -21,6 +21,8 @@ function clean_portal_ee {
 function main {
 	set_up
 
+	trap tear_down EXIT
+
 	if [ "${#}" -eq 1 ]
 	then
 		if [[ "${1}" == *_dxp ]]
@@ -61,8 +63,6 @@ function main {
 		test_bom_copy_tld
 		test_bom_manage_bom_jar
 	fi
-
-	tear_down
 }
 
 function set_up {
