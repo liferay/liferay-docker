@@ -30,6 +30,8 @@ function main {
 	then
 		exit 1
 	fi
+
+	echo -e "\nAll tests result: \e[1;32mSUCCESS\e[0m"
 }
 
 function _run_docker_tests {
