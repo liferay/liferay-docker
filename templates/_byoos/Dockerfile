@@ -8,7 +8,7 @@ COPY --from=liferay-dxp /usr/local/bin /usr/local/bin
 ENTRYPOINT ["tini", "--", "/usr/local/bin/liferay_entrypoint.sh"]
 
 ENV LIFERAY_HOME=/opt/liferay
-ENV LIFERAY_PID="${LIFERAY_HOME}/liferay.pid"
+ENV LIFERAY_PID=/opt/liferay/liferay.pid
 ENV LIFERAY_PRODUCT_NAME=Liferay
 
 EXPOSE 8000 8009 8080 11311
