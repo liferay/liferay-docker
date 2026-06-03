@@ -90,7 +90,7 @@ function _download_jdk {
 
 	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
-		lc_log ERROR "Unable to get the JDK download url."
+		lc_log ERROR "Unable to get the JDK download URL."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
