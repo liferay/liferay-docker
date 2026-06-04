@@ -25,12 +25,20 @@ function main {
 
 	if [ "${#}" -eq 1 ]
 	then
-		if [[ "${1}" == *_dxp ]]
+		if [[ "${1}" == *_dxp ]] &&
+		   [[ "${1}" != *_jakarta_* ]]
 		then
 			"${1}"
 		elif [[ "${1}" == *_jakarta_dxp ]]
 		then
 			set_up_jakarta_dxp_tests
+
+			"${1}"
+
+			clean_portal_ee
+		elif [[ "${1}" == *_jakarta_upgrade_dxp ]]
+		then
+			set_up_jakarta_upgrade_dxp_tests
 
 			"${1}"
 
@@ -51,11 +59,16 @@ function main {
 		test_bom_generate_pom_release_bom_dxp
 		test_bom_generate_pom_release_bom_test_dxp
 		test_bom_generate_pom_release_bom_third_party_dxp
+		test_bom_not_generate_pom_release_bom_jakarta_upgrade_dxp
 		test_bom_not_generate_pom_release_bom_test_dxp
 
 		set_up_jakarta_dxp_tests
 
 		test_bom_generate_pom_release_bom_jakarta_dxp
+
+		set_up_jakarta_upgrade_dxp_tests
+
+		test_bom_generate_pom_release_bom_jakarta_upgrade_dxp
 
 		clean_portal_ee
 
@@ -109,6 +122,16 @@ function set_up_jakarta_dxp_tests {
 		liferay-dxp-tomcat-7.4.13-u138-1755038551.zip 1> /dev/null
 
 	unzip -oq liferay-dxp-tomcat-7.4.13-u138-1755038551.zip
+
+	set_up_liferay_portal_ee
+}
+
+function set_up_jakarta_upgrade_dxp_tests {
+	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+
+	_PRODUCT_VERSION="2026.q2.0"
+
+	_ARTIFACT_RC_VERSION="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 
 	set_up_liferay_portal_ee
 }
@@ -250,6 +273,16 @@ function test_bom_generate_pom_release_bom_jakarta_dxp {
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
 }
 
+function test_bom_generate_pom_release_bom_jakarta_upgrade_dxp {
+	generate_pom_release_bom_jakarta_upgrade &> /dev/null
+
+	assert_equals \
+		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade-${_ARTIFACT_RC_VERSION}.pom \
+		test-dependencies/expected/test.bom.dxp.release.bom.jakarta.upgrade.pom
+
+	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade-${_ARTIFACT_RC_VERSION}.pom
+}
+
 function test_bom_generate_pom_release_bom_third_party_dxp {
 	generate_pom_release_bom_compile_only
 
@@ -283,6 +316,16 @@ function test_bom_manage_bom_jar {
 
 	rm --force --recursive api-jar
 	rm --force --recursive temp_dir_manage_bom_jar/META-INF
+}
+
+function test_bom_not_generate_pom_release_bom_jakarta_upgrade_dxp {
+	_PRODUCT_VERSION="2026.q1.0"
+
+	generate_pom_release_bom_jakarta_upgrade &> /dev/null
+
+	assert_equals \
+		"${?}" \
+		"${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 function test_bom_not_generate_pom_release_bom_test_dxp {
