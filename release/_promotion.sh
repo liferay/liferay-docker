@@ -57,6 +57,12 @@ function prepare_poms_for_promotion {
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party" \
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro"
 	do
+		if ! has_jakarta_upgrade_bom_support &&
+		   [ "${pom_name}" == "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade" ]
+		then
+			continue
+		fi
+
 		if ! is_quarterly_release &&
 		   [ "${pom_name}" == "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test" ]
 		then
