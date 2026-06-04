@@ -189,6 +189,16 @@ function get_target_platform_version {
 	fi	
 }
 
+function has_jakarta_upgrade_bom_support {
+	if (is_quarterly_release && is_equals_or_later_product_version_than "2026.q2.0") ||
+	   (is_7_4_u_release && is_equals_or_later_product_version_than "7.4.13-u149")
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function is_7_3_release {
 	if [[ "$(_get_product_version "${1}")" == 7.3* ]]
 	then
