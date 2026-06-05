@@ -14,6 +14,13 @@ function check_translations_sync {
 
 	git fetch --force brianchandotcom "master:refs/remotes/brianchandotcom/master"
 
+	if [ "${?}" -ne 0 ]
+	then
+		lc_log ERROR "Unable to fetch master from brianchandotcom/liferay-portal."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
 	if [ -n "$(git log -1 --format="%H" --grep="LPD-91206 Update Translations" master..brianchandotcom/master)" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
@@ -178,6 +185,8 @@ function set_up_branch {
 }
 
 function update_portal_repository {
+	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+
 	lc_cd "${_PROJECTS_DIR}/liferay-portal"
 
 	git checkout master --force
