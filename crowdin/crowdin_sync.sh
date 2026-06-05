@@ -41,22 +41,6 @@ function check_usage {
 	fi
 }
 
-function close_existing_crowdin_pull_requests {
-	local repository_owner
-
-	for repository_owner in brianchandotcom liferay-release
-	do
-		close_pull_request \
-			"head:crowdin-translations" \
-			"${repository_owner}/liferay-portal"
-
-		if [ "${?}" -ne 0 ]
-		then
-			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		fi
-	done
-}
-
 function download_translations {
 	lc_log INFO "Downloading translations from Crowdin."
 
@@ -83,7 +67,9 @@ function main {
 
 	check_usage
 
-	lc_time_run close_existing_crowdin_pull_requests
+	lc_time_run close_pull_request \
+		"head:crowdin-translations" \
+		"liferay-release/liferay-portal"
 
 	if [ "${_PROJECTS_DIR}" == "${_CROWDIN_DIR}" ]
 	then
