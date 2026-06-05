@@ -4,6 +4,24 @@ source ../_gh_pr.sh
 source ../_liferay_common.sh
 source ../release/_git.sh
 
+function check_translations_sync {
+	lc_cd "${_PROJECTS_DIR}/liferay-portal"
+
+	if ! git remote get-url brianchandotcom &> /dev/null
+	then
+		git remote add brianchandotcom "git@github.com:brianchandotcom/liferay-portal.git"
+	fi
+
+	git fetch --force brianchandotcom "master:refs/remotes/brianchandotcom/master"
+
+	if [ -n "$(git log -1 --format="%H" --grep="LPD-91206 Update Translations" master..brianchandotcom/master)" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	_TRANSLATIONS_SYNCED=true
+}
+
 function check_usage {
 	if [ -z "${CROWDIN_API_TOKEN}" ] ||
 	   [ -z "${CROWDIN_PROJECT_ID}" ]
@@ -75,6 +93,15 @@ function main {
 	fi
 
 	lc_time_run update_portal_repository
+
+	lc_time_run check_translations_sync
+
+	if [ "${_TRANSLATIONS_SYNCED}" != "true" ]
+	then
+		lc_log INFO "Skipping the Crowdin synchronization because the latest translations commit was not synced to liferay/liferay-portal."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 
 	lc_time_run set_up_branch
 
