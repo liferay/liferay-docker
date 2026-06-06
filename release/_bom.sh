@@ -387,7 +387,7 @@ function generate_pom_release_bom_jakarta_upgrade {
 
 	echo "" >> "${pom_file_name}"
 
-	local dependencies_list=(
+	local dependencies=(
 		"com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-base"
 		"com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
 		"com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-xml-provider"
@@ -496,7 +496,7 @@ function generate_pom_release_bom_jakarta_upgrade {
 		"org.mitre.dsmiley.httpproxy:smiley-http-proxy-servlet"
 	)
 
-	for dependency in "${dependencies_list[@]}"
+	for dependency in "${dependencies[@]}"
 	do
 		local artifact_id=$(echo "${dependency}" | cut --delimiter=':' --fields=2)
 		local group_id=$(echo "${dependency}" | cut --delimiter=':' --fields=1)
@@ -567,7 +567,7 @@ function generate_pom_release_bom_test {
 
 	echo "" >> "${pom_file_name}"
 
-	local dependencies_list=(
+	local dependencies=(
 		biz.aQute.bnd:biz.aQute.bnd:3.5.0
 		biz.aQute.bnd:biz.aQute.bndlib:3.5.0
 		com.liferay.portal:com.liferay.portal.test
@@ -581,7 +581,7 @@ function generate_pom_release_bom_test {
 		org.slf4j:log4j-over-slf4j:1.7.25
 	)
 
-	local sorted_dependencies_list=($(printf "%s\n" "${dependencies_list[@]}" | sort --field-separator=':' --key=2,2))
+	local sorted_dependencies=($(printf "%s\n" "${dependencies[@]}" | sort --field-separator=':' --key=2,2))
 
 	local artifact_urls=""
 
@@ -597,7 +597,7 @@ function generate_pom_release_bom_test {
 		artifact_urls+=$'\n'
 	done
 
-	for dependency in "${sorted_dependencies_list[@]}"
+	for dependency in "${sorted_dependencies[@]}"
 	do
 		local artifact_id=$(echo "${dependency}" | cut --delimiter=':' --fields=2)
 		local group_id=$(echo "${dependency}" | cut --delimiter=':' --fields=1)
