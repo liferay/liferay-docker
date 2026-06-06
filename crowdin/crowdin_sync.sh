@@ -185,7 +185,7 @@ function set_up_branch {
 }
 
 function update_portal_repository {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+	trap "return ${LIFERAY_COMMON_EXIT_CODE_BAD}" ERR
 
 	lc_cd "${_PROJECTS_DIR}/liferay-portal"
 
