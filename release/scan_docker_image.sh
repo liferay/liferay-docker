@@ -66,10 +66,12 @@ function _notify_info_sec {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	local scan_results=$(echo "${1}" | sed --quiet "/^Scan results/,\$p")
+
 	LIFERAY_INFO_SEC_JIRA_ISSUE_KEY="$( \
 		add_jira_issue_with_description \
 			"Sec R&D-Sec Engineering" \
-			"Hi team, the Prisma Cloud Scan of image ${LIFERAY_DOCKER_IMAGE_NAME} had the following output: ${1}" \
+			"Hi team, the Prisma Cloud Scan of image ${LIFERAY_DOCKER_IMAGE_NAME} had the following output: ${scan_results}" \
 			"$(get_due_date "3")" \
 			"Request" \
 			"LRINFOSEC" \
