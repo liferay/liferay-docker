@@ -35,6 +35,13 @@ function set_jdk_version_and_parameters {
 
 	local java_home=$(_resolve_jdk_install "${jdk_version}")
 
+	if [ -z "${java_home}" ] && [ "${jdk_version}" == "zulu8" ]
+	then
+		jdk_version="jdk8"
+
+		java_home=$(_resolve_jdk_install "${jdk_version}")
+	fi
+
 	if [ -z "${java_home}" ] && [ "${jdk_version}" != "zulu8" ]
 	then
 		_download_jdk "${jdk_version}"
