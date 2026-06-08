@@ -3,7 +3,7 @@
 function add_release_to_test_dependency {
 	local release_path="dxp"
 
-	if [[ "${1}" =~ *-[0-9]+$ ]]
+	if [[ "${1}" =~ -[0-9]+$ ]]
 	then
 		release_path="${release_path}/release-candidates"
 	fi
