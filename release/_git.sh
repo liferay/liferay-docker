@@ -254,7 +254,7 @@ function update_release_tool_repository {
 
 	git checkout master
 
-	git pull upstream master
+	git reset --hard FETCH_HEAD
 
 	git checkout "${release_tool_sha}"
 
