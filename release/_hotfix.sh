@@ -191,13 +191,13 @@ function compare_jars {
 
 		local new_jar_descriptions=""
 
-		if (echo "${jar_descriptions}" | grep --quiet ".class")
+		if (echo "${jar_descriptions}" | grep --quiet "\.class$\|\.jar$")
 		then
 			mkdir --parents "${_BUILD_DIR}/tmp/jar1" "${_BUILD_DIR}/tmp/jar2"
 
 			while IFS= read -r line
 			do
-				if (echo "$(basename ${line})" | grep --quiet ".class")
+				if (echo "$(basename ${line})" | grep --quiet "\.class$")
 				then
 					local class_file_name=$(basename "${line}")
 
@@ -206,9 +206,9 @@ function compare_jars {
 					javap -c -private -verbose "${_BUILD_DIR}/tmp/jar1/${class_file_name}" | tail --lines=+4 > \
 						"${_BUILD_DIR}/tmp/jar1/${class_file_name}.txt"
 
-					unzip -p "${jar2}" "${line}" > "${_BUILD_DIR}/tmp/jar2/${class_file_name}" 2>/dev/null
+					unzip -p "${jar2}" "${line}" > "${_BUILD_DIR}/tmp/jar2/${class_file_name}" 2> /dev/null
 
-					javap -c -private -verbose "${_BUILD_DIR}/tmp/jar2/${class_file_name}" 2>/dev/null | tail --lines=+4 > \
+					javap -c -private -verbose "${_BUILD_DIR}/tmp/jar2/${class_file_name}" 2> /dev/null | tail --lines=+4 > \
 						"${_BUILD_DIR}/tmp/jar2/${class_file_name}.txt"
 
 					local diff_result=$(diff \
@@ -218,6 +218,44 @@ function compare_jars {
 					if [ -n "${diff_result}" ]
 					then
 						new_jar_descriptions+="${line}"$'\n'
+					fi
+				elif (echo "$(basename ${line})" | grep --quiet "\.jar$")
+				then
+					local packaged_jar_file_name=$(basename "${line}")
+
+					unzip -p "${jar1}" "${line}" > "${_BUILD_DIR}/tmp/jar1/${packaged_jar_file_name}"
+
+					unzip -p "${jar2}" "${line}" > "${_BUILD_DIR}/tmp/jar2/${packaged_jar_file_name}" 2> /dev/null
+
+					local packaged_jar_descriptions=$( (
+						describe_jar "${_BUILD_DIR}/tmp/jar1/${packaged_jar_file_name}"
+						describe_jar "${_BUILD_DIR}/tmp/jar2/${packaged_jar_file_name}"
+					) | sort | uniq --count)
+
+					if [ $(echo "${packaged_jar_descriptions}" | grep --count "Defl:N") -eq 0 ]
+					then
+						lc_log INFO "The packaged JAR ${line} in ${1} has no files to compare."
+
+						continue
+					fi
+
+					packaged_jar_descriptions=$(echo "${packaged_jar_descriptions}" | awk '($1 == 1) && ($3 == "Defl:N") { print $5 }' | uniq)
+
+					if (echo "${packaged_jar_descriptions}" | grep --quiet "META-INF/MANIFEST.MF")
+					then
+						if (compare_property_in_packaged_file "${_BUILD_DIR}/tmp/jar1/${packaged_jar_file_name}" "${_BUILD_DIR}/tmp/jar2/${packaged_jar_file_name}" "META-INF/MANIFEST.MF" "Export-Package")
+						then
+							packaged_jar_descriptions=$(echo "${packaged_jar_descriptions}" | sed "/META-INF\/MANIFEST.MF/d")
+						fi
+					fi
+
+					if [ -n "${packaged_jar_descriptions}" ]
+					then
+						lc_log INFO "The packaged JAR ${line} in ${1} has changed content."
+
+						new_jar_descriptions+="${line}"$'\n'
+					else
+						lc_log INFO "Ignoring the packaged JAR ${line} in ${1} because the content is unchanged."
 					fi
 				else
 					new_jar_descriptions+="${line}"$'\n'
