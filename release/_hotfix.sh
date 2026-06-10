@@ -224,15 +224,15 @@ function compare_jars {
 					fi
 				elif (echo "$(basename ${line})" | grep --quiet "\.jar$")
 				then
-					local packaged_jar_file_name=$(basename "${line}")
+					local nested_jar_file_name=$(basename "${line}")
 
-					unzip -p "${jar1}" "${line}" > "${_BUILD_DIR}/tmp/jar1/${packaged_jar_file_name}"
+					unzip -p "${jar1}" "${line}" > "${_BUILD_DIR}/tmp/jar1/${nested_jar_file_name}"
 
-					unzip -p "${jar2}" "${line}" > "${_BUILD_DIR}/tmp/jar2/${packaged_jar_file_name}" 2> /dev/null
+					unzip -p "${jar2}" "${line}" > "${_BUILD_DIR}/tmp/jar2/${nested_jar_file_name}" 2> /dev/null
 
 					local packaged_jar_descriptions=$( (
-						describe_jar "${_BUILD_DIR}/tmp/jar1/${packaged_jar_file_name}"
-						describe_jar "${_BUILD_DIR}/tmp/jar2/${packaged_jar_file_name}"
+						describe_jar "${_BUILD_DIR}/tmp/jar1/${nested_jar_file_name}"
+						describe_jar "${_BUILD_DIR}/tmp/jar2/${nested_jar_file_name}"
 					) | sort | uniq --count)
 
 					if [ $(echo "${packaged_jar_descriptions}" | grep --count "Defl:N") -eq 0 ]
@@ -249,7 +249,7 @@ function compare_jars {
 
 					if (echo "${packaged_jar_descriptions}" | grep --quiet "META-INF/MANIFEST.MF")
 					then
-						if (compare_property_in_packaged_file "${_BUILD_DIR}/tmp/jar1/${packaged_jar_file_name}" "${_BUILD_DIR}/tmp/jar2/${packaged_jar_file_name}" "META-INF/MANIFEST.MF" "Export-Package")
+						if (compare_property_in_packaged_file "${_BUILD_DIR}/tmp/jar1/${nested_jar_file_name}" "${_BUILD_DIR}/tmp/jar2/${nested_jar_file_name}" "META-INF/MANIFEST.MF" "Export-Package")
 						then
 							packaged_jar_descriptions=$(echo "${packaged_jar_descriptions}" | sed "/META-INF\/MANIFEST.MF/d")
 						fi
