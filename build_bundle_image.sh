@@ -41,7 +41,7 @@ function build_docker_image {
 		local service_pack_name=${file_name_release_version##*-}
 	fi
 
-	if [[ ${service_pack_name} == ga* ]] || [[ ${service_pack_name} == sp* ]]
+	if [[ ${service_pack_name} == sp* ]]
 	then
 		release_version=${release_version}-${service_pack_name}
 	fi
@@ -144,10 +144,6 @@ function check_release {
 	then
 		DOCKER_IMAGE_NAME="dxp"
 		DOCKER_LABEL_NAME="Liferay DXP"
-	elif [[ ${RELEASE_FILE_NAME} == *-portal-* ]]
-	then
-		DOCKER_IMAGE_NAME="portal"
-		DOCKER_LABEL_NAME="Liferay Portal"
 	else
 		echo "${RELEASE_FILE_NAME} is an unsupported release file name."
 
@@ -405,7 +401,7 @@ function print_help {
 	echo "    LIFERAY_DOCKER_REPOSITORY (optional): Docker repository"
 	echo "    LIFERAY_DOCKER_SLIM (optional): If set to \"true\", the image will be smaller"
 	echo ""
-	echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=files.liferay.com/private/ee/portal/7.2.10/liferay-dxp-tomcat-7.2.10-ga1-20190531140450482.7z ${0} push"
+	echo "Example: LIFERAY_DOCKER_RELEASE_FILE_URL=releases.liferay.com/dxp/2025.q2.2/liferay-dxp-tomcat-2025.q2.2-1750899891.7z ${0} push"
 	echo ""
 	echo "Set \"push\" as a parameter to automatically push the image to Docker Hub."
 
