@@ -41,11 +41,11 @@ function test_hotfix_compare_jars {
 function _create_module_jar {
 	local packaged_jar_dir=$(mktemp --directory)
 
-	echo "Liferay-Created-By: ${4}" > "${packaged_jar_dir}/manifest"
-
 	echo "${2}" > "${packaged_jar_dir}/internal.txt"
 
 	touch --date "${3}" "${packaged_jar_dir}/internal.txt"
+
+	echo "Liferay-Created-By: ${4}" > "${packaged_jar_dir}/manifest"
 
 	local module_jar_dir=$(mktemp --directory)
 
