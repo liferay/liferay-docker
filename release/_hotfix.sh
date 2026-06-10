@@ -177,7 +177,10 @@ function compare_jars {
 		exit 2
 	fi
 
-	jar_descriptions=$(echo "${jar_descriptions}" | awk '($1 == 1) && ($3 == "Defl:N") { print $5 }' | uniq)
+	jar_descriptions=$( \
+		echo "${jar_descriptions}" | \
+		awk '($1 == 1) && ($3 == "Defl:N") { print $5 }' | \
+		uniq)
 
 	if [ -n "${jar_descriptions}" ]
 	then
@@ -239,7 +242,10 @@ function compare_jars {
 						continue
 					fi
 
-					packaged_jar_descriptions=$(echo "${packaged_jar_descriptions}" | awk '($1 == 1) && ($3 == "Defl:N") { print $5 }' | uniq)
+					packaged_jar_descriptions=$( \
+						echo "${packaged_jar_descriptions}" | \
+						awk '($1 == 1) && ($3 == "Defl:N") { print $5 }' | \
+						uniq)
 
 					if (echo "${packaged_jar_descriptions}" | grep --quiet "META-INF/MANIFEST.MF")
 					then
