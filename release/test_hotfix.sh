@@ -34,8 +34,8 @@ function tear_down {
 }
 
 function test_hotfix_compare_jars {
-	_test_hotfix_compare_jars "osgi/modules/com.liferay.test.changed.impl.jar" "${LIFERAY_COMMON_EXIT_CODE_OK}"
-	_test_hotfix_compare_jars "osgi/modules/com.liferay.test.rebuilt.impl.jar" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	_test_hotfix_compare_jars "osgi/modules/com.liferay.test.changed.impl.jar" "0"
+	_test_hotfix_compare_jars "osgi/modules/com.liferay.test.rebuilt.impl.jar" "1"
 }
 
 function _create_module_jar {
