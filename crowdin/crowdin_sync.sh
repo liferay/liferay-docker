@@ -93,7 +93,7 @@ function main {
 	then
 		lc_log INFO "Skipping the Crowdin synchronization because the latest translations commit was not synced to liferay/liferay-portal."
 
-		exit "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		exit "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
 	lc_time_run set_up_branch
@@ -108,7 +108,7 @@ function main {
 	then
 		lc_log INFO "Skipping pull request creation because there are no new translations."
 
-		exit "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+		exit "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
 	lc_time_run push_branch_to_liferay_release_fork \
