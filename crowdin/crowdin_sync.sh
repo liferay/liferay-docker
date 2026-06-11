@@ -200,6 +200,13 @@ function update_portal_repository {
 
 	git pull upstream master
 
+	if ! git remote get-url liferay-release &> /dev/null
+	then
+		git remote add liferay-release "git@github.com:liferay-release/liferay-portal.git"
+	fi
+
+	git push liferay-release master
+
 	git log -1
 }
 
