@@ -45,6 +45,13 @@ function _process_premium_support_lts_release_branches {
 			continue
 		fi
 
+		if ! is_latest_release_candidate_published "$(echo "${branch}" | cut --delimiter='-' --fields=2)"
+		then
+			lc_log INFO "Skipping ${branch} because a release candidate has already been built."
+
+			continue
+		fi
+
 		if ! _trigger_build_release "${branch}"
 		then
 			exit_code="${LIFERAY_COMMON_EXIT_CODE_BAD}"
