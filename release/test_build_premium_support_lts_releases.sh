@@ -29,7 +29,7 @@ function tear_down {
 
 function test_build_premium_support_lts_releases_process_premium_support_lts_release_branches {
 	_test_build_premium_support_lts_releases_process_premium_support_lts_release_branches \
-		"$(echo -e 'release-2023.q1\nrelease-2024.q1\nrelease-2025.q1')"
+		"release-2023.q1"
 
 	LIFERAY_RELEASE_TEST_DATE="2026-06-01"
 
@@ -38,16 +38,23 @@ function test_build_premium_support_lts_releases_process_premium_support_lts_rel
 	add_release_to_test_dependency "2026.q1.9-1234567890" "test-dependencies/actual/release-candidates.html"
 
 	_test_build_premium_support_lts_releases_process_premium_support_lts_release_branches \
-		"$(echo -e 'release-2024.q1\nrelease-2025.q1')"
+		""
 
 	git restore test-dependencies/actual/dxp.html test-dependencies/actual/release-candidates.html
 
 	add_release_to_test_dependency "2025.q2.9-1234567890" "test-dependencies/actual/release-candidates.html"
 
 	_test_build_premium_support_lts_releases_process_premium_support_lts_release_branches \
-		"$(echo -e 'release-2024.q1\nrelease-2025.q1\nrelease-2026.q1')"
+		"release-2026.q1"
 
 	git restore test-dependencies/actual/release-candidates.html
+
+	add_release_to_test_dependency "2025.q1.18-lts" "test-dependencies/actual/dxp.html"
+
+	_test_build_premium_support_lts_releases_process_premium_support_lts_release_branches \
+		"$(echo -e 'release-2025.q1\nrelease-2026.q1')"
+
+	git restore test-dependencies/actual/dxp.html
 }
 
 function _test_build_premium_support_lts_releases_process_premium_support_lts_release_branches {
