@@ -65,11 +65,15 @@ function test_release_common_get_due_date {
 }
 
 function test_release_common_get_latest_product_version {
-	_test_release_common_get_latest_product_version "dxp" "7.3.10-u36"
-	_test_release_common_get_latest_product_version "ga" "7.4.3.132-ga132"
-	_test_release_common_get_latest_product_version "lts" "2025.q1.8-lts"
-	_test_release_common_get_latest_product_version "quarterly" "2025.q2.8"
-	_test_release_common_get_latest_product_version "quarterly-candidate" "2025.q2.8"
+	_test_release_common_get_latest_product_version "dxp" "" "7.4.13-u112"
+	_test_release_common_get_latest_product_version "ga" "" "7.4.3.132-ga132"
+	_test_release_common_get_latest_product_version "lts" "" "2025.q1.8-lts"
+	_test_release_common_get_latest_product_version "quarterly" "" "2025.q2.8"
+	_test_release_common_get_latest_product_version "quarterly" "2024.q4" "2024.q4.6"
+	_test_release_common_get_latest_product_version "quarterly" "2025.q1" "2025.q1.8-lts"
+	_test_release_common_get_latest_product_version "quarterly-candidate" "" "2025.q2.8"
+	_test_release_common_get_latest_product_version "quarterly-candidate" "2024.q1" "2024.q1.21"
+	_test_release_common_get_latest_product_version "quarterly-candidate" "2025.q1" "2025.q1.18-lts"
 }
 
 function test_release_common_get_premium_support_lts_release_branches {
@@ -216,11 +220,17 @@ function test_release_common_is_later_product_version_than {
 }
 
 function test_release_common_is_latest_release_candidate_published {
-	_test_release_common_is_latest_release_candidate_published "0"
+	_test_release_common_is_latest_release_candidate_published "" "0"
+	_test_release_common_is_latest_release_candidate_published "2023.q1" "0"
+	_test_release_common_is_latest_release_candidate_published "2024.q1" "1"
+	_test_release_common_is_latest_release_candidate_published "2024.q4" "0"
+	_test_release_common_is_latest_release_candidate_published "2025.q1" "1"
+	_test_release_common_is_latest_release_candidate_published "2025.q2" "0"
 
 	add_release_to_test_dependency "2025.q2.9-1234567890" "release/test-dependencies/actual/release-candidates.html"
 
-	_test_release_common_is_latest_release_candidate_published "1"
+	_test_release_common_is_latest_release_candidate_published "" "1"
+	_test_release_common_is_latest_release_candidate_published "2025.q2" "1"
 
 	git restore release/test-dependencies/actual/release-candidates.html
 }
@@ -268,8 +278,8 @@ function _test_release_common_get_due_date {
 
 function _test_release_common_get_latest_product_version {
 	assert_equals \
-		"$(get_latest_product_version "${1}")" \
-		"${2}"
+		"$(get_latest_product_version "${1}" "${2}")" \
+		"${3}"
 }
 
 function _test_release_common_get_premium_support_lts_release_branches {
@@ -387,9 +397,9 @@ function _test_release_common_is_later_product_version_than {
 }
 
 function _test_release_common_is_latest_release_candidate_published {
-	is_latest_release_candidate_published 2> /dev/null
+	is_latest_release_candidate_published "${1}" 2> /dev/null
 
-	assert_equals "${?}" "${1}"
+	assert_equals "${?}" "${2}"
 }
 
 function _test_release_common_is_lts_release {
