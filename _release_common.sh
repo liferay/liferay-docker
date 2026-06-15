@@ -45,14 +45,22 @@ function get_due_date {
 }
 
 function get_latest_product_version {
+	local product_group_version="${2}"
+	local quarterly_version_regex="\d{4}\.q[1-4]"
+
+	if [ -n "${product_group_version}" ]
+	then
+		quarterly_version_regex=$(echo "${product_group_version}" | sed "s/\./\\\\./g")
+	fi
+
 	local product_name=""
-	local product_version="${1}"
 	local product_version_regex="(?<=<a href=\"/"
+	local product_version="${1}"
 
 	if [ "${product_version}" == "dxp" ]
 	then
 		product_name="dxp"
-		product_version_regex="${product_version_regex}${product_name}/)(7\.3\.10-u\d+)"
+		product_version_regex="${product_version_regex}${product_name}/)(7\.4\.13-u\d+)"
 	elif [ "${product_version}" == "ga" ]
 	then
 		product_name="portal"
@@ -64,11 +72,11 @@ function get_latest_product_version {
 	elif [ "${product_version}" == "quarterly" ]
 	then
 		product_name="dxp"
-		product_version_regex="${product_version_regex}${product_name}/)(\d{4}\.q[1-4]\.\d+(-lts)?)"
+		product_version_regex="${product_version_regex}${product_name}/)(${quarterly_version_regex}\.\d+(-lts)?)"
 	elif [ "${product_version}" == "quarterly-candidate" ]
 	then
 		product_name="dxp/release-candidates"
-		product_version_regex="\d{4}\.q[1-4]\.\d+(-lts)?"
+		product_version_regex="${quarterly_version_regex}\.\d+(-lts)?"
 	fi
 
 	local product_version_list_html
@@ -269,8 +277,18 @@ function is_later_product_version_than {
 }
 
 function is_latest_release_candidate_published {
-	local latest_quarterly_candidate_product_version="$(get_latest_product_version "quarterly-candidate")"
-	local latest_quarterly_product_version="$(get_latest_product_version "quarterly")"
+	local product_group_version="${1}"
+
+	local latest_quarterly_candidate_product_version=$(get_latest_product_version "quarterly-candidate" "${product_group_version}")
+
+	if [ -z "${latest_quarterly_candidate_product_version}" ]
+	then
+		lc_log INFO "There is no release candidate for ${product_group_version}." > /dev/stderr
+
+		return 0
+	fi
+
+	local latest_quarterly_product_version=$(get_latest_product_version "quarterly" "${product_group_version}")
 
 	lc_log INFO "Latest quarterly release candidate product version: ${latest_quarterly_candidate_product_version}" > /dev/stderr
 	lc_log INFO "Latest quarterly release product version: ${latest_quarterly_product_version}" > /dev/stderr
