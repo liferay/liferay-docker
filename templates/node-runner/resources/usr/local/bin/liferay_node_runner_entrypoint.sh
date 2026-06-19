@@ -1,6 +1,8 @@
 #!/bin/bash
 
 function main {
+	source /usr/local/bin/set_node_version.sh
+
 	if [ -e /usr/local/bin/liferay_node_runner_set_up.sh ]
 	then
 		/usr/local/bin/liferay_node_runner_set_up.sh
