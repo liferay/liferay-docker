@@ -46,16 +46,16 @@ function get_due_date {
 
 function get_latest_product_version {
 	local product_group_version="${2}"
+	local product_name=""
+	local product_version_regex="(?<=<a href=\"/"
+	local product_version="${1}"
+
 	local quarterly_version_regex="\d{4}\.q[1-4]"
 
 	if [ -n "${product_group_version}" ]
 	then
 		quarterly_version_regex=$(echo "${product_group_version}" | sed "s/\./\\\\./g")
 	fi
-
-	local product_name=""
-	local product_version_regex="(?<=<a href=\"/"
-	local product_version="${1}"
 
 	if [ "${product_version}" == "dxp" ]
 	then
