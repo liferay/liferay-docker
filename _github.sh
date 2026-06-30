@@ -53,8 +53,12 @@ function _invoke_github_api {
 			--retry 3 \
 			--silent)
 
-	if ! [[ $(echo "${curl_response}" | awk '/^HTTP/{print $2}') =~ ^2 ]]
+	local http_code=$(echo "${curl_response}" | awk '/^HTTP/{print $2}')
+
+	if ! [[ "${http_code}" =~ ^2 ]]
 	then
+		lc_log ERROR "Unable to ${4} https://api.github.com/repos/${1}/${2}. HTTP response code was ${http_code}." > /dev/stderr
+
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
