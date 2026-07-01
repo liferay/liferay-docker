@@ -22,16 +22,16 @@ function add_hotfix_testing_code {
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
-	if (! git show "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" &>/dev/null)
+	if ! git show "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" &> /dev/null
 	then
 		echo "Running: git fetch upstream tag \"${LIFERAY_RELEASE_HOTFIX_TEST_TAG}\""
 
-		git fetch -v upstream tag "${LIFERAY_RELEASE_HOTFIX_TEST_TAG}" || return 1
+		git fetch --verbose upstream tag "${LIFERAY_RELEASE_HOTFIX_TEST_TAG}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	echo "Running: git cherry-pick -n \"${LIFERAY_RELEASE_HOTFIX_TEST_SHA}\""
 
-	git cherry-pick -n "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" || return 1
+	git cherry-pick --no-commit "${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
 function add_portal_patcher_properties_jar {
@@ -113,15 +113,27 @@ function compare_jars {
 		local packaged_file=${3}
 		local property=${4}
 
-		local value1=$(unzip -p "${jar1}" "${packaged_file}" | sed --null-data --regexp-extended "s@\r?\n @@g" | grep --word-regexp "${property}")
-		local value2=$(unzip -p "${jar2}" "${packaged_file}" | sed --null-data --regexp-extended "s@\r?\n @@g" | grep --word-regexp "${property}")
+		local value1=$( \
+			unzip -p "${jar1}" "${packaged_file}" | \
+			sed \
+				--regexp-extended \
+				--expression "s@\r?\n @@g" \
+				--null-data | \
+			grep --word-regexp "${property}")
+		local value2=$( \
+			unzip -p "${jar2}" "${packaged_file}" | \
+			sed \
+				--regexp-extended \
+				--expression "s@\r?\n @@g" \
+				--null-data | \
+			grep --word-regexp "${property}")
 
 		if [ "${value1}" == "${value2}" ]
 		then
-			return 0
+			return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 		fi
 
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	}
 
 	function describe_jar {
@@ -170,7 +182,7 @@ function compare_jars {
 		describe_jar "${jar2}"
 	) | sort | uniq --count)
 
-	if [ $(echo "${jar_descriptions}" | grep --count "Defl:N") -eq 0 ]
+	if [[ "$(echo "${jar_descriptions}" | grep --count "Defl:N")" -eq 0 ]]
 	then
 		lc_log ERROR "The JARs have no files."
 
@@ -184,9 +196,9 @@ function compare_jars {
 
 	if [ -n "${jar_descriptions}" ]
 	then
-		if (echo "${jar_descriptions}" | grep --quiet "META-INF/MANIFEST.MF")
+		if echo "${jar_descriptions}" | grep --quiet "META-INF/MANIFEST.MF"
 		then
-			if (compare_property_in_packaged_file "${jar1}" "${jar2}" "META-INF/MANIFEST.MF" "Export-Package")
+			if compare_property_in_packaged_file "${jar1}" "${jar2}" "META-INF/MANIFEST.MF" "Export-Package"
 			then
 				jar_descriptions=$(echo "${jar_descriptions}" | sed --expression "/META-INF\/MANIFEST.MF/d")
 			fi
@@ -194,13 +206,13 @@ function compare_jars {
 
 		local new_jar_descriptions=""
 
-		if (echo "${jar_descriptions}" | grep --quiet "\.class$\|\.jar$")
+		if echo "${jar_descriptions}" | grep --quiet "\.class$\|\.jar$"
 		then
 			mkdir --parents "${_BUILD_DIR}/tmp/jar1" "${_BUILD_DIR}/tmp/jar2"
 
 			while IFS= read -r line
 			do
-				if (echo "$(basename ${line})" | grep --quiet "\.class$")
+				if echo "$(basename "${line}")" | grep --quiet "\.class$"
 				then
 					local class_file_name=$(basename "${line}")
 
@@ -214,15 +226,16 @@ function compare_jars {
 					javap -c -private -verbose "${_BUILD_DIR}/tmp/jar2/${class_file_name}" 2> /dev/null | tail --lines=+4 > \
 						"${_BUILD_DIR}/tmp/jar2/${class_file_name}.txt"
 
-					local diff_result=$(diff \
-						"${_BUILD_DIR}/tmp/jar1/${class_file_name}.txt" \
-						"${_BUILD_DIR}/tmp/jar2/${class_file_name}.txt")
+					local diff_result=$( \
+						diff \
+							"${_BUILD_DIR}/tmp/jar1/${class_file_name}.txt" \
+							"${_BUILD_DIR}/tmp/jar2/${class_file_name}.txt")
 
 					if [ -n "${diff_result}" ]
 					then
 						new_jar_descriptions+="${line}"$'\n'
 					fi
-				elif (echo "$(basename ${line})" | grep --quiet "\.jar$")
+				elif echo "$(basename "${line}")" | grep --quiet "\.jar$"
 				then
 					local nested_jar_file_name=$(basename "${line}")
 
@@ -235,7 +248,7 @@ function compare_jars {
 						describe_jar "${_BUILD_DIR}/tmp/jar2/${nested_jar_file_name}"
 					) | sort | uniq --count)
 
-					if [ $(echo "${packaged_jar_descriptions}" | grep --count "Defl:N") -eq 0 ]
+					if [[ "$(echo "${packaged_jar_descriptions}" | grep --count "Defl:N")" -eq 0 ]]
 					then
 						lc_log INFO "The packaged JAR ${line} in ${1} has no files to compare."
 
@@ -247,9 +260,9 @@ function compare_jars {
 						awk '($1 == 1) && ($3 == "Defl:N") { print $5 }' | \
 						uniq)
 
-					if (echo "${packaged_jar_descriptions}" | grep --quiet "META-INF/MANIFEST.MF")
+					if echo "${packaged_jar_descriptions}" | grep --quiet "META-INF/MANIFEST.MF"
 					then
-						if (compare_property_in_packaged_file "${_BUILD_DIR}/tmp/jar1/${nested_jar_file_name}" "${_BUILD_DIR}/tmp/jar2/${nested_jar_file_name}" "META-INF/MANIFEST.MF" "Export-Package")
+						if compare_property_in_packaged_file "${_BUILD_DIR}/tmp/jar1/${nested_jar_file_name}" "${_BUILD_DIR}/tmp/jar2/${nested_jar_file_name}" "META-INF/MANIFEST.MF" "Export-Package"
 						then
 							packaged_jar_descriptions=$(echo "${packaged_jar_descriptions}" | sed --expression "/META-INF\/MANIFEST.MF/d")
 						fi
@@ -283,11 +296,11 @@ function compare_jars {
 					lc_log INFO "${new_jar_descriptions}" | sed --expression "s/^/    /"
 					lc_log INFO ""
 
-					return 0
+					return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 				fi
 			done <<< "${new_jar_descriptions}"
 
-			return 1
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 
 		if [ -n "${new_jar_descriptions}" ]
@@ -296,11 +309,11 @@ function compare_jars {
 			lc_log INFO "${new_jar_descriptions}" | sed --expression "s/^/    /"
 			lc_log INFO ""
 
-			return 0
+			return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 		fi
 	fi
 
-	return 1
+	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
 function copy_release_info_date {
@@ -311,7 +324,7 @@ function copy_release_info_date {
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	sed \
-		--expression "s/release.info.date=.*/release.info.date=$(date -d "${build_date}" +"%B %d, %Y")/" \
+		--expression "s/release.info.date=.*/release.info.date=$(date --date "${build_date}" +"%B %d, %Y")/" \
 		--in-place \
 		release.properties
 }
@@ -339,9 +352,11 @@ function create_documentation {
 
 	if [ -n "${LIFERAY_RELEASE_HOTFIX_FIXED_ISSUES}" ]
 	then
-		echo "${LIFERAY_RELEASE_HOTFIX_FIXED_ISSUES}" | tr ',' '\n' | while read -r line
+		echo "${LIFERAY_RELEASE_HOTFIX_FIXED_ISSUES}" | \
+			tr ',' '\n' | \
+			while read -r line
 		do
-			if [ "${first_line}" = true ]
+			if [ "${first_line}" == true ]
 			then
 				first_line=false
 
@@ -374,7 +389,7 @@ function create_documentation {
 		do
 			local checksum=${line%% *}
 			local file=${line##* ./}
-			if [ "${first_line}" = true ]
+			if [ "${first_line}" == true ]
 			then
 				first_line=false
 			else
@@ -399,7 +414,7 @@ function create_documentation {
 
 		while read -r file
 		do
-			if [ "${first_line}" = true ]
+			if [ "${first_line}" == true ]
 			then
 				first_line=false
 			else
@@ -427,14 +442,19 @@ function create_hotfix {
 
 	diff --brief --recursive "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep --invert-match /work/Catalina
 
-	diff --brief --recursive "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | grep --invert-match /work/Catalina | while read -r change
+	diff --brief --recursive "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | \
+		grep --invert-match /work/Catalina | \
+		while read -r change
 	do
-		if (echo "${change}" | grep "^Only in ${_RELEASE_DIR}" &>/dev/null)
+		if echo "${change}" | grep "^Only in ${_RELEASE_DIR}" &> /dev/null
 		then
 			local removed_file=$(echo "${change}" | sed --expression "s/^Only in //")
 
-			removed_file=$(echo "${removed_file}" | sed --expression "s#: #/#" | sed --expression "s#${_RELEASE_DIR}##")
-			removed_file=${removed_file#/}
+			removed_file=$( \
+				echo "${removed_file}" | \
+				sed --expression "s#: #/#" | \
+				sed --expression "s#${_RELEASE_DIR}##")
+			removed_file=$(echo "${removed_file}" | sed --expression "s#^/##")
 
 			echo "${removed_file}"
 
@@ -451,12 +471,15 @@ function create_hotfix {
 
 				transform_file_name "${removed_file}" >> "${_BUILD_DIR}/hotfix/removed_files"
 			fi
-		elif (echo "${change}" | grep "^Only in ${_BUNDLES_DIR}" &>/dev/null)
+		elif echo "${change}" | grep "^Only in ${_BUNDLES_DIR}" &> /dev/null
 		then
 			local new_file=$(echo "${change}" | sed --expression "s/^Only in //")
 
-			new_file=$(echo "${new_file}" | sed --expression "s#: #/#" | sed --expression "s#${_BUNDLES_DIR}##")
-			new_file=${new_file#/}
+			new_file=$( \
+				echo "${new_file}" | \
+				sed --expression "s#: #/#" | \
+				sed --expression "s#${_BUNDLES_DIR}##")
+			new_file=$(echo "${new_file}" | sed --expression "s#^/##")
 
 			if [ ! -f "${_BUNDLES_DIR}/${new_file}" ]
 			then
@@ -487,7 +510,7 @@ function create_hotfix {
 
 			if in_hotfix_scope "${changed_file}"
 			then
-				if (echo "${changed_file}" | grep --quiet ".[jw]ar$")
+				if echo "${changed_file}" | grep --quiet ".[jw]ar$"
 				then
 					manage_jar "${changed_file}"
 				else
@@ -501,36 +524,36 @@ function create_hotfix {
 }
 
 function in_hotfix_scope {
-	if (echo "${1}" | grep --quiet "^glowroot/plugins")
+	if echo "${1}" | grep --quiet "^glowroot/plugins"
 	then
-		return 0
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
 	if (echo "${1}" | grep --quiet "^osgi/") && (! echo "${1}" | grep --quiet "^osgi/state")
 	then
-		return 0
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
 	if (echo "${1}" | grep --quiet "^tomcat/lib/ext") && is_7_3_release
 	then
-		return 0
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
-	if (echo "${1}" | grep --quiet "^tomcat/webapps/ROOT")
+	if echo "${1}" | grep --quiet "^tomcat/webapps/ROOT"
 	then
-		return 0
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
-	if (echo "${1}" | grep --quiet "^tools")
+	if echo "${1}" | grep --quiet "^tools"
 	then
-		return 0
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
-	return 1
+	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
 function manage_jar {
-	if (compare_jars "${1}")
+	if compare_jars "${1}"
 	then
 		echo "Adding modified file ${1} to the hotfix."
 
@@ -557,7 +580,7 @@ function prepare_release_dir {
 
 	local release7z
 
-	if [ -e "${_TEST_RELEASE_DIR}" ] && [ $(find "${_TEST_RELEASE_DIR}" -type f -printf "%f\n" | wc --lines) -eq 1 ]
+	if [ -e "${_TEST_RELEASE_DIR}" ] && [[ "$(find "${_TEST_RELEASE_DIR}" -type f -printf "%f\n" | wc --lines)" -eq 1 ]]
 	then
 		lc_cd "${_TEST_RELEASE_DIR}"
 
@@ -632,7 +655,12 @@ function sign_hotfix {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	openssl dgst -passin env:LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_PASSWORD -out hotfix.sign -sha256 -sign "${LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE}" hotfix.json
+	openssl dgst \
+		-out hotfix.sign \
+		-passin env:LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_PASSWORD \
+		-sha256 \
+		-sign "${LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE}" \
+		hotfix.json
 }
 
 function transform_file_name {

@@ -90,7 +90,7 @@ function promote_boms {
 }
 
 function promote_packages {
-	if (gsutil ls "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}" | grep "${_PRODUCT_VERSION}")
+	if gsutil ls "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}" | grep "${_PRODUCT_VERSION}"
 	then
 		lc_log INFO "Skipping the upload of ${_PRODUCT_VERSION} to GCP because it already exists."
 
@@ -112,8 +112,8 @@ function _download_bom_file {
 }
 
 function _download_from_nexus {
-	local file_url="${1}"
-	local file_name="${2}"
+	local file_name=${2}
+	local file_url=${1}
 
 	lc_log DEBUG "Downloading ${file_url} to ${file_name}."
 
@@ -136,15 +136,15 @@ function _download_from_nexus {
 }
 
 function _verify_checksum {
-	file="${1}"
+	local file=${1}
 
 	(
 		sed --expression "s/\n$//" --null-data "${file}.sha512"
 
 		echo "  ${file}"
-	) | sha512sum -c - --status
+	) | sha512sum --check - --status
 
-	if [ "${?}" != "0" ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to verify the checksum of ${file}."
 

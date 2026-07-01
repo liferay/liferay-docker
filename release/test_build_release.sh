@@ -119,6 +119,19 @@ function test_build_release_has_packaged_bundles {
 		"1"
 }
 
+function test_build_release_main {
+	LIFERAY_RELEASE_GIT_REF="2025.q4.1" ./build_release.sh &> /dev/null
+
+	local exit_code=${?}
+
+	assert_equals "${exit_code}" "0"
+
+	if [[ "${exit_code}" -ne 0 ]]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function test_build_release_not_handle_automated_build {
 	_test_build_release_not_handle_automated_build "hotfix" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_build_release_not_handle_automated_build "nightly" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
@@ -134,25 +147,10 @@ function test_build_release_not_handle_automated_build {
 	unset BUILD_CAUSE
 }
 
-function test_build_release_main {
-	LIFERAY_RELEASE_GIT_REF=2025.q4.1 ./build_release.sh &> /dev/null
-
-	local exit_code="${?}"
-
-	assert_equals "${exit_code}" "0"
-
-	if [ "${exit_code}" -ne 0 ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-}
-
 function _clean_up_release_data {
-	pgrep \
-		--full \
-		--list-name "${_RELEASE_ROOT_DIR}/release-data" \
-		| awk '{print $1}' \
-		| xargs --no-run-if-empty kill -9
+	pgrep --full --list-name "${_RELEASE_ROOT_DIR}/release-data" | \
+		awk '{print $1}' | \
+		xargs --no-run-if-empty kill -9
 
 	rm --force --recursive "${_RELEASE_ROOT_DIR}/release-data"
 }

@@ -109,7 +109,6 @@ function _download_jdk {
 	mkdir --parents "${target_dir}"
 
 	if ! curl \
-			"${download_url}" \
 			--fail \
 			--location \
 			--max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" \
@@ -117,7 +116,8 @@ function _download_jdk {
 			--retry 3 \
 			--retry-delay 10 \
 			--show-error \
-			--silent
+			--silent \
+			"${download_url}"
 	then
 		lc_log ERROR "Unable to download ${download_url}."
 

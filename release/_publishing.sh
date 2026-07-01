@@ -36,13 +36,13 @@ function add_fixed_issues_to_patcher_project_version {
 		local update_fixed_issues_response=$( \
 			printf "%s" "fixedIssues=${fixed_issues}&patcherProjectVersionId=${1}" | \
 			curl \
-				"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/updateFixedIssues" \
 				--data-binary @- \
 				--max-time 60 \
 				--retry 3 \
-				--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
+				--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}" \
+				"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/updateFixedIssues")
 
-		if [ $(echo "${update_fixed_issues_response}" | jq --raw-output '.status') -eq 200 ]
+		if [[ "$(echo "${update_fixed_issues_response}" | jq --raw-output '.status')" -eq 200 ]]
 		then
 			lc_log INFO "Adding fixed issues to Liferay Patcher project version ${2}."
 		else
@@ -66,13 +66,13 @@ function add_patcher_project_version {
 
 	local add_by_name_response=$( \
 		curl \
-			"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/addByName" \
 			--data-raw "combinedBranch=true&committish=${patcher_project_version}&fixedIssues=&name=${patcher_project_version}&productVersionLabel=$(get_patcher_product_version_label)&repositoryName=liferay-portal-ee&rootPatcherProjectVersionName=$(get_root_patcher_project_version_name)" \
 			--max-time 10 \
 			--retry 3 \
-			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}")
+			--user "${LIFERAY_RELEASE_PATCHER_PORTAL_EMAIL_ADDRESS}:${LIFERAY_RELEASE_PATCHER_PORTAL_PASSWORD}" \
+			"https://patcher.liferay.com/api/jsonws/osb-patcher-portlet.project_versions/addByName")
 
-	if [ $(echo "${add_by_name_response}" | jq --raw-output '.status') -eq 200 ]
+	if [[ "$(echo "${add_by_name_response}" | jq --raw-output '.status')" -eq 200 ]]
 	then
 		lc_log INFO "Added Liferay Patcher project version ${patcher_project_version}."
 
@@ -89,8 +89,7 @@ function add_patcher_project_version {
 function check_url {
 	local file_url=${1}
 
-	if (curl \
-			"${file_url}" \
+	if curl \
 			--fail \
 			--head \
 			--max-time 300 \
@@ -98,7 +97,8 @@ function check_url {
 			--retry 3 \
 			--retry-delay 10 \
 			--silent \
-			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}")
+			--user "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}:${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" \
+			"${file_url}"
 	then
 		lc_log DEBUG "File is available at ${file_url}."
 
@@ -151,14 +151,14 @@ function remove_old_release_candidate_tags {
 
 	local auth_token=$( \
 		curl \
-			"https://hub.docker.com/v2/users/login/" \
 			--data-raw '
 				{
 					"password": "'"${LIFERAY_DOCKER_HUB_TOKEN}"'",
 					"username": "'"${LIFERAY_DOCKER_HUB_USERNAME}"'"
 				}' \
 			--header "Content-Type: application/json" \
-			--silent | \
+			--silent \
+			"https://hub.docker.com/v2/users/login/" | \
 			jq --raw-output .token)
 
 	if [ "${auth_token}" == "null" ] || [ -z "${auth_token}" ]
@@ -170,9 +170,9 @@ function remove_old_release_candidate_tags {
 
 	local tags=$( \
 		curl \
-			"https://hub.docker.com/v2/repositories/liferay/release-candidates/tags?page_size=80" \
 			--header "Authorization: JWT ${auth_token}" \
-			--silent | \
+			--silent \
+			"https://hub.docker.com/v2/repositories/liferay/release-candidates/tags?page_size=80" | \
 			jq --raw-output ".results[].name" | \
 			grep "^${1}")
 
@@ -186,10 +186,10 @@ function remove_old_release_candidate_tags {
 	for tag in ${tags}
 	do
 		curl \
-			"https://hub.docker.com/v2/repositories/liferay/release-candidates/tags/${tag}/" \
 			--header "Authorization: JWT ${auth_token}" \
 			--request DELETE \
-			--silent
+			--silent \
+			"https://hub.docker.com/v2/repositories/liferay/release-candidates/tags/${tag}/"
 	done
 }
 
@@ -233,7 +233,7 @@ function upload_boms {
 
 	if [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" ] || [ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ]
 	then
-		 lc_log ERROR "Either \${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD} or \${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER} is undefined."
+		lc_log ERROR "Either \${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD} or \${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER} is undefined."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -266,7 +266,7 @@ function upload_hotfix {
 
 	for gcp_bucket in liferay-releases/dxp/hotfix liferay-releases-hotfix
 	do
-		if (gsutil ls "gs://${gcp_bucket}/${_PRODUCT_VERSION}" | grep --quiet "${_HOTFIX_FILE_NAME}")
+		if gsutil ls "gs://${gcp_bucket}/${_PRODUCT_VERSION}" | grep --quiet "${_HOTFIX_FILE_NAME}"
 		then
 			lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP bucket ${gcp_bucket} because it already exists."
 
@@ -359,7 +359,11 @@ function upload_release {
 		destination_bucket="gs://liferay-releases-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 	fi
 
-	for file in $(ls --almost-all --ignore "*.jar*" --ignore "*.pom*")
+	for file in $( \
+		ls \
+			--almost-all \
+			--ignore "*.jar*" \
+			--ignore "*.pom*")
 	do
 		if [ -f "${file}" ]
 		then
@@ -519,7 +523,7 @@ function _upload_to_nexus {
 
 	lc_log INFO "Uploading ${file_path} to ${file_url}."
 
-	if (check_url "${file_url}")
+	if check_url "${file_url}"
 	then
 		lc_log "Skipping the upload of ${file_path} to ${file_url} because it already exists."
 

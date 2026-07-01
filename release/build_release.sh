@@ -17,7 +17,6 @@ source ./_releases_json.sh
 source ./scan_docker_image.sh
 
 function check_usage {
-
 	#
 	# TODO Remove once all systems are using LIFERAY_RELEASE_GIT_REF instead of LIFERAY_RELEASE_GIT_SHA
 	#
@@ -307,7 +306,8 @@ function print_help {
 function print_variables {
 	echo "To reproduce this build locally, execute the following command in liferay-docker/release:"
 
-	local environment=$(set | \
+	local environment=$( \
+		set | \
 		grep --invert-match "LIFERAY_RELEASE_GCS_TOKEN" | \
 		grep --invert-match "LIFERAY_RELEASE_HOTFIX_SIGNATURE" | \
 		grep --invert-match "LIFERAY_RELEASE_PATCHER_REQUEST_KEY" | \

@@ -71,15 +71,16 @@ function _trigger_build_release {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local http_code=$(curl \
-		"https://release-master.liferay.com/job/build-release/buildWithParameters" \
-		--data-urlencode "LIFERAY_RELEASE_GIT_REF=${branch}" \
-		--max-time 10 \
-		--request "POST" \
-		--retry 3 \
-		--silent \
-		--user "${LIFERAY_RELEASE_JENKINS_ADMIN}:${JENKINS_ADMIN_API_TOKEN}" \
-		--write-out "%{http_code}")
+	local http_code=$( \
+		curl \
+			--data-urlencode "LIFERAY_RELEASE_GIT_REF=${branch}" \
+			--max-time 10 \
+			--request "POST" \
+			--retry 3 \
+			--silent \
+			--user "${LIFERAY_RELEASE_JENKINS_ADMIN}:${JENKINS_ADMIN_API_TOKEN}" \
+			--write-out "%{http_code}" \
+			"https://release-master.liferay.com/job/build-release/buildWithParameters")
 
 	if [ "${http_code}" == "201" ]
 	then

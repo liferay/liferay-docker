@@ -22,19 +22,6 @@ function main {
 	lc_time_run _scan_docker_image
 }
 
-function set_liferay_docker_image_name {
-	export LIFERAY_DOCKER_IMAGE_NAME="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
-
-	if [ "$(get_release_output)" == "nightly" ]
-	then
-		LIFERAY_DOCKER_IMAGE_NAME="liferay/dxp:7.4.13.nightly"
-	fi
-
-	lc_log INFO "Setting Liferay Docker image name to ${LIFERAY_DOCKER_IMAGE_NAME}"
-
-	echo "LIFERAY_DOCKER_IMAGE_NAME=${LIFERAY_DOCKER_IMAGE_NAME}" > "/tmp/liferay_docker_image_name.properties"
-}
-
 function print_help {
 	echo "Usage: LIFERAY_DOCKER_IMAGE_NAME=<<liferay_docker_image_name>> ${0}"
 	echo ""
@@ -47,6 +34,19 @@ function print_help {
 	echo "Example: LIFERAY_DOCKER_IMAGE_NAME=liferay/release-candidates:2025.q1.12-123456789 ${0}"
 
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
+}
+
+function set_liferay_docker_image_name {
+	export LIFERAY_DOCKER_IMAGE_NAME="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
+
+	if [ "$(get_release_output)" == "nightly" ]
+	then
+		LIFERAY_DOCKER_IMAGE_NAME="liferay/dxp:7.4.13.nightly"
+	fi
+
+	lc_log INFO "Setting Liferay Docker image name to ${LIFERAY_DOCKER_IMAGE_NAME}"
+
+	echo "LIFERAY_DOCKER_IMAGE_NAME=${LIFERAY_DOCKER_IMAGE_NAME}" > "/tmp/liferay_docker_image_name.properties"
 }
 
 function _is_info_sec_jira_issue_created {
@@ -122,13 +122,13 @@ function _scan_docker_image {
 
 	local auth_response=$( \
 		curl \
-			"${api_url}/login" \
 			--data "${data}" \
 			--header "Content-Type: application/json" \
 			--request POST \
-			--silent)
+			--silent \
+			"${api_url}/login")
 
-	if (! echo "${auth_response}" | grep --quiet "login_successful")
+	if ! echo "${auth_response}" | grep --quiet "login_successful"
 	then
 		lc_log ERROR "Unable to authenticate with ${api_url}."
 
@@ -139,10 +139,10 @@ function _scan_docker_image {
 	local token=$(echo "${auth_response}" | jq --raw-output '.token')
 
 	curl \
-		"${console_url}/api/v1/util/twistcli" \
 		--header "x-redlock-auth: ${token}" \
 		--output twistcli \
-		--silent
+		--silent \
+		"${console_url}/api/v1/util/twistcli"
 
 	if [ ! -f "./twistcli" ]
 	then

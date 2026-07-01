@@ -42,14 +42,14 @@ function clone_repository {
 
 	lc_cd "${1}"
 
-	if (git remote get-url upstream &>/dev/null)
+	if git remote get-url upstream &> /dev/null
 	then
 		git remote set-url upstream git@github.com:liferay/"${1}".git
 	else
 		git remote add upstream git@github.com:liferay/"${1}".git
 	fi
 
-	if (! git remote get-url brianchandotcom &>/dev/null)
+	if ! git remote get-url brianchandotcom &> /dev/null
 	then
 		git remote add brianchandotcom git@github.com:brianchandotcom/"${1}".git
 	fi
@@ -168,16 +168,21 @@ function update_portal_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if (echo "${LIFERAY_RELEASE_GIT_REF}" | grep --extended-regexp --quiet "^[[:alnum:]\.-]+/[0-9a-z]{40}$")
+	if echo "${LIFERAY_RELEASE_GIT_REF}" | grep --extended-regexp --quiet "^[[:alnum:]\.-]+/[0-9a-z]{40}$"
 	then
 		checkout_ref="${LIFERAY_RELEASE_GIT_REF#*/}"
 
-		LIFERAY_RELEASE_GIT_REF="${LIFERAY_RELEASE_GIT_REF%/*}"
-	elif (echo "${LIFERAY_RELEASE_GIT_REF}" | grep --extended-regexp --quiet "^[0-9a-f]{40}$")
+		LIFERAY_RELEASE_GIT_REF=$(dirname "${LIFERAY_RELEASE_GIT_REF}")
+	elif echo "${LIFERAY_RELEASE_GIT_REF}" | grep --extended-regexp --quiet "^[0-9a-f]{40}$"
 	then
 		lc_log INFO "Looking for a tag that matches Git SHA ${LIFERAY_RELEASE_GIT_REF}."
 
-		LIFERAY_RELEASE_GIT_REF=$(git ls-remote upstream | grep "${LIFERAY_RELEASE_GIT_REF}" | grep refs/tags/fix-pack-fix- | head --lines=1 | sed --expression "s#.*/##")
+		LIFERAY_RELEASE_GIT_REF=$( \
+			git ls-remote upstream | \
+			grep "${LIFERAY_RELEASE_GIT_REF}" | \
+			grep refs/tags/fix-pack-fix- | \
+			head --lines=1 | \
+			sed --expression "s#.*/##")
 
 		if [ -n "${LIFERAY_RELEASE_GIT_REF}" ]
 		then
@@ -189,7 +194,7 @@ function update_portal_repository {
 		fi
 	fi
 
-	if (! git remote get-url "${LIFERAY_PORTAL_REPOSITORY_OWNER}" &>/dev/null)
+	if ! git remote get-url "${LIFERAY_PORTAL_REPOSITORY_OWNER}" &> /dev/null
 	then
 		git remote add "${LIFERAY_PORTAL_REPOSITORY_OWNER}" "git@github.com:${LIFERAY_PORTAL_REPOSITORY_OWNER}/${LIFERAY_PORTAL_REPOSITORY_NAME}.git"
 	fi
@@ -237,7 +242,7 @@ function update_release_tool_repository {
 	then
 		lc_log ERROR "The property \"release.tool.sha\" is missing from ${LIFERAY_PORTAL_REPOSITORY_NAME}/release.properties."
 
-		return 1
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	if [ -e "${_BUILD_DIR}/liferay-release-tool-ee.sha" ] &&
@@ -250,7 +255,11 @@ function update_release_tool_repository {
 
 	git fetch --force --prune upstream
 
-	git fetch --force --prune --tags upstream
+	git fetch \
+		--force \
+		--prune \
+		--tags \
+		upstream
 
 	git checkout master
 

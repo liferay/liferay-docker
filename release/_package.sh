@@ -214,7 +214,12 @@ function _package_common_release {
 
 	cp --archive sql liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql
 
-	zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql" -i "*.sql"
+	zip \
+		-q \
+		-r \
+		"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
+		"liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql" \
+		-i "*.sql"
 
 	rm --force --recursive "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql"
 
@@ -331,7 +336,8 @@ function _package_wars {
 		zip \
 			-q \
 			-r \
-			"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}-weblogic-${_BUILD_TIMESTAMP}.war" ./* \
+			"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-${_PRODUCT_VERSION}-weblogic-${_BUILD_TIMESTAMP}.war" \
+			./* \
 			-x "${tomcat_war_name}"
 	fi
 }

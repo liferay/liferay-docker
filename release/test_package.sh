@@ -159,7 +159,7 @@ function _test_package_generate_javadocs {
 	_generate_javadocs &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_OK}"
- }
+}
 
 function _test_package_generate_release_properties_file {
 	_BUILDER_SHA="test1234"
@@ -175,9 +175,9 @@ function _test_package_generate_release_properties_file {
 	generate_release_properties_file &> /dev/null
 
 	sed \
-		--in-place \
 		--regexp-extended \
-		"s/(general.availability.date|release.date)=.*/\1=${3}/" \
+		--expression "s/(general.availability.date|release.date)=.*/\1=${3}/" \
+		--in-place \
 		release.properties
 
 	assert_equals \

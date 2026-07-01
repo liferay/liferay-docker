@@ -144,11 +144,9 @@ function test_releases_json_is_supported_product_version {
 }
 
 function test_releases_json_merge_json_snippets {
-	local json_files_count=$(
+	local json_files_count=$( \
 		ls "${_PROMOTION_DIR}" | \
-		grep \
-			--extended-regexp \
-			"(20.*(dxp|portal).*\.json)" 2> /dev/null | \
+		grep --extended-regexp "(20.*(dxp|portal).*\.json)" 2> /dev/null | \
 		wc --lines)
 
 	_merge_json_snippets &> /dev/null
@@ -177,7 +175,7 @@ function test_releases_json_process_new_product {
 
 	mv "${_PROMOTION_DIR}/releases.json" "${_PROMOTION_DIR}/0000-00-00-releases.json"
 
-    generate_releases_json &> /dev/null
+	generate_releases_json &> /dev/null
 
 	assert_equals \
 		"${_PROMOTION_DIR}/releases.json" \

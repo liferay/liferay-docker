@@ -250,7 +250,27 @@ function test_bom_generate_pom_release_bom_dxp {
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom" \
 		test-dependencies/expected/test.bom.dxp.release.bom.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
+	rm "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom"
+}
+
+function test_bom_generate_pom_release_bom_jakarta_dxp {
+	generate_pom_release_bom &> /dev/null
+
+	assert_equals \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom" \
+		test-dependencies/expected/test.bom.jakarta.dxp.release.bom.pom
+
+	rm "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom"
+}
+
+function test_bom_generate_pom_release_bom_jakarta_upgrade_dxp {
+	generate_pom_release_bom_jakarta_upgrade &> /dev/null
+
+	assert_equals \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade-${_ARTIFACT_RC_VERSION}.pom" \
+		test-dependencies/expected/test.bom.dxp.release.bom.jakarta.upgrade.pom
+
+	rm "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade-${_ARTIFACT_RC_VERSION}.pom"
 }
 
 function test_bom_generate_pom_release_bom_test_dxp {
@@ -260,27 +280,7 @@ function test_bom_generate_pom_release_bom_test_dxp {
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_RC_VERSION}.pom" \
 		test-dependencies/expected/test.bom.dxp.release.bom.test.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_RC_VERSION}.pom
-}
-
-function test_bom_generate_pom_release_bom_jakarta_dxp {
-	generate_pom_release_bom &> /dev/null
-
-	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom \
-		test-dependencies/expected/test.bom.jakarta.dxp.release.bom.pom
-
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
-}
-
-function test_bom_generate_pom_release_bom_jakarta_upgrade_dxp {
-	generate_pom_release_bom_jakarta_upgrade &> /dev/null
-
-	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade-${_ARTIFACT_RC_VERSION}.pom \
-		test-dependencies/expected/test.bom.dxp.release.bom.jakarta.upgrade.pom
-
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade-${_ARTIFACT_RC_VERSION}.pom
+	rm "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_RC_VERSION}.pom"
 }
 
 function test_bom_generate_pom_release_bom_third_party_dxp {
