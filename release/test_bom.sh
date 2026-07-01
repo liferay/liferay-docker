@@ -19,9 +19,9 @@ function clean_portal_ee {
 }
 
 function main {
-	set_up
-
 	trap tear_down EXIT
+
+	set_up
 
 	if [[ "${#}" -eq 1 ]]
 	then

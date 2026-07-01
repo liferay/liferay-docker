@@ -5,9 +5,9 @@ source ../_test_common.sh
 source ./_product.sh
 
 function main {
-	set_up
-
 	trap tear_down EXIT
+
+	set_up
 
 	if [[ "${#}" -eq 1 ]]
 	then

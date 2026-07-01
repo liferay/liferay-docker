@@ -5,20 +5,16 @@ source ../_test_common.sh
 source ./_marketplace.sh
 
 function main {
+	trap tear_down EXIT
+
+	set_up
+
 	if [[ "${#}" -eq 1 ]]
 	then
-		set_up
-
 		"${1}"
-
-		tear_down
 	else
-		set_up
-
 		test_marketplace_check_liferay_marketplace_products_compatibility
 		test_marketplace_get_latest_product_virtual_settings_file_entry_json_index
-
-		tear_down
 	fi
 }
 
