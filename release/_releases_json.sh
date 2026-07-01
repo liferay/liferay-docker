@@ -10,7 +10,7 @@ function generate_releases_json {
 	else
 		_process_new_product
 
-		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]]
 		then
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
@@ -101,7 +101,7 @@ function _get_database_schema_version {
 			"$(get_product_version_without_lts_suffix "${product_version}")" \
 			"${repository}" &> /dev/null
 
-		if [ "${?}" -ne 0 ]
+		if [[ "${?}" -ne 0 ]]
 		then
 			rm --force "${_PROMOTION_DIR}/PortalUpgradeProcessRegistryImpl.java"
 
@@ -142,7 +142,7 @@ function _get_general_availability_date {
 
 	release_properties_file=$(lc_download "https://releases.liferay.com/${product_name}/${product_version}/release.properties")
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		echo ""
 
@@ -199,7 +199,7 @@ function _get_supported_product_group_versions {
 	local quarter=$(get_release_quarter "${latest_product_version}")
 	local year=$(get_release_year "${latest_product_version}")
 
-	if [ "${quarter}" -lt 4 ]
+	if [[ "${quarter}" -lt 4 ]]
 	then
 		quarter=$((quarter + 1))
 	else

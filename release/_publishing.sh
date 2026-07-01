@@ -9,7 +9,7 @@ source ./_releases_json.sh
 function add_fixed_issues_to_patcher_project_version {
 	lc_download "https://releases.liferay.com/dxp/${_PRODUCT_VERSION}/release-notes.txt" release-notes.txt
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to download release-notes.txt."
 
@@ -26,7 +26,7 @@ function add_fixed_issues_to_patcher_project_version {
 	do
 		local start_index=$((counter * fixed_issues_array_part_length))
 
-		if [ "${counter}" -eq 3 ]
+		if [[ "${counter}" -eq 3 ]]
 		then
 			fixed_issues_array_part_length=$((fixed_issues_array_length - start_index))
 		fi
@@ -275,7 +275,7 @@ function upload_hotfix {
 
 		gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://${gcp_bucket}/${_PRODUCT_VERSION}/"
 
-		if [ "${?}" -ne 0 ]
+		if [[ "${?}" -ne 0 ]]
 		then
 			lc_log ERROR "Unable to upload ${_HOTFIX_FILE_NAME} to GCP bucket ${gcp_bucket}."
 
@@ -322,7 +322,7 @@ function upload_opensearch {
 			"${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.${module}.jar" \
 			"gs://liferay-releases/opensearch2/${release_dir_name}/com.liferay.portal.search.opensearch2.${module}.jar"
 
-		if [ "${?}" -ne 0 ]
+		if [[ "${?}" -ne 0 ]]
 		then
 			lc_log ERROR "Unable to upload com.liferay.portal.search.opensearch2.${module}.jar."
 	
@@ -390,7 +390,7 @@ function upload_to_docker_hub {
 		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" ./build_all_images.sh --push
 	elif [ "$(get_release_output)" == "nightly" ]
 	then
-		if [ "$(date +%w)" -eq 3 ]
+		if [[ "$(date +%w)" -eq 3 ]]
 		then
 			LIFERAY_DOCKER_DEVELOPER_MODE="true" LIFERAY_DOCKER_IMAGE_FILTER="7.4.13.nightly" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push-all
 		else
@@ -399,7 +399,7 @@ function upload_to_docker_hub {
 	else
 		prepare_branch_to_commit "${_BASE_DIR}" "liferay-docker"
 
-		if [ "${?}" -ne 0 ]
+		if [[ "${?}" -ne 0 ]]
 		then
 			lc_log ERROR "Unable to prepare the branch to update bundles.yml."
 
@@ -413,7 +413,7 @@ function upload_to_docker_hub {
 
 	local exit_code=${?}
 
-	if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 	then
 		lc_log ERROR "Unable to build the Docker image."
 	fi
@@ -489,7 +489,7 @@ function _update_bundles_yml {
 
 		local exit_code=${?}
 
-		if [ "${exit_code}" -eq 0 ]
+		if [[ "${exit_code}" -eq 0 ]]
 		then
 			create_pull_request \
 				"master" \
@@ -502,7 +502,7 @@ function _update_bundles_yml {
 
 		lc_cd "${_BASE_DIR}"
 
-		if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		if [[ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 		then
 			lc_log ERROR "Unable to send pull request to brianchandotcom/liferay-docker."
 

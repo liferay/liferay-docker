@@ -78,7 +78,7 @@ function test_build_hotfix_main {
 
 	assert_equals "${exit_code}" "0"
 
-	if [ "${exit_code}" -ne 0 ]
+	if [[ "${exit_code}" -ne 0 ]]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi

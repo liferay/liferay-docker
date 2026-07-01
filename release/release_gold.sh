@@ -153,7 +153,7 @@ function prepare_next_release_branch {
 
 		prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-portal-ee" "liferay-portal-ee" "${quarterly_release_branch}"
 
-		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 		then
 			lc_log ERROR "Unable to prepare the next release branch."
 
@@ -206,7 +206,7 @@ function prepare_next_release_pull_request {
 
 	local exit_code=${?}
 
-	if [ "${exit_code}" -eq 0 ]
+	if [[ "${exit_code}" -eq 0 ]]
 	then
 		create_pull_request \
 			"${base_branch}" \
@@ -219,7 +219,7 @@ function prepare_next_release_pull_request {
 
 	lc_cd "${_BASE_DIR}"
 
-	if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 	then
 		lc_log ERROR "Unable to send pull request to the release branch."
 	else
@@ -285,7 +285,7 @@ function reference_new_releases {
 		prepare_branch_to_commit "${_PROJECTS_DIR}/liferay-jenkins-ee/commands" "liferay-jenkins-ee"
 	fi
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to prepare the next release references branch."
 
@@ -399,7 +399,7 @@ function reference_new_releases {
 
 		local exit_code=${?}
 
-		if [ "${exit_code}" -eq 0 ]
+		if [[ "${exit_code}" -eq 0 ]]
 		then
 			create_pull_request \
 				"master" \
@@ -412,7 +412,7 @@ function reference_new_releases {
 
 		lc_cd "${_BASE_DIR}"
 
-		if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		if [[ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 		then
 			lc_log ERROR "Unable to send pull request with references to the next release."
 		else
@@ -462,7 +462,7 @@ function tag_release {
 
 	local release_properties_file=$(lc_download "https://releases.liferay.com/${LIFERAY_RELEASE_PRODUCT_NAME}/${_PRODUCT_VERSION}/release.properties")
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to download release.properties."
 
@@ -495,7 +495,7 @@ function tag_release {
 		do
 			local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | sed --regexp-extended "s/-u/\./")"
 
-			if [ $(invoke_github_api_delete "brianchandotcom" "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+			if [[ $(invoke_github_api_delete "brianchandotcom" "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 			then
 				lc_log ERROR "Unable to delete temp branch ${temp_branch} in brianchandotcom/${repository}."
 
@@ -634,7 +634,7 @@ function _create_tag {
 		END
 	)
 
-	if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ $(invoke_github_api_post "${repository_owner}" "${repository}/git/tags" "${tag_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 	then
 		lc_log ERROR "Unable to create tag ${product_version_without_lts_suffix} in ${repository_owner}/${repository}."
 
@@ -653,7 +653,7 @@ function _create_tag {
 		END
 	)
 
-	if [ $(invoke_github_api_post "${repository_owner}" "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ $(invoke_github_api_post "${repository_owner}" "${repository}/git/refs" "${ref_data}") -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 	then
 		lc_log ERROR "Unable to create tag reference for ${product_version_without_lts_suffix} in ${repository_owner}/${repository}."
 

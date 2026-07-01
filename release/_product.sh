@@ -256,7 +256,7 @@ function decrement_module_versions {
 		    continue
 		fi
 
-		if [ "${micro_version}" -eq "0" ]
+		if [[ "${micro_version}" -eq "0" ]]
 		then
 			continue
 		fi
@@ -377,7 +377,7 @@ function set_artifact_versions {
 }
 
 function set_product_version {
-	if [ "${#@}" -eq 0 ]
+	if [[ "${#@}" -eq 0 ]]
 	then
 		lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
@@ -552,14 +552,14 @@ function warm_up_tomcat {
 		start_tomcat
 	fi
 
-	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	stop_tomcat
 
-	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi

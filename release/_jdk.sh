@@ -20,14 +20,14 @@ function set_jdk_version_and_parameters {
 
 		for release_version in 2024.q1.26-lts 2024.q1.27-lts 2025.q1.23-lts 2025.q1.24-lts
 		do
-			if [[ "$(get_release_version)" == "${release_version}" ]]
+			if [ "$(get_release_version)" == "${release_version}" ]
 			then
 				jdk_version="zulu-17.0.18+8"
 			fi
 		done
 	fi
 
-	if [[ "$(get_release_version)" == "7.4.13" ]] &&
+	if [ "$(get_release_version)" == "7.4.13" ] &&
 	   [[ "$(get_release_version_trivial)" -ge 132 ]]
 	then
 		jdk_version="open-jdk-17.0.2"
@@ -75,7 +75,7 @@ function _download_jdk {
 
 	arch=$(_get_current_jdk_arch)
 
-	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 	then
 		lc_log ERROR "Unable to get the current architecture."
 
@@ -88,7 +88,7 @@ function _download_jdk {
 
 	download_url=$(_get_jdk_download_url "${arch}" "${jdk_version}")
 
-	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 	then
 		lc_log ERROR "Unable to get the JDK download URL."
 

@@ -58,7 +58,7 @@ function checkout_product_version {
 
 	git checkout "${product_version_tag}"
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to checkout to ${product_version_tag}."
 

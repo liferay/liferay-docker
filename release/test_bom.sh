@@ -23,7 +23,7 @@ function main {
 
 	trap tear_down EXIT
 
-	if [ "${#}" -eq 1 ]
+	if [[ "${#}" -eq 1 ]]
 	then
 		if [[ "${1}" == *_dxp ]] &&
 		   [[ "${1}" != *_jakarta_* ]]

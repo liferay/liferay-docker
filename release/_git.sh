@@ -138,7 +138,7 @@ function push_branch_to_liferay_release_fork {
 
 	git push --force "liferay-release" "${branch_name}"
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to push branch ${branch_name} to liferay-release/${repository_name}."
 

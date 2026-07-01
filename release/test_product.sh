@@ -9,7 +9,7 @@ function main {
 
 	trap tear_down EXIT
 
-	if [ "${#}" -eq 1 ]
+	if [[ "${#}" -eq 1 ]]
 	then
 		if [ "${1}" == "test_product_warm_up_tomcat_already_warmed" ]
 		then

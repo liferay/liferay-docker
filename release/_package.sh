@@ -171,7 +171,7 @@ function _generate_javadocs {
 			-Dtstamp.value="${_BUILD_TIMESTAMP}" \
 			-file "${_PROJECTS_DIR}/liferay-release-tool-ee/build-service-pack.xml" patch-doc
 
-		if [ "${?}" -ne 0 ]
+		if [[ "${?}" -ne 0 ]]
 		then
 			lc_log ERROR "Unable to generate javadocs."
 

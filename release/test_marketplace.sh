@@ -5,7 +5,7 @@ source ../_test_common.sh
 source ./_marketplace.sh
 
 function main {
-	if [ "${#}" -eq 1 ]
+	if [[ "${#}" -eq 1 ]]
 	then
 		set_up
 

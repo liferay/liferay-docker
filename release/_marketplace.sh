@@ -23,7 +23,7 @@ function check_liferay_marketplace_products_compatibility {
 	then
 		_set_liferay_marketplace_oauth2_token
 
-		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 		then
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
@@ -51,7 +51,7 @@ function check_liferay_marketplace_products_compatibility {
 
 			_download_product_by_external_reference_code "${LIFERAY_MARKETPLACE_PRODUCTS[${liferay_marketplace_product_name}]}" "${liferay_marketplace_product_name}"
 
-			if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+			if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 			then
 				return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 			fi
@@ -61,7 +61,7 @@ function check_liferay_marketplace_products_compatibility {
 
 		_deploy_liferay_marketplace_product_zip_file "${_BUILD_DIR}/marketplace/${liferay_marketplace_product_name}.zip"
 
-		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 		then
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
@@ -81,7 +81,7 @@ function check_liferay_marketplace_products_compatibility {
 	do
 		_check_liferay_marketplace_product_compatibility "${LIFERAY_MARKETPLACE_PRODUCTS[${liferay_marketplace_product_name}]}" "${liferay_marketplace_product_name}"
 
-		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 		then
 			stop_tomcat &> /dev/null
 
@@ -186,7 +186,7 @@ function _deploy_liferay_marketplace_product_zip_file {
 			-x "*/*" 2> /dev/null
 	fi
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to deploy $(basename "${liferay_marketplace_product_zip_file_path}") to ${_BUNDLES_DIR}/deploy."
 
@@ -244,7 +244,7 @@ function _download_product_by_external_reference_code {
 
 	_download_product "${product_download_url}" "${product_file_name}.zip"
 
-	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi

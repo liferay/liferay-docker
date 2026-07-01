@@ -9,7 +9,7 @@ function main {
 
 	if [ -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
 	then
-		if [ "${#}" -eq 1 ]
+		if [[ "${#}" -eq 1 ]]
 		then
 			"${1}"
 		else
