@@ -3,7 +3,7 @@
 source ./_publishing.sh
 
 function prepare_jars_for_promotion {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+	trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR
 
 	if [ -n "${nexus_repository_name}" ] && ([ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" || -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ])
 	then
@@ -12,7 +12,7 @@ function prepare_jars_for_promotion {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local nexus_repository_name="${1}"
+	local nexus_repository_name=${1}
 	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
 
 	for jar_rc_name in "release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.jar" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}-sources.jar" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar"
@@ -21,7 +21,7 @@ function prepare_jars_for_promotion {
 
 		if [ -n "${nexus_repository_name}" ]
 		then
-			_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/$(echo ${jar_rc_name} | cut --delimiter='-' --fields=1)/${_ARTIFACT_RC_VERSION}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
+			_download_bom_file "${nexus_repository_url}/${nexus_repository_name}/content/com/liferay/portal/$(echo "${jar_rc_name}" | cut --delimiter='-' --fields=1)/${_ARTIFACT_RC_VERSION}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
 		else
 			mv "${_PROMOTION_DIR}/${jar_rc_name}" "${_PROMOTION_DIR}/${jar_release_name}"
 			mv "${_PROMOTION_DIR}/${jar_rc_name}.MD5" "${_PROMOTION_DIR}/${jar_release_name}.MD5"
@@ -36,7 +36,7 @@ function prepare_jars_for_promotion {
 }
 
 function prepare_poms_for_promotion {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+	trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR
 
 	if [ -n "${nexus_repository_name}" ] && ([ -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD}" || -z "${LIFERAY_RELEASE_NEXUS_REPOSITORY_USER}" ])
 	then
@@ -45,7 +45,7 @@ function prepare_poms_for_promotion {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local nexus_repository_name="${1}"
+	local nexus_repository_name=${1}
 	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
 
 	for pom_name in \
@@ -83,8 +83,8 @@ function prepare_poms_for_promotion {
 }
 
 function promote_boms {
-	lc_time_run prepare_jars_for_promotion ${1}
-	lc_time_run prepare_poms_for_promotion ${1}
+	lc_time_run prepare_jars_for_promotion "${1}"
+	lc_time_run prepare_poms_for_promotion "${1}"
 
 	lc_time_run upload_boms liferay-public-releases
 }
@@ -101,8 +101,8 @@ function promote_packages {
 }
 
 function _download_bom_file {
-	local file_name="${2}"
-	local file_url="${1}"
+	local file_name=${2}
+	local file_url=${1}
 
 	_download_from_nexus "${file_url}" "${file_name}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	_download_from_nexus "${file_url}.md5" "${file_name}.MD5" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"

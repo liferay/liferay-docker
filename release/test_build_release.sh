@@ -41,7 +41,7 @@ function set_up {
 	export RUN_SCANCODE_PIPELINE="false"
 	export TRIGGER_CI_TEST_SUITE="false"
 	export _PRODUCT_VERSION="2025.q4.1"
-	export _RELEASE_ROOT_DIR="${PWD}"
+	export _RELEASE_ROOT_DIR=${PWD}
 
 	export _RELEASE_PACKAGE="${_RELEASE_ROOT_DIR}/release-data/build/release"
 }
@@ -74,7 +74,7 @@ function test_build_hotfix_has_packaged_hotfix {
 function test_build_hotfix_main {
 	LIFERAY_RELEASE_OUTPUT="hotfix" ./build_release.sh &> /dev/null
 
-	local exit_code="${?}"
+	local exit_code=${?}
 
 	assert_equals "${exit_code}" "0"
 
@@ -106,7 +106,7 @@ function test_build_release_handle_automated_build {
 
 	unset BUILD_CAUSE
 
-	LIFERAY_RELEASE_GIT_REF="${_PRODUCT_VERSION}"
+	LIFERAY_RELEASE_GIT_REF=${_PRODUCT_VERSION}
 }
 
 function test_build_release_has_packaged_bundles {
@@ -158,7 +158,7 @@ function _clean_up_release_data {
 }
 
 function _test_build_release_not_handle_automated_build {
-	LIFERAY_RELEASE_OUTPUT="${1}"
+	LIFERAY_RELEASE_OUTPUT=${1}
 
 	handle_automated_build &> /dev/null
 

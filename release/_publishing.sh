@@ -18,7 +18,7 @@ function add_fixed_issues_to_patcher_project_version {
 
 	IFS=',' read -r -a fixed_issues_array < "release-notes.txt"
 
-	local fixed_issues_array_length="${#fixed_issues_array[@]}"
+	local fixed_issues_array_length=${#fixed_issues_array[@]}
 
 	local fixed_issues_array_part_length=$((fixed_issues_array_length / 4))
 
@@ -62,7 +62,7 @@ function add_fixed_issues_to_patcher_project_version {
 }
 
 function add_patcher_project_version {
-	local patcher_project_version="$(get_patcher_project_version)"
+	local patcher_project_version=$(get_patcher_project_version)
 
 	local add_by_name_response=$( \
 		curl \
@@ -76,7 +76,7 @@ function add_patcher_project_version {
 	then
 		lc_log INFO "Added Liferay Patcher project version ${patcher_project_version}."
 
-		add_fixed_issues_to_patcher_project_version $(echo "${add_by_name_response}" | jq --raw-output '.data.patcherProjectVersionId') "${patcher_project_version}"
+		add_fixed_issues_to_patcher_project_version "$(echo "${add_by_name_response}" | jq --raw-output '.data.patcherProjectVersionId')" "${patcher_project_version}"
 	else
 		lc_log ERROR "Unable to add Liferay Patcher project ${patcher_project_version}:"
 
@@ -87,7 +87,7 @@ function add_patcher_project_version {
 }
 
 function check_url {
-	local file_url="${1}"
+	local file_url=${1}
 
 	if (curl \
 			"${file_url}" \
@@ -194,11 +194,11 @@ function remove_old_release_candidate_tags {
 }
 
 function upload_bom_file {
-	local nexus_repository_name="${1}"
+	local nexus_repository_name=${1}
 
 	local nexus_repository_url="https://repository.liferay.com/nexus/service/local/repositories"
 
-	local file_path="${2}"
+	local file_path=${2}
 
 	local file_name=$(basename "${file_path}")
 
@@ -222,7 +222,7 @@ function upload_boms {
 		return
 	fi
 
-	local nexus_repository_name="${1}"
+	local nexus_repository_name=${1}
 
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ] && [ "${nexus_repository_name}" == "xanadu" ]
 	then
@@ -240,7 +240,7 @@ function upload_boms {
 
 	if [ "${nexus_repository_name}" == "liferay-public-releases" ]
 	then
-		local upload_dir="${_PROMOTION_DIR}"
+		local upload_dir=${_PROMOTION_DIR}
 	else
 		local upload_dir="${_BUILD_DIR}/release"
 	fi
@@ -344,7 +344,7 @@ function upload_release {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_BUILD_DIR}"/release
+	lc_cd "${_BUILD_DIR}/release"
 
 	local destination_bucket=""
 
@@ -411,7 +411,7 @@ function upload_to_docker_hub {
 		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push
 	fi
 
-	local exit_code="${?}"
+	local exit_code=${?}
 
 	if [ "${exit_code}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
 	then
@@ -429,7 +429,7 @@ function upload_to_docker_hub {
 }
 
 function _update_bundles_yml {
-	local product_version_key="$(echo "${_PRODUCT_VERSION}" | cut --delimiter='-' --fields=1)"
+	local product_version_key=$(echo "${_PRODUCT_VERSION}" | cut --delimiter='-' --fields=1)
 
 	if (yq eval ".\"${product_version_key}\" | has(\"${_PRODUCT_VERSION}\")" "${_BASE_DIR}/bundles.yml" | grep --quiet "true") ||
 	   (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${_BASE_DIR}/bundles.yml" | grep --quiet "true")
@@ -487,7 +487,7 @@ function _update_bundles_yml {
 
 		push_branch_to_liferay_release_fork "${_TEMP_BRANCH}" "liferay-docker"
 
-		local exit_code="${?}"
+		local exit_code=${?}
 
 		if [ "${exit_code}" -eq 0 ]
 		then
@@ -497,7 +497,7 @@ function _update_bundles_yml {
 				"brianchandotcom/liferay-docker" \
 				"Add ${_PRODUCT_VERSION} to bundles.yml."
 
-			exit_code="${?}"
+			exit_code=${?}
 		fi
 
 		lc_cd "${_BASE_DIR}"
@@ -514,8 +514,8 @@ function _update_bundles_yml {
 }
 
 function _upload_to_nexus {
-	local file_path="${1}"
-	local file_url="${2}"
+	local file_path=${1}
+	local file_url=${2}
 
 	lc_log INFO "Uploading ${file_path} to ${file_url}."
 

@@ -51,7 +51,7 @@ function set_jdk_version_and_parameters {
 
 	lc_log INFO "Using JDK ${jdk_version} for release ${_PRODUCT_VERSION}."
 
-	export JAVA_HOME="${java_home}"
+	export JAVA_HOME=${java_home}
 
 	lc_log INFO "Java release:\n $(cat "${JAVA_HOME}/release")"
 
@@ -82,7 +82,7 @@ function _download_jdk {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local jdk_version="${1}"
+	local jdk_version=${1}
 
 	local download_url
 
@@ -147,7 +147,7 @@ function _get_current_jdk_arch {
 
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
-		machine="${LIFERAY_RELEASE_TEST_MACHINE}"
+		machine=${LIFERAY_RELEASE_TEST_MACHINE}
 	fi
 
 	if [ "${machine}" == "aarch64" ] || [ "${machine}" == "arm64" ]
@@ -168,8 +168,8 @@ function _get_current_jdk_arch {
 }
 
 function _get_jdk_download_url {
-	local arch="${1}"
-	local jdk_version="${2}"
+	local arch=${1}
+	local jdk_version=${2}
 
 	if [[ "${jdk_version}" == open-jdk-17* ]]
 	then
@@ -198,7 +198,7 @@ function _get_jdk_download_url {
 }
 
 function _resolve_jdk_install {
-	local jdk_version="${1}"
+	local jdk_version=${1}
 
 	local alternative_path="${HOME}/.liferay/java/${jdk_version}"
 	local default_path="/opt/java/${jdk_version}"

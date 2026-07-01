@@ -27,9 +27,9 @@ function set_up {
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _PRODUCT_VERSION="2024.q2.0"
 
-	export _RELEASE_ROOT_DIR="${PWD}"
+	export _RELEASE_ROOT_DIR=${PWD}
 
-	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
+	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}/../.."
 
 	if [ ! -d "${_PROJECTS_DIR}/liferay-portal-ee" ]
 	then
@@ -40,7 +40,7 @@ function set_up {
 
 	export _BUILD_DIR="${_PROJECTS_DIR}/liferay-portal-ee"
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
 	git restore .
 
@@ -69,9 +69,9 @@ function test_git_generate_release_notes {
 	generate_release_notes
 
 	assert_equals \
-		$(grep --quiet "\-," "${_PROJECTS_DIR}/liferay-portal-ee/release/release-notes.txt"; echo "${?}") \
+		"$(grep --quiet "\-," "${_PROJECTS_DIR}/liferay-portal-ee/release/release-notes.txt"; echo "${?}")" \
 		"${LIFERAY_COMMON_EXIT_CODE_BAD}" \
-		$(grep --quiet "LPD-27038" "${_PROJECTS_DIR}/liferay-portal-ee/release/release-notes.txt"; echo "${?}") \
+		"$(grep --quiet "LPD-27038" "${_PROJECTS_DIR}/liferay-portal-ee/release/release-notes.txt"; echo "${?}")" \
 		"${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 

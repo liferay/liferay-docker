@@ -255,7 +255,7 @@ function _is_supported_product_version {
 
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
-		today="${LIFERAY_RELEASE_TEST_DATE}"
+		today=${LIFERAY_RELEASE_TEST_DATE}
 	fi
 
 	if [[ "${today}" > "${end_of_premium_support_date}" ]]
@@ -305,7 +305,7 @@ function _process_new_product {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local product_group_version="$(get_product_group_version)"
+	local product_group_version=$(get_product_group_version)
 
 	jq "map(
 			if .product == \"${LIFERAY_RELEASE_PRODUCT_NAME}\" and .productGroupVersion == \"${product_group_version}\"

@@ -68,14 +68,14 @@ function _notify_info_sec {
 
 	local scan_results=$(echo "${1}" | sed --quiet "/^Scan results/,\$p")
 
-	LIFERAY_INFO_SEC_JIRA_ISSUE_KEY="$( \
+	LIFERAY_INFO_SEC_JIRA_ISSUE_KEY=$( \
 		add_jira_issue_with_description \
 			"Sec R&D-Sec Engineering" \
 			"Hi team, the Prisma Cloud Scan of image ${LIFERAY_DOCKER_IMAGE_NAME} had the following output: ${scan_results}" \
 			"$(get_due_date "3")" \
 			"Request" \
 			"LRINFOSEC" \
-			"${LIFERAY_DOCKER_IMAGE_NAME} - Release Candidate | Prisma Cloud Scan Vulnerabilities")"
+			"${LIFERAY_DOCKER_IMAGE_NAME} - Release Candidate | Prisma Cloud Scan Vulnerabilities")
 
 	if ! _is_info_sec_jira_issue_created
 	then
@@ -153,7 +153,7 @@ function _scan_docker_image {
 
 	chmod +x ./twistcli
 
-	local scan_result="${LIFERAY_COMMON_EXIT_CODE_OK}"
+	local scan_result=${LIFERAY_COMMON_EXIT_CODE_OK}
 
 	lc_log INFO "Scanning ${LIFERAY_DOCKER_IMAGE_NAME}."
 
@@ -174,8 +174,8 @@ function _scan_docker_image {
 
 	lc_log INFO "${scan_output}"
 
-	if [[ ${scan_output} == *"Compliance threshold check results: PASS"* ]] &&
-	   [[ ${scan_output} == *"Vulnerability threshold check results: PASS"* ]]
+	if [[ "${scan_output}" == *"Compliance threshold check results: PASS"* ]] &&
+	   [[ "${scan_output}" == *"Vulnerability threshold check results: PASS"* ]]
 	then
 		lc_log INFO "The result of scan for ${LIFERAY_DOCKER_IMAGE_NAME} is: PASS."
 	else
@@ -210,7 +210,7 @@ function _scan_docker_image {
 		${info_sec_jira_issue_message}
 		END
 
-		scan_result="${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		scan_result=${LIFERAY_COMMON_EXIT_CODE_BAD}
 	fi
 
 	rm --force ./twistcli

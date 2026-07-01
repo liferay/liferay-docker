@@ -16,7 +16,7 @@ function check_usage {
 	LIFERAY_RELEASE_UPLOAD="true"
 	_BUILD_TIMESTAMP=$(date +%s)
 
-	LIFERAY_RELEASE_RC_BUILD_TIMESTAMP="${_BUILD_TIMESTAMP}"
+	LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=${_BUILD_TIMESTAMP}
 
 	set_product_version "${LIFERAY_RELEASE_VERSION}" "${_BUILD_TIMESTAMP}"
 
@@ -28,20 +28,20 @@ function check_usage {
 
 	lc_cd release-data
 
-	_RELEASE_ROOT_DIR="${PWD}"
+	_RELEASE_ROOT_DIR=${PWD}
 
-	_BUILD_DIR="${_RELEASE_ROOT_DIR}"/build
+	_BUILD_DIR="${_RELEASE_ROOT_DIR}/build"
 
-	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
-	_PROMOTION_DIR="${_BUILD_DIR}"/release
+	LIFERAY_COMMON_LOG_DIR=${_BUILD_DIR}
+	_PROMOTION_DIR="${_BUILD_DIR}/release"
 
-	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/dev/projects
+	_PROJECTS_DIR="${_RELEASE_ROOT_DIR}/dev/projects"
 
-	_BUNDLES_DIR="${_PROJECTS_DIR}"/bundles
+	_BUNDLES_DIR="${_PROJECTS_DIR}/bundles"
 }
 
 function checkout_product_version {
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
 	git clean -d --force -x
 

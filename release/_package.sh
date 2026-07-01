@@ -3,7 +3,7 @@
 source ../_release_common.sh
 
 function generate_checksum_files {
-	lc_cd "${_BUILD_DIR}"/release
+	lc_cd "${_BUILD_DIR}/release"
 
 	for file in *
 	do
@@ -64,7 +64,7 @@ function generate_release_properties_file {
 }
 
 function install_patching_tool {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+	trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR
 
 	lc_cd "${_BUNDLES_DIR}"
 
@@ -116,10 +116,10 @@ function package_release {
 
 	cp --archive "${_BUNDLES_DIR}"/* "${package_dir}"
 
-	echo "${_GIT_SHA}" > "${package_dir}"/.githash
-	echo "${_PRODUCT_VERSION}" > "${package_dir}"/.liferay-version
+	echo "${_GIT_SHA}" > "${package_dir}/.githash"
+	echo "${_PRODUCT_VERSION}" > "${package_dir}/.liferay-version"
 
-	touch "${package_dir}"/.liferay-home
+	touch "${package_dir}/.liferay-home"
 
 	lc_cd "${_BUILD_DIR}/release"
 
@@ -183,7 +183,7 @@ function _generate_javadocs {
 function _package_common_release {
 	7z a "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" liferay-${LIFERAY_RELEASE_PRODUCT_NAME}
 
-	echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" > "${_BUILD_DIR}"/release/.lfrrelease-tomcat-bundle
+	echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" > "${_BUILD_DIR}/release/.lfrrelease-tomcat-bundle"
 
 	tar \
 		--create \
@@ -227,7 +227,7 @@ function _package_nightly_release {
 	7z a "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-7.4.13.nightly-${_BUILD_TIMESTAMP}.7z" \
 		"liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 
-	echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-7.4.13.nightly-${_BUILD_TIMESTAMP}.7z" > "${_BUILD_DIR}"/release/.lfrrelease-tomcat-bundle
+	echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-7.4.13.nightly-${_BUILD_TIMESTAMP}.7z" > "${_BUILD_DIR}/release/.lfrrelease-tomcat-bundle"
 
 	tar \
 		--create \
@@ -306,7 +306,7 @@ function _package_portal_dependencies {
 			portal-kernel.jar \
 			portlet.jar
 		do
-			cp "${_BUILD_DIR}"/release/liferay-"${LIFERAY_RELEASE_PRODUCT_NAME}"/tomcat/lib/ext/"${jar}" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
+			cp "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/tomcat/lib/ext/${jar}" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 		done
 
 		zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"

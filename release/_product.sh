@@ -34,8 +34,8 @@ function add_ckeditor_license {
 }
 
 function add_licensing {
-	if [ -e "${_BUILD_DIR}"/built.sha ] &&
-	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}/built.sha" ] &&
+	   [ "$(cat "${_BUILD_DIR}/built.sha")" == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already built in ${_BUILD_DIR}."
 
@@ -60,10 +60,10 @@ function add_licensing {
 }
 
 function build_product {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+	trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR
 
-	if [ -e "${_BUILD_DIR}"/built.sha ] &&
-	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}/built.sha" ] &&
+	   [ "$(cat "${_BUILD_DIR}/built.sha")" == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already built in ${_BUILD_DIR}."
 
@@ -108,7 +108,7 @@ function build_product {
 
 	rm --force tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/mysql.jar
 
-	echo "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" > "${_BUILD_DIR}"/built.sha
+	echo "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" > "${_BUILD_DIR}/built.sha"
 }
 
 function build_sql {
@@ -194,8 +194,8 @@ function clean_up_ignored_dxp_plugins {
 }
 
 function compile_product {
-	if [ -e "${_BUILD_DIR}"/built.sha ] &&
-	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}/built.sha" ] &&
+	   [ "$(cat "${_BUILD_DIR}/built.sha")" == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already built in ${_BUILD_DIR}."
 
@@ -226,8 +226,8 @@ function copy_copyright {
 }
 
 function decrement_module_versions {
-	if [ -e "${_BUILD_DIR}"/built.sha ] &&
-	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}/built.sha" ] &&
+	   [ "$(cat "${_BUILD_DIR}/built.sha")" == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already built in ${_BUILD_DIR}."
 
@@ -271,7 +271,7 @@ function decrement_module_versions {
 }
 
 function deploy_elasticsearch_sidecar {
-	if [ -e "${_BUNDLES_DIR}"/elasticsearch-sidecar ]
+	if [ -e "${_BUNDLES_DIR}/elasticsearch-sidecar" ]
 	then
 		lc_log INFO "Elasticsearch sidecar already exists in the bundle."
 
@@ -340,8 +340,8 @@ function get_java_specification_version {
 }
 
 function obfuscate_licensing {
-	if [ -e "${_BUILD_DIR}"/built.sha ] &&
-	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}/built.sha" ] &&
+	   [ "$(cat "${_BUILD_DIR}/built.sha")" == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already built in ${_BUILD_DIR}."
 
@@ -361,7 +361,7 @@ function obfuscate_licensing {
 }
 
 function set_artifact_versions {
-	_ARTIFACT_VERSION="${1}"
+	_ARTIFACT_VERSION=${1}
 
 	if is_u_release
 	then
@@ -405,7 +405,7 @@ function set_product_version {
 			_PRODUCT_VERSION="${major_version}.${minor_version}.${bug_fix}-u${trivial}"
 		fi
 	else
-		_PRODUCT_VERSION="${1}"
+		_PRODUCT_VERSION=${1}
 
 		_add_lts_suffix_to_product_version
 
@@ -423,8 +423,8 @@ function set_product_version {
 function set_up_profile {
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
-	if [ -e "${_BUILD_DIR}"/built.sha ] &&
-	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}/built.sha" ] &&
+	   [ "$(cat "${_BUILD_DIR}/built.sha")" == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already built in ${_BUILD_DIR}."
 
@@ -441,7 +441,7 @@ function start_tomcat {
 	rm --force --recursive "${_BUNDLES_DIR}/tomcat/temp"
 	rm --force --recursive "${_BUNDLES_DIR}/tomcat/work"
 
-	local current_dir="${PWD}"
+	local current_dir=${PWD}
 
 	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
 
@@ -486,7 +486,7 @@ function start_tomcat {
 }
 
 function stop_tomcat {
-	local current_dir="${PWD}"
+	local current_dir=${PWD}
 
 	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
 

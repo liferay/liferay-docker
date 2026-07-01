@@ -33,10 +33,10 @@ function set_up {
 	export LIFERAY_RELEASE_TEST_ALTERNATIVE_PATH="${HOME}/.liferay/java"
 	export LIFERAY_RELEASE_TEST_DEFAULT_PATH="/opt/java"
 	export LIFERAY_RELEASE_TEST_MACHINE=$(uname --machine)
-	export _CURRENT_JAVA_HOME="${JAVA_HOME}"
-	export _CURRENT_JAVA_OPTS="${JAVA_OPTS}"
-	export _CURRENT_PATH="${PATH}"
-	export _PROJECTS_DIR="${PWD}"/../..
+	export _CURRENT_JAVA_HOME=${JAVA_HOME}
+	export _CURRENT_JAVA_OPTS=${JAVA_OPTS}
+	export _CURRENT_PATH=${PATH}
+	export _PROJECTS_DIR="${PWD}/../.."
 	export _PROMOTION_DIR="${PWD}/test-dependencies/expected"
 
 	cp test-dependencies/actual/releases.json .
@@ -97,7 +97,7 @@ function test_release_gold_not_prepare_next_release_branch {
 	_test_release_gold_prepare_next_release_branch "7.4.13-u101" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 
 	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="true"
-	_PROMOTION_DIR="${PWD}"/test-dependencies/expected
+	_PROMOTION_DIR="${PWD}/test-dependencies/expected"
 
 	_test_release_gold_prepare_next_release_branch "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
@@ -132,7 +132,7 @@ function test_release_gold_set_next_release_date {
 	lc_cd "${_PROJECTS_DIR}/liferay-docker/release"
 
 	assert_equals \
-		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.date")" \
+		"$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/release.properties" "release.info.date")" \
 		"October 11, 2025"
 }
 
@@ -149,7 +149,7 @@ function test_release_gold_test_boms {
 }
 
 function _test_release_gold_check_supported_versions {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	check_supported_versions &> /dev/null
 
@@ -157,20 +157,20 @@ function _test_release_gold_check_supported_versions {
 }
 
 function _test_release_gold_is_latest_product_version_by_releases_json {
-	local current_product_name="${LIFERAY_RELEASE_PRODUCT_NAME}"
+	local current_product_name=${LIFERAY_RELEASE_PRODUCT_NAME}
 
-	LIFERAY_RELEASE_PRODUCT_NAME="${1}"
-	_PRODUCT_VERSION="${2}"
+	LIFERAY_RELEASE_PRODUCT_NAME=${1}
+	_PRODUCT_VERSION=${2}
 
 	is_latest_product_version_by_releases_json "${_PROMOTION_DIR}"
 
 	assert_equals "${?}" "${3}"
 
-	LIFERAY_RELEASE_PRODUCT_NAME="${current_product_name}"
+	LIFERAY_RELEASE_PRODUCT_NAME=${current_product_name}
 }
 
 function _test_release_gold_not_reference_new_releases {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	reference_new_releases 1> /dev/null
 
@@ -178,7 +178,7 @@ function _test_release_gold_not_reference_new_releases {
 }
 
 function _test_release_gold_prepare_next_release_branch {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	prepare_next_release_branch 1> /dev/null
 
@@ -186,7 +186,7 @@ function _test_release_gold_prepare_next_release_branch {
 }
 
 function _test_release_gold_reference_new_releases {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	lc_cd "test-dependencies/actual"
 
@@ -200,16 +200,16 @@ function _test_release_gold_reference_new_releases {
 }
 
 function _test_release_gold_set_next_release_version_display_name {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
-	local current_dir="${PWD}"
+	local current_dir=${PWD}
 
 	set_next_release_version_display_name "${1}" "${2}" &> /dev/null
 
 	assert_equals \
-		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[master-private]")" \
+		"$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/release.properties" "release.info.version.display.name[master-private]")" \
 		"${3}" \
-		"$(lc_get_property "${_PROJECTS_DIR}"/liferay-portal-ee/release.properties "release.info.version.display.name[release-private]")" \
+		"$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/release.properties" "release.info.version.display.name[release-private]")" \
 		"${3}"
 
 	lc_cd "${current_dir}"
@@ -217,7 +217,7 @@ function _test_release_gold_set_next_release_version_display_name {
 
 function _test_release_gold_test_boms {
 	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	set_jdk_version_and_parameters &> /dev/null
 
@@ -227,9 +227,9 @@ function _test_release_gold_test_boms {
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 
-	JAVA_HOME="${_CURRENT_JAVA_HOME}"
-	JAVA_OPTS="${_CURRENT_JAVA_OPTS}"
-	PATH="${_CURRENT_PATH}"
+	JAVA_HOME=${_CURRENT_JAVA_HOME}
+	JAVA_OPTS=${_CURRENT_JAVA_OPTS}
+	PATH=${_CURRENT_PATH}
 }
 
 main "${@}"

@@ -33,11 +33,11 @@ function set_up {
 		JAVA_OPTS="-XX:+IgnoreUnrecognizedVMOptions -XX:MaxPermSize=256m -Xmx2048m"
 	fi
 
-	export _CURRENT_JAVA_HOME="${JAVA_HOME}"
-	export _CURRENT_JAVA_OPTS="${JAVA_OPTS}"
-	export _CURRENT_PATH="${PATH}"
+	export _CURRENT_JAVA_HOME=${JAVA_HOME}
+	export _CURRENT_JAVA_OPTS=${JAVA_OPTS}
+	export _CURRENT_PATH=${PATH}
 	export _JDK_PARAMETERS_17=$(echo "${JAVA_OPTS}" | sed "s/-XX:MaxPermSize=[^ ]*//g")
-	export _JDK_PARAMETERS_8="${JAVA_OPTS}"
+	export _JDK_PARAMETERS_8=${JAVA_OPTS}
 	export _TEST_JDK_DIR="test-dependencies/test_jdk"
 
 	for jdk_version in open-jdk-17.0.2 zulu-17.0.18+8 zulu8
@@ -51,9 +51,9 @@ function set_up {
 function tear_down {
 	common_tear_down
 
-	JAVA_HOME="${_CURRENT_JAVA_HOME}"
-	JAVA_OPTS="${_CURRENT_JAVA_OPTS}"
-	PATH="${_CURRENT_PATH}"
+	JAVA_HOME=${_CURRENT_JAVA_HOME}
+	JAVA_OPTS=${_CURRENT_JAVA_OPTS}
+	PATH=${_CURRENT_PATH}
 
 	rm --force --recursive "${_TEST_JDK_DIR}"
 
@@ -125,7 +125,7 @@ function test_jdk_set_jdk_version_and_parameters {
 }
 
 function _test_jdk_get_current_jdk_arch {
-	LIFERAY_RELEASE_TEST_MACHINE="${1}"
+	LIFERAY_RELEASE_TEST_MACHINE=${1}
 
 	assert_equals "$(_get_current_jdk_arch)" "${2}"
 }
@@ -139,7 +139,7 @@ function _test_jdk_resolve_jdk_install {
 }
 
 function _test_jdk_set_jdk_version_and_parameters {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	set_jdk_version_and_parameters &> /dev/null
 
@@ -147,7 +147,7 @@ function _test_jdk_set_jdk_version_and_parameters {
 		"${JAVA_HOME}" "${LIFERAY_RELEASE_TEST_DEFAULT_PATH}/${2}" \
 		"${JAVA_OPTS}" "${3}"
 
-	JAVA_OPTS="${_CURRENT_JAVA_OPTS}"
+	JAVA_OPTS=${_CURRENT_JAVA_OPTS}
 }
 
 main "${@}"

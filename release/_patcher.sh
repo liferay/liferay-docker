@@ -60,7 +60,7 @@ function report_patcher_status {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_cd "${_BUILD_DIR}"/patcher-status/production/osbPatcherStatus/build/jenkins
+	lc_cd "${_BUILD_DIR}/patcher-status/production/osbPatcherStatus/build/jenkins"
 
 	(
 		echo "{"

@@ -14,7 +14,7 @@ function main {
 
 function set_up {
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
-	export _BUNDLES_DIR="${PWD}"
+	export _BUNDLES_DIR=${PWD}
 	export _PRODUCT_VERSION="7.4.13-u36"
 
 	mkdir --parents "${_BUNDLES_DIR}/tomcat"

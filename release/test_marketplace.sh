@@ -25,7 +25,7 @@ function main {
 function set_up {
 	common_set_up
 
-	export _RELEASE_ROOT_DIR="${PWD}"
+	export _RELEASE_ROOT_DIR=${PWD}
 
 	export _BUILD_DIR="${_RELEASE_ROOT_DIR}/release-data/build"
 	export _BUNDLES_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp"

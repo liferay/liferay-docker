@@ -149,7 +149,7 @@ function generate_api_jars {
 
 	for file in $(ls api-jar/META-INF --almost-all | grep --extended-regexp --invert-match '^(alloy-util.tld|alloy.tld|c.tld|liferay.tld)$')
 	do
-		if [[ "$file" == *.tld ]]
+		if [[ "${file}" == *.tld ]]
 		then
 			rm "api-jar/META-INF/${file}"
 		fi

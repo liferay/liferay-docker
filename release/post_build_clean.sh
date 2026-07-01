@@ -3,7 +3,7 @@
 source ./_liferay_common.sh
 
 function main {
-	local workspace_dir="${PWD}"
+	local workspace_dir=${PWD}
 
 	local current_job=$(basename "${PWD}")
 

@@ -104,14 +104,14 @@ function calculate_checksums {
 }
 
 function compare_jars {
-	local jar1=${_BUNDLES_DIR}/"${1}"
-	local jar2=${_RELEASE_DIR}/"${1}"
+	local jar1="${_BUNDLES_DIR}/${1}"
+	local jar2="${_RELEASE_DIR}/${1}"
 
 	function compare_property_in_packaged_file {
-		local jar1="${1}"
-		local jar2="${2}"
-		local packaged_file="${3}"
-		local property="${4}"
+		local jar1=${1}
+		local jar2=${2}
+		local packaged_file=${3}
+		local property=${4}
 
 		local value1=$(unzip -p "${jar1}" "${packaged_file}" | sed --null-data --regexp-extended "s@\r?\n @@g" | grep --word-regexp "${property}")
 		local value2=$(unzip -p "${jar2}" "${packaged_file}" | sed --null-data --regexp-extended "s@\r?\n @@g" | grep --word-regexp "${property}")
@@ -270,7 +270,7 @@ function compare_jars {
 
 			rm --force --recursive "${_BUILD_DIR}/tmp/jar1" "${_BUILD_DIR}/tmp/jar2"
 		else
-			new_jar_descriptions="${jar_descriptions}"
+			new_jar_descriptions=${jar_descriptions}
 		fi
 
 		if [[ "${1}" == *"portal.tools.db.schema.importer.jar" ]]
@@ -368,7 +368,7 @@ function create_documentation {
 
 	first_line=true
 
-	if [ -e "${_BUILD_DIR}"/hotfix/checksums ]
+	if [ -e "${_BUILD_DIR}/hotfix/checksums" ]
 	then
 		while read -r line
 		do
@@ -385,7 +385,7 @@ function create_documentation {
 			writeln "            \"path\": \"${file}\","
 			writeln "            \"checksum\": \"${checksum}\""
 			write "        }"
-		done < "${_BUILD_DIR}"/hotfix/checksums
+		done < "${_BUILD_DIR}/hotfix/checksums"
 
 		writeln ""
 	fi
@@ -393,7 +393,7 @@ function create_documentation {
 	writeln "    ],"
 	writeln "    \"removed\" :["
 
-	if [ -e "${_BUILD_DIR}"/hotfix/removed_files ]
+	if [ -e "${_BUILD_DIR}/hotfix/removed_files" ]
 	then
 		first_line=true
 
@@ -409,7 +409,7 @@ function create_documentation {
 			writeln "        {"
 			writeln "            \"path\": \"${file}\""
 			write "        }"
-		done < "${_BUILD_DIR}"/hotfix/removed_files
+		done < "${_BUILD_DIR}/hotfix/removed_files"
 
 		writeln ""
 	fi
@@ -419,9 +419,9 @@ function create_documentation {
 }
 
 function create_hotfix {
-	rm --force --recursive "${_BUILD_DIR}"/hotfix
+	rm --force --recursive "${_BUILD_DIR}/hotfix"
 
-	mkdir --parents "${_BUILD_DIR}"/hotfix
+	mkdir --parents "${_BUILD_DIR}/hotfix"
 
 	echo "Comparing ${_BUNDLES_DIR} and ${_RELEASE_DIR}."
 
@@ -449,7 +449,7 @@ function create_hotfix {
 			then
 				echo "Removing ${removed_file}."
 
-				transform_file_name "${removed_file}" >> "${_BUILD_DIR}"/hotfix/removed_files
+				transform_file_name "${removed_file}" >> "${_BUILD_DIR}/hotfix/removed_files"
 			fi
 		elif (echo "${change}" | grep "^Only in ${_BUNDLES_DIR}" &>/dev/null)
 		then
@@ -539,7 +539,7 @@ function manage_jar {
 }
 
 function package_hotfix {
-	lc_cd "${_BUILD_DIR}"/hotfix
+	lc_cd "${_BUILD_DIR}/hotfix"
 
 	rm --force "../${_HOTFIX_FILE_NAME}" checksums removed_files
 
@@ -551,7 +551,7 @@ function package_hotfix {
 }
 
 function prepare_release_dir {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+	trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR
 
 	_RELEASE_DIR="${_RELEASES_DIR}/${_PRODUCT_VERSION}"
 
@@ -611,12 +611,12 @@ function prepare_release_dir {
 }
 
 function set_hotfix_name {
-	_HOTFIX_FILE_NAME=liferay-dxp-${_PRODUCT_VERSION}-hotfix-"${LIFERAY_RELEASE_HOTFIX_ID}".zip
-	_HOTFIX_NAME=hotfix-"${LIFERAY_RELEASE_HOTFIX_ID}"
+	_HOTFIX_FILE_NAME="liferay-dxp-${_PRODUCT_VERSION}-hotfix-${LIFERAY_RELEASE_HOTFIX_ID}.zip"
+	_HOTFIX_NAME="hotfix-${LIFERAY_RELEASE_HOTFIX_ID}"
 }
 
 function sign_hotfix {
-	lc_cd "${_BUILD_DIR}"/hotfix
+	lc_cd "${_BUILD_DIR}/hotfix"
 
 	if [ ! -n "${LIFERAY_RELEASE_HOTFIX_SIGNATURE_KEY_FILE}" ]
 	then

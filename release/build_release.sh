@@ -50,7 +50,7 @@ function check_usage {
 
 	_RELEASE_TOOL_DIR=$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")
 
-	_BASE_DIR="$(dirname "${_RELEASE_TOOL_DIR}")"
+	_BASE_DIR=$(dirname "${_RELEASE_TOOL_DIR}")
 
 	lc_cd "${_RELEASE_TOOL_DIR}"
 
@@ -58,7 +58,7 @@ function check_usage {
 
 	lc_cd release-data
 
-	_RELEASE_ROOT_DIR="${PWD}"
+	_RELEASE_ROOT_DIR=${PWD}
 
 	_BUILD_DIR="${_RELEASE_ROOT_DIR}/build"
 	_BUILDER_SHA=$(git rev-parse HEAD)
@@ -73,7 +73,7 @@ function check_usage {
 		_PROJECTS_DIR="${_RELEASE_ROOT_DIR}/dev/projects"
 	fi
 
-	LIFERAY_COMMON_LOG_DIR="${_BUILD_DIR}"
+	LIFERAY_COMMON_LOG_DIR=${_BUILD_DIR}
 
 	LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal-ee"
 	LIFERAY_PORTAL_REPOSITORY_OWNER="brianchandotcom"
@@ -275,7 +275,7 @@ function main {
 
 	local seconds=$((end_time - _BUILD_TIMESTAMP))
 
-	lc_log INFO "Completed ${LIFERAY_RELEASE_OUTPUT} building in $(lc_echo_time ${seconds}) on $(date)."
+	lc_log INFO "Completed ${LIFERAY_RELEASE_OUTPUT} building in $(lc_echo_time "${seconds}") on $(date)."
 }
 
 function print_help {

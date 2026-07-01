@@ -17,7 +17,7 @@ function set_up {
 	common_set_up
 
 	export LIFERAY_RELEASE_TEST_DATE="2025-06-01"
-	export _RELEASE_ROOT_DIR="${PWD}"
+	export _RELEASE_ROOT_DIR=${PWD}
 }
 
 function tear_down {

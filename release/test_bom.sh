@@ -5,7 +5,7 @@ source ../_test_common.sh
 source ./_bom.sh
 
 function clean_portal_ee {
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
 	git reset --hard &> /dev/null
 
@@ -81,14 +81,14 @@ function main {
 function set_up {
 	export LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal-ee"
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
-	export _BUILD_TIMESTAMP=12345
+	export _BUILD_TIMESTAMP="12345"
 	export _PRODUCT_VERSION="2024.q2.6"
-	export _RELEASE_ROOT_DIR="${PWD}"
+	export _RELEASE_ROOT_DIR=${PWD}
 
 	export _ARTIFACT_RC_VERSION="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
 	export _BUILD_DIR="${_RELEASE_ROOT_DIR}/release-data/build"
-	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
-	export _RELEASE_TOOL_DIR="${_RELEASE_ROOT_DIR}"
+	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}/../.."
+	export _RELEASE_TOOL_DIR=${_RELEASE_ROOT_DIR}
 
 	mkdir --parents "${_RELEASE_ROOT_DIR}/release-data/build/boms"
 
@@ -137,7 +137,7 @@ function set_up_jakarta_upgrade_dxp_tests {
 }
 
 function set_up_liferay_portal_ee {
-	lc_cd "${_PROJECTS_DIR}"/liferay-portal-ee
+	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
 	git reset --hard &> /dev/null
 
@@ -196,7 +196,7 @@ function test_bom_copy_file {
 }
 
 function test_bom_copy_tld {
-	mkdir --parents "${_RELEASE_ROOT_DIR}"/test-dependencies/actual/META-INF
+	mkdir --parents "${_RELEASE_ROOT_DIR}/test-dependencies/actual/META-INF"
 
 	copy_tld "${_RELEASE_ROOT_DIR}/test-dependencies/actual/META-INF" "liferay-*.tld" "ratings.tld" 1> /dev/null
 
@@ -217,37 +217,37 @@ function test_bom_generate_pom_release_bom_api_dxp {
 	generate_pom_release_api &> /dev/null
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom" \
 		test-dependencies/expected/test.bom.dxp.release.bom.api.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom
+	rm "release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom"
 }
 
 function test_bom_generate_pom_release_bom_compile_only_dxp {
 	generate_pom_release_bom_compile_only
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom" \
 		test-dependencies/expected/test.bom.dxp.release.bom.compile.only.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom
+	rm "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom"
 }
 
 function test_bom_generate_pom_release_bom_distro_dxp {
 	generate_pom_release_distro &> /dev/null
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom" \
 		test-dependencies/expected/test.bom.dxp.release.bom.distro.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom
+	rm "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom"
 }
 
 function test_bom_generate_pom_release_bom_dxp {
 	generate_pom_release_bom &> /dev/null
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom" \
 		test-dependencies/expected/test.bom.dxp.release.bom.pom
 
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom
@@ -257,7 +257,7 @@ function test_bom_generate_pom_release_bom_test_dxp {
 	generate_pom_release_bom_test
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_RC_VERSION}.pom \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_RC_VERSION}.pom" \
 		test-dependencies/expected/test.bom.dxp.release.bom.test.pom
 
 	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_RC_VERSION}.pom
@@ -289,11 +289,11 @@ function test_bom_generate_pom_release_bom_third_party_dxp {
 	generate_pom_release_bom_third_party
 
 	assert_equals \
-		release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom \
+		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom" \
 		test-dependencies/expected/test.bom.dxp.release.bom.third.party.pom
 
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom
-	rm release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom
+	rm "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom"
+	rm "release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom"
 }
 
 function test_bom_manage_bom_jar {

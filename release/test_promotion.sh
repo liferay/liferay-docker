@@ -49,7 +49,7 @@ function test_promotion_not_promote_jakarta_upgrade_bom {
 	assert_equals \
 		"${?}" \
 		"0" \
-		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade-${_ARTIFACT_VERSION}.pom* 2> /dev/null | wc --lines)" \
+		"$(ls -1 "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade-${_ARTIFACT_VERSION}.pom"* 2> /dev/null | wc --lines)" \
 		"0"
 }
 
@@ -71,19 +71,19 @@ function test_promotion_prepare_poms_for_promotion {
 	prepare_poms_for_promotion
 
 	assert_equals \
-		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"$(ls -1 "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_VERSION}.pom"* | wc --lines)" \
 		"3" \
-		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"$(ls -1 "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_VERSION}.pom"* | wc --lines)" \
 		"3" \
-		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"$(ls -1 "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_VERSION}.pom"* | wc --lines)" \
 		"3" \
-		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"$(ls -1 "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade-${_ARTIFACT_VERSION}.pom"* | wc --lines)" \
 		"3" \
-		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"$(ls -1 "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test-${_ARTIFACT_VERSION}.pom"* | wc --lines)" \
 		"3" \
-		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"$(ls -1 "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_VERSION}.pom"* | wc --lines)" \
 		"3" \
-		"$(ls -1 ${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_VERSION}.pom* | wc --lines)" \
+		"$(ls -1 "${_PROMOTION_DIR}/release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_VERSION}.pom"* | wc --lines)" \
 		"3"
 }
 

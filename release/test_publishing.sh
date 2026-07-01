@@ -25,7 +25,7 @@ function set_up {
 	common_set_up
 
 	export LIFERAY_RELEASE_UPLOAD="true"
-	export _RELEASE_ROOT_DIR="${PWD}"
+	export _RELEASE_ROOT_DIR=${PWD}
 
 	export _BASE_DIR="${_RELEASE_ROOT_DIR}/test-dependencies/actual/liferay-docker"
 }
@@ -75,26 +75,26 @@ function test_publishing_upload_opensearch {
 }
 
 function _run_update_bundles_yml {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	_update_bundles_yml &> /dev/null
 }
 
 function _test_publishing_get_patcher_product_version_label {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(get_patcher_product_version_label)" "${2}"
 }
 
 function _test_publishing_get_patcher_project_version {
-	_PRODUCT_VERSION="${1}"
-	_ARTIFACT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
+	_ARTIFACT_VERSION=${1}
 
 	assert_equals "$(get_patcher_project_version)" "${2}"
 }
 
 function _test_publishing_get_root_patcher_project_version_name {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(get_root_patcher_project_version_name)" "${2}"
 }

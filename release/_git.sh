@@ -5,8 +5,8 @@ source ../_release_common.sh
 function clean_portal_repository {
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
-	if [ -e "${_BUILD_DIR}"/built.sha ] &&
-	   [ $(cat "${_BUILD_DIR}"/built.sha) == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
+	if [ -e "${_BUILD_DIR}/built.sha" ] &&
+	   [ "$(cat "${_BUILD_DIR}/built.sha")" == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already built in ${_BUILD_DIR}."
 
@@ -110,10 +110,10 @@ function prepare_branch_to_commit {
 
 	if [ -n "${3}" ]
 	then
-		base_branch="${3}"
+		base_branch=${3}
 	fi
 
-	local repository_name="${2}"
+	local repository_name=${2}
 
 	_TEMP_BRANCH="temp-branch-$(date "+%Y%m%d%H%M%S")"
 
@@ -154,14 +154,14 @@ function set_git_sha {
 }
 
 function update_portal_repository {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+	trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
-	local checkout_ref="${LIFERAY_RELEASE_GIT_REF}"
+	local checkout_ref=${LIFERAY_RELEASE_GIT_REF}
 
 	if [ -e "${_BUILD_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}.sha" ] &&
-	   [ $(cat "${_BUILD_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}.sha") == "${LIFERAY_RELEASE_GIT_REF}" ]
+	   [ "$(cat "${_BUILD_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}.sha")" == "${LIFERAY_RELEASE_GIT_REF}" ]
 	then
 		lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already checked out in ${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}."
 
@@ -225,9 +225,9 @@ function update_portal_repository {
 }
 
 function update_release_tool_repository {
-	trap 'return ${LIFERAY_COMMON_EXIT_CODE_BAD}' ERR
+	trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR
 
-	lc_cd "${_PROJECTS_DIR}"/liferay-release-tool-ee
+	lc_cd "${_PROJECTS_DIR}/liferay-release-tool-ee"
 
 	git reset --hard && git clean -dfx
 
@@ -240,8 +240,8 @@ function update_release_tool_repository {
 		return 1
 	fi
 
-	if [ -e "${_BUILD_DIR}"/liferay-release-tool-ee.sha ] &&
-	   [ $(cat "${_BUILD_DIR}"/liferay-release-tool-ee.sha) == "${release_tool_sha}" ]
+	if [ -e "${_BUILD_DIR}/liferay-release-tool-ee.sha" ] &&
+	   [ "$(cat "${_BUILD_DIR}/liferay-release-tool-ee.sha")" == "${release_tool_sha}" ]
 	then
 		lc_log INFO "${release_tool_sha} was already checked out in ${_PROJECTS_DIR}/liferay-release-tool-ee."
 
@@ -258,5 +258,5 @@ function update_release_tool_repository {
 
 	git checkout "${release_tool_sha}"
 
-	echo "${release_tool_sha}" > "${_BUILD_DIR}"/liferay-release-tool-ee.sha
+	echo "${release_tool_sha}" > "${_BUILD_DIR}/liferay-release-tool-ee.sha"
 }

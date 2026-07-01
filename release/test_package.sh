@@ -28,10 +28,10 @@ function set_up {
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _BUILD_TIMESTAMP="1234567890"
 	export _PRODUCT_VERSION
-	export _RELEASE_ROOT_DIR="${PWD}"
+	export _RELEASE_ROOT_DIR=${PWD}
 
 	export _BUILD_DIR="${_RELEASE_ROOT_DIR}/test-dependencies"
-	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}"/../..
+	export _PROJECTS_DIR="${_RELEASE_ROOT_DIR}/../.."
 
 	common_set_up
 
@@ -61,7 +61,7 @@ function test_package_generate_javadocs {
 }
 
 function test_package_generate_release_properties_file {
-	_BUNDLES_DIR="${_BUILD_DIR}"
+	_BUNDLES_DIR=${_BUILD_DIR}
 
 	_test_package_generate_release_properties_file "2025.q1.18-lts" "9.0.107" "2025-10-10"
 	_test_package_generate_release_properties_file "2025.q2.0" "9.0.104" "2025-05-22"
@@ -143,10 +143,10 @@ function test_package_portal_dependencies {
 	unzip -oq "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
 
 	assert_equals \
-		"$(ls -1 liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION})" \
-		"$(cat ${_BUILD_DIR}/expected/test_publishing_liferay-dxp-client-7.3.10-u36.txt)" \
-		"$(ls -1 liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION})" \
-		"$(cat ${_BUILD_DIR}/expected/test_publishing_liferay-dxp-dependencies-7.3.10-u36.txt)"
+		"$(ls -1 "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}")" \
+		"$(cat "${_BUILD_DIR}/expected/test_publishing_liferay-dxp-client-7.3.10-u36.txt")" \
+		"$(ls -1 "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}")" \
+		"$(cat "${_BUILD_DIR}/expected/test_publishing_liferay-dxp-dependencies-7.3.10-u36.txt")"
 
 	rm --force "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
 	rm --force "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
@@ -154,7 +154,7 @@ function test_package_portal_dependencies {
 }
 
 function _test_package_generate_javadocs {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	_generate_javadocs &> /dev/null
 
@@ -164,7 +164,7 @@ function _test_package_generate_javadocs {
 function _test_package_generate_release_properties_file {
 	_BUILDER_SHA="test1234"
 	_GIT_SHA="test1234"
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	echo "test1234" > "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z.sha512"
 
@@ -190,7 +190,7 @@ function _test_package_generate_release_properties_file {
 }
 
 function _test_package_not_generate_javadocs {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	_generate_javadocs &> /dev/null
 

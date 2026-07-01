@@ -34,7 +34,7 @@ function _process_premium_support_lts_release_branches {
 		local skip_branch="release-$(get_product_group_version "$(get_latest_product_version "quarterly")")"
 	fi
 
-	local exit_code="${LIFERAY_COMMON_EXIT_CODE_OK}"
+	local exit_code=${LIFERAY_COMMON_EXIT_CODE_OK}
 
 	for branch in $(get_premium_support_lts_release_branches)
 	do
@@ -54,7 +54,7 @@ function _process_premium_support_lts_release_branches {
 
 		if ! _trigger_build_release "${branch}"
 		then
-			exit_code="${LIFERAY_COMMON_EXIT_CODE_BAD}"
+			exit_code=${LIFERAY_COMMON_EXIT_CODE_BAD}
 		fi
 	done
 
@@ -62,7 +62,7 @@ function _process_premium_support_lts_release_branches {
 }
 
 function _trigger_build_release {
-	local branch="${1}"
+	local branch=${1}
 
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
