@@ -123,7 +123,7 @@ function _check_liferay_marketplace_product_compatibility {
 			local module_name=$( \
 				echo "${module_info}" | \
 				cut --delimiter "|" --fields=4 | \
-				sed "s/ (.*)//" | \
+				sed --expression "s/ (.*)//" | \
 				xargs)
 
 			lc_log ERROR "Module ${module_name} is not compatible with release ${_PRODUCT_VERSION}."

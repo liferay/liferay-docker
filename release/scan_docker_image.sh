@@ -66,7 +66,7 @@ function _notify_info_sec {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local scan_results=$(echo "${1}" | sed --quiet "/^Scan results/,\$p")
+	local scan_results=$(echo "${1}" | sed --expression "/^Scan results/,\$p" --quiet)
 
 	LIFERAY_INFO_SEC_JIRA_ISSUE_KEY=$( \
 		add_jira_issue_with_description \
@@ -203,7 +203,7 @@ function _scan_docker_image {
 			head --lines=1)
 
 		cat <<- END > scan_failure_slack_message.txt
-		*Affected release:* \`$(echo "${LIFERAY_DOCKER_IMAGE_NAME}" | sed "s/.*://")\`
+		*Affected release:* \`$(echo "${LIFERAY_DOCKER_IMAGE_NAME}" | sed --expression "s/.*://")\`
 
 		*Prisma Cloud scan result:* ${prisma_cloud_link}
 

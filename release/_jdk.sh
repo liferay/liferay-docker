@@ -62,7 +62,7 @@ function set_jdk_version_and_parameters {
 
 	if [[ "${jdk_version}" == *"17"* ]]
 	then
-		JAVA_OPTS=$(echo "${JAVA_OPTS}" | sed "s/-XX:MaxPermSize=[^ ]*//g")
+		JAVA_OPTS=$(echo "${JAVA_OPTS}" | sed --expression "s/-XX:MaxPermSize=[^ ]*//g")
 	fi
 
 	export JAVA_OPTS
@@ -173,7 +173,7 @@ function _get_jdk_download_url {
 
 	if [[ "${jdk_version}" == open-jdk-17* ]]
 	then
-		local java_version=$(echo "${jdk_version}" | sed --regexp-extended "s/^open-jdk-//")
+		local java_version=$(echo "${jdk_version}" | sed --regexp-extended --expression "s/^open-jdk-//")
 
 		echo "https://download.oracle.com/java/$(echo "${java_version}" | cut --delimiter='.' --fields=1)/archive/jdk-${java_version}_linux-${arch}_bin.tar.gz"
 
@@ -182,7 +182,7 @@ function _get_jdk_download_url {
 
 	if [[ "${jdk_version}" == zulu-17* ]]
 	then
-		echo "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=${arch}&bundle_type=jdk&ext=tar.gz&hw_bitness=64&java_version=$(echo "${jdk_version}" | sed --regexp-extended "s/^zulu-//; s/\+.*$//")&javafx=false&os=linux"
+		echo "https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=${arch}&bundle_type=jdk&ext=tar.gz&hw_bitness=64&java_version=$(echo "${jdk_version}" | sed --regexp-extended --expression "s/^zulu-//; s/\+.*$//")&javafx=false&os=linux"
 
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi

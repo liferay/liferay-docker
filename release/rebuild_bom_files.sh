@@ -20,7 +20,7 @@ function check_usage {
 
 	set_product_version "${LIFERAY_RELEASE_VERSION}" "${_BUILD_TIMESTAMP}"
 
-	_RELEASE_TOOL_DIR=$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")
+	_RELEASE_TOOL_DIR=$(dirname "$(readlink /proc/$$/fd/255 2> /dev/null)")
 
 	lc_cd "${_RELEASE_TOOL_DIR}"
 
@@ -49,7 +49,7 @@ function checkout_product_version {
 
 	git checkout master
 
-	local product_version_tag=$(echo "${_PRODUCT_VERSION}" | sed --regexp-extended "s/-lts//g")
+	local product_version_tag=$(echo "${_PRODUCT_VERSION}" | sed --regexp-extended --expression "s/-lts//g")
 
 	git branch --delete "${product_version_tag}" 2> /dev/null
 	git tag --delete "${product_version_tag}" 2> /dev/null

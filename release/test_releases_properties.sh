@@ -32,11 +32,11 @@ function tear_down {
 }
 
 function test_release_properties_generate_file_dxp  {
-	generate_release_properties_file &>/dev/null
+	generate_release_properties_file &> /dev/null
 
 	assert_equals \
 		"$(grep 'target.platform.version' release.properties | cut --delimiter='=' --fields=2)" \
-		"${_PRODUCT_VERSION/-/.}"
+		"$(echo "${_PRODUCT_VERSION}" | sed --expression "s/-/./")"
 }
 
 main "${@}"

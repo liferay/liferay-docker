@@ -188,7 +188,7 @@ function compare_jars {
 		then
 			if (compare_property_in_packaged_file "${jar1}" "${jar2}" "META-INF/MANIFEST.MF" "Export-Package")
 			then
-				jar_descriptions=$(echo "${jar_descriptions}" | sed "/META-INF\/MANIFEST.MF/d")
+				jar_descriptions=$(echo "${jar_descriptions}" | sed --expression "/META-INF\/MANIFEST.MF/d")
 			fi
 		fi
 
@@ -251,7 +251,7 @@ function compare_jars {
 					then
 						if (compare_property_in_packaged_file "${_BUILD_DIR}/tmp/jar1/${nested_jar_file_name}" "${_BUILD_DIR}/tmp/jar2/${nested_jar_file_name}" "META-INF/MANIFEST.MF" "Export-Package")
 						then
-							packaged_jar_descriptions=$(echo "${packaged_jar_descriptions}" | sed "/META-INF\/MANIFEST.MF/d")
+							packaged_jar_descriptions=$(echo "${packaged_jar_descriptions}" | sed --expression "/META-INF\/MANIFEST.MF/d")
 						fi
 					fi
 
@@ -280,7 +280,7 @@ function compare_jars {
 				if [ -n "${line}" ] && [[ "${line}" != *"kernel"* ]]
 				then
 					lc_log INFO "Changes in ${1}: "
-					lc_log INFO "${new_jar_descriptions}" | sed "s/^/    /"
+					lc_log INFO "${new_jar_descriptions}" | sed --expression "s/^/    /"
 					lc_log INFO ""
 
 					return 0
@@ -293,7 +293,7 @@ function compare_jars {
 		if [ -n "${new_jar_descriptions}" ]
 		then
 			lc_log INFO "Changes in ${1}: "
-			lc_log INFO "${new_jar_descriptions}" | sed "s/^/    /"
+			lc_log INFO "${new_jar_descriptions}" | sed --expression "s/^/    /"
 			lc_log INFO ""
 
 			return 0
@@ -306,7 +306,7 @@ function compare_jars {
 function copy_release_info_date {
 	local build_date=$(unzip -p "${_RELEASE_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/portal-impl.jar" META-INF/MANIFEST.MF | grep "Liferay-Portal-Build-Date:")
 
-	build_date=${build_date#Liferay-Portal-Build-Date: }
+	build_date=$(echo "${build_date}" | sed --expression "s/^Liferay-Portal-Build-Date: //")
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
@@ -431,7 +431,7 @@ function create_hotfix {
 	do
 		if (echo "${change}" | grep "^Only in ${_RELEASE_DIR}" &>/dev/null)
 		then
-			local removed_file=${change#Only in }
+			local removed_file=$(echo "${change}" | sed --expression "s/^Only in //")
 
 			removed_file=$(echo "${removed_file}" | sed --expression "s#: #/#" | sed --expression "s#${_RELEASE_DIR}##")
 			removed_file=${removed_file#/}
@@ -453,7 +453,7 @@ function create_hotfix {
 			fi
 		elif (echo "${change}" | grep "^Only in ${_BUNDLES_DIR}" &>/dev/null)
 		then
-			local new_file=${change#Only in }
+			local new_file=$(echo "${change}" | sed --expression "s/^Only in //")
 
 			new_file=$(echo "${new_file}" | sed --expression "s#: #/#" | sed --expression "s#${_BUNDLES_DIR}##")
 			new_file=${new_file#/}
@@ -472,11 +472,11 @@ function create_hotfix {
 				add_file_to_hotfix "${new_file}"
 			fi
 		else
-			local changed_file=${change#Files }
+			local changed_file=$(echo "${change}" | sed --expression "s/^Files //")
 
 			changed_file=${changed_file%% *}
 			changed_file=$(echo "${changed_file}" | sed --expression "s#${_BUNDLES_DIR}##")
-			changed_file=${changed_file#/}
+			changed_file=$(echo "${changed_file}" | sed --expression "s#^/##")
 
 			if [ ! -f "${_BUNDLES_DIR}/${changed_file}" ]
 			then

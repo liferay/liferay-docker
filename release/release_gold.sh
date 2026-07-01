@@ -16,7 +16,7 @@ function add_property {
 	local new_value=${2}
 	local search_key=${3}
 
-	sed --in-place "/${search_key}/a\	\\${new_key}=${new_value}" "build-shared.properties"
+	sed --expression "/${search_key}/a\	\\${new_key}=${new_value}" --in-place "build-shared.properties"
 }
 
 function check_supported_versions {
@@ -46,7 +46,7 @@ function check_usage {
 
 	set_product_version "${LIFERAY_RELEASE_VERSION}" "${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}"
 
-	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2>/dev/null)")"
+	lc_cd "$(dirname "$(readlink /proc/$$/fd/255 2> /dev/null)")"
 
 	_RELEASE_ROOT_DIR=${PWD}
 
@@ -432,7 +432,7 @@ function replace_property {
 	local new_value=${2}
 	local search_key=${3}
 
-	sed --in-place "s/${search_key}/${new_key}=${new_value}/" "build-shared.properties"
+	sed --expression "s/${search_key}/${new_key}=${new_value}/" --in-place "build-shared.properties"
 }
 
 function set_next_release_date {
@@ -493,7 +493,7 @@ function tag_release {
 	then
 		for repository in liferay-portal liferay-portal-ee
 		do
-			local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | sed --regexp-extended "s/-u/\./")"
+			local temp_branch="release-$(echo "${_PRODUCT_VERSION}" | sed --regexp-extended --expression "s/-u/\./")"
 
 			if [[ $(invoke_github_api_delete "brianchandotcom" "${repository}/git/refs/heads/${temp_branch}") -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 			then
@@ -541,7 +541,7 @@ function test_boms {
 
 	if [ "$(get_product_group_version)" == "2024.q1" ]
 	then
-		sed --in-place "/com.liferay.gradle.plugins.workspace/s/version: \"[^\"]*\"/version: \"14.0.1\"/" settings.gradle
+		sed --expression "/com.liferay.gradle.plugins.workspace/s/version: \"[^\"]*\"/version: \"14.0.1\"/" --in-place settings.gradle
 	fi
 
 	lc_log INFO "Searching for ${_PRODUCT_VERSION} in .liferay/workspace/releases.json."

@@ -58,7 +58,7 @@ function test_build_premium_support_lts_releases_process_premium_support_lts_rel
 }
 
 function _test_build_premium_support_lts_releases_process_premium_support_lts_release_branches {
-	local triggered_branches=$(_process_premium_support_lts_release_branches 2>/dev/null | grep "^release-")
+	local triggered_branches=$(_process_premium_support_lts_release_branches 2> /dev/null | grep "^release-")
 
 	assert_equals \
 		"${triggered_branches}" "${1}"

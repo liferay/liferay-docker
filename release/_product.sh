@@ -245,7 +245,7 @@ function decrement_module_versions {
 
 		local bundle_version=$(lc_get_property "${bnd_bnd_file}" "Bundle-Version")
 
-		local major_minor_version=${bundle_version%.*}
+		local major_minor_version=$(echo "${bundle_version}" | sed --expression "s/\.[^.]*$//")
 
 		local micro_version=${bundle_version##*.}
 
@@ -370,7 +370,7 @@ function set_artifact_versions {
 
 	if is_quarterly_release
 	then
-		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed "s/-lts//g")
+		_ARTIFACT_VERSION=$(echo "${_ARTIFACT_VERSION}" | sed --expression "s/-lts//g")
 	fi
 
 	_ARTIFACT_RC_VERSION="${_ARTIFACT_VERSION}-${2}"
@@ -445,7 +445,7 @@ function start_tomcat {
 
 	lc_cd "${_BUNDLES_DIR}/tomcat/bin"
 
-	./catalina.sh start &>/dev/null
+	./catalina.sh start &> /dev/null
 
 	lc_log INFO "Waiting for Tomcat to start up..."
 
@@ -492,7 +492,7 @@ function stop_tomcat {
 
 	lc_log INFO "Stopping Tomcat."
 
-	./catalina.sh stop &>/dev/null
+	./catalina.sh stop &> /dev/null
 
 	local backslash_and_slash_regex="\\\\\/"
 	local slash_regex="\/"

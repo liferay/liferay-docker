@@ -32,7 +32,7 @@ function generate_release_properties_file {
 
 	local tomcat_version=$(grep --extended-regexp --only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${_BUNDLES_DIR}/tomcat/RELEASE-NOTES")
 
-	tomcat_version=$(echo "${tomcat_version}" | sed "s/Apache Tomcat Version //")
+	tomcat_version=$(echo "${tomcat_version}" | sed --expression "s/Apache Tomcat Version //")
 
 	if [ -z "${tomcat_version}" ]
 	then
@@ -45,7 +45,7 @@ function generate_release_properties_file {
 
 	local product_version=$(echo "${_PRODUCT_VERSION}" | tr "[:lower:]" "[:upper:]")
 
-	product_version=$(echo "DXP ${product_version}" | sed "s/-/ /")
+	product_version=$(echo "DXP ${product_version}" | sed --expression "s/-/ /")
 
 	(
 		echo "${date_key}=${LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE}"

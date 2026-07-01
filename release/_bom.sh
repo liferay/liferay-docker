@@ -226,16 +226,16 @@ function generate_distro_jar {
 
 	lc_cd "${_BUILD_DIR}/boms"
 
-	local osgi_version=$(echo "${_PRODUCT_VERSION}" | sed 's/-/\./g')
+	local osgi_version=$(echo "${_PRODUCT_VERSION}" | sed --expression "s/-/\./g")
 
 	if is_quarterly_release
 	then
 		if is_lts_release
 		then
-			osgi_version=$(echo "${osgi_version}" | sed "s/.lts//g")
+			osgi_version=$(echo "${osgi_version}" | sed --expression "s/.lts//g")
 		fi
 
-		osgi_version=$(echo "${osgi_version}" | sed "s/q//g")
+		osgi_version=$(echo "${osgi_version}" | sed --expression "s/q//g")
 	fi
 
 	java -jar biz.aQute.bnd-6.4.0.jar remote distro -o "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro" "${osgi_version}"
@@ -593,7 +593,7 @@ function generate_pom_release_bom_test {
 		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng/third-party/org-apache-logging-log4j-core/artifact.properties" \
 		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng/third-party/org-apache-logging-log4j/artifact.properties"
 	do
-		artifact_urls+=$(awk -F= '/^artifact.url=/ { print $2 }' "$file")
+		artifact_urls+=$(awk -F "=" '/^artifact.url=/ { print $2 }' "${file}")
 		artifact_urls+=$'\n'
 	done
 

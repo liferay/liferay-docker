@@ -79,7 +79,7 @@ function _add_major_versions {
 			return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 		fi
 
-		local product_major_version=$(jq --raw-output ".[].productVersion" "${quarterly_release_json_file}" | sed "s/\.[0-9]\+//");
+		local product_major_version=$(jq --raw-output ".[].productVersion" "${quarterly_release_json_file}" | sed --expression "s/\.[0-9]\+//")
 
 		jq "map(
 				. + {productMajorVersion: \"${product_major_version}\"}
@@ -392,7 +392,7 @@ function _process_product_version {
 	[
 	    {
 	        "product": "${product_name}",
-	        "productGroupVersion": "$(echo "${product_version}" | sed --regexp-extended "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")",
+	        "productGroupVersion": "$(echo "${product_version}" | sed --regexp-extended --expression "s@(^[0-9]+\.[0-9a-z]+)\..*@\1@")",
 	        "productVersion": "$(lc_get_property "${release_properties_file}" liferay.product.version)",
 	        "promoted": "false",
 	        "releaseKey": "$(echo "${product_name}-${product_version}" | sed "s/\([0-9]\+\)\.\([0-9]\+\)\.[0-9]\+\(-\|[^0-9]\)/\1.\2\3/g" | sed --expression "s/portal-7\.4\.[0-9]*-ga/portal-7.4-ga/")",
@@ -415,7 +415,7 @@ function _promote_product_versions {
 			then
 				lc_log INFO "Promoting ${last_version}."
 
-				sed --in-place 's/"promoted": "false"/"promoted": "true"/' "${_PROMOTION_DIR}/${last_version}"
+				sed --expression "s/\"promoted\": \"false\"/\"promoted\": \"true\"/" --in-place "${_PROMOTION_DIR}/${last_version}"
 			else
 				lc_log INFO "No product version found to promote for ${product_name}-${group_version}."
 			fi

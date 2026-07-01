@@ -17,7 +17,7 @@ function prepare_jars_for_promotion {
 
 	for jar_rc_name in "release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.jar" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}-sources.jar" "release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.jar"
 	do
-		local jar_release_name="${jar_rc_name/-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}/}"
+		local jar_release_name=$(echo "${jar_rc_name}" | sed --expression "s/-${LIFERAY_RELEASE_RC_BUILD_TIMESTAMP}//")
 
 		if [ -n "${nexus_repository_name}" ]
 		then
@@ -79,7 +79,7 @@ function prepare_poms_for_promotion {
 		fi
 	done
 
-	sed --in-place "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_ARTIFACT_VERSION}</version>#" "${_PROMOTION_DIR}"/*.pom
+	sed --expression "s#<version>${_ARTIFACT_RC_VERSION}</version>#<version>${_ARTIFACT_VERSION}</version>#" --in-place "${_PROMOTION_DIR}"/*.pom
 }
 
 function promote_boms {
@@ -139,7 +139,7 @@ function _verify_checksum {
 	file="${1}"
 
 	(
-		sed --null-data "s/\n$//" "${file}.sha512"
+		sed --expression "s/\n$//" --null-data "${file}.sha512"
 
 		echo "  ${file}"
 	) | sha512sum -c - --status

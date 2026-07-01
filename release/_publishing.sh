@@ -453,7 +453,7 @@ function _update_bundles_yml {
 				grep "$(get_product_group_version)" | \
 				tail --lines=1)
 
-			sed --in-place "/${previous_quarterly_release_key}/a\    ${_PRODUCT_VERSION}:" "${_BASE_DIR}/bundles.yml"
+			sed --expression "/${previous_quarterly_release_key}/a\    ${_PRODUCT_VERSION}:" --in-place "${_BASE_DIR}/bundles.yml"
 		fi
 	fi
 
@@ -471,8 +471,8 @@ function _update_bundles_yml {
 		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url = \"${nightly_bundle_url}\"" "${_BASE_DIR}/bundles.yml"
 	fi
 
-	sed --in-place "/^$/d" "${_BASE_DIR}/bundles.yml"
-	sed --in-place "s/[[:space:]]{}//g" "${_BASE_DIR}/bundles.yml"
+	sed --expression "/^$/d" --in-place "${_BASE_DIR}/bundles.yml"
+	sed --expression "s/[[:space:]]{}//g" --in-place "${_BASE_DIR}/bundles.yml"
 
 	if [ -z "$(tail --bytes=1 "${_BASE_DIR}/bundles.yml")" ]
 	then
