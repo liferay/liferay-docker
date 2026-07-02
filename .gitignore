@@ -1,6 +1,7 @@
 *.iml
 .DS_Store
 .idea
+CLAUDE.local.md
 downloads
 logs-*
 node_modules
