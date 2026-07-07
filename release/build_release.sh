@@ -153,6 +153,8 @@ function main {
 
 	lc_time_run set_product_version
 
+	lc_time_run _write_slack_message
+
 	lc_time_run set_general_availability_date
 
 	lc_time_run set_jdk_version_and_parameters
@@ -338,6 +340,12 @@ function set_general_availability_date {
 	then
 		LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE=$(date +%Y-%m-%d)
 	fi
+}
+
+function _write_slack_message {
+	cat <<- END > "${_RELEASE_TOOL_DIR}/build_release_slack_message.txt"
+	*Version:* \`${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}\`
+	END
 }
 
 main "${@}"
