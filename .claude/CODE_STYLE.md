@@ -32,7 +32,7 @@ Files used only by other files (internal use) take a leading `_` (e.g. `_file.sh
 
 Additionally, every file must follow the same top-to-bottom layout:
 
-- Shebang `#!/bin/bash` for Linux environments or `#!/usr/bin/env bash` for multi-platform environments, followed by a blank line. Both forms are valid; which one to use depends on where the script runs and is the author's choice.
+- Shebang `#!/bin/bash` for Linux environments or `#!/usr/bin/env bash` for multiplatform environments, followed by a blank line. Both forms are valid; which one to use depends on where the script runs and is the author's choice.
 - `source` statements for dependencies, followed by a blank line.
 - Function definitions.
 - A single `main` invocation as the last line. Use `main "${@}"` when the file takes parameters and plain `main` when it does not; both are valid, and the choice is the author's.
@@ -349,9 +349,9 @@ do
 done
 ```
 
-- Prefer single-bracket `[ ... ]` tests. Reserve `[[ ... ]]` for cases that need its features: pattern matching, regular-expression matching (`=~`), `${BASH_SOURCE[0]}` comparisons, lexicographic string comparisons with `<` or `>` (which `[ ... ]` would treat as input or output redirection), and numeric comparisons (`-eq`, `-ne`, `-lt`, `-le`, `-gt`, `-ge`). Numeric comparisons stay in `[[ ... ]]` because its arithmetic context tolerates empty or non-integer operands, whereas `[ ... ]` fails with "integer expression expected".
+- Prefer single-bracket `[ ... ]` tests. Reserve `[[ ... ]]` for cases that need its features: pattern matching, regular-expression matching (`=~`), `${BASH_SOURCE[0]}` comparisons, lexicographic string comparisons with `<` or `>` (which `[ ... ]` would treat as input or output redirection), and numeric comparisons (`-eq`, `-ne`, `-lt`, `-le`, `-gt`, `-ge`). Numeric comparisons stay in `[[ ... ]]` because its arithmetic context tolerates empty or noninteger operands, whereas `[ ... ]` fails with "integer expression expected".
 - Use `==` for string equality and the numeric operators above for numeric comparison.
-- For multi-line conditions, break after the logical operator (`||` / `&&`) and align continuation lines so the test lines up under the first one (one tab plus three spaces, matching the width of `if `).
+- For multiline conditions, break after the logical operator (`||` / `&&`) and align continuation lines so the test lines up under the first one (one tab plus three spaces, matching the width of `if `).
 
 ```bash
 if [ "$(get_release_output)" == "hotfix" ] ||
@@ -467,8 +467,8 @@ But, in boolean functions only — the `is_*` and `has_*` predicates — prefer 
 
 If `_liferay_common.sh` is available in the repository, `source` it and use the `lc_*` helper functions instead of reimplementing common behavior:
 
-- `lc_cd`: change directory.
 - `lc_background_run` / `lc_wait`: run functions concurrently and join them.
+- `lc_cd`: change directory.
 - `lc_download`: download files.
 - `lc_get_property`: read properties from files `*.properties`.
 - `lc_log`: leveled logging.
