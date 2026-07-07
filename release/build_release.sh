@@ -155,7 +155,7 @@ function main {
 
 	lc_time_run _write_slack_message
 
-	lc_time_run set_general_availability_date
+	lc_time_run _set_general_availability_date
 
 	lc_time_run set_jdk_version_and_parameters
 
@@ -321,7 +321,7 @@ function print_variables {
 	echo ""
 }
 
-function set_general_availability_date {
+function _set_general_availability_date {
 	if [ "$(get_release_output)" != "release-candidate" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
