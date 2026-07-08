@@ -14,14 +14,19 @@ function check_translations_sync {
 
 	git fetch --force brianchandotcom "master:refs/remotes/brianchandotcom/master"
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to fetch master from brianchandotcom/liferay-portal."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	if [ -n "$(git log -1 --format="%H" --grep="LPD-91206 Update Translations" master..brianchandotcom/master)" ]
+	if [ -n "$( \
+		git log \
+			-1 \
+			--format="%H" \
+			--grep="LPD-91206 Update Translations" \
+			master..brianchandotcom/master)" ]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -36,7 +41,7 @@ function check_usage {
 		print_help
 	fi
 
-	_CROWDIN_DIR="${PWD}"
+	_CROWDIN_DIR=${PWD}
 
 	LIFERAY_COMMON_LOG_DIR="${_CROWDIN_DIR}/logs"
 
@@ -44,7 +49,7 @@ function check_usage {
 
 	if [ ! -d "${_PROJECTS_DIR}" ]
 	then
-		_PROJECTS_DIR="${_CROWDIN_DIR}"
+		_PROJECTS_DIR=${_CROWDIN_DIR}
 	fi
 }
 
@@ -58,7 +63,7 @@ function download_translations {
 		--plain \
 		--verbose
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to download translations from Crowdin."
 
@@ -174,7 +179,7 @@ function set_up_branch {
 
 	git checkout -b "${_TEMP_BRANCH}"
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to create branch ${_TEMP_BRANCH}."
 
@@ -221,7 +226,7 @@ function upload_sources {
 		--plain \
 		--verbose
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to upload source files to Crowdin."
 
