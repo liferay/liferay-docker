@@ -198,7 +198,9 @@ function update_portal_repository {
 		git remote add upstream "git@github.com:liferay/liferay-portal.git"
 	fi
 
-	git pull upstream master
+	git fetch upstream master
+
+	git reset --hard upstream/master
 
 	if ! git remote get-url liferay-release &> /dev/null
 	then
