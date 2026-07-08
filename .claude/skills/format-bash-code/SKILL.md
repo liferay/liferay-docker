@@ -1,7 +1,7 @@
 ---
 
 argument-hint: "[optional *.sh file or folder paths]"
-description: Format Bash (*.sh) files to match .claude/CODE_STYLE.md, the repository's source of truth for shell style. Use when the user asks to format, fix, or apply the code style to shell scripts. Runs in two modes — with no arguments it formats only the locally modified *.sh files; with file or folder paths as arguments it formats those targets instead.
+description: Format Bash (*.sh) files to match .claude/CODE_STYLE.md, the repository's source of truth for shell style. Use when the user asks to format, fix, or apply the code style to shell scripts. Runs in two modes — with no arguments it formats every *.sh file modified locally on the current branch (both committed on branch and not yet committed changes); with file or folder paths as arguments it formats those targets instead.
 name: format-bash-code
 
 ---
@@ -20,17 +20,18 @@ There are two modes. Pick the mode from whether arguments were provided.
 
 ### Default Mode (No Arguments)
 
-Format only the `*.sh` files that have been modified locally. Collect them with:
+Format every `*.sh` file modified locally on the current branch — both the changes already committed on the branch (relative to `master`) and the changes not yet committed. Collect them with:
 
 ```bash
 {
+	git diff --name-only --diff-filter=ACMR master...HEAD
 	git diff --name-only --diff-filter=ACMR
 	git diff --name-only --cached --diff-filter=ACMR
 	git ls-files --others --exclude-standard
 } | sort --unique | grep '\.sh$'
 ```
 
-This covers unstaged changes, staged changes, and new untracked scripts. If the list is empty, report that there are no locally modified `*.sh` files and stop.
+This covers commits made on the branch (versus `master`), unstaged changes, staged changes, and new untracked scripts. If the branch's base is not `master`, substitute the correct base branch. If the list is empty, report that there are no locally modified `*.sh` files and stop.
 
 ### Argument Mode (Paths Provided)
 
