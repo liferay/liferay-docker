@@ -312,12 +312,19 @@ sed --expression "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/"
 
 - Short forms are only acceptable where no long form exists (e.g. `git clean -dfx`), or where this guide deliberately standardizes on a short form, as it does for `awk`'s field separator `-F` (write `-F ":"`, never `--field-separator ":"`). When a flag has more than one long-form spelling, use the one this guide shows; for example, write `sed -n` as `--quiet`, not `--silent`. When it is unclear whether a long form exists, the short form is acceptable too.
 
-- Order a command's flags alphabetically, whether inline or broken across lines. The exceptions are flags whose order matters: a `find` expression (`-name`, `-type`, `-print0`, …) and repeated `sed --expression` scripts stay in their written order, and `sed`'s `--regexp-extended` must come before `--expression`.
+- Order a command's flags alphabetically, whether inline or broken across lines. The exceptions are flags whose order matters: a `find` expression (`-name`, `-type`, `-print0`, …) and repeated `sed --expression` scripts stay in their written order, `sed`'s `--regexp-extended` must come before `--expression`, and `zip`'s `-i`/`-x` include/exclude filters trail the input file list they act on (so they follow the positionals rather than sorting in with the other flags).
 
 ```bash
 find "${dir}" -name "*.sh" -type f
 
 sed --regexp-extended --expression "s/^open-jdk-//"
+
+zip \
+	-q \
+	-r \
+	"${archive}.zip" \
+	"${source_dir}" \
+	-i "*.sql"
 ```
 
 - When a command carries three or more flags, break it across lines as well (see [Pipelines](#pipelines)).
