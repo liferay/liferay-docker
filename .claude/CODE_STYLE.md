@@ -204,7 +204,7 @@ local fixed_issues_array_part_length=$((fixed_issues_array_length / 4))
 ```
 
 - Use `$( ... )` for command substitution, never backticks (`` ` ` ``).
-- On a scalar assignment — a bare `x=...` or a `local x=...` — whose entire right-hand side is a single command substitution `$( ... )`, a single parameter expansion `${ ... }`, or a single arithmetic expansion `$(( ... ))`, do not quote the right-hand side. Quote and brace everywhere else: `export`, `readonly`, and `declare` assignments, any right-hand side that is more than a single expansion (a concatenation or an adjacent literal), command arguments, test operands, and interpolation.
+- On a scalar assignment — a bare `x=...`, a `local x=...`, or an `export`/`readonly`/`declare` `x=...` — whose entire right-hand side is a single command substitution `$( ... )`, a single parameter expansion `${ ... }`, or a single arithmetic expansion `$(( ... ))`, do not quote the right-hand side. Quote and brace everywhere else: any right-hand side that is more than a single expansion (a concatenation or an adjacent literal), command arguments, test operands, and interpolation.
 - Do not add `;` at the end of `$( ... )`.
 
 ```bash
@@ -213,6 +213,8 @@ local architecture=$(dpkg --print-architecture)
 local exit_code=${?}
 
 local seconds=$((end_time - _BUILD_TIMESTAMP))
+
+export TEST_MACHINE=$(uname --machine)
 ```
 
 ## Sorting
