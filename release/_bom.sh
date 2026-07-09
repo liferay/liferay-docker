@@ -75,15 +75,15 @@ function generate_api_jars {
 
 	for artifact in ${enforce_version_artifacts}
 	do
-		if (! echo "${artifact}" | grep --quiet "com.fasterxml") &&
-		   (! echo "${artifact}" | grep --quiet "com.liferay.alloy-taglibs:alloy-taglib:") &&
-		   (! echo "${artifact}" | grep --quiet "com.liferay.portletmvc4spring:com.liferay.portletmvc4spring.test:") &&
-		   (! echo "${artifact}" | grep --quiet "com.liferay:biz.aQute.bnd.annotation:") &&
-		   (! echo "${artifact}" | grep --quiet "io.swagger") &&
-		   (! echo "${artifact}" | grep --quiet "jakarta") &&
-		   (! echo "${artifact}" | grep --quiet "javax") &&
-		   (! echo "${artifact}" | grep --quiet "org.jsoup") &&
-		   (! echo "${artifact}" | grep --quiet "org.osgi")
+		if ! echo "${artifact}" | grep --quiet "com.fasterxml" &&
+		   ! echo "${artifact}" | grep --quiet "com.liferay.alloy-taglibs:alloy-taglib:" &&
+		   ! echo "${artifact}" | grep --quiet "com.liferay.portletmvc4spring:com.liferay.portletmvc4spring.test:" &&
+		   ! echo "${artifact}" | grep --quiet "com.liferay:biz.aQute.bnd.annotation:" &&
+		   ! echo "${artifact}" | grep --quiet "io.swagger" &&
+		   ! echo "${artifact}" | grep --quiet "jakarta" &&
+		   ! echo "${artifact}" | grep --quiet "javax" &&
+		   ! echo "${artifact}" | grep --quiet "org.jsoup" &&
+		   ! echo "${artifact}" | grep --quiet "org.osgi"
 		then
 			continue
 		fi
@@ -207,8 +207,8 @@ function generate_api_source_jar {
 
 	find . -name taglib -type d -print0 | while IFS= read -r -d '' taglib_dir
 	do
-		if (! echo "${taglib_dir}" | grep --quiet "/com/liferay/") ||
-		   (echo "${taglib_dir}" | grep --quiet "/classes/")
+		if ! echo "${taglib_dir}" | grep --quiet "/com/liferay/" ||
+		   echo "${taglib_dir}" | grep --quiet "/classes/"
 		then
 			continue
 		fi
@@ -220,8 +220,8 @@ function generate_api_source_jar {
 
 	find . -name packageinfo -type f -print0 | while IFS= read -r -d '' packageinfo_file
 	do
-		if (echo "${packageinfo_file}" | grep --quiet "/classes/") ||
-		   (echo "${packageinfo_file}" | grep --quiet "/portal-kernel/")
+		if echo "${packageinfo_file}" | grep --quiet "/classes/" ||
+		   echo "${packageinfo_file}" | grep --quiet "/portal-kernel/"
 		then
 			continue
 		fi
@@ -763,8 +763,8 @@ function manage_bom_jar {
 
 	#rm --force "${name}-${version}.jar"
 
-	if (basename "${1}" | grep --extended-regexp --quiet "^com.liferay.") &&
-	   (! basename "${1}" | grep --quiet "com.liferay.jakarta.portlet-api.jar")
+	if basename "${1}" | grep --extended-regexp --quiet "^com.liferay." &&
+	   ! basename "${1}" | grep --quiet "com.liferay.jakarta.portlet-api.jar"
 	then
 		local current_file
 

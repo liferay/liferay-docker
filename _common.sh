@@ -8,14 +8,14 @@ fi
 function check_docker_buildx {
 	docker buildx inspect > /dev/null 2>&1
 
-	if [ "${?}" -gt 0 ]
+	if [[ "${?}" -gt 0 ]]
 	then
 		echo "Docker Buildx is not available."
 
 		exit 1
 	fi
 
-	if [ $(docker buildx ls | grep --count --word-regexp "liferay-buildkit") -eq 0 ]
+	if [[ "$(docker buildx ls | grep --count --word-regexp "liferay-buildkit")" -eq 0 ]]
 	then
 		docker buildx create --name "liferay-buildkit"
 	fi
@@ -24,7 +24,7 @@ function check_docker_buildx {
 function check_utils {
 	for util in "${@}"
 	do
-		if (! command -v "${util}" &>/dev/null)
+		if ! command -v "${util}" &> /dev/null
 		then
 			echo "The utility ${util} is not installed."
 
@@ -126,7 +126,7 @@ function download {
 	then
 		gsutil cp "${file_url}" "${file_name}"
 
-		if [ "${?}" -ne 0 ]
+		if [[ "${?}" -ne 0 ]]
 		then
 			echo "Unable to download ${file_url}."
 
@@ -298,7 +298,12 @@ function start_tomcat {
 
 	for count in {0..30}
 	do
-		if (curl --fail --max-time 3 --output /dev/null --silent http://localhost:8080)
+		if curl \
+				--fail \
+				--max-time 3 \
+				--output /dev/null \
+				--silent \
+				http://localhost:8080
 		then
 			break
 		fi
@@ -340,7 +345,7 @@ function test_docker_image {
 	then
 		./test_bundle_image.sh
 
-		if [ "${?}" -gt 0 ]
+		if [[ "${?}" -gt 0 ]]
 		then
 			echo "Testing failed, exiting."
 
@@ -358,7 +363,7 @@ function warm_up_tomcat {
 
 	if [ -e "${TEMP_DIR}/liferay/data/hsql/lportal.script" ]
 	then
-		if [ $(stat "${TEMP_DIR}/liferay/data/hsql/lportal.script") -lt 1024000 ]
+		if [[ "$(stat "${TEMP_DIR}/liferay/data/hsql/lportal.script")" -lt 1024000 ]]
 		then
 			start_tomcat
 		else
@@ -366,7 +371,7 @@ function warm_up_tomcat {
 		fi
 	elif [ -e "${TEMP_DIR}/liferay/data/hypersonic/lportal.script" ]
 	then
-		if [ $(stat "${TEMP_DIR}/liferay/data/hypersonic/lportal.script") -lt 1024000 ]
+		if [[ "$(stat "${TEMP_DIR}/liferay/data/hypersonic/lportal.script")" -lt 1024000 ]]
 		then
 			start_tomcat
 		else

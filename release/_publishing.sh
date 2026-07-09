@@ -435,8 +435,8 @@ function upload_to_docker_hub {
 function _update_bundles_yml {
 	local product_version_key=$(echo "${_PRODUCT_VERSION}" | cut --delimiter='-' --fields=1)
 
-	if (yq eval ".\"${product_version_key}\" | has(\"${_PRODUCT_VERSION}\")" "${_BASE_DIR}/bundles.yml" | grep --quiet "true") ||
-	   (yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${_BASE_DIR}/bundles.yml" | grep --quiet "true")
+	if yq eval ".\"${product_version_key}\" | has(\"${_PRODUCT_VERSION}\")" "${_BASE_DIR}/bundles.yml" | grep --quiet "true" ||
+	   yq eval ".quarterly | has(\"${_PRODUCT_VERSION}\")" "${_BASE_DIR}/bundles.yml" | grep --quiet "true"
 	then
 		lc_log INFO "The ${_PRODUCT_VERSION} product version was already published."
 

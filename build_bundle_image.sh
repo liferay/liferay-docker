@@ -170,7 +170,7 @@ function download_trial_dxp_license {
 	then
 		rm --force --recursive "${TEMP_DIR}/liferay/data/license"
 
-		if (! ./download_trial_dxp_license.sh "${TEMP_DIR}/liferay" $(date "${CURRENT_DATE}" "+%s000"))
+		if ! ./download_trial_dxp_license.sh "${TEMP_DIR}/liferay" "$(date "${CURRENT_DATE}" "+%s000")"
 		then
 			exit 4
 		fi
@@ -261,7 +261,7 @@ function main {
 	then
 		prepare_slim_image
 
-		if [ "${?}" -ne 0 ]
+		if [[ "${?}" -ne 0 ]]
 		then
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
@@ -296,7 +296,7 @@ function prepare_slim_image {
 			"https://releases.liferay.com/opensearch2/${release_dir_name}/com.liferay.portal.search.opensearch2.${module}.jar" \
 			"${TEMP_DIR}/liferay/deploy/com.liferay.portal.search.opensearch2.${module}.jar"
 
-		if [ "${?}" -ne 0 ]
+		if [[ "${?}" -ne 0 ]]
 		then
 			lc_log ERROR "Unable to download com.liferay.portal.search.opensearch2.${module}.jar."
 
@@ -502,7 +502,7 @@ function update_patching_tool {
 
 		patching_tool_minor_version=$(echo "${patching_tool_minor_version}" | sed --expression "s/\.[^.]*$//")
 
-		if (! echo ${patching_tool_minor_version} | grep --regexp='[0-9]*[.][0-9]*' >/dev/null)
+		if ! echo "${patching_tool_minor_version}" | grep --regexp='[0-9]*[.][0-9]*' > /dev/null
 		then
 			echo "Patching Tool update is skipped as it's not a 1.0+ version or the bundle did not include a properly configured Patching Tool."
 
@@ -524,7 +524,7 @@ function update_patching_tool {
 
 		local exit_code=${?}
 
-		if [ ${exit_code} -gt 0 ]
+		if [[ "${exit_code}" -gt 0 ]]
 		then
 			echo "./patching_tool_version.sh returned with an error: ${latest_patching_tool_version}"
 

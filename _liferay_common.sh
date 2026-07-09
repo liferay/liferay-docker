@@ -35,7 +35,7 @@ function lc_check_utils {
 
 	for util in "${@}"
 	do
-		if (! command -v "${util}" &>/dev/null)
+		if ! command -v "${util}" &> /dev/null
 		then
 			lc_log ERROR "The utility ${util} is not installed."
 
@@ -76,7 +76,7 @@ function lc_clone_repository {
 
 	lc_cd "${repository_path}"
 
-	if (git remote get-url upstream &>/dev/null)
+	if git remote get-url upstream &> /dev/null
 	then
 		git remote set-url upstream "git@github.com:liferay/${repository_name}.git"
 	else
@@ -89,7 +89,15 @@ function lc_clone_repository {
 function lc_curl {
 	local url=${1}
 
-	if (! curl "${url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output - --retry 10 --retry-delay 5 --show-error --silent)
+	if ! curl \
+			--fail \
+			--max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" \
+			--output - \
+			--retry 10 \
+			--retry-delay 5 \
+			--show-error \
+			--silent \
+			"${url}"
 	then
 		lc_log ERROR "Unable to curl ${url}."
 
@@ -132,7 +140,7 @@ function lc_docker_compose {
 
 	local LIFERAY_COMMON_DOCKER_COMPOSE="docker compose"
 
-	if (command -v docker-compose &>/dev/null)
+	if command -v docker-compose &> /dev/null
 	then
 		LIFERAY_COMMON_DOCKER_COMPOSE="docker-compose"
 	fi
@@ -229,9 +237,17 @@ function lc_download {
 
 	local http_code
 
-	http_code=$(curl "${file_url}" --fail --max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" --output "${cache_file}.${temp_suffix}" --show-error --silent --write-out "%{http_code}")
+	http_code=$( \
+		curl \
+			--fail \
+			--max-time "${LIFERAY_COMMON_DOWNLOAD_MAX_TIME}" \
+			--output "${cache_file}.${temp_suffix}" \
+			--show-error \
+			--silent \
+			--write-out "%{http_code}" \
+			"${file_url}")
 
-	if [ "${?}" -gt 0 ]
+	if [[ "${?}" -gt 0 ]]
 	then
 		lc_log DEBUG "Unable to download ${file_url}. HTTP response code was ${http_code}."
 
@@ -353,7 +369,7 @@ function lc_time_run {
 	else
 		local seconds=$((end_time - start_time))
 
-		if [ "${exit_code}" -gt 0 ]
+		if [[ "${exit_code}" -gt 0 ]]
 		then
 			echo -e "$(lc_date) ! ${*} exited with \e[1;31merror\e[0m in $(lc_echo_time "${seconds}") (exit code: ${exit_code})."
 
@@ -364,7 +380,7 @@ function lc_time_run {
 				tail --lines=100 "${log_file}"
 			fi
 
-			if (declare -F lc_time_run_error &>/dev/null)
+			if declare -F lc_time_run_error &> /dev/null
 			then
 				LC_TIME_RUN_ERROR_EXIT_CODE=${exit_code}
 				LC_TIME_RUN_ERROR_FUNCTION="${*}"
@@ -387,7 +403,7 @@ function lc_wait {
 
 		local exit_code=${?}
 
-		if [ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_OK}" ] && [ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
+		if [[ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_OK}" ]] && [[ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]]
 		then
 			lc_log ERROR "Exiting because background process exit code was ${exit_code}."
 
@@ -419,7 +435,7 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
 
-	if (locale --all-locales | grep --quiet en_US.utf8)
+	if locale --all-locales | grep --quiet en_US.utf8
 	then
 		export LC_ALL=en_US.utf8
 	else

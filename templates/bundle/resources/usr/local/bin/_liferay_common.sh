@@ -35,7 +35,7 @@ function lc_check_utils {
 
 	for util in "${@}"
 	do
-		if (! command -v "${util}" &>/dev/null)
+		if ! command -v "${util}" &> /dev/null
 		then
 			lc_log ERROR "The utility ${util} is not installed."
 
@@ -81,7 +81,7 @@ function lc_docker_compose {
 
 	local LIFERAY_COMMON_DOCKER_COMPOSE="docker compose"
 
-	if (command -v docker-compose &>/dev/null)
+	if command -v docker-compose &> /dev/null
 	then
 		LIFERAY_COMMON_DOCKER_COMPOSE="docker-compose"
 	fi
@@ -139,7 +139,11 @@ function lc_download {
 
 	local timestamp=$(lc_date "${current_date}" "+%Y%m%d%H%M%S")
 
-	if (! curl "${file_url}" --fail --output "${cache_file}.temp${timestamp}" --silent)
+	if ! curl \
+			--fail \
+			--output "${cache_file}.temp${timestamp}" \
+			--silent \
+			"${file_url}"
 	then
 		lc_log ERROR "Unable to download ${file_url}."
 
@@ -223,7 +227,7 @@ function lc_time_run {
 	else
 		local seconds=$((end_time - start_time))
 
-		if [ "${exit_code}" -gt 0 ]
+		if [[ "${exit_code}" -gt 0 ]]
 		then
 			echo -e "$(lc_date) ! ${*} exited with \e[1;31merror\e[0m in $(lc_echo_time "${seconds}") (exit code: ${exit_code})."
 
@@ -234,7 +238,7 @@ function lc_time_run {
 				tail --lines=100 "${log_file}"
 			fi
 
-			if (declare -F lc_time_run_error &>/dev/null)
+			if declare -F lc_time_run_error &> /dev/null
 			then
 				LC_TIME_RUN_ERROR_EXIT_CODE=${exit_code}
 				LC_TIME_RUN_ERROR_FUNCTION=${@}
@@ -257,7 +261,7 @@ function lc_wait {
 
 		local exit_code=${?}
 
-		if [ "${exit_code}" -ne 0 ]
+		if [[ "${exit_code}" -ne 0 ]]
 		then
 			exit "${exit_code}"
 		fi
@@ -283,7 +287,7 @@ function _lc_init {
 	LIFERAY_COMMON_EXIT_CODE_OK=0
 	LIFERAY_COMMON_EXIT_CODE_SKIPPED=4
 
-	if (locale --all-locales | grep --quiet en_US.utf8)
+	if locale --all-locales | grep --quiet en_US.utf8
 	then
 		export LC_ALL=en_US.utf8
 	else

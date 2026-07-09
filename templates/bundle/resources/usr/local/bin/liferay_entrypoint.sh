@@ -53,7 +53,7 @@ function main {
 
 	. configure_liferay.sh
 
-	if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 	then
 		echo "[LIFERAY] Unable to configure Liferay."
 		echo ""
@@ -99,7 +99,7 @@ function start_interval_thread_dump {
 		then
 			local sleep=$(cat "${LIFERAY_CONTAINER_THREAD_DUMP_INTERVAL_FILE}")
 
-			if ! [ "${sleep}" -gt 3 ] &>/dev/null
+			if ! [[ "${sleep}" -gt 3 ]] &> /dev/null
 			then
 				sleep=3
 			fi

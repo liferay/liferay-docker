@@ -111,11 +111,11 @@ function build_bundle_image {
 
 	local build_bundle_image_exit_code=${PIPESTATUS[0]}
 
-	if [ "${build_bundle_image_exit_code}" -gt 0 ]
+	if [[ "${build_bundle_image_exit_code}" -gt 0 ]]
 	then
 		echo "FAILED: ${image_name}" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
-		if [ "${build_bundle_image_exit_code}" -eq 4 ]
+		if [[ "${build_bundle_image_exit_code}" -eq 4 ]]
 		then
 			echo "Detected a license failure while building image ${image_name}." > "${LIFERAY_DOCKER_LOGS_DIR}/license-failure"
 
@@ -179,7 +179,7 @@ function build_bundle_images {
 
 			local query=.\"${main_key}\".\"${version}\"
 
-			if (has_slim_build_criteria "${version}")
+			if has_slim_build_criteria "${version}"
 			then
 				build_bundle_image "${query}" "true" "${version}"
 			fi
@@ -199,7 +199,7 @@ function build_bundle_images {
 
 			if [[ "$(yq "${query}" < bundles.yml)" != "null" ]]
 			then
-				if (has_slim_build_criteria "${specified_version}")
+				if has_slim_build_criteria "${specified_version}"
 				then
 					build_bundle_image "${query}" "true" "${specified_version}"
 				fi
@@ -571,7 +571,7 @@ function get_main_key {
 	do
 		local count=$(echo "${version}" | grep --count --extended-regexp "${main_key}-|${main_key}\.")
 
-		if [ "${count}" -gt 0 ]
+		if [[ "${count}" -gt 0 ]]
 		then
 			echo "${main_key}"
 
@@ -598,7 +598,7 @@ function get_tag_from_image {
 	then
 		docker pull "${image_name}:latest" > /dev/null
 
-		if [ "${?}" -gt 0 ]
+		if [[ "${?}" -gt 0 ]]
 		then
 			version="0"
 		else
@@ -700,7 +700,7 @@ function main {
 }
 
 function validate_bundles_yml {
-	if [ $(yq '.*.*.latest' < bundles.yml | grep "true" -c) -gt 2 ]
+	if [[ "$(yq '.*.*.latest' < bundles.yml | grep --count "true")" -gt 2 ]]
 	then
 		echo "There are too many images designated as latest."
 
@@ -713,13 +713,13 @@ function validate_bundles_yml {
 
 	for main_key in ${main_keys}
 	do
-		if [ $(yq .\""${main_key}"\".*.latest < bundles.yml | grep "true\|false" -c) -gt 0 ]
+		if [[ "$(yq .\""${main_key}"\".*.latest < bundles.yml | grep --count "true\|false")" -gt 0 ]]
 		then
 			local minor_keys=$(yq .\""${main_key}"\" < bundles.yml | grep --invert-match '  .*' | sed "s/://")
 
 			for minor_key in ${minor_keys}
 			do
-				if [ $(yq .\""${main_key}"\".\""${minor_key}"\".latest < bundles.yml | grep "true\|false" -c) -gt 0 ]
+				if [[ "$(yq .\""${main_key}"\".\""${minor_key}"\".latest < bundles.yml | grep --count "true\|false")" -gt 0 ]]
 				then
 					if [ "$(yq .\""${main_key}"\".\""${minor_key}"\".bundle_url < bundles.yml | grep "portal-tomcat")" ]
 					then
@@ -733,12 +733,12 @@ function validate_bundles_yml {
 		fi
 	done
 
-	if [ ${dxp_latest_key_counter} -gt 1 ]
+	if [[ "${dxp_latest_key_counter}" -gt 1 ]]
 	then
 		echo "There are ${dxp_latest_key_counter} latest DXP images."
 
 		exit 1
-	elif [ ${portal_latest_key_counter} -gt 1 ]
+	elif [[ "${portal_latest_key_counter}" -gt 1 ]]
 	then
 		echo "There are ${portal_latest_key_counter} latest portal images."
 

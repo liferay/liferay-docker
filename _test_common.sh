@@ -14,7 +14,7 @@ function assert_equals {
 
 	for index in "${!arguments[@]}"
 	do
-		if [ $((index % 2)) -ne 0 ]
+		if [[ $((index % 2)) -ne 0 ]]
 		then
 			continue
 		fi
@@ -29,7 +29,7 @@ function assert_equals {
 				--suppress-common-lines \
 				"${arguments[${index}]}" "${arguments[${index} + 1]}" > "${temp_assertion_error_file}"
 
-			if [ "${?}" -ne 0 ] && [ "${_TEST_RESULT}" == "true" ]
+			if [[ "${?}" -ne 0 ]] && [ "${_TEST_RESULT}" == "true" ]
 			then
 				_TEST_RESULT="false"
 

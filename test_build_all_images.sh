@@ -7,7 +7,7 @@ source ./build_all_images.sh
 function main {
 	set_up
 
-	if [ "${#}" -eq 1 ]
+	if [[ "${#}" -eq 1 ]]
 	then
 		if [ "${1}" == "test_build_all_images_is_container_healthy" ]
 		then

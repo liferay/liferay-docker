@@ -54,10 +54,10 @@ function calculate_results {
 
 						if [ "${type}" == "Zip" ]
 						then
-							if (! unzip -l "${file_version}" &>/dev/null)
+							if ! unzip -l "${file_version}" &> /dev/null
 							then
 								type="BrokenZip"
-							elif (unzip -l "${file_version}" | grep manifest.xml &>/dev/null)
+							elif unzip -l "${file_version}" | grep manifest.xml &> /dev/null
 							then
 								type="LAR"
 
@@ -73,7 +73,7 @@ function calculate_results {
 
 						if [ "${type}" == "ISO" ]
 						then
-							if (echo "${file_brief}" | grep MP4 &>/dev/null)
+							if echo "${file_brief}" | grep MP4 &> /dev/null
 							then
 								type="MP4"
 							fi

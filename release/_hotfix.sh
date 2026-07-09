@@ -529,12 +529,12 @@ function in_hotfix_scope {
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
-	if (echo "${1}" | grep --quiet "^osgi/") && (! echo "${1}" | grep --quiet "^osgi/state")
+	if echo "${1}" | grep --quiet "^osgi/" && ! echo "${1}" | grep --quiet "^osgi/state"
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
-	if (echo "${1}" | grep --quiet "^tomcat/lib/ext") && is_7_3_release
+	if echo "${1}" | grep --quiet "^tomcat/lib/ext" && is_7_3_release
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi

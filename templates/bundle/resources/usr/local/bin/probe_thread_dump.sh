@@ -89,7 +89,7 @@ function main {
 		exit_code=${?}
 	fi
 
-	if [ ${exit_code} -gt 1 ]
+	if [[ "${exit_code}" -gt 1 ]]
 	then
 		echo -e "${curl_content}"
 

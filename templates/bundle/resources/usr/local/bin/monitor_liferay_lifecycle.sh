@@ -63,7 +63,7 @@ function main {
 
 		local exit_code=${?}
 
-		if [ ${exit_code} -gt 0 ]
+		if [[ "${exit_code}" -gt 0 ]]
 		then
 			if [ "${started}" == "true" ]
 			then
@@ -77,7 +77,7 @@ function main {
 
 					lecho "The Tomcat thread active count is ${tomcat_thread_active_count}."
 
-					if [[ "${tomcat_thread_active_count}" =~ ^[0-9]+$ ]] && [ "${tomcat_thread_active_count}" -ge "${LIFERAY_CONTAINER_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]
+					if [[ "${tomcat_thread_active_count}" =~ ^[0-9]+$ ]] && [[ "${tomcat_thread_active_count}" -ge "${LIFERAY_CONTAINER_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]]
 					then
 						lecho "Checking the JVM thread state of the Liferay service."
 
@@ -85,7 +85,7 @@ function main {
 
 						thread_state_exit_code=${?}
 
-						if [ ${thread_state_exit_code} -gt 1 ]
+						if [[ "${thread_state_exit_code}" -gt 1 ]]
 						then
 							generate_thread_dump
 
@@ -104,7 +104,7 @@ function main {
 
 			exit_code=${?}
 
-			if [ ${exit_code} -gt 0 ] && [ "${started}" == "true" ]
+			if [[ "${exit_code}" -gt 0 ]] && [ "${started}" == "true" ]
 			then
 				generate_thread_dump
 
@@ -142,10 +142,10 @@ function main {
 
 			local module_count=$(echo "${telnet_content}" | grep --count --extended-regexp "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}")
 
-			if [ "${module_count}" -eq 0 ]
+			if [[ "${module_count}" -eq 0 ]]
 			then
 				lecho "No modules are available that match: ${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}"
-			elif [ "${module_count}" -eq "${active_count}" ]
+			elif [[ "${module_count}" -eq "${active_count}" ]]
 			then
 				update_container_status live
 
@@ -157,11 +157,11 @@ function main {
 			fi
 		fi
 
-		if [ "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" -gt 0 ] && [ ${exit_code} -gt 0 ] && [ "${started}" == "true" ]
+		if [[ "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" -gt 0 ]] && [[ "${exit_code}" -gt 0 ]] && [ "${started}" == "true" ]
 		then
 			fail_count=$((fail_count + 1))
 
-			if [ "${fail_count}" -eq "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" ]
+			if [[ "${fail_count}" -eq "${LIFERAY_CONTAINER_KILL_ON_FAILURE}" ]]
 			then
 				kill_service
 			fi

@@ -23,7 +23,7 @@ fi
 
 cat /opt/liferay/container_status
 
-if (cat /opt/liferay/container_status | grep --quiet "status=live")
+if cat /opt/liferay/container_status | grep --quiet "status=live"
 then
 	exit 0
 else

@@ -30,7 +30,7 @@ function install_patch_step_1 {
 
 	cp "${LIFERAY_PATCHING_DIR}/${patch_file_name}" /opt/liferay/patching-tool/patches
 
-	if (/opt/liferay/patching-tool/patching-tool.sh install -force)
+	if /opt/liferay/patching-tool/patching-tool.sh install -force
 	then
 		install_patch_step_2
 	fi
@@ -67,7 +67,7 @@ function main {
 
 	if [ -n "${LIFERAY_DOCKER_HOTFIX}" ]
 	then
-		if (! /opt/liferay/patching-tool/patching-tool.sh version | grep --quiet "Patching-tool version: 4.")
+		if ! /opt/liferay/patching-tool/patching-tool.sh version | grep --quiet "Patching-tool version: 4."
 		then
 			echo "[LIFERAY] The environment variable \"LIFERAY_DOCKER_HOTFIX\" requires Patching Tool 4 and above."
 		else

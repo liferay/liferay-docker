@@ -29,7 +29,7 @@ function close_pull_request {
 
 	gh pr close "${pull_request_number}" --repo "${repository}"
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to close existing pull request #${pull_request_number} in ${repository}."
 
@@ -52,7 +52,7 @@ function create_pull_request {
 		--repo "${repository}" \
 		--title "${title}"
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to create pull request in ${repository}."
 

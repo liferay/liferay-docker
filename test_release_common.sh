@@ -7,7 +7,7 @@ source ./test/_test_util.sh
 function main {
 	set_up
 
-	if [ "${#}" -eq 1 ]
+	if [[ "${#}" -eq 1 ]]
 	then
 		"${1}"
 	else

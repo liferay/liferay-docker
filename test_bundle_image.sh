@@ -27,7 +27,7 @@ function check_usage {
 }
 
 function clean_up_test_directory {
-	if [ "${TEST_RESULT}" -eq 0 ]
+	if [[ "${TEST_RESULT}" -eq 0 ]]
 	then
 		rm --force --recursive "${TEST_DIR}"
 	fi
@@ -39,7 +39,7 @@ function clean_up_test_directory {
 }
 
 function generate_thread_dump {
-	if [ "${TEST_RESULT}" -gt 0 ]
+	if [[ "${TEST_RESULT}" -gt 0 ]]
 	then
 		docker exec --interactive --tty "${CONTAINER_ID}" /usr/local/bin/generate_thread_dump.sh
 
@@ -278,7 +278,7 @@ function test_health_status {
 		local ignore_license=$(docker logs "${CONTAINER_ID}" 2> /dev/null | grep --count "Starting Liferay Portal")
 		local license_status=$(docker logs "${CONTAINER_ID}" 2> /dev/null | grep --count "License registered for DXP Development")
 
-		if [ "${health_status}" == "\"healthy\"" ] && ([ ${ignore_license} -gt 0 ] || [ ${license_status} -gt 0 ])
+		if [ "${health_status}" == "\"healthy\"" ] && ([[ "${ignore_license}" -gt 0 ]] || [[ "${license_status}" -gt 0 ]])
 		then
 			echo ""
 
@@ -304,7 +304,7 @@ function test_page {
 
 	local exit_code=${?}
 
-	if [ ${exit_code} -gt 0 ]
+	if [[ "${exit_code}" -gt 0 ]]
 	then
 		log_test_failure "${FUNCNAME[1]}"
 

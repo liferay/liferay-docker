@@ -5,7 +5,7 @@ function main {
 	do
 		jcmd "$(cat "${LIFERAY_PID}")" Thread.print > "${LIFERAY_HOME}/dump_${i}.tdump"
 
-		if [ "${i}" -lt 3 ]
+		if [[ "${i}" -lt 3 ]]
 		then
 			sleep 5
 		fi

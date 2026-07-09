@@ -93,7 +93,7 @@ function main {
 	then
 		slim
 
-		if [ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+		if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 		then
 			echo "[LIFERAY] Unable to slim container. Ensure that the necessary environment variables are set."
 			echo ""
@@ -121,7 +121,7 @@ function main {
 }
 
 function slim {
-	if (! echo "${LIFERAY_NETWORK_HOST_ADDRESSES}" | grep --quiet --perl-regexp "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?")
+	if ! echo "${LIFERAY_NETWORK_HOST_ADDRESSES}" | grep --perl-regexp --quiet "\[?(\"?(http|https):\/\/[.\w-]+:[\d]+\"?)+(,\s*\"(http|https):\/\/[.\w-]+:[\d]+\")*\]?"
 	then
 		echo "[LIFERAY] Run this container with the option \"--env LIFERAY_NETWORK_HOST_ADDRESSES=[\"http://node1:9201\", \"http://node2:9202\"]\" to connect to remote search servers (Elasticsearch or OpenSearch)."
 		echo ""

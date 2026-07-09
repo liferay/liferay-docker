@@ -4,7 +4,7 @@ source ./_liferay_common.sh
 source ./_test_common.sh
 
 function main {
-	if [ "${#}" -eq 1 ]
+	if [[ "${#}" -eq 1 ]]
 	then
 		"${1}"
 	else

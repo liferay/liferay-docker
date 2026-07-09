@@ -13,7 +13,7 @@ function download_product_version_list_html {
 		product_version_list_html=$(lc_curl "https://releases.liferay.com/${1}/")
 	fi
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -31,11 +31,11 @@ function get_due_date {
 
 	local number_of_working_days=${1}
 
-	while [ "${number_of_working_days}" -gt 0 ]
+	while [[ "${number_of_working_days}" -gt 0 ]]
 	do
 		date=$(date --date "${date} +1 day" +%Y-%m-%d)
 
-		if [ $(date --date "${date}" +%u) -le 5 ]
+		if [[ "$(date --date "${date}" +%u)" -le 5 ]]
 		then
 			number_of_working_days=$((number_of_working_days - 1))
 		fi
@@ -83,7 +83,7 @@ function get_latest_product_version {
 
 	product_version_list_html=$(download_product_version_list_html "${product_name}")
 
-	if [ "${?}" -ne 0 ]
+	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to download the product version list."
 
