@@ -79,11 +79,11 @@ function install_patching_tool {
 
 	lc_log info "Installing Patching Tool ${latest_version}."
 
-	lc_download https://releases.liferay.com/tools/patching-tool/patching-tool-"${latest_version}".zip patching-tool-"${latest_version}".zip
+	lc_download "https://releases.liferay.com/tools/patching-tool/patching-tool-${latest_version}.zip" "patching-tool-${latest_version}.zip"
 
-	unzip -q patching-tool-"${latest_version}".zip
+	unzip -q "patching-tool-${latest_version}.zip"
 
-	rm --force patching-tool-"${latest_version}".zip
+	rm --force "patching-tool-${latest_version}.zip"
 
 	lc_cd patching-tool
 
@@ -202,7 +202,7 @@ function _generate_javadocs {
 }
 
 function _package_common_release {
-	7z a "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" liferay-${LIFERAY_RELEASE_PRODUCT_NAME}
+	7z a "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 
 	echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" > "${_BUILD_DIR}/release/.lfrrelease-tomcat-bundle"
 
@@ -233,7 +233,7 @@ function _package_common_release {
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
-	cp --archive sql liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql
+	cp --archive sql "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-sql"
 
 	zip \
 		-q \
