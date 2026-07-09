@@ -203,7 +203,7 @@ function update_portal_repository {
 		git remote add upstream "git@github.com:liferay/liferay-portal.git"
 	fi
 
-	git fetch upstream master
+	git fetch upstream "master:refs/remotes/upstream/master"
 
 	git reset --hard upstream/master
 
