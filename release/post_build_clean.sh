@@ -93,8 +93,6 @@ function _clean_up_repository {
 	lc_cd "/opt/dev/projects/github/${1}"
 
 	git clean -dfx &> /dev/null
-
-	git gc &> /dev/null
 }
 
 main
