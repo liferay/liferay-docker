@@ -12,7 +12,7 @@ function main {
 		touch /opt/liferay/data/.elasticsearch.initialized
 	fi
 
-	if [ "${LIFERAY_DISABLE_TRIAL_LICENSE}" == "true" ]
+	if [ "${LIFERAY_CONTAINER_DISABLE_TRIAL_LICENSE}" == "true" ]
 	then
 		rm --force /opt/liferay/data/license/trial-commerce-enterprise-license-*.li
 		rm --force /opt/liferay/deploy/trial-dxp-license-*.xml
