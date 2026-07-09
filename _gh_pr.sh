@@ -8,12 +8,13 @@ function close_pull_request {
 
 	lc_log INFO "Checking for an open pull request to close in ${repository}."
 
-	local existing_pull_request=$(gh pr list \
-		--jq ".[0]" \
-		--json "number" \
-		--repo "${repository}" \
-		--search "${query}" \
-		--state "open")
+	local existing_pull_request=$( \
+		gh pr list \
+			--jq ".[0]" \
+			--json "number" \
+			--repo "${repository}" \
+			--search "${query}" \
+			--state "open")
 
 	if [ -z "${existing_pull_request}" ]
 	then
@@ -67,5 +68,6 @@ function get_pull_request_url {
 	gh pr view \
 		--jq ".url" \
 		--json "url" \
-		--repo "${repository}"
+		--repo "${repository}" \
+		"liferay-release:${branch_name}"
 }

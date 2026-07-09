@@ -60,12 +60,13 @@ function _compare {
 	do
 		total=$((total + 1))
 
-		found=$(awk \
-			-v h="${hash}" \
-			-v n="${name}" \
-			-v s="${state}" \
-			'$1==h && $2==n && $3==s {print}' \
-			"${2}")
+		found=$( \
+			awk \
+				-v h="${hash}" \
+				-v n="${name}" \
+				-v s="${state}" \
+				'$1==h && $2==n && $3==s {print}' \
+				"${2}")
 
 		if [ -n "${found}" ]
 		then

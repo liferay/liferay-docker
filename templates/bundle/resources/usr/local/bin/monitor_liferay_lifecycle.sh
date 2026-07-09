@@ -59,7 +59,15 @@ function main {
 		local curl_content=""
 		local thread_state_exit_code=""
 
-		curl_content=$(curl --connect-timeout "${LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT}" --connect-to ":80:localhost:8080" --fail --max-time "${curl_max_time}" --show-error --silent "${LIFERAY_CONTAINER_STATUS_REQUEST_URL}" 2>/dev/null)
+		curl_content=$( \
+			curl \
+				--connect-timeout "${LIFERAY_CONTAINER_STATUS_REQUEST_TIMEOUT}" \
+				--connect-to ":80:localhost:8080" \
+				--fail \
+				--max-time "${curl_max_time}" \
+				--show-error \
+				--silent \
+				"${LIFERAY_CONTAINER_STATUS_REQUEST_URL}" 2> /dev/null)
 
 		local exit_code=${?}
 
@@ -138,7 +146,10 @@ function main {
 				) | telnet 127.0.0.1 11311 2> /dev/null
 			)
 
-			local active_count=$(echo "${telnet_content}" | grep --extended-regexp "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep --count ACTIVE)
+			local active_count=$( \
+				echo "${telnet_content}" | \
+					grep --extended-regexp "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | \
+					grep --count ACTIVE)
 
 			local module_count=$(echo "${telnet_content}" | grep --count --extended-regexp "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}")
 
@@ -153,7 +164,9 @@ function main {
 			else
 				lecho "Modules pending activation:"
 
-				echo "${telnet_content}" | grep --extended-regexp "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | grep --invert-match ACTIVE
+				echo "${telnet_content}" | \
+					grep --extended-regexp "${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}" | \
+					grep --invert-match ACTIVE
 			fi
 		fi
 

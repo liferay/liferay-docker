@@ -78,7 +78,15 @@ function main {
 
 	local curl_content
 
-	curl_content=$(curl --connect-timeout "${CONNECTION_TIMEOUT}" --fail --max-time "${TIMEOUT}" --show-error --silent --url "${DOMAIN}:${PORT}" "${DOMAIN}:${PORT}${FILE_PATH}")
+	curl_content=$( \
+		curl \
+			--connect-timeout "${CONNECTION_TIMEOUT}" \
+			--fail \
+			--max-time "${TIMEOUT}" \
+			--show-error \
+			--silent \
+			--url "${DOMAIN}:${PORT}" \
+			"${DOMAIN}:${PORT}${FILE_PATH}")
 
 	local exit_code=${?}
 

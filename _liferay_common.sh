@@ -149,7 +149,6 @@ function lc_docker_compose {
 }
 
 function lc_download {
-
 	#
 	# Usage:
 	#

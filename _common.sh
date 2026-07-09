@@ -133,7 +133,12 @@ function download {
 			exit 2
 		fi
 	else
-		curl $(echo "${LIFERAY_DOCKER_CURL_OPTIONS}") --fail --location --output "${file_name}" "${file_url}" || exit 2
+		curl \
+			$(echo "${LIFERAY_DOCKER_CURL_OPTIONS}") \
+			--fail \
+			--location \
+			--output "${file_name}" \
+			"${file_url}" || exit 2
 	fi
 }
 
@@ -274,7 +279,6 @@ function remove_temp_dockerfile_target_platform {
 }
 
 function start_tomcat {
-
 	#
 	# Increase the available memory for warming up Tomcat. This is needed
 	# because LPKG hash and OSGi state processing for 7.0.x is expensive. Set
@@ -355,7 +359,6 @@ function test_docker_image {
 }
 
 function warm_up_tomcat {
-
 	#
 	# Warm up Tomcat for older versions to speed up starting Tomcat. Populating
 	# the Hypersonic files can take over 20 seconds.

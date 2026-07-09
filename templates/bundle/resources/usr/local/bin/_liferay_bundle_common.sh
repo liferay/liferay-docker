@@ -40,5 +40,4 @@ function update_container_status {
 		echo "status=${1}"
 		echo "update_time=$(date +%s)"
 	) > /opt/liferay/container_status
-
 }

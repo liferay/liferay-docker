@@ -2,7 +2,10 @@
 
 function apply_patch {
 	local patch_file_name=${1}
-	local patch_version=$(echo "${patch_file_name}" | awk -F"-" '{ print $NF }' | awk -F"." '{ print $1 }')
+	local patch_version=$( \
+		echo "${patch_file_name}" | \
+			awk -F "-" '{ print $NF }' | \
+			awk -F "." '{ print $1 }')
 
 	if [ -e "/opt/liferay/patching-tool/patch-applied" ]
 	then

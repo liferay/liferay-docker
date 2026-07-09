@@ -35,7 +35,14 @@ function main {
 function run_query {
 	echo "<h1>${2}</h1>" >> "${_REPORTS_FILE}"
 
-	mysql --connect-timeout=10 -D "${1}" -e "${2}" -H -p"${LCP_SECRET_DATABASE_PASSWORD}" -u "${LCP_SECRET_DATABASE_USER}" >> "${_REPORTS_FILE}"
+	mysql \
+		--connect-timeout=10 \
+		--database "${1}" \
+		--execute "${2}" \
+		--html \
+		--password="${LCP_SECRET_DATABASE_PASSWORD}" \
+		--user "${LCP_SECRET_DATABASE_USER}" \
+		>> "${_REPORTS_FILE}"
 }
 
 main "${@}"

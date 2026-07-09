@@ -1,7 +1,6 @@
 #!/bin/bash
 
 function main {
-
 	local test_results=""
 
 	local changed_files=$(git diff --name-only upstream/master)

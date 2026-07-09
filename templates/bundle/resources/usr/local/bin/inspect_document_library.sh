@@ -163,17 +163,31 @@ function print_results {
 
 			echo -en "${count},"
 
-			local unique=$(sed --expression "s/.*\ //" < "type_${type}"| sort | uniq | wc --lines)
+			local unique=$( \
+				sed --expression "s/.*\ //" < "type_${type}" | \
+				sort | \
+				uniq | \
+				wc --lines)
 
 			echo -en "${unique},"
 
-			local size=$(sed --expression "s/\ .*//" < "type_${type}"| tr '\n' '+' | sed --expression "s/\+$/\n/" | bc)
+			local size=$( \
+				sed --expression "s/\ .*//" < "type_${type}" | \
+				tr '\n' '+' | \
+				sed --expression "s/\+$/\n/" | \
+				bc)
 
 			size=$((size / 1048576))
 
 			echo -en "${size},"
 
-			local unique_size=$(sort < "type_${type}"| uniq | sed --expression "s/\ .*//" | tr '\n' '+' | sed --expression "s/\+$/\n/" | bc)
+			local unique_size=$( \
+				sort < "type_${type}" | \
+				uniq | \
+				sed --expression "s/\ .*//" | \
+				tr '\n' '+' | \
+				sed --expression "s/\+$/\n/" | \
+				bc)
 
 			unique_size=$((unique_size / 1048576))
 

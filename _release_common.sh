@@ -151,14 +151,18 @@ function get_release_patch_version {
 
 	if is_lts_release "${product_version}"
 	then
-		echo "${product_version}" | cut --delimiter='.' --fields=3 | sed --expression "s/-lts//"
+		echo "${product_version}" | \
+			cut --delimiter='.' --fields=3 | \
+			sed --expression "s/-lts//"
 	else
 		echo "${product_version}" | cut --delimiter='.' --fields=3
 	fi
 }
 
 function get_release_quarter {
-	echo "$(_get_product_version "${1}")" | cut --delimiter='.' --fields=2 | tr --delete 'q'
+	echo "$(_get_product_version "${1}")" | \
+		cut --delimiter='.' --fields=2 | \
+		tr --delete 'q'
 }
 
 function get_release_version {
@@ -178,7 +182,9 @@ function get_release_version_trivial {
 
 	if is_u_release "${product_version}"
 	then
-		echo "${product_version}" | cut --delimiter='-' --fields=2 | tr --delete 'u'
+		echo "${product_version}" | \
+			cut --delimiter='-' --fields=2 | \
+			tr --delete 'u'
 	fi
 }
 
@@ -193,8 +199,10 @@ function get_target_platform_version {
 	then
 		echo "${product_version}" | sed --expression "s/-lts//"
 	else
-		echo "${product_version}" | sed "s/-u/.u/" | cut --delimiter='-' --fields=1
-	fi	
+		echo "${product_version}" | \
+			sed --expression "s/-u/.u/" | \
+			cut --delimiter='-' --fields=1
+	fi
 }
 
 function has_jakarta_upgrade_bom_support {
