@@ -52,7 +52,6 @@ function prepare_poms_for_promotion {
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.api" \
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom" \
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only" \
-		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.jakarta.upgrade" \
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.test" \
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party" \
 		"release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro"
