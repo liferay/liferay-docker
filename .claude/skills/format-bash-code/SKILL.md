@@ -57,7 +57,7 @@ For every target file, read it and apply the rules from `.claude/CODE_STYLE.md` 
 - **Variables**: `UPPER_SNAKE_CASE` for globals/env, `lower_snake_case` for locals (`_UPPER` when shared across local functions), `local` declarations, no spaces around `=`, always braced and quoted (`"${var}"`), the whole parameter quoted when a variable is adjacent to literal text (`"release.${name}.pom"`, not `release."${name}".pom`; literal kept outside quotes only for a glob or for a Git URL/ref/refspec/tag passed to `git`), locals declared close to first use rather than batched at the top, the enumerated Bash-specific parameter expansions (`${var##*/}`, `${var%/*}`, `${var##*:}`, `${var%.*}`, `${var#prefix}`, `${var/a/b}`) rewritten to the legible equivalents listed in CODE_STYLE.md (every other expansion left unchanged), `$((...))` arithmetic with no inner spaces, `$(...)` over backticks, a single command substitution, parameter expansion, or arithmetic expansion left unquoted when it is the entire right-hand side of a bare `x=`, `local x=`, `export x=`, `readonly x=`, or `declare x=` assignment, no trailing `;` at the end of a `$( ... )`.
 - **Sorting**: `source` lines, function definitions, and same-location local variable declarations sorted case-sensitively (`../` before `./`). This is mechanical, not a judgment call — apply it even when the current order looks like a deliberate "template" and even when it means moving whole function bodies. Functions sort alphabetically with globals before locals and `main` in its alphabetical position (it is not pinned first or last); reordering definitions never changes behavior, since execution order comes from the calls in `main`, not the definition order.
 - **Commands**: `awk` parameters wrapped in `""` (the field separator counts as a parameter — rewrite the attached `-F=` / `-Fx` forms to `-F "="` / `-F "x"`) and `awk` instructions in `''`, `sed` regex expressions in `""` (even when they contain `$`) with the program always passed via `--expression`, never as a bare positional argument (`sed --expression "s/a/b/"`, not `sed "s/a/b/"`) — this applies to standalone single-script `sed` and to `sed` nested in a command substitution; long form of flags preferred (e.g. `xargs --null`, not `xargs -0`); flags ordered alphabetically whether inline or broken, except order-dependent ones (`find` primaries, repeated `sed --expression`, `sed`'s `--regexp-extended`, which must precede `--expression`, and `zip`'s `-i`/`-x` include/exclude filters, which trail the input file list they act on rather than sorting in with the other flags); commands with three or more flags (e.g. `curl`) broken one argument per line with positionals last (e.g. `sed --expression "..." --in-place file`), except a command whose syntax pins the operand first (`find`'s path) — an option and its value count as one flag, positionals do not count, ≤2 flags stay inline, and the break applies even inside `if` / `if !` conditions; put a space between a redirection operator and its target (`&> /dev/null`, not `&>/dev/null`), but `2>&1`, `>&2`, and `<(...)` / `>(...)` stay attached.
-- **Control flow**: `then` (including after `elif`) and `do` on their own line, single-bracket `[ ... ]` tests by default but `[[ ... ]]` for pattern/regex matching, `${BASH_SOURCE[0]}` comparisons, lexicographic `<`/`>` string comparisons, and numeric comparisons (`-eq`, `-ge`, etc.), `==` for strings, aligned multiline conditions, no parentheses around a single boolean function, variable, command, or pipeline (parentheses only for combined conditions).
+- **Control flow**: `then` (including after `elif`) and `do` on their own line, single-bracket `[ ... ]` tests by default but `[[ ... ]]` for pattern/regex matching, `${BASH_SOURCE[0]}` comparisons, lexicographic `<`/`>` string comparisons, and numeric comparisons (`-eq`, `-ge`, etc.) — but a numeric comparison whose operator is held in a variable (`[ "${a}" "${operator}" "${b}" ]`) stays single-bracket, since `[[ ... ]]` needs a literal operator — `==` for strings, aligned multiline conditions, no parentheses around a single boolean function, variable, command, or pipeline (parentheses only for combined conditions, with `(( ))` arithmetic and awk/jq program `if (...)` left untouched).
 - **Indentation/spacing**: tabs only, single blank line between logical statements, no blank line just inside `{` / `}`.
 - **Pipelines**: long pipelines and `curl`-style commands broken across lines with `| \` continuations indented one tab; a space after `$(` when a pipeline or command is broken inside a command substitution.
 - **Return codes**: named `LIFERAY_COMMON_EXIT_CODE_*` constants, quoted (but boolean functions return bare `0`/`1`).
@@ -78,8 +78,9 @@ The formatter must be idempotent: a second run on an unchanged tree must produce
 Reading each file is the primary check, but it is easy to miss a class of violation across many files — especially when the work is split across several passes or subagents that may apply a rule unevenly. After editing, rescan the target files with these greps and confirm every remaining hit is intentional. Each is a deterministic rule, so a hit is either a real violation to fix now or an explainable exception (and never both):
 
 ```bash
-# Parenthesized conditions — every hit must be a combined (&& / ||) condition or
-# jq program syntax; a single command, pipeline, function, or variable is a violation.
+# Parenthesized conditions — every hit must be a combined (&& / ||) condition, a
+# `(( ))` arithmetic evaluation, or awk/jq program syntax; a single command,
+# pipeline, function, or variable wrapped in ( ) is a violation.
 grep -nE '\b(if|elif|while) +!? *\(' "${files[@]}"
 
 # Quoted single-expansion scalar RHS — `local x="${1}"` / `x="$(...)"` / `x="$((...))"`
@@ -113,6 +114,14 @@ grep -nE '\$\([a-z]+ \\$' "${files[@]}"
 # Redirection operator must have a space before its target (`&> /dev/null`, not
 # `&>/dev/null`); fd-duplication (`2>&1`, `>&2`) stays attached, so it is filtered out.
 grep -nE '(&>>?|[0-9]>>?)[^ &0-9]' "${files[@]}" | grep -vE '2>&1|>&[0-9]'
+
+# Numeric comparison must use [[ ... ]], never single-bracket [ ... -eq/-ne/-lt/-le/-gt/-ge ... ]
+# (its arithmetic context tolerates empty/noninteger operands). Every hit is a violation; the
+# regex matches only literal operators, so variable-operator tests (`[ "${a}" "${operator}" "${b}" ]`,
+# which must stay single-bracket) never appear. Comparing a count (`wc`/`grep --count`) via
+# `==`/`!=` is also numeric, but recognizing the operand as numeric is semantic and left to
+# author/review, not swept or auto-converted here.
+grep -nE '(^|[^[])\[ [^]]*-(eq|ne|lt|le|gt|ge)( |\])' "${files[@]}"
 
 # Blank-line layout around functions (each must report nothing). These catch
 # sort/relocation dropping the separator between definitions, or a stray blank
