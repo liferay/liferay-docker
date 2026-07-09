@@ -40,7 +40,7 @@ function clean_up_temp_directory {
 function configure_tomcat {
 	printf "\nCATALINA_OPTS=\"\${CATALINA_OPTS} \${LIFERAY_JVM_OPTS}\"" >> "${TEMP_DIR}/liferay/tomcat/bin/setenv.sh"
 
-	sed --in-place "/<web-app /a <distributable />" "${TEMP_DIR}/liferay/tomcat/webapps/ROOT/WEB-INF/web.xml"
+	sed --expression "/<web-app /a <distributable />" --in-place "${TEMP_DIR}/liferay/tomcat/webapps/ROOT/WEB-INF/web.xml"
 }
 
 function date {
@@ -64,9 +64,9 @@ function date {
 			/bin/date -jf "%a %b %e %H:%M:%S %Z %Y" "${1}" "${2}"
 		elif [ -e /bin/date ]
 		then
-			/bin/date -d "${1}" "${2}"
+			/bin/date --date "${1}" "${2}"
 		else
-			/usr/bin/date -d "${1}" "${2}"
+			/usr/bin/date --date "${1}" "${2}"
 		fi
 	fi
 }
@@ -162,7 +162,7 @@ function get_tomcat_version {
 
 	if [ -e "${1}/tomcat" ]
 	then
-		liferay_tomcat_version=$(grep --extended-regexp --only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${1}/tomcat/RELEASE-NOTES" | sed --regexp-extended "s/Apache Tomcat Version //")
+		liferay_tomcat_version=$(grep --extended-regexp --only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${1}/tomcat/RELEASE-NOTES" | sed --regexp-extended --expression "s/Apache Tomcat Version //")
 	else
 		for tomcat_dir_path in "${1}"/tomcat-*
 		do
@@ -194,7 +194,7 @@ function log_in_to_docker_hub {
 		echo "Logging in to Docker Hub."
 		echo ""
 
-		echo "${LIFERAY_DOCKER_HUB_TOKEN}" | docker login --password-stdin -u "${LIFERAY_DOCKER_HUB_USERNAME}"
+		echo "${LIFERAY_DOCKER_HUB_TOKEN}" | docker login --password-stdin --username "${LIFERAY_DOCKER_HUB_USERNAME}"
 
 		LIFERAY_DOCKER_HUB_LOGGED_IN=true
 	fi
@@ -268,7 +268,7 @@ function prepare_tomcat {
 }
 
 function remove_temp_dockerfile_target_platform {
-	sed 's/--platform=${TARGETPLATFORM} //g; s/${TARGETARCH}'/$(get_current_arch)/ "${TEMP_DIR}"/Dockerfile > "${TEMP_DIR}"/Dockerfile.temp
+	sed --expression 's/--platform=${TARGETPLATFORM} //g; s/${TARGETARCH}'/$(get_current_arch)/ "${TEMP_DIR}/Dockerfile" > "${TEMP_DIR}/Dockerfile.temp"
 
 	mv "${TEMP_DIR}/Dockerfile.temp" "${TEMP_DIR}/Dockerfile"
 }
@@ -291,7 +291,7 @@ function start_tomcat {
 		echo "Killing process ${pid} that is listening on port 8080."
 		echo ""
 
-		kill -9 "${pid}" 2>/dev/null
+		kill -9 "${pid}" 2> /dev/null
 	fi
 
 	"./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh" start
@@ -312,13 +312,13 @@ function start_tomcat {
 
 	for i in {0..30..1}
 	do
-		if kill -0 "${pid}" 2>/dev/null
+		if kill -0 "${pid}" 2> /dev/null
 		then
 			sleep 1
 		fi
 	done
 
-	kill -0 "${pid}" 2>/dev/null && kill -9 "${pid}" 2>/dev/null
+	kill -0 "${pid}" 2> /dev/null && kill -9 "${pid}" 2> /dev/null
 
 	rm --force --recursive "${TEMP_DIR}/liferay/data/osgi/state"
 	rm --force --recursive "${TEMP_DIR}/liferay/osgi/state"

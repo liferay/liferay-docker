@@ -46,7 +46,7 @@ function generate_release_notes {
 
 		git add .releng/docker-image.changelog
 
-		git commit -m "${RELEASE_NOTES_NEW_VERSION} change log"
+		git commit --message "${RELEASE_NOTES_NEW_VERSION} change log"
 	fi
 }
 

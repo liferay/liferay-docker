@@ -31,7 +31,7 @@ function calculate_results {
 		do
 			if [[ "${repository_id}" -eq 0 ]] ||
 			   [ ! -d "${pwd}/${company_id}/${repository_id}" ] ||
-			   [[ $(find "${pwd}/${company_id}/${repository_id}" -maxdepth 1 -mindepth 1 | wc --lines 2>/dev/null) -eq 0 ]]
+			   [[ $(find "${pwd}/${company_id}/${repository_id}" -maxdepth 1 -mindepth 1 | wc --lines 2> /dev/null) -eq 0 ]]
 			then
 				continue
 			fi
@@ -108,7 +108,7 @@ function check_usage {
 }
 
 function get_regenerated_dir_size {
-	local size=$(du --summarize "${1}" 2>/dev/null)
+	local size=$(du --summarize "${1}" 2> /dev/null)
 
 	if [ -n "${size}" ]
 	then

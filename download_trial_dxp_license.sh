@@ -21,12 +21,12 @@ function main {
 
 		curl --header "${LIFERAY_DOCKER_LICENSE_API_HEADER}" --silent "${LIFERAY_DOCKER_LICENSE_API_URL}?licenseLifetime=$((1000 *60 * 60 * 24 * 90))&startDate=${license_start_date}&owner=docker%40liferay.com" > "${license_dir}/deploy/${license_file_name}.json"
 
-		sed "s/\\\n//g" "${license_dir}/deploy/${license_file_name}.json" |
-		sed "s/\\\t//g" |
-		sed "s/\"<?xml/<?xml/" |
-		sed "s/license>\"/license>/" |
-		sed 's/\\"/\"/g' |
-		sed 's/\\\//\//g' > "${license_dir}/deploy/${license_file_name}"
+		sed --expression "s/\\\n//g" "${license_dir}/deploy/${license_file_name}.json" | \
+			sed --expression "s/\\\t//g" | \
+			sed --expression "s/\"<?xml/<?xml/" | \
+			sed --expression "s/license>\"/license>/" | \
+			sed --expression "s/\\\\\"/\\\"/g" | \
+			sed --expression "s/\\\\\\//\\//g" > "${license_dir}/deploy/${license_file_name}"
 
 		rm --force "${license_dir}/deploy/${license_file_name}.json"
 

@@ -8,9 +8,9 @@ function main {
 		mkdir --parents /var/lib/squid
 
 		/usr/lib/squid/security_file_certgen \
+			-M 20MB \
 			-c \
-			-s /var/lib/squid/ssl_db \
-			-M 20MB
+			-s /var/lib/squid/ssl_db
 
 		chown --recursive proxy:proxy /var/lib/squid
 

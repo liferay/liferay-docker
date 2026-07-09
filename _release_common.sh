@@ -54,7 +54,7 @@ function get_latest_product_version {
 
 	if [ -n "${product_group_version}" ]
 	then
-		quarterly_version_regex=$(echo "${product_group_version}" | sed "s/\./\\\\./g")
+		quarterly_version_regex=$(echo "${product_group_version}" | sed --expression "s/\./\\\\./g")
 	fi
 
 	if [ "${product_version}" == "dxp" ]
@@ -131,7 +131,7 @@ function get_product_version_without_lts_suffix {
 
 	if is_quarterly_release "${product_version}"
 	then
-		echo "${product_version}" | sed "s/-lts//g"
+		echo "${product_version}" | sed --expression "s/-lts//g"
 	else
 		echo "${product_version}"
 	fi
@@ -191,7 +191,7 @@ function get_target_platform_version {
 
 	if is_quarterly_release "${product_version}"
 	then
-		echo "${product_version}" | sed "s/-lts//"
+		echo "${product_version}" | sed --expression "s/-lts//"
 	else
 		echo "${product_version}" | sed "s/-u/.u/" | cut --delimiter='-' --fields=1
 	fi	

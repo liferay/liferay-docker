@@ -10,7 +10,6 @@ function download_file_from_github {
 
 	local http_response=$( \
 		curl \
-			"https://api.github.com/repos/liferay/${repository_name}/contents/${file_path}?ref=${ref}" \
 			--header "Accept: application/vnd.github.v3.raw" \
 			--header "Authorization: token ${LIFERAY_RELEASE_GITHUB_PAT}" \
 			--include \
@@ -18,7 +17,8 @@ function download_file_from_github {
 			--output "${file_name}" \
 			--request GET \
 			--retry 3 \
-			--write-out "%{http_code}")
+			--write-out "%{http_code}" \
+			"https://api.github.com/repos/liferay/${repository_name}/contents/${file_path}?ref=${ref}")
 
 	if [ "${http_response}" != "200" ]
 	then
@@ -41,7 +41,6 @@ function invoke_github_api_post {
 function _invoke_github_api {
 	local curl_response=$( \
 		curl \
-			"https://api.github.com/repos/${1}/${2}" \
 			--data "${3}" \
 			--fail \
 			--header "Accept: application/vnd.github+json" \
@@ -51,7 +50,8 @@ function _invoke_github_api {
 			--max-time 10 \
 			--request "${4}" \
 			--retry 3 \
-			--silent)
+			--silent \
+			"https://api.github.com/repos/${1}/${2}")
 
 	local http_code=$(echo "${curl_response}" | awk '/^HTTP/{print $2}')
 

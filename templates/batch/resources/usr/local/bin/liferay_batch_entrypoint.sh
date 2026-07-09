@@ -164,7 +164,7 @@ function main {
 
 		echo "Items: $(</tmp/liferay_batch_entrypoint.items.json)"
 
-		local parameters=$(jq --raw-output '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' ${file_name} 2>/dev/null)
+		local parameters=$(jq --raw-output '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' "${file_name}" 2> /dev/null)
 
 		if [ "${parameters}" != "" ]
 		then

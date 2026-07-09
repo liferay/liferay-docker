@@ -295,7 +295,7 @@ function lc_get_property {
 
 		echo "${property_value##*: }"
 	else
-		local property_value=$(sed --null-data --regexp-extended "s/\\\r?\n[ \t]*//g" < "${file}" | grep --fixed-strings "${property_key}=")
+		local property_value=$(sed --null-data --regexp-extended --expression "s/\\\r?\n[ \t]*//g" < "${file}" | grep --fixed-strings "${property_key}=")
 
 		echo "${property_value##*=}"
 	fi

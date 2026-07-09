@@ -22,5 +22,5 @@ function add_release_to_test_dependency {
 
 	release="${release//$'\n'/\\n}"
 
-	sed --in-place "/<\/ul>/i \\${release}" "${2}"
+	sed --expression "/<\/ul>/i \\${release}" --in-place "${2}"
 }

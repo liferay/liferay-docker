@@ -6,9 +6,9 @@ function main {
 		LIFERAY_ROUTES_DXP="/etc/liferay/lxc/dxp-metadata"
 	fi
 
-	local protocol=$(cat ${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.server.protocol 2>/dev/null)
+	local protocol=$(cat "${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.server.protocol" 2> /dev/null)
 
-	for i in $(cat ${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.domains 2>/dev/null)
+	for i in $(cat "${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.domains" 2> /dev/null)
 	do
 		local url="${protocol}://${i}"
 

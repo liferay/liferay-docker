@@ -160,9 +160,9 @@ function build_bundle_images {
 		local latest_7413_version=$( \
 			yq '."7.4.13"' bundles.yml | \
 			grep '^.*:$' | \
-			sed "s/://" | \
-			sed "s/.*-u//" | \
-			sed "s/7.4.13.nightly//" | \
+			sed --expression "s/://" | \
+			sed --expression "s/.*-u//" | \
+			sed --expression "s/7.4.13.nightly//" | \
 			sort --numeric-sort --reverse | \
 			head --lines=1)
 
@@ -309,7 +309,7 @@ function build_jdk_image {
 	echo "Building Docker image ${jdk_friendly_name}."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_AMD64_VERSION=${latest_available_zulu_amd64_version} LIFERAY_DOCKER_ZULU_ARM64_VERSION=${latest_available_zulu_arm64_version} time ./build_"$(echo "${jdk_image_name}" | sed --regexp-extended "s/-/_/g")"_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/"${jdk_image_name}".log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_AMD64_VERSION=${latest_available_zulu_amd64_version} LIFERAY_DOCKER_ZULU_ARM64_VERSION=${latest_available_zulu_arm64_version} time ./build_"$(echo "${jdk_image_name}" | sed --regexp-extended --expression "s/-/_/g")"_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/${jdk_image_name}.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then

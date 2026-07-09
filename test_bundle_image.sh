@@ -198,7 +198,7 @@ function start_container {
 	then
 		CONTAINER_HTTP_PORT=$(docker port "${CONTAINER_ID}" 8080/tcp)
 
-		CONTAINER_HTTP_PORT=${CONTAINER_HTTP_PORT##*:}
+		CONTAINER_HTTP_PORT=$(echo "${CONTAINER_HTTP_PORT}" | awk -F ":" '{print $NF}')
 	fi
 
 	TEST_RESULT=0
@@ -218,7 +218,7 @@ function test_docker_image_files {
 function test_docker_image_fix_pack_installed {
 	if [ -n "${LIFERAY_DOCKER_TEST_INSTALLED_PATCHES}" ]
 	then
-		local correct_fix_pack=$(echo "${LIFERAY_DOCKER_TEST_INSTALLED_PATCHES}" | tr -d '[:space:]')
+		local correct_fix_pack=$(echo "${LIFERAY_DOCKER_TEST_INSTALLED_PATCHES}" | tr --delete '[:space:]')
 		local output=$(docker exec --interactive --tty "${CONTAINER_ID}" /opt/liferay/patching-tool/patching-tool.sh info | grep "Currently installed patches:")
 
 		local installed_fix_pack=$(echo "${output##*: }" | tr --delete '[:space:]')
@@ -246,7 +246,7 @@ function test_docker_image_hotfix_installed {
 function test_docker_image_patching_tool_updated {
 	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" ]
 	then
-		local output=$(docker logs --details "${CONTAINER_ID}" 2>/dev/null)
+		local output=$(docker logs --details "${CONTAINER_ID}" 2> /dev/null)
 
 		if [[ "${output}" =~ .*"Patching Tool updated successfully".* ]]
 		then
