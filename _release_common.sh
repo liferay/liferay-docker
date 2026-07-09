@@ -26,10 +26,10 @@ function get_due_date {
 
 	if [ -n "${2}" ]
 	then
-		date="${2}"
+		date=${2}
 	fi
 
-	local number_of_working_days="${1}"
+	local number_of_working_days=${1}
 
 	while [ "${number_of_working_days}" -gt 0 ]
 	do
@@ -45,10 +45,10 @@ function get_due_date {
 }
 
 function get_latest_product_version {
-	local product_group_version="${2}"
+	local product_group_version=${2}
 	local product_name=""
 	local product_version_regex="(?<=<a href=\"/"
-	local product_version="${1}"
+	local product_version=${1}
 
 	local quarterly_version_regex="\d{4}\.q[1-4]"
 
@@ -114,7 +114,7 @@ function get_premium_support_lts_release_branches {
 
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ] && [ -n "${LIFERAY_RELEASE_TEST_DATE}" ]
 	then
-		today="${LIFERAY_RELEASE_TEST_DATE}"
+		today=${LIFERAY_RELEASE_TEST_DATE}
 	fi
 
 	local year=$(date --date "${today}" +%Y)
@@ -147,7 +147,7 @@ function get_release_output {
 }
 
 function get_release_patch_version {
-	local product_version="$(_get_product_version "${1}")"
+	local product_version=$(_get_product_version "${1}")
 
 	if is_lts_release "${product_version}"
 	then
@@ -162,7 +162,7 @@ function get_release_quarter {
 }
 
 function get_release_version {
-	local product_version="$(_get_product_version "${1}")"
+	local product_version=$(_get_product_version "${1}")
 
 	if is_u_release "${product_version}"
 	then
@@ -174,7 +174,7 @@ function get_release_version {
 }
 
 function get_release_version_trivial {
-	local product_version="$(_get_product_version "${1}")"
+	local product_version=$(_get_product_version "${1}")
 
 	if is_u_release "${product_version}"
 	then
@@ -277,7 +277,7 @@ function is_later_product_version_than {
 }
 
 function is_latest_release_candidate_published {
-	local product_group_version="${1}"
+	local product_group_version=${1}
 
 	local latest_quarterly_candidate_product_version=$(get_latest_product_version "quarterly-candidate" "${product_group_version}")
 
@@ -329,7 +329,7 @@ function is_quarterly_release {
 }
 
 function is_quarterly_release_docker_image {
-	if is_quarterly_release $(echo "${1}" | cut --delimiter=':' --fields=2 | cut --delimiter='-' --fields=1)
+	if is_quarterly_release "$(echo "${1}" | cut --delimiter=':' --fields=2 | cut --delimiter='-' --fields=1)"
 	then
 		return 0
 	fi
@@ -356,7 +356,7 @@ function is_u_release {
 }
 
 function set_actual_product_version {
-	_ACTUAL_PRODUCT_VERSION="${1}"
+	_ACTUAL_PRODUCT_VERSION=${1}
 }
 
 function _compare_product_versions {
@@ -364,12 +364,12 @@ function _compare_product_versions {
 
 	if [ -n "${_ACTUAL_PRODUCT_VERSION}" ]
 	then
-		product_version_1="${_ACTUAL_PRODUCT_VERSION}"
+		product_version_1=${_ACTUAL_PRODUCT_VERSION}
 	else
 		product_version_1=$(_get_product_version)
 	fi
 
-	local product_version_2="${1}"
+	local product_version_2=${1}
 
 	if [ "${2}" == "equals_or_later" ] &&
 	   [ "${product_version_1}" == "${product_version_2}" ]
@@ -392,36 +392,36 @@ function _compare_product_versions {
 
 	if (is_u_release "${product_version_1}" && is_u_release "${product_version_2}")
 	then
-		if [ "$(get_release_version_trivial ${product_version_1})" "${operator_1}" "$(get_release_version_trivial ${product_version_2})" ]
+		if [ "$(get_release_version_trivial "${product_version_1}")" "${operator_1}" "$(get_release_version_trivial "${product_version_2}")" ]
 		then
 			return 0
-		elif [ "$(get_release_version_trivial ${product_version_1})" "${operator_2}" "$(get_release_version_trivial ${product_version_2})" ]
+		elif [ "$(get_release_version_trivial "${product_version_1}")" "${operator_2}" "$(get_release_version_trivial "${product_version_2}")" ]
 		then
 			return 1
 		fi
 	elif is_quarterly_release "${product_version_1}" &&
 		 is_quarterly_release "${product_version_2}"
 	then
-		if [ "$(get_release_year ${product_version_1})" "${operator_1}" "$(get_release_year ${product_version_2})" ]
+		if [ "$(get_release_year "${product_version_1}")" "${operator_1}" "$(get_release_year "${product_version_2}")" ]
 		then
 			return 0
-		elif [ "$(get_release_year ${product_version_1})" "${operator_2}" "$(get_release_year ${product_version_2})" ]
+		elif [ "$(get_release_year "${product_version_1}")" "${operator_2}" "$(get_release_year "${product_version_2}")" ]
 		then
 			return 1
 		fi
 
-		if [ "$(get_release_quarter ${product_version_1})" "${operator_1}" "$(get_release_quarter ${product_version_2})" ]
+		if [ "$(get_release_quarter "${product_version_1}")" "${operator_1}" "$(get_release_quarter "${product_version_2}")" ]
 		then
 			return 0
-		elif [ "$(get_release_quarter ${product_version_1})" "${operator_2}" "$(get_release_quarter ${product_version_2})" ]
+		elif [ "$(get_release_quarter "${product_version_1}")" "${operator_2}" "$(get_release_quarter "${product_version_2}")" ]
 		then
 			return 1
 		fi
 
-		if [ "$(get_release_patch_version ${product_version_1})" "${operator_1}" "$(get_release_patch_version ${product_version_2})" ]
+		if [ "$(get_release_patch_version "${product_version_1}")" "${operator_1}" "$(get_release_patch_version "${product_version_2}")" ]
 		then
 			return 0
-		elif [ "$(get_release_patch_version ${product_version_1})" "${operator_2}" "$(get_release_patch_version ${product_version_2})" ]
+		elif [ "$(get_release_patch_version "${product_version_1}")" "${operator_2}" "$(get_release_patch_version "${product_version_2}")" ]
 		then
 			return 1
 		fi

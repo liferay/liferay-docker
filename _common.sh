@@ -47,7 +47,7 @@ function date {
 	export LC_ALL=en_US.UTF-8
 	export TZ=America/Los_Angeles
 
-	if [ -z ${1+x} ] || [ -z ${2+x} ]
+	if [ -z "${1+x}" ] || [ -z "${2+x}" ]
 	then
 		if [ "$(uname)" == "Darwin" ]
 		then
@@ -84,8 +84,8 @@ function delete_local_images {
 }
 
 function download {
-	local file_name="${1}"
-	local file_url="${2}"
+	local file_name=${1}
+	local file_url=${2}
 
 	if [ -e "${file_name}" ] &&
 	   [[ "${file_url}" != */apache-tomcat/* ]] &&
@@ -113,14 +113,14 @@ function download {
 			LIFERAY_DOCKER_MIRROR=lax
 		fi
 
-		file_url="http://mirrors.${LIFERAY_DOCKER_MIRROR}.liferay.com/"${file_url##*//}
+		file_url="http://mirrors.${LIFERAY_DOCKER_MIRROR}.liferay.com/${file_url##*//}"
 	fi
 
 	echo ""
 	echo "Downloading ${file_url}."
 	echo ""
 
-	mkdir --parents $(dirname "${file_name}")
+	mkdir --parents "$(dirname "${file_name}")"
 
 	if [[ "${file_url}" == gs://* ]]
 	then
@@ -138,7 +138,7 @@ function download {
 }
 
 function get_current_arch {
-	if [ $(uname --machine) == "aarch64" ]
+	if [ "$(uname --machine)" == "aarch64" ]
 	then
 		echo "arm64"
 	else
@@ -160,7 +160,7 @@ function get_docker_image_tags_args {
 function get_tomcat_version {
 	local liferay_tomcat_version
 
-	if [ -e "${1}"/tomcat ]
+	if [ -e "${1}/tomcat" ]
 	then
 		liferay_tomcat_version=$(grep --extended-regexp --only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" "${1}/tomcat/RELEASE-NOTES" | sed --regexp-extended "s/Apache Tomcat Version //")
 	else
@@ -168,7 +168,7 @@ function get_tomcat_version {
 		do
 			if [ -e "${tomcat_dir_path}" ]
 			then
-				local tomcat_dir=${tomcat_dir_path##*/}
+				local tomcat_dir=$(basename "${tomcat_dir_path}")
 
 				liferay_tomcat_version=${tomcat_dir#*-}
 			fi
@@ -203,9 +203,9 @@ function log_in_to_docker_hub {
 function make_logs_directory {
 	if [ -z "${LIFERAY_DOCKER_LOGS_DIR}" ]
 	then
-		LIFERAY_DOCKER_LOGS_DIR=logs-$(date "$(date)" "+%Y%m%d%H%M")
+		LIFERAY_DOCKER_LOGS_DIR="logs-$(date "$(date)" "+%Y%m%d%H%M")"
 
-		export LIFERAY_DOCKER_LOGS_DIR="${LIFERAY_DOCKER_LOGS_DIR}"
+		export LIFERAY_DOCKER_LOGS_DIR=${LIFERAY_DOCKER_LOGS_DIR}
 
 		mkdir --parents "${LIFERAY_DOCKER_LOGS_DIR}"
 	fi
@@ -270,7 +270,7 @@ function prepare_tomcat {
 function remove_temp_dockerfile_target_platform {
 	sed 's/--platform=${TARGETPLATFORM} //g; s/${TARGETARCH}'/$(get_current_arch)/ "${TEMP_DIR}"/Dockerfile > "${TEMP_DIR}"/Dockerfile.temp
 
-	mv "${TEMP_DIR}"/Dockerfile.temp "${TEMP_DIR}"/Dockerfile
+	mv "${TEMP_DIR}/Dockerfile.temp" "${TEMP_DIR}/Dockerfile"
 }
 
 function start_tomcat {

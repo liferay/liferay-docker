@@ -20,7 +20,7 @@ function build_base_image {
 	echo "Building Docker image Base."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/base.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/base.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -45,7 +45,7 @@ function build_batch_image {
 	echo "Building Docker image Batch."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_batch_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/batch.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_batch_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/batch.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -62,12 +62,12 @@ function build_bundle_image {
 	local slim=${2}
 	local version=${3}
 
-	local additional_tags=$(get_string $( yq "${query}".additional_tags < bundles.yml))
-	local bundle_url=$(get_string $(yq "${query}".bundle_url < bundles.yml))
-	local fix_pack_url=$(get_string $(yq "${query}".fix_pack_url < bundles.yml))
-	local latest=$(get_string $(yq "${query}".latest < bundles.yml))
-	local test_hotfix_url=$(get_string $(yq "${query}".test_hotfix_url < bundles.yml))
-	local test_installed_patch=$(get_string $( yq "${query}".test_installed_patch < bundles.yml))
+	local additional_tags=$(get_string "$(yq "${query}.additional_tags" < bundles.yml)")
+	local bundle_url=$(get_string "$(yq "${query}.bundle_url" < bundles.yml)")
+	local fix_pack_url=$(get_string "$(yq "${query}.fix_pack_url" < bundles.yml)")
+	local latest=$(get_string "$(yq "${query}.latest" < bundles.yml)")
+	local test_hotfix_url=$(get_string "$(yq "${query}.test_hotfix_url" < bundles.yml)")
+	local test_installed_patch=$(get_string "$(yq "${query}.test_installed_patch" < bundles.yml)")
 
 	if is_release_candidate
 	then
@@ -91,12 +91,12 @@ function build_bundle_image {
 
 	if [ ! -n "${version}" ]
 	then
-		local build_id=${bundle_url##*/}
+		local build_id=$(basename "${bundle_url}")
 	else
 		local build_id=${version}
 	fi
 
-	local image_name="${build_id}"
+	local image_name=${build_id}
 
 	if [ "${slim}" == "true" ]
 	then
@@ -227,7 +227,7 @@ function build_caddy_image {
 	echo "Building Docker image Caddy resources."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_caddy_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/caddy.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_caddy_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/caddy.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -252,7 +252,7 @@ function build_dynamic_rendering_image {
 	echo "Building Docker image Dynamic Rendering."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/dynamic_rendering.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/dynamic_rendering.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -277,7 +277,7 @@ function build_jar_runner_image {
 	echo "Building Docker image JAR Runner."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_jar_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/jar_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_jar_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/jar_runner.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -290,9 +290,9 @@ function build_jar_runner_image {
 }
 
 function build_jdk_image {
-	local jdk_friendly_name="${1}"
-	local jdk_image_name="${2}"
-	local jdk_version="${3}"
+	local jdk_friendly_name=${1}
+	local jdk_image_name=${2}
+	local jdk_version=${3}
 
 	local latest_available_zulu_amd64_version=$(get_latest_available_zulu_version "amd64" "${jdk_version}")
 	local latest_available_zulu_arm64_version=$(get_latest_available_zulu_version "arm64" "${jdk_version}")
@@ -334,7 +334,7 @@ function build_job_runner_image {
 	echo "Building Docker image Job Runner."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/job_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/job_runner.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -359,7 +359,7 @@ function build_nexus_publisher_image {
 	echo "Building Docker image Nexus Publisher."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_nexus_publisher_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/nexus_publisher.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_nexus_publisher_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/nexus_publisher.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -384,7 +384,7 @@ function build_node_runner_image {
 	echo "Building Docker image Node Runner."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_node_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/node_runner.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_node_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/node_runner.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -409,7 +409,7 @@ function build_noop_image {
 	echo "Building Docker image NOOP."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_noop_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/noop.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_noop_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/noop.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -434,7 +434,7 @@ function build_squid_image {
 	echo "Building Docker image Squid resources."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_squid_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/squid.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_squid_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/squid.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -462,7 +462,7 @@ function build_zabbix_server_image {
 	echo "Building Docker image Zabbix Server."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/zabbix_server.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/zabbix_server.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -490,7 +490,7 @@ function build_zabbix_web_image {
 	echo "Building Docker image Zabbix Web."
 	echo ""
 
-	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}"/zabbix_server_web_interface.log
+	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/zabbix_server_web_interface.log"
 
 	if [ "${PIPESTATUS[0]}" -gt 0 ]
 	then
@@ -526,7 +526,7 @@ function get_latest_docker_hub_version {
 }
 
 function get_latest_docker_hub_zabbix_server_version {
-	local image_tag="${1}"
+	local image_tag=${1}
 
 	local token=$(curl --silent "https://auth.docker.io/token?scope=repository:${image_tag}:pull&service=registry.docker.io" | jq --raw-output '.token')
 
@@ -590,13 +590,13 @@ function get_string {
 }
 
 function get_tag_from_image {
-	local image_name="${2}"
-	local filter="${3}"
-	local version="${1}"
+	local filter=${3}
+	local image_name=${2}
+	local version=${1}
 
 	if [ -z "${version}" ]
 	then
-		docker pull "${image_name}:latest" >/dev/null
+		docker pull "${image_name}:latest" > /dev/null
 
 		if [ "${?}" -gt 0 ]
 		then
@@ -643,7 +643,7 @@ function main {
 		BUILD_ALL_IMAGES_PUSH="push-all"
 
 		if [ "$(git config --global github.user)" == "brianchandotcom" ] ||
-		   ([ "$(git config --global user.name)" == "liferay-release" ] && 
+		   ([ "$(git config --global user.name)" == "liferay-release" ] &&
 		   [ "$(get_environment_type)" == "release_slave" ])
 		then
 			./release_notes.sh commit
@@ -693,7 +693,7 @@ function main {
 
 	cat "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
-	if [ $(grep --count "FAILED" "${LIFERAY_DOCKER_LOGS_DIR}/results") != 0 ]
+	if [[ "$(grep --count "FAILED" "${LIFERAY_DOCKER_LOGS_DIR}/results")" -ne 0 ]]
 	then
 		exit 1
 	fi
@@ -721,10 +721,10 @@ function validate_bundles_yml {
 			do
 				if [ $(yq .\""${main_key}"\".\""${minor_key}"\".latest < bundles.yml | grep "true\|false" -c) -gt 0 ]
 				then
-					if [ $(yq .\""${main_key}"\".\""${minor_key}"\".bundle_url < bundles.yml | grep "portal-tomcat") ]
+					if [ "$(yq .\""${main_key}"\".\""${minor_key}"\".bundle_url < bundles.yml | grep "portal-tomcat")" ]
 					then
 						portal_latest_key_counter=$((portal_latest_key_counter+1))
-					elif [ $(yq .\""${main_key}"\".\""${minor_key}"\".bundle_url < bundles.yml | grep "dxp-tomcat") ]
+					elif [ "$(yq .\""${main_key}"\".\""${minor_key}"\".bundle_url < bundles.yml | grep "dxp-tomcat")" ]
 					then
 						dxp_latest_key_counter=$((dxp_latest_key_counter+1))
 					fi

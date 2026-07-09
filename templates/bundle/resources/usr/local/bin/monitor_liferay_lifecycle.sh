@@ -7,12 +7,11 @@ function generate_thread_dump {
 
 	local file_name="${LIFERAY_CONTAINER_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
 
-	jattach $(cat "${LIFERAY_PID}") threaddump \
-		| tee "${file_name}" \
-		| gzip \
-		| base64 --wrap 102400 - \
-		| awk '{print "Line #" NR " of b64(gzip(thread dump)): " $0}' \
-		> /proc/1/fd/1
+	jattach "$(cat "${LIFERAY_PID}")" threaddump | \
+		tee "${file_name}" | \
+		gzip | \
+		base64 --wrap 102400 - | \
+		awk '{print "Line #" NR " of b64(gzip(thread dump)): " $0}' > /proc/1/fd/1
 
 	lecho "Generated a thread dump at ${file_name}."
 }
@@ -26,7 +25,7 @@ function lecho {
 function kill_service {
 	lecho "Killing container since it reached the LIFERAY_CONTAINER_KILL_ON_FAILURE threshold."
 
-	kill $(cat "${LIFERAY_PID}")
+	kill "$(cat "${LIFERAY_PID}")"
 
 	lecho "Waiting 30 seconds for shut down."
 
@@ -52,7 +51,7 @@ function main {
 
 	while true
 	do
-		if [ "${started}" != true ]
+		if [ "${started}" != "true" ]
 		then
 			touch_startup_lock
 		fi
@@ -70,13 +69,11 @@ function main {
 			then
 				if [ "${LIFERAY_CONTAINER_TOMCAT_THREAD_ACTIVE_COUNT_ENABLED}" == "true" ] && [ -n "${LIFERAY_CONTAINER_TOMCAT_THREAD_ACTIVE_COUNT_THRESHOLD}" ]
 				then
-					local tomcat_thread_active_count=$(curl \
-						"http://localhost:15000/metrics" \
-						--max-time 2 \
-						--silent \
-						| grep "^catalina_executor_activecount" \
-						| cut --delimiter=' ' --fields=2 \
-						| cut --delimiter='.' --fields=1)
+					local tomcat_thread_active_count=$( \
+						curl --max-time 2 --silent "http://localhost:15000/metrics" | \
+							grep "^catalina_executor_activecount" | \
+							cut --delimiter=' ' --fields=2 | \
+							cut --delimiter='.' --fields=1)
 
 					lecho "The Tomcat thread active count is ${tomcat_thread_active_count}."
 
@@ -92,13 +89,13 @@ function main {
 						then
 							generate_thread_dump
 
-							update_container_status fail,http-response-error,curl-return-code-${exit_code},threads-are-same
+							update_container_status "fail,http-response-error,curl-return-code-${exit_code},threads-are-same"
 						fi
 					fi
 				else
 					generate_thread_dump
 
-					update_container_status fail,http-response-error,curl-return-code-${exit_code}
+					update_container_status "fail,http-response-error,curl-return-code-${exit_code}"
 				fi
 			fi
 		elif [ -n "${LIFERAY_CONTAINER_STATUS_REQUEST_CONTENT}" ]
@@ -115,7 +112,7 @@ function main {
 			fi
 		fi
 
-		if [[ ${exit_code} -eq 0 || ( -n ${thread_state_exit_code} && ${thread_state_exit_code} -lt 2 ) ]]
+		if [[ "${exit_code}" -eq 0 || ( -n "${thread_state_exit_code}" && "${thread_state_exit_code}" -lt 2 ) ]]
 		then
 			fail_count=0
 

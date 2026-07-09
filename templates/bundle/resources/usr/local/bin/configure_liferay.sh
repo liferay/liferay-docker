@@ -42,19 +42,19 @@ function main {
 		echo ""
 	fi
 
-	if [ -d "${LIFERAY_MOUNT_DIR}"/files ]
+	if [ -d "${LIFERAY_MOUNT_DIR}/files" ]
 	then
-		if [[ $(ls --almost-all "${LIFERAY_MOUNT_DIR}"/files) ]]
+		if [[ $(ls --almost-all "${LIFERAY_MOUNT_DIR}/files") ]]
 		then
 			echo "[LIFERAY] Copying files from ${LIFERAY_MOUNT_DIR}/files:"
 			echo ""
 
-			tree --noreport "${LIFERAY_MOUNT_DIR}"/files
+			tree --noreport "${LIFERAY_MOUNT_DIR}/files"
 
 			echo ""
 			echo "[LIFERAY] ... into ${LIFERAY_HOME}."
 
-			cp --recursive "${LIFERAY_MOUNT_DIR}"/files/* "${LIFERAY_HOME}"
+			cp --recursive "${LIFERAY_MOUNT_DIR}/files"/* "${LIFERAY_HOME}"
 
 			echo ""
 		fi
@@ -63,24 +63,24 @@ function main {
 		echo ""
 	fi
 
-	if [ -d "${LIFERAY_MOUNT_DIR}"/scripts ]
+	if [ -d "${LIFERAY_MOUNT_DIR}/scripts" ]
 	then
-		execute_scripts "${LIFERAY_MOUNT_DIR}"/scripts
+		execute_scripts "${LIFERAY_MOUNT_DIR}/scripts"
 	else
 		echo "[LIFERAY] The directory /mnt/liferay/scripts does not exist. Create the directory \$(pwd)/xyz123/scripts on the host operating system to create the directory ${LIFERAY_MOUNT_DIR}/scripts on the container. Files in ${LIFERAY_MOUNT_DIR}/scripts will be executed, in alphabetical order, before ${LIFERAY_PRODUCT_NAME} starts."
 		echo ""
 	fi
 
-	if [ -d "${LIFERAY_MOUNT_DIR}"/deploy ]
+	if [ -d "${LIFERAY_MOUNT_DIR}/deploy" ]
 	then
 		if [[ $(ls --almost-all /opt/liferay/deploy) ]]
 		then
-			cp /opt/liferay/deploy/* "${LIFERAY_MOUNT_DIR}"/deploy
+			cp /opt/liferay/deploy/* "${LIFERAY_MOUNT_DIR}/deploy"
 		fi
 
 		rm --force --recursive /opt/liferay/deploy
 
-		ln --symbolic "${LIFERAY_MOUNT_DIR}"/deploy /opt/liferay/deploy
+		ln --symbolic "${LIFERAY_MOUNT_DIR}/deploy" /opt/liferay/deploy
 
 		echo "[LIFERAY] The directory /mnt/liferay/deploy is ready. Copy files to \$(pwd)/xyz123/deploy on the host operating system to deploy modules to ${LIFERAY_PRODUCT_NAME} at runtime."
 		echo ""
@@ -102,7 +102,7 @@ function main {
 		fi
 	fi
 
-	export LIFERAY_PATCHING_DIR="${LIFERAY_MOUNT_DIR}"/patching
+	export LIFERAY_PATCHING_DIR="${LIFERAY_MOUNT_DIR}/patching"
 
 	if [ -e /opt/liferay/patching-tool ]
 	then

@@ -7,7 +7,7 @@ function main {
 	echo "[LIFERAY] To SSH into this container, run: \"docker exec -it ${HOSTNAME} /bin/bash\"."
 	echo ""
 
-	if [[ "${DOCKER_TCMALLOC_ENABLED}" == "true" ]]
+	if [ "${DOCKER_TCMALLOC_ENABLED}" == "true" ]
 	then
 		LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4:${LD_PRELOAD}"
 
@@ -25,9 +25,9 @@ function main {
 
 	export LIFERAY_MOUNT_DIR
 
-	if [[ "${LIFERAY_CONTAINER_STARTUP_LOCK_ENABLED}" == "true" ]]
+	if [ "${LIFERAY_CONTAINER_STARTUP_LOCK_ENABLED}" == "true" ]
 	then
-		if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" != "true" ]]
+		if [ "${LIFERAY_CONTAINER_STATUS_ENABLED}" != "true" ]
 		then
 			echo "Container status needs to be enabled with LIFERAY_CONTAINER_STATUS_ENABLED to enable startup lock."
 
@@ -112,7 +112,7 @@ function start_interval_thread_dump {
 }
 
 function start_monitor_liferay_lifecycle {
-	if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" == "true" ]]
+	if [ "${LIFERAY_CONTAINER_STATUS_ENABLED}" == "true" ]
 	then
 		/usr/local/bin/monitor_liferay_lifecycle.sh &
 	fi

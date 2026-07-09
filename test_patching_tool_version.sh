@@ -28,7 +28,7 @@ function _test_patching_tool_version {
 	else
 		assert_equals \
 			"${latest_patching_tool_version}" \
-			$(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-${1}.txt)
+			$(lc_curl "https://releases.liferay.com/tools/patching-tool/LATEST-${1}.txt")
 	fi
 }
 

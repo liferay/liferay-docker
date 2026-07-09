@@ -26,17 +26,17 @@ function main {
 	echo "OAuth Application ERC: ${LIFERAY_BATCH_OAUTH_APP_ERC}"
 	echo ""
 
-	local lxc_dxp_main_domain=$(cat ${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.main.domain)
+	local lxc_dxp_main_domain=$(cat "${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.main.domain")
 
 	if [ ! -n "${lxc_dxp_main_domain}" ]
 	then
-		lxc_dxp_main_domain=$(cat ${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.mainDomain)
+		lxc_dxp_main_domain=$(cat "${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.mainDomain")
 	fi
 
-	local lxc_dxp_server_protocol=$(cat ${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.server.protocol)
-	local oauth2_client_id=$(cat ${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.headless.server.client.id)
-	local oauth2_client_secret=$(cat ${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.headless.server.client.secret)
-	local oauth2_token_uri=$(cat ${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.token.uri)
+	local lxc_dxp_server_protocol=$(cat "${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.server.protocol")
+	local oauth2_client_id=$(cat "${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.headless.server.client.id")
+	local oauth2_client_secret=$(cat "${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.headless.server.client.secret")
+	local oauth2_token_uri=$(cat "${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.token.uri")
 
 	echo "LXC DXP Main Domain: ${lxc_dxp_main_domain}"
 	echo "LXC DXP Server Protocol: ${lxc_dxp_server_protocol}"
@@ -58,7 +58,7 @@ function main {
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${oauth2_token_uri}")
 
-	local http_status_code="$(cat ${http_status_code_file})"
+	local http_status_code=$(cat "${http_status_code_file}")
 
 	if [[ "${http_status_code}" -ge 400 ]]
 	then
@@ -70,7 +70,7 @@ function main {
 	echo "OAuth Token Response: ${oauth2_token_response}"
 	echo ""
 
-	local oauth2_access_token=$(jq --raw-output ".access_token" <<< ${oauth2_token_response})
+	local oauth2_access_token=$(jq --raw-output ".access_token" <<< "${oauth2_token_response}")
 
 	if [ "${oauth2_access_token}" == "" ]
 	then
@@ -109,7 +109,7 @@ function main {
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${external_reference_code}")
 
-		local http_status_code="$(cat ${http_status_code_file})"
+		local http_status_code=$(cat "${http_status_code_file}")
 
 		if [[ "${http_status_code}" -ge 400 ]]
 		then
@@ -135,13 +135,13 @@ function main {
 		echo "Processing: ${file_name}"
 		echo ""
 
-		local href=$(jq --raw-output ".actions.createBatch.href" ${file_name})
+		local href=$(jq --raw-output ".actions.createBatch.href" "${file_name}")
 
-		if [[ "$href" == "null" ]]
+		if [ "${href}" == "null" ]
 		then
-			local class_name=$(jq --raw-output ".configuration.className" ${file_name})
+			local class_name=$(jq --raw-output ".configuration.className" "${file_name}")
 
-			if [[ "$class_name" == "null" ]]
+			if [ "${class_name}" == "null" ]
 			then
 				echo "Batch data file is missing configuration class name."
 
@@ -153,14 +153,14 @@ function main {
 
 		href="${href#*://*/}"
 
-		if [[ ! $href =~ ^/.* ]]
+		if [[ ! ${href} =~ ^/.* ]]
 		then
 			href="/${href}"
 		fi
 
 		echo "HREF: ${href}"
 
-		jq --raw-output ".items" ${file_name} > /tmp/liferay_batch_entrypoint.items.json
+		jq --raw-output ".items" "${file_name}" > /tmp/liferay_batch_entrypoint.items.json
 
 		echo "Items: $(</tmp/liferay_batch_entrypoint.items.json)"
 
@@ -187,7 +187,7 @@ function main {
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${lxc_dxp_server_protocol}://${lxc_dxp_main_domain}${href}${parameters}")
 
-		local http_status_code="$(cat ${http_status_code_file})"
+		local http_status_code=$(cat "${http_status_code_file}")
 
 		if [[ "${http_status_code}" -ge 400 ]]
 		then

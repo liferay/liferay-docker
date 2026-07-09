@@ -2,7 +2,7 @@
 
 if [ -n "${1}" ]
 then
-	LIFERAY_DOCKER_UBUNTU_PRO_TOKEN="${1}"
+	LIFERAY_DOCKER_UBUNTU_PRO_TOKEN=${1}
 fi
 
 if [ -z "${LIFERAY_DOCKER_UBUNTU_PRO_TOKEN}" ]

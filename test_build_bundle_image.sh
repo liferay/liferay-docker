@@ -21,7 +21,7 @@ function main {
 function set_up {
 	common_set_up
 
-	export TEMP_DIR="${PWD}"
+	export TEMP_DIR=${PWD}
 	export _LATEST_TOMCAT_VERSION_TEST=$( \
 		get_latest_version_from_url \
 			"http://dlcdn.apache.org/tomcat/tomcat-9/" \
@@ -75,7 +75,7 @@ function _test_build_bundle_image_get_latest_tomcat_version {
 }
 
 function _test_build_bundle_image_set_parent_image {
-	LIFERAY_DOCKER_RELEASE_VERSION="${1}"
+	LIFERAY_DOCKER_RELEASE_VERSION=${1}
 
 	_set_dockerfile "jdk21" "jdk21" "Dockerfile"
 

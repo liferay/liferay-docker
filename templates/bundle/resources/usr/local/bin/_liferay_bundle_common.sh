@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function execute_scripts {
-	if [ -e "${1}" ] && [[ $(find "${1}" -maxdepth 1 -name "*.sh" -printf "%f\n") ]]
+	if [ -e "${1}" ] && [ -n "$(find "${1}" -maxdepth 1 -name "*.sh" -printf "%f\n")" ]
 	then
 		echo "[LIFERAY] Executing scripts in ${1}:"
 
@@ -18,14 +18,14 @@ function execute_scripts {
 }
 
 function update_container_status {
-	if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" != "true" ]]
+	if [ "${LIFERAY_CONTAINER_STATUS_ENABLED}" != "true" ]
 	then
 		return
 	fi
 
 	local old_status=$(grep status= /opt/liferay/container_status)
 
-	old_status=${old_status#status=}
+	old_status=$(echo "${old_status}" | sed --expression "s/^status=//")
 
 	if [ "${old_status}" == "${1}" ]
 	then

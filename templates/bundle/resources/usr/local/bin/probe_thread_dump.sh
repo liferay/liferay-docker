@@ -8,7 +8,7 @@ function check_usage {
 
 	while [ "${1}" != "" ]
 	do
-		case ${1} in
+		case "${1}" in
 			-c)
 				shift
 
@@ -80,28 +80,28 @@ function main {
 
 	curl_content=$(curl --connect-timeout "${CONNECTION_TIMEOUT}" --fail --max-time "${TIMEOUT}" --show-error --silent --url "${DOMAIN}:${PORT}" "${DOMAIN}:${PORT}${FILE_PATH}")
 
-	local exit_code="${?}"
+	local exit_code=${?}
 
 	if [ -n "${CONTENT}" ]
 	then
 		curl_content=$(echo "${curl_content}" | grep" ${CONTENT}")
 
-		exit_code="${?}"
+		exit_code=${?}
 	fi
 
 	if [ ${exit_code} -gt 1 ]
 	then
 		echo -e "${curl_content}"
 
-		if [ ! -e  "${LIFERAY_CONTAINER_THREAD_DUMPS_DIRECTORY}" ]
+		if [ ! -e "${LIFERAY_CONTAINER_THREAD_DUMPS_DIRECTORY}" ]
 		then
 			mkdir --parents "${LIFERAY_CONTAINER_THREAD_DUMPS_DIRECTORY}"
 		fi
 
-		jattach $(cat "${LIFERAY_PID}") threaddump > "${LIFERAY_CONTAINER_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
+		jattach "$(cat "${LIFERAY_PID}")" threaddump > "${LIFERAY_CONTAINER_THREAD_DUMPS_DIRECTORY}/$(hostname)_$(date +'%Y-%m-%d_%H-%M-%S').tdump"
 	fi
 
-	exit ${exit_code}
+	exit "${exit_code}"
 }
 
 function print_help {

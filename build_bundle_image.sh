@@ -8,29 +8,29 @@ source ./_release_common.sh
 function build_docker_image {
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
-		DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME}-snapshot
+		DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}-snapshot"
 	fi
 
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == https://release-* ]] || [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == *release.liferay.com* ]]
 	then
-		DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME}-snapshot
+		DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}-snapshot"
 	fi
 
-	local release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
+	local release_version=$(dirname "${LIFERAY_DOCKER_RELEASE_FILE_URL}")
 
-	release_version=${release_version##*/}
+	release_version=$(basename "${release_version}")
 
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == https://release-* ]] || [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == *release.liferay.com* ]]
 	then
 		release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL#*tomcat-}
-		release_version=${release_version%.*}
+		release_version=$(echo "${release_version}" | sed --expression "s/\.[^.]*$//")
 	fi
 
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == *files.liferay.com/* ]] && [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} != */snapshot-* ]]
 	then
 		local file_name_release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL#*tomcat-}
 
-		file_name_release_version=${file_name_release_version%.*}
+		file_name_release_version=$(echo "${file_name_release_version}" | sed --expression "s/\.[^.]*$//")
 		file_name_release_version=${file_name_release_version%-*}
 
 		if [[ ${file_name_release_version} == *-slim ]]
@@ -43,16 +43,16 @@ function build_docker_image {
 
 	if [[ ${service_pack_name} == sp* ]]
 	then
-		release_version=${release_version}-${service_pack_name}
+		release_version="${release_version}-${service_pack_name}"
 	fi
 
 	LABEL_VERSION=${release_version}
 
 	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
 	then
-		local release_branch=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
+		local release_branch=$(dirname "${LIFERAY_DOCKER_RELEASE_FILE_URL}")
 
-		release_branch=${release_branch%/*}
+		release_branch=$(dirname "${release_branch}")
 		release_branch=${release_branch%-private*}
 		release_branch=${release_branch##*-}
 
@@ -74,7 +74,7 @@ function build_docker_image {
 
 		if [ "${LIFERAY_DOCKER_SLIM}" == "true" ]
 		then
-			release_version=${release_version}-slim
+			release_version="${release_version}-slim"
 		fi
 	fi
 
@@ -97,7 +97,7 @@ function build_docker_image {
 		fi
 	done
 
-	if [[ "${LIFERAY_DOCKER_LATEST}" = "true" ]]
+	if [[ "${LIFERAY_DOCKER_LATEST}" == "true" ]]
 	then
 		DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:latest")
 	fi
@@ -188,7 +188,7 @@ function get_latest_tomcat_version {
 	latest_tomcat_version=$( \
 		echo -e "${latest_tomcat_version}\n${1}" | \
 		sort --version-sort | \
-		tail -1)
+		tail --lines=1)
 
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
@@ -208,7 +208,7 @@ function get_latest_tomcat_version {
 			latest_tomcat_version=$( \
 				echo -e "${latest_tomcat_version}\n${master_tomcat_version}" | \
 				sort --version-sort | \
-				tail -1)
+				tail --lines=1)
 		fi
 	fi
 
@@ -222,9 +222,9 @@ function install_fix_pack {
 	then
 		local fix_pack_url=${LIFERAY_DOCKER_FIX_PACK_URL}
 
-		FIX_PACK_FILE_NAME=${fix_pack_url##*/}
+		FIX_PACK_FILE_NAME=$(basename "${fix_pack_url}")
 
-		download downloads/fix-packs/"${FIX_PACK_FILE_NAME}" "${fix_pack_url}"
+		download "downloads/fix-packs/${FIX_PACK_FILE_NAME}" "${fix_pack_url}"
 
 		cp "downloads/fix-packs/${FIX_PACK_FILE_NAME}" "${TEMP_DIR}/liferay/patching-tool/patches"
 
@@ -294,24 +294,24 @@ function prepare_slim_image {
 	do
 		LIFERAY_COMMON_DOWNLOAD_SKIP_CACHE="true" lc_download \
 			"https://releases.liferay.com/opensearch2/${release_dir_name}/com.liferay.portal.search.opensearch2.${module}.jar" \
-			"${TEMP_DIR}/liferay/deploy/com.liferay.portal.search.opensearch2.${module}.jar" \
+			"${TEMP_DIR}/liferay/deploy/com.liferay.portal.search.opensearch2.${module}.jar"
 
 		if [ "${?}" -ne 0 ]
 		then
 			lc_log ERROR "Unable to download com.liferay.portal.search.opensearch2.${module}.jar."
-	
+
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 	done
 }
 
 function prepare_temp_directory {
-	RELEASE_FILE_NAME=${LIFERAY_DOCKER_RELEASE_FILE_URL##*/}
+	RELEASE_FILE_NAME=$(basename "${LIFERAY_DOCKER_RELEASE_FILE_URL}")
 
-	local download_dir=${LIFERAY_DOCKER_RELEASE_FILE_URL%/*}
+	local download_dir=$(dirname "${LIFERAY_DOCKER_RELEASE_FILE_URL}")
 
 	download_dir=$( \
-		echo "${download_dir}" |
+		echo "${download_dir}" | \
 		sed \
 			--expression "s/.*com\///" \
 			--expression "s/.*gs:\/\///" \
@@ -326,7 +326,7 @@ function prepare_temp_directory {
 	then
 		7z x -O"${TEMP_DIR}" "${download_dir}/${RELEASE_FILE_NAME}" || exit 3
 	else
-		unzip -d "${TEMP_DIR}" -q "${download_dir}/${RELEASE_FILE_NAME}"  || exit 3
+		unzip -d "${TEMP_DIR}" -q "${download_dir}/${RELEASE_FILE_NAME}" || exit 3
 	fi
 
 	mv "${TEMP_DIR}/liferay-"* "${TEMP_DIR}/liferay"
@@ -410,7 +410,7 @@ function print_help {
 
 function push_docker_image {
 	if [ "${1}" == "push" ] ||
-	   [  "${1}" == "push-all" ]
+	   [ "${1}" == "push-all" ]
 	then
 		check_docker_buildx
 
@@ -440,7 +440,7 @@ function push_docker_image {
 function set_parent_image {
 	if is_quarterly_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 	then
-		local release_year="$(get_release_year "${LIFERAY_DOCKER_RELEASE_VERSION}")"
+		local release_year=$(get_release_year "${LIFERAY_DOCKER_RELEASE_VERSION}")
 
 		if [[ "${release_year}" -gt 2024 ]]
 		then
@@ -491,7 +491,7 @@ function update_patching_tool {
 
 	if [ -e "${TEMP_DIR}/liferay/patching-tool" ]
 	then
-		local patching_tool_minor_version=$("${TEMP_DIR}"/liferay/patching-tool/patching-tool.sh version | grep "Patching-tool version")
+		local patching_tool_minor_version=$("${TEMP_DIR}/liferay/patching-tool/patching-tool.sh" version | grep "Patching-tool version")
 
 		if [ ! -n "${patching_tool_minor_version}" ]
 		then
@@ -500,7 +500,7 @@ function update_patching_tool {
 			patching_tool_minor_version=${patching_tool_minor_version##*Patching-tool version: }
 		fi
 
-		patching_tool_minor_version=${patching_tool_minor_version%.*}
+		patching_tool_minor_version=$(echo "${patching_tool_minor_version}" | sed --expression "s/\.[^.]*$//")
 
 		if (! echo ${patching_tool_minor_version} | grep --regexp='[0-9]*[.][0-9]*' >/dev/null)
 		then
@@ -520,15 +520,15 @@ function update_patching_tool {
 		# proper exit code.
 		#
 
-		latest_patching_tool_version=$(./patching_tool_version.sh ${patching_tool_minor_version})
+		latest_patching_tool_version=$(./patching_tool_version.sh "${patching_tool_minor_version}")
 
-		local exit_code="${?}"
+		local exit_code=${?}
 
 		if [ ${exit_code} -gt 0 ]
 		then
 			echo "./patching_tool_version.sh returned with an error: ${latest_patching_tool_version}"
 
-			exit ${exit_code}
+			exit "${exit_code}"
 		fi
 
 		echo ""
@@ -547,7 +547,7 @@ function update_patching_tool {
 
 		if [ ! -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION}" ]
 		then
-			export LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION="${latest_patching_tool_version}"
+			export LIFERAY_DOCKER_TEST_PATCHING_TOOL_VERSION=${latest_patching_tool_version}
 		fi
 	fi
 }

@@ -66,7 +66,7 @@ function get_change_log {
 }
 
 function get_latest_version {
-	local git_line=$(grep 'docker.image.git.id' .releng/docker-image.changelog | tail -n1)
+	local git_line=$(grep 'docker.image.git.id' .releng/docker-image.changelog | tail --lines=1)
 
 	RELEASE_NOTES_LATEST_SHA=${git_line#*=}
 
@@ -76,7 +76,7 @@ function get_latest_version {
 	RELEASE_NOTES_VERSION_MAJOR=${RELEASE_NOTES_LATEST_VERSION%%.*}
 
 	RELEASE_NOTES_VERSION_MINOR=${RELEASE_NOTES_LATEST_VERSION#*.}
-	RELEASE_NOTES_VERSION_MINOR=${RELEASE_NOTES_VERSION_MINOR%.*}
+	RELEASE_NOTES_VERSION_MINOR=$(echo "${RELEASE_NOTES_VERSION_MINOR}" | sed --expression "s/\.[^.]*$//")
 
 	RELEASE_NOTES_VERSION_MICRO=${RELEASE_NOTES_LATEST_VERSION##*.}
 }

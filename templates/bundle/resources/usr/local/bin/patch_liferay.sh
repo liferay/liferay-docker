@@ -14,8 +14,8 @@ function apply_patch {
 			echo "[LIFERAY] ${patch_file_name} cannot be applied on this container because ${installed_patch} is already installed. Remove ${patch_file_name} from the patching directory to disable this warning message."
 		fi
 	elif [[ "${patch_file_name}" != *q* ]] &&
-		 [[ "${patch_version}" -lt 7310 ]] &&
-	     ( /opt/liferay/patching-tool/patching-tool.sh apply "${LIFERAY_PATCHING_DIR}/${patch_file_name}" )
+	     [[ "${patch_version}" -lt 7310 ]] &&
+	     /opt/liferay/patching-tool/patching-tool.sh apply "${LIFERAY_PATCHING_DIR}/${patch_file_name}"
 	then
 		echo "${patch_file_name}" > /opt/liferay/patching-tool/patch-applied
 
@@ -26,7 +26,7 @@ function apply_patch {
 }
 
 function install_patch_step_1 {
-	local patch_file_name="${1}"
+	local patch_file_name=${1}
 
 	cp "${LIFERAY_PATCHING_DIR}/${patch_file_name}" /opt/liferay/patching-tool/patches
 
@@ -75,7 +75,7 @@ function main {
 		fi
 	elif [ -d "${LIFERAY_PATCHING_DIR}" ] && [[ $(find "${LIFERAY_PATCHING_DIR}" -maxdepth 1 -type f -name "*liferay-*.zip" 2>/dev/null) ]]
 	then
-		if [ $(find "${LIFERAY_PATCHING_DIR}" -maxdepth 1 -type f -name "*liferay-*.zip" | wc --lines) == 1 ]
+		if [[ "$(find "${LIFERAY_PATCHING_DIR}" -maxdepth 1 -type f -name "*liferay-*.zip" | wc --lines)" -eq 1 ]]
 		then
 			local patch_file_name=$(basename "${LIFERAY_PATCHING_DIR}"/*liferay-*.zip)
 

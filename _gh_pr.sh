@@ -64,7 +64,7 @@ function get_pull_request_url {
 	local branch_name=${1}
 	local repository=${2}
 
-	gh pr view "liferay-release:${branch_name}" \
+	gh pr view \
 		--jq ".url" \
 		--json "url" \
 		--repo "${repository}"

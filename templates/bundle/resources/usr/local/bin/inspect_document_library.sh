@@ -52,7 +52,7 @@ function calculate_results {
 
 						local type=${file_brief%% *}
 
-						if [[ ${type} == "Zip" ]]
+						if [ "${type}" == "Zip" ]
 						then
 							if (! unzip -l "${file_version}" &>/dev/null)
 							then
@@ -71,11 +71,11 @@ function calculate_results {
 							fi
 						fi
 
-						if [[ ${type} == "ISO" ]]
+						if [ "${type}" == "ISO" ]
 						then
 							if (echo "${file_brief}" | grep MP4 &>/dev/null)
 							then
-								type=MP4
+								type="MP4"
 							fi
 						fi
 
@@ -126,11 +126,11 @@ function lcd {
 }
 
 function main {
-	RESULTS_DIR=/tmp/inspect_document_library_results
+	RESULTS_DIR="/tmp/inspect_document_library_results"
 
 	check_usage
 
-	if [ -e ${RESULTS_DIR} ]
+	if [ -e "${RESULTS_DIR}" ]
 	then
 		echo "Not calculating again because ${RESULTS_DIR} exists from a previous run."
 	else
@@ -155,7 +155,7 @@ function print_results {
 
 		for type in type_*
 		do
-			type=${type#type_}
+			type=$(echo "${type}" | sed --expression "s/^type_//")
 
 			echo -en "${type},"
 

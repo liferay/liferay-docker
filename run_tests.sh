@@ -32,9 +32,9 @@ function _run_docker_tests {
 		find . \
 			-maxdepth 1 \
 			-name "test_*.sh" ! -name "test_bundle_image.sh" \
-			-type f \
-			| sort \
-			| xargs --max-args=1 /bin/bash
+			-type f | \
+			sort | \
+			xargs --max-args=1 /bin/bash
 	else
 		for changed_file in $(echo "${1}" | grep --extended-regexp "^[^/]+\.sh$")
 		do
@@ -53,9 +53,9 @@ function _run_release_tests {
 	then
 		find . \
 			-name "test_*.sh" \
-			-type f \
-			| sort \
-			| xargs --max-args=1 /bin/bash
+			-type f | \
+			sort | \
+			xargs --max-args=1 /bin/bash
 	else
 		for changed_file in $(echo "${1}" | grep --extended-regexp "^release/.*\.sh$")
 		do

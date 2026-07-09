@@ -3,7 +3,7 @@
 function main {
 	for i in {1..3}
 	do
-		jcmd "$(cat ${LIFERAY_PID})" Thread.print > "${LIFERAY_HOME}/dump_${i}.tdump"
+		jcmd "$(cat "${LIFERAY_PID}")" Thread.print > "${LIFERAY_HOME}/dump_${i}.tdump"
 
 		if [ "${i}" -lt 3 ]
 		then
@@ -13,8 +13,7 @@ function main {
 
 	for i in {1..3}
 	do
-		_filter_threads "${LIFERAY_HOME}/dump_${i}.tdump" | \
-			_parse_threads > "${LIFERAY_HOME}/filter_${i}.tdump"
+		_filter_threads "${LIFERAY_HOME}/dump_${i}.tdump" | _parse_threads > "${LIFERAY_HOME}/filter_${i}.tdump"
 
 		if [ ! -s "${LIFERAY_HOME}/filter_${i}.tdump" ]
 		then
@@ -26,9 +25,9 @@ function main {
 
 	for i in {1..2}
 	do
-		comparison[$i]=$(_compare "${LIFERAY_HOME}/filter_1.tdump" "${LIFERAY_HOME}/filter_$((i+1)).tdump")
+		comparison[${i}]=$(_compare "${LIFERAY_HOME}/filter_1.tdump" "${LIFERAY_HOME}/filter_$((i+1)).tdump")
 
-		echo "Lifecycle monitor: match dump_1 & dump_$((i+1)): ${comparison[$i]}%."
+		echo "Lifecycle monitor: match dump_1 & dump_$((i+1)): ${comparison[${i}]}%."
 	done
 
 	if (( "${comparison[1]}" == 100 && "${comparison[2]}" == 100 ))

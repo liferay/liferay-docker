@@ -5,7 +5,7 @@ function check_usage {
 
 	while [ "${1}" != "" ]
 	do
-		case ${1} in
+		case "${1}" in
 			-d)
 				shift
 
@@ -35,7 +35,7 @@ function generate_heap_dump {
 
 	echo "[Liferay] Generating ${HEAP_DUMPS_DIR}/${date}/heap_dump-${time}.txt"
 
-	jattach $(cat "${LIFERAY_PID}") dumpheap "${HEAP_DUMPS_DIR}/${date}/heap_dump-${time}.txt"
+	jattach "$(cat "${LIFERAY_PID}")" dumpheap "${HEAP_DUMPS_DIR}/${date}/heap_dump-${time}.txt"
 }
 
 function main {

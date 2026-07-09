@@ -12,7 +12,7 @@ function assert_equals {
 
 	local assertion_error_file="${PWD}/assertion_error"
 
-	for index in ${!arguments[@]}
+	for index in "${!arguments[@]}"
 	do
 		if [ $((index % 2)) -ne 0 ]
 		then

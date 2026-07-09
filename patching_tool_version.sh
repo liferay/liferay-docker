@@ -20,13 +20,13 @@ function get_full_version {
 		echo "1.0.24"
 	elif [ "${1}" == "2.0" ]
 	then
-		echo $(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-2.0.txt)
+		echo "$(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-2.0.txt)"
 	elif [ "${1}" == "3.0" ]
 	then
-		echo $(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-3.0.txt)
+		echo "$(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-3.0.txt)"
 	elif [ "${1}" == "4.0" ]
 	then
-		echo $(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-4.0.txt)
+		echo "$(lc_curl https://releases.liferay.com/tools/patching-tool/LATEST-4.0.txt)"
 	else
 		echo "Unable to get full version for ${1}."
 

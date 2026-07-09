@@ -105,7 +105,7 @@ function main {
 }
 
 function prepare_mount {
-	TEST_DIR=temp-test-$(date "$(date)" "+%Y%m%d%H%M")
+	TEST_DIR="temp-test-$(date "$(date)" "+%Y%m%d%H%M")"
 
 	mkdir --parents "${TEST_DIR}"
 
@@ -115,14 +115,14 @@ function prepare_mount {
 
 	if [ -n "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL}" ]
 	then
-		local patching_tool_file_name=${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL##*/}
+		local patching_tool_file_name=$(basename "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL}")
 
 		download "downloads/patching-tool/${patching_tool_file_name}" "${LIFERAY_DOCKER_TEST_PATCHING_TOOL_URL}"
 	fi
 
 	if [ -n "${LIFERAY_DOCKER_TEST_HOTFIX_URL}" ]
 	then
-		local hotfix_file_name=${LIFERAY_DOCKER_TEST_HOTFIX_URL##*/}
+		local hotfix_file_name=$(basename "${LIFERAY_DOCKER_TEST_HOTFIX_URL}")
 
 		download "downloads/hotfix/${hotfix_file_name}" "${LIFERAY_DOCKER_TEST_HOTFIX_URL}"
 
@@ -149,7 +149,7 @@ function start_container {
 
 	if [ ! -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then
-		LIFERAY_DOCKER_NETWORK_NAME="${DOCKER_NETWORK_NAME}"
+		LIFERAY_DOCKER_NETWORK_NAME=${DOCKER_NETWORK_NAME}
 	fi
 
 	CONTAINER_HOSTNAME="localhost"
@@ -275,8 +275,8 @@ function test_health_status {
 		echo -en "."
 
 		local health_status=$(docker inspect --format="{{json .State.Health.Status}}" "${CONTAINER_ID}")
-		local ignore_license=$(docker logs ${CONTAINER_ID} 2> /dev/null | grep --count "Starting Liferay Portal")
-		local license_status=$(docker logs ${CONTAINER_ID} 2> /dev/null | grep --count "License registered for DXP Development")
+		local ignore_license=$(docker logs "${CONTAINER_ID}" 2> /dev/null | grep --count "Starting Liferay Portal")
+		local license_status=$(docker logs "${CONTAINER_ID}" 2> /dev/null | grep --count "License registered for DXP Development")
 
 		if [ "${health_status}" == "\"healthy\"" ] && ([ ${ignore_license} -gt 0 ] || [ ${license_status} -gt 0 ])
 		then
@@ -302,7 +302,7 @@ function test_page {
 
 	content=$(curl --fail --location --max-time 60 --show-error --silent "${1}")
 
-	local exit_code="${?}"
+	local exit_code=${?}
 
 	if [ ${exit_code} -gt 0 ]
 	then

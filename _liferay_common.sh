@@ -39,7 +39,7 @@ function lc_check_utils {
 		then
 			lc_log ERROR "The utility ${util} is not installed."
 
-			exit_code="${LIFERAY_COMMON_EXIT_CODE_BAD}"
+			exit_code=${LIFERAY_COMMON_EXIT_CODE_BAD}
 		fi
 	done
 
@@ -52,7 +52,7 @@ function lc_clone_repository {
 
 	if [ -z "${repository_path}" ]
 	then
-		repository_path="${repository_name}"
+		repository_path=${repository_name}
 	fi
 
 	if [ -e "${repository_path}" ]
@@ -174,7 +174,7 @@ function lc_download {
 
 	if [ -z "${file_name}" ]
 	then
-		file_name=${file_url##*/}
+		file_name=$(basename "${file_url}")
 
 		local skip_copy="true"
 	fi
@@ -217,7 +217,7 @@ function lc_download {
 		fi
 	fi
 
-	local cache_file_dir="$(dirname "${cache_file}")"
+	local cache_file_dir=$(dirname "${cache_file}")
 
 	mkdir --parents "${cache_file_dir}"
 
@@ -316,9 +316,9 @@ function lc_next_step {
 
 	step=$((step + 1))
 
-	echo ${step} > "${LIFERAY_COMMON_STEP_FILE}"
+	echo "${step}" > "${LIFERAY_COMMON_STEP_FILE}"
 
-	printf "%02d" ${step}
+	printf "%02d" "${step}"
 }
 
 function lc_time_run {
@@ -355,7 +355,7 @@ function lc_time_run {
 
 		if [ "${exit_code}" -gt 0 ]
 		then
-			echo -e "$(lc_date) ! ${*} exited with \e[1;31merror\e[0m in $(lc_echo_time ${seconds}) (exit code: ${exit_code})."
+			echo -e "$(lc_date) ! ${*} exited with \e[1;31merror\e[0m in $(lc_echo_time "${seconds}") (exit code: ${exit_code})."
 
 			if [ -z "${LIFERAY_COMMON_DEBUG_ENABLED}" ] && [ -n "${LIFERAY_COMMON_LOG_DIR}" ]
 			then
@@ -366,16 +366,16 @@ function lc_time_run {
 
 			if (declare -F lc_time_run_error &>/dev/null)
 			then
-				LC_TIME_RUN_ERROR_EXIT_CODE="${exit_code}"
+				LC_TIME_RUN_ERROR_EXIT_CODE=${exit_code}
 				LC_TIME_RUN_ERROR_FUNCTION="${*}"
-				LC_TIME_RUN_ERROR_LOG_FILE="${log_file}"
+				LC_TIME_RUN_ERROR_LOG_FILE=${log_file}
 
 				lc_time_run_error
 			fi
 
-			exit ${exit_code}
+			exit "${exit_code}"
 		else
-			echo -e "$(lc_date) < ${*}: \e[1;32mSuccess\e[0m in $(lc_echo_time ${seconds})"
+			echo -e "$(lc_date) < ${*}: \e[1;32mSuccess\e[0m in $(lc_echo_time "${seconds}")"
 		fi
 	fi
 }
@@ -385,7 +385,7 @@ function lc_wait {
 	do
 		wait "${pid}"
 
-		local exit_code="${?}"
+		local exit_code=${?}
 
 		if [ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_OK}" ] && [ "${exit_code}" -ne "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" ]
 		then
@@ -408,7 +408,7 @@ function _lc_init {
 
 	if [ -z "${LIFERAY_COMMON_DOWNLOAD_CACHE_DIR}" ]
 	then
-		LIFERAY_COMMON_DOWNLOAD_CACHE_DIR=${HOME}/.liferay-common-cache
+		LIFERAY_COMMON_DOWNLOAD_CACHE_DIR="${HOME}/.liferay-common-cache"
 	fi
 
 	LIFERAY_COMMON_DOWNLOAD_MAX_TIME=1200

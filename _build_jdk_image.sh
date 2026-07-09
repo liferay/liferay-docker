@@ -3,10 +3,10 @@
 source ./_common.sh
 
 function _build_docker_image {
-	local jdk_friendly_name="${2}"
-	local jdk_from_image_name="${3}"
-	local jdk_image_name="${4}"
-	local jdk_version="${5}"
+	local jdk_friendly_name=${2}
+	local jdk_from_image_name=${3}
+	local jdk_image_name=${4}
+	local jdk_version=${5}
 
 	delete_local_images "${LIFERAY_DOCKER_REPOSITORY}/${jdk_image_name}"
 

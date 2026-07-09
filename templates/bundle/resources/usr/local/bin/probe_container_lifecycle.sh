@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "${LIFERAY_CONTAINER_STATUS_ENABLED}" != "true" ]]
+if [ "${LIFERAY_CONTAINER_STATUS_ENABLED}" != "true" ]
 then
 	echo "Set the environment variable LIFERAY_CONTAINER_STATUS_ENABLED to \"true\" to enable ${0}."
 

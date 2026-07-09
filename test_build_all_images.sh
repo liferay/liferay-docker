@@ -103,7 +103,7 @@ function _test_build_all_images_is_container_healthy {
 	LIFERAY_DOCKER_IMAGE_FILTER="${1}" LIFERAY_DOCKER_SLIM="${2}" ./build_all_images.sh &> /dev/null
 
 	assert_equals \
-		"$(grep --count "\[test_health_status\] SUCCESS" logs-*/"${1}".log)" \
+		"$(grep --count "\[test_health_status\] SUCCESS" logs-*/"${1}.log")" \
 		"1"
 
 	rm --force --recursive logs-*

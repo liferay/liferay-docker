@@ -283,7 +283,7 @@ function _test_release_common_get_latest_product_version {
 }
 
 function _test_release_common_get_premium_support_lts_release_branches {
-	LIFERAY_RELEASE_TEST_DATE="${1}"
+	LIFERAY_RELEASE_TEST_DATE=${1}
 
 	assert_equals \
 		"$(get_premium_support_lts_release_branches)" \
@@ -293,7 +293,7 @@ function _test_release_common_get_premium_support_lts_release_branches {
 }
 
 function _test_release_common_get_product_group_version {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(get_product_group_version)" "${2}"
 }
@@ -303,7 +303,7 @@ function _test_release_common_get_product_version_without_lts_suffix {
 }
 
 function _test_release_common_get_release_output {
-	LIFERAY_RELEASE_OUTPUT="${1}"
+	LIFERAY_RELEASE_OUTPUT=${1}
 
 	assert_equals "$(get_release_output)" "${2}"
 
@@ -311,31 +311,31 @@ function _test_release_common_get_release_output {
 }
 
 function _test_release_common_get_release_patch_version {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(get_release_patch_version)" "${2}"
 }
 
 function _test_release_common_get_release_quarter {
-	_PRODUCT_VERSION="${1}"
-	
+	_PRODUCT_VERSION=${1}
+
 	assert_equals "$(get_release_quarter)" "${2}"
 }
 
 function _test_release_common_get_release_version {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(get_release_version)" "${2}"
 }
 
 function _test_release_common_get_release_version_trivial {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(get_release_version_trivial)" "${2}"
 }
 
 function _test_release_common_get_target_platform_version {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(get_target_platform_version)" "${2}"
 }
@@ -365,7 +365,7 @@ function _test_release_common_is_7_4_u_release {
 }
 
 function _test_release_common_is_early_product_version_than {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	is_early_product_version_than "${2}"
 
@@ -373,7 +373,7 @@ function _test_release_common_is_early_product_version_than {
 }
 
 function _test_release_common_is_equals_or_later_product_version_than {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	is_equals_or_later_product_version_than "${2}"
 
@@ -381,7 +381,7 @@ function _test_release_common_is_equals_or_later_product_version_than {
 }
 
 function _test_release_common_is_first_quarterly_release {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	is_first_quarterly_release
 
@@ -389,7 +389,7 @@ function _test_release_common_is_first_quarterly_release {
 }
 
 function _test_release_common_is_later_product_version_than {
-	_PRODUCT_VERSION="${1}"
+	_PRODUCT_VERSION=${1}
 
 	is_later_product_version_than "${2}"
 

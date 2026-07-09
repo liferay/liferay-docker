@@ -7,7 +7,7 @@ function check_usage {
 
 	while [ "${1}" != "" ]
 	do
-		case ${1} in
+		case "${1}" in
 			-d)
 				shift
 
@@ -50,9 +50,7 @@ function generate_thread_dump {
 
 	echo "[Liferay] Generating ${THREAD_DUMPS_DIR}/${date}/thread_dump-${HOSTNAME}-${time}-${id}.txt.gz"
 
-	jattach $(cat "${LIFERAY_PID}") threaddump \
-		| gzip \
-		> "${THREAD_DUMPS_DIR}/${date}/thread_dump-${HOSTNAME}-${time}-${id}.txt.gz"
+	jattach "$(cat "${LIFERAY_PID}")" threaddump | gzip > "${THREAD_DUMPS_DIR}/${date}/thread_dump-${HOSTNAME}-${time}-${id}.txt.gz"
 }
 
 function main {

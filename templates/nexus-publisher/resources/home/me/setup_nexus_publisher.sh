@@ -7,12 +7,12 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 function clone_repository {
 	local repository_name=${1}
 
-	if [ ! -e ${repository_name} ]
+	if [ ! -e "${repository_name}" ]
 	then
-		git clone https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/brianchandotcom/${repository_name}.git
+		git clone https://"${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}"@github.com/brianchandotcom/"${repository_name}".git
 	fi
 
-	cat <<EOF | head --bytes=-1 > ${repository_name}/.git/config
+	cat <<EOF | head --bytes=-1 > "${repository_name}/.git/config"
 [remote "origin"]
 	fetch = +refs/heads/*:refs/remotes/origin/*
 	url = https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/brianchandotcom/${repository_name}.git
@@ -21,7 +21,7 @@ function clone_repository {
 	url = https://${LIFERAY_NEXUS_PUBLISHER_GIT_GITHUB_OATH_TOKEN}@github.com/liferay/${repository_name}.git
 EOF
 
-	cat <<EOF | head --bytes=-1 > ${repository_name}/build.me.properties
+	cat <<EOF | head --bytes=-1 > "${repository_name}/build.me.properties"
 	build.repository.private.password=${LIFERAY_NEXUS_PUBLISHER_SONATYPE_PASSWORD}
 	build.repository.private.username=${LIFERAY_NEXUS_PUBLISHER_SONATYPE_USERNAME}
 

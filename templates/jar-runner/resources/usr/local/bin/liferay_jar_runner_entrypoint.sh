@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function main {
-	export JAVA_HOME=/usr/lib/jvm/${JAVA_VERSION}
-	export PATH=/usr/lib/jvm/${JAVA_VERSION}/bin/:${PATH}
+	export JAVA_HOME="/usr/lib/jvm/${JAVA_VERSION}"
+	export PATH="/usr/lib/jvm/${JAVA_VERSION}/bin/:${PATH}"
 
 	if [ -e /usr/local/bin/liferay_jar_runner_set_up.sh ]
 	then
