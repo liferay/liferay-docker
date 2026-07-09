@@ -16,12 +16,6 @@ function generate_thread_dump {
 	lecho "Generated a thread dump at ${file_name}."
 }
 
-function lecho {
-	echo -en "Lifecycle monitor: "
-
-	echo "${@}"
-}
-
 function kill_service {
 	lecho "Killing container since it reached the LIFERAY_CONTAINER_KILL_ON_FAILURE threshold."
 
@@ -33,7 +27,13 @@ function kill_service {
 
 	lecho "Forcefully killing the Liferay service in the container."
 
-	kill -9 $(cat "${LIFERAY_PID}")
+	kill -9 "$(cat "${LIFERAY_PID}")"
+}
+
+function lecho {
+	echo -en "Lifecycle monitor: "
+
+	echo "${@}"
 }
 
 function main {

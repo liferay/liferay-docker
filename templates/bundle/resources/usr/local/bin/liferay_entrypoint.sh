@@ -72,19 +72,6 @@ function main {
 	update_container_status post-shutdown
 
 	execute_scripts /usr/local/liferay/scripts/post-shutdown
-
-}
-
-function start_liferay {
-	set +e
-
-	start_liferay.sh &
-
-	START_LIFERAY_PID=$!
-
-	echo "${START_LIFERAY_PID}" > "${LIFERAY_PID}"
-
-	wait ${START_LIFERAY_PID}
 }
 
 function start_interval_thread_dump {
@@ -109,6 +96,18 @@ function start_interval_thread_dump {
 			sleep 60
 		fi
 	done
+}
+
+function start_liferay {
+	set +e
+
+	start_liferay.sh &
+
+	START_LIFERAY_PID=${!}
+
+	echo "${START_LIFERAY_PID}" > "${LIFERAY_PID}"
+
+	wait "${START_LIFERAY_PID}"
 }
 
 function start_monitor_liferay_lifecycle {

@@ -19,6 +19,18 @@ function add_lock {
 	fi
 }
 
+function main {
+	local delay=$((RANDOM % 10 + 1))
+
+	echo "Delaying lock check for ${delay} seconds."
+
+	sleep "${delay}"
+
+	wait_until_free
+
+	add_lock
+}
+
 function wait_until_free {
 	while
 		[ -e "${LIFERAY_CONTAINER_STARTUP_LOCK_FILE}" ] &&
@@ -38,18 +50,6 @@ function wait_until_free {
 
 		sleep 3
 	done
-}
-
-function main {
-	local delay=$((RANDOM % 10 + 1))
-
-	echo "Delaying lock check for ${delay} seconds."
-
-	sleep ${delay}
-
-	wait_until_free
-
-	add_lock
 }
 
 main

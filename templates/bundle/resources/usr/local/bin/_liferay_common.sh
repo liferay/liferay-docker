@@ -155,6 +155,12 @@ function lc_download {
 	fi
 }
 
+function lc_echo_time {
+	local seconds=${1}
+
+	printf "%02dh:%02dm:%02ds" $((seconds / 3600)) $((seconds % 3600 / 60)) $((seconds % 60))
+}
+
 function lc_get_property {
 	file=${1}
 	property_key=${2}
@@ -169,12 +175,6 @@ function lc_get_property {
 
 		echo "${property_value##*=}"
 	fi
-}
-
-function lc_echo_time {
-	local seconds=${1}
-
-	printf "%02dh:%02dm:%02ds" $((seconds / 3600)) $((seconds % 3600 / 60)) $((seconds % 60))
 }
 
 function lc_log {
