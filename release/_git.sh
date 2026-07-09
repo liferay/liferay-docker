@@ -170,7 +170,7 @@ function update_portal_repository {
 
 	if echo "${LIFERAY_RELEASE_GIT_REF}" | grep --extended-regexp --quiet "^[[:alnum:]\.-]+/[0-9a-z]{40}$"
 	then
-		checkout_ref="${LIFERAY_RELEASE_GIT_REF#*/}"
+		checkout_ref=${LIFERAY_RELEASE_GIT_REF#*/}
 
 		LIFERAY_RELEASE_GIT_REF=$(dirname "${LIFERAY_RELEASE_GIT_REF}")
 	elif echo "${LIFERAY_RELEASE_GIT_REF}" | grep --extended-regexp --quiet "^[0-9a-f]{40}$"
