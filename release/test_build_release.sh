@@ -87,7 +87,7 @@ function test_build_hotfix_main {
 
 function test_build_release_bundle_smaller_than_1_gb_300_mb {
 	assert_equals \
-		"$(( $(stat --format="%s" "${_RELEASE_PACKAGE}"/liferay-dxp-tomcat-2025.q4.1-*.7z) < 1300000000 ))" \
+		"$(($(stat --format="%s" "${_RELEASE_PACKAGE}"/liferay-dxp-tomcat-2025.q4.1-*.7z) < 1300000000))" \
 		"1"
 }
 
