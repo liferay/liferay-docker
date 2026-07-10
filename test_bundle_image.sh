@@ -198,7 +198,7 @@ function start_container {
 	then
 		CONTAINER_HTTP_PORT=$(docker port "${CONTAINER_ID}" 8080/tcp)
 
-		CONTAINER_HTTP_PORT=$(echo "${CONTAINER_HTTP_PORT}" | awk -F ":" '{print $NF}')
+		CONTAINER_HTTP_PORT=$(echo "${CONTAINER_HTTP_PORT}" | awk -F ":" 'END {print $NF}')
 	fi
 
 	TEST_RESULT=0

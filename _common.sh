@@ -366,7 +366,7 @@ function warm_up_tomcat {
 
 	if [ -e "${TEMP_DIR}/liferay/data/hsql/lportal.script" ]
 	then
-		if [[ "$(stat "${TEMP_DIR}/liferay/data/hsql/lportal.script")" -lt 1024000 ]]
+		if [[ "$(stat --printf="%s" "${TEMP_DIR}/liferay/data/hsql/lportal.script")" -lt 1024000 ]]
 		then
 			start_tomcat
 		else
@@ -374,7 +374,7 @@ function warm_up_tomcat {
 		fi
 	elif [ -e "${TEMP_DIR}/liferay/data/hypersonic/lportal.script" ]
 	then
-		if [[ "$(stat "${TEMP_DIR}/liferay/data/hypersonic/lportal.script")" -lt 1024000 ]]
+		if [[ "$(stat --printf="%s" "${TEMP_DIR}/liferay/data/hypersonic/lportal.script")" -lt 1024000 ]]
 		then
 			start_tomcat
 		else
