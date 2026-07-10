@@ -29,6 +29,7 @@ function main {
 		test_release_common_is_7_4_u_release
 		test_release_common_is_early_product_version_than
 		test_release_common_is_equals_or_later_product_version_than
+		test_release_common_is_first_quarterly_release
 		test_release_common_is_later_product_version_than
 		test_release_common_is_latest_release_candidate_published
 		test_release_common_is_lts_release
