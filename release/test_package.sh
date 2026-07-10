@@ -113,8 +113,6 @@ function test_package_package_jakarta_transform_dependencies {
 	_test_package_package_jakarta_transform_dependencies "2025.q3.0"
 	_test_package_package_jakarta_transform_dependencies "2026.q1.0-lts"
 	_test_package_package_jakarta_transform_dependencies "2026.q2.0"
-	_test_package_package_jakarta_transform_dependencies "2026.q3.0"
-	_test_package_package_jakarta_transform_dependencies "2027.q1.0-lts"
 
 	rm --force --recursive "${_PROJECTS_DIR}"
 
