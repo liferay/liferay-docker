@@ -324,7 +324,7 @@ function upload_opensearch {
 		if [[ "${?}" -ne 0 ]]
 		then
 			lc_log ERROR "Unable to upload com.liferay.portal.search.opensearch2.${module}.jar."
-	
+
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 	done
