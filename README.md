@@ -1,6 +1,6 @@
 # Code Style
 
-Read [CODE_STYLE.md](https://github.com/liferay/liferay-docker/blob/master/.claude/CODE_STYLE.md)
+Read the [Code Style guide](https://github.com/liferay/liferay-docker/blob/master/.claude/CODE_STYLE.md).
 
 # Documentation
 
