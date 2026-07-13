@@ -2,11 +2,11 @@
 
 argument-hint: "[optional *.sh file or folder paths]"
 description: Format Bash (*.sh) files to match .claude/CODE_STYLE.md, the repository's source of truth for shell style. Use when the user asks to format, fix, or apply the code style to shell scripts. Runs in two modes — with no arguments it formats every *.sh file modified locally on the current branch (both committed on branch and not yet committed changes); with file or folder paths as arguments it formats those targets instead.
-name: format-bash-code
+name: format-bash-source
 
 ---
 
-# Format Bash Code
+# Format Bash Source
 
 Reformat Bash scripts so they comply with [.claude/CODE_STYLE.md](../../CODE_STYLE.md), the authoritative style guide for every `*.sh` file in this repository.
 

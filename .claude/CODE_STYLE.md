@@ -2,7 +2,7 @@
 
 This document is the source of truth for the style of every Bash file in the `liferay-docker` repository. It defines how files are structured, named, formatted, and documented so that all scripts read consistently regardless of author.
 
-It applies to every `*.sh` file in the repository, including executables, internal (`_`-prefixed) helpers, and test files. When the rules here and the existing code disagree, this document wins and the code should be updated to match. To apply these rules, run the [`format-bash-code`](skills/format-bash-code/SKILL.md) Claude skill: invoke `/format-bash-code` with no arguments to format every `*.sh` file you have modified locally on the current branch (both the changes already committed on the branch and the changes not yet committed), or pass file or folder paths to format those targets instead.
+It applies to every `*.sh` file in the repository, including executables, internal (`_`-prefixed) helpers, and test files. When the rules here and the existing code disagree, this document wins and the code should be updated to match. To apply these rules, run the [`format-bash-source`](skills/format-bash-source/SKILL.md) Claude skill: invoke `/format-bash-source` with no arguments to format every `*.sh` file you have modified locally on the current branch (both the changes already committed on the branch and the changes not yet committed), or pass file or folder paths to format those targets instead.
 
 ## Table of Contents
 
@@ -359,7 +359,7 @@ done
 ```
 
 - Prefer single-bracket `[ ... ]` tests. Reserve `[[ ... ]]` for cases that need its features: pattern matching, regular-expression matching (`=~`), `${BASH_SOURCE[0]}` comparisons, lexicographic string comparisons with `<` or `>` (which `[ ... ]` would treat as input or output redirection), and numeric comparisons (`-eq`, `-ne`, `-lt`, `-le`, `-gt`, `-ge`). Numeric comparisons stay in `[[ ... ]]` because its arithmetic context tolerates empty or noninteger operands, whereas `[ ... ]` fails with "integer expression expected".
-- Use `==` for string equality and the numeric operators above for numeric comparison. Comparing a value that is inherently an integer — for example a count from `wc --lines` or `grep --count` — against a number is a numeric comparison, so write it with a numeric operator in `[[ ... ]]` (`[[ "$(... | wc --lines)" -eq 1 ]]`), not as a string test (`[ "$(...)" == 1 ]`). Recognizing that an operand is numeric depends on knowing what the command produces, so this conversion is **not** applied by the [`format-bash-code`](skills/format-bash-code/SKILL.md) skill; it is an authoring guideline enforced in code review.
+- Use `==` for string equality and the numeric operators above for numeric comparison. Comparing a value that is inherently an integer — for example a count from `wc --lines` or `grep --count` — against a number is a numeric comparison, so write it with a numeric operator in `[[ ... ]]` (`[[ "$(... | wc --lines)" -eq 1 ]]`), not as a string test (`[ "$(...)" == 1 ]`). Recognizing that an operand is numeric depends on knowing what the command produces, so this conversion is **not** applied by the [`format-bash-source`](skills/format-bash-source/SKILL.md) skill; it is an authoring guideline enforced in code review.
 - When the comparison operator itself is held in a variable (`[ "${a}" "${operator}" "${b}" ]`), keep the single-bracket `[ ... ]`, because `[[ ... ]]` parses its operator token literally and cannot accept a dynamic operator.
 - For multiline conditions, break after the logical operator (`||` / `&&`) and align continuation lines so the test lines up under the first one (one tab plus three spaces, matching the width of `if `).
 
@@ -494,4 +494,4 @@ lc_log DEBUG "File is available at ${file_url}."
 lc_log INFO "${LIFERAY_RELEASE_GIT_REF} was already built in ${_BUILD_DIR}."
 ```
 
-The `lc_log`-versus-`echo` choice is semantic and depends on intent, so it is **not** applied by the [`format-bash-code`](skills/format-bash-code/SKILL.md) skill; it is an authoring guideline enforced in code review. The formatter never rewrites `echo` to `lc_log` or vice versa.
+The `lc_log`-versus-`echo` choice is semantic and depends on intent, so it is **not** applied by the [`format-bash-source`](skills/format-bash-source/SKILL.md) skill; it is an authoring guideline enforced in code review. The formatter never rewrites `echo` to `lc_log` or vice versa.
