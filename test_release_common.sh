@@ -37,6 +37,7 @@ function main {
 		test_release_common_is_quarterly_release
 		test_release_common_is_quarterly_release_docker_image
 		test_release_common_is_u_release
+		test_release_common_is_u_release_docker_image
 	fi
 
 	tear_down
@@ -271,6 +272,13 @@ function test_release_common_is_u_release {
 	_test_release_common_is_u_release "7.4.13-u149-ai-hub" "0"
 }
 
+function test_release_common_is_u_release_docker_image {
+	_test_release_common_is_u_release_docker_image "liferay/dxp:7.4.13-u134" "0"
+	_test_release_common_is_u_release_docker_image "liferay/release-candidates:7.4.13-u134-123456789" "0"
+	_test_release_common_is_u_release_docker_image "liferay/release-candidates:7.3.10-u36-123456789" "0"
+	_test_release_common_is_u_release_docker_image "liferay/release-candidates:2025.q1.12-123456789" "1"
+}
+
 function _test_release_common_get_due_date {
 	assert_equals \
 		"$(get_due_date "${1}" "${2}")" \
@@ -429,6 +437,12 @@ function _test_release_common_is_quarterly_release_docker_image {
 
 function _test_release_common_is_u_release {
 	is_u_release "${1}"
+
+	assert_equals "${?}" "${2}"
+}
+
+function _test_release_common_is_u_release_docker_image {
+	is_u_release_docker_image "${1}"
 
 	assert_equals "${?}" "${2}"
 }
