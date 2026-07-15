@@ -353,6 +353,15 @@ function is_u_release {
 	return 1
 }
 
+function is_u_release_docker_image {
+	if is_u_release "$(echo "${1}" | cut --delimiter=':' --fields=2)"
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function set_actual_product_version {
 	_ACTUAL_PRODUCT_VERSION=${1}
 }

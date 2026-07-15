@@ -102,6 +102,13 @@ function _scan_docker_image {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	if is_u_release_docker_image "${LIFERAY_DOCKER_IMAGE_NAME}"
+	then
+		lc_log INFO "Skipping Docker image scan for U releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	if [ -z "${LIFERAY_PRISMA_CLOUD_ACCESS_KEY}" ] ||
 	   [ -z "${LIFERAY_PRISMA_CLOUD_SECRET}" ]
 	then
