@@ -28,7 +28,6 @@ function print_help {
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_DOCKER_IMAGE_NAME: Liferay Docker image name to scan"
-	echo "    LIFERAY_RELEASE_OUTPUT (optional): Set to \"nightly\" for nightly builds. The default is \"release-candidate\"."
 	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to notify info sec"
 	echo ""
 	echo "Example: LIFERAY_DOCKER_IMAGE_NAME=liferay/release-candidates:2025.q1.12-123456789 ${0}"
@@ -38,11 +37,6 @@ function print_help {
 
 function set_liferay_docker_image_name {
 	export LIFERAY_DOCKER_IMAGE_NAME="liferay/release-candidates:${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}"
-
-	if [ "$(get_release_output)" == "nightly" ]
-	then
-		LIFERAY_DOCKER_IMAGE_NAME="liferay/dxp:7.4.13.nightly"
-	fi
 
 	lc_log INFO "Setting Liferay Docker image name to ${LIFERAY_DOCKER_IMAGE_NAME}"
 
