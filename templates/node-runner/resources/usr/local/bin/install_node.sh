@@ -23,7 +23,7 @@ function main {
 	mkdir --parents "${target_dir}"
 
 	curl -fsSL "https://nodejs.org/dist/v${node_version}/node-v${node_version}-linux-${node_architecture}.tar.gz" | \
-		tar --extract --gzip --directory "${target_dir}" --strip-components 1
+		tar --directory "${target_dir}" --extract --gzip --strip-components 1
 
 	"${target_dir}/bin/node" --version
 }
