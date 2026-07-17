@@ -1,12 +1,15 @@
 #!/bin/bash
 
 function main {
+	local available_node_versions=$(ls /usr/local/node | paste --delimiters=',' --serial | sed "s/,/, /g")
+
 	if [ -z "${NODE_VERSION}" ]
 	then
-		return
-	fi
+		echo "[LIFERAY] The \"NODE_VERSION\" environment variable is not set."
+		echo "[LIFERAY] Set it to one of the available Node versions: ${available_node_versions}."
 
-	local available_node_versions=$(ls /usr/local/node | paste --delimiters=',' --serial | sed "s/,/, /g")
+		exit 1
+	fi
 
 	if [ -e "/usr/local/node/${NODE_VERSION}" ]
 	then
