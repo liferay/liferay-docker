@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function main {
-	local node_version="${1}"
-	local target_dir="${2}"
+	local node_version=${1}
+	local target_dir=${2}
 
 	local architecture=$(dpkg --print-architecture)
 
@@ -22,8 +22,17 @@ function main {
 
 	mkdir --parents "${target_dir}"
 
-	curl -fsSL "https://nodejs.org/dist/v${node_version}/node-v${node_version}-linux-${node_architecture}.tar.gz" | \
-		tar --directory "${target_dir}" --extract --gzip --strip-components 1
+	curl \
+		--fail \
+		--location \
+		--show-error \
+		--silent \
+		"https://nodejs.org/dist/v${node_version}/node-v${node_version}-linux-${node_architecture}.tar.gz" | \
+		tar \
+			--directory "${target_dir}" \
+			--extract \
+			--gzip \
+			--strip-components 1
 
 	"${target_dir}/bin/node" --version
 }
