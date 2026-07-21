@@ -2531,3 +2531,10 @@ docker.image.git.id-10.0.65=162a2697d96b9e3ae6e1c9d84ec88bb81ff91666
 
 docker.image.change.log-10.0.66=LPD-98466
 docker.image.git.id-10.0.66=0ed90e3d68769e20baf3dcd68188de0fd9f08c5e
+
+#
+# Liferay Docker Image Version 10.0.67
+#
+
+docker.image.change.log-10.0.67=LPD-83893
+docker.image.git.id-10.0.67=6c1af98bd49ab7a2d37e7dbf41cb5186577eb256
