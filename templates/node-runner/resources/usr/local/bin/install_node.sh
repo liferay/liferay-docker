@@ -4,9 +4,9 @@ function main {
 	local node_version=${1}
 	local target_dir=${2}
 
-	local architecture=$(dpkg --print-architecture)
-
 	local node_architecture
+
+	local architecture=$(dpkg --print-architecture)
 
 	if [ "${architecture}" == "amd64" ]
 	then
