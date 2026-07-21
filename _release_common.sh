@@ -8,7 +8,7 @@ function download_product_version_list_html {
 		product_version_list_html=$(cat "${_RELEASE_ROOT_DIR}/test-dependencies/actual/$(basename "${1}").html")
 	elif [ "${1}" == "dxp/release-candidates" ]
 	then
-		product_version_list_html=$(gsutil ls "gs://liferay-releases-candidates/")
+		product_version_list_html=$(gcloud storage ls "gs://liferay-releases-candidates/")
 	else
 		product_version_list_html=$(lc_curl "https://releases.liferay.com/${1}/")
 	fi

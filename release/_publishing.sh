@@ -266,14 +266,14 @@ function upload_hotfix {
 
 	local gcp_bucket="liferay-hotfixes"
 
-	if gsutil ls "gs://${gcp_bucket}/${_PRODUCT_VERSION}" | grep --quiet "${_HOTFIX_FILE_NAME}"
+	if gcloud storage ls "gs://${gcp_bucket}/${_PRODUCT_VERSION}" | grep --quiet "${_HOTFIX_FILE_NAME}"
 	then
 		lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP bucket ${gcp_bucket} because it already exists."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gsutil cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://${gcp_bucket}/${_PRODUCT_VERSION}/"
+	gcloud storage cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://${gcp_bucket}/${_PRODUCT_VERSION}/"
 
 	if [[ "${?}" -ne 0 ]]
 	then
@@ -317,7 +317,7 @@ function upload_opensearch {
 
 	for module in api impl
 	do
-		gsutil mv \
+		gcloud storage mv \
 			"${_BUNDLES_DIR}/osgi/portal/com.liferay.portal.search.opensearch2.${module}.jar" \
 			"gs://liferay-releases/opensearch2/${release_dir_name}/com.liferay.portal.search.opensearch2.${module}.jar"
 
@@ -349,11 +349,11 @@ function upload_release {
 
 	if [ "$(get_release_output)" == "nightly" ]
 	then
-		gsutil rm -r "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly/"
+		gcloud storage rm --recursive "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly/"
 
 		destination_bucket="gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly/"
 	else
-		gsutil rm -r "gs://liferay-releases-candidates/${_PRODUCT_VERSION}-*"
+		gcloud storage rm --recursive "gs://liferay-releases-candidates/${_PRODUCT_VERSION}-*"
 
 		destination_bucket="gs://liferay-releases-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 	fi
@@ -368,7 +368,7 @@ function upload_release {
 		then
 			echo "Copying ${file}."
 
-			gsutil cp "${_BUILD_DIR}/release/${file}" "${destination_bucket}"
+			gcloud storage cp "${_BUILD_DIR}/release/${file}" "${destination_bucket}"
 		fi
 	done
 }

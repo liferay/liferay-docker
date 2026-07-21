@@ -529,11 +529,11 @@ function _upload_releases_json {
 
 	lc_log INFO "Backing up to gs://liferay-releases/releases.json.BACKUP."
 
-	gsutil cp "gs://liferay-releases/releases.json" "gs://liferay-releases/releases.json.BACKUP"
+	gcloud storage cp "gs://liferay-releases/releases.json" "gs://liferay-releases/releases.json.BACKUP"
 
 	lc_log INFO "Uploading ${_PROMOTION_DIR}/releases.json to gs://liferay-releases/releases.json."
 
-	gsutil cp "${_PROMOTION_DIR}/releases.json" "gs://liferay-releases/releases.json.upload"
+	gcloud storage cp "${_PROMOTION_DIR}/releases.json" "gs://liferay-releases/releases.json.upload"
 
-	gsutil mv "gs://liferay-releases/releases.json.upload" "gs://liferay-releases/releases.json"
+	gcloud storage mv "gs://liferay-releases/releases.json.upload" "gs://liferay-releases/releases.json"
 }

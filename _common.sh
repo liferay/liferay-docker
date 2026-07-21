@@ -124,7 +124,7 @@ function download {
 
 	if [[ "${file_url}" == gs://* ]]
 	then
-		gsutil cp "${file_url}" "${file_name}"
+		gcloud storage cp "${file_url}" "${file_name}"
 
 		if [[ "${?}" -ne 0 ]]
 		then
