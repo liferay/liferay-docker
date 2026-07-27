@@ -4,7 +4,7 @@ source /usr/local/bin/_liferay_bundle_common.sh
 source /usr/local/bin/_liferay_common.sh
 
 function configure_structured_logging {
-	if [ "${LIFERAY_STRUCTURED_LOGGING_ENABLED}" != "true" ]
+	if [ "${LIFERAY_CONTAINER_STRUCTURED_LOGGING_ENABLED}" != "true" ]
 	then
 		return
 	fi
