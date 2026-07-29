@@ -124,6 +124,8 @@ function main {
 		exit "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	fi
 
+	lc_time_run normalize_synced_translations
+
 	lc_time_run push_branch_to_liferay_release_fork \
 		"${_TEMP_BRANCH}" \
 		"liferay-portal"
@@ -194,6 +196,57 @@ function normalize_existing_translations {
 	fi
 
 	commit_changes "${normalized_translation_files}" "LPD-91206 buildLang"
+}
+
+function normalize_synced_translations {
+	lc_cd "${_PROJECTS_DIR}/liferay-portal"
+
+	local changed_translation_files=$( \
+		git show --name-only --pretty=format: HEAD | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}")
+
+	if [ -z "${changed_translation_files}" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	lc_log INFO "Running the Lang Builder to normalize the synced translations."
+
+	_run_lang_builder_on_files "${changed_translation_files}"
+
+	if [[ "${?}" -ne 0 ]]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local normalized_translation_files=$( \
+		git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}")
+
+	if [ -z "${normalized_translation_files}" ]
+	then
+		lc_log INFO "Skipping the Crowdin translation update because the Lang Builder made no changes to the synced translations."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	local branch_id=$(_get_crowdin_branch_id)
+
+	if [ -z "${branch_id}" ]
+	then
+		lc_log ERROR "Unable to get the Crowdin branch ID for the master branch."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local normalized_translation_file
+
+	while IFS= read -r normalized_translation_file
+	do
+		_push_normalized_translations "${branch_id}" "${normalized_translation_file}"
+
+		git add "${normalized_translation_file}"
+	done <<< "${normalized_translation_files}"
+
+	git commit --amend --no-edit
 }
 
 function print_help {
@@ -332,6 +385,113 @@ function _apply_crowdin_translations {
 	' "${crowdin_translation_file}" "${head_translation_file}"
 }
 
+function _get_crowdin_branch_id {
+	local response=$( \
+		_get_crowdin_data \
+			"projects/${CROWDIN_PROJECT_ID}/branches" \
+			"name=master")
+
+	if [ -z "${response}" ]
+	then
+		return
+	fi
+
+	echo "${response}" | jq --raw-output ".data[0].data.id"
+}
+
+function _get_crowdin_data {
+	local api_path=${1}
+
+	shift
+
+	local query_arguments=()
+
+	local query_parameter
+
+	for query_parameter in "${@}"
+	do
+		query_arguments+=(--data-urlencode "${query_parameter}")
+	done
+
+	local http_code_file=$(mktemp)
+
+	local response=$( \
+		curl \
+			--connect-timeout 10 \
+			--get \
+			--header "Authorization: Bearer ${CROWDIN_API_TOKEN}" \
+			--max-time 30 \
+			--retry 5 \
+			--retry-connrefused \
+			--retry-max-time 60 \
+			--show-error \
+			--silent \
+			--write-out "%output{${http_code_file}}%{http_code}" \
+			"${query_arguments[@]}" \
+			"https://api.crowdin.com/api/v2/${api_path}")
+
+	local http_code=$(cat "${http_code_file}")
+
+	rm --force "${http_code_file}"
+
+	if [[ "${http_code}" -ge 400 ]]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	echo "${response}"
+}
+
+function _get_crowdin_string_id {
+	local branch_id=${1}
+	local key=${2}
+
+	local response=$( \
+		_get_crowdin_data \
+			"projects/${CROWDIN_PROJECT_ID}/strings" \
+			"branchId=${branch_id}" \
+			"filter=${key}" \
+			"limit=500" \
+			"scope=identifier")
+
+	if [ -z "${response}" ]
+	then
+		return
+	fi
+
+	echo "${response}" | jq --raw-output ".data[] | select(.data.identifier == \"${key}\") | .data.id // empty"
+}
+
+function _get_crowdin_translation_id {
+	local crowdin_language_id=${1}
+	local string_id=${2}
+	local text=${3}
+
+	local response=$( \
+		_get_crowdin_data \
+			"projects/${CROWDIN_PROJECT_ID}/translations" \
+			"languageId=${crowdin_language_id}" \
+			"limit=100" \
+			"stringId=${string_id}")
+
+	if [ -z "${response}" ]
+	then
+		return
+	fi
+
+	local translation
+
+	while IFS= read -r translation
+	do
+		if [ "$(echo "${translation}" | jq --raw-output ".data.text")" == "${text}" ]
+		then
+			echo "${translation}" | jq --raw-output ".data.id // empty"
+
+			return
+		fi
+	done <<< "$(echo "${response}" | jq --compact-output ".data[]")"
+}
+
 function _has_new_translations {
 	local head_translation_file=${1}
 	local merged_translation_file=${2}
@@ -352,7 +512,7 @@ function _merge_translation_file {
 
 	_apply_crowdin_translations "${crowdin_translation_file}" "${head_translation_file}" > "${merged_translation_file}"
 
-	if [ -z "$(tail --bytes=1 "${merged_translation_file}")" ]
+	if [ -n "$(tail --bytes=1 "${head_translation_file}")" ]
 	then
 		truncate --size=-1 "${merged_translation_file}"
 	fi
@@ -365,6 +525,85 @@ function _merge_translation_file {
 	fi
 
 	rm --force "${head_translation_file}" "${merged_translation_file}"
+}
+
+function _post_crowdin_data {
+	local api_path=${1}
+	local data=${2}
+
+	curl \
+		--connect-timeout 10 \
+		--data "${data}" \
+		--header "Authorization: Bearer ${CROWDIN_API_TOKEN}" \
+		--header "Content-Type: application/json" \
+		--max-time 30 \
+		--request POST \
+		--retry 5 \
+		--retry-connrefused \
+		--retry-max-time 60 \
+		--show-error \
+		--silent \
+		"https://api.crowdin.com/api/v2/${api_path}"
+}
+
+function _push_normalized_translations {
+	local branch_id=${1}
+	local translation_file=${2}
+
+	local translation_file_name=$(basename "${translation_file}")
+
+	local locale=$( \
+		echo "${translation_file_name}" | sed --regexp-extended --expression "s/^(Language|bundle)_(.+)\.properties$/\2/")
+
+	if [ "${locale}" == "${translation_file_name}" ]
+	then
+		return
+	fi
+
+	local crowdin_language_id=$(yq ".files[0].languages_mapping.locale | to_entries[] | select(.value == \"${locale}\") | .key" "${_CROWDIN_DIR}/crowdin.yml")
+
+	if [ -z "${crowdin_language_id}" ]
+	then
+		lc_log INFO "Skipping locale ${locale} because it is not a mapped Crowdin target language."
+
+		return
+	fi
+
+	local head_translation_file=$(mktemp)
+
+	git show "HEAD:${translation_file}" > "${head_translation_file}"
+
+	local normalized_translations=$( \
+		diff "${head_translation_file}" "${translation_file}" | \
+		grep "^>" | \
+		sed --expression "s/^> //")
+
+	local normalized_translation
+
+	while IFS= read -r normalized_translation
+	do
+		if [ -z "${normalized_translation}" ]
+		then
+			continue
+		fi
+
+		local key=$(echo "${normalized_translation}" | sed --expression "s/=.*//")
+
+		local string_id=$(_get_crowdin_string_id "${branch_id}" "${key}")
+
+		if [ -z "${string_id}" ]
+		then
+			lc_log WARN "Unable to find a Crowdin string for key ${key}."
+
+			continue
+		fi
+
+		local text=$(echo "${normalized_translation}" | sed --expression "s/^[^=]*=//")
+
+		_update_crowdin_translation "${crowdin_language_id}" "${key}" "${string_id}" "${text}"
+	done <<< "${normalized_translations}"
+
+	rm --force "${head_translation_file}"
 }
 
 function _run_lang_builder_on_files {
@@ -416,6 +655,70 @@ function _run_lang_builder_on_files {
 			fi
 		done
 	done <<< "${translation_dirs}"
+}
+
+function _update_crowdin_translation {
+	local crowdin_language_id=${1}
+	local key=${2}
+	local string_id=${3}
+	local text=${4}
+
+	local translation_data=$(
+		cat <<- END
+		{
+			"languageId": "${crowdin_language_id}",
+			"stringId": ${string_id},
+			"text": $(printf "%s" "${text}" | jq --raw-input --slurp ".")
+		}
+		END
+	)
+
+	local translation_response=$( \
+		_post_crowdin_data \
+			"projects/${CROWDIN_PROJECT_ID}/translations" \
+			"${translation_data}")
+
+	local translation_id=$(echo "${translation_response}" | jq --raw-output ".data.id // empty")
+
+	if [ -z "${translation_id}" ]
+	then
+		translation_id=$(_get_crowdin_translation_id "${crowdin_language_id}" "${string_id}" "${text}")
+	fi
+
+	if [ -z "${translation_id}" ]
+	then
+		local error_message=$( \
+			echo "${translation_response}" | jq --raw-output "[.errors[]?.error.errors[]?.message] | join(\", \")")
+
+		lc_log WARN "Unable to update the Crowdin translation for ${key} in ${crowdin_language_id}. Crowdin returned \"${error_message}\"."
+
+		return
+	fi
+
+	local approval_data=$(
+		cat <<- END
+		{
+			"translationId": ${translation_id}
+		}
+		END
+	)
+
+	local approval_response=$( \
+		_post_crowdin_data \
+			"projects/${CROWDIN_PROJECT_ID}/approvals" \
+			"${approval_data}")
+
+	if [ -z "$(echo "${approval_response}" | jq --raw-output ".data.id // empty")" ]
+	then
+		local error_message=$( \
+			echo "${approval_response}" | jq --raw-output "[.errors[]?.error.errors[]?.message] | join(\", \")")
+
+		lc_log WARN "Unable to approve the Crowdin translation for ${key} in ${crowdin_language_id}. Crowdin returned \"${error_message}\"."
+
+		return
+	fi
+
+	lc_log INFO "Updated the Crowdin translation for ${key} in ${crowdin_language_id}."
 }
 
 main "${@}"
