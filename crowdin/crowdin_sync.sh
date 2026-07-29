@@ -45,12 +45,16 @@ function check_usage {
 
 	LIFERAY_COMMON_LOG_DIR="${_CROWDIN_DIR}/logs"
 
+	_LANG_BUILDER_LIB_DIR="tools/sdk/dependencies/com.liferay.lang.builder/lib"
+
 	_PROJECTS_DIR="/opt/dev/projects/github"
 
 	if [ ! -d "${_PROJECTS_DIR}" ]
 	then
 		_PROJECTS_DIR=${_CROWDIN_DIR}
 	fi
+
+	_TRANSLATION_FILE_REGEX="(Language|bundle)(_[a-zA-Z].*)?\.properties$"
 }
 
 function download_translations {
@@ -103,6 +107,10 @@ function main {
 
 	lc_time_run set_up_branch
 
+	lc_time_run set_up_lang_builder
+
+	lc_time_run normalize_existing_translations
+
 	lc_time_run upload_sources
 
 	lc_time_run download_translations
@@ -128,10 +136,8 @@ function main {
 }
 
 function merge_and_commit_translations {
-	local translation_file_regex="(Language|bundle)(_[a-zA-Z].*)?\.properties$"
-
 	local changed_files=$( \
-		git diff --name-only | grep --extended-regexp "${translation_file_regex}")
+		git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}")
 
 	if [ -z "${changed_files}" ]
 	then
@@ -148,7 +154,7 @@ function merge_and_commit_translations {
 	done <<< "${changed_files}"
 
 	local merged_files=$( \
-		git diff --name-only | grep --extended-regexp "${translation_file_regex}")
+		git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}")
 
 	if [ -z "${merged_files}" ]
 	then
@@ -158,6 +164,36 @@ function merge_and_commit_translations {
 	commit_changes "${merged_files}" "LPD-91206 Update Translations"
 
 	_CREATE_PULL_REQUEST=true
+}
+
+function normalize_existing_translations {
+	lc_cd "${_PROJECTS_DIR}/liferay-portal"
+
+	lc_log INFO "Running the Lang Builder to normalize the existing translations."
+
+	local translation_files=$( \
+		yq ".files[].source" "${_CROWDIN_DIR}/crowdin.yml" | \
+		sed --expression "s#^/##" --expression "s#^#:(glob)#" | \
+		xargs --no-run-if-empty git ls-files --)
+
+	_run_lang_builder_on_files "${translation_files}"
+
+	if [[ "${?}" -ne 0 ]]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	local normalized_translation_files=$( \
+		git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}")
+
+	if [ -z "${normalized_translation_files}" ]
+	then
+		lc_log INFO "Skipping the buildLang commit because the Lang Builder made no changes to the existing translations."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	commit_changes "${normalized_translation_files}" "LPD-91206 buildLang"
 }
 
 function print_help {
@@ -189,6 +225,21 @@ function set_up_branch {
 	cp "${_CROWDIN_DIR}/crowdin.yml" "${_PROJECTS_DIR}/liferay-portal"
 }
 
+function set_up_lang_builder {
+	lc_cd "${_PROJECTS_DIR}/liferay-portal"
+
+	lc_log INFO "Setting up the SDK to install the Lang Builder."
+
+	ant setup-sdk
+
+	if [ ! -d "${_LANG_BUILDER_LIB_DIR}" ]
+	then
+		lc_log ERROR "Unable to set up the Lang Builder."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function update_portal_repository {
 	trap "return ${LIFERAY_COMMON_EXIT_CODE_BAD}" ERR
 
@@ -196,7 +247,7 @@ function update_portal_repository {
 
 	git checkout master --force
 
-	git reset --hard && git clean -dfx
+	git clean -dfx --exclude "tools/gradle-*-bin.zip"
 
 	if ! git remote get-url upstream &> /dev/null
 	then
@@ -314,6 +365,57 @@ function _merge_translation_file {
 	fi
 
 	rm --force "${head_translation_file}" "${merged_translation_file}"
+}
+
+function _run_lang_builder_on_files {
+	local translation_files=${1}
+
+	lc_cd "${_PROJECTS_DIR}/liferay-portal"
+
+	local translation_dirs=$( \
+		echo "${translation_files}" | \
+		xargs dirname | \
+		sort --unique)
+
+	local translation_dir
+
+	while IFS= read -r translation_dir
+	do
+		local translation_file_prefix="Language"
+
+		if [ "$(basename "${translation_dir}")" == "app.bnd-localization" ]
+		then
+			translation_file_prefix="bundle"
+		fi
+
+		java \
+			-Dfile.encoding=UTF-8 \
+			-Duser.country=US \
+			-Duser.language=en \
+			-classpath "${_LANG_BUILDER_LIB_DIR}/*" \
+			com.liferay.lang.builder.LangBuilder \
+			"lang.dir=${translation_dir}" \
+			"lang.file=${translation_file_prefix}" \
+			"lang.translate=false"
+
+		if [[ "${?}" -ne 0 ]]
+		then
+			lc_log ERROR "Unable to run the Lang Builder in ${translation_dir}."
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+
+		local translation_file
+
+		for translation_file in "${translation_dir}/${translation_file_prefix}"*.properties
+		do
+			if [ -z "$(git show "HEAD:${translation_file}" 2> /dev/null | tail --bytes=1)" ] &&
+			   [ -n "$(tail --bytes=1 "${translation_file}")" ]
+			then
+				printf "\n" >> "${translation_file}"
+			fi
+		done
+	done <<< "${translation_dirs}"
 }
 
 main "${@}"
