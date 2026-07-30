@@ -16,6 +16,7 @@ function set_up {
 	export _LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal"
 	export _PROJECTS_DIR=$(mktemp --directory)
 	export _TEST_DEPENDENCIES_DIR="${_CROWDIN_DIR}/test-dependencies"
+	export _TRANSLATION_FILE_REGEX="(Language|bundle)(_[a-zA-Z].*)?\.properties$"
 
 	mkdir "${_PROJECTS_DIR}/${_LIFERAY_PORTAL_REPOSITORY_NAME}"
 
