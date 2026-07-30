@@ -138,8 +138,7 @@ function main {
 }
 
 function merge_and_commit_translations {
-	local changed_files=$( \
-		git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}")
+	local changed_files=$(_get_changed_files)
 
 	if [ -z "${changed_files}" ]
 	then
@@ -155,8 +154,7 @@ function merge_and_commit_translations {
 		_merge_translation_file "${translation_file}"
 	done <<< "${changed_files}"
 
-	local merged_files=$( \
-		git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}")
+	local merged_files=$(_get_changed_files)
 
 	if [ -z "${merged_files}" ]
 	then
@@ -185,8 +183,7 @@ function normalize_existing_translations {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local normalized_translation_files=$( \
-		git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}")
+	local normalized_translation_files=$(_get_changed_files)
 
 	if [ -z "${normalized_translation_files}" ]
 	then
@@ -218,8 +215,7 @@ function normalize_synced_translations {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local normalized_translation_files=$( \
-		git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}")
+	local normalized_translation_files=$(_get_changed_files)
 
 	if [ -z "${normalized_translation_files}" ]
 	then
@@ -383,6 +379,10 @@ function _apply_crowdin_translations {
 			}
 		}
 	' "${crowdin_translation_file}" "${head_translation_file}"
+}
+
+function _get_changed_files {
+	git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}"
 }
 
 function _get_crowdin_branch_id {
