@@ -169,7 +169,7 @@ function merge_and_commit_translations {
 function normalize_existing_translations {
 	lc_cd "${_PROJECTS_DIR}/liferay-portal"
 
-	lc_log INFO "Running the Lang Builder to normalize the existing translations."
+	lc_log INFO "Running Lang Builder to normalize the existing translations."
 
 	local translation_files=$( \
 		yq ".files[].source" "${_CROWDIN_DIR}/crowdin.yml" | \
@@ -187,7 +187,7 @@ function normalize_existing_translations {
 
 	if [ -z "${normalized_translation_files}" ]
 	then
-		lc_log INFO "Skipping the buildLang commit because the Lang Builder made no changes to the existing translations."
+		lc_log INFO "Skipping the buildLang commit because Lang Builder made no changes to the existing translations."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -206,7 +206,7 @@ function normalize_synced_translations {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	lc_log INFO "Running the Lang Builder to normalize the synced translations."
+	lc_log INFO "Running Lang Builder to normalize the synced translations."
 
 	_run_lang_builder_on_files "${changed_translation_files}"
 
@@ -219,7 +219,7 @@ function normalize_synced_translations {
 
 	if [ -z "${normalized_translation_files}" ]
 	then
-		lc_log INFO "Skipping the Crowdin translation update because the Lang Builder made no changes to the synced translations."
+		lc_log INFO "Skipping the Crowdin translation update because Lang Builder made no changes to the synced translations."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -277,13 +277,13 @@ function set_up_branch {
 function set_up_lang_builder {
 	lc_cd "${_PROJECTS_DIR}/liferay-portal"
 
-	lc_log INFO "Setting up the SDK to install the Lang Builder."
+	lc_log INFO "Setting up the SDK to install Lang Builder."
 
 	ant setup-sdk
 
 	if [ ! -d "${_LANG_BUILDER_LIB_DIR}" ]
 	then
-		lc_log ERROR "Unable to set up the Lang Builder."
+		lc_log ERROR "Unable to set up Lang Builder."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -639,7 +639,7 @@ function _run_lang_builder_on_files {
 
 		if [[ "${?}" -ne 0 ]]
 		then
-			lc_log ERROR "Unable to run the Lang Builder in ${translation_dir}."
+			lc_log ERROR "Unable to run Lang Builder in ${translation_dir}."
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
