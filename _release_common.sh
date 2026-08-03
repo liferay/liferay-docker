@@ -281,15 +281,15 @@ function is_latest_release_candidate_published {
 
 	if [ -z "${latest_quarterly_candidate_product_version}" ]
 	then
-		lc_log INFO "There is no release candidate for ${product_group_version}." > /dev/stderr
+		lc_log INFO "There is no release candidate for ${product_group_version}." >&2
 
 		return 0
 	fi
 
 	local latest_quarterly_product_version=$(get_latest_product_version "quarterly" "${product_group_version}")
 
-	lc_log INFO "Latest quarterly release candidate product version: ${latest_quarterly_candidate_product_version}" > /dev/stderr
-	lc_log INFO "Latest quarterly release product version: ${latest_quarterly_product_version}" > /dev/stderr
+	lc_log INFO "Latest quarterly release candidate product version: ${latest_quarterly_candidate_product_version}" >&2
+	lc_log INFO "Latest quarterly release product version: ${latest_quarterly_product_version}" >&2
 
 	if [ "${latest_quarterly_candidate_product_version}" == "${latest_quarterly_product_version}" ]
 	then

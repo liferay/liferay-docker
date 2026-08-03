@@ -57,7 +57,7 @@ function _invoke_github_api {
 
 	if ! [[ "${http_code}" =~ ^2 ]]
 	then
-		lc_log ERROR "Unable to ${4} https://api.github.com/repos/${1}/${2}. HTTP response code was ${http_code}." > /dev/stderr
+		lc_log ERROR "Unable to ${4} https://api.github.com/repos/${1}/${2}. HTTP response code was ${http_code}." >&2
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
