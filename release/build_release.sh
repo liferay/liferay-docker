@@ -98,6 +98,8 @@ function handle_automated_build {
 	then
 		lc_log INFO "The latest quarterly release candidate has not been published. Skipping build."
 
+		_write_automated_build_failure_slack_message
+
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
@@ -342,6 +344,16 @@ function _set_general_availability_date {
 	then
 		LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE=$(date +%Y-%m-%d)
 	fi
+}
+
+function _write_automated_build_failure_slack_message {
+	cat <<- END > "${_RELEASE_TOOL_DIR}/build_release_slack_message.txt"
+	*Automated build failed*
+
+	*Reason:* The latest quarterly release candidate (\`${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}\`) has not been published.
+
+	*Latest published quarterly release product version:* \`${_LATEST_QUARTERLY_PRODUCT_VERSION}\`
+	END
 }
 
 function _write_slack_message {
