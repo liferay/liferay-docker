@@ -277,21 +277,21 @@ function is_later_product_version_than {
 function is_latest_release_candidate_published {
 	local product_group_version=${1}
 
-	local latest_quarterly_candidate_product_version=$(get_latest_product_version "quarterly-candidate" "${product_group_version}")
+	_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION=$(get_latest_product_version "quarterly-candidate" "${product_group_version}")
 
-	if [ -z "${latest_quarterly_candidate_product_version}" ]
+	if [ -z "${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" ]
 	then
 		lc_log INFO "There is no release candidate for ${product_group_version}." >&2
 
 		return 0
 	fi
 
-	local latest_quarterly_product_version=$(get_latest_product_version "quarterly" "${product_group_version}")
+	_LATEST_QUARTERLY_PRODUCT_VERSION=$(get_latest_product_version "quarterly" "${product_group_version}")
 
-	lc_log INFO "Latest quarterly release candidate product version: ${latest_quarterly_candidate_product_version}" >&2
-	lc_log INFO "Latest quarterly release product version: ${latest_quarterly_product_version}" >&2
+	lc_log INFO "Latest quarterly release candidate product version: ${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" >&2
+	lc_log INFO "Latest quarterly release product version: ${_LATEST_QUARTERLY_PRODUCT_VERSION}" >&2
 
-	if [ "${latest_quarterly_candidate_product_version}" == "${latest_quarterly_product_version}" ]
+	if [ "${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" == "${_LATEST_QUARTERLY_PRODUCT_VERSION}" ]
 	then
 		return 0
 	fi
