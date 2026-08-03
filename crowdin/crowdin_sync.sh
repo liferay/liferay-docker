@@ -608,14 +608,14 @@ function _push_normalized_translations {
 
 		if [ -z "${string_id}" ]
 		then
-			lc_log WARN "Unable to find a Crowdin string for key ${key}."
+			lc_log WARN "Unable to find a Crowdin string for key \"${key}\" in ${file_path}."
 
 			continue
 		fi
 
 		local text=$(echo "${normalized_translation}" | sed --expression "s/^[^=]*=//")
 
-		_update_crowdin_translation "${crowdin_language_id}" "${key}" "${string_id}" "${text}"
+		_update_crowdin_translation "${crowdin_language_id}" "${file_path}" "${key}" "${string_id}" "${text}"
 	done <<< "${normalized_translations}"
 
 	rm --force "${head_translation_file}"
@@ -674,9 +674,10 @@ function _run_lang_builder_on_files {
 
 function _update_crowdin_translation {
 	local crowdin_language_id=${1}
-	local key=${2}
-	local string_id=${3}
-	local text=${4}
+	local file_path=${2}
+	local key=${3}
+	local string_id=${4}
+	local text=${5}
 
 	local translation_data=$(
 		cat <<- END
@@ -705,7 +706,7 @@ function _update_crowdin_translation {
 		local error_message=$( \
 			echo "${translation_response}" | jq --raw-output "[.errors[]?.error.errors[]?.message] | join(\", \")")
 
-		lc_log WARN "Unable to update the Crowdin translation for ${key} in ${crowdin_language_id}. Crowdin returned \"${error_message}\"."
+		lc_log WARN "Unable to update the Crowdin translation for \"${key}\" in ${file_path} (${crowdin_language_id}). Crowdin returned \"${error_message}\"."
 
 		return
 	fi
@@ -728,12 +729,12 @@ function _update_crowdin_translation {
 		local error_message=$( \
 			echo "${approval_response}" | jq --raw-output "[.errors[]?.error.errors[]?.message] | join(\", \")")
 
-		lc_log WARN "Unable to approve the Crowdin translation for ${key} in ${crowdin_language_id}. Crowdin returned \"${error_message}\"."
+		lc_log WARN "Unable to approve the Crowdin translation for \"${key}\" in ${file_path} (${crowdin_language_id}). Crowdin returned \"${error_message}\"."
 
 		return
 	fi
 
-	lc_log INFO "Updated the Crowdin translation for ${key} in ${crowdin_language_id}."
+	lc_log INFO "Updated the Crowdin translation for \"${key}\" in ${file_path} (${crowdin_language_id})."
 }
 
 main "${@}"
