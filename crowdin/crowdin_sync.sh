@@ -224,20 +224,11 @@ function normalize_synced_translations {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	local branch_id=$(_get_crowdin_branch_id)
-
-	if [ -z "${branch_id}" ]
-	then
-		lc_log ERROR "Unable to get the Crowdin branch ID for the master branch."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
 	local normalized_translation_file
 
 	while IFS= read -r normalized_translation_file
 	do
-		_push_normalized_translations "${branch_id}" "${normalized_translation_file}"
+		_push_normalized_translations "${normalized_translation_file}"
 
 		git add "${normalized_translation_file}"
 	done <<< "${normalized_translation_files}"
@@ -385,20 +376,6 @@ function _get_changed_files {
 	git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}"
 }
 
-function _get_crowdin_branch_id {
-	local response=$( \
-		_get_crowdin_data \
-			"projects/${CROWDIN_PROJECT_ID}/branches" \
-			"name=master")
-
-	if [ -z "${response}" ]
-	then
-		return
-	fi
-
-	echo "${response}" | jq --raw-output ".data[0].data.id"
-}
-
 function _get_crowdin_data {
 	local api_path=${1}
 
@@ -442,14 +419,31 @@ function _get_crowdin_data {
 	echo "${response}"
 }
 
+function _get_crowdin_file_id {
+	local path=${1}
+
+	local response=$( \
+		_get_crowdin_data \
+			"projects/${CROWDIN_PROJECT_ID}/files" \
+			"filter=$(basename "${path}")" \
+			"limit=500")
+
+	if [ -z "${response}" ]
+	then
+		return
+	fi
+
+	echo "${response}" | jq --raw-output ".data[] | select(.data.path == \"/master${path}\") | .data.id // empty"
+}
+
 function _get_crowdin_string_id {
-	local branch_id=${1}
+	local file_id=${1}
 	local key=${2}
 
 	local response=$( \
 		_get_crowdin_data \
 			"projects/${CROWDIN_PROJECT_ID}/strings" \
-			"branchId=${branch_id}" \
+			"fileId=${file_id}" \
 			"filter=${key}" \
 			"limit=500" \
 			"scope=identifier")
@@ -547,8 +541,7 @@ function _post_crowdin_data {
 }
 
 function _push_normalized_translations {
-	local branch_id=${1}
-	local translation_file=${2}
+	local translation_file=${1}
 
 	local translation_file_name=$(basename "${translation_file}")
 
@@ -565,6 +558,28 @@ function _push_normalized_translations {
 	if [ -z "${crowdin_language_id}" ]
 	then
 		lc_log INFO "Skipping locale ${locale} because it is not a mapped Crowdin target language."
+
+		return
+	fi
+
+	local translation_file_prefix=$(echo "${translation_file_name}" | sed --expression "s/_.*//")
+
+	local candidate_source_path="/$(dirname "${translation_file}")/${translation_file_prefix}.properties"
+
+	local dest_source_path=$(yq ".files[0].source" "${_CROWDIN_DIR}/crowdin.yml")
+
+	local file_path=${candidate_source_path}
+
+	if [ "${candidate_source_path}" == "${dest_source_path}" ]
+	then
+		file_path=$(yq ".files[0].dest" "${_CROWDIN_DIR}/crowdin.yml")
+	fi
+
+	local file_id=$(_get_crowdin_file_id "${file_path}")
+
+	if [ -z "${file_id}" ]
+	then
+		lc_log WARN "Unable to find a Crowdin file for ${file_path}."
 
 		return
 	fi
@@ -589,7 +604,7 @@ function _push_normalized_translations {
 
 		local key=$(echo "${normalized_translation}" | sed --expression "s/=.*//")
 
-		local string_id=$(_get_crowdin_string_id "${branch_id}" "${key}")
+		local string_id=$(_get_crowdin_string_id "${file_id}" "${key}")
 
 		if [ -z "${string_id}" ]
 		then
