@@ -13,6 +13,7 @@ function main {
 
 	test_build_release_bundle_smaller_than_1_gb_300_mb
 	test_build_release_handle_automated_build
+	test_build_release_has_automated_build_failure_slack_message
 	test_build_release_has_packaged_bundles
 	test_build_release_has_slack_message
 	test_build_release_not_handle_automated_build
@@ -43,6 +44,7 @@ function set_up {
 	export TRIGGER_CI_TEST_SUITE="false"
 	export _PRODUCT_VERSION="2025.q4.1"
 	export _RELEASE_ROOT_DIR=${PWD}
+	export _RELEASE_TOOL_DIR=$(mktemp --directory)
 
 	export _RELEASE_PACKAGE="${_RELEASE_ROOT_DIR}/release-data/build/release"
 }
@@ -52,6 +54,8 @@ function tear_down {
 
 	_clean_up_release_data
 
+	rm --force --recursive "${_RELEASE_TOOL_DIR}"
+
 	unset LIFERAY_RELEASE_GIT_REF
 	unset LIFERAY_RELEASE_TEST_ALTERNATIVE_PATH
 	unset LIFERAY_RELEASE_TEST_DEFAULT_PATH
@@ -60,6 +64,7 @@ function tear_down {
 	unset TRIGGER_CI_TEST_SUITE
 	unset _RELEASE_PACKAGE
 	unset _RELEASE_ROOT_DIR
+	unset _RELEASE_TOOL_DIR
 }
 
 function test_build_hotfix_has_packaged_hotfix {
@@ -108,6 +113,30 @@ function test_build_release_handle_automated_build {
 	unset BUILD_CAUSE
 
 	LIFERAY_RELEASE_GIT_REF=${_PRODUCT_VERSION}
+}
+
+function test_build_release_has_automated_build_failure_slack_message {
+	BUILD_CAUSE="TIMERTRIGGER"
+	LIFERAY_RELEASE_OUTPUT="release-candidate"
+
+	add_release_to_test_dependency "2025.q2.9-1234567890" "test-dependencies/actual/release-candidates.html"
+
+	handle_automated_build &> /dev/null
+
+	git restore test-dependencies/actual/release-candidates.html
+
+	local slack_message_file="${_RELEASE_TOOL_DIR}/build_release_slack_message.txt"
+
+	assert_equals \
+		"$(grep --count "^\*Automated build failed\*$" "${slack_message_file}")" \
+		"1" \
+		"$(grep --count "^\*Reason:\* The latest quarterly release candidate (\`2025.q2.9\`) has not been published\.$" "${slack_message_file}")" \
+		"1" \
+		"$(grep --count "^\*Latest published quarterly release product version:\* \`2025.q2.8\`$" "${slack_message_file}")" \
+		"1"
+
+	unset BUILD_CAUSE
+	unset LIFERAY_RELEASE_OUTPUT
 }
 
 function test_build_release_has_packaged_bundles {
