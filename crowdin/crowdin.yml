@@ -65,5 +65,11 @@ files:
         skip_untranslated_strings: 1
         source: "**/app.bnd-localization/bundle.properties"
         translation: /**/app.bnd-localization/%file_name%_%locale%.%file_extension%
+    -   escape_quotes: 0
+        escape_special_characters: 0
+        languages_mapping: *languages_mapping
+        skip_untranslated_strings: 1
+        source: /workspaces/liferay-osbfaro-workspace/modules/osb-faro-web/src/main/resources/content/Language.properties
+        translation: /workspaces/liferay-osbfaro-workspace/modules/osb-faro-web/src/main/resources/content/%file_name%_%locale%.%file_extension%
 preserve_hierarchy: 1
 project_id_env: CROWDIN_PROJECT_ID
