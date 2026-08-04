@@ -38,6 +38,7 @@ function main {
 		test_release_common_is_quarterly_release_docker_image
 		test_release_common_is_u_release
 		test_release_common_is_u_release_docker_image
+		test_release_common_set_latest_quarterly_product_versions
 	fi
 
 	tear_down
@@ -53,6 +54,8 @@ function tear_down {
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_TEST_MODE
 	unset _ACTUAL_PRODUCT_VERSION
+	unset _LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION
+	unset _LATEST_QUARTERLY_PRODUCT_VERSION
 	unset _PRODUCT_VERSION
 }
 
@@ -279,6 +282,15 @@ function test_release_common_is_u_release_docker_image {
 	_test_release_common_is_u_release_docker_image "liferay/release-candidates:2025.q1.12-123456789" "1"
 }
 
+function test_release_common_set_latest_quarterly_product_versions {
+	_test_release_common_set_latest_quarterly_product_versions "" "2025.q2.8" "2025.q2.8"
+	_test_release_common_set_latest_quarterly_product_versions "2023.q1" "" ""
+	_test_release_common_set_latest_quarterly_product_versions "2024.q1" "2024.q1.21" ""
+	_test_release_common_set_latest_quarterly_product_versions "2024.q4" "" "2024.q4.6"
+	_test_release_common_set_latest_quarterly_product_versions "2025.q1" "2025.q1.18-lts" "2025.q1.8-lts"
+	_test_release_common_set_latest_quarterly_product_versions "2025.q2" "2025.q2.8" "2025.q2.8"
+}
+
 function _test_release_common_get_due_date {
 	assert_equals \
 		"$(get_due_date "${1}" "${2}")" \
@@ -445,6 +457,16 @@ function _test_release_common_is_u_release_docker_image {
 	is_u_release_docker_image "${1}"
 
 	assert_equals "${?}" "${2}"
+}
+
+function _test_release_common_set_latest_quarterly_product_versions {
+	set_latest_quarterly_product_versions "${1}" 2> /dev/null
+
+	assert_equals \
+		"${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" \
+		"${2}" \
+		"${_LATEST_QUARTERLY_PRODUCT_VERSION}" \
+		"${3}"
 }
 
 main "${@}"
