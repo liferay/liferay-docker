@@ -275,23 +275,10 @@ function is_later_product_version_than {
 }
 
 function is_latest_release_candidate_published {
-	local product_group_version=${1}
+	set_latest_quarterly_product_versions "${1}"
 
-	_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION=$(get_latest_product_version "quarterly-candidate" "${product_group_version}")
-
-	if [ -z "${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" ]
-	then
-		lc_log INFO "There is no release candidate for ${product_group_version}." >&2
-
-		return 0
-	fi
-
-	_LATEST_QUARTERLY_PRODUCT_VERSION=$(get_latest_product_version "quarterly" "${product_group_version}")
-
-	lc_log INFO "Latest quarterly release candidate product version: ${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" >&2
-	lc_log INFO "Latest quarterly release product version: ${_LATEST_QUARTERLY_PRODUCT_VERSION}" >&2
-
-	if [ "${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" == "${_LATEST_QUARTERLY_PRODUCT_VERSION}" ]
+	if [ -z "${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" ] ||
+	   [ "${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" == "${_LATEST_QUARTERLY_PRODUCT_VERSION}" ]
 	then
 		return 0
 	fi
@@ -364,6 +351,23 @@ function is_u_release_docker_image {
 
 function set_actual_product_version {
 	_ACTUAL_PRODUCT_VERSION=${1}
+}
+
+function set_latest_quarterly_product_versions {
+	local product_group_version=${1}
+
+	_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION=$(get_latest_product_version "quarterly-candidate" "${product_group_version}")
+	_LATEST_QUARTERLY_PRODUCT_VERSION=$(get_latest_product_version "quarterly" "${product_group_version}")
+
+	if [ -z "${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" ]
+	then
+		lc_log INFO "There is no release candidate for ${product_group_version}." >&2
+
+		return
+	fi
+
+	lc_log INFO "Latest quarterly release candidate product version: ${_LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION}" >&2
+	lc_log INFO "Latest quarterly release product version: ${_LATEST_QUARTERLY_PRODUCT_VERSION}" >&2
 }
 
 function _compare_product_versions {

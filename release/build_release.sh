@@ -103,7 +103,7 @@ function handle_automated_build {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	LIFERAY_RELEASE_GIT_REF="release-$(get_product_group_version "$(get_latest_product_version "quarterly")")"
+	LIFERAY_RELEASE_GIT_REF="release-$(get_product_group_version "${_LATEST_QUARTERLY_PRODUCT_VERSION}")"
 	RUN_SCANCODE_PIPELINE=true
 	TRIGGER_CI_TEST_SUITE=true
 

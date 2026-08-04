@@ -31,7 +31,7 @@ function main {
 function _process_premium_support_lts_release_branches {
 	if is_latest_release_candidate_published
 	then
-		local skip_branch="release-$(get_product_group_version "$(get_latest_product_version "quarterly")")"
+		local skip_branch="release-$(get_product_group_version "${_LATEST_QUARTERLY_PRODUCT_VERSION}")"
 	fi
 
 	local exit_code=${LIFERAY_COMMON_EXIT_CODE_OK}
