@@ -96,7 +96,7 @@ function handle_automated_build {
 
 	if ! is_latest_release_candidate_published
 	then
-		lc_log INFO "The latest quarterly release candidate has not been published. Skipping build."
+		lc_log INFO "The latest quarterly release candidate was not published. Skipping build."
 
 		_write_automated_build_failure_slack_message
 
