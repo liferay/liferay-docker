@@ -113,9 +113,9 @@ function test_product_deploy_opensearch {
 }
 
 function test_product_get_java_specification_version {
-	_test_product_get_java_specification_version "jdk17" "17"
 	_test_product_get_java_specification_version "jdk8" "1.8"
-	_test_product_get_java_specification_version "openjdk17" "17"
+	_test_product_get_java_specification_version "openjdk-17.0.2" "17"
+	_test_product_get_java_specification_version "zulu-17.0.18+8" "17"
 	_test_product_get_java_specification_version "zulu8" "1.8"
 }
 

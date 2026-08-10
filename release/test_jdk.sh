@@ -40,7 +40,7 @@ function set_up {
 	export _JDK_PARAMETERS_8=${JAVA_OPTS}
 	export _TEST_JDK_DIR="test-dependencies/test_jdk"
 
-	for jdk_version in open-jdk-17.0.2 zulu-17.0.18+8 zulu8
+	for jdk_version in openjdk-17.0.2 zulu-17.0.18+8 zulu8
 	do
 		mkdir --parents "${_TEST_JDK_DIR}/default_jdk/${jdk_version}"
 	done
@@ -77,11 +77,17 @@ function test_jdk_get_current_jdk_arch {
 
 function test_jdk_get_jdk_download_url {
 	_test_jdk_get_jdk_download_url \
-		"aarch64" "open-jdk-17.0.2" \
-		"https://download.oracle.com/java/17/archive/jdk-17.0.2_linux-aarch64_bin.tar.gz"
+		"aarch64" "openjdk-17.0.2" \
+		"https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-aarch64_bin.tar.gz"
 	_test_jdk_get_jdk_download_url \
-		"x64" "open-jdk-17.0.2" \
-		"https://download.oracle.com/java/17/archive/jdk-17.0.2_linux-x64_bin.tar.gz"
+		"x64" "openjdk-17.0.2" \
+		"https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz"
+	_test_jdk_get_jdk_download_url \
+		"aarch64" "openjdk-21.0.2" \
+		"https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-aarch64_bin.tar.gz"
+	_test_jdk_get_jdk_download_url \
+		"x64" "openjdk-21.0.2" \
+		"https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
 	_test_jdk_get_jdk_download_url \
 		"aarch64" "zulu-17.0.18+8" \
 		"https://api.azul.com/zulu/download/community/v1.0/bundles/latest/binary/?arch=aarch64&bundle_type=jdk&ext=tar.gz&hw_bitness=64&java_version=17.0.18&javafx=false&os=linux"
@@ -94,7 +100,7 @@ function test_jdk_resolve_jdk_install {
 	LIFERAY_RELEASE_TEST_ALTERNATIVE_PATH="${_TEST_JDK_DIR}/alternative_jdk"
 	LIFERAY_RELEASE_TEST_DEFAULT_PATH="${_TEST_JDK_DIR}/default_jdk"
 
-	_test_jdk_resolve_jdk_install "open-jdk-17.0.2" "${_TEST_JDK_DIR}/default_jdk/open-jdk-17.0.2"
+	_test_jdk_resolve_jdk_install "openjdk-17.0.2" "${_TEST_JDK_DIR}/default_jdk/openjdk-17.0.2"
 	_test_jdk_resolve_jdk_install "zulu-17.0.18+8" "${_TEST_JDK_DIR}/default_jdk/zulu-17.0.18+8"
 	_test_jdk_resolve_jdk_install "zulu8" "${_TEST_JDK_DIR}/default_jdk/zulu8"
 
@@ -113,15 +119,15 @@ function test_jdk_set_jdk_version_and_parameters {
 	_test_jdk_set_jdk_version_and_parameters "2024.q1.27-lts" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2024.q2.0" "zulu8" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "2024.q3.0" "zulu8" "${_JDK_PARAMETERS_8}"
-	_test_jdk_set_jdk_version_and_parameters "2025.q1.0-lts" "open-jdk-17.0.2" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "2025.q1.0-lts" "openjdk-17.0.2" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2025.q1.23-lts" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2025.q1.24-lts" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
-	_test_jdk_set_jdk_version_and_parameters "2026.q1.3-lts" "open-jdk-17.0.2" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "2026.q1.3-lts" "openjdk-17.0.2" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2026.q1.4-lts" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2026.q2.0" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "7.3.10-u36" "zulu8" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "7.4.13-u131" "zulu8" "${_JDK_PARAMETERS_8}"
-	_test_jdk_set_jdk_version_and_parameters "7.4.13-u132" "open-jdk-17.0.2" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "7.4.13-u132" "openjdk-17.0.2" "${_JDK_PARAMETERS_17}"
 }
 
 function _test_jdk_get_current_jdk_arch {
