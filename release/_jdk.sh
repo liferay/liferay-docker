@@ -55,12 +55,12 @@ function set_jdk_version_and_parameters {
 
 	lc_log INFO "Java release:\n $(cat "${JAVA_HOME}/release")"
 
-	if [[ "${jdk_version}" == *"8"* ]] && [[ ! "${JAVA_OPTS}" =~ "-XX:MaxPermSize" ]]
+	if [ "${jdk_version}" == "zulu8" ] && [[ ! "${JAVA_OPTS}" =~ "-XX:MaxPermSize" ]]
 	then
 		JAVA_OPTS="${JAVA_OPTS} -XX:MaxPermSize=256m"
 	fi
 
-	if [[ "${jdk_version}" == *"17"* ]]
+	if [ "${jdk_version}" != "zulu8" ]
 	then
 		JAVA_OPTS=$(echo "${JAVA_OPTS}" | sed --expression "s/-XX:MaxPermSize=[^ ]*//g")
 	fi
