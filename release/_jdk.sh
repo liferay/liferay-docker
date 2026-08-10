@@ -18,6 +18,11 @@ function set_jdk_version_and_parameters {
 			jdk_version="zulu-17.0.18+8"
 		fi
 
+		if is_equals_or_later_product_version_than "2026.q4.0"
+		then
+			jdk_version="openjdk-21.0.2"
+		fi
+
 		for release_version in 2024.q1.26-lts 2024.q1.27-lts 2025.q1.23-lts 2025.q1.24-lts
 		do
 			if [ "$(get_release_version)" == "${release_version}" ]

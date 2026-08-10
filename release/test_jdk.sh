@@ -37,10 +37,11 @@ function set_up {
 	export _CURRENT_JAVA_OPTS=${JAVA_OPTS}
 	export _CURRENT_PATH=${PATH}
 	export _JDK_PARAMETERS_17=$(echo "${JAVA_OPTS}" | sed --expression "s/-XX:MaxPermSize=[^ ]*//g")
+	export _JDK_PARAMETERS_21=$(echo "${JAVA_OPTS}" | sed --expression "s/-XX:MaxPermSize=[^ ]*//g")
 	export _JDK_PARAMETERS_8=${JAVA_OPTS}
 	export _TEST_JDK_DIR="test-dependencies/test_jdk"
 
-	for jdk_version in openjdk-17.0.2 zulu-17.0.18+8 zulu8
+	for jdk_version in openjdk-17.0.2 openjdk-21.0.2 zulu-17.0.18+8 zulu8
 	do
 		mkdir --parents "${_TEST_JDK_DIR}/default_jdk/${jdk_version}"
 	done
@@ -64,6 +65,7 @@ function tear_down {
 	unset _CURRENT_JAVA_OPTS
 	unset _CURRENT_PATH
 	unset _JDK_PARAMETERS_17
+	unset _JDK_PARAMETERS_21
 	unset _JDK_PARAMETERS_8
 	unset _TEST_JDK_DIR
 }
@@ -125,6 +127,10 @@ function test_jdk_set_jdk_version_and_parameters {
 	_test_jdk_set_jdk_version_and_parameters "2026.q1.3-lts" "openjdk-17.0.2" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2026.q1.4-lts" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2026.q2.0" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "2026.q3.0" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "2026.q4.0" "openjdk-21.0.2" "${_JDK_PARAMETERS_21}"
+	_test_jdk_set_jdk_version_and_parameters "2026.q4.5" "openjdk-21.0.2" "${_JDK_PARAMETERS_21}"
+	_test_jdk_set_jdk_version_and_parameters "2027.q1.0-lts" "openjdk-21.0.2" "${_JDK_PARAMETERS_21}"
 	_test_jdk_set_jdk_version_and_parameters "7.3.10-u36" "zulu8" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "7.4.13-u131" "zulu8" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "7.4.13-u132" "openjdk-17.0.2" "${_JDK_PARAMETERS_17}"

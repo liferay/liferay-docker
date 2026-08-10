@@ -367,6 +367,11 @@ function get_java_specification_version {
 	then
 		echo "17"
 	fi
+
+	if echo "${JAVA_HOME}" | grep --extended-regexp "openjdk-21|zulu-21" &> /dev/null
+	then
+		echo "21"
+	fi
 }
 
 function obfuscate_licensing {
