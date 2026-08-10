@@ -124,6 +124,36 @@ function build_sql {
 	ant build-db
 }
 
+function clean_up_cmp_and_dsr_modules {
+	local jar_file_name
+
+	for jar_file_name in \
+		com.liferay.headless.cmp.api \
+		com.liferay.headless.cmp.client \
+		com.liferay.headless.cmp.impl \
+		com.liferay.headless.dsr.api \
+		com.liferay.headless.dsr.client \
+		com.liferay.headless.dsr.impl \
+		com.liferay.site.cmp.site.initializer \
+		com.liferay.site.dsr.analytics.rest.api \
+		com.liferay.site.dsr.analytics.rest.client \
+		com.liferay.site.dsr.analytics.rest.impl \
+		com.liferay.site.dsr.site.initializer \
+		com.liferay.site.dsr.site.initializer.api \
+		com.liferay.site.initializer.cmp \
+		com.liferay.site.initializer.dsr
+	do
+		local jar_file_path
+
+		find "${_BUNDLES_DIR}/osgi" -name "${jar_file_name}.jar" -type f -print0 | while IFS= read -r -d '' jar_file_path
+		do
+			lc_log INFO "Deleting ${jar_file_path}."
+
+			rm --force "${jar_file_path}"
+		done
+	done
+}
+
 function clean_up_ignored_dxp_modules {
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules"
 

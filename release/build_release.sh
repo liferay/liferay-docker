@@ -185,6 +185,7 @@ function main {
 		lc_background_run build_sql
 		lc_background_run copy_copyright
 		lc_background_run deploy_elasticsearch_sidecar
+		lc_background_run clean_up_cmp_and_dsr_modules
 		lc_background_run clean_up_ignored_dxp_modules
 		lc_background_run clean_up_ignored_dxp_plugins
 
