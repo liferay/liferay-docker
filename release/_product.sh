@@ -128,6 +128,7 @@ function clean_up_cmp_and_dsr_modules {
 	local jar_file_name
 
 	for jar_file_name in \
+		com.liferay.digital.sales.room.site.initializer.jar \
 		com.liferay.headless.cmp.api \
 		com.liferay.headless.cmp.client \
 		com.liferay.headless.cmp.impl \
@@ -140,6 +141,7 @@ function clean_up_cmp_and_dsr_modules {
 		com.liferay.site.dsr.analytics.rest.impl \
 		com.liferay.site.dsr.site.initializer \
 		com.liferay.site.dsr.site.initializer.api \
+		com.liferay.site.dsr.site.initializer.test.util.jar \
 		com.liferay.site.initializer.cmp \
 		com.liferay.site.initializer.dsr
 	do
