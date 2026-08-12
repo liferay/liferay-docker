@@ -37,6 +37,7 @@ function main {
 
 function set_up {
 	export LIFERAY_CKEDITOR_LICENSE_KEY="123456789"
+	export LIFERAY_PORTAL_REPOSITORY_NAME="liferay-portal-ee"
 	export LIFERAY_RELEASE_PRODUCT_NAME="dxp"
 	export _BUILD_DIR=${PWD}
 	export _BUNDLES_DIR="${PWD}/test-dependencies/liferay-dxp"
@@ -61,6 +62,7 @@ function tear_down {
 	rm --force --recursive "${_BUNDLES_DIR}"
 
 	unset LIFERAY_CKEDITOR_LICENSE_KEY
+	unset LIFERAY_PORTAL_REPOSITORY_NAME
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
 	unset _BUNDLES_DIR
@@ -99,6 +101,8 @@ function test_product_clean_up_cmp_and_dsr_modules {
 }
 
 function test_product_clean_up_ignored_dxp_plugins {
+	local bundles_dir=${_BUNDLES_DIR}
+
 	_BUNDLES_DIR="${PWD}/test-dependencies/actual/bundle"
 
 	mkdir --parents "${_BUNDLES_DIR}/osgi/portal-war"
@@ -120,7 +124,7 @@ function test_product_clean_up_ignored_dxp_plugins {
 	_test_product_clean_up_ignored_dxp_plugins "2025.q1.0-lts" "9"
 	_test_product_clean_up_ignored_dxp_plugins "2026.q1.0-lts" "1"
 
-	export _BUNDLES_DIR="${PWD}/test-dependencies/liferay-dxp"
+	_BUNDLES_DIR=${bundles_dir}
 }
 
 function test_product_deploy_opensearch {
