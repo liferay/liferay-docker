@@ -15,6 +15,7 @@ ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_node_runner_entrypoint.s
 ENV LANG="C.UTF-8"
 ENV LIFERAY_NODE_RUNNER_START="npm start"
 ENV NODE_VERSION="v22"
+ENV PATH="/usr/local/node/${NODE_VERSION}/bin:${PATH}"
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
