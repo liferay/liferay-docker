@@ -20,11 +20,13 @@ function main {
 	else
 		test_product_add_ckeditor_license
 		test_product_add_lts_suffix_to_product_version
+		test_product_clean_up_cmp_and_dsr_modules
 		test_product_clean_up_ignored_dxp_plugins
 		test_product_deploy_opensearch
 		test_product_get_java_specification_version
 		test_product_is_free_tier_ignored_version
 		test_product_not_add_ckeditor_license
+		test_product_not_clean_up_cmp_and_dsr_modules
 		test_product_set_product_version_lts
 		test_product_set_product_version_with_parameters
 		test_product_warm_up_tomcat
@@ -79,6 +81,21 @@ function test_product_add_lts_suffix_to_product_version {
 	_test_product_add_lts_suffix_to_product_version "2026.q1.0" "2026.q1.0-lts"
 	_test_product_add_lts_suffix_to_product_version "2026.q2.0" "2026.q2.0"
 	_test_product_add_lts_suffix_to_product_version "7.4.13-u148" "7.4.13-u148"
+}
+
+function test_product_clean_up_cmp_and_dsr_modules {
+	local bundles_dir=${_BUNDLES_DIR}
+
+	_BUNDLES_DIR="${PWD}/test-dependencies/actual/bundle"
+
+	mkdir --parents "${_BUNDLES_DIR}/osgi/modules"
+
+	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "2026.q3.0"
+	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "2026.q4.0"
+	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "2027.q1.0-lts"
+	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "7.4.13-u152"
+
+	_BUNDLES_DIR=${bundles_dir}
 }
 
 function test_product_clean_up_ignored_dxp_plugins {
@@ -136,6 +153,13 @@ function test_product_not_add_ckeditor_license {
 	_test_product_not_add_ckeditor_license "7.4.13-u134"
 }
 
+function test_product_not_clean_up_cmp_and_dsr_modules {
+	_test_product_not_clean_up_cmp_and_dsr_modules "nightly" "7.4.13-u152"
+	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "2025.q4.9"
+	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "2026.q2.0"
+	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "7.4.13-u153"
+}
+
 function test_product_set_product_version_lts {
 	set_product_version 1> /dev/null
 
@@ -189,6 +213,21 @@ function _test_product_add_lts_suffix_to_product_version {
 		"${2}"
 }
 
+function _test_product_clean_up_cmp_and_dsr_modules {
+	LIFERAY_RELEASE_OUTPUT=${1}
+	_PRODUCT_VERSION=${2}
+
+	touch "${_BUNDLES_DIR}/osgi/modules/com.liferay.headless.cmp.api.jar"
+
+	clean_up_cmp_and_dsr_modules &> /dev/null
+
+	assert_equals \
+		"$(find "${_BUNDLES_DIR}/osgi" -name "com.liferay.headless.cmp.api.jar" | wc --lines)" \
+		"0"
+
+	unset LIFERAY_RELEASE_OUTPUT
+}
+
 function _test_product_clean_up_ignored_dxp_plugins {
 	_PRODUCT_VERSION=${1}
 
@@ -220,6 +259,19 @@ function _test_product_not_add_ckeditor_license {
 	add_ckeditor_license &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+}
+
+function _test_product_not_clean_up_cmp_and_dsr_modules {
+	LIFERAY_RELEASE_OUTPUT=${1}
+	_PRODUCT_VERSION=${2}
+
+	clean_up_cmp_and_dsr_modules &> /dev/null
+
+	assert_equals \
+		"${?}" \
+		"${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+
+	unset LIFERAY_RELEASE_OUTPUT
 }
 
 function _test_product_set_product_version_with_parameters {
