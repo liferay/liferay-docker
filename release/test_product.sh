@@ -23,10 +23,13 @@ function main {
 		test_product_clean_up_cmp_and_dsr_modules
 		test_product_clean_up_ignored_dxp_plugins
 		test_product_deploy_opensearch
+		test_product_get_build_profile_parameters
 		test_product_get_java_specification_version
 		test_product_is_free_tier_ignored_version
 		test_product_not_add_ckeditor_license
 		test_product_not_clean_up_cmp_and_dsr_modules
+		test_product_not_get_build_profile_parameters
+		test_product_set_product_version_cms_standalone
 		test_product_set_product_version_lts
 		test_product_set_product_version_with_parameters
 		test_product_warm_up_tomcat
@@ -62,6 +65,7 @@ function tear_down {
 	rm --force --recursive "${_BUNDLES_DIR}"
 
 	unset LIFERAY_CKEDITOR_LICENSE_KEY
+	unset LIFERAY_CMS_STANDALONE_RELEASE
 	unset LIFERAY_PORTAL_REPOSITORY_NAME
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
@@ -133,6 +137,16 @@ function test_product_deploy_opensearch {
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
+function test_product_get_build_profile_parameters {
+	LIFERAY_CMS_STANDALONE_RELEASE="true"
+
+	assert_equals \
+		"$(_get_build_profile_parameters)" \
+		"-Dbuild.profile=cms-standalone"
+
+	unset LIFERAY_CMS_STANDALONE_RELEASE
+}
+
 function test_product_get_java_specification_version {
 	_test_product_get_java_specification_version "jdk8" "1.8"
 	_test_product_get_java_specification_version "openjdk-17.0.2" "17"
@@ -162,6 +176,26 @@ function test_product_not_clean_up_cmp_and_dsr_modules {
 	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "2025.q4.9"
 	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "2026.q2.0"
 	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "7.4.13-u153"
+}
+
+function test_product_not_get_build_profile_parameters {
+	_PRODUCT_VERSION="7.4.13-u152"
+
+	assert_equals \
+		"$(_get_build_profile_parameters)" \
+		""
+}
+
+function test_product_set_product_version_cms_standalone {
+	LIFERAY_CMS_STANDALONE_RELEASE="true"
+
+	set_product_version "7.4.13-u152" "123456789" 1> /dev/null
+
+	assert_equals \
+		"${_PRODUCT_VERSION}" \
+		"7.4.13-u152-cms-standalone"
+
+	unset LIFERAY_CMS_STANDALONE_RELEASE
 }
 
 function test_product_set_product_version_lts {
