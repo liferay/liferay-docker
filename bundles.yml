@@ -723,6 +723,7 @@
     7.4.13-u149:
     7.4.13-u150:
     7.4.13-u151:
+    7.4.13-u152:
     7.4.13.nightly:
         bundle_url: releases-cdn.liferay.com/dxp/nightly/liferay-dxp-tomcat-7.4.13.nightly.7z
 quarterly:
