@@ -17,6 +17,7 @@ function main {
 		"${1}"
 	else
 		test_git_generate_release_notes
+		test_git_not_generate_release_notes
 	fi
 
 	tear_down
@@ -54,6 +55,7 @@ function set_up {
 }
 
 function tear_down {
+	unset LIFERAY_CMS_STANDALONE_RELEASE
 	unset LIFERAY_PORTAL_REPOSITORY_NAME
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
@@ -73,6 +75,16 @@ function test_git_generate_release_notes {
 		"${LIFERAY_COMMON_EXIT_CODE_BAD}" \
 		"$(grep --quiet "LPD-27038" "${_PROJECTS_DIR}/liferay-portal-ee/release/release-notes.txt"; echo "${?}")" \
 		"${LIFERAY_COMMON_EXIT_CODE_OK}"
+}
+
+function test_git_not_generate_release_notes {
+	LIFERAY_CMS_STANDALONE_RELEASE="true"
+
+	generate_release_notes &> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+
+	unset LIFERAY_CMS_STANDALONE_RELEASE
 }
 
 main "${@}"

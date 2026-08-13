@@ -217,6 +217,13 @@ function upload_bom_file {
 }
 
 function upload_boms {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "BOMs should not be uploaded for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
 		return
@@ -374,6 +381,13 @@ function upload_release {
 }
 
 function upload_to_docker_hub {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "Docker images should not be pushed for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
 		return

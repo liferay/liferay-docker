@@ -69,9 +69,9 @@ function commit_changes {
 }
 
 function generate_release_notes {
-	if is_ai_hub_release
+	if (is_ai_hub_release || is_cms_standalone_release)
 	then
-		lc_log INFO "Release notes should not be generated for AI Hub releases."
+		lc_log INFO "Release notes should not be generated for AI Hub and CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

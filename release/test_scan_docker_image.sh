@@ -17,6 +17,7 @@ function test_scan_docker_image {
 	_test_scan_docker_image "liferay/dxp:7.4.13-u134" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_scan_docker_image "liferay/release-candidates:7.4.13-u134-123456789" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_scan_docker_image "liferay/release-candidates:7.3.10-u36-123456789" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_scan_docker_image "liferay/release-candidates:2025.q1.12-cms-standalone-123456789" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_scan_docker_image "liferay/release-candidates:2025.q1.12-123456789" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 

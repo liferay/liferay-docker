@@ -49,6 +49,13 @@ function copy_tld {
 }
 
 function generate_api_jars {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "API JARs should not be generated for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	mkdir --parents "${_BUILD_DIR}/boms"
 
 	lc_cd "${_BUILD_DIR}/boms"
@@ -201,6 +208,13 @@ function generate_api_jars {
 }
 
 function generate_api_source_jar {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "API source JARs should not be generated for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
 	_copy_source_package ./portal-kernel/src/com/liferay
@@ -242,6 +256,13 @@ function generate_api_source_jar {
 }
 
 function generate_distro_jar {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "Distro JARs should not be generated for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	if [ ! -e "${_BUNDLES_DIR}/osgi/modules/biz.aQute.remote.agent-6.4.0.jar" ]
 	then
 		lc_download "https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.remote.agent/6.4.0/biz.aQute.remote.agent-6.4.0.jar" "${_BUNDLES_DIR}/deploy/biz.aQute.remote.agent-6.4.0.jar"
@@ -286,6 +307,13 @@ function generate_distro_jar {
 }
 
 function generate_pom_release_api {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "API POM should not be generated for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.api-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
@@ -298,6 +326,13 @@ function generate_pom_release_api {
 }
 
 function generate_pom_release_bom {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "BOM should not be generated for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
@@ -367,6 +402,13 @@ function generate_pom_release_bom {
 }
 
 function generate_pom_release_bom_compile_only {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "Compile only BOM should not be generated for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.compile.only-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
@@ -399,6 +441,13 @@ function generate_pom_release_bom_compile_only {
 }
 
 function generate_pom_release_bom_test {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "Test BOM should not be generated for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	if ! is_quarterly_release
 	then
 		lc_log INFO "The test BOM should be generated only for quarterly releases."
@@ -483,6 +532,13 @@ function generate_pom_release_bom_test {
 }
 
 function generate_pom_release_bom_third_party {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "Third party BOM should not be generated for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.bom.third.party-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."
@@ -543,6 +599,13 @@ function generate_pom_release_bom_third_party {
 }
 
 function generate_pom_release_distro {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "Distro POM should not be generated for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local pom_file_name="release.${LIFERAY_RELEASE_PRODUCT_NAME}.distro-${_ARTIFACT_RC_VERSION}.pom"
 
 	lc_log DEBUG "Generating ${pom_file_name}."

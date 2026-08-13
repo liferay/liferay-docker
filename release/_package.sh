@@ -93,6 +93,13 @@ function install_patching_tool {
 }
 
 function package_boms {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "BOMs should not be packaged for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	lc_cd "${_BUILD_DIR}/boms"
 
 	cp --archive ./*.pom "${_BUILD_DIR}/release"

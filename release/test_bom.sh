@@ -62,6 +62,7 @@ function main {
 		test_bom_copy_file
 		test_bom_copy_tld
 		test_bom_manage_bom_jar
+		test_bom_not_generate_boms
 	fi
 }
 
@@ -137,6 +138,7 @@ function tear_down {
 
 	git clean -dfx &> /dev/null
 
+	unset LIFERAY_CMS_STANDALONE_RELEASE
 	unset LIFERAY_PORTAL_REPOSITORY_NAME
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _ARTIFACT_RC_VERSION
@@ -285,10 +287,34 @@ function test_bom_manage_bom_jar {
 	rm --force --recursive temp_dir_manage_bom_jar/META-INF
 }
 
+function test_bom_not_generate_boms {
+	LIFERAY_CMS_STANDALONE_RELEASE="true"
+
+	_test_bom_not_generate_boms generate_api_jars
+	_test_bom_not_generate_boms generate_api_source_jar
+	_test_bom_not_generate_boms generate_distro_jar
+	_test_bom_not_generate_boms generate_pom_release_api
+	_test_bom_not_generate_boms generate_pom_release_bom
+	_test_bom_not_generate_boms generate_pom_release_bom_compile_only
+	_test_bom_not_generate_boms generate_pom_release_bom_test
+	_test_bom_not_generate_boms generate_pom_release_bom_third_party
+	_test_bom_not_generate_boms generate_pom_release_distro
+
+	unset LIFERAY_CMS_STANDALONE_RELEASE
+}
+
 function test_bom_not_generate_pom_release_bom_test_dxp {
 	_PRODUCT_VERSION="7.4.13-u147"
 
 	generate_pom_release_bom_test &> /dev/null
+
+	assert_equals \
+		"${?}" \
+		"${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+}
+
+function _test_bom_not_generate_boms {
+	"${1}" &> /dev/null
 
 	assert_equals \
 		"${?}" \
