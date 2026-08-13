@@ -8,7 +8,12 @@ function main {
 		/usr/local/bin/liferay_node_runner_set_up.sh
 	fi
 
-	${LIFERAY_NODE_RUNNER_START}
+	if [ -n "${1}" ]
+	then
+		"${@}"
+	else
+		${LIFERAY_NODE_RUNNER_START}
+	fi
 
 	if [ -e /usr/local/bin/liferay_node_runner_tear_down.sh ]
 	then
@@ -16,4 +21,4 @@ function main {
 	fi
 }
 
-main
+main "${@}"

@@ -11,6 +11,7 @@ function main {
 		"${1}"
 	else
 		test_build_node_runner_image_derived_image_installs_dependencies
+		test_build_node_runner_image_entrypoint_passes_arguments
 		test_build_node_runner_image_entrypoint_starts_default_command
 		test_build_node_runner_image_has_node_on_path
 		test_build_node_runner_image_switches_node_version
@@ -68,6 +69,12 @@ function test_build_node_runner_image_derived_image_installs_dependencies {
 	assert_equals \
 		"$(docker run --entrypoint ls --rm "${_TEST_DERIVED_IMAGE}" node_modules)" \
 		"left-pad"
+}
+
+function test_build_node_runner_image_entrypoint_passes_arguments {
+	assert_equals \
+		"$(docker run --rm "${_TEST_NODE_RUNNER_IMAGE}" echo "[LIFERAY_NODE_RUNNER_TEST] argument" 2>&1 | grep --fixed-strings "[LIFERAY_NODE_RUNNER_TEST] argument")" \
+		"[LIFERAY_NODE_RUNNER_TEST] argument"
 }
 
 function test_build_node_runner_image_entrypoint_starts_default_command {
