@@ -253,6 +253,18 @@ function is_ai_hub_release {
 	return 1
 }
 
+function is_cms_standalone_release {
+	if [ "${LIFERAY_CMS_STANDALONE_RELEASE}" == "true" ]
+	then
+		return 0
+	elif [[ "$(_get_product_version "${1}")" == *cms-standalone* ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function is_early_product_version_than {
 	_compare_product_versions "${1}" "early"
 }
