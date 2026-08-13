@@ -360,7 +360,7 @@ function upload_release {
 
 		destination_bucket="gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly/"
 	else
-		gcloud storage rm --recursive "gs://liferay-releases-candidates/${_PRODUCT_VERSION}-*"
+		gcloud storage rm --recursive "gs://liferay-releases-candidates/${_PRODUCT_VERSION}-[0-9]*"
 
 		destination_bucket="gs://liferay-releases-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 	fi
