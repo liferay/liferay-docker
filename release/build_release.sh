@@ -94,17 +94,26 @@ function handle_automated_build {
 
 	lc_log INFO "This build was triggered automatically."
 
-	if ! is_latest_release_candidate_published
+	if [[ "$(date --date "$(get_today)" +%w)" -eq 1 ]]
 	then
-		lc_log INFO "The latest quarterly release candidate was not published. Skipping build."
+		if ! is_latest_release_candidate_published
+		then
+			lc_log INFO "The latest quarterly release candidate was not published. Skipping build."
 
-		_write_automated_build_failure_slack_message
+			_write_automated_build_failure_slack_message
 
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+
+		LIFERAY_RELEASE_GIT_REF="release-$(get_product_group_version "${_LATEST_QUARTERLY_PRODUCT_VERSION}")"
+		RUN_SCANCODE_PIPELINE=true
+	elif [[ "$(date --date "$(get_today)" +%w)" -eq 2 ]]
+	then
+		CI_TEST_SUITE="portal-release-cms"
+		LIFERAY_CMS_STANDALONE_RELEASE=true
+		LIFERAY_RELEASE_GIT_REF="master"
 	fi
 
-	LIFERAY_RELEASE_GIT_REF="release-$(get_product_group_version "${_LATEST_QUARTERLY_PRODUCT_VERSION}")"
-	RUN_SCANCODE_PIPELINE=true
 	TRIGGER_CI_TEST_SUITE=true
 
 	lc_log INFO "LIFERAY_RELEASE_GIT_REF is set to ${LIFERAY_RELEASE_GIT_REF}."
@@ -289,6 +298,7 @@ function print_help {
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
+	echo "    LIFERAY_CMS_STANDALONE_RELEASE (optional): Set this to \"true\" to build the CMS standalone bundle instead of a regular release"
 	echo "    LIFERAY_RELEASE_DEVELOPER_MODE (optional): Set this to \"true\" to run the script as a local development build. Forces LIFERAY_RELEASE_UPLOAD to \"false\"."
 	echo "    LIFERAY_RELEASE_GCS_TOKEN (optional): *.json file containing the token to authenticate with Google Cloud Storage"
 	echo "    LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE (optional): General availability date"
@@ -319,7 +329,7 @@ function print_variables {
 		grep --invert-match "LIFERAY_RELEASE_HOTFIX_SIGNATURE" | \
 		grep --invert-match "LIFERAY_RELEASE_PATCHER_REQUEST_KEY" | \
 		grep --invert-match "LIFERAY_RELEASE_UPLOAD" | \
-		grep --regexp="^LIFERAY_RELEASE" | \
+		grep --regexp="^LIFERAY_CMS_STANDALONE_RELEASE" --regexp="^LIFERAY_RELEASE" | \
 		tr "\n" " ")
 
 	echo "${environment}LIFERAY_RELEASE_DEVELOPER_MODE=true ./build_release.sh"

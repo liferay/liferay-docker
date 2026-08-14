@@ -13,6 +13,7 @@ function main {
 
 	test_build_release_bundle_smaller_than_1_gb_300_mb
 	test_build_release_handle_automated_build
+	test_build_release_handle_automated_build_cms_standalone
 	test_build_release_has_automated_build_failure_slack_message
 	test_build_release_has_packaged_bundles
 	test_build_release_has_slack_message
@@ -56,8 +57,10 @@ function tear_down {
 
 	rm --force --recursive "${_RELEASE_TOOL_DIR}"
 
+	unset LIFERAY_CMS_STANDALONE_RELEASE
 	unset LIFERAY_RELEASE_GIT_REF
 	unset LIFERAY_RELEASE_TEST_ALTERNATIVE_PATH
+	unset LIFERAY_RELEASE_TEST_DATE
 	unset LIFERAY_RELEASE_TEST_DEFAULT_PATH
 	unset LIFERAY_RELEASE_TEST_MACHINE
 	unset RUN_SCANCODE_PIPELINE
@@ -99,6 +102,7 @@ function test_build_release_bundle_smaller_than_1_gb_300_mb {
 function test_build_release_handle_automated_build {
 	BUILD_CAUSE="TIMERTRIGGER"
 	LIFERAY_RELEASE_GIT_REF="release-test"
+	LIFERAY_RELEASE_TEST_DATE="2026-08-10"
 
 	handle_automated_build &> /dev/null
 
@@ -111,6 +115,36 @@ function test_build_release_handle_automated_build {
 		"true"
 
 	unset BUILD_CAUSE
+	unset LIFERAY_RELEASE_TEST_DATE
+
+	LIFERAY_RELEASE_GIT_REF=${_PRODUCT_VERSION}
+}
+
+function test_build_release_handle_automated_build_cms_standalone {
+	BUILD_CAUSE="TIMERTRIGGER"
+	CI_TEST_SUITE="portal-release-acceptance"
+	LIFERAY_RELEASE_GIT_REF="release-test"
+	LIFERAY_RELEASE_TEST_DATE="2026-08-11"
+	RUN_SCANCODE_PIPELINE="false"
+
+	handle_automated_build &> /dev/null
+
+	assert_equals \
+		"${CI_TEST_SUITE}" \
+		"portal-release-cms" \
+		"${LIFERAY_CMS_STANDALONE_RELEASE}" \
+		"true" \
+		"${LIFERAY_RELEASE_GIT_REF}" \
+		"master" \
+		"${RUN_SCANCODE_PIPELINE}" \
+		"false" \
+		"${TRIGGER_CI_TEST_SUITE}" \
+		"true"
+
+	unset BUILD_CAUSE
+	unset CI_TEST_SUITE
+	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_RELEASE_TEST_DATE
 
 	LIFERAY_RELEASE_GIT_REF=${_PRODUCT_VERSION}
 }
@@ -118,6 +152,7 @@ function test_build_release_handle_automated_build {
 function test_build_release_has_automated_build_failure_slack_message {
 	BUILD_CAUSE="TIMERTRIGGER"
 	LIFERAY_RELEASE_OUTPUT="release-candidate"
+	LIFERAY_RELEASE_TEST_DATE="2026-08-10"
 
 	add_release_to_test_dependency "2025.q2.9-1234567890" "test-dependencies/actual/release-candidates.html"
 
@@ -137,6 +172,7 @@ function test_build_release_has_automated_build_failure_slack_message {
 
 	unset BUILD_CAUSE
 	unset LIFERAY_RELEASE_OUTPUT
+	unset LIFERAY_RELEASE_TEST_DATE
 }
 
 function test_build_release_has_packaged_bundles {
@@ -173,6 +209,7 @@ function test_build_release_not_handle_automated_build {
 	_test_build_release_not_handle_automated_build "nightly" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 
 	BUILD_CAUSE="TIMERTRIGGER"
+	LIFERAY_RELEASE_TEST_DATE="2026-08-10"
 
 	add_release_to_test_dependency "2025.q2.9-1234567890" "test-dependencies/actual/release-candidates.html"
 
@@ -181,6 +218,7 @@ function test_build_release_not_handle_automated_build {
 	git restore test-dependencies/actual/release-candidates.html
 
 	unset BUILD_CAUSE
+	unset LIFERAY_RELEASE_TEST_DATE
 }
 
 function _clean_up_release_data {
