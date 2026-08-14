@@ -23,6 +23,7 @@ function main {
 		test_release_common_get_release_version_trivial
 		test_release_common_get_release_year
 		test_release_common_get_target_platform_version
+		test_release_common_get_today
 		test_release_common_is_7_3_release
 		test_release_common_is_7_3_u_release
 		test_release_common_is_7_4_release
@@ -150,6 +151,11 @@ function test_release_common_get_target_platform_version {
 	_test_release_common_get_target_platform_version "7.4.13-u149-ai-hub" "7.4.13.u149"
 	_test_release_common_get_target_platform_version "7.4.13-u75" "7.4.13.u75"
 	_test_release_common_get_target_platform_version "7.4.3.129-ga129" "7.4.3.129"
+}
+
+function test_release_common_get_today {
+	_test_release_common_get_today "2026-08-13" "2026-08-13"
+	_test_release_common_get_today "" "$(date +%Y-%m-%d)"
 }
 
 function test_release_common_is_7_3_release {
@@ -374,6 +380,14 @@ function _test_release_common_get_target_platform_version {
 	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(get_target_platform_version)" "${2}"
+}
+
+function _test_release_common_get_today {
+	LIFERAY_RELEASE_TEST_DATE=${1}
+
+	assert_equals "$(get_today)" "${2}"
+
+	unset LIFERAY_RELEASE_TEST_DATE
 }
 
 function _test_release_common_is_7_3_release {
