@@ -22,13 +22,7 @@ function download_product_version_list_html {
 }
 
 function get_due_date {
-	local date=$(date +%Y-%m-%d)
-
-	if [ -n "${2}" ]
-	then
-		date=${2}
-	fi
-
+	local date=$(get_today)
 	local number_of_working_days=${1}
 
 	while [[ "${number_of_working_days}" -gt 0 ]]
@@ -110,14 +104,7 @@ function get_latest_version_from_url {
 }
 
 function get_premium_support_lts_release_branches {
-	local today=$(date +%Y-%m-%d)
-
-	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ] && [ -n "${LIFERAY_RELEASE_TEST_DATE}" ]
-	then
-		today=${LIFERAY_RELEASE_TEST_DATE}
-	fi
-
-	local year=$(date --date "${today}" +%Y)
+	local year=$(date --date "$(get_today)" +%Y)
 
 	echo "release-$((year - 2)).q1 release-$((year - 1)).q1 release-${year}.q1"
 }

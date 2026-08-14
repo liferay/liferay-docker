@@ -313,9 +313,13 @@ function test_release_common_set_latest_quarterly_product_versions {
 }
 
 function _test_release_common_get_due_date {
+	LIFERAY_RELEASE_TEST_DATE=${2}
+
 	assert_equals \
-		"$(get_due_date "${1}" "${2}")" \
+		"$(get_due_date "${1}")" \
 		"${3}"
+
+	unset LIFERAY_RELEASE_TEST_DATE
 }
 
 function _test_release_common_get_latest_product_version {

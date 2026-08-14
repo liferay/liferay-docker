@@ -251,12 +251,7 @@ function _is_supported_product_version {
 	fi
 
 	local end_of_premium_support_date=$(date --date "${general_availability_date} +${years} year -1 day" +%Y-%m-%d)
-	local today=$(date +%Y-%m-%d)
-
-	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
-	then
-		today=${LIFERAY_RELEASE_TEST_DATE}
-	fi
+	local today=$(get_today)
 
 	if [[ "${today}" > "${end_of_premium_support_date}" ]]
 	then

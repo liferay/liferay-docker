@@ -343,7 +343,7 @@ function _set_general_availability_date {
 
 	if [ -z "${LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE}" ]
 	then
-		LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE=$(date +%Y-%m-%d)
+		LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE=$(get_today)
 	fi
 }
 
