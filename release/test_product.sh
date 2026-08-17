@@ -23,12 +23,12 @@ function main {
 		test_product_clean_up_cmp_and_dsr_modules
 		test_product_clean_up_ignored_dxp_plugins
 		test_product_deploy_opensearch
-		test_product_get_build_profile_parameters
+		test_product_get_build_profile_parameter
 		test_product_get_java_specification_version
 		test_product_is_free_tier_ignored_version
 		test_product_not_add_ckeditor_license
 		test_product_not_clean_up_cmp_and_dsr_modules
-		test_product_not_get_build_profile_parameters
+		test_product_not_get_build_profile_parameter
 		test_product_set_product_version_cms_standalone
 		test_product_set_product_version_lts
 		test_product_set_product_version_with_parameters
@@ -137,11 +137,11 @@ function test_product_deploy_opensearch {
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
-function test_product_get_build_profile_parameters {
+function test_product_get_build_profile_parameter {
 	LIFERAY_CMS_STANDALONE_RELEASE="true"
 
 	assert_equals \
-		"$(_get_build_profile_parameters)" \
+		"$(_get_build_profile_parameter)" \
 		"-Dbuild.profile=cms-standalone"
 
 	unset LIFERAY_CMS_STANDALONE_RELEASE
@@ -178,11 +178,11 @@ function test_product_not_clean_up_cmp_and_dsr_modules {
 	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "7.4.13-u153"
 }
 
-function test_product_not_get_build_profile_parameters {
+function test_product_not_get_build_profile_parameter {
 	_PRODUCT_VERSION="7.4.13-u152"
 
 	assert_equals \
-		"$(_get_build_profile_parameters)" \
+		"$(_get_build_profile_parameter)" \
 		""
 }
 

@@ -74,7 +74,7 @@ function build_product {
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
-	$(_set_cpu_limit) ant deploy $(_get_build_profile_parameters)
+	$(_set_cpu_limit) ant deploy $(_get_build_profile_parameter)
 
 	$(_set_cpu_limit) ant deploy-portal-license-enterprise-app
 
@@ -644,7 +644,7 @@ function _add_lts_suffix_to_product_version {
 	fi
 }
 
-function _get_build_profile_parameters {
+function _get_build_profile_parameter {
 	if is_cms_standalone_release
 	then
 		echo "-Dbuild.profile=cms-standalone"
