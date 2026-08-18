@@ -51,7 +51,7 @@ function copy_tld {
 function generate_api_jars {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "API JAR should not be generated for CMS standalone releases."
+		lc_log INFO "The API JAR should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -210,7 +210,7 @@ function generate_api_jars {
 function generate_api_source_jar {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "API source JAR should not be generated for CMS standalone releases."
+		lc_log INFO "The API source JAR should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -258,7 +258,7 @@ function generate_api_source_jar {
 function generate_distro_jar {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "Distro JAR should not be generated for CMS standalone releases."
+		lc_log INFO "The distro JAR should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -309,7 +309,7 @@ function generate_distro_jar {
 function generate_pom_release_api {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "API POM should not be generated for CMS standalone releases."
+		lc_log INFO "The API POM should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -328,7 +328,7 @@ function generate_pom_release_api {
 function generate_pom_release_bom {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "BOM should not be generated for CMS standalone releases."
+		lc_log INFO "The BOM should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -404,7 +404,7 @@ function generate_pom_release_bom {
 function generate_pom_release_bom_compile_only {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "Compile only BOM should not be generated for CMS standalone releases."
+		lc_log INFO "The compile only BOM should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -443,7 +443,7 @@ function generate_pom_release_bom_compile_only {
 function generate_pom_release_bom_test {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "Test BOM should not be generated for CMS standalone releases."
+		lc_log INFO "The test BOM should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -534,7 +534,7 @@ function generate_pom_release_bom_test {
 function generate_pom_release_bom_third_party {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "Third party BOM should not be generated for CMS standalone releases."
+		lc_log INFO "The third party BOM should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -601,7 +601,7 @@ function generate_pom_release_bom_third_party {
 function generate_pom_release_distro {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "Distro POM should not be generated for CMS standalone releases."
+		lc_log INFO "The distro POM should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
