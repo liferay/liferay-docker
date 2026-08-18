@@ -1,5 +1,30 @@
 #!/bin/bash
 
+function execute_curl {
+	local response
+
+	response=$(curl --silent --write-out "\n%{http_code}" "${@}")
+
+	if [ "${?}" -gt 0 ]
+	then
+		LIFERAY_BATCH_HTTP_BODY="Unable to complete the request."
+		LIFERAY_BATCH_HTTP_STATUS="000"
+
+		return 1
+	fi
+
+	LIFERAY_BATCH_HTTP_BODY="${response%$'\n'*}"
+	LIFERAY_BATCH_HTTP_STATUS="${response##*$'\n'}"
+
+	if [ "${LIFERAY_BATCH_HTTP_STATUS}" == "000" ] ||
+	   [ "${LIFERAY_BATCH_HTTP_STATUS}" -ge 400 ]
+	then
+		return 1
+	fi
+
+	return 0
+}
+
 function main {
 	if [ ! -n "${LIFERAY_BATCH_OAUTH_APP_ERC}" ]
 	then
@@ -105,33 +130,24 @@ function process_batch_data_file {
 
 	echo "Parameters: ${parameters}"
 
-	local http_status_code_file=$(mktemp)
-
-	local post_response=$( \
-		curl \
+	if ! execute_curl \
 			--data @/tmp/liferay_batch_entrypoint.items.json \
 			--header "Accept: application/json" \
 			--header "Authorization: Bearer ${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" \
 			--header "Content-Type: application/json" \
 			--request POST \
-			--silent \
-			--write-out "%output{${http_status_code_file}}%{http_code}" \
 			${LIFERAY_BATCH_CURL_OPTIONS} \
-			"${LIFERAY_BATCH_DXP_URL}${href}${parameters}")
-
-	local http_status_code=$(cat "${http_status_code_file}")
-
-	if [[ "${http_status_code}" -ge 400 ]]
+			"${LIFERAY_BATCH_DXP_URL}${href}${parameters}"
 	then
-		echo "POST ${LIFERAY_BATCH_DXP_URL}${href}${parameters} errored with HTTP status ${http_status_code}."
+		echo "POST ${LIFERAY_BATCH_DXP_URL}${href}${parameters} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}."
 
 		return 1
 	fi
 
-	echo "POST Response: ${post_response}"
+	echo "POST Response: ${LIFERAY_BATCH_HTTP_BODY}"
 	echo ""
 
-	if [ ! -n "${post_response}" ]
+	if [ ! -n "${LIFERAY_BATCH_HTTP_BODY}" ]
 	then
 		echo "Received empty POST response. Check Liferay logs for more information."
 
@@ -140,9 +156,9 @@ function process_batch_data_file {
 		return 1
 	fi
 
-	local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${post_response}")
+	local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${LIFERAY_BATCH_HTTP_BODY}")
 
-	local status=$(jq --raw-output ".executeStatus//.status" <<< "${post_response}")
+	local status=$(jq --raw-output ".executeStatus//.status" <<< "${LIFERAY_BATCH_HTTP_BODY}")
 
 	wait_for_import_task "${external_reference_code}" "${status}"
 }
@@ -166,34 +182,25 @@ function process_site_initializer {
 
 	local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${site}")
 
-	local http_status_code_file=$(mktemp)
-
-	local put_response=$( \
-		curl \
+	if ! execute_curl \
 			--form "file=@/opt/liferay/site-initializer/site-initializer.zip;type=application/zip" \
 			--form "site=${site}" \
 			--header "Accept: application/json" \
 			--header "Authorization: Bearer ${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" \
 			--header "Content-Type: multipart/form-data" \
 			--request PUT \
-			--silent \
-			--write-out "%output{${http_status_code_file}}%{http_code}" \
 			${LIFERAY_BATCH_CURL_OPTIONS} \
-			"${LIFERAY_BATCH_DXP_URL}${href}${external_reference_code}")
-
-	local http_status_code=$(cat "${http_status_code_file}")
-
-	if [[ "${http_status_code}" -ge 400 ]]
+			"${LIFERAY_BATCH_DXP_URL}${href}${external_reference_code}"
 	then
-		echo "PUT ${LIFERAY_BATCH_DXP_URL}${href}${external_reference_code} errored with HTTP status ${http_status_code}."
+		echo "PUT ${LIFERAY_BATCH_DXP_URL}${href}${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}."
 
 		return 1
 	fi
 
-	echo "PUT Response: ${put_response}"
+	echo "PUT Response: ${LIFERAY_BATCH_HTTP_BODY}"
 	echo ""
 
-	if [ ! -n "${put_response}" ]
+	if [ ! -n "${LIFERAY_BATCH_HTTP_BODY}" ]
 	then
 		echo "Received empty PUT response. Check Liferay logs for more information."
 
@@ -204,28 +211,19 @@ function process_site_initializer {
 }
 
 function request_oauth2_access_token {
-	local http_status_code_file=$(mktemp)
-
-	local oauth2_token_response=$( \
-		curl \
+	if ! execute_curl \
 			--data "client_id=${LIFERAY_BATCH_OAUTH2_CLIENT_ID}&client_secret=${LIFERAY_BATCH_OAUTH2_CLIENT_SECRET}&grant_type=client_credentials" \
 			--header "Content-type: application/x-www-form-urlencoded" \
 			--request POST \
-			--silent \
-			--write-out "%output{${http_status_code_file}}%{http_code}" \
 			${LIFERAY_BATCH_CURL_OPTIONS} \
-			"${LIFERAY_BATCH_DXP_URL}${LIFERAY_BATCH_OAUTH2_TOKEN_URI}")
-
-	local http_status_code=$(cat "${http_status_code_file}")
-
-	if [[ "${http_status_code}" -ge 400 ]]
+			"${LIFERAY_BATCH_DXP_URL}${LIFERAY_BATCH_OAUTH2_TOKEN_URI}"
 	then
-		echo "POST ${LIFERAY_BATCH_DXP_URL}${LIFERAY_BATCH_OAUTH2_TOKEN_URI} errored with HTTP status ${http_status_code}."
+		echo "POST ${LIFERAY_BATCH_DXP_URL}${LIFERAY_BATCH_OAUTH2_TOKEN_URI} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}."
 
 		return 1
 	fi
 
-	LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN=$(jq --raw-output ".access_token" <<< "${oauth2_token_response}")
+	LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN=$(jq --raw-output ".access_token" <<< "${LIFERAY_BATCH_HTTP_BODY}")
 
 	if [ "${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" == "" ]
 	then
@@ -243,26 +241,19 @@ function wait_for_import_task {
 
 	until [ "${status}" == "COMPLETED" ] || [ "${status}" == "FAILED" ] || [ "${status}" == "NOT_FOUND" ]
 	do
-		local http_status_code_file=$(mktemp)
-
-		local get_response=$( \
-			curl \
-				--header "accept: application/json" \
+		if ! execute_curl \
+				--header "Accept: application/json" \
 				--header "Authorization: Bearer ${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" \
-				--request 'GET' \
-				--silent \
-				--write-out "%output{${http_status_code_file}}%{http_code}" \
+				--request GET \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
-				"${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}")
-
-		if [[ "${http_status_code}" -ge 400 ]]
+				"${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}"
 		then
-			echo "GET ${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code} errored with HTTP status ${http_status_code}."
+			echo "GET ${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}."
 
 			return 1
 		fi
 
-		status=$(jq --raw-output '.executeStatus//.status' <<< "${get_response}")
+		status=$(jq --raw-output '.executeStatus//.status' <<< "${LIFERAY_BATCH_HTTP_BODY}")
 
 		echo "Execute Status: ${status}"
 	done
