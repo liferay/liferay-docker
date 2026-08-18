@@ -51,7 +51,7 @@ function copy_tld {
 function generate_api_jars {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "API JARs should not be generated for CMS standalone releases."
+		lc_log INFO "API JAR should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -210,7 +210,7 @@ function generate_api_jars {
 function generate_api_source_jar {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "API source JARs should not be generated for CMS standalone releases."
+		lc_log INFO "API source JAR should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -258,7 +258,7 @@ function generate_api_source_jar {
 function generate_distro_jar {
 	if is_cms_standalone_release
 	then
-		lc_log INFO "Distro JARs should not be generated for CMS standalone releases."
+		lc_log INFO "Distro JAR should not be generated for CMS standalone releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
