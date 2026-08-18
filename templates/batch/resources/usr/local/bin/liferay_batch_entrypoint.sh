@@ -139,7 +139,7 @@ function process_batch_data_file {
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${LIFERAY_BATCH_DXP_URL}${href}${parameters}"
 	then
-		echo "POST ${LIFERAY_BATCH_DXP_URL}${href}${parameters} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}."
+		echo "POST ${LIFERAY_BATCH_DXP_URL}${href}${parameters} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}"
 
 		return 1
 	fi
@@ -192,7 +192,7 @@ function process_site_initializer {
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${LIFERAY_BATCH_DXP_URL}${href}${external_reference_code}"
 	then
-		echo "PUT ${LIFERAY_BATCH_DXP_URL}${href}${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}."
+		echo "PUT ${LIFERAY_BATCH_DXP_URL}${href}${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}"
 
 		return 1
 	fi
@@ -218,7 +218,7 @@ function request_oauth2_access_token {
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${LIFERAY_BATCH_DXP_URL}${LIFERAY_BATCH_OAUTH2_TOKEN_URI}"
 	then
-		echo "POST ${LIFERAY_BATCH_DXP_URL}${LIFERAY_BATCH_OAUTH2_TOKEN_URI} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}."
+		echo "POST ${LIFERAY_BATCH_DXP_URL}${LIFERAY_BATCH_OAUTH2_TOKEN_URI} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}"
 
 		return 1
 	fi
@@ -248,7 +248,7 @@ function wait_for_import_task {
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}"
 		then
-			echo "GET ${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}."
+			echo "GET ${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}"
 
 			return 1
 		fi
