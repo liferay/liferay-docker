@@ -20,7 +20,6 @@ function main {
 }
 
 function set_up {
-	export _TEST_DERIVED_IMAGE="liferay/node-runner-derived:test"
 	export _TEST_NODE_RUNNER_IMAGE="liferay/node-runner:test"
 
 	docker build --tag "${_TEST_NODE_RUNNER_IMAGE}" templates/node-runner &> /dev/null
@@ -49,6 +48,8 @@ function set_up {
 
 	RUN npm install --no-workspaces
 	EOF
+
+	export _TEST_DERIVED_IMAGE="liferay/node-runner-derived:test"
 
 	docker build --tag "${_TEST_DERIVED_IMAGE}" "${_TEST_APP_DIR}" &> /dev/null
 }
