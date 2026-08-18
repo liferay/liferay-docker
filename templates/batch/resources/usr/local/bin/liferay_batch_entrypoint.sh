@@ -38,12 +38,7 @@ function main {
 	LIFERAY_BATCH_OAUTH2_CLIENT_SECRET=$(cat "${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.headless.server.client.secret")
 	LIFERAY_BATCH_OAUTH2_TOKEN_URI=$(cat "${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.token.uri")
 
-	echo "LXC DXP Main Domain: ${lxc_dxp_main_domain}"
-	echo "LXC DXP Server Protocol: $(cat "${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.server.protocol")"
-	echo ""
-	echo "OAuth Client ID: ${LIFERAY_BATCH_OAUTH2_CLIENT_ID}"
-	echo "OAuth Client Secret: ${LIFERAY_BATCH_OAUTH2_CLIENT_SECRET}"
-	echo "OAuth Token URI: ${LIFERAY_BATCH_OAUTH2_TOKEN_URI}"
+	echo "DXP URL: ${LIFERAY_BATCH_DXP_URL}"
 	echo ""
 
 	if ! request_oauth2_access_token
@@ -229,9 +224,6 @@ function request_oauth2_access_token {
 
 		return 1
 	fi
-
-	echo "OAuth Token Response: ${oauth2_token_response}"
-	echo ""
 
 	LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN=$(jq --raw-output ".access_token" <<< "${oauth2_token_response}")
 
