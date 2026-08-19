@@ -25,10 +25,14 @@ function execute_curl {
 	return 0
 }
 
+function log {
+	echo "${1}"
+}
+
 function main {
 	if [ ! -n "${LIFERAY_BATCH_OAUTH_APP_ERC}" ]
 	then
-		echo "Set the environment variable LIFERAY_BATCH_OAUTH_APP_ERC."
+		log "Set the environment variable LIFERAY_BATCH_OAUTH_APP_ERC." ERROR
 
 		exit 1
 	fi
@@ -63,8 +67,7 @@ function main {
 		LIFERAY_ROUTES_DXP="/etc/liferay/lxc/dxp-metadata"
 	fi
 
-	echo "OAuth Application ERC: ${LIFERAY_BATCH_OAUTH_APP_ERC}"
-	echo ""
+	log "OAuth Application ERC: ${LIFERAY_BATCH_OAUTH_APP_ERC}"
 
 	local lxc_dxp_main_domain=$(cat "${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.main.domain")
 
@@ -78,8 +81,7 @@ function main {
 	LIFERAY_BATCH_OAUTH2_CLIENT_SECRET=$(cat "${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.headless.server.client.secret")
 	LIFERAY_BATCH_OAUTH2_TOKEN_URI=$(cat "${LIFERAY_ROUTES_CLIENT_EXTENSION}/${LIFERAY_BATCH_OAUTH_APP_ERC}.oauth2.token.uri")
 
-	echo "DXP URL: ${LIFERAY_BATCH_DXP_URL}"
-	echo ""
+	log "DXP URL: ${LIFERAY_BATCH_DXP_URL}"
 
 	if ! request_oauth2_access_token
 	then
@@ -104,8 +106,7 @@ function main {
 function process_batch_data_file {
 	local file_name="${1}"
 
-	echo "Processing: ${file_name}"
-	echo ""
+	log "Processing: ${file_name}"
 
 	local href=$(jq --raw-output ".actions.createBatch.href" "${file_name}")
 
@@ -115,7 +116,7 @@ function process_batch_data_file {
 
 		if [ "${class_name}" == "null" ]
 		then
-			echo "Batch data file is missing configuration class name."
+			log "Batch data file is missing configuration class name." ERROR
 
 			return 1
 		fi
@@ -130,11 +131,11 @@ function process_batch_data_file {
 		href="/${href}"
 	fi
 
-	echo "HREF: ${href}"
+	log "HREF: ${href}"
 
 	jq --raw-output ".items" "${file_name}" > /tmp/liferay_batch_entrypoint.items.json
 
-	echo "Items: $(</tmp/liferay_batch_entrypoint.items.json)"
+	log "Items: $(</tmp/liferay_batch_entrypoint.items.json)"
 
 	local parameters=$(jq --raw-output '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' "${file_name}" 2> /dev/null)
 
@@ -143,7 +144,7 @@ function process_batch_data_file {
 		parameters="?${parameters}"
 	fi
 
-	echo "Parameters: ${parameters}"
+	log "Parameters: ${parameters}"
 
 	if ! refresh_oauth2_access_token
 	then
@@ -159,17 +160,16 @@ function process_batch_data_file {
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${LIFERAY_BATCH_DXP_URL}${href}${parameters}"
 	then
-		echo "POST ${LIFERAY_BATCH_DXP_URL}${href}${parameters} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}"
+		log "POST ${LIFERAY_BATCH_DXP_URL}${href}${parameters} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
 
 		return 1
 	fi
 
-	echo "POST Response: ${LIFERAY_BATCH_HTTP_BODY}"
-	echo ""
+	log "POST Response: ${LIFERAY_BATCH_HTTP_BODY}"
 
 	if [ ! -n "${LIFERAY_BATCH_HTTP_BODY}" ]
 	then
-		echo "Received empty POST response. Check Liferay logs for more information."
+		log "Received empty POST response. Check Liferay logs for more information." ERROR
 
 		rm /tmp/liferay_batch_entrypoint.items.json
 
@@ -193,16 +193,15 @@ function process_site_initializer {
 		return 0
 	fi
 
-	echo "Processing: ${LIFERAY_BATCH_SITE_INITIALIZER_DIR}/site-initializer.json"
-	echo ""
+	log "Processing: ${LIFERAY_BATCH_SITE_INITIALIZER_DIR}/site-initializer.json"
 
 	local href="/o/headless-site/v1.0/sites/by-external-reference-code/"
 
-	echo "HREF: ${href}"
+	log "HREF: ${href}"
 
 	local site=$(jq --raw-output '.' "${LIFERAY_BATCH_SITE_INITIALIZER_DIR}/site-initializer.json")
 
-	echo "Site: ${site}"
+	log "Site: ${site}"
 
 	local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${site}")
 
@@ -216,17 +215,16 @@ function process_site_initializer {
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${LIFERAY_BATCH_DXP_URL}${href}${external_reference_code}"
 	then
-		echo "PUT ${LIFERAY_BATCH_DXP_URL}${href}${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}"
+		log "PUT ${LIFERAY_BATCH_DXP_URL}${href}${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
 
 		return 1
 	fi
 
-	echo "PUT Response: ${LIFERAY_BATCH_HTTP_BODY}"
-	echo ""
+	log "PUT Response: ${LIFERAY_BATCH_HTTP_BODY}"
 
 	if [ ! -n "${LIFERAY_BATCH_HTTP_BODY}" ]
 	then
-		echo "Received empty PUT response. Check Liferay logs for more information."
+		log "Received empty PUT response. Check Liferay logs for more information." ERROR
 
 		return 1
 	fi
@@ -251,7 +249,7 @@ function request_oauth2_access_token {
 			${LIFERAY_BATCH_CURL_OPTIONS} \
 			"${LIFERAY_BATCH_DXP_URL}${LIFERAY_BATCH_OAUTH2_TOKEN_URI}"
 	then
-		echo "POST ${LIFERAY_BATCH_DXP_URL}${LIFERAY_BATCH_OAUTH2_TOKEN_URI} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}"
+		log "POST ${LIFERAY_BATCH_DXP_URL}${LIFERAY_BATCH_OAUTH2_TOKEN_URI} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
 
 		return 1
 	fi
@@ -260,7 +258,7 @@ function request_oauth2_access_token {
 
 	if [ "${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" == "" ]
 	then
-		echo "Unable to get OAuth 2 access token."
+		log "Unable to get OAuth 2 access token." ERROR
 
 		return 1
 	fi
@@ -290,7 +288,7 @@ function wait_for_import_task {
 				${LIFERAY_BATCH_CURL_OPTIONS} \
 				"${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}"
 		then
-			echo "GET ${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}"
+			log "GET ${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
 
 			return 1
 		fi
@@ -299,12 +297,12 @@ function wait_for_import_task {
 
 		if ! status=$(jq --exit-status --raw-output '.executeStatus' <<< "${LIFERAY_BATCH_HTTP_BODY}")
 		then
-			echo "Unable to read a status for batch import task ${external_reference_code}. ${LIFERAY_BATCH_HTTP_BODY}"
+			log "Unable to read a status for batch import task ${external_reference_code}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
 
 			return 1
 		fi
 
-		echo "Execute Status: ${status}"
+		log "Execute Status: ${status}"
 
 		if [ "${status}" == "COMPLETED" ]
 		then
@@ -314,7 +312,7 @@ function wait_for_import_task {
 			then
 				local failed_item_messages=$(jq --raw-output '[(.failedItems//[])[] | "Item \(.itemIndex): \(.message)"] | join(" ")' <<< "${LIFERAY_BATCH_HTTP_BODY}")
 
-				echo "Batch import task ${external_reference_code} completed with ${failed_items} failed item(s). ${failed_item_messages}"
+				log "Batch import task ${external_reference_code} completed with ${failed_items} failed item(s). ${failed_item_messages}" ERROR
 
 				return 1
 			fi
@@ -324,14 +322,14 @@ function wait_for_import_task {
 
 		if [ "${status}" == "FAILED" ]
 		then
-			echo "Batch import task ${external_reference_code} reported ${status}. ${LIFERAY_BATCH_HTTP_BODY}"
+			log "Batch import task ${external_reference_code} reported ${status}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
 
 			return 1
 		fi
 
 		if [ "${waited_seconds}" -ge "${LIFERAY_BATCH_MAX_WAIT_SECONDS}" ]
 		then
-			echo "Batch import task ${external_reference_code} did not reach a terminal state within ${waited_seconds} seconds. The last reported status was ${status}."
+			log "Batch import task ${external_reference_code} did not reach a terminal state within ${waited_seconds} seconds. The last reported status was ${status}." ERROR
 
 			return 1
 		fi
