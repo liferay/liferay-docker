@@ -135,6 +135,11 @@ function process_batch_data_file {
 
 	echo "Parameters: ${parameters}"
 
+	if ! refresh_oauth2_access_token
+	then
+		return 1
+	fi
+
 	if ! execute_curl \
 			--data @/tmp/liferay_batch_entrypoint.items.json \
 			--header "Accept: application/json" \
@@ -219,6 +224,15 @@ function process_site_initializer {
 	return 0
 }
 
+function refresh_oauth2_access_token {
+	if [ $((SECONDS - LIFERAY_BATCH_OAUTH2_TOKEN_SECONDS)) -lt 480 ]
+	then
+		return 0
+	fi
+
+	request_oauth2_access_token
+}
+
 function request_oauth2_access_token {
 	if ! execute_curl \
 			--data "client_id=${LIFERAY_BATCH_OAUTH2_CLIENT_ID}&client_secret=${LIFERAY_BATCH_OAUTH2_CLIENT_SECRET}&grant_type=client_credentials" \
@@ -241,6 +255,8 @@ function request_oauth2_access_token {
 		return 1
 	fi
 
+	LIFERAY_BATCH_OAUTH2_TOKEN_SECONDS=${SECONDS}
+
 	return 0
 }
 
@@ -252,6 +268,11 @@ function wait_for_import_task {
 
 	while true
 	do
+		if ! refresh_oauth2_access_token
+		then
+			return 1
+		fi
+
 		if ! execute_curl \
 				--header "Accept: application/json" \
 				--header "Authorization: Bearer ${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" \
