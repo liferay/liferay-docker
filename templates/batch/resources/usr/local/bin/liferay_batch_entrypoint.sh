@@ -33,6 +33,16 @@ function main {
 		exit 1
 	fi
 
+	if [ ! -n "${LIFERAY_BATCH_DIR}" ]
+	then
+		LIFERAY_BATCH_DIR="/opt/liferay/batch"
+	fi
+
+	if [ ! -n "${LIFERAY_BATCH_SITE_INITIALIZER_DIR}" ]
+	then
+		LIFERAY_BATCH_SITE_INITIALIZER_DIR="/opt/liferay/site-initializer"
+	fi
+
 	if [ ! -n "${LIFERAY_BATCH_CURL_OPTIONS}" ]
 	then
 		LIFERAY_BATCH_CURL_OPTIONS=" "
@@ -81,7 +91,7 @@ function main {
 		exit 1
 	fi
 
-	find /opt/liferay/batch -type f -name "*.batch-engine-data.json" -print0 2> /dev/null | LC_ALL=C sort --zero-terminated |
+	find ${LIFERAY_BATCH_DIR} -type f -name "*.batch-engine-data.json" -print0 2> /dev/null | LC_ALL=C sort --zero-terminated |
 	while IFS= read -r -d "" file_name
 	do
 		if ! process_batch_data_file "${file_name}"
@@ -178,26 +188,26 @@ function process_batch_data_file {
 }
 
 function process_site_initializer {
-	if [ ! -e "/opt/liferay/site-initializer/site-initializer.json" ]
+	if [ ! -e "${LIFERAY_BATCH_SITE_INITIALIZER_DIR}/site-initializer.json" ]
 	then
 		return 0
 	fi
 
-	echo "Processing: /opt/liferay/site-initializer/site-initializer.json"
+	echo "Processing: ${LIFERAY_BATCH_SITE_INITIALIZER_DIR}/site-initializer.json"
 	echo ""
 
 	local href="/o/headless-site/v1.0/sites/by-external-reference-code/"
 
 	echo "HREF: ${href}"
 
-	local site=$(jq --raw-output '.' /opt/liferay/site-initializer/site-initializer.json)
+	local site=$(jq --raw-output '.' "${LIFERAY_BATCH_SITE_INITIALIZER_DIR}/site-initializer.json")
 
 	echo "Site: ${site}"
 
 	local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${site}")
 
 	if ! execute_curl \
-			--form "file=@/opt/liferay/site-initializer/site-initializer.zip;type=application/zip" \
+			--form "file=@${LIFERAY_BATCH_SITE_INITIALIZER_DIR}/site-initializer.zip;type=application/zip" \
 			--form "site=${site}" \
 			--header "Accept: application/json" \
 			--header "Authorization: Bearer ${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" \
