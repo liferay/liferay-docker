@@ -262,7 +262,18 @@ function wait_for_import_task {
 
 	if [ "${status}" == "FAILED" ]
 	then
-		echo "Batch import task failed. Check Liferay logs for more information."
+		echo "Batch import task ${external_reference_code} reported ${status}. ${LIFERAY_BATCH_HTTP_BODY}"
+
+		return 1
+	fi
+
+	local failed_items=$(jq --raw-output '.failedItems//[] | length' <<< "${LIFERAY_BATCH_HTTP_BODY}")
+
+	if [ "${failed_items}" != "0" ]
+	then
+		local failed_item_messages=$(jq --raw-output '[(.failedItems//[])[] | "Item \(.itemIndex): \(.message)"] | join(" ")' <<< "${LIFERAY_BATCH_HTTP_BODY}")
+
+		echo "Batch import task ${external_reference_code} completed with ${failed_items} failed item(s). ${failed_item_messages}"
 
 		return 1
 	fi
