@@ -11,6 +11,11 @@ COPY resources/ /
 ENTRYPOINT ["tini", "-v", "--", "/usr/local/bin/liferay_batch_entrypoint.sh"]
 
 ENV LANG="C.UTF-8"
+ENV LIFERAY_BATCH_CURL_OPTIONS=
+ENV LIFERAY_BATCH_DIR=/opt/liferay/batch
+ENV LIFERAY_BATCH_MAX_WAIT_SECONDS=540
+ENV LIFERAY_BATCH_OAUTH_APP_ERC=
+ENV LIFERAY_BATCH_SITE_INITIALIZER_DIR=/opt/liferay/site-initializer
 
 LABEL org.label-schema.build-date="${LABEL_BUILD_DATE}"
 LABEL org.label-schema.name="${LABEL_NAME}"
