@@ -114,87 +114,15 @@ function main {
 }
 
 function process_batch_data_file {
-	local file_name="${1}"
+	local items_file=$(mktemp)
 
-	log "Processing: ${file_name}"
-
-	local href=$(jq --raw-output ".actions.createBatch.href" "${file_name}")
-
-	if [ "${href}" == "null" ]
-	then
-		local class_name=$(jq --raw-output ".configuration.className" "${file_name}")
-
-		if [ "${class_name}" == "null" ]
-		then
-			log "Batch data file is missing configuration class name." ERROR
-
-			return 1
-		fi
-
-		href="/o/headless-batch-engine/v1.0/import-task/${class_name}"
-	fi
-
-	href="${href#*://*/}"
-
-	if [[ ! ${href} =~ ^/.* ]]
-	then
-		href="/${href}"
-	fi
-
-	log "HREF: ${href}"
-
-	jq --raw-output ".items" "${file_name}" > /tmp/liferay_batch_entrypoint.items.json
-
-	log "Items: $(</tmp/liferay_batch_entrypoint.items.json)"
-
-	local parameters=$(jq --raw-output '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' "${file_name}" 2> /dev/null)
-
-	if [ "${parameters}" != "" ]
-	then
-		parameters="?${parameters}"
-	fi
-
-	log "Parameters: ${parameters}"
-
-	if ! refresh_oauth2_access_token
-	then
-		return 1
-	fi
-
-	if ! execute_curl \
-			--data @/tmp/liferay_batch_entrypoint.items.json \
-			--header "Accept: application/json" \
-			--header "Authorization: Bearer ${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" \
-			--header "Content-Type: application/json" \
-			--request POST \
-			${LIFERAY_BATCH_CURL_OPTIONS} \
-			"${LIFERAY_BATCH_DXP_URL}${href}${parameters}"
-	then
-		log "POST ${LIFERAY_BATCH_DXP_URL}${href}${parameters} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
-
-		return 1
-	fi
-
-	log "POST Response: ${LIFERAY_BATCH_HTTP_BODY}"
-
-	if [ ! -n "${LIFERAY_BATCH_HTTP_BODY}" ]
-	then
-		log "Received empty POST response. Check Liferay logs for more information." ERROR
-
-		rm /tmp/liferay_batch_entrypoint.items.json
-
-		return 1
-	fi
-
-	local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${LIFERAY_BATCH_HTTP_BODY}")
-
-	wait_for_import_task "${external_reference_code}"
+	_process_batch_data_file "${1}" "${items_file}"
 
 	local exit_code=${?}
 
-	rm /tmp/liferay_batch_entrypoint.items.json
+	rm --force "${items_file}"
 
-	return ${exit_code}
+	return "${exit_code}"
 }
 
 function process_site_initializer {
@@ -357,6 +285,83 @@ function wait_for_import_task {
 			sleep_seconds=$((sleep_seconds * 2))
 		fi
 	done
+}
+
+function _process_batch_data_file {
+	local file_name="${1}"
+	local items_file="${2}"
+
+	log "Processing: ${file_name}"
+
+	local href=$(jq --raw-output ".actions.createBatch.href" "${file_name}")
+
+	if [ "${href}" == "null" ]
+	then
+		local class_name=$(jq --raw-output ".configuration.className" "${file_name}")
+
+		if [ "${class_name}" == "null" ]
+		then
+			log "Batch data file is missing configuration class name." ERROR
+
+			return 1
+		fi
+
+		href="/o/headless-batch-engine/v1.0/import-task/${class_name}"
+	fi
+
+	href="${href#*://*/}"
+
+	if [[ ! ${href} =~ ^/.* ]]
+	then
+		href="/${href}"
+	fi
+
+	log "HREF: ${href}"
+
+	jq --raw-output ".items" "${file_name}" > "${items_file}"
+
+	log "Items: $(<"${items_file}")"
+
+	local parameters=$(jq --raw-output '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' "${file_name}" 2> /dev/null)
+
+	if [ "${parameters}" != "" ]
+	then
+		parameters="?${parameters}"
+	fi
+
+	log "Parameters: ${parameters}"
+
+	if ! refresh_oauth2_access_token
+	then
+		return 1
+	fi
+
+	if ! execute_curl \
+			--data @"${items_file}" \
+			--header "Accept: application/json" \
+			--header "Authorization: Bearer ${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" \
+			--header "Content-Type: application/json" \
+			--request POST \
+			${LIFERAY_BATCH_CURL_OPTIONS} \
+			"${LIFERAY_BATCH_DXP_URL}${href}${parameters}"
+	then
+		log "POST ${LIFERAY_BATCH_DXP_URL}${href}${parameters} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
+
+		return 1
+	fi
+
+	log "POST Response: ${LIFERAY_BATCH_HTTP_BODY}"
+
+	if [ ! -n "${LIFERAY_BATCH_HTTP_BODY}" ]
+	then
+		log "Received empty POST response. Check Liferay logs for more information." ERROR
+
+		return 1
+	fi
+
+	local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${LIFERAY_BATCH_HTTP_BODY}")
+
+	wait_for_import_task "${external_reference_code}"
 }
 
 main

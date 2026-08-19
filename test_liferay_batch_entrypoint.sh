@@ -5,6 +5,7 @@ source ./_test_common.sh
 function main {
 	test_liferay_batch_entrypoint_import_task_status
 	test_liferay_batch_entrypoint_polls_with_backoff
+	test_liferay_batch_entrypoint_removes_the_items_file
 	test_liferay_batch_entrypoint_reports_completed_with_failed_items
 	test_liferay_batch_entrypoint_reports_poll_http_error
 	test_liferay_batch_entrypoint_reports_post_error_body
@@ -21,6 +22,7 @@ function set_up {
 	mkdir --parents \
 		"${_TEST_FIXTURE_DIR}/batch" \
 		"${_TEST_FIXTURE_DIR}/bin" \
+		"${_TEST_FIXTURE_DIR}/tmp" \
 		"${_TEST_FIXTURE_DIR}/lxc/dxp-metadata" \
 		"${_TEST_FIXTURE_DIR}/lxc/ext-init-metadata"
 
@@ -84,6 +86,24 @@ function test_liferay_batch_entrypoint_polls_with_backoff {
 		"$(wc --lines < "${_TEST_FIXTURE_DIR}/poll_count")" "3" \
 		"$(_output_contains "did not reach a terminal state")" "true" \
 		"${_TEST_ENTRYPOINT_EXIT_CODE}" "1"
+
+	tear_down
+}
+
+function test_liferay_batch_entrypoint_removes_the_items_file {
+	set_up
+
+	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
+
+	local completed_file_count=$(ls "${_TEST_FIXTURE_DIR}/tmp" | wc --lines)
+
+	export _TEST_POST_HTTP_STATUS="400"
+
+	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
+
+	assert_equals \
+		"${completed_file_count}" "0" \
+		"$(ls "${_TEST_FIXTURE_DIR}/tmp" | wc --lines)" "0"
 
 	tear_down
 }
@@ -207,6 +227,7 @@ function _output_contains {
 
 function _run_entrypoint {
 	PATH="${_TEST_FIXTURE_DIR}/bin:${PATH}" \
+	TMPDIR="${_TEST_FIXTURE_DIR}/tmp" \
 	LIFERAY_BATCH_DIR="${_TEST_FIXTURE_DIR}/batch" \
 	LIFERAY_BATCH_OAUTH_APP_ERC="${LIFERAY_BATCH_OAUTH_APP_ERC-test}" \
 	LIFERAY_BATCH_SITE_INITIALIZER_DIR="${_TEST_FIXTURE_DIR}/no-site-initializer" \
