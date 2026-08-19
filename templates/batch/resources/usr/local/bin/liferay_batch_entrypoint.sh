@@ -25,6 +25,16 @@ function execute_curl {
 	return 0
 }
 
+function is_transient_http_status {
+	if [ "${LIFERAY_BATCH_HTTP_STATUS}" == "000" ] ||
+	   [ "${LIFERAY_BATCH_HTTP_STATUS}" -ge 500 ]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function log {
 	echo "${1}"
 }
@@ -271,7 +281,10 @@ function request_oauth2_access_token {
 function wait_for_import_task {
 	local external_reference_code="${1}"
 
+	local import_task_url="${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}"
+
 	local sleep_seconds=1
+	local status="UNKNOWN"
 	local waited_seconds=0
 
 	while true
@@ -281,48 +294,49 @@ function wait_for_import_task {
 			return 1
 		fi
 
-		if ! execute_curl \
+		if execute_curl \
 				--header "Accept: application/json" \
 				--header "Authorization: Bearer ${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" \
 				--request GET \
 				${LIFERAY_BATCH_CURL_OPTIONS} \
-				"${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code}"
+				"${import_task_url}"
 		then
-			log "GET ${LIFERAY_BATCH_DXP_URL}/o/headless-batch-engine/v1.0/import-task/by-external-reference-code/${external_reference_code} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
-
-			return 1
-		fi
-
-		local status
-
-		if ! status=$(jq --exit-status --raw-output '.executeStatus' <<< "${LIFERAY_BATCH_HTTP_BODY}")
-		then
-			log "Unable to read a status for batch import task ${external_reference_code}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
-
-			return 1
-		fi
-
-		log "Execute Status: ${status}"
-
-		if [ "${status}" == "COMPLETED" ]
-		then
-			local failed_items=$(jq --raw-output '.failedItems//[] | length' <<< "${LIFERAY_BATCH_HTTP_BODY}")
-
-			if [ "${failed_items}" != "0" ]
+			if ! status=$(jq --exit-status --raw-output '.executeStatus' <<< "${LIFERAY_BATCH_HTTP_BODY}")
 			then
-				local failed_item_messages=$(jq --raw-output '[(.failedItems//[])[] | "Item \(.itemIndex): \(.message)"] | join(" ")' <<< "${LIFERAY_BATCH_HTTP_BODY}")
-
-				log "Batch import task ${external_reference_code} completed with ${failed_items} failed item(s). ${failed_item_messages}" ERROR
+				log "Unable to read a status for batch import task ${external_reference_code}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
 
 				return 1
 			fi
 
-			return 0
-		fi
+			log "Execute Status: ${status}"
 
-		if [ "${status}" == "FAILED" ]
+			if [ "${status}" == "COMPLETED" ]
+			then
+				local failed_items=$(jq --raw-output '.failedItems//[] | length' <<< "${LIFERAY_BATCH_HTTP_BODY}")
+
+				if [ "${failed_items}" != "0" ]
+				then
+					local failed_item_messages=$(jq --raw-output '[(.failedItems//[])[] | "Item \(.itemIndex): \(.message)"] | join(" ")' <<< "${LIFERAY_BATCH_HTTP_BODY}")
+
+					log "Batch import task ${external_reference_code} completed with ${failed_items} failed item(s). ${failed_item_messages}" ERROR
+
+					return 1
+				fi
+
+				return 0
+			fi
+
+			if [ "${status}" == "FAILED" ]
+			then
+				log "Batch import task ${external_reference_code} reported ${status}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
+
+				return 1
+			fi
+		elif is_transient_http_status
 		then
-			log "Batch import task ${external_reference_code} reported ${status}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
+			log "GET ${import_task_url} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY} Retrying." WARNING
+		else
+			log "GET ${import_task_url} errored with HTTP status ${LIFERAY_BATCH_HTTP_STATUS}. ${LIFERAY_BATCH_HTTP_BODY}" ERROR
 
 			return 1
 		fi

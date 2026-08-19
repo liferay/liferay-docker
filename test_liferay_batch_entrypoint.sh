@@ -10,6 +10,7 @@ function main {
 	test_liferay_batch_entrypoint_reports_post_error_body
 	test_liferay_batch_entrypoint_reports_unparseable_poll_response
 	test_liferay_batch_entrypoint_requires_oauth_app_erc
+	test_liferay_batch_entrypoint_retries_transient_poll_failure
 }
 
 function set_up {
@@ -38,6 +39,8 @@ function set_up {
 	export _TEST_POLL_BODY="{\"executeStatus\": \"COMPLETED\", \"failedItems\": []}"
 	export _TEST_POLL_COUNT_FILE="${_TEST_FIXTURE_DIR}/poll_count"
 	export _TEST_POLL_HTTP_STATUS="200"
+	export _TEST_POLL_TRANSIENT_BODY=""
+	export _TEST_POLL_TRANSIENT_COUNT="0"
 	export _TEST_POST_BODY="{\"externalReferenceCode\": \"ERC-1\"}"
 	export _TEST_POST_HTTP_STATUS="200"
 	export _TEST_TOKEN_BODY="{\"access_token\": \"token\", \"expires_in\": 600}"
@@ -55,6 +58,8 @@ function tear_down {
 	unset _TEST_POLL_BODY
 	unset _TEST_POLL_COUNT_FILE
 	unset _TEST_POLL_HTTP_STATUS
+	unset _TEST_POLL_TRANSIENT_BODY
+	unset _TEST_POLL_TRANSIENT_COUNT
 	unset _TEST_POST_BODY
 	unset _TEST_POST_HTTP_STATUS
 	unset _TEST_TOKEN_BODY
@@ -106,7 +111,7 @@ function test_liferay_batch_entrypoint_reports_poll_http_error {
 	export _TEST_POLL_BODY="{\"status\": \"NOT_FOUND\", \"title\": \"No ImportTask exists with the external reference code.\"}"
 	export _TEST_POLL_HTTP_STATUS="404"
 
-	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
+	_TEST_ENTRYPOINT_OUTPUT=$(LIFERAY_BATCH_MAX_WAIT_SECONDS=3 _run_entrypoint)
 
 	_TEST_ENTRYPOINT_EXIT_CODE="${?}"
 
@@ -168,6 +173,25 @@ function test_liferay_batch_entrypoint_requires_oauth_app_erc {
 	tear_down
 }
 
+function test_liferay_batch_entrypoint_retries_transient_poll_failure {
+	set_up
+
+	export _TEST_POLL_TRANSIENT_BODY="<html><body>503 Service Unavailable</body></html>"
+	export _TEST_POLL_TRANSIENT_COUNT="2"
+
+	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
+
+	_TEST_ENTRYPOINT_EXIT_CODE="${?}"
+
+	assert_equals \
+		"$(wc --lines < "${_TEST_FIXTURE_DIR}/poll_count")" "3" \
+		"$(_output_contains "errored with HTTP status 503")" "true" \
+		"$(_output_contains "Retrying.")" "true" \
+		"${_TEST_ENTRYPOINT_EXIT_CODE}" "0"
+
+	tear_down
+}
+
 function _output_contains {
 	if [[ "${_TEST_ENTRYPOINT_OUTPUT}" == *"${1}"* ]]
 	then
@@ -218,6 +242,14 @@ function _write_curl_stub {
 		elif [[ "\${url}" == */by-external-reference-code/* ]]
 		then
 			echo "poll" >> "\${_TEST_POLL_COUNT_FILE}"
+
+			if [ "\$(wc --lines < "\${_TEST_POLL_COUNT_FILE}")" -le "\${_TEST_POLL_TRANSIENT_COUNT}" ]
+			then
+				echo "\${_TEST_POLL_TRANSIENT_BODY}"
+				echo "503"
+
+				exit 0
+			fi
 
 			echo "\${_TEST_POLL_BODY}"
 			echo "\${_TEST_POLL_HTTP_STATUS}"
