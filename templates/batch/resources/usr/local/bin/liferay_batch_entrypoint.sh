@@ -38,6 +38,11 @@ function main {
 		LIFERAY_BATCH_CURL_OPTIONS=" "
 	fi
 
+	if [ ! -n "${LIFERAY_BATCH_MAX_WAIT_SECONDS}" ]
+	then
+		LIFERAY_BATCH_MAX_WAIT_SECONDS=540
+	fi
+
 	if [ ! -n "${LIFERAY_ROUTES_CLIENT_EXTENSION}" ]
 	then
 		LIFERAY_ROUTES_CLIENT_EXTENSION="/etc/liferay/lxc/ext-init-metadata"
@@ -158,9 +163,13 @@ function process_batch_data_file {
 
 	local external_reference_code=$(jq --raw-output ".externalReferenceCode" <<< "${LIFERAY_BATCH_HTTP_BODY}")
 
-	local status=$(jq --raw-output ".executeStatus//.status" <<< "${LIFERAY_BATCH_HTTP_BODY}")
+	wait_for_import_task "${external_reference_code}"
 
-	wait_for_import_task "${external_reference_code}" "${status}"
+	local exit_code=${?}
+
+	rm /tmp/liferay_batch_entrypoint.items.json
+
+	return ${exit_code}
 }
 
 function process_site_initializer {
@@ -237,9 +246,11 @@ function request_oauth2_access_token {
 
 function wait_for_import_task {
 	local external_reference_code="${1}"
-	local status="${2}"
 
-	until [ "${status}" == "COMPLETED" ] || [ "${status}" == "FAILED" ] || [ "${status}" == "NOT_FOUND" ]
+	local sleep_seconds=1
+	local waited_seconds=0
+
+	while true
 	do
 		if ! execute_curl \
 				--header "Accept: application/json" \
@@ -253,32 +264,56 @@ function wait_for_import_task {
 			return 1
 		fi
 
-		status=$(jq --raw-output '.executeStatus//.status' <<< "${LIFERAY_BATCH_HTTP_BODY}")
+		local status
+
+		if ! status=$(jq --exit-status --raw-output '.executeStatus' <<< "${LIFERAY_BATCH_HTTP_BODY}")
+		then
+			echo "Unable to read a status for batch import task ${external_reference_code}. ${LIFERAY_BATCH_HTTP_BODY}"
+
+			return 1
+		fi
 
 		echo "Execute Status: ${status}"
+
+		if [ "${status}" == "COMPLETED" ]
+		then
+			local failed_items=$(jq --raw-output '.failedItems//[] | length' <<< "${LIFERAY_BATCH_HTTP_BODY}")
+
+			if [ "${failed_items}" != "0" ]
+			then
+				local failed_item_messages=$(jq --raw-output '[(.failedItems//[])[] | "Item \(.itemIndex): \(.message)"] | join(" ")' <<< "${LIFERAY_BATCH_HTTP_BODY}")
+
+				echo "Batch import task ${external_reference_code} completed with ${failed_items} failed item(s). ${failed_item_messages}"
+
+				return 1
+			fi
+
+			return 0
+		fi
+
+		if [ "${status}" == "FAILED" ]
+		then
+			echo "Batch import task ${external_reference_code} reported ${status}. ${LIFERAY_BATCH_HTTP_BODY}"
+
+			return 1
+		fi
+
+		if [ "${waited_seconds}" -ge "${LIFERAY_BATCH_MAX_WAIT_SECONDS}" ]
+		then
+			echo "Batch import task ${external_reference_code} did not reach a terminal state within ${waited_seconds} seconds. The last reported status was ${status}."
+
+			return 1
+		fi
+
+		sleep "${sleep_seconds}"
+
+		waited_seconds=$((waited_seconds + sleep_seconds))
+
+		if [ "${sleep_seconds}" -lt 16 ]
+		then
+			sleep_seconds=$((sleep_seconds * 2))
+		fi
 	done
-
-	rm /tmp/liferay_batch_entrypoint.items.json
-
-	if [ "${status}" == "FAILED" ]
-	then
-		echo "Batch import task ${external_reference_code} reported ${status}. ${LIFERAY_BATCH_HTTP_BODY}"
-
-		return 1
-	fi
-
-	local failed_items=$(jq --raw-output '.failedItems//[] | length' <<< "${LIFERAY_BATCH_HTTP_BODY}")
-
-	if [ "${failed_items}" != "0" ]
-	then
-		local failed_item_messages=$(jq --raw-output '[(.failedItems//[])[] | "Item \(.itemIndex): \(.message)"] | join(" ")' <<< "${LIFERAY_BATCH_HTTP_BODY}")
-
-		echo "Batch import task ${external_reference_code} completed with ${failed_items} failed item(s). ${failed_item_messages}"
-
-		return 1
-	fi
-
-	return 0
 }
 
 main
