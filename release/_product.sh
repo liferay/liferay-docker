@@ -52,7 +52,7 @@ function add_licensing {
 
 	ant \
 		-Dext.dir=. \
-		-Dfree.tier.ignored.version="$(_is_free_tier_ignored_version)" \
+		-Dfree.tier.ignored.version="$(is_free_tier_ignored_version)" \
 		-Djava.lib.dir="${JAVA_HOME}/jre/lib" \
 		-Dportal.dir="${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}" \
 		-Dportal.release.edition.private=true \
@@ -383,6 +383,17 @@ function get_java_specification_version {
 	fi
 }
 
+function is_free_tier_ignored_version {
+	local free_tier_ignored_versions=$(lc_get_property "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/release.properties" "free.tier.ignored.versions")
+
+	if echo "${free_tier_ignored_versions}" | grep --quiet "${_PRODUCT_VERSION}"
+	then
+		echo "true"
+	else
+		echo "false"
+	fi
+}
+
 function obfuscate_licensing {
 	if [ -e "${_BUILD_DIR}/built.sha" ] &&
 	   [ "$(cat "${_BUILD_DIR}/built.sha")" == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
@@ -648,17 +659,6 @@ function _get_build_profile_parameter {
 	if is_cms_standalone_release
 	then
 		echo "-Dbuild.profile=cms-standalone"
-	fi
-}
-
-function _is_free_tier_ignored_version {
-	local free_tier_ignored_versions=$(lc_get_property "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/release.properties" "free.tier.ignored.versions")
-
-	if echo "${free_tier_ignored_versions}" | grep --quiet "${_PRODUCT_VERSION}"
-	then
-		echo "true"
-	else
-		echo "false"
 	fi
 }
 

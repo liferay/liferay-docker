@@ -287,7 +287,7 @@ function _test_product_is_free_tier_ignored_version {
 	_PRODUCT_VERSION=${1}
 
 	assert_equals \
-		"$(_is_free_tier_ignored_version)" \
+		"$(is_free_tier_ignored_version)" \
 		"${2}"
 }
 

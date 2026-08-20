@@ -18,6 +18,7 @@ function main {
 	test_build_release_has_packaged_bundles
 	test_build_release_has_slack_message
 	test_build_release_not_handle_automated_build
+	test_build_release_not_has_free_tier_slack_message
 
 	test_build_hotfix_main || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 
@@ -188,6 +189,8 @@ function test_build_release_has_packaged_bundles {
 function test_build_release_has_slack_message {
 	assert_equals \
 		"$(grep --count "^\*Version:\* \`2025.q4.1-[0-9]*\`$" "${_RELEASE_ROOT_DIR}/build_release_slack_message.txt")" \
+		"1" \
+		"$(grep --count --extended-regexp "^\*Free Tier:\* \`(false|true)\`$" "${_RELEASE_ROOT_DIR}/build_release_slack_message.txt")" \
 		"1"
 }
 
@@ -221,6 +224,12 @@ function test_build_release_not_handle_automated_build {
 	unset LIFERAY_RELEASE_TEST_DATE
 }
 
+function test_build_release_not_has_free_tier_slack_message {
+	_test_build_release_not_has_free_tier_slack_message "hotfix" "2025.q4.1"
+	_test_build_release_not_has_free_tier_slack_message "nightly" "2025.q4.1"
+	_test_build_release_not_has_free_tier_slack_message "release-candidate" "7.4.13-u148"
+}
+
 function _clean_up_release_data {
 	pgrep --full --list-name "${_RELEASE_ROOT_DIR}/release-data" | \
 		awk '{print $1}' | \
@@ -229,6 +238,21 @@ function _clean_up_release_data {
 	rm --force --recursive "${_RELEASE_ROOT_DIR}/release-data"
 
 	rm --force "${_RELEASE_ROOT_DIR}/build_release_slack_message.txt"
+}
+
+function _test_build_release_not_has_free_tier_slack_message {
+	LIFERAY_RELEASE_OUTPUT=${1}
+	_PRODUCT_VERSION=${2}
+
+	_write_slack_message
+
+	assert_equals \
+		"$(grep --count "^\*Free Tier:\*" "${_RELEASE_TOOL_DIR}/build_release_slack_message.txt")" \
+		"0"
+
+	unset LIFERAY_RELEASE_OUTPUT
+
+	_PRODUCT_VERSION="2025.q4.1"
 }
 
 function _test_build_release_not_handle_automated_build {

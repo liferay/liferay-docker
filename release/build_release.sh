@@ -371,6 +371,13 @@ function _write_slack_message {
 	cat <<- END > "${_RELEASE_TOOL_DIR}/build_release_slack_message.txt"
 	*Version:* \`${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}\`
 	END
+
+	if [ "$(get_release_output)" == "release-candidate" ] && is_quarterly_release
+	then
+		cat <<- END >> "${_RELEASE_TOOL_DIR}/build_release_slack_message.txt"
+		*Free Tier:* \`$(is_free_tier_ignored_version)\`
+		END
+	fi
 }
 
 main "${@}"
