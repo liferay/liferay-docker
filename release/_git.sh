@@ -151,6 +151,8 @@ function set_git_sha {
 
 	_GIT_SHA=$(git rev-parse HEAD)
 	_GIT_SHA_SHORT=$(git rev-parse --short HEAD)
+
+	lc_log INFO "${LIFERAY_PORTAL_REPOSITORY_NAME} Git SHA is set to ${_GIT_SHA}."
 }
 
 function update_portal_repository {
