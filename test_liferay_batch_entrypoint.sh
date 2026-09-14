@@ -80,7 +80,7 @@ function test_liferay_batch_entrypoint_polls_with_backoff {
 
 	_TEST_ENTRYPOINT_OUTPUT=$(LIFERAY_BATCH_MAX_WAIT_SECONDS=3 _run_entrypoint)
 
-	_TEST_ENTRYPOINT_EXIT_CODE="${?}"
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
 
 	assert_equals \
 		"$(wc --lines < "${_TEST_FIXTURE_DIR}/poll_count")" "3" \
@@ -115,7 +115,7 @@ function test_liferay_batch_entrypoint_reports_completed_with_failed_items {
 
 	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
 
-	_TEST_ENTRYPOINT_EXIT_CODE="${?}"
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
 
 	assert_equals \
 		"$(_output_contains "completed with 1 failed item(s)")" "true" \
@@ -133,7 +133,7 @@ function test_liferay_batch_entrypoint_reports_poll_http_error {
 
 	_TEST_ENTRYPOINT_OUTPUT=$(LIFERAY_BATCH_MAX_WAIT_SECONDS=3 _run_entrypoint)
 
-	_TEST_ENTRYPOINT_EXIT_CODE="${?}"
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
 
 	assert_equals \
 		"$(wc --lines < "${_TEST_FIXTURE_DIR}/poll_count")" "1" \
@@ -152,7 +152,7 @@ function test_liferay_batch_entrypoint_reports_post_error_body {
 
 	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
 
-	_TEST_ENTRYPOINT_EXIT_CODE="${?}"
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
 
 	assert_equals \
 		"$(_output_contains "already in use")" "true" \
@@ -169,7 +169,7 @@ function test_liferay_batch_entrypoint_reports_unparseable_poll_response {
 
 	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
 
-	_TEST_ENTRYPOINT_EXIT_CODE="${?}"
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
 
 	assert_equals \
 		"$(wc --lines < "${_TEST_FIXTURE_DIR}/poll_count")" "1" \
@@ -184,7 +184,7 @@ function test_liferay_batch_entrypoint_requires_oauth_app_erc {
 
 	_TEST_ENTRYPOINT_OUTPUT=$(LIFERAY_BATCH_OAUTH_APP_ERC="" _run_entrypoint)
 
-	_TEST_ENTRYPOINT_EXIT_CODE="${?}"
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
 
 	assert_equals \
 		"$(_output_contains "Set the environment variable LIFERAY_BATCH_OAUTH_APP_ERC.")" "true" \
@@ -201,7 +201,7 @@ function test_liferay_batch_entrypoint_retries_transient_poll_failure {
 
 	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
 
-	_TEST_ENTRYPOINT_EXIT_CODE="${?}"
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
 
 	assert_equals \
 		"$(wc --lines < "${_TEST_FIXTURE_DIR}/poll_count")" "3" \
@@ -239,11 +239,11 @@ function _run_entrypoint {
 function _test_liferay_batch_entrypoint_import_task_status {
 	set_up
 
-	export _TEST_POLL_BODY="${1}"
+	export _TEST_POLL_BODY=${1}
 
 	_TEST_ENTRYPOINT_OUTPUT=$(LIFERAY_BATCH_MAX_WAIT_SECONDS=3 _run_entrypoint)
 
-	_TEST_ENTRYPOINT_EXIT_CODE="${?}"
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
 
 	assert_equals "${_TEST_ENTRYPOINT_EXIT_CODE}" "${2}"
 
