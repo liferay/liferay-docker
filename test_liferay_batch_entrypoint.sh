@@ -7,6 +7,8 @@ function main {
 	test_liferay_batch_entrypoint_forwards_configuration
 	test_liferay_batch_entrypoint_import_task_status
 	test_liferay_batch_entrypoint_logs_ignored_configuration
+	test_liferay_batch_entrypoint_logs_large_payload_as_one_record
+	test_liferay_batch_entrypoint_logs_structured_json
 	test_liferay_batch_entrypoint_omits_server_side_configuration
 	test_liferay_batch_entrypoint_polls_with_backoff
 	test_liferay_batch_entrypoint_removes_the_items_file
@@ -114,6 +116,40 @@ function test_liferay_batch_entrypoint_logs_ignored_configuration {
 	assert_equals \
 		"$(_output_contains "Ignoring batch configuration")" "false" \
 		"${_TEST_ENTRYPOINT_EXIT_CODE}" "0"
+
+	tear_down
+}
+
+function test_liferay_batch_entrypoint_logs_large_payload_as_one_record {
+	set_up
+
+	jq --compact-output --null-input '{"configuration": {"className": "Foo"}, "items": [range(4000) | {"description": "0123456789012345678901234567890123456789", "externalReferenceCode": "ERC-\(.)", "name": "Item \(.)"}]}' > "${_TEST_FIXTURE_DIR}/batch/00-test.batch-engine-data.json"
+
+	_TEST_ENTRYPOINT_OUTPUT=$(LIFERAY_BATCH_STRUCTURED_LOGGING_ENABLED=true _run_entrypoint)
+
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
+
+	assert_equals \
+		"$(_output_json_values "select(.message | startswith(\"Items: \")) | .message | length > 131072")" "true" \
+		"$(_output_json_values ".script")" "liferay_batch_entrypoint.sh" \
+		"${_TEST_ENTRYPOINT_EXIT_CODE}" "0"
+
+	tear_down
+}
+
+function test_liferay_batch_entrypoint_logs_structured_json {
+	set_up
+
+	export _TEST_POLL_BODY="{\"executeStatus\": \"FAILED\"}"
+
+	_TEST_ENTRYPOINT_OUTPUT=$(LIFERAY_BATCH_STRUCTURED_LOGGING_ENABLED=true _run_entrypoint)
+
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
+
+	assert_equals \
+		"$(_output_json_values ".script")" "liferay_batch_entrypoint.sh" \
+		"$(_output_json_values ".severity")" "ERROR INFO" \
+		"${_TEST_ENTRYPOINT_EXIT_CODE}" "1"
 
 	tear_down
 }
@@ -275,6 +311,12 @@ function _output_contains {
 	echo "false"
 
 	return 1
+}
+
+function _output_json_values {
+	jq --raw-output "${1}" <<< "${_TEST_ENTRYPOINT_OUTPUT}" | \
+		sort --unique | \
+		xargs
 }
 
 function _post_url_contains {
