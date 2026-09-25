@@ -381,9 +381,9 @@ function upload_release {
 }
 
 function upload_to_docker_hub {
-	if is_cms_standalone_release
+	if (is_cms_standalone_release && [ "$(get_release_output)" != "release-candidate" ])
 	then
-		lc_log INFO "Docker images should not be pushed for CMS standalone releases."
+		lc_log INFO "Docker images should only be pushed for CMS standalone release candidates."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
