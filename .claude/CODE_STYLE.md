@@ -141,6 +141,17 @@ main
 - Name environment and global variables in upper snake case (e.g. `ENVIRONMENT_VARIABLE`).
 - Declare local variables with `local` and name them in lower snake case (e.g. `local_variable`); if a local variable is shared across local functions, name it in upper snake case with a leading underscore (e.g. `_LOCAL_SHARED_VARIABLE`).
 - Declare each local variable close to its first use rather than batching all declarations at the top of the function. For local variables that share the same first-use location, declare them together and apply [Sorting](#sorting). A consecutive run of `local` declarations with no blank line or other statement between them counts as one location and is sorted as a single block.
+- Declare every lower snake case variable a function assigns with `local`, so it does not leak into the global scope. This includes `for` loop variables and `read` targets, which are declared right before the loop.
+
+```bash
+local packaged_file
+
+for packaged_file in "META-INF/MANIFEST.MF" "META-INF/system.packages.extra.mf"
+do
+	...
+done
+```
+
 - Do not put spaces around `=` in assignments.
 - Always wrap variable references in braces, and quote them (`"${variable}"`) everywhere except the single-expansion assignment case described at the end of this section. Bracing and quoting apply to positional and special parameters too: `"${1}"`, `"${@}"`, `"${#}"`, `"${?}"`.
 
