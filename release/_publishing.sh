@@ -363,6 +363,16 @@ function upload_release {
 		gcloud storage rm --recursive "gs://liferay-releases-candidates/${_PRODUCT_VERSION}-[0-9]*"
 
 		destination_bucket="gs://liferay-releases-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
+
+		if is_cms_standalone_release
+		then
+			gcloud storage rm --recursive "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/cms-standalone-weekly/"
+
+			gcloud storage cp \
+				"${_BUILD_DIR}/release/.lfrrelease-tomcat-bundle" \
+				"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" \
+				"gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/cms-standalone-weekly/"
+		fi
 	fi
 
 	for file in $( \
