@@ -5,36 +5,6 @@ source ../_liferay_common.sh
 source ../release/_git.sh
 source ./_crowdin_common.sh
 
-function check_translations_sync {
-	lc_cd "${_PROJECTS_DIR}/liferay-portal"
-
-	if ! git remote get-url brianchandotcom &> /dev/null
-	then
-		git remote add brianchandotcom "git@github.com:brianchandotcom/liferay-portal.git"
-	fi
-
-	git fetch --force brianchandotcom "master:refs/remotes/brianchandotcom/master"
-
-	if [[ "${?}" -ne 0 ]]
-	then
-		lc_log ERROR "Unable to fetch master from brianchandotcom/liferay-portal."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	if [ -n "$( \
-		git log \
-			--format="%H" \
-			--grep="LPD-91206 Update Translations" \
-			--max-count=1 \
-			master..brianchandotcom/master)" ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	_TRANSLATIONS_SYNCED=true
-}
-
 function check_usage {
 	if [ -z "${CROWDIN_API_TOKEN}" ] ||
 	   [ -z "${CROWDIN_PROJECT_ID}" ]
@@ -93,9 +63,12 @@ function main {
 		lc_wait
 	fi
 
-	lc_time_run update_portal_repository
+	lc_time_run update_translations_repository "master" "liferay-portal"
 
-	lc_time_run check_translations_sync
+	lc_time_run check_translations_sync \
+		"master" \
+		"LPD-91206 Update Translations" \
+		"liferay-portal"
 
 	if [ "${_TRANSLATIONS_SYNCED}" != "true" ]
 	then
@@ -244,34 +217,6 @@ function set_up_lang_builder {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
-}
-
-function update_portal_repository {
-	trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR
-
-	lc_cd "${_PROJECTS_DIR}/liferay-portal"
-
-	git checkout master --force
-
-	git clean -dfx --exclude "tools/gradle-*-bin.zip"
-
-	if ! git remote get-url upstream &> /dev/null
-	then
-		git remote add upstream "git@github.com:liferay/liferay-portal.git"
-	fi
-
-	git fetch upstream "master:refs/remotes/upstream/master"
-
-	git reset --hard upstream/master
-
-	if ! git remote get-url liferay-release &> /dev/null
-	then
-		git remote add liferay-release "git@github.com:liferay-release/liferay-portal.git"
-	fi
-
-	git push liferay-release master
-
-	git log --max-count=1
 }
 
 function upload_sources {

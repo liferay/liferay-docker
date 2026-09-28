@@ -3,6 +3,44 @@
 source ../_liferay_common.sh
 source ../release/_git.sh
 
+function check_translations_sync {
+	local branch=${1}
+	local commit_message=${2}
+	local repository_name=${3}
+
+	_TRANSLATIONS_SYNCED=false
+
+	lc_cd "${_PROJECTS_DIR}/${repository_name}"
+
+	lc_log INFO "Checking if the latest \"${commit_message}\" commit in brianchandotcom/${repository_name} ${branch} was synced to liferay/${repository_name}."
+
+	if ! git remote get-url brianchandotcom &> /dev/null
+	then
+		git remote add brianchandotcom git@github.com:brianchandotcom/"${repository_name}".git
+	fi
+
+	git fetch --force brianchandotcom "${branch}:refs/remotes/brianchandotcom/${branch}"
+
+	if [[ "${?}" -ne 0 ]]
+	then
+		lc_log ERROR "Unable to fetch ${branch} from brianchandotcom/${repository_name}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	if [ -n "$( \
+		git log \
+			--format="%H" \
+			--grep="${commit_message}" \
+			--max-count=1 \
+			"${branch}..brianchandotcom/${branch}")" ]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	_TRANSLATIONS_SYNCED=true
+}
+
 function filter_translation_files {
 	grep --extended-regexp "(Language|bundle)(_[a-zA-Z].*)?\.properties$"
 }
@@ -48,6 +86,37 @@ function merge_and_commit_translations {
 	commit_changes "${merged_files}" "${commit_message}"
 
 	_CREATE_PULL_REQUEST=true
+}
+
+function update_translations_repository {
+	local branch=${1}
+	local repository_name=${2}
+
+	trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR
+
+	lc_cd "${_PROJECTS_DIR}/${repository_name}"
+
+	lc_log INFO "Updating ${branch} from liferay/${repository_name} and pushing it to liferay-release/${repository_name}."
+
+	if ! git remote get-url upstream &> /dev/null
+	then
+		git remote add upstream git@github.com:liferay/"${repository_name}".git
+	fi
+
+	git fetch upstream "${branch}:refs/remotes/upstream/${branch}"
+
+	git checkout -B "${branch}" --force "upstream/${branch}"
+
+	git clean -dfx --exclude "tools/gradle-*-bin.zip"
+
+	if ! git remote get-url liferay-release &> /dev/null
+	then
+		git remote add liferay-release git@github.com:liferay-release/"${repository_name}".git
+	fi
+
+	git push liferay-release "${branch}"
+
+	git log --max-count=1
 }
 
 function _apply_translations {
