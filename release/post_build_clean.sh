@@ -9,10 +9,15 @@ function main {
 
 	lc_log INFO "Cleaning workspace for job ${current_job}."
 
-	if [ "${current_job}" == "build-hotfix" ] ||
-	   [ "${current_job}" == "build-release" ] ||
-	   [ "${current_job}" == "build-release-nightly" ] ||
-	   [ "${current_job}" == "release-gold" ]
+	if [ "${current_job}" == "backport-crowdin-sync" ]
+	then
+		rm --force --recursive "${workspace_dir}/crowdin/logs"
+
+		_clean_up_repository "liferay-portal-ee"
+	elif [ "${current_job}" == "build-hotfix" ] ||
+	     [ "${current_job}" == "build-release" ] ||
+	     [ "${current_job}" == "build-release-nightly" ] ||
+	     [ "${current_job}" == "release-gold" ]
 	then
 		local buildkit_container_name=$( \
 			docker ps --filter "name=buildkit" --format "{{.Names}}")
