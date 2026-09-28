@@ -3,6 +3,7 @@
 source ../_gh_pr.sh
 source ../_liferay_common.sh
 source ../release/_git.sh
+source ./_crowdin_common.sh
 
 function check_translations_sync {
 	lc_cd "${_PROJECTS_DIR}/liferay-portal"
@@ -53,8 +54,6 @@ function check_usage {
 	then
 		_PROJECTS_DIR=${_CROWDIN_DIR}
 	fi
-
-	_TRANSLATION_FILE_REGEX="(Language|bundle)(_[a-zA-Z].*)?\.properties$"
 }
 
 function download_translations {
@@ -115,7 +114,7 @@ function main {
 
 	lc_time_run download_translations
 
-	lc_time_run merge_and_commit_translations
+	lc_time_run merge_and_commit_translations "LPD-91206 Update Translations"
 
 	if [ "${_CREATE_PULL_REQUEST}" != "true" ]
 	then
@@ -137,53 +136,19 @@ function main {
 		"LPD-91206 Update Translations"
 }
 
-function merge_and_commit_translations {
-	local changed_files=$(_get_changed_files)
-
-	if [ -z "${changed_files}" ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	lc_log INFO "Merging approved translations into translation files."
-
-	local translation_file
-
-	while IFS= read -r translation_file
-	do
-		_merge_translation_file "${translation_file}"
-	done <<< "${changed_files}"
-
-	local merged_files=$(_get_changed_files)
-
-	if [ -z "${merged_files}" ]
-	then
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	commit_changes "${merged_files}" "LPD-91206 Update Translations"
-
-	_CREATE_PULL_REQUEST=true
-}
-
 function normalize_existing_translations {
 	lc_cd "${_PROJECTS_DIR}/liferay-portal"
 
 	lc_log INFO "Running Lang Builder to normalize the existing translations."
 
-	local translation_files=$( \
-		yq ".files[].source" "${_CROWDIN_DIR}/crowdin.yml" | \
-		sed --expression "s#^/##" --expression "s#^#:(glob)#" | \
-		xargs --no-run-if-empty git ls-files --)
-
-	_run_lang_builder_on_files "${translation_files}"
+	_run_lang_builder_on_files "$(get_translation_files)"
 
 	if [[ "${?}" -ne 0 ]]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local normalized_translation_files=$(_get_changed_files)
+	local normalized_translation_files=$(get_changed_translation_files)
 
 	if [ -z "${normalized_translation_files}" ]
 	then
@@ -200,7 +165,7 @@ function normalize_synced_translations {
 
 	local changed_translation_files=$( \
 		git show --name-only --pretty=format: HEAD | \
-		grep --extended-regexp "${_TRANSLATION_FILE_REGEX}")
+		filter_translation_files)
 
 	if [ -z "${changed_translation_files}" ]
 	then
@@ -216,7 +181,7 @@ function normalize_synced_translations {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local normalized_translation_files=$(_get_changed_files)
+	local normalized_translation_files=$(get_changed_translation_files)
 
 	if [ -z "${normalized_translation_files}" ]
 	then
@@ -324,57 +289,6 @@ function upload_sources {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
-}
-
-function _apply_crowdin_translations {
-	local crowdin_translation_file=${1}
-	local head_translation_file=${2}
-
-	awk \
-		-v crowdin_translation_file="${crowdin_translation_file}" \
-		-v head_translation_file="${head_translation_file}" '
-		function is_translation(line) {
-			if (line ~ /^[#!]/ || line !~ /=/) {
-				return 0
-			}
-
-			return 1
-		}
-
-		function parse_key(line) {
-			sub(/=.*/, "", line)
-
-			return line
-		}
-
-		FILENAME == crowdin_translation_file {
-			if (is_translation($0)) {
-				key = parse_key($0)
-
-				crowdin_translations[key] = $0
-			}
-		}
-
-		FILENAME == head_translation_file {
-			if (!is_translation($0)) {
-				print
-
-				next
-			}
-
-			key = parse_key($0)
-
-			if (key in crowdin_translations) {
-				print crowdin_translations[key]
-			} else {
-				print
-			}
-		}
-	' "${crowdin_translation_file}" "${head_translation_file}"
-}
-
-function _get_changed_files {
-	git diff --name-only | grep --extended-regexp "${_TRANSLATION_FILE_REGEX}"
 }
 
 function _get_crowdin_data {
@@ -485,41 +399,6 @@ function _get_crowdin_translation_id {
 			return
 		fi
 	done <<< "$(echo "${response}" | jq --compact-output ".data[]")"
-}
-
-function _has_new_translations {
-	local head_translation_file=${1}
-	local merged_translation_file=${2}
-
-	! diff --brief \
-		<(grep "=" "${head_translation_file}") \
-		<(grep "=" "${merged_translation_file}") &> /dev/null
-}
-
-function _merge_translation_file {
-	local crowdin_translation_file=${1}
-
-	local head_translation_file=$(mktemp)
-
-	git show "HEAD:${crowdin_translation_file}" > "${head_translation_file}"
-
-	local merged_translation_file=$(mktemp)
-
-	_apply_crowdin_translations "${crowdin_translation_file}" "${head_translation_file}" > "${merged_translation_file}"
-
-	if [ -n "$(tail --bytes=1 "${head_translation_file}")" ]
-	then
-		truncate --size=-1 "${merged_translation_file}"
-	fi
-
-	if _has_new_translations "${head_translation_file}" "${merged_translation_file}"
-	then
-		mv "${merged_translation_file}" "${crowdin_translation_file}"
-	else
-		cp "${head_translation_file}" "${crowdin_translation_file}"
-	fi
-
-	rm --force "${head_translation_file}" "${merged_translation_file}"
 }
 
 function _post_crowdin_data {
