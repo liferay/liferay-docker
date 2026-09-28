@@ -83,6 +83,8 @@ function merge_and_commit_translations {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	lc_log INFO "Committing $(echo "${merged_files}" | wc --lines) translation files to $(git branch --show-current)."
+
 	commit_changes "${merged_files}" "${commit_message}"
 
 	_CREATE_PULL_REQUEST=true
