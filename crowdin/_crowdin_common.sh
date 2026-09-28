@@ -116,7 +116,10 @@ function update_translations_repository {
 		git remote add liferay-release git@github.com:liferay-release/"${repository_name}".git
 	fi
 
-	git push liferay-release "${branch}"
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
+	then
+		git push liferay-release "${branch}"
+	fi
 
 	git log --max-count=1
 }

@@ -148,9 +148,12 @@ function _backport_translations {
 	do
 		lc_log INFO "Backporting translations from master to ${release_branch}."
 
-		lc_time_run close_pull_request \
-			"head:backport-translations-${release_branch}" \
-			"liferay-release/liferay-portal-ee"
+		if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
+		then
+			lc_time_run close_pull_request \
+				"head:backport-translations-${release_branch}" \
+				"liferay-release/liferay-portal-ee"
+		fi
 
 		lc_time_run update_translations_repository "${release_branch}" "liferay-portal-ee"
 
@@ -179,17 +182,20 @@ function _backport_translations {
 			continue
 		fi
 
-		lc_time_run push_branch_to_liferay_release_fork \
-			"${_TEMP_BRANCH}" \
-			"liferay-portal-ee"
+		if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
+		then
+			lc_time_run push_branch_to_liferay_release_fork \
+				"${_TEMP_BRANCH}" \
+				"liferay-portal-ee"
 
-		lc_time_run create_pull_request \
-			"${release_branch}" \
-			"${_TEMP_BRANCH}" \
-			"liferay-release/liferay-portal-ee" \
-			"LPD-105062 Backport Translations | ${release_branch}"
+			lc_time_run create_pull_request \
+				"${release_branch}" \
+				"${_TEMP_BRANCH}" \
+				"liferay-release/liferay-portal-ee" \
+				"LPD-105062 Backport Translations | ${release_branch}"
 
-		lc_log INFO "Created pull request for ${release_branch}."
+			lc_log INFO "Created pull request for ${release_branch}."
+		fi
 	done
 }
 
