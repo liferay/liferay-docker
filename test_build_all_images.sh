@@ -9,21 +9,25 @@ function main {
 
 	if [[ "${#}" -eq 1 ]]
 	then
-		if [ "${1}" == "test_build_all_images_is_container_healthy" ]
+		if [ "${1}" == "test_build_all_images_are_regular_containers_healthy" ]
 		then
 			"${1}"
 		else
-			test_build_all_images_is_container_healthy
+			test_build_all_images_are_regular_containers_healthy
 
 			"${1}"
 		fi
 	else
-		test_build_all_images_is_container_healthy
+		test_build_all_images_are_regular_containers_healthy
 
 		test_build_all_images_get_latest_available_zulu_version
 		test_build_all_images_has_slim_build_criteria
 		test_build_all_images_latest_is_not_slim
 		test_build_all_images_trial_license_is_deleted
+
+		test_build_all_images_is_cms_standalone_container_healthy
+
+		test_build_all_images_has_cms_standalone_tag
 	fi
 
 	tear_down
@@ -31,10 +35,13 @@ function main {
 
 function set_up {
 	export _LATEST_RELEASE=$(yq eval ".quarterly | keys | .[-1]" "${PWD}/bundles.yml")
+
+	rm --force --recursive logs-*
 }
 
 function tear_down {
 	docker rmi $(docker images --filter "dangling=true" --no-trunc) &> /dev/null
+	docker rmi --force "liferay/dxp:cms-standalone" &> /dev/null
 	docker rmi --force "liferay/jdk11-jdk8:latest" &> /dev/null
 	docker rmi --force "liferay/jdk11:latest" &> /dev/null
 	docker rmi --force "liferay/jdk21-jdk11-jdk8:latest" &> /dev/null
@@ -51,6 +58,11 @@ function tear_down {
 	unset _LATEST_RELEASE
 }
 
+function test_build_all_images_are_regular_containers_healthy {
+	_test_build_all_images_is_container_healthy "${_LATEST_RELEASE}" "true"
+	_test_build_all_images_is_container_healthy "7.3.10-u36" "false"
+}
+
 function test_build_all_images_get_latest_available_zulu_version {
 	_test_build_all_images_get_latest_available_zulu_version "amd64" "8"
 	_test_build_all_images_get_latest_available_zulu_version "arm64" "8"
@@ -60,6 +72,12 @@ function test_build_all_images_get_latest_available_zulu_version {
 	_test_build_all_images_get_latest_available_zulu_version "arm64" "21"
 }
 
+function test_build_all_images_has_cms_standalone_tag {
+	assert_equals \
+		"$(docker images --format "{{.Repository}}:{{.Tag}}" "liferay/dxp:cms-standalone")" \
+		"liferay/dxp:cms-standalone"
+}
+
 function test_build_all_images_has_slim_build_criteria {
 	_test_build_all_images_has_slim_build_criteria "2024.q2.0" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_build_all_images_has_slim_build_criteria "2025.q1.11-lts" "${LIFERAY_COMMON_EXIT_CODE_OK}"
@@ -67,9 +85,8 @@ function test_build_all_images_has_slim_build_criteria {
 	_test_build_all_images_has_slim_build_criteria "7.4.13.nightly" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
-function test_build_all_images_is_container_healthy {
-	_test_build_all_images_is_container_healthy "${_LATEST_RELEASE}" "true"
-	_test_build_all_images_is_container_healthy "7.3.10-u36" "false"
+function test_build_all_images_is_cms_standalone_container_healthy {
+	_test_build_all_images_is_container_healthy "cms-standalone-weekly" "false"
 }
 
 function test_build_all_images_latest_is_not_slim {
