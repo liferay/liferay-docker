@@ -146,9 +146,10 @@ function build_bundle_images {
 	# LIFERAY_DOCKER_IMAGE_FILTER=7.2.10 ./build_all_images.sh
 	#
 
-	if is_release_candidate
+	if is_cms_standalone_release "${LIFERAY_DOCKER_IMAGE_FILTER}" ||
+	   is_release_candidate
 	then
-		echo "Building bundle images for release candidate ${LIFERAY_DOCKER_IMAGE_FILTER}."
+		echo "Building bundle image ${LIFERAY_DOCKER_IMAGE_FILTER}."
 
 		build_bundle_image "" "false" "${LIFERAY_DOCKER_IMAGE_FILTER}"
 

@@ -461,6 +461,11 @@ function push_docker_image {
 }
 
 function set_parent_image {
+	if is_cms_standalone_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
+	then
+		return
+	fi
+
 	if is_quarterly_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 	then
 		local release_year=$(get_release_year "${LIFERAY_DOCKER_RELEASE_VERSION}")
