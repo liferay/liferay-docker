@@ -159,7 +159,10 @@ function package_release {
 
 	if [ "$(get_release_output)" == "nightly" ]
 	then
-		_package_nightly_release
+		_package_tomcat_bundles "7.4.13.nightly"
+	elif is_cms_standalone_release
+	then
+		_package_tomcat_bundles "${_PRODUCT_VERSION}"
 	else
 		_package_common_release
 	fi
@@ -264,27 +267,6 @@ function _package_common_release {
 	_generate_javadocs
 }
 
-function _package_nightly_release {
-	7z a "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-7.4.13.nightly-${_BUILD_TIMESTAMP}.7z" \
-		"liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
-
-	echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-7.4.13.nightly-${_BUILD_TIMESTAMP}.7z" > "${_BUILD_DIR}/release/.lfrrelease-tomcat-bundle"
-
-	tar \
-		--create \
-		--file "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-7.4.13.nightly-${_BUILD_TIMESTAMP}.tar.gz" \
-		--gzip \
-		"liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
-
-	zip -qr "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-7.4.13.nightly-${_BUILD_TIMESTAMP}.zip" \
-		"liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
-
-	rm \
-		--force \
-		--recursive \
-		"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
-}
-
 function _package_portal_dependencies {
 	if is_7_3_release
 	then
@@ -357,6 +339,27 @@ function _package_portal_dependencies {
 
 		rm --force --recursive "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-dependencies-${_PRODUCT_VERSION}"
 	fi
+}
+
+function _package_tomcat_bundles {
+	local bundle_name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${1}-${_BUILD_TIMESTAMP}"
+
+	7z a "${_BUILD_DIR}/release/${bundle_name}.7z" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+
+	echo "${bundle_name}.7z" > "${_BUILD_DIR}/release/.lfrrelease-tomcat-bundle"
+
+	tar \
+		--create \
+		--file "${_BUILD_DIR}/release/${bundle_name}.tar.gz" \
+		--gzip \
+		"liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+
+	zip -qr "${_BUILD_DIR}/release/${bundle_name}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+
+	rm \
+		--force \
+		--recursive \
+		"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 }
 
 function _package_wars {
