@@ -47,7 +47,7 @@ function generate_thread_dump {
 			"${CONTAINER_ID}" \
 			/usr/local/bin/generate_thread_dump.sh
 
-		docker cp "${CONTAINER_ID}":/opt/liferay/data/sre/thread_dumps "${PWD}/${LIFERAY_DOCKER_LOGS_DIR}"
+		docker cp "${CONTAINER_ID}:/opt/liferay/data/sre/thread_dumps" "${PWD}/${LIFERAY_DOCKER_LOGS_DIR}"
 	fi
 }
 
@@ -149,7 +149,9 @@ function prepare_mount {
 function start_container {
 	echo "Starting container from image ${LIFERAY_DOCKER_IMAGE_ID}."
 
+	#
 	# TODO Temporary fix until IT rebuilds the CI servers
+	#
 
 	if [ ! -n "${LIFERAY_DOCKER_NETWORK_NAME}" ]
 	then

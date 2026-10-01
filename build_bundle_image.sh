@@ -6,12 +6,12 @@ source ./_liferay_common.sh
 source ./_release_common.sh
 
 function build_docker_image {
-	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
+	if [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL%}" == */snapshot-* ]]
 	then
 		DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}-snapshot"
 	fi
 
-	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == https://release-* ]] || [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == *release.liferay.com* ]]
+	if [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL}" == https://release-* ]] || [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL}" == *release.liferay.com* ]]
 	then
 		DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME}-snapshot"
 	fi
@@ -20,20 +20,20 @@ function build_docker_image {
 
 	release_version=$(basename "${release_version}")
 
-	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == https://release-* ]] || [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == *release.liferay.com* ]]
+	if [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL}" == https://release-* ]] || [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL}" == *release.liferay.com* ]]
 	then
 		release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL#*tomcat-}
 		release_version=$(echo "${release_version}" | sed --expression "s/\.[^.]*$//")
 	fi
 
-	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL} == *files.liferay.com/* ]] && [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} != */snapshot-* ]]
+	if [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL}" == *files.liferay.com/* ]] && [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL%}" != */snapshot-* ]]
 	then
 		local file_name_release_version=${LIFERAY_DOCKER_RELEASE_FILE_URL#*tomcat-}
 
 		file_name_release_version=$(echo "${file_name_release_version}" | sed --expression "s/\.[^.]*$//")
 		file_name_release_version=${file_name_release_version%-*}
 
-		if [[ ${file_name_release_version} == *-slim ]]
+		if [[ "${file_name_release_version}" == *-slim ]]
 		then
 			file_name_release_version=${file_name_release_version%-slim}
 		fi
@@ -41,14 +41,14 @@ function build_docker_image {
 		local service_pack_name=${file_name_release_version##*-}
 	fi
 
-	if [[ ${service_pack_name} == sp* ]]
+	if [[ "${service_pack_name}" == sp* ]]
 	then
 		release_version="${release_version}-${service_pack_name}"
 	fi
 
 	LABEL_VERSION=${release_version}
 
-	if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
+	if [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL%}" == */snapshot-* ]]
 	then
 		local release_branch=$(dirname "${LIFERAY_DOCKER_RELEASE_FILE_URL}")
 
@@ -60,7 +60,7 @@ function build_docker_image {
 
 		release_hash=${release_hash:0:7}
 
-		if [[ ${release_branch} == master ]]
+		if [[ "${release_branch}" == master ]]
 		then
 			LABEL_VERSION="Master Snapshot on ${LABEL_VERSION} at ${release_hash}"
 		else
@@ -88,7 +88,7 @@ function build_docker_image {
 
 	for release_version_single in ${release_version}
 	do
-		if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
+		if [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL%}" == */snapshot-* ]]
 		then
 			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${release_branch}-${release_version_single}-${release_hash}")
 			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${release_branch}-$(date "${CURRENT_DATE}" "+%Y%m%d")")
@@ -142,7 +142,7 @@ function build_docker_image {
 }
 
 function check_release {
-	if [[ ${RELEASE_FILE_NAME} == *-dxp-* ]] || [[ ${RELEASE_FILE_NAME} == *-private* ]]
+	if [[ "${RELEASE_FILE_NAME}" == *-dxp-* ]] || [[ "${RELEASE_FILE_NAME}" == *-private* ]]
 	then
 		DOCKER_IMAGE_NAME="dxp"
 		DOCKER_LABEL_NAME="Liferay DXP"
@@ -168,7 +168,7 @@ function check_usage {
 }
 
 function download_trial_dxp_license {
-	if [[ ${DOCKER_LABEL_NAME} == "Liferay DXP" ]]
+	if [[ "${DOCKER_LABEL_NAME}" == "Liferay DXP" ]]
 	then
 		rm --force --recursive "${TEMP_DIR}/liferay/data/license"
 
@@ -328,7 +328,7 @@ function prepare_temp_directory {
 
 	download "${download_dir}/${RELEASE_FILE_NAME}" "${LIFERAY_DOCKER_RELEASE_FILE_URL}"
 
-	if [[ ${RELEASE_FILE_NAME} == *.7z ]]
+	if [[ "${RELEASE_FILE_NAME}" == *.7z ]]
 	then
 		7z x -O"${TEMP_DIR}" "${download_dir}/${RELEASE_FILE_NAME}" || exit 3
 	else
@@ -473,7 +473,10 @@ function set_parent_image {
 			return
 		fi
 
-		sed --expression "s/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g" --in-place "${TEMP_DIR}/Dockerfile"
+		sed \
+			--expression "s/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g" \
+			--in-place \
+			"${TEMP_DIR}/Dockerfile"
 		sed \
 			--expression "s/FROM liferay-jdk21/FROM liferay-jdk11/g" \
 			--in-place \
@@ -497,14 +500,20 @@ function set_parent_image {
 			return
 		fi
 
-		sed --expression "s/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g" --in-place "${TEMP_DIR}/Dockerfile"
+		sed \
+			--expression "s/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11:latest AS liferay-jdk11/g" \
+			--in-place \
+			"${TEMP_DIR}/Dockerfile"
 		sed \
 			--expression "s/FROM liferay-jdk21/FROM liferay-jdk11/g" \
 			--in-place \
 			"${TEMP_DIR}/Dockerfile"
 	elif [[ "$(get_product_group_version "${LIFERAY_DOCKER_RELEASE_VERSION}" | tr --delete '.')" -le 73 ]]
 	then
-		sed --expression "s/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11-jdk8:latest AS liferay-jdk11-jdk8/g" --in-place "${TEMP_DIR}/Dockerfile"
+		sed \
+			--expression "s/liferay\/jdk21:latest AS liferay-jdk21/liferay\/jdk11-jdk8:latest AS liferay-jdk11-jdk8/g" \
+			--in-place \
+			"${TEMP_DIR}/Dockerfile"
 		sed \
 			--expression "s/FROM liferay-jdk21/FROM liferay-jdk11-jdk8/g" \
 			--in-place \

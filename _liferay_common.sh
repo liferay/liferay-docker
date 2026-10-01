@@ -108,7 +108,7 @@ function lc_curl {
 }
 
 function lc_date {
-	if [ -z ${1+x} ] || [ -z ${2+x} ]
+	if [ -z "${1+x}" ] || [ -z "${2+x}" ]
 	then
 		if [ "$(uname)" == "Darwin" ]
 		then
@@ -125,9 +125,9 @@ function lc_date {
 			/bin/date -jf "%a %b %e %H:%M:%S %Z %Y" "${1}" "${2}"
 		elif [ -e /bin/date ]
 		then
-			/bin/date -d "${1}" "${2}"
+			/bin/date --date "${1}" "${2}"
 		else
-			/usr/bin/date -d "${1}" "${2}"
+			/usr/bin/date --date "${1}" "${2}"
 		fi
 	fi
 }
@@ -209,7 +209,7 @@ function lc_download {
 		else
 			lc_log DEBUG "Skipping the download of ${file_url} because it already exists."
 
-			if [ "${skip_copy}" = "true" ]
+			if [ "${skip_copy}" == "true" ]
 			then
 				lc_log DEBUG "Skipping copy."
 
@@ -262,7 +262,7 @@ function lc_download {
 
 	mv "${cache_file}.${temp_suffix}" "${cache_file}"
 
-	if [ "${skip_copy}" = "true" ]
+	if [ "${skip_copy}" == "true" ]
 	then
 		echo "${cache_file}"
 	else

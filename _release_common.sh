@@ -41,8 +41,8 @@ function get_due_date {
 function get_latest_product_version {
 	local product_group_version=${2}
 	local product_name=""
-	local product_version_regex="(?<=<a href=\"/"
 	local product_version=${1}
+	local product_version_regex="(?<=<a href=\"/"
 
 	local quarterly_version_regex="\d{4}\.q[1-4]"
 
@@ -94,13 +94,14 @@ function get_latest_product_version {
 }
 
 function get_latest_version_from_url {
-	curl "${1}" \
+	curl \
 		--max-time 10 \
 		--retry 2 \
 		--silent \
-		| grep --only-matching --perl-regexp "${2}" \
-		| sort --version-sort \
-		| tail --lines=1
+		"${1}" | \
+		grep --only-matching --perl-regexp "${2}" | \
+		sort --version-sort | \
+		tail --lines=1
 }
 
 function get_premium_support_lts_release_branches {
@@ -422,7 +423,7 @@ function _compare_product_versions {
 			return 1
 		fi
 	elif is_quarterly_release "${product_version_1}" &&
-		 is_quarterly_release "${product_version_2}"
+	     is_quarterly_release "${product_version_2}"
 	then
 		if [ "$(get_release_year "${product_version_1}")" "${operator_1}" "$(get_release_year "${product_version_2}")" ]
 		then

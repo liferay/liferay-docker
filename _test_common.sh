@@ -18,7 +18,7 @@ function assert_equals {
 
 	for index in "${!arguments[@]}"
 	do
-		if [[ $((index % 2)) -ne 0 ]]
+		if [[ "$((index % 2))" -ne 0 ]]
 		then
 			continue
 		fi

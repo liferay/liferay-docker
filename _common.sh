@@ -266,7 +266,12 @@ function make_temp_directory {
 }
 
 function pid_8080 {
-	local pid=$(lsof -Fp -i 4tcp:8080 -sTCP:LISTEN | head --lines=1)
+	local pid=$( \
+		lsof \
+			-Fp \
+			-i 4tcp:8080 \
+			-sTCP:LISTEN | \
+		head --lines=1)
 
 	echo "${pid##p}"
 }
