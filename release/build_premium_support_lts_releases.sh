@@ -80,7 +80,7 @@ function _trigger_build_release {
 			--silent \
 			--user "${LIFERAY_RELEASE_JENKINS_ADMIN}:${JENKINS_ADMIN_API_TOKEN}" \
 			--write-out "%{http_code}" \
-			"https://release-master.liferay.com/job/build-release/buildWithParameters")
+			"http://release-master/job/build-release/buildWithParameters")
 
 	if [ "${http_code}" == "201" ]
 	then
