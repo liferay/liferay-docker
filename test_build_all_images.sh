@@ -9,8 +9,14 @@ function main {
 
 	if [[ "${#}" -eq 1 ]]
 	then
-		if [ "${1}" == "test_build_all_images_are_regular_containers_healthy" ]
+		if [ "${1}" == "test_build_all_images_are_regular_containers_healthy" ] ||
+		   [ "${1}" == "test_build_all_images_is_cms_standalone_container_healthy" ]
 		then
+			"${1}"
+		elif [ "${1}" == "test_build_all_images_has_cms_standalone_tag" ]
+		then
+			test_build_all_images_is_cms_standalone_container_healthy
+
 			"${1}"
 		else
 			test_build_all_images_are_regular_containers_healthy
