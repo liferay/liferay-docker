@@ -38,6 +38,12 @@ function set_jdk_version_and_parameters {
 		jdk_version="openjdk-17.0.2"
 	fi
 
+	if [ "$(get_release_version)" == "7.4.13" ] &&
+	   [[ "$(get_release_version_trivial)" -ge 154 ]]
+	then
+		jdk_version="openjdk-21.0.2"
+	fi
+
 	local java_home=$(_resolve_jdk_install "${jdk_version}")
 
 	if [ -z "${java_home}" ]

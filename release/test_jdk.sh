@@ -134,6 +134,9 @@ function test_jdk_set_jdk_version_and_parameters {
 	_test_jdk_set_jdk_version_and_parameters "7.3.10-u36" "zulu8" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "7.4.13-u131" "zulu8" "${_JDK_PARAMETERS_8}"
 	_test_jdk_set_jdk_version_and_parameters "7.4.13-u132" "openjdk-17.0.2" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "7.4.13-u153" "openjdk-17.0.2" "${_JDK_PARAMETERS_17}"
+	_test_jdk_set_jdk_version_and_parameters "7.4.13-u154" "openjdk-21.0.2" "${_JDK_PARAMETERS_21}"
+	_test_jdk_set_jdk_version_and_parameters "7.4.13-u154-cms-standalone" "openjdk-21.0.2" "${_JDK_PARAMETERS_21}"
 }
 
 function _test_jdk_get_current_jdk_arch {
