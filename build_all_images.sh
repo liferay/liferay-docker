@@ -185,6 +185,8 @@ function build_bundle_images {
 			grep '^.*:$' | \
 			sed --expression "s/://")
 
+		local version
+
 		for version in ${versions}
 		do
 			local main_key=$(get_main_key "${main_keys}" "${version}")
@@ -608,6 +610,8 @@ function get_main_key {
 		return
 	fi
 
+	local main_key
+
 	for main_key in ${main_keys}
 	do
 		local count=$( \
@@ -760,6 +764,8 @@ function validate_bundles_yml {
 		sed --expression "s/://")
 	local portal_latest_key_counter=0
 
+	local main_key
+
 	for main_key in ${main_keys}
 	do
 		if [[ "$(yq .\""${main_key}"\".*.latest < bundles.yml | grep --count "true\|false")" -gt 0 ]]
@@ -768,6 +774,8 @@ function validate_bundles_yml {
 				yq .\""${main_key}"\" < bundles.yml | \
 				grep --invert-match '  .*' | \
 				sed --expression "s/://")
+
+			local minor_key
 
 			for minor_key in ${minor_keys}
 			do

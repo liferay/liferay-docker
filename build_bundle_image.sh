@@ -84,6 +84,8 @@ function build_docker_image {
 
 	IFS=","
 
+	local release_version_single
+
 	for release_version_single in ${release_version}
 	do
 		if [[ ${LIFERAY_DOCKER_RELEASE_FILE_URL%} == */snapshot-* ]]
@@ -291,6 +293,8 @@ function prepare_slim_image {
 	then
 		release_dir_name="nightly"
 	fi
+
+	local module
 
 	for module in api impl
 	do

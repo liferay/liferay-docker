@@ -33,6 +33,8 @@ function lc_cd {
 function lc_check_utils {
 	local exit_code=${LIFERAY_COMMON_EXIT_CODE_OK}
 
+	local util
+
 	for util in "${@}"
 	do
 		if ! command -v "${util}" &> /dev/null
@@ -301,8 +303,8 @@ function lc_echo_time {
 }
 
 function lc_get_property {
-	file=${1}
-	property_key=${2}
+	local file=${1}
+	local property_key=${2}
 
 	if [ "${file##*.}" == "bnd" ]
 	then
@@ -402,6 +404,8 @@ function lc_time_run {
 }
 
 function lc_wait {
+	local pid
+
 	for pid in "${!LIFERAY_COMMON_BACKGROUND_PIDS[@]}"
 	do
 		wait "${pid}"

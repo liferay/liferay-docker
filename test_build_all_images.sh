@@ -41,6 +41,8 @@ function tear_down {
 	docker rmi --force "liferay/jdk21:latest" &> /dev/null
 	docker rmi --force $(docker images "liferay/dxp:${_LATEST_RELEASE}-slim") &> /dev/null
 
+	local file
+
 	for file in $(find $(find . -name "logs-*" -type d) -name "build*image_id.txt" -type f)
 	do
 		docker rmi --force $(cat "${file}" | cut --delimiter=':' --fields=2) &> /dev/null

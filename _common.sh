@@ -22,6 +22,8 @@ function check_docker_buildx {
 }
 
 function check_utils {
+	local util
+
 	for util in "${@}"
 	do
 		if ! command -v "${util}" &> /dev/null
@@ -78,6 +80,8 @@ function delete_local_images {
 	if [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" == "true" ]] && [ -n "${1}" ]
 	then
 		echo "Deleting local ${1} images."
+
+		local image_id
 
 		for image_id in $(docker image ls | grep "${1}" | awk '{print $3}' | uniq)
 		do
@@ -157,6 +161,8 @@ function get_current_arch {
 function get_docker_image_tags_args {
 	local docker_image_tags_args=""
 
+	local docker_image_tag
+
 	for docker_image_tag in "${@}"
 	do
 		docker_image_tags_args="${docker_image_tags_args} --tag ${docker_image_tag}"
@@ -178,6 +184,8 @@ function get_tomcat_version {
 				"${1}/tomcat/RELEASE-NOTES" | \
 			sed --regexp-extended --expression "s/Apache Tomcat Version //")
 	else
+		local tomcat_dir_path
+
 		for tomcat_dir_path in "${1}"/tomcat-*
 		do
 			if [ -e "${tomcat_dir_path}" ]
@@ -360,6 +368,8 @@ function start_tomcat {
 
 	"./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh" start
 
+	local count
+
 	for count in {0..30}
 	do
 		if curl \
@@ -378,6 +388,8 @@ function start_tomcat {
 	pid=$(pid_8080)
 
 	"./${TEMP_DIR}/liferay/tomcat/bin/catalina.sh" stop
+
+	local i
 
 	for i in {0..30..1}
 	do

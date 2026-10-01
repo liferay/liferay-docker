@@ -5,12 +5,16 @@ source "$(dirname "${BASH_SOURCE[0]}")/_env_common.sh"
 function assert_equals {
 	local arguments=()
 
+	local argument
+
 	for argument in "${@}"
 	do
 		arguments+=("${argument}")
 	done
 
 	local assertion_error_file="${PWD}/assertion_error"
+
+	local index
 
 	for index in "${!arguments[@]}"
 	do
@@ -32,6 +36,8 @@ function assert_equals {
 			if [[ "${?}" -ne 0 ]] && [ "${_TEST_RESULT}" == "true" ]
 			then
 				_TEST_RESULT="false"
+
+				local line
 
 				while IFS= read -r line
 				do

@@ -35,6 +35,8 @@ function _run_docker_tests {
 			sort | \
 			xargs --max-args=1 /bin/bash
 	else
+		local changed_file
+
 		for changed_file in $(echo "${1}" | grep --extended-regexp "^[^/]+\.sh$")
 		do
 			find . \
@@ -55,6 +57,8 @@ function _run_release_tests {
 			sort | \
 			xargs --max-args=1 /bin/bash
 	else
+		local changed_file
+
 		for changed_file in $(echo "${1}" | grep --extended-regexp "^release/.*\.sh$")
 		do
 			find . \

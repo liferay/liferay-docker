@@ -280,6 +280,8 @@ function test_docker_image_scripts_2 {
 function test_health_status {
 	echo -en "Waiting for health status"
 
+	local counter
+
 	for counter in {1..200}
 	do
 		echo -en "."
