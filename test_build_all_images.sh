@@ -124,13 +124,15 @@ function _test_build_all_images_has_slim_build_criteria {
 }
 
 function _test_build_all_images_is_container_healthy {
-	LIFERAY_DOCKER_IMAGE_FILTER="${1}" LIFERAY_DOCKER_SLIM="${2}" ./build_all_images.sh &> /dev/null
+	mkdir --parents "logs-${1}"
+
+	LIFERAY_DOCKER_IMAGE_FILTER="${1}" LIFERAY_DOCKER_LOGS_DIR="logs-${1}" build_bundle_images &> /dev/null
 
 	assert_equals \
-		"$(grep --count "\[test_health_status\] SUCCESS" logs-*/"${1}.log")" \
+		"$(grep --count "\[test_health_status\] SUCCESS" "logs-${1}/${1}.log")" \
 		"1"
 
-	rm --force --recursive logs-*
+	rm --force --recursive "logs-${1}"
 }
 
 function _test_build_all_images_trial_license_is_deleted {
