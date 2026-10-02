@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM} ubuntu:questing AS ubuntu-questing
+FROM --platform=${TARGETPLATFORM} ubuntu:resolute AS ubuntu-resolute
 
 COPY resources/ /
 
@@ -10,7 +10,7 @@ RUN apt-get update && \
 RUN userdel ubuntu && \
 	useradd --create-home --home-dir /home/liferay --shell /usr/sbin/nologin --uid 1000 --user-group liferay
 
-FROM ubuntu-questing
+FROM ubuntu-resolute
 
 ARG LABEL_BUILD_DATE
 ARG LABEL_NAME
