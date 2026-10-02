@@ -84,6 +84,7 @@ function main {
 	   [[ "$(du --bytes --summarize "${liferay_common_cache_dir}" | cut --fields=1)" -gt 10737418240 ]]
 	then
 		find "${liferay_common_cache_dir}" \
+			-maxdepth 1 \
 			-mindepth 1 \
 			-exec rm --force --recursive {} \; &> /dev/null
 	fi
