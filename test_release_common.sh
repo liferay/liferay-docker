@@ -142,6 +142,7 @@ function test_release_common_get_release_patch_version {
 	_test_release_common_get_release_patch_version "2024.q3.7" "7"
 	_test_release_common_get_release_patch_version "2025.q1.13-lts" "13"
 	_test_release_common_get_release_patch_version "2025.q2.0" "0"
+	_test_release_common_get_release_patch_version "2026.q4.0-cms-standalone" "0"
 }
 
 function test_release_common_get_release_quarter {

@@ -135,16 +135,7 @@ function get_release_output {
 }
 
 function get_release_patch_version {
-	local product_version=$(_get_product_version "${1}")
-
-	if is_lts_release "${product_version}"
-	then
-		echo "${product_version}" | \
-			cut --delimiter='.' --fields=3 | \
-			sed --expression "s/-lts//"
-	else
-		echo "${product_version}" | cut --delimiter='.' --fields=3
-	fi
+	echo "$(_get_product_version_without_suffix "${1}")" | cut --delimiter='.' --fields=3
 }
 
 function get_release_quarter {
