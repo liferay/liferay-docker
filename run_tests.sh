@@ -7,7 +7,7 @@ function main {
 
 	if [ -z "${changed_files}" ]
 	then
-		test_results=$((_run_docker_tests && _run_release_tests) 2>&1 | tee /dev/stderr)
+		test_results=$((_run_docker_tests && (_run_release_tests) && _run_crowdin_tests) 2>&1 | tee /dev/stderr)
 	else
 		test_results=$(_run_docker_tests "${changed_files}" 2>&1 | tee /dev/stderr)
 
@@ -17,11 +17,38 @@ function main {
 		fi
 
 		test_results+=$(_run_release_tests "${changed_files}" 2>&1 | tee /dev/stderr)
+
+		if [ -n "${test_results}" ]
+		then
+			test_results+=$'\n'
+		fi
+
+		test_results+=$(_run_crowdin_tests "${changed_files}" 2>&1 | tee /dev/stderr)
 	fi
 
 	if [[ "${test_results}" == *"FAILED"* ]]
 	then
 		exit 1
+	fi
+}
+
+function _run_crowdin_tests {
+	cd crowdin
+
+	if [ -z "${1}" ]
+	then
+		find . \
+			-name "test_*.sh" \
+			-type f | \
+			sort | \
+			xargs --max-args=1 /bin/bash
+	else
+		for changed_file in $(echo "${1}" | grep --extended-regexp "^crowdin/.*\.sh$")
+		do
+			find . \
+				-name "test_$(basename "${changed_file}" | sed --expression "s/^_//")" \
+				-type f | xargs --max-args=1 /bin/bash
+		done
 	fi
 }
 
