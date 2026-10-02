@@ -5,7 +5,7 @@ ARG OPTIONAL_PACKAGES
 COPY resources/etc/created-date /etc/created-date
 
 RUN apt-get update && \
-	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bc ffmpeg file fonts-dejavu gawk ghostscript google-perftools libtcnative-1 ${OPTIONAL_PACKAGES} && \
+	DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --no-install-recommends --yes bc ffmpeg file fonts-dejavu gawk ghostscript libgoogle-perftools4t64 libtcnative-1 ${OPTIONAL_PACKAGES} && \
 	apt-get upgrade --yes && \
 	apt-get clean
 
