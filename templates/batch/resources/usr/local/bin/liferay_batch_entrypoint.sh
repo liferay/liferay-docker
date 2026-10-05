@@ -13,8 +13,8 @@ function execute_curl {
 		return 1
 	fi
 
-	LIFERAY_BATCH_HTTP_BODY="${response%$'\n'*}"
-	LIFERAY_BATCH_HTTP_STATUS="${response##*$'\n'}"
+	LIFERAY_BATCH_HTTP_BODY=${response%$'\n'*}
+	LIFERAY_BATCH_HTTP_STATUS=${response##*$'\n'}
 
 	if [ "${LIFERAY_BATCH_HTTP_STATUS}" == "000" ] ||
 	   [[ "${LIFERAY_BATCH_HTTP_STATUS}" -ge 400 ]]
@@ -314,7 +314,7 @@ function _process_batch_data_file {
 		href="/o/headless-batch-engine/v1.0/import-task/${class_name}"
 	fi
 
-	href="${href#*://*/}"
+	href=$(echo "${href}" | sed --expression "s|^[^/]*://[^/]*/||")
 
 	if [[ ! "${href}" =~ ^/.* ]]
 	then
@@ -325,7 +325,7 @@ function _process_batch_data_file {
 
 	jq --raw-output ".items" "${file_name}" > "${items_file}"
 
-	log "Items: $(<"${items_file}")"
+	log "Items: $(< "${items_file}")"
 
 	local parameters=$(jq --raw-output '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' "${file_name}" 2> /dev/null)
 
@@ -342,7 +342,7 @@ function _process_batch_data_file {
 	fi
 
 	if ! execute_curl \
-			--data @"${items_file}" \
+			--data "@${items_file}" \
 			--header "Accept: application/json" \
 			--header "Authorization: Bearer ${LIFERAY_BATCH_OAUTH2_ACCESS_TOKEN}" \
 			--header "Content-Type: application/json" \

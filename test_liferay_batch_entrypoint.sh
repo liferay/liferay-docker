@@ -19,12 +19,7 @@ function set_up {
 
 	_TEST_FIXTURE_DIR=$(mktemp --directory)
 
-	mkdir --parents \
-		"${_TEST_FIXTURE_DIR}/batch" \
-		"${_TEST_FIXTURE_DIR}/bin" \
-		"${_TEST_FIXTURE_DIR}/tmp" \
-		"${_TEST_FIXTURE_DIR}/lxc/dxp-metadata" \
-		"${_TEST_FIXTURE_DIR}/lxc/ext-init-metadata"
+	mkdir --parents "${_TEST_FIXTURE_DIR}/batch" "${_TEST_FIXTURE_DIR}/bin" "${_TEST_FIXTURE_DIR}/tmp" "${_TEST_FIXTURE_DIR}/lxc/dxp-metadata" "${_TEST_FIXTURE_DIR}/lxc/ext-init-metadata"
 
 	echo "localhost" > "${_TEST_FIXTURE_DIR}/lxc/dxp-metadata/com.liferay.lxc.dxp.main.domain"
 	echo "http" > "${_TEST_FIXTURE_DIR}/lxc/dxp-metadata/com.liferay.lxc.dxp.server.protocol"
@@ -264,7 +259,7 @@ function _write_curl_stub {
 		then
 			echo "poll" >> "\${_TEST_POLL_COUNT_FILE}"
 
-			if [ "\$(wc --lines < "\${_TEST_POLL_COUNT_FILE}")" -le "\${_TEST_POLL_TRANSIENT_COUNT}" ]
+			if [[ "\$(wc --lines < "\${_TEST_POLL_COUNT_FILE}")" -le "\${_TEST_POLL_TRANSIENT_COUNT}" ]]
 			then
 				echo "\${_TEST_POLL_TRANSIENT_BODY}"
 				echo "503"
