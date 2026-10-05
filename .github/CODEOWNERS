@@ -1,0 +1,12 @@
+templates/_byoos    @liferay-release
+templates/_jdk    @liferay-release
+templates/base    @liferay-release
+templates/batch    @liferay-devtools
+templates/bundle    @liferay-release
+templates/caddy    @liferay-devtools
+templates/jar-runner    @liferay-devtools
+templates/job-runner    @liferay-devtools
+templates/nexus-publisher    @brianchandotcom
+templates/node-runner    @liferay-devtools
+templates/noop    @liferay-devtools
+templates/squid    @brianchandotcom
