@@ -66,11 +66,11 @@ function get_latest_product_version {
 	elif [ "${product_version}" == "quarterly" ]
 	then
 		product_name="dxp"
-		product_version_regex="${product_version_regex}${product_name}/)(${quarterly_version_regex}\.\d+(-lts)?)"
+		product_version_regex="${product_version_regex}${product_name}/)(${quarterly_version_regex}\.\d+(-lts)?)(?=\")"
 	elif [ "${product_version}" == "quarterly-candidate" ]
 	then
 		product_name="dxp/release-candidates"
-		product_version_regex="${quarterly_version_regex}\.\d+(-lts)?"
+		product_version_regex="${quarterly_version_regex}\.\d+(-lts)?(?=-\d+[/\"])"
 	fi
 
 	local product_version_list_html

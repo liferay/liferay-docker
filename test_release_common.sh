@@ -82,6 +82,22 @@ function test_release_common_get_latest_product_version {
 	_test_release_common_get_latest_product_version "quarterly-candidate" "" "2025.q2.8"
 	_test_release_common_get_latest_product_version "quarterly-candidate" "2024.q1" "2024.q1.21"
 	_test_release_common_get_latest_product_version "quarterly-candidate" "2025.q1" "2025.q1.18-lts"
+
+	add_release_to_test_dependency "2026.q4.0-ai-hub" "release/test-dependencies/actual/dxp.html"
+	add_release_to_test_dependency "2026.q4.0-ai-hub-1790963992" "release/test-dependencies/actual/release-candidates.html"
+	add_release_to_test_dependency "2026.q4.0-cms-standalone" "release/test-dependencies/actual/dxp.html"
+	add_release_to_test_dependency "2026.q4.0-cms-standalone-1790963992" "release/test-dependencies/actual/release-candidates.html"
+	add_release_to_test_dependency "2027.q1.0-lts-cms-standalone" "release/test-dependencies/actual/dxp.html"
+	add_release_to_test_dependency "2027.q1.0-lts-cms-standalone-1790963992" "release/test-dependencies/actual/release-candidates.html"
+
+	_test_release_common_get_latest_product_version "quarterly" "" "2025.q2.8"
+	_test_release_common_get_latest_product_version "quarterly" "2026.q4" ""
+	_test_release_common_get_latest_product_version "quarterly" "2027.q1" ""
+	_test_release_common_get_latest_product_version "quarterly-candidate" "" "2025.q2.8"
+	_test_release_common_get_latest_product_version "quarterly-candidate" "2026.q4" ""
+	_test_release_common_get_latest_product_version "quarterly-candidate" "2027.q1" ""
+
+	git restore release/test-dependencies/actual/dxp.html release/test-dependencies/actual/release-candidates.html
 }
 
 function test_release_common_get_premium_support_lts_release_branches {
