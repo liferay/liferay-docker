@@ -103,7 +103,12 @@ function main {
 		exit 1
 	fi
 
-	find "${LIFERAY_BATCH_DIR}" -type f -name "*.batch-engine-data.json" -print0 2> /dev/null | \
+	local file_name
+
+	find "${LIFERAY_BATCH_DIR}" \
+		-type f \
+		-name "*.batch-engine-data.json" \
+		-print0 2> /dev/null | \
 		LC_ALL=C sort --zero-terminated | \
 		while IFS= read -r -d "" file_name
 		do
@@ -172,7 +177,7 @@ function process_site_initializer {
 }
 
 function refresh_oauth2_access_token {
-	if [[ $((SECONDS - LIFERAY_BATCH_OAUTH2_TOKEN_SECONDS)) -lt 480 ]]
+	if [[ "$((SECONDS - LIFERAY_BATCH_OAUTH2_TOKEN_SECONDS))" -lt 480 ]]
 	then
 		return 0
 	fi
