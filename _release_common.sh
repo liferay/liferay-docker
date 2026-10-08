@@ -461,3 +461,17 @@ function _get_product_version {
 		echo "${1}"
 	fi
 }
+
+function _get_product_version_without_suffix {
+	local product_version=$(_get_product_version "${1}")
+
+	if is_quarterly_release "${product_version}"
+	then
+		echo "${product_version}" | cut --delimiter='-' --fields=1
+	elif is_u_release "${product_version}"
+	then
+		echo "${product_version}" | cut --delimiter='-' --fields=1,2
+	else
+		echo "${product_version}"
+	fi
+}
