@@ -7,7 +7,7 @@ function main {
 
 	if [ -z "${changed_files}" ]
 	then
-		test_results=$((_run_docker_tests && (_run_release_tests) && _run_crowdin_tests) 2>&1 | tee /dev/stderr)
+		test_results=$((_run_docker_tests && _run_release_tests && _run_crowdin_tests) 2>&1 | tee /dev/stderr)
 	else
 		test_results=$(_run_docker_tests "${changed_files}" 2>&1 | tee /dev/stderr)
 
@@ -33,23 +33,27 @@ function main {
 }
 
 function _run_crowdin_tests {
-	cd crowdin
+	(
+		cd crowdin
 
-	if [ -z "${1}" ]
-	then
-		find . \
-			-name "test_*.sh" \
-			-type f | \
-			sort | \
-			xargs --max-args=1 /bin/bash
-	else
-		for changed_file in $(echo "${1}" | grep --extended-regexp "^crowdin/.*\.sh$")
-		do
+		if [ -z "${1}" ]
+		then
 			find . \
-				-name "test_$(basename "${changed_file}" | sed --expression "s/^_//")" \
-				-type f | xargs --max-args=1 /bin/bash
-		done
-	fi
+				-name "test_*.sh" \
+				-type f | \
+				sort | \
+				xargs --max-args=1 /bin/bash
+		else
+			local changed_file
+
+			for changed_file in $(echo "${1}" | grep --extended-regexp "^crowdin/.*\.sh$")
+			do
+				find . \
+					-name "test_$(basename "${changed_file}" | sed --expression "s/^_//")" \
+					-type f | xargs --max-args=1 /bin/bash
+			done
+		fi
+	)
 }
 
 function _run_docker_tests {
@@ -74,27 +78,29 @@ function _run_docker_tests {
 }
 
 function _run_release_tests {
-	cd release
+	(
+		cd release
 
-	if [ -z "${1}" ]
-	then
-		find . \
-			-name "test_*.sh" \
-			-type f | \
-			sort | \
-			xargs --max-args=1 /bin/bash
-	else
-		local changed_file
-
-		for changed_file in $(echo "${1}" | grep --extended-regexp "^release/.*\.sh$")
-		do
+		if [ -z "${1}" ]
+		then
 			find . \
-				-name "test_$(basename "${changed_file}" | sed --expression "s/^_//")" ! -name "test_build_release.sh" \
-				-type f | xargs --max-args=1 /bin/bash
-		done
+				-name "test_*.sh" \
+				-type f | \
+				sort | \
+				xargs --max-args=1 /bin/bash
+		else
+			local changed_file
 
-		/bin/bash test_build_release.sh
-	fi
+			for changed_file in $(echo "${1}" | grep --extended-regexp "^release/.*\.sh$")
+			do
+				find . \
+					-name "test_$(basename "${changed_file}" | sed --expression "s/^_//")" ! -name "test_build_release.sh" \
+					-type f | xargs --max-args=1 /bin/bash
+			done
+
+			/bin/bash test_build_release.sh
+		fi
+	)
 }
 
 main
