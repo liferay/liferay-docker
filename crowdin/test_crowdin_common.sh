@@ -24,10 +24,6 @@ function set_up {
 
 	git init --quiet
 
-	git config user.email "test@test.com"
-
-	git config user.name "Test"
-
 	git commit \
 		--allow-empty \
 		--message "Initial commit" \

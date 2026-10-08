@@ -92,10 +92,6 @@ function _set_up_translation_files {
 
 	git init --quiet
 
-	git config user.email "test@test.com"
-
-	git config user.name "Test"
-
 	cat <<- END > "${translation_dir}/${translation_file_prefix}.properties"
 	key-automatic-copy=Automatic Copy
 	key-copied=Copied
