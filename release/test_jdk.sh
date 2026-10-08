@@ -129,6 +129,7 @@ function test_jdk_set_jdk_version_and_parameters {
 	_test_jdk_set_jdk_version_and_parameters "2026.q2.0" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2026.q3.0" "zulu-17.0.18+8" "${_JDK_PARAMETERS_17}"
 	_test_jdk_set_jdk_version_and_parameters "2026.q4.0" "openjdk-21.0.2" "${_JDK_PARAMETERS_21}"
+	_test_jdk_set_jdk_version_and_parameters "2026.q4.0-cms-standalone" "openjdk-21.0.2" "${_JDK_PARAMETERS_21}"
 	_test_jdk_set_jdk_version_and_parameters "2026.q4.5" "openjdk-21.0.2" "${_JDK_PARAMETERS_21}"
 	_test_jdk_set_jdk_version_and_parameters "2027.q1.0-lts" "openjdk-21.0.2" "${_JDK_PARAMETERS_21}"
 	_test_jdk_set_jdk_version_and_parameters "7.3.10-u36" "zulu8" "${_JDK_PARAMETERS_8}"

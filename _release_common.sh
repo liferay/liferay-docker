@@ -378,12 +378,12 @@ function _compare_product_versions {
 
 	if [ -n "${_ACTUAL_PRODUCT_VERSION}" ]
 	then
-		product_version_1=${_ACTUAL_PRODUCT_VERSION}
+		product_version_1=$(_get_product_version_without_suffix "${_ACTUAL_PRODUCT_VERSION}")
 	else
-		product_version_1=$(_get_product_version)
+		product_version_1=$(_get_product_version_without_suffix)
 	fi
 
-	local product_version_2=${1}
+	local product_version_2=$(_get_product_version_without_suffix "${1}")
 
 	if [ "${2}" == "equals_or_later" ] &&
 	   [ "${product_version_1}" == "${product_version_2}" ]
