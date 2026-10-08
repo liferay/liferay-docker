@@ -47,24 +47,24 @@ function main {
 		exit 1
 	fi
 
-	if [ ! -n "${LIFERAY_BATCH_DIR}" ]
-	then
-		LIFERAY_BATCH_DIR="/opt/liferay/batch"
-	fi
-
-	if [ ! -n "${LIFERAY_BATCH_SITE_INITIALIZER_DIR}" ]
-	then
-		LIFERAY_BATCH_SITE_INITIALIZER_DIR="/opt/liferay/site-initializer"
-	fi
-
 	if [ ! -n "${LIFERAY_BATCH_CURL_OPTIONS}" ]
 	then
 		LIFERAY_BATCH_CURL_OPTIONS=" "
 	fi
 
+	if [ ! -n "${LIFERAY_BATCH_DIR}" ]
+	then
+		LIFERAY_BATCH_DIR="/opt/liferay/batch"
+	fi
+
 	if [ ! -n "${LIFERAY_BATCH_MAX_WAIT_SECONDS}" ]
 	then
 		LIFERAY_BATCH_MAX_WAIT_SECONDS=540
+	fi
+
+	if [ ! -n "${LIFERAY_BATCH_SITE_INITIALIZER_DIR}" ]
+	then
+		LIFERAY_BATCH_SITE_INITIALIZER_DIR="/opt/liferay/site-initializer"
 	fi
 
 	if [ ! -n "${LIFERAY_ROUTES_CLIENT_EXTENSION}" ]
