@@ -330,7 +330,7 @@ function _process_batch_data_file {
 
 	jq --raw-output ".items" "${file_name}" > "${items_file}"
 
-	log "Items: $(< "${items_file}")"
+	log "Items: $(cat "${items_file}")"
 
 	local parameters=$(jq --raw-output '.configuration.parameters | [map_values(. | @uri) | to_entries[] | .key + "=" + .value] | join("&")' "${file_name}" 2> /dev/null)
 
