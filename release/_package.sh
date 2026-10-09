@@ -142,7 +142,7 @@ function package_jakarta_transform_dependencies {
 function package_release {
 	rm --force --recursive "${_BUILD_DIR}/release"
 
-	local package_dir="${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+	local package_dir="${_BUILD_DIR}/release/$(_get_package_dir_name)"
 
 	mkdir --parents "${package_dir}"
 
@@ -213,6 +213,15 @@ function _generate_javadocs {
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
+	fi
+}
+
+function _get_package_dir_name {
+	if is_cms_standalone_release
+	then
+		echo "liferay-cms"
+	else
+		echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 	fi
 }
 
@@ -343,8 +352,9 @@ function _package_portal_dependencies {
 
 function _package_tomcat_bundles {
 	local bundle_name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${1}-${_BUILD_TIMESTAMP}"
+	local package_dir_name=$(_get_package_dir_name)
 
-	7z a "${_BUILD_DIR}/release/${bundle_name}.7z" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+	7z a "${_BUILD_DIR}/release/${bundle_name}.7z" "${package_dir_name}"
 
 	echo "${bundle_name}.7z" > "${_BUILD_DIR}/release/.lfrrelease-tomcat-bundle"
 
@@ -352,14 +362,14 @@ function _package_tomcat_bundles {
 		--create \
 		--file "${_BUILD_DIR}/release/${bundle_name}.tar.gz" \
 		--gzip \
-		"liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+		"${package_dir_name}"
 
-	zip -qr "${_BUILD_DIR}/release/${bundle_name}.zip" "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+	zip -qr "${_BUILD_DIR}/release/${bundle_name}.zip" "${package_dir_name}"
 
 	rm \
 		--force \
 		--recursive \
-		"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
+		"${_BUILD_DIR}/release/${package_dir_name}"
 }
 
 function _package_wars {
