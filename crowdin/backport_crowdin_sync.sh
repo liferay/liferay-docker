@@ -79,8 +79,6 @@ function main {
 
 	lc_time_run set_supported_release_branches
 
-	lc_log INFO "Backporting translations to the supported release branches: ${_SUPPORTED_RELEASE_BRANCHES[*]}."
-
 	_backport_translations
 }
 
@@ -142,6 +140,8 @@ function set_up_branch {
 }
 
 function _backport_translations {
+	lc_log INFO "Backporting translations to the supported release branches: ${_SUPPORTED_RELEASE_BRANCHES[*]}."
+
 	local release_branch
 
 	for release_branch in "${_SUPPORTED_RELEASE_BRANCHES[@]}"
