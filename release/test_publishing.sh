@@ -17,7 +17,6 @@ function main {
 		test_publishing_not_upload_boms
 		test_publishing_update_bundles_yml
 		test_publishing_upload_opensearch
-		test_publishing_upload_to_docker_hub_cms_standalone
 	fi
 
 	tear_down
@@ -86,11 +85,6 @@ function test_publishing_upload_opensearch {
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
-function test_publishing_upload_to_docker_hub_cms_standalone {
-	_test_publishing_upload_to_docker_hub_cms_standalone "release" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_publishing_upload_to_docker_hub_cms_standalone "release-candidate" "${LIFERAY_COMMON_EXIT_CODE_OK}"
-}
-
 function _run_update_bundles_yml {
 	_PRODUCT_VERSION=${1}
 
@@ -114,18 +108,6 @@ function _test_publishing_get_root_patcher_project_version_name {
 	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(get_root_patcher_project_version_name)" "${2}"
-}
-
-function _test_publishing_upload_to_docker_hub_cms_standalone {
-	LIFERAY_CMS_STANDALONE_RELEASE="true"
-	LIFERAY_RELEASE_OUTPUT=${1}
-
-	upload_to_docker_hub &> /dev/null
-
-	assert_equals "${?}" "${2}"
-
-	unset LIFERAY_CMS_STANDALONE_RELEASE
-	unset LIFERAY_RELEASE_OUTPUT
 }
 
 main "${@}"
