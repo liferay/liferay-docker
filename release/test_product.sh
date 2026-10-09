@@ -33,7 +33,6 @@ function main {
 		test_product_set_product_version_lts
 		test_product_set_product_version_with_parameters
 		test_product_update_release_info_name
-		test_product_update_release_info_name_not_cms_standalone
 		test_product_warm_up_tomcat
 
 		test_product_warm_up_tomcat_already_warmed
@@ -217,15 +216,8 @@ function test_product_set_product_version_with_parameters {
 }
 
 function test_product_update_release_info_name {
-	LIFERAY_CMS_STANDALONE_RELEASE="true"
-
-	_test_product_update_release_info_name "Liferay Content Management System"
-
-	unset LIFERAY_CMS_STANDALONE_RELEASE
-}
-
-function test_product_update_release_info_name_not_cms_standalone {
-	_test_product_update_release_info_name "Liferay Digital Experience Platform"
+	_test_product_update_release_info_name "Liferay Content Management System" "true"
+	_test_product_update_release_info_name "Liferay Digital Experience Platform" "false"
 }
 
 function test_product_warm_up_tomcat {
@@ -339,6 +331,8 @@ function _test_product_set_product_version_with_parameters {
 }
 
 function _test_product_update_release_info_name {
+	LIFERAY_CMS_STANDALONE_RELEASE="${2}"
+
 	local projects_dir=${_PROJECTS_DIR}
 
 	_PROJECTS_DIR="${_BUILD_DIR}/test-dependencies/actual/update-release-info-name"
@@ -347,7 +341,7 @@ function _test_product_update_release_info_name {
 
 	echo -e "release.info.name=Liferay Digital Experience Platform\nrelease.info.name[master-private]=Liferay Digital Experience Platform\nrelease.info.name[release-private]=Liferay Digital Experience Platform" > "${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
 
-	update_release_info_name
+	update_release_info_name 1> /dev/null
 
 	lc_cd "${_BUILD_DIR}"
 
@@ -362,6 +356,8 @@ function _test_product_update_release_info_name {
 	rm --force --recursive "${_PROJECTS_DIR}"
 
 	_PROJECTS_DIR=${projects_dir}
+
+	unset LIFERAY_CMS_STANDALONE_RELEASE
 }
 
 main "${@}"
