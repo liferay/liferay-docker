@@ -12,6 +12,7 @@ function main {
 	else
 		test_build_node_runner_image_derived_image_installs_dependencies
 		test_build_node_runner_image_entrypoint_starts_default_command
+		test_build_node_runner_image_forwards_sigterm_to_node
 		test_build_node_runner_image_has_node_on_path
 		test_build_node_runner_image_switches_node_version
 	fi
@@ -28,6 +29,18 @@ function set_up {
 
 	echo 'console.log("[LIFERAY_NODE_RUNNER_TEST] started");' > "${_TEST_APP_DIR}/app.js"
 
+	cat <<- EOF > "${_TEST_APP_DIR}/sigterm.js"
+	process.on("SIGTERM", () => {
+		console.log("[LIFERAY_NODE_RUNNER_TEST] SIGTERM");
+
+		process.exit(0);
+	});
+
+	console.log("[LIFERAY_NODE_RUNNER_TEST] started");
+
+	setInterval(() => {}, 1000);
+	EOF
+
 	cat <<- EOF > "${_TEST_APP_DIR}/package.json"
 	{
 		"dependencies": {
@@ -35,6 +48,7 @@ function set_up {
 		},
 		"name": "liferay-node-runner-test",
 		"scripts": {
+			"sigterm": "node sigterm.js",
 			"start": "node app.js"
 		},
 		"version": "1.0.0"
@@ -44,7 +58,7 @@ function set_up {
 	cat <<- EOF > "${_TEST_APP_DIR}/Dockerfile"
 	FROM ${_TEST_NODE_RUNNER_IMAGE}
 
-	COPY --chown=liferay:liferay app.js package.json ./
+	COPY --chown=liferay:liferay app.js package.json sigterm.js ./
 
 	RUN npm install --no-workspaces
 	EOF
@@ -75,6 +89,30 @@ function test_build_node_runner_image_entrypoint_starts_default_command {
 	assert_equals \
 		"$(docker run --rm "${_TEST_DERIVED_IMAGE}" 2>&1 | grep --fixed-strings "[LIFERAY_NODE_RUNNER_TEST] started")" \
 		"[LIFERAY_NODE_RUNNER_TEST] started"
+}
+
+function test_build_node_runner_image_forwards_sigterm_to_node {
+	local container_id=$(docker run --detach --env LIFERAY_NODE_RUNNER_START="npm run sigterm" "${_TEST_DERIVED_IMAGE}")
+
+	local attempt
+
+	for attempt in {1..30}
+	do
+		if docker logs "${container_id}" 2>&1 | grep --fixed-strings --quiet "[LIFERAY_NODE_RUNNER_TEST] started"
+		then
+			break
+		fi
+
+		sleep 1
+	done
+
+	docker stop --time 20 "${container_id}" &> /dev/null
+
+	assert_equals \
+		"$(docker logs "${container_id}" 2>&1 | grep --fixed-strings "[LIFERAY_NODE_RUNNER_TEST] SIGTERM")" \
+		"[LIFERAY_NODE_RUNNER_TEST] SIGTERM"
+
+	docker rm --force "${container_id}" &> /dev/null
 }
 
 function test_build_node_runner_image_has_node_on_path {
