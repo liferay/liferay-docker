@@ -614,6 +614,8 @@ function update_release_info_date {
 function update_release_info_name {
 	if ! is_cms_standalone_release
 	then
+		lc_log INFO "The release.info.name should only be updated for CMS standalone releases."
+
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
