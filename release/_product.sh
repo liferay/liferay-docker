@@ -621,6 +621,12 @@ function update_release_info_name {
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
+	#
+	# Release branches use release.info.name[release-private] while the
+	# CMS build from master uses release.info.name. Changing both simplifies
+	# the implementation since it will be correct for either build.
+	#
+
 	sed \
 		--expression "s/release.info.name=.*/release.info.name=Liferay Content Management System/" \
 		--expression "s/release.info.name\[release-private\]=.*/release.info.name[release-private]=Liferay Content Management System/" \
