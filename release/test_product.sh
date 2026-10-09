@@ -32,6 +32,8 @@ function main {
 		test_product_set_product_version_cms_standalone
 		test_product_set_product_version_lts
 		test_product_set_product_version_with_parameters
+		test_product_update_release_info_name
+		test_product_update_release_info_name_not_cms_standalone
 		test_product_warm_up_tomcat
 
 		test_product_warm_up_tomcat_already_warmed
@@ -214,6 +216,18 @@ function test_product_set_product_version_with_parameters {
 	_test_product_set_product_version_with_parameters "7.4.13-u136" "7.4.13-u136" "7.4.13.u136"
 }
 
+function test_product_update_release_info_name {
+	LIFERAY_CMS_STANDALONE_RELEASE="true"
+
+	_test_product_update_release_info_name "Liferay Content Management System"
+
+	unset LIFERAY_CMS_STANDALONE_RELEASE
+}
+
+function test_product_update_release_info_name_not_cms_standalone {
+	_test_product_update_release_info_name "Liferay Digital Experience Platform"
+}
+
 function test_product_warm_up_tomcat {
 	warm_up_tomcat 1> /dev/null
 
@@ -322,6 +336,32 @@ function _test_product_set_product_version_with_parameters {
 		"${3}" \
 		"${_ARTIFACT_RC_VERSION}" \
 		"${3}-123456789"
+}
+
+function _test_product_update_release_info_name {
+	local projects_dir=${_PROJECTS_DIR}
+
+	_PROJECTS_DIR="${_BUILD_DIR}/test-dependencies/actual/update-release-info-name"
+
+	mkdir --parents "${_PROJECTS_DIR}/liferay-portal-ee"
+
+	echo -e "release.info.name=Liferay Digital Experience Platform\nrelease.info.name[master-private]=Liferay Digital Experience Platform\nrelease.info.name[release-private]=Liferay Digital Experience Platform" > "${_PROJECTS_DIR}/liferay-portal-ee/release.properties"
+
+	update_release_info_name
+
+	lc_cd "${_BUILD_DIR}"
+
+	assert_equals \
+		"$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/release.properties" "release.info.name")" \
+		"${1}" \
+		"$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/release.properties" "release.info.name[master-private]")" \
+		"Liferay Digital Experience Platform" \
+		"$(lc_get_property "${_PROJECTS_DIR}/liferay-portal-ee/release.properties" "release.info.name[release-private]")" \
+		"${1}"
+
+	rm --force --recursive "${_PROJECTS_DIR}"
+
+	_PROJECTS_DIR=${projects_dir}
 }
 
 main "${@}"
