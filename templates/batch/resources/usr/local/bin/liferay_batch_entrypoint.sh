@@ -13,8 +13,8 @@ function execute_curl {
 		return 1
 	fi
 
-	LIFERAY_BATCH_HTTP_BODY=${response%$'\n'*}
-	LIFERAY_BATCH_HTTP_STATUS=${response##*$'\n'}
+	LIFERAY_BATCH_HTTP_BODY=$(echo "${response}" | head --lines=-1)
+	LIFERAY_BATCH_HTTP_STATUS=$(echo "${response}" | tail --lines=1)
 
 	if [ "${LIFERAY_BATCH_HTTP_STATUS}" == "000" ] ||
 	   [[ "${LIFERAY_BATCH_HTTP_STATUS}" -ge 400 ]]
