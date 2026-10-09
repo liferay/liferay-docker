@@ -38,9 +38,7 @@ function _run_crowdin_tests {
 
 		if [ -z "${1}" ]
 		then
-			find . \
-				-name "test_*.sh" \
-				-type f | \
+			find . -name "test_*.sh" -type f | \
 				sort | \
 				xargs --max-args=1 /bin/bash
 		else
@@ -83,9 +81,7 @@ function _run_release_tests {
 
 		if [ -z "${1}" ]
 		then
-			find . \
-				-name "test_*.sh" \
-				-type f | \
+			find . -name "test_*.sh" -type f | \
 				sort | \
 				xargs --max-args=1 /bin/bash
 		else

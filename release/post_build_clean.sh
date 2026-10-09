@@ -63,6 +63,8 @@ function main {
 			liferay_repository="liferay-portal"
 		fi
 
+		local repository
+
 		for repository in liferay-binaries-cache-2020 "${liferay_repository}"
 		do
 			_clean_up_repository "${repository}"
