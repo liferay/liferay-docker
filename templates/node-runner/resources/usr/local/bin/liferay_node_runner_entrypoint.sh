@@ -12,6 +12,9 @@ function main {
 
 	trap "kill ${!}" INT TERM
 
+	# The first wait returns as soon as the trap runs, while the application is
+	# still shutting down. The second wait blocks until it actually exits.
+
 	wait "${!}"
 
 	wait "${!}"
