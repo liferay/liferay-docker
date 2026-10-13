@@ -77,8 +77,10 @@ function tear_down {
 function test_release_gold_check_supported_versions {
 	_test_release_gold_check_supported_versions "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	_test_release_gold_check_supported_versions "2025.q5.0" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	_test_release_gold_check_supported_versions "2026.q3.5-cms-standalone" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	_test_release_gold_check_supported_versions "7.0.6-ga7" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	_test_release_gold_check_supported_versions "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_release_gold_check_supported_versions "7.4.13-u154-cms-standalone" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
 function test_release_gold_check_usage {
