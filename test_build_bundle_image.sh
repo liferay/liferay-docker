@@ -56,6 +56,7 @@ function test_build_bundle_image_set_parent_image {
 	_test_build_bundle_image_set_parent_image "2024.q2.0" "jdk11" "jdk11"
 	_test_build_bundle_image_set_parent_image "2024.q3.0" "jdk21" "jdk21"
 	_test_build_bundle_image_set_parent_image "2025.q1.0" "jdk21" "jdk21"
+	_test_build_bundle_image_set_parent_image "2026.q4.0-cms-standalone" "jdk21" "jdk21"
 	_test_build_bundle_image_set_parent_image "7.2.10.8" "jdk11-jdk8" "jdk11-jdk8"
 	_test_build_bundle_image_set_parent_image "7.3.10-u36" "jdk11-jdk8" "jdk11-jdk8"
 	_test_build_bundle_image_set_parent_image "7.4.13.nightly" "jdk21" "jdk21"
