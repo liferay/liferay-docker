@@ -97,9 +97,9 @@ function test_build_jar_runner_image_runs_tear_down_script_after_sigterm {
 function _test_build_jar_runner_image_stop_container {
 	local container_id=$(docker run --detach "${_TEST_DERIVED_IMAGE}")
 
-	local attempt
+	local counter
 
-	for attempt in {1..30}
+	for counter in {1..30}
 	do
 		if docker logs "${container_id}" 2>&1 | grep --fixed-strings --quiet "[LIFERAY_JAR_RUNNER_TEST] started"
 		then

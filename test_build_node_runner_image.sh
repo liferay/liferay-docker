@@ -94,9 +94,9 @@ function test_build_node_runner_image_entrypoint_starts_default_command {
 function test_build_node_runner_image_forwards_sigterm_to_node {
 	local container_id=$(docker run --detach --env LIFERAY_NODE_RUNNER_START="npm run sigterm" "${_TEST_DERIVED_IMAGE}")
 
-	local attempt
+	local counter
 
-	for attempt in {1..30}
+	for counter in {1..30}
 	do
 		if docker logs "${container_id}" 2>&1 | grep --fixed-strings --quiet "[LIFERAY_NODE_RUNNER_TEST] started"
 		then
