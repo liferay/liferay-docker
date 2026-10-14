@@ -17,6 +17,7 @@ function main {
 		test_release_common_get_product_group_version
 		test_release_common_get_product_version_without_lts_suffix
 		test_release_common_get_product_version_without_suffix
+		test_release_common_get_release_candidates_dir_name
 		test_release_common_get_release_output
 		test_release_common_get_release_patch_version
 		test_release_common_get_release_quarter
@@ -130,6 +131,16 @@ function test_release_common_get_product_version_without_suffix {
 	_test_release_common_get_product_version_without_suffix "7.4.13-u134" "7.4.13-u134"
 	_test_release_common_get_product_version_without_suffix "7.4.13-u149-ai-hub" "7.4.13-u149"
 	_test_release_common_get_product_version_without_suffix "7.4.13-u154-cms-standalone" "7.4.13-u154"
+}
+
+function test_release_common_get_release_candidates_dir_name {
+	_test_release_common_get_release_candidates_dir_name "liferay-releases-candidates"
+
+	LIFERAY_CMS_STANDALONE_WEEKLY="true"
+
+	_test_release_common_get_release_candidates_dir_name "liferay-releases-candidates/cms-standalone-weekly"
+
+	unset LIFERAY_CMS_STANDALONE_WEEKLY
 }
 
 function test_release_common_get_release_output {
@@ -401,6 +412,10 @@ function _test_release_common_get_product_version_without_suffix {
 	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(_get_product_version_without_suffix)" "${2}"
+}
+
+function _test_release_common_get_release_candidates_dir_name {
+	assert_equals "$(get_release_candidates_dir_name)" "${1}"
 }
 
 function _test_release_common_get_release_output {
