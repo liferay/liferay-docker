@@ -352,6 +352,15 @@ function is_u_release_docker_image {
 	return 1
 }
 
+function is_weekly_cms_standalone_release {
+	if [ "${LIFERAY_CMS_STANDALONE_WEEKLY}" == "true" ]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function set_actual_product_version {
 	_ACTUAL_PRODUCT_VERSION=${1}
 }
