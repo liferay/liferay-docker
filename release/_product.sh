@@ -126,8 +126,8 @@ function build_sql {
 
 function clean_up_cmp_and_dsr_modules {
 	if [ "$(get_release_output)" == "nightly" ] ||
-	   (is_quarterly_release && ! is_equals_or_later_product_version_than "2026.q3.0") ||
-	   (is_u_release && [ "$(get_release_version_trivial)" != "152" ])
+	   (is_quarterly_release && is_early_product_version_than "2026.q3.0") ||
+	   (is_u_release && is_early_product_version_than "7.4.13-u152")
 	then
 		lc_log INFO "Skipping the clean up of CMP and DSR modules."
 
