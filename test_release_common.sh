@@ -41,6 +41,7 @@ function main {
 		test_release_common_is_quarterly_release_docker_image
 		test_release_common_is_u_release
 		test_release_common_is_u_release_docker_image
+		test_release_common_is_weekly_cms_standalone_release
 		test_release_common_set_latest_quarterly_product_versions
 	fi
 
@@ -55,6 +56,7 @@ function set_up {
 
 function tear_down {
 	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_CMS_STANDALONE_WEEKLY
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_TEST_MODE
 	unset _ACTUAL_PRODUCT_VERSION
@@ -340,6 +342,16 @@ function test_release_common_is_u_release_docker_image {
 	_test_release_common_is_u_release_docker_image "liferay/release-candidates:2025.q1.12-123456789" "1"
 }
 
+function test_release_common_is_weekly_cms_standalone_release {
+	_test_release_common_is_weekly_cms_standalone_release "1"
+
+	LIFERAY_CMS_STANDALONE_WEEKLY="true"
+
+	_test_release_common_is_weekly_cms_standalone_release "0"
+
+	unset LIFERAY_CMS_STANDALONE_WEEKLY
+}
+
 function test_release_common_set_latest_quarterly_product_versions {
 	_test_release_common_set_latest_quarterly_product_versions "" "2025.q2.8" "2025.q2.8"
 	_test_release_common_set_latest_quarterly_product_versions "2023.q1" "" ""
@@ -539,6 +551,12 @@ function _test_release_common_is_u_release_docker_image {
 	is_u_release_docker_image "${1}"
 
 	assert_equals "${?}" "${2}"
+}
+
+function _test_release_common_is_weekly_cms_standalone_release {
+	is_weekly_cms_standalone_release
+
+	assert_equals "${?}" "${1}"
 }
 
 function _test_release_common_set_latest_quarterly_product_versions {
