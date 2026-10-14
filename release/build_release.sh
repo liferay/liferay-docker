@@ -47,7 +47,7 @@ function check_usage {
 		LIFERAY_RELEASE_HOTFIX_ID=${_BUILD_TIMESTAMP}
 	fi
 
-	_RELEASE_TOOL_DIR=$(dirname "$(readlink /proc/$$/fd/255 2> /dev/null)")
+	_RELEASE_TOOL_DIR=$(dirname "$(readlink "/proc/${$}/fd/255" 2> /dev/null)")
 
 	_BASE_DIR=$(dirname "${_RELEASE_TOOL_DIR}")
 

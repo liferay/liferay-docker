@@ -281,6 +281,8 @@ function decrement_module_versions {
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
+	local bnd_bnd_file
+
 	find . -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd_bnd_file
 	do
 		if echo "${bnd_bnd_file}" | grep --quiet archetype-resources ||
