@@ -101,7 +101,11 @@ function _test_build_jar_runner_image_stop_container {
 
 	for counter in {1..30}
 	do
-		if docker logs "${container_id}" 2>&1 | grep --fixed-strings --quiet "[LIFERAY_JAR_RUNNER_TEST] started"
+		if docker logs "${container_id}" 2>&1 | \
+			grep \
+				--fixed-strings \
+				--quiet \
+				"[LIFERAY_JAR_RUNNER_TEST] started"
 		then
 			break
 		fi
