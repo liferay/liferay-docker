@@ -101,6 +101,7 @@ function test_product_clean_up_cmp_and_dsr_modules {
 	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "2026.q4.0"
 	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "2027.q1.0-lts"
 	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "7.4.13-u152"
+	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "7.4.13-u153"
 
 	_BUNDLES_DIR=${bundles_dir}
 }
@@ -178,7 +179,7 @@ function test_product_not_clean_up_cmp_and_dsr_modules {
 	_test_product_not_clean_up_cmp_and_dsr_modules "nightly" "7.4.13-u152"
 	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "2025.q4.9"
 	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "2026.q2.0"
-	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "7.4.13-u153"
+	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "7.4.13-u151"
 }
 
 function test_product_not_get_build_profile_parameter {
