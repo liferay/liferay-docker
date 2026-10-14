@@ -124,7 +124,7 @@ awk '{ line = $0; gsub(/\t/, "    ", line); if (length(line) > 80 && gsub(/ --[a
 # Unbraced variable references — named (`$HOME`), positional (`$1`), and special
 # (`$$`, `$#`, `$?`, `$@`) parameters must all be braced and quoted (`"${HOME}"`,
 # `"${$}"`). Escaped `\$` is excluded and single-line awk/jq programs are filtered
-# out; any remaining hit is a violation unless it sits inside a multi-line awk/jq
+# out; any remaining hit is a violation unless it sits inside a multiline awk/jq
 # program (`$0`, `$1`, `$i` are awk fields there, not shell parameters).
 grep -nE '(^|[^\\])\$([A-Za-z_][A-Za-z0-9_]*|[0-9$#?@!*-])' "${files[@]}" | grep -vE 'awk|jq'
 
