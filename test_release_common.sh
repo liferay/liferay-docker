@@ -238,6 +238,12 @@ function test_release_common_is_cms_standalone_release {
 	_test_release_common_is_cms_standalone_release "7.4.13-u152" "0"
 
 	unset LIFERAY_CMS_STANDALONE_RELEASE
+
+	LIFERAY_CMS_STANDALONE_WEEKLY="true"
+
+	_test_release_common_is_cms_standalone_release "7.4.13-u152" "0"
+
+	unset LIFERAY_CMS_STANDALONE_WEEKLY
 }
 
 function test_release_common_is_early_product_version_than {
