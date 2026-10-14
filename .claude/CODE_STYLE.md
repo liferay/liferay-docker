@@ -37,7 +37,7 @@ Additionally, every file must follow the same top-to-bottom layout:
 - Function definitions.
 - A single `main` invocation as the last line. Use `main "${@}"` when the file takes parameters and plain `main` when it does not; both are valid, and the choice is the author's.
 - Files meant to be both executed and sourced guard their `main` body so it only runs when the file is executed directly.
-- The last line is never blank.
+- The file ends on its last line of content: no blank lines and no trailing newline after it.
 
 ```bash
 #!/bin/bash
