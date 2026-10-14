@@ -121,15 +121,23 @@ grep -nE '(&>>?|[0-9]>>?)[^ &0-9]' "${files[@]}" | grep -vE '2>&1|>&[0-9]'
 # so they are left alone.
 awk '{ line = $0; gsub(/\t/, "    ", line); if (length(line) > 80 && gsub(/ --[a-zA-Z][a-zA-Z-]*/, "&") >= 2) print FILENAME":"FNR }' "${files[@]}"
 
+# Unbraced variable references — named (`$HOME`), positional (`$1`), and special
+# (`$$`, `$#`, `$?`, `$@`) parameters must all be braced and quoted (`"${HOME}"`,
+# `"${$}"`). Escaped `\$` is excluded and single-line awk/jq programs are filtered
+# out; any remaining hit is a violation unless it sits inside a multi-line awk/jq
+# program (`$0`, `$1`, `$i` are awk fields there, not shell parameters).
+grep -nE '(^|[^\\])\$([A-Za-z_][A-Za-z0-9_]*|[0-9$#?@!*-])' "${files[@]}" | grep -vE 'awk|jq'
+
 # Undeclared function variables: every lowercase variable a function assigns (`x=`,
-# `for x in`, or a `read` target) must be declared `local` earlier in that function.
+# `for x in`, or a `read` target, whose option values may be double- or single-quoted,
+# as in `read -r -d '' x`) must be declared `local` earlier in that function.
 awk '
 	/^function / { infn = 1; split("", declared) }
 	/^}$/ { infn = 0 }
 	{ line = $0; sub(/^[\t ]+/, "", line); names = "" }
 	line ~ /^local / { n = split(line, t, / +/); for (i = 2; i <= n; i++) { sub(/=.*/, "", t[i]); declared[t[i]] }; next }
 	infn && match(line, /^for [a-z_][a-z0-9_]* /) { names = substr(line, 5, RLENGTH - 5) }
-	infn && match(line, /(^|while |\| *)(IFS=[^ ]* )?read( +-[a-zA-Z]+( +"[^"]*")?)* +[a-z_][a-z0-9_ ]*/) { names = substr(line, RSTART, RLENGTH); sub(/.*read( +-[a-zA-Z]+( +"[^"]*")?)* +/, "", names) }
+	infn && match(line, /(^|while |\| *)(IFS=[^ ]* )?read( +-[a-zA-Z]+( +("[^"]*"|\047[^\047]*\047))?)* +[a-z_][a-z0-9_ ]*/) { names = substr(line, RSTART, RLENGTH); sub(/.*read( +-[a-zA-Z]+( +("[^"]*"|\047[^\047]*\047))?)* +/, "", names) }
 	infn && match(line, /^[a-z_][a-z0-9_]*=/) { names = substr(line, 1, RLENGTH - 1) }
 	{ n = split(names, list, / +/); for (i = 1; i <= n; i++) if (list[i] != "" && !(list[i] in declared)) print FILENAME":"FNR": "list[i] }
 ' "${files[@]}"
