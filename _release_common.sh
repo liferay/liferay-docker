@@ -125,6 +125,15 @@ function get_product_version_without_lts_suffix {
 	fi
 }
 
+function get_release_candidates_dir_name {
+	if is_weekly_cms_standalone_release
+	then
+		echo "liferay-releases-candidates/cms-standalone-weekly"
+	else
+		echo "liferay-releases-candidates"
+	fi
+}
+
 function get_release_output {
 	if [ -z "${LIFERAY_RELEASE_OUTPUT}" ]
 	then
