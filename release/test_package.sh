@@ -76,17 +76,13 @@ function test_package_generate_release_properties_file {
 }
 
 function test_package_get_package_dir_name {
-	assert_equals \
-		"$(_get_package_dir_name)" \
-		"liferay-dxp"
-
 	LIFERAY_CMS_STANDALONE_RELEASE="true"
 
-	assert_equals \
-		"$(_get_package_dir_name)" \
-		"liferay-cms"
+	_test_package_get_package_dir_name "liferay-cms"
 
 	unset LIFERAY_CMS_STANDALONE_RELEASE
+
+	_test_package_get_package_dir_name "liferay-dxp"
 }
 
 function test_package_not_generate_javadocs {
@@ -270,6 +266,12 @@ function _test_package_not_generate_javadocs {
 	_generate_javadocs &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+}
+
+function _test_package_get_package_dir_name {
+	assert_equals \
+		"$(_get_package_dir_name)" \
+		"${1}"
 }
 
 function _test_package_not_package_jakarta_transform_dependencies {
