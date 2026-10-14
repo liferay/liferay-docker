@@ -174,7 +174,7 @@ function remove_old_release_candidate_tags {
 			--silent \
 			"https://hub.docker.com/v2/repositories/liferay/release-candidates/tags?page_size=80" | \
 			jq --raw-output ".results[].name" | \
-			grep "^${1}")
+			grep "^${1}-[0-9]")
 
 	if [ -z "${tags}" ]
 	then
