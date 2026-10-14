@@ -260,18 +260,18 @@ function _test_package_generate_release_properties_file {
 	rm --force release.properties
 }
 
+function _test_package_get_package_dir_name {
+	assert_equals \
+		"$(_get_package_dir_name)" \
+		"${1}"
+}
+
 function _test_package_not_generate_javadocs {
 	_PRODUCT_VERSION=${1}
 
 	_generate_javadocs &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-}
-
-function _test_package_get_package_dir_name {
-	assert_equals \
-		"$(_get_package_dir_name)" \
-		"${1}"
 }
 
 function _test_package_not_package_jakarta_transform_dependencies {

@@ -168,6 +168,8 @@ function clean_up_cmp_and_dsr_modules {
 function clean_up_ignored_dxp_modules {
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules"
 
+	local ignored_dir
+
 	(
 		git grep "Liferay-Releng-Bundle: false" | sed --expression "s/app.bnd:.*//"
 		git ls-files "*/.lfrbuild-releng-ignore" | sed --expression "s#/.lfrbuild-releng-ignore##"
@@ -188,6 +190,8 @@ function clean_up_ignored_dxp_modules {
 				lc_log INFO "Excluding ${dxp_dir} as well based on ${ignored_dir}."
 			fi
 		fi
+
+		local ignored_bnd_bnd_file
 
 		find "${ignored_dir}" "${dxp_dir}" -name bnd.bnd | while IFS= read -r ignored_bnd_bnd_file
 		do
@@ -513,6 +517,8 @@ function start_tomcat {
 
 	lc_log INFO "Waiting for Tomcat to start up..."
 
+	local count
+
 	for count in {0..30}
 	do
 		if curl \
@@ -574,6 +580,8 @@ function stop_tomcat {
 	local tomcat_dir_regex=$( \
 		echo "${_BUNDLES_DIR}/tomcat" | \
 		sed --expression "s/${slash_regex}/${backslash_and_slash_regex}/g")
+
+	local count
 
 	for count in {0..30}
 	do

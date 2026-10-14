@@ -112,6 +112,8 @@ function test_product_clean_up_ignored_dxp_plugins {
 
 	mkdir --parents "${_BUNDLES_DIR}/osgi/portal-war"
 
+	local file
+
 	for file in \
 		documentum-hook-test.war \
 		fjord-theme.war \
@@ -331,7 +333,7 @@ function _test_product_set_product_version_with_parameters {
 }
 
 function _test_product_update_release_info_name {
-	LIFERAY_CMS_STANDALONE_RELEASE="${2}"
+	LIFERAY_CMS_STANDALONE_RELEASE=${2}
 
 	local projects_dir=${_PROJECTS_DIR}
 

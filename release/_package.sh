@@ -5,6 +5,8 @@ source ../_release_common.sh
 function generate_checksum_files {
 	lc_cd "${_BUILD_DIR}/release"
 
+	local file
+
 	for file in *
 	do
 		if [ -f "${file}" ]
@@ -33,7 +35,8 @@ function generate_release_properties_file {
 	local tomcat_version=$( \
 		grep \
 			--extended-regexp \
-			--only-matching "Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" \
+			--only-matching \
+			"Apache Tomcat Version [0-9]+\.[0-9]+\.[0-9]+" \
 			"${_BUNDLES_DIR}/tomcat/RELEASE-NOTES")
 
 	tomcat_version=$(echo "${tomcat_version}" | sed --expression "s/Apache Tomcat Version //")
@@ -288,6 +291,8 @@ function _package_portal_dependencies {
 
 		mkdir --parents "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-client-${_PRODUCT_VERSION}"
 
+		local jar
+
 		for jar in \
 			activation.jar \
 			axis.jar \
@@ -366,10 +371,7 @@ function _package_tomcat_bundles {
 
 	zip -qr "${_BUILD_DIR}/release/${bundle_name}.zip" "${package_dir_name}"
 
-	rm \
-		--force \
-		--recursive \
-		"${_BUILD_DIR}/release/${package_dir_name}"
+	rm --force --recursive "${_BUILD_DIR}/release/${package_dir_name}"
 }
 
 function _package_wars {
