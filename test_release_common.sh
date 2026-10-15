@@ -18,6 +18,7 @@ function main {
 		test_release_common_get_product_version_without_lts_suffix
 		test_release_common_get_product_version_without_suffix
 		test_release_common_get_release_candidates_dir_name
+		test_release_common_get_release_dir_name
 		test_release_common_get_release_output
 		test_release_common_get_release_patch_version
 		test_release_common_get_release_quarter
@@ -139,6 +140,18 @@ function test_release_common_get_release_candidates_dir_name {
 	LIFERAY_CMS_STANDALONE_WEEKLY="true"
 
 	_test_release_common_get_release_candidates_dir_name "liferay-releases-candidates/cms-standalone-weekly"
+
+	unset LIFERAY_CMS_STANDALONE_WEEKLY
+}
+
+function test_release_common_get_release_dir_name {
+	_test_release_common_get_release_dir_name "2026.q4.0" "dxp/2026.q4.0"
+	_test_release_common_get_release_dir_name "2026.q4.0-cms-standalone" "dxp/cms-standalone/2026.q4.0-cms-standalone"
+	_test_release_common_get_release_dir_name "7.4.13-u154-cms-standalone" "dxp/cms-standalone/7.4.13-u154-cms-standalone"
+
+	LIFERAY_CMS_STANDALONE_WEEKLY="true"
+
+	_test_release_common_get_release_dir_name "7.4.13-u154-cms-standalone" "dxp/cms-standalone-weekly"
 
 	unset LIFERAY_CMS_STANDALONE_WEEKLY
 }
@@ -422,6 +435,12 @@ function _test_release_common_get_product_version_without_suffix {
 
 function _test_release_common_get_release_candidates_dir_name {
 	assert_equals "$(get_release_candidates_dir_name)" "${1}"
+}
+
+function _test_release_common_get_release_dir_name {
+	_PRODUCT_VERSION=${1}
+
+	assert_equals "$(get_release_dir_name)" "${2}"
 }
 
 function _test_release_common_get_release_output {
