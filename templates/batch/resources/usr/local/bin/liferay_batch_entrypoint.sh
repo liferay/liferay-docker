@@ -332,6 +332,17 @@ function _process_batch_data_file {
 
 	log "Items: $(cat "${items_file}")"
 
+	local ignored_configuration=$( \
+		jq \
+			--raw-output \
+			'(.configuration // {} | keys) - ["callbackURL", "className", "fieldNameMappingMap", "parameters", "taskItemDelegateName"] | join(", ")' \
+			"${file_name}" 2> /dev/null)
+
+	if [ -n "${ignored_configuration}" ]
+	then
+		log "Ignoring batch configuration: ${ignored_configuration}" WARNING
+	fi
+
 	local parameters=$( \
 		jq \
 			--raw-output \

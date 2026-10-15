@@ -6,6 +6,7 @@ function main {
 	test_liferay_batch_entrypoint_encodes_query_parameter_keys
 	test_liferay_batch_entrypoint_forwards_configuration
 	test_liferay_batch_entrypoint_import_task_status
+	test_liferay_batch_entrypoint_logs_ignored_configuration
 	test_liferay_batch_entrypoint_omits_server_side_configuration
 	test_liferay_batch_entrypoint_polls_with_backoff
 	test_liferay_batch_entrypoint_removes_the_items_file
@@ -85,6 +86,36 @@ function test_liferay_batch_entrypoint_forwards_configuration {
 function test_liferay_batch_entrypoint_import_task_status {
 	_test_liferay_batch_entrypoint_import_task_status "{\"executeStatus\": \"COMPLETED\", \"failedItems\": []}" "0"
 	_test_liferay_batch_entrypoint_import_task_status "{\"executeStatus\": \"FAILED\"}" "1"
+}
+
+function test_liferay_batch_entrypoint_logs_ignored_configuration {
+	set_up
+
+	echo "{\"configuration\": {\"className\": \"Foo\", \"onErrorFail\": \"false\"}, \"items\": [{\"name\": \"x\"}]}" > "${_TEST_FIXTURE_DIR}/batch/00-test.batch-engine-data.json"
+
+	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
+
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
+
+	assert_equals \
+		"$(_output_contains "Ignoring batch configuration: onErrorFail")" "true" \
+		"${_TEST_ENTRYPOINT_EXIT_CODE}" "0"
+
+	tear_down
+
+	set_up
+
+	echo "{\"configuration\": {\"callbackURL\": \"http://x/y\", \"className\": \"Foo\", \"fieldNameMappingMap\": {\"a\": \"b\"}, \"parameters\": {}, \"taskItemDelegateName\": \"C_Bar\"}, \"items\": [{\"name\": \"x\"}]}" > "${_TEST_FIXTURE_DIR}/batch/00-test.batch-engine-data.json"
+
+	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
+
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
+
+	assert_equals \
+		"$(_output_contains "Ignoring batch configuration")" "false" \
+		"${_TEST_ENTRYPOINT_EXIT_CODE}" "0"
+
+	tear_down
 }
 
 function test_liferay_batch_entrypoint_omits_server_side_configuration {
