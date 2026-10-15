@@ -16,8 +16,12 @@ function main {
 		   [ "${1}" == "test_build_release_has_slack_message" ]
 		then
 			test_build_release_main || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-		elif [ "${1}" == "test_build_hotfix_has_packaged_hotfix" ]
+		elif [ "${1}" == "test_build_hotfix_has_packaged_hotfix" ] ||
+		     [ "${1}" == "test_build_hotfix_smaller_than_13_mb" ]
 		then
+			LIFERAY_RELEASE_GIT_REF="fix-pack-fix-299864673"
+			_PRODUCT_VERSION="2026.q3.6"
+
 			test_build_hotfix_main || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 
