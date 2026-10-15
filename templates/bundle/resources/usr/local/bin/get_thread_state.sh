@@ -95,7 +95,8 @@ function _filter_threads {
 				sub(/#.*/, "", $0)
 
 				stack = $0 "\n"
-			} else {
+			}
+			else {
 				capture=0
 			}
 		}

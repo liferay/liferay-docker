@@ -164,7 +164,8 @@ function _apply_translations {
 
 			if (key in translations) {
 				print translations[key]
-			} else {
+			}
+			else {
 				print
 			}
 		}
