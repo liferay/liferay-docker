@@ -3,7 +3,10 @@
 source ./_test_common.sh
 
 function main {
+	test_liferay_batch_entrypoint_encodes_query_parameter_keys
+	test_liferay_batch_entrypoint_forwards_configuration
 	test_liferay_batch_entrypoint_import_task_status
+	test_liferay_batch_entrypoint_omits_server_side_configuration
 	test_liferay_batch_entrypoint_polls_with_backoff
 	test_liferay_batch_entrypoint_removes_the_items_file
 	test_liferay_batch_entrypoint_reports_completed_with_failed_items
@@ -30,6 +33,7 @@ function set_up {
 	echo "{\"configuration\": {\"className\": \"Foo\", \"parameters\": {\"createStrategy\": \"UPSERT\"}}, \"items\": [{\"name\": \"x\"}]}" > "${_TEST_FIXTURE_DIR}/batch/00-test.batch-engine-data.json"
 
 	touch "${_TEST_FIXTURE_DIR}/poll_count"
+	touch "${_TEST_FIXTURE_DIR}/post_url"
 
 	_write_curl_stub
 
@@ -40,6 +44,7 @@ function set_up {
 	export _TEST_POLL_TRANSIENT_COUNT="0"
 	export _TEST_POST_BODY="{\"externalReferenceCode\": \"ERC-1\"}"
 	export _TEST_POST_HTTP_STATUS="200"
+	export _TEST_POST_URL_FILE="${_TEST_FIXTURE_DIR}/post_url"
 	export _TEST_TOKEN_BODY="{\"access_token\": \"token\", \"expires_in\": 600}"
 	export _TEST_TOKEN_HTTP_STATUS="200"
 }
@@ -59,13 +64,34 @@ function tear_down {
 	unset _TEST_POLL_TRANSIENT_COUNT
 	unset _TEST_POST_BODY
 	unset _TEST_POST_HTTP_STATUS
+	unset _TEST_POST_URL_FILE
 	unset _TEST_TOKEN_BODY
 	unset _TEST_TOKEN_HTTP_STATUS
+}
+
+function test_liferay_batch_entrypoint_encodes_query_parameter_keys {
+	_test_liferay_batch_entrypoint_forwards_configuration "{\"className\": \"Foo\", \"parameters\": {\"a&b\": \"v\"}}" "a%26b=v" "true"
+}
+
+function test_liferay_batch_entrypoint_forwards_configuration {
+	_test_liferay_batch_entrypoint_forwards_configuration "{\"className\": \"Foo\", \"taskItemDelegateName\": \"C_Bar\"}" "taskItemDelegateName=C_Bar" "true"
+	_test_liferay_batch_entrypoint_forwards_configuration "{\"callbackURL\": \"http://example.com/done\", \"className\": \"Foo\"}" "callbackURL=http%3A%2F%2Fexample.com%2Fdone" "true"
+	_test_liferay_batch_entrypoint_forwards_configuration "{\"className\": \"Foo\", \"fieldNameMappingMap\": {\"a\": \"b\", \"c\": \"d\"}}" "fieldNameMapping=a%3Db%2Cc%3Dd" "true"
+
+	_test_liferay_batch_entrypoint_forwards_configuration "{\"className\": \"Foo\", \"parameters\": {\"taskItemDelegateName\": \"C_FromParameters\"}, \"taskItemDelegateName\": \"C_Sibling\"}" "taskItemDelegateName=C_Sibling" "true"
+	_test_liferay_batch_entrypoint_forwards_configuration "{\"className\": \"Foo\", \"parameters\": {\"taskItemDelegateName\": \"C_FromParameters\"}, \"taskItemDelegateName\": \"C_Sibling\"}" "C_FromParameters" "false"
 }
 
 function test_liferay_batch_entrypoint_import_task_status {
 	_test_liferay_batch_entrypoint_import_task_status "{\"executeStatus\": \"COMPLETED\", \"failedItems\": []}" "0"
 	_test_liferay_batch_entrypoint_import_task_status "{\"executeStatus\": \"FAILED\"}" "1"
+}
+
+function test_liferay_batch_entrypoint_omits_server_side_configuration {
+	_test_liferay_batch_entrypoint_forwards_configuration "{\"className\": \"Foo\", \"companyId\": 123}" "companyId" "false"
+	_test_liferay_batch_entrypoint_forwards_configuration "{\"className\": \"Foo\", \"multiCompany\": true}" "multiCompany" "false"
+	_test_liferay_batch_entrypoint_forwards_configuration "{\"className\": \"Foo\", \"userId\": 456}" "userId" "false"
+	_test_liferay_batch_entrypoint_forwards_configuration "{\"className\": \"Foo\", \"version\": \"1.0\"}" "version" "false"
 }
 
 function test_liferay_batch_entrypoint_polls_with_backoff {
@@ -220,6 +246,19 @@ function _output_contains {
 	return 1
 }
 
+function _post_url_contains {
+	if [[ "$(cat "${_TEST_FIXTURE_DIR}/post_url")" == *"${1}"* ]]
+	then
+		echo "true"
+
+		return 0
+	fi
+
+	echo "false"
+
+	return 1
+}
+
 function _run_entrypoint {
 	PATH="${_TEST_FIXTURE_DIR}/bin:${PATH}" \
 	TMPDIR="${_TEST_FIXTURE_DIR}/tmp" \
@@ -229,6 +268,22 @@ function _run_entrypoint {
 	LIFERAY_ROUTES_CLIENT_EXTENSION="${_TEST_FIXTURE_DIR}/lxc/ext-init-metadata" \
 	LIFERAY_ROUTES_DXP="${_TEST_FIXTURE_DIR}/lxc/dxp-metadata" \
 		bash ./templates/batch/resources/usr/local/bin/liferay_batch_entrypoint.sh 2>&1
+}
+
+function _test_liferay_batch_entrypoint_forwards_configuration {
+	set_up
+
+	echo "{\"configuration\": ${1}, \"items\": [{\"name\": \"x\"}]}" > "${_TEST_FIXTURE_DIR}/batch/00-test.batch-engine-data.json"
+
+	_TEST_ENTRYPOINT_OUTPUT=$(_run_entrypoint)
+
+	_TEST_ENTRYPOINT_EXIT_CODE=${?}
+
+	assert_equals \
+		"$(_post_url_contains "${2}")" "${3}" \
+		"${_TEST_ENTRYPOINT_EXIT_CODE}" "0"
+
+	tear_down
 }
 
 function _test_liferay_batch_entrypoint_import_task_status {
@@ -270,6 +325,8 @@ function _write_curl_stub {
 			echo "\${_TEST_POLL_BODY}"
 			echo "\${_TEST_POLL_HTTP_STATUS}"
 		else
+			echo "\${url}" > "\${_TEST_POST_URL_FILE}"
+
 			echo "\${_TEST_POST_BODY}"
 			echo "\${_TEST_POST_HTTP_STATUS}"
 		fi
