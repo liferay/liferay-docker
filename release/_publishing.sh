@@ -398,13 +398,6 @@ function upload_release {
 }
 
 function upload_to_docker_hub {
-	if (is_cms_standalone_release && [ "$(get_release_output)" != "release-candidate" ])
-	then
-		lc_log INFO "Docker images should only be pushed for CMS standalone release candidates."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
 		return
@@ -430,6 +423,9 @@ function upload_to_docker_hub {
 		else
 			LIFERAY_DOCKER_IMAGE_FILTER="7.4.13.nightly" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push
 		fi
+	elif is_cms_standalone_release
+	then
+		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push
 	else
 		prepare_branch_to_commit "${_BASE_DIR}" "liferay-docker"
 
