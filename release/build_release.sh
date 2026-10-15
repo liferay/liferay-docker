@@ -265,6 +265,8 @@ function main {
 
 		lc_time_run build_product
 
+		lc_time_run clean_up_cmp_and_dsr_modules
+
 		lc_time_run clean_up_ignored_dxp_modules
 
 		lc_time_run clean_up_ignored_dxp_plugins

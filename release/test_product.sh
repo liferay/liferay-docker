@@ -97,6 +97,8 @@ function test_product_clean_up_cmp_and_dsr_modules {
 
 	mkdir --parents "${_BUNDLES_DIR}/osgi/modules"
 
+	_test_product_clean_up_cmp_and_dsr_modules "hotfix" "2026.q3.7"
+	_test_product_clean_up_cmp_and_dsr_modules "hotfix" "7.4.13-u154"
 	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "2026.q3.0"
 	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "2026.q4.0"
 	_test_product_clean_up_cmp_and_dsr_modules "release-candidate" "2027.q1.0-lts"
@@ -176,6 +178,8 @@ function test_product_not_add_ckeditor_license {
 }
 
 function test_product_not_clean_up_cmp_and_dsr_modules {
+	_test_product_not_clean_up_cmp_and_dsr_modules "hotfix" "2026.q2.0"
+	_test_product_not_clean_up_cmp_and_dsr_modules "hotfix" "7.4.13-u151"
 	_test_product_not_clean_up_cmp_and_dsr_modules "nightly" "7.4.13-u152"
 	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "2025.q4.9"
 	_test_product_not_clean_up_cmp_and_dsr_modules "release-candidate" "2026.q2.0"
