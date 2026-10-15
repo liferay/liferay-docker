@@ -88,7 +88,7 @@ function build_docker_image {
 
 	for release_version_single in ${release_version}
 	do
-		if is_cms_standalone_release "${release_version_single}"
+		if is_weekly_cms_standalone_release
 		then
 			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:cms-standalone-weekly")
 		elif [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL%}" == */snapshot-* ]]

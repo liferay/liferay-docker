@@ -71,7 +71,9 @@ function build_bundle_image {
 
 	if is_release_candidate
 	then
-		bundle_url="gs://liferay-releases-candidates/${version}/$(gcloud storage cat "gs://liferay-releases-candidates/${version}/.lfrrelease-tomcat-bundle")"
+		local release_candidates_dir_name=$(get_release_candidates_dir_name)
+
+		bundle_url="gs://${release_candidates_dir_name}/${version}/$(gcloud storage cat "gs://${release_candidates_dir_name}/${version}/.lfrrelease-tomcat-bundle")"
 	fi
 
 	if is_nightly_release "${version}"

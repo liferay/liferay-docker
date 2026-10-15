@@ -320,6 +320,9 @@ function upload_opensearch {
 	if [ "$(get_release_output)" == "nightly" ]
 	then
 		release_dir_name="nightly"
+	elif is_weekly_cms_standalone_release
+	then
+		release_dir_name="cms-standalone-weekly"
 	fi
 
 	for module in api impl
@@ -360,19 +363,23 @@ function upload_release {
 
 		destination_bucket="gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/nightly/"
 	else
-		gcloud storage rm --recursive "gs://liferay-releases-candidates/${_PRODUCT_VERSION}-[0-9]*"
+		local release_candidates_dir_name=$(get_release_candidates_dir_name)
 
-		destination_bucket="gs://liferay-releases-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
-
-		if is_cms_standalone_release
+		if is_weekly_cms_standalone_release
 		then
+			gcloud storage rm --recursive "gs://${release_candidates_dir_name}/"
+
 			gcloud storage rm --recursive "gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/cms-standalone-weekly/"
 
 			gcloud storage cp \
 				"${_BUILD_DIR}/release/.lfrrelease-tomcat-bundle" \
 				"${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" \
 				"gs://liferay-releases/${LIFERAY_RELEASE_PRODUCT_NAME}/cms-standalone-weekly/"
+		else
+			gcloud storage rm --recursive "gs://${release_candidates_dir_name}/${_PRODUCT_VERSION}-[0-9]*"
 		fi
+
+		destination_bucket="gs://${release_candidates_dir_name}/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 	fi
 
 	for file in $( \
@@ -414,7 +421,7 @@ function upload_to_docker_hub {
 
 	if [ "$(get_release_output)" == "release-candidate" ]
 	then
-		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" ./build_all_images.sh --push
+		LIFERAY_CMS_STANDALONE_WEEKLY="${LIFERAY_CMS_STANDALONE_WEEKLY}" LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" ./build_all_images.sh --push
 	elif [ "$(get_release_output)" == "nightly" ]
 	then
 		if [[ "$(date +%w)" -eq 3 ]]

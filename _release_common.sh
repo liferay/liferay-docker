@@ -251,10 +251,9 @@ function is_ai_hub_release {
 }
 
 function is_cms_standalone_release {
-	if [ "${LIFERAY_CMS_STANDALONE_RELEASE}" == "true" ]
-	then
-		return 0
-	elif [[ "$(_get_product_version "${1}")" == *cms-standalone* ]]
+	if [ "${LIFERAY_CMS_STANDALONE_RELEASE}" == "true" ] ||
+	   is_weekly_cms_standalone_release ||
+	   [[ "$(_get_product_version "${1}")" == *cms-standalone* ]]
 	then
 		return 0
 	fi
