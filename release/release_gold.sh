@@ -39,6 +39,13 @@ function check_usage {
 		print_help
 	fi
 
+	if [[ "${LIFERAY_RELEASE_VERSION}" == *cms-standalone* ]]
+	then
+		lc_log ERROR "Set LIFERAY_RELEASE_VERSION without the \"-cms-standalone\" suffix and LIFERAY_CMS_STANDALONE_RELEASE to \"true\"."
+
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
 	LIFERAY_RELEASE_OUTPUT="release"
 	LIFERAY_RELEASE_PRODUCT_NAME=dxp
 
@@ -103,6 +110,15 @@ function main {
 	lc_time_run set_jdk_version_and_parameters
 
 	lc_time_run promote_packages
+
+	if is_cms_standalone_release
+	then
+		lc_time_run upload_to_docker_hub
+
+		lc_log INFO "Skipping the remaining release steps because ${_PRODUCT_VERSION} is a CMS standalone release."
+
+		return
+	fi
 
 	lc_time_run tag_release
 
@@ -241,6 +257,7 @@ function print_help {
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
+	echo "    LIFERAY_CMS_STANDALONE_RELEASE (optional): Set this to \"true\" to publish the CMS standalone bundle instead of a regular release"
 	echo "    LIFERAY_RELEASE_GCS_TOKEN (optional): *.json file containing the token to authenticate with Google Cloud Storage"
 	echo "    LIFERAY_RELEASE_GITHUB_PAT (optional): GitHub personal access token used to tag releases"
 	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD (optional): Nexus user's password"
