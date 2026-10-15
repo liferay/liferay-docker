@@ -34,8 +34,12 @@ function main {
 		test_build_release_not_handle_automated_build
 		test_build_release_not_has_free_tier_slack_message
 
+		LIFERAY_RELEASE_GIT_REF="fix-pack-fix-299864673"
+		_PRODUCT_VERSION="2026.q3.6"
+
 		test_build_hotfix_main || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 
+		test_build_hotfix_smaller_than_13_mb
 		test_build_hotfix_has_packaged_hotfix
 
 		_clean_up_release_data
@@ -107,6 +111,12 @@ function test_build_hotfix_main {
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
+}
+
+function test_build_hotfix_smaller_than_13_mb {
+	assert_equals \
+		"$(($(stat --format="%s" "${_RELEASE_ROOT_DIR}/release-data/build/liferay-dxp-2026.q3.6-hotfix-${LIFERAY_RELEASE_HOTFIX_ID}.zip") < 13000000))" \
+		"1"
 }
 
 function test_build_release_bundle_smaller_than_1_gb_300_mb {
