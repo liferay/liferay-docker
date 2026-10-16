@@ -6,10 +6,12 @@ function build_docker_image {
 	local docker_image_name=${2}
 	local release_version=${3}
 
+	local docker_image_repository=$(echo "${LIFERAY_DOCKER_REPOSITORY}" | sed --expression "s/\/$//")
+
 	DOCKER_IMAGE_TAGS=()
 
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}${docker_image_name}:${release_version}-${TIMESTAMP}")
-	DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}${docker_image_name}:${release_version}")
+	DOCKER_IMAGE_TAGS+=("${docker_image_repository}/${docker_image_name}:${release_version}-${TIMESTAMP}")
+	DOCKER_IMAGE_TAGS+=("${docker_image_repository}/${docker_image_name}:${release_version}")
 
 	if [[ " ${@} " =~ " --push " ]]
 	then
