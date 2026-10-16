@@ -60,6 +60,8 @@ function check_usage {
 function main {
 	check_usage "${@}"
 
+	make_logs_directory
+
 	make_temp_directory templates/bundle
 
 	prepare_temp_directory "${@}"

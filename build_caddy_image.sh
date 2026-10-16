@@ -40,6 +40,8 @@ function build_docker_image {
 }
 
 function main {
+	make_logs_directory
+
 	make_temp_directory templates/caddy
 
 	log_in_to_docker_hub

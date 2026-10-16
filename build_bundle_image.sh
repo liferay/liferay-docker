@@ -248,6 +248,8 @@ function main {
 
 	check_usage "${@}"
 
+	make_logs_directory
+
 	make_temp_directory templates/bundle
 
 	set_parent_image

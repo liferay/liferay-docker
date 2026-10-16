@@ -42,6 +42,8 @@ function build_docker_image {
 function main {
 	delete_local_images "${LIFERAY_DOCKER_REPOSITORY}/node-runner"
 
+	make_logs_directory
+
 	make_temp_directory templates/node-runner
 
 	log_in_to_docker_hub
