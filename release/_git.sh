@@ -80,7 +80,7 @@ function generate_release_notes {
 
 	if ! is_quarterly_release
 	then
-		ga_version=${_PRODUCT_VERSION%%-u*}-ga1
+		ga_version="${_PRODUCT_VERSION%%-u*}-ga1"
 	fi
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
@@ -96,7 +96,9 @@ function generate_release_notes {
 		grep --invert-match LRQA | \
 		grep --invert-match POSHI | \
 		grep --invert-match RELEASE | \
-		paste --delimiters=',' --serial > "${_BUILD_DIR}/release/release-notes.txt"
+		paste \
+			--delimiters=',' \
+			--serial > "${_BUILD_DIR}/release/release-notes.txt"
 }
 
 function prepare_branch_to_commit {
@@ -170,12 +172,20 @@ function update_portal_repository {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if echo "${LIFERAY_RELEASE_GIT_REF}" | grep --extended-regexp --quiet "^[[:alnum:]\.-]+/[0-9a-z]{40}$"
+	if echo "${LIFERAY_RELEASE_GIT_REF}" | \
+		grep \
+			--extended-regexp \
+			--quiet \
+			"^[[:alnum:]\.-]+/[0-9a-z]{40}$"
 	then
-		checkout_ref=${LIFERAY_RELEASE_GIT_REF#*/}
+		checkout_ref=$(echo "${LIFERAY_RELEASE_GIT_REF}" | sed --expression "s#^[^/]*/##")
 
 		LIFERAY_RELEASE_GIT_REF=$(dirname "${LIFERAY_RELEASE_GIT_REF}")
-	elif echo "${LIFERAY_RELEASE_GIT_REF}" | grep --extended-regexp --quiet "^[0-9a-f]{40}$"
+	elif echo "${LIFERAY_RELEASE_GIT_REF}" | \
+		grep \
+			--extended-regexp \
+			--quiet \
+			"^[0-9a-f]{40}$"
 	then
 		lc_log INFO "Looking for a tag that matches Git SHA ${LIFERAY_RELEASE_GIT_REF}."
 
