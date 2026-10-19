@@ -106,7 +106,8 @@ function prepare_temp_directory {
 		--archive \
 		--quiet \
 		"${excludes[@]}" \
-		"${1}/" "${TEMP_DIR}/liferay"
+		"${1}/" \
+		"${TEMP_DIR}/liferay"
 }
 
 main "${@}"

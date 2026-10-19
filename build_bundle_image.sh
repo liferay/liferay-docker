@@ -141,7 +141,7 @@ function build_docker_image {
 		--build-arg OPTIONAL_PACKAGES="${OPTIONAL_PACKAGES}" \
 		--iidfile "${LIFERAY_DOCKER_LOGS_DIR}/build_bundle_image_id.txt" \
 		$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
-		"${TEMP_DIR}" || exit 1
+		"${TEMP_DIR}" || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
 function check_release {
@@ -152,7 +152,7 @@ function check_release {
 	else
 		echo "${RELEASE_FILE_NAME} is an unsupported release file name."
 
-		exit 1
+		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	if is_release_candidate
@@ -337,7 +337,10 @@ function prepare_temp_directory {
 	then
 		7z x -O"${TEMP_DIR}" "${download_dir}/${RELEASE_FILE_NAME}" || exit 3
 	else
-		unzip -d "${TEMP_DIR}" -q "${download_dir}/${RELEASE_FILE_NAME}" || exit 3
+		unzip \
+			-d "${TEMP_DIR}" \
+			-q \
+			"${download_dir}/${RELEASE_FILE_NAME}" || exit 3
 	fi
 
 	mv "${TEMP_DIR}/liferay-"* "${TEMP_DIR}/liferay"
@@ -371,7 +374,10 @@ function prepare_temp_directory {
 
 		download "${latest_tomcat_download_dir}/apache-tomcat.zip" "${latest_tomcat_url}"
 
-		unzip -d "${TEMP_DIR}/liferay" -q "${latest_tomcat_download_dir}/apache-tomcat.zip" || exit 3
+		unzip \
+			-d "${TEMP_DIR}/liferay" \
+			-q \
+			"${latest_tomcat_download_dir}/apache-tomcat.zip" || exit 3
 
 		mv "${TEMP_DIR}/liferay/apache-tomcat-"* "${TEMP_DIR}/liferay/${latest_tomcat_dir_name}"
 
@@ -427,7 +433,7 @@ function print_help {
 	echo ""
 	echo "Set \"push\" as a parameter to automatically push the image to Docker Hub."
 
-	exit 1
+	exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
 function push_docker_image {
@@ -458,7 +464,7 @@ function push_docker_image {
 			--platform "${LIFERAY_DOCKER_IMAGE_PLATFORMS}" \
 			--push \
 			$(get_docker_image_tags_args "${DOCKER_IMAGE_TAGS[@]}") \
-			"${TEMP_DIR}" || exit 1
+			"${TEMP_DIR}" || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 }
 
@@ -588,7 +594,10 @@ function update_patching_tool {
 
 		download "downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip" "releases-cdn.liferay.com/tools/patching-tool/patching-tool-${latest_patching_tool_version}.zip"
 
-		unzip -d "${TEMP_DIR}/liferay" -q "downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip"
+		unzip \
+			-d "${TEMP_DIR}/liferay" \
+			-q \
+			"downloads/patching-tool/patching-tool-${latest_patching_tool_version}.zip"
 
 		"${TEMP_DIR}/liferay/patching-tool/patching-tool.sh" auto-discovery
 
