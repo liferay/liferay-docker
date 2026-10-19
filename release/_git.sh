@@ -269,7 +269,8 @@ function update_release_tool_repository {
 		--force \
 		--prune \
 		--tags \
-		upstream
+		upstream \
+		master
 
 	git checkout master
 
