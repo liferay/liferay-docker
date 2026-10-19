@@ -19,6 +19,22 @@ function trigger_ci_test_suite {
 
 		local release_url="https://storage.cloud.google.com/liferay-releases-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 
+		local test_portal_release_parameters=(
+			--data-urlencode "TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z"
+		)
+
+		if is_cms_standalone_release
+		then
+			test_portal_release_parameters+=(--data-urlencode "TEST_PORTAL_RELEASE_STANDALONE=true")
+		else
+			test_portal_release_parameters+=(
+				--data-urlencode "TEST_PORTAL_RELEASE_OSGI_URL=${release_url}liferay-dxp-osgi-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
+				--data-urlencode "TEST_PORTAL_RELEASE_SQL_URL=${release_url}liferay-dxp-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
+				--data-urlencode "TEST_PORTAL_RELEASE_TOOLS_URL=${release_url}liferay-dxp-tools-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
+				--data-urlencode "TEST_PORTAL_RELEASE_WAR_URL=${release_url}liferay-dxp-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.war"
+			)
+		fi
+
 		for ci_slave_number in {41..48}
 		do
 			local http_code=$( \
@@ -28,12 +44,8 @@ function trigger_ci_test_suite {
 					--data-urlencode "TEST_PORTAL_BRANCH_NAME=$(_get_test_portal_branch_name "${LIFERAY_RELEASE_GIT_REF}")" \
 					--data-urlencode "TEST_PORTAL_BUILD_PROFILE=${LIFERAY_RELEASE_PRODUCT_NAME}" \
 					--data-urlencode "TEST_PORTAL_RELEASE_GIT_ID=${_GIT_SHA}" \
-					--data-urlencode "TEST_PORTAL_RELEASE_OSGI_URL=${release_url}liferay-dxp-osgi-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
-					--data-urlencode "TEST_PORTAL_RELEASE_SQL_URL=${release_url}liferay-dxp-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
-					--data-urlencode "TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z" \
-					--data-urlencode "TEST_PORTAL_RELEASE_TOOLS_URL=${release_url}liferay-dxp-tools-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip" \
 					--data-urlencode "TEST_PORTAL_RELEASE_VERSION=${_PRODUCT_VERSION}" \
-					--data-urlencode "TEST_PORTAL_RELEASE_WAR_URL=${release_url}liferay-dxp-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.war" \
+					"${test_portal_release_parameters[@]}" \
 					--data-urlencode "TEST_PORTAL_REPOSITORY_NAME=${LIFERAY_PORTAL_REPOSITORY_NAME}" \
 					--data-urlencode "TEST_PORTAL_USER_BRANCH_NAME=${LIFERAY_RELEASE_GIT_REF}" \
 					--data-urlencode "TEST_PORTAL_USER_NAME=${LIFERAY_PORTAL_REPOSITORY_OWNER}" \
