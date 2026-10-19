@@ -428,7 +428,9 @@ git log "tags/${ga_version}..HEAD" --pretty="%s %H" | \
 	grep --extended-regexp "^[A-Z][A-Z0-9]*-[0-9]+" | \
 	sort | \
 	uniq | \
-	paste --delimiters=',' --serial > "${_BUILD_DIR}/release/release-notes.txt"
+	paste \
+		--delimiters=',' \
+		--serial > "${_BUILD_DIR}/release/release-notes.txt"
 ```
 
 - When the last stage of a broken pipeline is a compound command (`while`, `for`, `until`, `if`), it takes the continuation indent like any other stage, and its `do`/`done` (or `then`/`fi`) and its body follow that stage's own indentation, not the indentation of the statement that opened the pipeline. Keeping `do` and `done` aligned with the compound command they belong to is what the [Control Flow](#control-flow) rule already requires; the pipeline continuation only changes the column they all sit at.
@@ -442,7 +444,7 @@ find "${dir}" -type f -print0 2> /dev/null | \
 	done
 ```
 
-- Break a command across lines when it takes three or more flags, or when it exceeds eighty columns (counting a tab as four columns) and carries at least two flags to spread across the lines. To break it, put one argument per line, indent the continuation one tab, and place the positionals last. An option and its value count as one flag (`--max-time 300`); positionals count toward neither threshold (`sed --expression "..." --in-place file`). The exception is a command whose syntax pins a positional first, such as `find` (`find "${dir}" -name "*.sh" -type f`). The break applies everywhere, including inside an `if` / `if !` condition. A command that meets neither condition stays on one line (`rm --force --recursive`, `grep --extended-regexp --quiet`). Leave a line as it is when breaking cannot bring it under eighty columns, which happens when a single argument is itself longer than the limit.
+- Break a command across lines when it takes three or more flags, or when it exceeds eighty columns (counting a tab as four columns) and carries at least two flags to spread across the lines. To break it, put one argument per line, indent the continuation one tab, and place the positionals last. An option and its value count as one flag (`--max-time 300`); positionals count toward neither threshold (`sed --expression "..." --in-place file`). The exception is a command whose syntax pins a positional first, such as `find` (`find "${dir}" -name "*.sh" -type f`). The break applies everywhere, including inside an `if` / `if !` condition and on a stage of a broken pipeline. A redirection (`> file`, `>> file`, `< file`, `&> /dev/null`) is not an argument and counts toward neither threshold, but it does count toward the line length; when the command is broken, the redirection stays at the end of the command's last line (`"${file}" > /dev/null`), never on a line of its own. A command that meets neither condition stays on one line (`rm --force --recursive`, `grep --extended-regexp --quiet`). Leave a line as it is when breaking cannot bring it under eighty columns, which happens when a single argument is itself longer than the limit.
 
 ```bash
 curl \
