@@ -43,8 +43,8 @@ function main {
 
 		test_build_hotfix_main || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 
-		test_build_hotfix_smaller_than_13_mb
 		test_build_hotfix_has_packaged_hotfix
+		test_build_hotfix_smaller_than_13_mb
 
 		_clean_up_release_data
 
