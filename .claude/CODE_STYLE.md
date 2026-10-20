@@ -420,7 +420,7 @@ function function_name {
 
 ## Pipelines
 
-- Break a pipeline of three or more commands (two or more `|`) across lines, ending each line with `| \` and indenting the continuation by one tab. A two-command pipeline (a single `|`) stays on one line.
+- Break a pipeline of three or more commands (two or more `|`) across lines, ending each line with `| \` and indenting the continuation by one tab. A two-command pipeline (a single `|`) stays on one line unless one of its commands must be broken across lines, and then that command starts on a line of its own after `| \`, as `update_portal_repository` in `release/_git.sh` does with `echo "${LIFERAY_RELEASE_GIT_REF}" | \` above a broken `grep`.
 
 ```bash
 git log "tags/${ga_version}..HEAD" --pretty="%s %H" | \
@@ -444,7 +444,7 @@ find "${dir}" -type f -print0 2> /dev/null | \
 	done
 ```
 
-- Break a command across lines when it takes three or more flags, or when it exceeds eighty columns (counting a tab as four columns) and carries at least two flags to spread across the lines. To break it, put one argument per line, indent the continuation one tab, and place the positionals last. An option and its value count as one flag (`--max-time 300`); positionals count toward neither threshold (`sed --expression "..." --in-place file`). The exception is a command whose syntax pins a positional first, such as `find` (`find "${dir}" -name "*.sh" -type f`). The break applies everywhere, including inside an `if` / `if !` condition and on a stage of a broken pipeline. A redirection (`> file`, `>> file`, `< file`, `&> /dev/null`) is not an argument and counts toward neither threshold, but it does count toward the line length; when the command is broken, the redirection stays at the end of the command's last line (`"${file}" > /dev/null`), never on a line of its own. A command that meets neither condition stays on one line (`rm --force --recursive`, `grep --extended-regexp --quiet`). Leave a line as it is when breaking cannot bring it under eighty columns, which happens when a single argument is itself longer than the limit.
+- Break a command across lines when it takes three or more flags, or when it exceeds eighty columns (counting a tab as four columns) and carries at least two flags to spread across the lines. To break it, put one argument per line, indent the continuation one tab, and place the positionals last. An option and its value count as one flag (`--max-time 300`); positionals count toward neither threshold (`sed --expression "..." --in-place file`). The exception is a command whose syntax pins a positional first, such as `find` (`find "${dir}" -name "*.sh" -type f`). The break applies everywhere, including inside an `if` / `if !` condition and on a stage of a broken pipeline. A redirection (`> file`, `>> file`, `< file`, `&> /dev/null`) is not an argument and never counts as a flag, but it does count toward the eighty columns; when the command is broken, the redirection stays at the end of the command's last line (`"${file}" > /dev/null`), never on a line of its own. A command that meets neither condition stays on one line (`rm --force --recursive`, `grep --extended-regexp --quiet`). Leave a line as it is when breaking cannot bring it under eighty columns, which happens when a single argument is itself longer than the limit.
 
 ```bash
 curl \
