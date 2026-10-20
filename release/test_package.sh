@@ -95,9 +95,8 @@ function test_package_not_generate_javadocs {
 function test_package_not_generate_release_properties_file {
 	_BUNDLES_DIR=""
 
-	generate_release_properties_file &> /dev/null
-
-	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	_test_package_not_generate_release_properties_file "2025.q2.0" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	_test_package_not_generate_release_properties_file "2026.q4.0-cms-standalone" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 function test_package_not_package_boms {
@@ -272,6 +271,14 @@ function _test_package_not_generate_javadocs {
 	_generate_javadocs &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+}
+
+function _test_package_not_generate_release_properties_file {
+	_PRODUCT_VERSION=${1}
+
+	generate_release_properties_file &> /dev/null
+
+	assert_equals "${?}" "${2}"
 }
 
 function _test_package_not_package_jakarta_transform_dependencies {
