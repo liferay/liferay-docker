@@ -293,6 +293,13 @@ function upload_hotfix {
 }
 
 function upload_opensearch {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "The OpenSearch connector should not be uploaded for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	if [ "${LIFERAY_RELEASE_UPLOAD}" != "true" ]
 	then
 		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD to \"true\" to enable."
@@ -320,9 +327,6 @@ function upload_opensearch {
 	if [ "$(get_release_output)" == "nightly" ]
 	then
 		release_dir_name="nightly"
-	elif is_weekly_cms_standalone_release
-	then
-		release_dir_name="cms-standalone-weekly"
 	fi
 
 	for module in api impl

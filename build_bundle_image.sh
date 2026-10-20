@@ -297,6 +297,9 @@ function prepare_slim_image {
 	if is_nightly_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 	then
 		release_dir_name="nightly"
+	elif is_cms_standalone_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
+	then
+		release_dir_name="dxp/$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | sed --expression "s/-cms-standalone//")"
 	fi
 
 	local module

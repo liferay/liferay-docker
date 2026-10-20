@@ -343,6 +343,13 @@ function deploy_elasticsearch_sidecar {
 }
 
 function deploy_opensearch {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "The OpenSearch connector should not be deployed for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	if [ "${LIFERAY_RELEASE_TEST_MODE}" == "true" ]
 	then
 		return
