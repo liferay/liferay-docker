@@ -111,8 +111,8 @@ function handle_automated_build {
 	then
 		CI_TEST_SUITE="portal-release-cms-standalone"
 		LIFERAY_CMS_STANDALONE_RELEASE=true
-		LIFERAY_CMS_STANDALONE_WEEKLY=true
 		LIFERAY_RELEASE_GIT_REF="master"
+		LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE=true
 	fi
 
 	TRIGGER_CI_TEST_SUITE=true
@@ -304,7 +304,6 @@ function print_help {
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_CMS_STANDALONE_RELEASE (optional): Set this to \"true\" to build the CMS standalone bundle instead of a regular release"
-	echo "    LIFERAY_CMS_STANDALONE_WEEKLY (optional): Set this to \"true\" to publish the CMS standalone bundle as the weekly build instead of a release candidate"
 	echo "    LIFERAY_RELEASE_DEVELOPER_MODE (optional): Set this to \"true\" to run the script as a local development build. Forces LIFERAY_RELEASE_UPLOAD to \"false\"."
 	echo "    LIFERAY_RELEASE_GCS_TOKEN (optional): *.json file containing the token to authenticate with Google Cloud Storage"
 	echo "    LIFERAY_RELEASE_GENERAL_AVAILABILITY_DATE (optional): General availability date"
@@ -320,6 +319,7 @@ function print_help {
 	echo "    LIFERAY_RELEASE_PATCHER_REQUEST_KEY (optional): Request key from Patcher that is used to report back statuses to Patcher"
 	echo "    LIFERAY_RELEASE_PATCHER_USER_ID (optional): User ID of the patcher user who started the build"
 	echo "    LIFERAY_RELEASE_UPLOAD (optional): Set this to \"true\" to upload artifacts"
+	echo "    LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE (optional): Set this to \"true\" to publish the CMS standalone bundle as the weekly build instead of a release candidate"
 	echo ""
 	echo "Example: LIFERAY_RELEASE_GIT_REF=release-2023.q3 ${0}"
 

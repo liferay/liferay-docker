@@ -58,9 +58,9 @@ function set_up {
 
 function tear_down {
 	unset LIFERAY_CMS_STANDALONE_RELEASE
-	unset LIFERAY_CMS_STANDALONE_WEEKLY
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_TEST_MODE
+	unset LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE
 	unset _ACTUAL_PRODUCT_VERSION
 	unset _LATEST_QUARTERLY_CANDIDATE_PRODUCT_VERSION
 	unset _LATEST_QUARTERLY_PRODUCT_VERSION
@@ -137,11 +137,11 @@ function test_release_common_get_product_version_without_suffix {
 function test_release_common_get_release_candidates_dir_name {
 	_test_release_common_get_release_candidates_dir_name "liferay-releases-candidates"
 
-	LIFERAY_CMS_STANDALONE_WEEKLY="true"
+	LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE="true"
 
 	_test_release_common_get_release_candidates_dir_name "liferay-releases-candidates/cms-standalone-weekly"
 
-	unset LIFERAY_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE
 }
 
 function test_release_common_get_release_dir_name {
@@ -149,11 +149,11 @@ function test_release_common_get_release_dir_name {
 	_test_release_common_get_release_dir_name "2026.q4.0-cms-standalone" "dxp/cms-standalone/2026.q4.0-cms-standalone"
 	_test_release_common_get_release_dir_name "7.4.13-u154-cms-standalone" "dxp/cms-standalone/7.4.13-u154-cms-standalone"
 
-	LIFERAY_CMS_STANDALONE_WEEKLY="true"
+	LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE="true"
 
 	_test_release_common_get_release_dir_name "7.4.13-u154-cms-standalone" "dxp/cms-standalone-weekly"
 
-	unset LIFERAY_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE
 }
 
 function test_release_common_get_release_output {
@@ -252,11 +252,11 @@ function test_release_common_is_cms_standalone_release {
 
 	unset LIFERAY_CMS_STANDALONE_RELEASE
 
-	LIFERAY_CMS_STANDALONE_WEEKLY="true"
+	LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE="true"
 
 	_test_release_common_is_cms_standalone_release "7.4.13-u152" "0"
 
-	unset LIFERAY_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE
 }
 
 function test_release_common_is_early_product_version_than {
@@ -375,11 +375,11 @@ function test_release_common_is_u_release_docker_image {
 function test_release_common_is_weekly_cms_standalone_release {
 	_test_release_common_is_weekly_cms_standalone_release "1"
 
-	LIFERAY_CMS_STANDALONE_WEEKLY="true"
+	LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE="true"
 
 	_test_release_common_is_weekly_cms_standalone_release "0"
 
-	unset LIFERAY_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE
 }
 
 function test_release_common_set_latest_quarterly_product_versions {

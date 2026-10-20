@@ -82,12 +82,12 @@ function tear_down {
 	rm --force --recursive "${_RELEASE_TOOL_DIR}"
 
 	unset LIFERAY_CMS_STANDALONE_RELEASE
-	unset LIFERAY_CMS_STANDALONE_WEEKLY
 	unset LIFERAY_RELEASE_GIT_REF
 	unset LIFERAY_RELEASE_TEST_ALTERNATIVE_PATH
 	unset LIFERAY_RELEASE_TEST_DATE
 	unset LIFERAY_RELEASE_TEST_DEFAULT_PATH
 	unset LIFERAY_RELEASE_TEST_MACHINE
+	unset LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE
 	unset RUN_SCANCODE_PIPELINE
 	unset TRIGGER_CI_TEST_SUITE
 	unset _RELEASE_PACKAGE
@@ -161,10 +161,10 @@ function test_build_release_handle_automated_build_cms_standalone {
 		"portal-release-cms-standalone" \
 		"${LIFERAY_CMS_STANDALONE_RELEASE}" \
 		"true" \
-		"${LIFERAY_CMS_STANDALONE_WEEKLY}" \
-		"true" \
 		"${LIFERAY_RELEASE_GIT_REF}" \
 		"master" \
+		"${LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE}" \
+		"true" \
 		"${RUN_SCANCODE_PIPELINE}" \
 		"false" \
 		"${TRIGGER_CI_TEST_SUITE}" \
@@ -173,8 +173,8 @@ function test_build_release_handle_automated_build_cms_standalone {
 	unset BUILD_CAUSE
 	unset CI_TEST_SUITE
 	unset LIFERAY_CMS_STANDALONE_RELEASE
-	unset LIFERAY_CMS_STANDALONE_WEEKLY
 	unset LIFERAY_RELEASE_TEST_DATE
+	unset LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE
 
 	LIFERAY_RELEASE_GIT_REF=${_PRODUCT_VERSION}
 }

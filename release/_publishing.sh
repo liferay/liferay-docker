@@ -418,7 +418,7 @@ function upload_to_docker_hub {
 
 	if [ "$(get_release_output)" == "release-candidate" ]
 	then
-		LIFERAY_CMS_STANDALONE_WEEKLY="${LIFERAY_CMS_STANDALONE_WEEKLY}" LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" ./build_all_images.sh --push
+		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}" LIFERAY_DOCKER_RELEASE_CANDIDATE="true" LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE="${LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE}" ./build_all_images.sh --push
 	elif [ "$(get_release_output)" == "nightly" ]
 	then
 		if [[ "$(date +%w)" -eq 3 ]]
