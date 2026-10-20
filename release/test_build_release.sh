@@ -95,13 +95,9 @@ function tear_down {
 }
 
 function test_build_hotfix_has_packaged_hotfix {
-	local hotfix_zip_file="${_RELEASE_ROOT_DIR}/release-data/build/liferay-dxp-${_PRODUCT_VERSION}-hotfix-${LIFERAY_RELEASE_HOTFIX_ID}.zip"
-
 	assert_equals \
-		"$(ls -1 "${hotfix_zip_file}" | wc --lines)" \
+		"$(ls -1 "${_RELEASE_ROOT_DIR}/release-data/build/liferay-dxp-${_PRODUCT_VERSION}-hotfix-${LIFERAY_RELEASE_HOTFIX_ID}.zip" | wc --lines)" \
 		"1"
-
-	rm --force "${hotfix_zip_file}"
 }
 
 function test_build_hotfix_main {
