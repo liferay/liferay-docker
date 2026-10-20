@@ -24,6 +24,13 @@ function generate_checksum_files {
 }
 
 function generate_release_properties_file {
+	if is_cms_standalone_release
+	then
+		lc_log INFO "The release.properties file should not be generated for CMS standalone releases."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	local date_key="release.date"
 
 	if (is_7_4_u_release && is_later_product_version_than "7.4.13-u145") ||
