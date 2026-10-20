@@ -156,10 +156,10 @@ function main {
 
 			local module_count=$( \
 				echo "${telnet_content}" | \
-				grep \
-					--count \
-					--extended-regexp \
-					"${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}")
+					grep \
+						--count \
+						--extended-regexp \
+						"${LIFERAY_CONTAINER_STATUS_ACTIVE_MODULES}")
 
 			if [[ "${module_count}" -eq 0 ]]
 			then
