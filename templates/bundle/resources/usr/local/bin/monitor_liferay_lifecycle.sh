@@ -79,7 +79,7 @@ function main {
 				then
 					local tomcat_thread_active_count=$( \
 						curl \
-							--max-time 2 \
+							--max-time "${LIFERAY_CONTAINER_PROMETHEUS_CURL_MAX_TIME}" \
 							--silent \
 							"http://localhost:15000/metrics" | \
 							grep "^catalina_executor_activecount" | \
