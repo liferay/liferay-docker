@@ -382,7 +382,7 @@ function _write_slack_message {
 	then
 		cat <<- END >> "${_RELEASE_TOOL_DIR}/build_release_slack_message.txt"
 
-		*Free Tier:* \`$(is_free_tier_ignored_version)\`
+		*Free Tier:* \`$(is_free_tier_version)\`
 		END
 	fi
 }
