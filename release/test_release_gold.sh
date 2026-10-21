@@ -88,7 +88,7 @@ function test_release_gold_check_usage {
 }
 
 function test_release_gold_check_usage_with_cms_standalone_suffix {
-	LIFERAY_CMS_STANDALONE_RELEASE="true"
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
 	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="false"
 	LIFERAY_RELEASE_VERSION="2026.q3.5-cms-standalone"
 
@@ -96,7 +96,7 @@ function test_release_gold_check_usage_with_cms_standalone_suffix {
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 	unset LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH
 	unset LIFERAY_RELEASE_VERSION
 }

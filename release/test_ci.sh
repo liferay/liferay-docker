@@ -56,7 +56,7 @@ function test_ci_get_test_portal_release_parameters {
 		END
 	)"
 
-	LIFERAY_CMS_STANDALONE_RELEASE="true"
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
 
 	_test_ci_get_test_portal_release_parameters "$(cat <<- END
 		--data-urlencode TEST_PORTAL_RELEASE_STANDALONE=true
@@ -64,7 +64,7 @@ function test_ci_get_test_portal_release_parameters {
 		END
 	)"
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 	unset _BUILD_TIMESTAMP
 	unset _PRODUCT_VERSION
 }

@@ -94,7 +94,7 @@ function test_build_all_images_has_slim_build_criteria {
 }
 
 function test_build_all_images_is_cms_standalone_container_healthy {
-	LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE="true" _test_build_all_images_is_container_healthy "cms-standalone-weekly" "false"
+	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true" _test_build_all_images_is_container_healthy "cms-standalone-weekly" "false"
 }
 
 function test_build_all_images_latest_is_not_slim {

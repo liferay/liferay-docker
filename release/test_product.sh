@@ -66,8 +66,8 @@ function tear_down {
 	rm --force --recursive "${_BUNDLES_DIR}"
 
 	unset LIFERAY_CKEDITOR_LICENSE_KEY
-	unset LIFERAY_CMS_STANDALONE_RELEASE
 	unset LIFERAY_PORTAL_REPOSITORY_NAME
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
 	unset _BUNDLES_DIR
@@ -144,13 +144,13 @@ function test_product_deploy_opensearch {
 }
 
 function test_product_get_build_profile_parameter {
-	LIFERAY_CMS_STANDALONE_RELEASE="true"
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
 
 	assert_equals \
 		"$(_get_build_profile_parameter)" \
 		"-Dbuild.profile=cms-standalone"
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 }
 
 function test_product_get_java_specification_version {
@@ -195,7 +195,7 @@ function test_product_not_get_build_profile_parameter {
 }
 
 function test_product_set_product_version_cms_standalone {
-	LIFERAY_CMS_STANDALONE_RELEASE="true"
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
 
 	set_product_version "7.4.13-u152" "123456789" 1> /dev/null
 
@@ -203,7 +203,7 @@ function test_product_set_product_version_cms_standalone {
 		"${_PRODUCT_VERSION}" \
 		"7.4.13-u152-cms-standalone"
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 }
 
 function test_product_set_product_version_lts {
@@ -338,7 +338,7 @@ function _test_product_set_product_version_with_parameters {
 }
 
 function _test_product_update_release_info_name {
-	LIFERAY_CMS_STANDALONE_RELEASE=${2}
+	LIFERAY_RELEASE_CMS_STANDALONE=${2}
 
 	local projects_dir=${_PROJECTS_DIR}
 
@@ -364,7 +364,7 @@ function _test_product_update_release_info_name {
 
 	_PROJECTS_DIR=${projects_dir}
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 }
 
 main "${@}"

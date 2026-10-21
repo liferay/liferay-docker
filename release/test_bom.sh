@@ -138,8 +138,8 @@ function tear_down {
 
 	git clean -dfx &> /dev/null
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
 	unset LIFERAY_PORTAL_REPOSITORY_NAME
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _ARTIFACT_RC_VERSION
 	unset _BUILD_DIR
@@ -288,7 +288,7 @@ function test_bom_manage_bom_jar {
 }
 
 function test_bom_not_generate_boms {
-	LIFERAY_CMS_STANDALONE_RELEASE="true"
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
 
 	_test_bom_not_generate_boms generate_api_jars
 	_test_bom_not_generate_boms generate_api_source_jar
@@ -300,7 +300,7 @@ function test_bom_not_generate_boms {
 	_test_bom_not_generate_boms generate_pom_release_bom_third_party
 	_test_bom_not_generate_boms generate_pom_release_distro
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 }
 
 function test_bom_not_generate_pom_release_bom_test_dxp {

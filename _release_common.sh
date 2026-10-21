@@ -266,7 +266,7 @@ function is_ai_hub_release {
 
 function is_cms_standalone_release {
 	if is_weekly_cms_standalone_release ||
-	   [ "${LIFERAY_CMS_STANDALONE_RELEASE}" == "true" ] ||
+	   [ "${LIFERAY_RELEASE_CMS_STANDALONE}" == "true" ] ||
 	   [[ "$(_get_product_version "${1}")" == *cms-standalone* ]]
 	then
 		return 0
@@ -375,7 +375,7 @@ function is_u_release_docker_image {
 }
 
 function is_weekly_cms_standalone_release {
-	if [ "${LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE}" == "true" ]
+	if [ "${LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY}" == "true" ]
 	then
 		return 0
 	fi

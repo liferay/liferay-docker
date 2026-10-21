@@ -48,8 +48,8 @@ function tear_down {
 	rm --force "${_BUILD_DIR}"/liferay-dxp-tomcat-*.zip
 	rm --force --recursive "${_BUILD_DIR}/release"
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
 	unset LIFERAY_PORTAL_REPOSITORY_NAME
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
 	unset _BUILD_TIMESTAMP
@@ -76,11 +76,11 @@ function test_package_generate_release_properties_file {
 }
 
 function test_package_get_package_dir_name {
-	LIFERAY_CMS_STANDALONE_RELEASE="true"
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
 
 	_test_package_get_package_dir_name "liferay-cms"
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 
 	_test_package_get_package_dir_name "liferay-dxp"
 }
@@ -100,13 +100,13 @@ function test_package_not_generate_release_properties_file {
 }
 
 function test_package_not_package_boms {
-	LIFERAY_CMS_STANDALONE_RELEASE="true"
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
 
 	package_boms &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 }
 
 function test_package_not_package_jakarta_transform_dependencies {

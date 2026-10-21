@@ -41,7 +41,7 @@ function check_usage {
 
 	if [[ "${LIFERAY_RELEASE_VERSION}" == *cms-standalone* ]]
 	then
-		lc_log ERROR "Set LIFERAY_RELEASE_VERSION without the \"-cms-standalone\" suffix and LIFERAY_CMS_STANDALONE_RELEASE to \"true\"."
+		lc_log ERROR "Set LIFERAY_RELEASE_VERSION without the \"-cms-standalone\" suffix and LIFERAY_RELEASE_CMS_STANDALONE to \"true\"."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -257,7 +257,7 @@ function print_help {
 	echo ""
 	echo "The script reads the following environment variables:"
 	echo ""
-	echo "    LIFERAY_CMS_STANDALONE_RELEASE (optional): Set this to \"true\" to publish the CMS standalone bundle instead of a regular release"
+	echo "    LIFERAY_RELEASE_CMS_STANDALONE (optional): Set this to \"true\" to publish the CMS standalone bundle instead of a regular release"
 	echo "    LIFERAY_RELEASE_GCS_TOKEN (optional): *.json file containing the token to authenticate with Google Cloud Storage"
 	echo "    LIFERAY_RELEASE_GITHUB_PAT (optional): GitHub personal access token used to tag releases"
 	echo "    LIFERAY_RELEASE_NEXUS_REPOSITORY_PASSWORD (optional): Nexus user's password"

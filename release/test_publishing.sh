@@ -60,13 +60,13 @@ function test_publishing_get_root_patcher_project_version_name {
 }
 
 function test_publishing_not_upload_boms {
-	LIFERAY_CMS_STANDALONE_RELEASE="true"
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
 
 	upload_boms xanadu &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 
-	unset LIFERAY_CMS_STANDALONE_RELEASE
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 }
 
 function test_publishing_update_bundles_yml {
