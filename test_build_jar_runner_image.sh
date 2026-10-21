@@ -22,6 +22,8 @@ function set_up {
 
 	cp --recursive templates/jar-runner "${_TEST_APP_DIR}/jar-runner"
 
+	cp templates/base/resources/usr/local/bin/_liferay_base_common.sh "${_TEST_APP_DIR}/jar-runner/resources/usr/local/bin"
+
 	mkdir --parents "${_TEST_APP_DIR}/jar-runner/resources/etc"
 
 	date > "${_TEST_APP_DIR}/jar-runner/resources/etc/created-date"

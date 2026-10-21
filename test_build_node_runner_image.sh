@@ -21,11 +21,15 @@ function main {
 }
 
 function set_up {
+	export _TEST_APP_DIR=$(mktemp --directory)
+
+	cp --recursive templates/node-runner "${_TEST_APP_DIR}/node-runner"
+
+	cp templates/base/resources/usr/local/bin/_liferay_base_common.sh "${_TEST_APP_DIR}/node-runner/resources/usr/local/bin"
+
 	export _TEST_NODE_RUNNER_IMAGE="liferay/node-runner:test"
 
-	docker build --tag "${_TEST_NODE_RUNNER_IMAGE}" templates/node-runner &> /dev/null
-
-	export _TEST_APP_DIR=$(mktemp --directory)
+	docker build --tag "${_TEST_NODE_RUNNER_IMAGE}" "${_TEST_APP_DIR}/node-runner" &> /dev/null
 
 	echo 'console.log("[LIFERAY_NODE_RUNNER_TEST] started");' > "${_TEST_APP_DIR}/app.js"
 
