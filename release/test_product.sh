@@ -167,6 +167,12 @@ function test_product_is_free_tier_ignored_version {
 	_test_product_is_free_tier_ignored_version "2026.q1.1-lts" "false"
 	_test_product_is_free_tier_ignored_version "2026.q1.2-lts" "true"
 	_test_product_is_free_tier_ignored_version "2026.q1.3-lts" "true"
+
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
+
+	_test_product_is_free_tier_ignored_version "2026.q1.0-lts" "true"
+
+	unset LIFERAY_RELEASE_CMS_STANDALONE
 }
 
 function test_product_is_free_tier_version {
