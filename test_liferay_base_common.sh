@@ -16,7 +16,7 @@ function set_up {
 	cat <<- EOF > "${_TEST_DIR}/app.sh"
 	#!/bin/bash
 
-	trap "sleep 1; echo stopped; exit 3" TERM
+	trap 'sleep 1; echo stopped; exit 3' TERM
 
 	echo "started"
 
