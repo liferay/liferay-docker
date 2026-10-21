@@ -335,10 +335,7 @@ function print_variables {
 		grep --invert-match "LIFERAY_RELEASE_HOTFIX_SIGNATURE" | \
 		grep --invert-match "LIFERAY_RELEASE_PATCHER_REQUEST_KEY" | \
 		grep --invert-match "LIFERAY_RELEASE_UPLOAD" | \
-		grep \
-			--regexp="^LIFERAY_CMS_STANDALONE_RELEASE" \
-			--regexp="^LIFERAY_RELEASE" \
-			--regexp="^LIFERAY_WEEKLY_CMS_STANDALONE_RELEASE" | \
+		grep --regexp="^LIFERAY_RELEASE" | \
 		tr "\n" " ")
 
 	echo "${environment}LIFERAY_RELEASE_DEVELOPER_MODE=true ./build_release.sh"
