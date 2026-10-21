@@ -331,7 +331,7 @@ function build_jdk_image {
 	local latest_available_zulu_amd64_version=$(get_latest_available_zulu_version "amd64" "${jdk_version}")
 	local latest_available_zulu_arm64_version=$(get_latest_available_zulu_version "arm64" "${jdk_version}")
 
-	if [[ "$(get_latest_docker_hub_zulu_version "${jdk_image_name}" "${jdk_version}" "amd64")" == "${latest_available_zulu_amd64_version}" ]] && [[ "$(get_latest_docker_hub_zulu_version "${jdk_image_name}" "${jdk_version}" "arm64")" == "${latest_available_zulu_arm64_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [[ "$(get_latest_docker_hub_version "${jdk_image_name}")" == "$(./release_notes.sh get-version)" ]] && [[ "$(get_latest_docker_hub_zulu_version "${jdk_image_name}" "${jdk_version}" "amd64")" == "${latest_available_zulu_amd64_version}" ]] && [[ "$(get_latest_docker_hub_zulu_version "${jdk_image_name}" "${jdk_version}" "arm64")" == "${latest_available_zulu_arm64_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
 	then
 		echo ""
 		echo "Docker image ${jdk_friendly_name} is up to date."
