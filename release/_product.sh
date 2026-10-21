@@ -407,6 +407,22 @@ function is_free_tier_ignored_version {
 	fi
 }
 
+function is_free_tier_version {
+	if is_cms_standalone_release
+	then
+		echo "false"
+
+		return
+	fi
+
+	if lc_get_property "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/release.properties" "free.tier.ignored.versions" | grep --quiet "${_PRODUCT_VERSION}"
+	then
+		echo "true"
+	else
+		echo "false"
+	fi
+}
+
 function obfuscate_licensing {
 	if [ -e "${_BUILD_DIR}/built.sha" ] &&
 	   [ "$(cat "${_BUILD_DIR}/built.sha")" == "${LIFERAY_RELEASE_GIT_REF}${LIFERAY_RELEASE_HOTFIX_TEST_SHA}" ]
