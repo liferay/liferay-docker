@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source /usr/local/bin/_liferay_base_common.sh
 source /usr/local/bin/_liferay_bundle_common.sh
 source /usr/local/bin/_liferay_common.sh
 
@@ -107,7 +108,7 @@ function start_liferay {
 
 	echo "${START_LIFERAY_PID}" > "${LIFERAY_PID}"
 
-	wait "${START_LIFERAY_PID}"
+	forward_signals_and_wait "${START_LIFERAY_PID}"
 }
 
 function start_monitor_liferay_lifecycle {

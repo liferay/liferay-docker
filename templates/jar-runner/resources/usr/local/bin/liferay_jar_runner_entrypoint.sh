@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /usr/local/bin/_liferay_base_common.sh
+
 function main {
 	export JAVA_HOME="/usr/lib/jvm/${JAVA_VERSION}"
 	export PATH="/usr/lib/jvm/${JAVA_VERSION}/bin/:${PATH}"
@@ -11,16 +13,7 @@ function main {
 
 	java ${LIFERAY_JAR_RUNNER_JAVA_OPTS} -jar /opt/liferay/jar-runner.jar "${@}" &
 
-	trap "kill ${!}" INT TERM
-
-	#
-	# The first wait returns as soon as the trap runs, while the application is
-	# still shutting down. The second wait blocks until it actually exits.
-	#
-
-	wait "${!}"
-
-	wait "${!}"
+	forward_signals_and_wait "${!}"
 
 	if [ -e /usr/local/bin/liferay_jar_runner_tear_down.sh ]
 	then

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /usr/local/bin/_liferay_base_common.sh
+
 function main {
 	source /usr/local/bin/set_node_version.sh
 
@@ -10,16 +12,7 @@ function main {
 
 	${LIFERAY_NODE_RUNNER_START} &
 
-	trap "kill ${!}" INT TERM
-
-	#
-	# The first wait returns as soon as the trap runs, while the application is
-	# still shutting down. The second wait blocks until it actually exits.
-	#
-
-	wait "${!}"
-
-	wait "${!}"
+	forward_signals_and_wait "${!}"
 
 	if [ -e /usr/local/bin/liferay_node_runner_tear_down.sh ]
 	then
