@@ -25,6 +25,7 @@ function main {
 		test_product_deploy_opensearch
 		test_product_get_build_profile_parameter
 		test_product_get_java_specification_version
+		test_product_get_license_app_product_id_parameters
 		test_product_is_free_tier_ignored_version
 		test_product_is_free_tier_version
 		test_product_not_add_ckeditor_license
@@ -160,6 +161,11 @@ function test_product_get_java_specification_version {
 	_test_product_get_java_specification_version "openjdk-21.0.2" "21"
 	_test_product_get_java_specification_version "zulu-17.0.18+8" "17"
 	_test_product_get_java_specification_version "zulu8" "1.8"
+}
+
+function test_product_get_license_app_product_id_parameters {
+	_test_product_get_license_app_product_id_parameters "2026.q4.0" "-Dlicense.app.product.id.CMP=f37efde7-11b1-6ad7-5c60-07bec3334db1 -Dlicense.app.product.id.DSR=23bd2e2b-c4aa-45d7-86c9-ba0e2f890bf5"
+	_test_product_get_license_app_product_id_parameters "2026.q4.0-cms-standalone" "-Dlicense.app.product.id.CMP=f37efde7-11b1-6ad7-5c60-07bec3334db1"
 }
 
 function test_product_is_free_tier_ignored_version {
@@ -314,6 +320,14 @@ function _test_product_get_java_specification_version {
 	assert_equals "$(get_java_specification_version)" "${2}"
 
 	JAVA_HOME=${_CURRENT_JAVA_HOME}
+}
+
+function _test_product_get_license_app_product_id_parameters {
+	_PRODUCT_VERSION=${1}
+
+	assert_equals \
+		"$(_get_license_app_product_id_parameters)" \
+		"${2}"
 }
 
 function _test_product_is_free_tier_ignored_version {
