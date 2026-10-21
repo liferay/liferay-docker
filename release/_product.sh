@@ -717,6 +717,17 @@ function _get_build_profile_parameter {
 	fi
 }
 
+function _get_license_app_product_id_parameters {
+	local parameters="-Dlicense.app.product.id.CMP=f37efde7-11b1-6ad7-5c60-07bec3334db1"
+
+	if ! is_cms_standalone_release
+	then
+		parameters="${parameters} -Dlicense.app.product.id.DSR=23bd2e2b-c4aa-45d7-86c9-ba0e2f890bf5"
+	fi
+
+	echo "${parameters}"
+}
+
 function _set_cpu_limit {
 	if [ "$(get_environment_type)" != "local" ]
 	then
