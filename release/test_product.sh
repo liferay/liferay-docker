@@ -26,6 +26,7 @@ function main {
 		test_product_get_build_profile_parameter
 		test_product_get_java_specification_version
 		test_product_is_free_tier_ignored_version
+		test_product_is_free_tier_version
 		test_product_not_add_ckeditor_license
 		test_product_not_clean_up_cmp_and_dsr_modules
 		test_product_not_get_build_profile_parameter
@@ -168,6 +169,19 @@ function test_product_is_free_tier_ignored_version {
 	_test_product_is_free_tier_ignored_version "2026.q1.3-lts" "true"
 }
 
+function test_product_is_free_tier_version {
+	_test_product_is_free_tier_version "2026.q1.0-lts" "false"
+	_test_product_is_free_tier_version "2026.q1.1-lts" "false"
+	_test_product_is_free_tier_version "2026.q1.2-lts" "true"
+	_test_product_is_free_tier_version "2026.q1.3-lts" "true"
+
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
+
+	_test_product_is_free_tier_version "2026.q1.2-lts" "false"
+
+	unset LIFERAY_RELEASE_CMS_STANDALONE
+}
+
 function test_product_not_add_ckeditor_license {
 	_test_product_not_add_ckeditor_license "2023.q1.0"
 	_test_product_not_add_ckeditor_license "2024.q2.0"
@@ -301,6 +315,14 @@ function _test_product_is_free_tier_ignored_version {
 
 	assert_equals \
 		"$(is_free_tier_ignored_version)" \
+		"${2}"
+}
+
+function _test_product_is_free_tier_version {
+	_PRODUCT_VERSION=${1}
+
+	assert_equals \
+		"$(is_free_tier_version)" \
 		"${2}"
 }
 
