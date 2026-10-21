@@ -152,7 +152,7 @@ function _backport_translations {
 		then
 			lc_time_run close_pull_request \
 				"head:backport-translations-${release_branch}" \
-				"liferay-release/liferay-portal-ee"
+				"liferay/liferay-portal-ee"
 		fi
 
 		lc_time_run update_translations_repository "${release_branch}" "liferay-portal-ee"
@@ -191,7 +191,7 @@ function _backport_translations {
 			lc_time_run create_pull_request \
 				"${release_branch}" \
 				"${_TEMP_BRANCH}" \
-				"liferay-release/liferay-portal-ee" \
+				"liferay/liferay-portal-ee" \
 				"LPD-105062 Backport Translations | ${release_branch}"
 
 			lc_log INFO "Created pull request for ${release_branch}."
