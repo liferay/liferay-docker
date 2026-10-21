@@ -140,6 +140,15 @@ function _backport_translations {
 	do
 		lc_log INFO "Backporting translations from master to ${release_branch}."
 
+		lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
+
+		if [ -z "$(git ls-remote upstream refs/heads/"${release_branch}")" ]
+		then
+			lc_log INFO "Skipping ${release_branch} because it does not exist in liferay/liferay-portal-ee."
+
+			continue
+		fi
+
 		if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 		then
 			lc_time_run close_pull_request \
