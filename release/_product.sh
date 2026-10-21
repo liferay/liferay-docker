@@ -397,13 +397,11 @@ function get_java_specification_version {
 }
 
 function is_free_tier_ignored_version {
-	local free_tier_ignored_versions=$(lc_get_property "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/release.properties" "free.tier.ignored.versions")
-
-	if echo "${free_tier_ignored_versions}" | grep --quiet "${_PRODUCT_VERSION}"
+	if is_cms_standalone_release
 	then
 		echo "true"
 	else
-		echo "false"
+		is_free_tier_version
 	fi
 }
 
