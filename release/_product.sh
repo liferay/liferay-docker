@@ -54,6 +54,7 @@ function add_licensing {
 		-Dext.dir=. \
 		-Dfree.tier.ignored.version="$(is_free_tier_ignored_version)" \
 		-Djava.lib.dir="${JAVA_HOME}/jre/lib" \
+		$(_get_license_app_product_id_parameters) \
 		-Dportal.dir="${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}" \
 		-Dportal.release.edition.private=true \
 		-file build-release-license.xml
