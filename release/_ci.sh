@@ -17,6 +17,8 @@ function trigger_ci_test_suite {
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 
+		local ci_slave_number
+
 		for ci_slave_number in {41..48}
 		do
 			local http_code=$( \
