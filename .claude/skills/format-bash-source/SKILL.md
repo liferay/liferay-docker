@@ -60,7 +60,7 @@ For every target file, read it and apply the rules from `.claude/CODE_STYLE.md` 
 - **Control flow**: `then` (including after `elif`) and `do` on their own line, single-bracket `[ ... ]` tests by default but `[[ ... ]]` for pattern/regex matching, `${BASH_SOURCE[0]}` comparisons, lexicographic `<`/`>` string comparisons, and numeric comparisons (`-eq`, `-ge`, etc.) — but a numeric comparison whose operator is held in a variable (`[ "${a}" "${operator}" "${b}" ]`) stays single-bracket, since `[[ ... ]]` needs a literal operator — `==` for strings, aligned multiline conditions, no parentheses around a single boolean function, variable, command, or pipeline (parentheses only for combined conditions, with `(( ))` arithmetic and awk/jq program `if (...)` left untouched).
 - **Indentation/spacing**: tabs only, single blank line between logical statements, no blank line just inside `{` / `}`.
 - **Pipelines**: long pipelines and `curl`-style commands broken across lines with `| \` continuations indented one tab, with a two-command pipeline broken only when one of its commands is; a space after `$(` when a pipeline or command is broken inside a command substitution; a compound command (`while`, `for`, `until`, `if`) ending a broken pipeline taking the continuation indent like any other stage, with its `do`/`done` (or `then`/`fi`) and body aligned to that stage rather than left at the opening statement's indent.
-- **Return codes**: named `LIFERAY_COMMON_EXIT_CODE_*` constants, quoted (but boolean functions return bare `0`/`1`); a `trap` body single-quoted with the constant quoted inside it (`trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR`).
+- **Return codes**: named `LIFERAY_COMMON_EXIT_CODE_*` constants, quoted (but boolean functions return bare `0`/`1`); a `trap` body that references a variable single-quoted with every variable quoted inside it, whatever the command (`trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR`, `trap 'kill "${pid}"' INT TERM`); a body with no variable (`trap tear_down EXIT`) needs no quotes.
 - **Comments / shared helpers**: `#`-delimited comment blocks, `lc_*` helpers over reimplementation. Do not convert between `echo` and `lc_log` — that choice is semantic and is left to the author, not the formatter.
 
 Skip `.claude/CODE_STYLE.md` itself and any non-`*.sh` file.
@@ -153,12 +153,13 @@ awk '
 # author/review, not swept or auto-converted here.
 grep -nE '(^|[^[])\[ [^]]*-(eq|ne|lt|le|gt|ge)( |\])' "${files[@]}"
 
-# A trap body must be single-quoted with the constant quoted inside it. The first grep
-# catches a double-quoted body (expands at install time); the second catches a single-quoted
-# body that left the constant unquoted. The compliant form matches neither, so every hit
-# is a violation.
-grep -nE 'trap +"[^"]*(return|exit)' "${files[@]}"
-grep -nE "trap +'[^']*(return|exit) +\\\$\{" "${files[@]}"
+# A trap body that references a variable must be single-quoted with every variable quoted
+# inside it, whatever the command (`return`, `exit`, `kill`, ...). The first grep catches a
+# double-quoted body containing a variable (expands at install time); the second catches a
+# single-quoted body that left a variable unquoted. The compliant form matches neither, so
+# every hit is a violation.
+grep -nE 'trap +"[^"]*\$' "${files[@]}"
+grep -nE "trap +'[^']*[^\"']\\\$\{" "${files[@]}"
 
 # A compound command (`while`, `for`, `until`, `if`) ending a broken pipeline keeps its
 # `do`/`then` aligned with itself. Every hit is a `do`/`then` indented less than the

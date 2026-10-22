@@ -508,9 +508,11 @@ function is_7_3_release {
 }
 ```
 
-- A `trap` body is a deferred command, so wrap it in single quotes and quote the constant inside it, not `trap "return ${LIFERAY_COMMON_EXIT_CODE_BAD}" ERR`, which expands the constant when the trap is installed rather than when it fires. This covers `exit` and every signal, not just `ERR`.
+- A `trap` body is a deferred command, so wrap it in single quotes and quote every variable inside it, not `trap "return ${LIFERAY_COMMON_EXIT_CODE_BAD}" ERR`, which expands the variable when the trap is installed rather than when it fires. This covers any command in the body (`return`, `exit`, `kill`, `rm`, a function call, …) and every signal, not just `ERR`. A body that references no variable, such as a bare function name (`trap tear_down EXIT`), needs no quotes.
 
 ```bash
+trap 'kill "${pid}"' INT TERM
+
 trap 'return "${LIFERAY_COMMON_EXIT_CODE_BAD}"' ERR
 ```
 
