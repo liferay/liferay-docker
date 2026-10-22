@@ -74,6 +74,7 @@ function tear_down {
 	unset _BUILD_DIR
 	unset _BUNDLES_DIR
 	unset _CURRENT_JAVA_HOME
+	unset _PRODUCT_VERSION
 	unset _PROJECTS_DIR
 }
 
