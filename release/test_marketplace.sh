@@ -17,6 +17,7 @@ function main {
 		test_marketplace_check_punchout2go_activation_key
 		test_marketplace_deploy_punchout2go_activation_key
 		test_marketplace_get_latest_product_virtual_settings_file_entry_json_index
+		test_marketplace_get_liferay_marketplace_product_module_regex
 	fi
 }
 
@@ -115,6 +116,12 @@ function test_marketplace_get_latest_product_virtual_settings_file_entry_json_in
 	_test_marketplace_get_latest_product_virtual_settings_file_entry_json_index "empty_version" ""
 }
 
+function test_marketplace_get_liferay_marketplace_product_module_regex {
+	_test_marketplace_get_liferay_marketplace_product_module_regex "cmp" "cmp|content.marketing.platform"
+	_test_marketplace_get_liferay_marketplace_product_module_regex "drools" "drools"
+	_test_marketplace_get_liferay_marketplace_product_module_regex "dsr" "digital.sales.room|dsr"
+}
+
 function _test_marketplace_check_punchout2go_activation_key {
 	local deployment_log_file=$(mktemp)
 
@@ -137,6 +144,10 @@ function _test_marketplace_get_latest_product_virtual_settings_file_entry_json_i
 	assert_equals \
 		"$(_get_latest_product_virtual_settings_file_entry_json_index "${product_virtual_settings_file_entries}")" \
 		"${2}"
+}
+
+function _test_marketplace_get_liferay_marketplace_product_module_regex {
+	assert_equals "$(_get_liferay_marketplace_product_module_regex "${1}")" "${2}"
 }
 
 main "${@}"
