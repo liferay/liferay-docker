@@ -32,7 +32,9 @@ function check_liferay_marketplace_products_compatibility {
 
 		declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
 			["adyen"]="f05ab2d6-1d54-c72d-988a-91fcd5669ef3"
+			["cmp"]="d85abb01-6c60-addd-0f73-6621612aae72"
 			["drools"]="15099181"
+			["dsr"]="DSR"
 			["hubspot"]="53d5501f-abd7-b579-af7f-56b8b15966d0"
 			["liferaycommerceminium4globalcss"]="ebcf98b3-9844-b783-757a-579944b18b00"
 			["liferaypaypalbatch"]="a1946869-212f-0793-d703-b623d0f149a6"
@@ -127,7 +129,7 @@ function _check_liferay_marketplace_product_compatibility {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	local modules_info=$(blade sh lb -s | grep "${product_name}")
+	local modules_info=$(blade sh lb -s | grep --extended-regexp "$(_get_liferay_marketplace_product_module_regex "${product_name}")")
 
 	if [ -z "${modules_info}" ]
 	then
@@ -175,7 +177,7 @@ function _check_liferay_marketplace_product_compatibility {
 
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
-		lc_log INFO "Module ${product_name} is compatible with release ${_PRODUCT_VERSION}. Updating list of supported versions."
+		lc_log INFO "Module ${product_name} is compatible with release ${_PRODUCT_VERSION}."
 
 		_update_product_supported_versions "${product_external_reference_code}" "${product_name}"
 	fi
@@ -496,6 +498,13 @@ function _update_product_supported_versions {
 
 	local product_external_reference_code=${1}
 	local product_name=${2}
+
+	if [ "${product_name}" == "cmp" ] || [ "${product_name}" == "dsr" ]
+	then
+		lc_log INFO "The list of supported versions should not be updated for product ${product_name}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
 
 	local product_virtual_settings_file_entries=$(_get_product_virtual_settings_file_entries_by_external_reference_code "${product_external_reference_code}")
 
