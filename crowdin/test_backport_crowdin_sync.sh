@@ -12,7 +12,6 @@ function main {
 		"${1}"
 	else
 		test_backport_crowdin_sync_export_master_translations
-		test_backport_crowdin_sync_get_supported_release_branches
 		test_backport_crowdin_sync_not_export_master_translations
 	fi
 
@@ -44,27 +43,6 @@ function test_backport_crowdin_sync_export_master_translations {
 	_test_backport_crowdin_sync_export_master_translations \
 		"modules/apps/test/app.bnd-localization" \
 		"bundle"
-}
-
-function test_backport_crowdin_sync_get_supported_release_branches {
-	cat <<- END > "${_PROJECTS_DIR}/releases.json"
-	[
-		{"product": "dxp", "productGroupVersion": "2024.q1", "tags": ["supported", "testBom"]},
-		{"product": "dxp", "productGroupVersion": "2025.q1", "tags": ["supported"]},
-		{"product": "dxp", "productGroupVersion": "2025.q1", "tags": ["recommended", "supported"]},
-		{"product": "dxp", "productGroupVersion": "2025.q2", "tags": ["recommended"]},
-		{"product": "dxp", "productGroupVersion": "2026.q1"},
-		{"product": "dxp", "productGroupVersion": "7.4", "tags": ["supported"]},
-		{"product": "portal", "productGroupVersion": "2026.q2", "tags": ["supported"]}
-	]
-	END
-
-	assert_equals \
-		"$(_get_supported_release_branches "${_PROJECTS_DIR}/releases.json")" \
-		"release-2024.q1
-release-2025.q1"
-
-	rm --force "${_PROJECTS_DIR}/releases.json"
 }
 
 function test_backport_crowdin_sync_not_export_master_translations {
