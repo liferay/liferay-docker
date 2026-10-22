@@ -26,9 +26,9 @@ function check_usage {
 	lc_check_utils gcloud || exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 
 	_DESTINATION_DIR="gs://liferay-releases/tools/ide/${LIFERAY_RELEASE_UPLOAD_DESTINATION_DIR_NAME}"
-	_SOURCE_DIR="/opt/java/jenkins/userContent/liferay-ide/${LIFERAY_RELEASE_UPLOAD_SOURCE_DIR}"
+	_SOURCE_DIR="gs://liferay-releases-candidates/liferay-ide/${LIFERAY_RELEASE_UPLOAD_SOURCE_DIR}"
 
-	if [ ! -d "${_SOURCE_DIR}" ]
+	if ! gcloud storage ls "${_SOURCE_DIR}" &> /dev/null
 	then
 		lc_log ERROR "${_SOURCE_DIR} does not exist."
 
@@ -55,7 +55,7 @@ function print_help {
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_RELEASE_UPLOAD_DESTINATION_DIR_NAME: Name of the directory under gs://liferay-releases/tools/ide to upload to. Its existing contents are deleted before uploading."
-	echo "    LIFERAY_RELEASE_UPLOAD_SOURCE_DIR: Directory relative to /opt/java/jenkins/userContent/liferay-ide to upload from"
+	echo "    LIFERAY_RELEASE_UPLOAD_SOURCE_DIR: Directory relative to gs://liferay-releases-candidates/liferay-ide to upload from"
 	echo ""
 	echo "Example: LIFERAY_RELEASE_UPLOAD_DESTINATION_DIR_NAME=4.0.1 LIFERAY_RELEASE_UPLOAD_SOURCE_DIR=4.x/202608072258 ${0}"
 
@@ -72,7 +72,7 @@ function _is_valid_destination_dir_name {
 }
 
 function _is_valid_source_dir {
-	if [[ "${1}" =~ ^[0-9A-Za-z][0-9A-Za-z._-]*(/[0-9A-Za-z][0-9A-Za-z._-]*)*/?$ ]]
+	if [[ "${1}" =~ ^[0-9A-Za-z][0-9A-Za-z._-]*(/[0-9A-Za-z][0-9A-Za-z._-]*)*$ ]]
 	then
 		return 0
 	fi
@@ -97,7 +97,7 @@ function _delete_destination_dir {
 }
 
 function _upload_files {
-	if ! gcloud storage cp --recursive "${_SOURCE_DIR}"/* "${_DESTINATION_DIR}/"
+	if ! gcloud storage cp --recursive "${_SOURCE_DIR}/*" "${_DESTINATION_DIR}/"
 	then
 		lc_log ERROR "Unable to upload ${_SOURCE_DIR} to ${_DESTINATION_DIR}."
 

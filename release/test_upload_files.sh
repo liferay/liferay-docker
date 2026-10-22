@@ -21,7 +21,7 @@ function test_upload_files_is_valid_destination_dir_name {
 
 function test_upload_files_is_valid_source_dir {
 	_test_upload_files_is_valid_source_dir "4.x/202608072258" "0"
-	_test_upload_files_is_valid_source_dir "4.x/202608072258/" "0"
+	_test_upload_files_is_valid_source_dir "4.x/202608072258/" "1"
 	_test_upload_files_is_valid_source_dir "" "1"
 	_test_upload_files_is_valid_source_dir "../../../root/.ssh" "1"
 	_test_upload_files_is_valid_source_dir "/root/.ssh" "1"
