@@ -2,6 +2,7 @@
 
 source ../_liferay_common.sh
 source ../_test_common.sh
+source ../test/_test_util.sh
 source ./backport_crowdin_sync.sh
 
 function main {
@@ -12,6 +13,7 @@ function main {
 		"${1}"
 	else
 		test_backport_crowdin_sync_export_master_translations
+		test_backport_crowdin_sync_get_supported_release_branches
 		test_backport_crowdin_sync_not_export_master_translations
 	fi
 
@@ -43,6 +45,11 @@ function test_backport_crowdin_sync_export_master_translations {
 	_test_backport_crowdin_sync_export_master_translations \
 		"modules/apps/test/app.bnd-localization" \
 		"bundle"
+}
+
+function test_backport_crowdin_sync_get_supported_release_branches {
+	_test_backport_crowdin_sync_get_supported_release_branches "2026.q1.3-lts" "release-2024.q1 release-2025.q1 release-2026.q1"
+	_test_backport_crowdin_sync_get_supported_release_branches "2026.q2.1" "release-2024.q1 release-2025.q1 release-2026.q1 release-2026.q2"
 }
 
 function test_backport_crowdin_sync_not_export_master_translations {
@@ -136,6 +143,23 @@ function _test_backport_crowdin_sync_export_master_translations {
 		"${_PROJECTS_DIR}/expected.properties"
 
 	rm --force "${_PROJECTS_DIR}/expected.properties"
+}
+
+function _test_backport_crowdin_sync_get_supported_release_branches {
+	lc_cd "$(dirname "${_CROWDIN_DIR}")/release"
+
+	LIFERAY_RELEASE_TEST_DATE="2026-06-01"
+
+	_RELEASE_ROOT_DIR=${PWD}
+
+	add_release_to_test_dependency "${1}" "test-dependencies/actual/dxp.html"
+
+	assert_equals "$(get_supported_release_branches 2> /dev/null)" "${2}"
+
+	git restore test-dependencies/actual/dxp.html
+
+	unset LIFERAY_RELEASE_TEST_DATE
+	unset _RELEASE_ROOT_DIR
 }
 
 main "${@}"
