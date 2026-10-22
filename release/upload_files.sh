@@ -62,6 +62,22 @@ function print_help {
 	exit "${LIFERAY_COMMON_EXIT_CODE_HELP}"
 }
 
+function _delete_destination_dir {
+	if ! gcloud storage ls "${_DESTINATION_DIR}" &> /dev/null
+	then
+		lc_log INFO "${_DESTINATION_DIR} does not exist."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	if ! gcloud storage rm --recursive "${_DESTINATION_DIR}"
+	then
+		lc_log ERROR "Unable to delete ${_DESTINATION_DIR}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function _is_valid_destination_dir_name {
 	if [[ "${1}" =~ ^[0-9A-Za-z][0-9A-Za-z._-]*$ ]]
 	then
@@ -78,22 +94,6 @@ function _is_valid_source_dir {
 	fi
 
 	return 1
-}
-
-function _delete_destination_dir {
-	if ! gcloud storage ls "${_DESTINATION_DIR}" &> /dev/null
-	then
-		lc_log INFO "${_DESTINATION_DIR} does not exist."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	fi
-
-	if ! gcloud storage rm --recursive "${_DESTINATION_DIR}"
-	then
-		lc_log ERROR "Unable to delete ${_DESTINATION_DIR}."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
 }
 
 function _upload_files {
