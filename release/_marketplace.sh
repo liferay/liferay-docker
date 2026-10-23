@@ -370,6 +370,23 @@ function _get_liferay_marketplace_product_module_regex {
 	fi
 }
 
+function _get_liferay_marketplace_product_names {
+	if is_first_quarterly_release
+	then
+		if is_early_product_version_than "2026.q3.0"
+		then
+			printf "%s\n" "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}" | \
+				grep --extended-regexp --invert-match "^(cmp|dsr)$" | \
+				sort --ignore-case
+		else
+			printf "%s\n" "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}" | sort --ignore-case
+		fi
+	elif is_quarterly_release && is_equals_or_later_product_version_than "2026.q3.0"
+	then
+		printf "%s\n" "cmp" "dsr"
+	fi
+}
+
 function _get_product_by_external_reference_code {
 	local product_external_reference_code=${1}
 
