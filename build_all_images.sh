@@ -22,7 +22,7 @@ function build_base_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_base_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/base.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: Base" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -47,7 +47,7 @@ function build_batch_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_batch_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/batch.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: Batch" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -263,7 +263,7 @@ function build_caddy_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_caddy_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/caddy.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: Caddy" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -288,7 +288,7 @@ function build_dynamic_rendering_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_dynamic_rendering_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/dynamic_rendering.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: Dynamic Rendering" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -313,7 +313,7 @@ function build_jar_runner_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_jar_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/jar_runner.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: JAR Runner" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -345,7 +345,7 @@ function build_jdk_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZULU_AMD64_VERSION=${latest_available_zulu_amd64_version} LIFERAY_DOCKER_ZULU_ARM64_VERSION=${latest_available_zulu_arm64_version} time ./build_"$(echo "${jdk_image_name}" | sed --regexp-extended --expression "s/-/_/g")"_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/${jdk_image_name}.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: ${jdk_friendly_name}" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -370,7 +370,7 @@ function build_job_runner_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_job_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/job_runner.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: Job Runner" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -395,7 +395,7 @@ function build_nexus_publisher_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_nexus_publisher_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/nexus_publisher.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: Nexus Publisher" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -420,7 +420,7 @@ function build_node_runner_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_node_runner_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/node_runner.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: Node Runner" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -445,7 +445,7 @@ function build_noop_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_noop_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/noop.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: NOOP" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -470,7 +470,7 @@ function build_squid_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" time ./build_squid_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/squid.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: Squid" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -498,7 +498,7 @@ function build_zabbix_server_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_version} time ./build_zabbix_server_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/zabbix_server.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: Zabbix Server" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
@@ -526,7 +526,7 @@ function build_zabbix_web_image {
 
 	LIFERAY_DOCKER_IMAGE_PLATFORMS="${LIFERAY_DOCKER_IMAGE_PLATFORMS}" LIFERAY_DOCKER_REPOSITORY="${LIFERAY_DOCKER_REPOSITORY}" LIFERAY_DOCKER_ZABBIX_VERSION=${latest_official_zabbix_server_web_interface_version} time ./build_zabbix_web_image.sh "${BUILD_ALL_IMAGES_PUSH}" | tee --append "${LIFERAY_DOCKER_LOGS_DIR}/zabbix_server_web_interface.log"
 
-	if [ "${PIPESTATUS[0]}" -gt 0 ]
+	if [[ "${PIPESTATUS[0]}" -gt 0 ]]
 	then
 		echo "FAILED: Zabbix Web" >> "${LIFERAY_DOCKER_LOGS_DIR}/results"
 
