@@ -94,7 +94,10 @@ function _run_release_tests {
 					-type f | xargs --max-args=1 /bin/bash
 			done
 
-			/bin/bash test_build_release.sh
+			if echo "${1}" | grep --extended-regexp --quiet "^release/.*\.sh$"
+			then
+				/bin/bash test_build_release.sh
+			fi
 		fi
 	)
 }
