@@ -378,7 +378,7 @@ function _get_liferay_marketplace_product_module_regex {
 }
 
 function _get_liferay_marketplace_product_names {
-	if is_first_quarterly_release
+	if is_first_quarterly_release && ! is_cms_standalone_release
 	then
 		if is_early_product_version_than "2026.q3.0"
 		then
@@ -390,7 +390,12 @@ function _get_liferay_marketplace_product_names {
 		fi
 	elif is_quarterly_release && is_equals_or_later_product_version_than "2026.q3.0"
 	then
-		printf "%s\n" "cmp" "dsr"
+		if is_cms_standalone_release
+		then
+			printf "%s\n" "cmp"
+		else
+			printf "%s\n" "cmp" "dsr"
+		fi
 	fi
 }
 
