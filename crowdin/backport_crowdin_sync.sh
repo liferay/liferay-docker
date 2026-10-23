@@ -20,11 +20,11 @@ function check_usage {
 }
 
 function export_master_translations {
-	local release_branch=${1}
+	local supported_release_branch=${1}
 
 	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
-	lc_log INFO "Exporting the translations from master that can be backported to ${release_branch}."
+	lc_log INFO "Exporting the translations from master that can be backported to ${supported_release_branch}."
 
 	local source_file
 
@@ -104,13 +104,13 @@ function main {
 }
 
 function set_up_branch {
-	local release_branch=${1}
+	local supported_release_branch=${1}
 
-	_TEMP_BRANCH="backport-translations-${release_branch}-$(date "+%Y%m%d%H%M%S")"
+	_TEMP_BRANCH="backport-translations-${supported_release_branch}-$(date "+%Y%m%d%H%M%S")"
 
 	lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
-	lc_log INFO "Creating branch ${_TEMP_BRANCH} from ${release_branch}."
+	lc_log INFO "Creating branch ${_TEMP_BRANCH} from ${supported_release_branch}."
 
 	git checkout -b "${_TEMP_BRANCH}"
 
@@ -123,28 +123,28 @@ function set_up_branch {
 }
 
 function _backport_translations {
-	local release_branches
+	local supported_release_branches
 
-	release_branches=$(get_supported_release_branches)
+	supported_release_branches=$(get_supported_release_branches)
 
 	if [[ "${?}" -ne 0 ]]
 	then
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	lc_log INFO "Backporting translations to the supported release branches: ${release_branches}."
+	lc_log INFO "Backporting translations to the supported release branches: ${supported_release_branches}."
 
-	local release_branch
+	local supported_release_branch
 
-	for release_branch in ${release_branches}
+	for supported_release_branch in ${supported_release_branches}
 	do
-		lc_log INFO "Backporting translations from master to ${release_branch}."
+		lc_log INFO "Backporting translations from master to ${supported_release_branch}."
 
 		lc_cd "${_PROJECTS_DIR}/liferay-portal-ee"
 
-		if [ -z "$(git ls-remote upstream refs/heads/"${release_branch}")" ]
+		if [ -z "$(git ls-remote upstream refs/heads/"${supported_release_branch}")" ]
 		then
-			lc_log INFO "Skipping ${release_branch} because it does not exist in liferay/liferay-portal-ee."
+			lc_log INFO "Skipping ${supported_release_branch} because it does not exist in liferay/liferay-portal-ee."
 
 			continue
 		fi
@@ -152,33 +152,33 @@ function _backport_translations {
 		if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 		then
 			lc_time_run close_pull_request \
-				"head:backport-translations-${release_branch}" \
+				"head:backport-translations-${supported_release_branch}" \
 				"liferay/liferay-portal-ee"
 		fi
 
-		lc_time_run update_translations_repository "${release_branch}" "liferay-portal-ee"
+		lc_time_run update_translations_repository "${supported_release_branch}" "liferay-portal-ee"
 
 		lc_time_run check_translations_sync \
-			"${release_branch}" \
+			"${supported_release_branch}" \
 			"LPD-105062 Backport Translations" \
 			"liferay-portal-ee"
 
 		if [ "${_TRANSLATIONS_SYNCED}" != "true" ]
 		then
-			lc_log INFO "Skipping ${release_branch} because the latest translations backport was not synced to liferay/liferay-portal-ee."
+			lc_log INFO "Skipping ${supported_release_branch} because the latest translations backport was not synced to liferay/liferay-portal-ee."
 
 			continue
 		fi
 
-		lc_time_run set_up_branch "${release_branch}"
+		lc_time_run set_up_branch "${supported_release_branch}"
 
-		lc_time_run export_master_translations "${release_branch}"
+		lc_time_run export_master_translations "${supported_release_branch}"
 
 		lc_time_run merge_and_commit_translations "LPD-105062 Backport Translations"
 
 		if [ "${_CREATE_PULL_REQUEST}" != "true" ]
 		then
-			lc_log INFO "Skipping pull request creation for ${release_branch} because there are no new translations."
+			lc_log INFO "Skipping pull request creation for ${supported_release_branch} because there are no new translations."
 
 			continue
 		fi
@@ -190,12 +190,12 @@ function _backport_translations {
 				"liferay-portal-ee"
 
 			lc_time_run create_pull_request \
-				"${release_branch}" \
+				"${supported_release_branch}" \
 				"${_TEMP_BRANCH}" \
 				"liferay/liferay-portal-ee" \
-				"LPD-105062 Backport Translations | ${release_branch}"
+				"LPD-105062 Backport Translations | ${supported_release_branch}"
 
-			lc_log INFO "Created pull request for ${release_branch}."
+			lc_log INFO "Created pull request for ${supported_release_branch}."
 		fi
 	done
 }
