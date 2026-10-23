@@ -12,7 +12,26 @@ function check_liferay_marketplace_products_compatibility {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if ! is_first_quarterly_release
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
+	then
+		declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
+			["adyen"]="f05ab2d6-1d54-c72d-988a-91fcd5669ef3"
+			["cmp"]="d85abb01-6c60-addd-0f73-6621612aae72"
+			["drools"]="15099181"
+			["dsr"]="DSR"
+			["hubspot"]="53d5501f-abd7-b579-af7f-56b8b15966d0"
+			["liferaycommerceminium4globalcss"]="ebcf98b3-9844-b783-757a-579944b18b00"
+			["liferaypaypalbatch"]="a1946869-212f-0793-d703-b623d0f149a6"
+			["liferayupscommerceshippingengine"]="f1cb4b5e-fbdd-7f70-df5d-9f1a736784b2"
+			["opensearch"]="ea19fdc8-b908-690d-9f90-15edcdd23a87"
+			["punchout"]="175496027"
+			["stripe"]="6a02a832-083b-f08c-888a-0a59d7c09119"
+		)
+	fi
+
+	local liferay_marketplace_product_names=$(_get_liferay_marketplace_product_names)
+
+	if [ -z "${liferay_marketplace_product_names}" ]
 	then
 		lc_log INFO "The compatibility of Liferay Marketplace products should not be checked on the ${_PRODUCT_VERSION} release."
 
@@ -29,23 +48,11 @@ function check_liferay_marketplace_products_compatibility {
 		fi
 
 		mkdir --parents "${_BUILD_DIR}/marketplace"
-
-		declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
-			["adyen"]="f05ab2d6-1d54-c72d-988a-91fcd5669ef3"
-			["cmp"]="d85abb01-6c60-addd-0f73-6621612aae72"
-			["drools"]="15099181"
-			["dsr"]="DSR"
-			["hubspot"]="53d5501f-abd7-b579-af7f-56b8b15966d0"
-			["liferaycommerceminium4globalcss"]="ebcf98b3-9844-b783-757a-579944b18b00"
-			["liferaypaypalbatch"]="a1946869-212f-0793-d703-b623d0f149a6"
-			["liferayupscommerceshippingengine"]="f1cb4b5e-fbdd-7f70-df5d-9f1a736784b2"
-			["opensearch"]="ea19fdc8-b908-690d-9f90-15edcdd23a87"
-			["punchout"]="175496027"
-			["stripe"]="6a02a832-083b-f08c-888a-0a59d7c09119"
-		)
 	fi
 
-	for liferay_marketplace_product_name in $(printf "%s\n" "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}" | sort --ignore-case)
+	local liferay_marketplace_product_name
+
+	for liferay_marketplace_product_name in ${liferay_marketplace_product_names}
 	do
 		if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 		then
@@ -89,7 +96,7 @@ function check_liferay_marketplace_products_compatibility {
 
 	start_tomcat "print-startup-logs" >> "${_LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
 
-	for liferay_marketplace_product_name in $(printf "%s\n" "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}" | sort --ignore-case)
+	for liferay_marketplace_product_name in ${liferay_marketplace_product_names}
 	do
 		_check_liferay_marketplace_product_compatibility "${LIFERAY_MARKETPLACE_PRODUCTS[${liferay_marketplace_product_name}]}" "${liferay_marketplace_product_name}"
 
