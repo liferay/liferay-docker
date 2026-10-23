@@ -19,6 +19,7 @@ function main {
 		test_marketplace_get_latest_product_virtual_settings_file_entry_json_index
 		test_marketplace_get_liferay_marketplace_product_module_regex
 		test_marketplace_get_liferay_marketplace_product_names
+		test_marketplace_not_check_liferay_marketplace_products_compatibility
 	fi
 }
 
@@ -141,6 +142,15 @@ function test_marketplace_get_liferay_marketplace_product_names {
 	unset _PRODUCT_VERSION
 }
 
+function test_marketplace_not_check_liferay_marketplace_products_compatibility {
+	_test_marketplace_not_check_liferay_marketplace_products_compatibility "2025.q1.20-lts"
+	_test_marketplace_not_check_liferay_marketplace_products_compatibility "2026.q2.5"
+	_test_marketplace_not_check_liferay_marketplace_products_compatibility "7.4.13-u154"
+	_test_marketplace_not_check_liferay_marketplace_products_compatibility "7.4.13-u154-cms-standalone"
+
+	unset _PRODUCT_VERSION
+}
+
 function _test_marketplace_check_punchout2go_activation_key {
 	local deployment_log_file=$(mktemp)
 
@@ -173,6 +183,14 @@ function _test_marketplace_get_liferay_marketplace_product_names {
 	_PRODUCT_VERSION=${1}
 
 	assert_equals "$(_get_liferay_marketplace_product_names | xargs)" "${2}"
+}
+
+function _test_marketplace_not_check_liferay_marketplace_products_compatibility {
+	_PRODUCT_VERSION=${1}
+
+	check_liferay_marketplace_products_compatibility &> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 main "${@}"
