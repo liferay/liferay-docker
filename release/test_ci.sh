@@ -57,10 +57,13 @@ function test_ci_get_test_portal_release_parameters {
 	)"
 
 	LIFERAY_RELEASE_CMS_STANDALONE="true"
+	_PRODUCT_VERSION="7.4.13-u154-cms-standalone"
+
+	release_url="https://storage.cloud.google.com/liferay-releases-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 
 	_test_ci_get_test_portal_release_parameters "$(cat <<- END
 		--data-urlencode TEST_PORTAL_RELEASE_STANDALONE=true
-		--data-urlencode TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z
+		--data-urlencode TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}liferay-cms-tomcat-7.4.13-u154-cms-standalone-${_BUILD_TIMESTAMP}.7z
 		END
 	)"
 

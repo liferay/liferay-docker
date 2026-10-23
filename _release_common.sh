@@ -216,6 +216,17 @@ function get_today {
 	fi
 }
 
+function get_tomcat_bundle_name {
+	local product_version=$(_get_product_version "${1}")
+
+	if is_cms_standalone_release "${product_version}"
+	then
+		echo "liferay-cms-tomcat-${product_version}-${_BUILD_TIMESTAMP}"
+	else
+		echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${product_version}-${_BUILD_TIMESTAMP}"
+	fi
+}
+
 function is_7_3_release {
 	if [[ "$(_get_product_version "${1}")" == 7.3* ]]
 	then

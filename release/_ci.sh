@@ -82,7 +82,7 @@ function _get_test_portal_release_parameters {
 	if is_cms_standalone_release
 	then
 		echo "--data-urlencode TEST_PORTAL_RELEASE_STANDALONE=true"
-		echo "--data-urlencode TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}liferay-dxp-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z"
+		echo "--data-urlencode TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}$(get_tomcat_bundle_name).7z"
 	else
 		echo "--data-urlencode TEST_PORTAL_RELEASE_OSGI_URL=${release_url}liferay-dxp-osgi-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"
 		echo "--data-urlencode TEST_PORTAL_RELEASE_SQL_URL=${release_url}liferay-dxp-sql-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.zip"

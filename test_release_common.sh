@@ -27,6 +27,7 @@ function main {
 		test_release_common_get_release_year
 		test_release_common_get_target_platform_version
 		test_release_common_get_today
+		test_release_common_get_tomcat_bundle_name
 		test_release_common_is_7_3_release
 		test_release_common_is_7_3_u_release
 		test_release_common_is_7_4_release
@@ -209,6 +210,24 @@ function test_release_common_get_target_platform_version {
 function test_release_common_get_today {
 	_test_release_common_get_today "2026-08-13" "2026-08-13"
 	_test_release_common_get_today "" "$(date +%Y-%m-%d)"
+}
+
+function test_release_common_get_tomcat_bundle_name {
+	LIFERAY_RELEASE_PRODUCT_NAME="dxp"
+	_BUILD_TIMESTAMP="1234567890"
+
+	_test_release_common_get_tomcat_bundle_name "2026.q1.0-lts" "liferay-dxp-tomcat-2026.q1.0-lts-1234567890"
+	_test_release_common_get_tomcat_bundle_name "7.4.13-u154" "liferay-dxp-tomcat-7.4.13-u154-1234567890"
+	_test_release_common_get_tomcat_bundle_name "7.4.13-u154-cms-standalone" "liferay-cms-tomcat-7.4.13-u154-cms-standalone-1234567890"
+
+	LIFERAY_RELEASE_CMS_STANDALONE="true"
+
+	_test_release_common_get_tomcat_bundle_name "7.4.13-u154" "liferay-cms-tomcat-7.4.13-u154-1234567890"
+
+	unset LIFERAY_RELEASE_CMS_STANDALONE
+	unset LIFERAY_RELEASE_PRODUCT_NAME
+	unset _BUILD_TIMESTAMP
+	unset _PRODUCT_VERSION
 }
 
 function test_release_common_is_7_3_release {
@@ -487,6 +506,12 @@ function _test_release_common_get_today {
 	assert_equals "$(get_today)" "${2}"
 
 	unset LIFERAY_RELEASE_TEST_DATE
+}
+
+function _test_release_common_get_tomcat_bundle_name {
+	_PRODUCT_VERSION=${1}
+
+	assert_equals "$(get_tomcat_bundle_name)" "${2}"
 }
 
 function _test_release_common_is_7_3_release {

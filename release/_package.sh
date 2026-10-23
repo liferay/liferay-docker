@@ -363,7 +363,7 @@ function _package_portal_dependencies {
 }
 
 function _package_tomcat_bundles {
-	local bundle_name="liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${1}-${_BUILD_TIMESTAMP}"
+	local bundle_name=$(get_tomcat_bundle_name "${1}")
 	local package_dir_name=$(_get_package_dir_name)
 
 	7z a "${_BUILD_DIR}/release/${bundle_name}.7z" "${package_dir_name}"
