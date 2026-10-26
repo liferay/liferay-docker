@@ -381,6 +381,28 @@ function _get_latest_product_virtual_settings_file_entry_json_index {
 	echo "${latest_product_virtual_settings_file_entry_json_index}"
 }
 
+function _get_liferay_marketplace_product_activation_key {
+	local product_name=${1}
+
+	local activation_key_year=$(date --date "$(get_today)" +%Y)
+
+	if [ "${product_name}" == "cmp" ]
+	then
+		_get_cmp_activation_key "${activation_key_year}"
+	elif [ "${product_name}" == "dsr" ]
+	then
+		_get_dsr_activation_key "${activation_key_year}"
+	elif [ "${product_name}" == "punchout" ]
+	then
+		if [[ "$(date --date "$(get_today)" +%-m)" -lt 4 ]]
+		then
+			activation_key_year=$((activation_key_year - 1))
+		fi
+
+		_get_punchout2go_activation_key "${activation_key_year}"
+	fi
+}
+
 function _get_liferay_marketplace_product_activation_key_name {
 	local product_name=${1}
 
