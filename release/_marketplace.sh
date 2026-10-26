@@ -363,6 +363,21 @@ function _get_latest_product_virtual_settings_file_entry_json_index {
 	echo "${latest_product_virtual_settings_file_entry_json_index}"
 }
 
+function _get_liferay_marketplace_product_activation_key_name {
+	local product_name=${1}
+
+	if [ "${product_name}" == "cmp" ]
+	then
+		echo "Content Marketing Platform"
+	elif [ "${product_name}" == "dsr" ]
+	then
+		echo "Digital Sales Room"
+	elif [ "${product_name}" == "punchout" ]
+	then
+		echo "Liferay Commerce Connector to PunchOut2Go"
+	fi
+}
+
 function _get_liferay_marketplace_product_module_regex {
 	local product_name=${1}
 
