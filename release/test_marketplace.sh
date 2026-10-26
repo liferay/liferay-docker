@@ -15,7 +15,7 @@ function main {
 	else
 		test_marketplace_check_liferay_marketplace_products_compatibility
 		test_marketplace_check_punchout2go_activation_key
-		test_marketplace_deploy_punchout2go_activation_key
+		test_marketplace_deploy_liferay_marketplace_product_activation_key
 		test_marketplace_get_cmp_activation_key
 		test_marketplace_get_dsr_activation_key
 		test_marketplace_get_latest_product_virtual_settings_file_entry_json_index
@@ -24,6 +24,7 @@ function main {
 		test_marketplace_get_liferay_marketplace_product_module_regex
 		test_marketplace_get_liferay_marketplace_product_names
 		test_marketplace_not_check_liferay_marketplace_products_compatibility
+		test_marketplace_not_deploy_liferay_marketplace_product_activation_key
 	fi
 }
 
@@ -89,31 +90,28 @@ function test_marketplace_check_punchout2go_activation_key {
 		"Unable to resolve com.liferay.commerce.punchout.api: This application does not have a valid license" "1"
 }
 
-function test_marketplace_deploy_punchout2go_activation_key {
-	local activation_key_year=$(date +%Y)
-
-	if [[ "$(date +%-m)" -lt 4 ]]
-	then
-		activation_key_year=$((activation_key_year - 1))
-	fi
-
+function test_marketplace_deploy_liferay_marketplace_product_activation_key {
 	local activation_key_directory=$(mktemp --directory)
-	local activation_key_file="${activation_key_directory}/activation-key-punchout2go-${activation_key_year}-04-01.xml"
 
-	echo "<license/>" > "${activation_key_file}"
+	echo "<license/>" > "${activation_key_directory}/activation-key-cmp-2026.xml"
+	echo "<license/>" > "${activation_key_directory}/activation-key-dsr-2026.xml"
+	echo "<license/>" > "${activation_key_directory}/activation-key-punchout2go-2026-04-01.xml"
 
-	export "LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_${activation_key_year}=${activation_key_file}"
+	LIFERAY_CMP_ACTIVATION_KEY_2026="${activation_key_directory}/activation-key-cmp-2026.xml"
+	LIFERAY_DSR_ACTIVATION_KEY_2026="${activation_key_directory}/activation-key-dsr-2026.xml"
+	LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2026="${activation_key_directory}/activation-key-punchout2go-2026-04-01.xml"
+	LIFERAY_RELEASE_TEST_DATE="2026-10-26"
 
-	_deploy_punchout2go_activation_key &> /dev/null
+	_test_marketplace_deploy_liferay_marketplace_product_activation_key "cmp" "activation-key-cmp-2026.xml"
+	_test_marketplace_deploy_liferay_marketplace_product_activation_key "dsr" "activation-key-dsr-2026.xml"
+	_test_marketplace_deploy_liferay_marketplace_product_activation_key "punchout" "activation-key-punchout2go-2026-04-01.xml"
 
-	assert_equals \
-		"${?}" "0" \
-		"$(ls -1 "${_BUNDLES_DIR}/deploy/activation-key-punchout2go-${activation_key_year}-04-01.xml" | wc --lines)" "1"
-
-	rm --force "${_BUNDLES_DIR}/deploy/activation-key-punchout2go-${activation_key_year}-04-01.xml"
 	rm --force --recursive "${activation_key_directory}"
 
-	unset "LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_${activation_key_year}"
+	unset LIFERAY_CMP_ACTIVATION_KEY_2026
+	unset LIFERAY_DSR_ACTIVATION_KEY_2026
+	unset LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2026
+	unset LIFERAY_RELEASE_TEST_DATE
 }
 
 function test_marketplace_get_cmp_activation_key {
@@ -199,6 +197,17 @@ function test_marketplace_not_check_liferay_marketplace_products_compatibility {
 	unset _PRODUCT_VERSION
 }
 
+function test_marketplace_not_deploy_liferay_marketplace_product_activation_key {
+	LIFERAY_CMP_ACTIVATION_KEY_2026=""
+	LIFERAY_RELEASE_TEST_DATE="2026-10-26"
+
+	_test_marketplace_not_deploy_liferay_marketplace_product_activation_key "cmp" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	_test_marketplace_not_deploy_liferay_marketplace_product_activation_key "drools" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+
+	unset LIFERAY_CMP_ACTIVATION_KEY_2026
+	unset LIFERAY_RELEASE_TEST_DATE
+}
+
 function _test_marketplace_check_punchout2go_activation_key {
 	local deployment_log_file=$(mktemp)
 
@@ -213,6 +222,16 @@ function _test_marketplace_check_punchout2go_activation_key {
 	rm --force "${deployment_log_file}"
 
 	unset _LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE
+}
+
+function _test_marketplace_deploy_liferay_marketplace_product_activation_key {
+	_deploy_liferay_marketplace_product_activation_key "${1}" &> /dev/null
+
+	assert_equals \
+		"${?}" "${LIFERAY_COMMON_EXIT_CODE_OK}" \
+		"$(ls -1 "${_BUNDLES_DIR}/deploy/${2}" | wc --lines)" "1"
+
+	rm --force "${_BUNDLES_DIR}/deploy/${2}"
 }
 
 function _test_marketplace_get_cmp_activation_key {
@@ -259,6 +278,12 @@ function _test_marketplace_not_check_liferay_marketplace_products_compatibility 
 	check_liferay_marketplace_products_compatibility &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+}
+
+function _test_marketplace_not_deploy_liferay_marketplace_product_activation_key {
+	_deploy_liferay_marketplace_product_activation_key "${1}" &> /dev/null
+
+	assert_equals "${?}" "${2}"
 }
 
 main "${@}"
