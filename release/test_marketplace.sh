@@ -13,8 +13,8 @@ function main {
 	then
 		"${1}"
 	else
+		test_marketplace_check_liferay_marketplace_product_activation_key
 		test_marketplace_check_liferay_marketplace_products_compatibility
-		test_marketplace_check_punchout2go_activation_key
 		test_marketplace_deploy_liferay_marketplace_product_activation_key
 		test_marketplace_get_cmp_activation_key
 		test_marketplace_get_dsr_activation_key
@@ -71,6 +71,21 @@ function tear_down {
 	unset _RELEASE_ROOT_DIR
 }
 
+function test_marketplace_check_liferay_marketplace_product_activation_key {
+	_test_marketplace_check_liferay_marketplace_product_activation_key \
+		"" "drools" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_marketplace_check_liferay_marketplace_product_activation_key \
+		"Content Marketing Platform license validation passed" "cmp" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_marketplace_check_liferay_marketplace_product_activation_key \
+		"Digital Sales Room license validation passed" "dsr" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_marketplace_check_liferay_marketplace_product_activation_key \
+		"License verification failed for com.liferay.headless.cmp.api_2.2.0 [88]: This application does not have a valid license" "cmp" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	_test_marketplace_check_liferay_marketplace_product_activation_key \
+		"Liferay Commerce Connector to PunchOut2Go license validation passed" "punchout" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_marketplace_check_liferay_marketplace_product_activation_key \
+		"Unable to resolve com.liferay.commerce.punchout.api: This application does not have a valid license" "punchout" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+}
+
 function test_marketplace_check_liferay_marketplace_products_compatibility {
 	declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
 		["liferaycommerceminium4globalcss"]="bee3adc0-891c-5828-c4f6-3d244135c972"
@@ -81,13 +96,6 @@ function test_marketplace_check_liferay_marketplace_products_compatibility {
 	assert_equals \
 		"${?}" "0" \
 		"$(ls -1 "${_BUNDLES_DIR}/osgi/modules/liferaycommerceminium4globalcss.zip" | wc --lines)" "1"
-}
-
-function test_marketplace_check_punchout2go_activation_key {
-	_test_marketplace_check_punchout2go_activation_key \
-		"Liferay Commerce Connector to PunchOut2Go license validation passed" "0"
-	_test_marketplace_check_punchout2go_activation_key \
-		"Unable to resolve com.liferay.commerce.punchout.api: This application does not have a valid license" "1"
 }
 
 function test_marketplace_deploy_liferay_marketplace_product_activation_key {
@@ -208,16 +216,16 @@ function test_marketplace_not_deploy_liferay_marketplace_product_activation_key 
 	unset LIFERAY_RELEASE_TEST_DATE
 }
 
-function _test_marketplace_check_punchout2go_activation_key {
+function _test_marketplace_check_liferay_marketplace_product_activation_key {
 	local deployment_log_file=$(mktemp)
 
 	export _LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE=${deployment_log_file}
 
 	echo "${1}" > "${deployment_log_file}"
 
-	_check_punchout2go_activation_key &> /dev/null
+	_check_liferay_marketplace_product_activation_key "${2}" &> /dev/null
 
-	assert_equals "${?}" "${2}"
+	assert_equals "${?}" "${3}"
 
 	rm --force "${deployment_log_file}"
 
