@@ -16,6 +16,8 @@ function main {
 		test_marketplace_check_liferay_marketplace_products_compatibility
 		test_marketplace_check_punchout2go_activation_key
 		test_marketplace_deploy_punchout2go_activation_key
+		test_marketplace_get_cmp_activation_key
+		test_marketplace_get_dsr_activation_key
 		test_marketplace_get_latest_product_virtual_settings_file_entry_json_index
 		test_marketplace_get_liferay_marketplace_product_activation_key_name
 		test_marketplace_get_liferay_marketplace_product_module_regex
@@ -113,6 +115,24 @@ function test_marketplace_deploy_punchout2go_activation_key {
 	unset "LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_${activation_key_year}"
 }
 
+function test_marketplace_get_cmp_activation_key {
+	LIFERAY_CMP_ACTIVATION_KEY_2026="activation-key-cmp-2026.xml"
+
+	_test_marketplace_get_cmp_activation_key "2026" "activation-key-cmp-2026.xml"
+	_test_marketplace_get_cmp_activation_key "2027" ""
+
+	unset LIFERAY_CMP_ACTIVATION_KEY_2026
+}
+
+function test_marketplace_get_dsr_activation_key {
+	LIFERAY_DSR_ACTIVATION_KEY_2026="activation-key-dsr-2026.xml"
+
+	_test_marketplace_get_dsr_activation_key "2026" "activation-key-dsr-2026.xml"
+	_test_marketplace_get_dsr_activation_key "2027" ""
+
+	unset LIFERAY_DSR_ACTIVATION_KEY_2026
+}
+
 function test_marketplace_get_latest_product_virtual_settings_file_entry_json_index {
 	_test_marketplace_get_latest_product_virtual_settings_file_entry_json_index "2026.Q2" "2"
 	_test_marketplace_get_latest_product_virtual_settings_file_entry_json_index "7.4" "2"
@@ -173,6 +193,14 @@ function _test_marketplace_check_punchout2go_activation_key {
 	rm --force "${deployment_log_file}"
 
 	unset _LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE
+}
+
+function _test_marketplace_get_cmp_activation_key {
+	assert_equals "$(_get_cmp_activation_key "${1}")" "${2}"
+}
+
+function _test_marketplace_get_dsr_activation_key {
+	assert_equals "$(_get_dsr_activation_key "${1}")" "${2}"
 }
 
 function _test_marketplace_get_latest_product_virtual_settings_file_entry_json_index {
