@@ -11,7 +11,7 @@ function check_usage {
 
 	if ! _is_valid_upload_destination_dir_name "${LIFERAY_RELEASE_UPLOAD_DESTINATION_DIR_NAME}"
 	then
-		lc_log ERROR "\${LIFERAY_RELEASE_UPLOAD_DESTINATION_DIR_NAME} must only contain letters, numbers, \".\", \"_\", and \"-\", and must start with a letter or number."
+		lc_log ERROR "\${LIFERAY_RELEASE_UPLOAD_DESTINATION_DIR_NAME} must only contain letters, numbers, \".\", \"_\", and \"-\", must start with a letter or number, and cannot be \"latest\"."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
@@ -35,6 +35,7 @@ function check_usage {
 	fi
 
 	_DESTINATION_DIR="gs://liferay-releases/tools/ide/${LIFERAY_RELEASE_UPLOAD_DESTINATION_DIR_NAME}"
+	_LATEST_DIR="gs://liferay-releases/tools/ide/latest"
 }
 
 function main {
@@ -48,6 +49,8 @@ function main {
 	lc_time_run _delete_destination_dir "${_DESTINATION_DIR}"
 
 	lc_time_run _upload_files "${_SOURCE_DIR}" "${_DESTINATION_DIR}"
+
+	lc_time_run _update_latest_dir
 }
 
 function print_help {
@@ -56,6 +59,7 @@ function print_help {
 	echo "The script reads the following environment variables:"
 	echo ""
 	echo "    LIFERAY_RELEASE_UPLOAD_DESTINATION_DIR_NAME: Name of the directory under gs://liferay-releases/tools/ide to upload to. Its existing contents are deleted before uploading."
+	echo "    LIFERAY_RELEASE_UPLOAD_LATEST (optional): Set this to \"true\" to replace the contents of gs://liferay-releases/tools/ide/latest with this release"
 	echo "    LIFERAY_RELEASE_UPLOAD_SOURCE_DIR: Directory relative to gs://liferay-releases-candidates/liferay-ide to upload from"
 	echo ""
 	echo "Example: LIFERAY_RELEASE_UPLOAD_DESTINATION_DIR_NAME=4.0.1 LIFERAY_RELEASE_UPLOAD_SOURCE_DIR=4.x/202608072258 ${0}"
@@ -80,7 +84,7 @@ function _delete_destination_dir {
 }
 
 function _is_valid_upload_destination_dir_name {
-	if [[ "${1}" =~ ^[0-9A-Za-z][0-9A-Za-z._-]*$ ]]
+	if [[ "${1}" =~ ^[0-9A-Za-z][0-9A-Za-z._-]*$ ]] && [ "${1}" != "latest" ]
 	then
 		return 0
 	fi
@@ -95,6 +99,24 @@ function _is_valid_upload_source_dir {
 	fi
 
 	return 1
+}
+
+function _update_latest_dir {
+	if [ "${LIFERAY_RELEASE_UPLOAD_LATEST}" != "true" ]
+	then
+		lc_log INFO "Set the environment variable LIFERAY_RELEASE_UPLOAD_LATEST to \"true\" to enable."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
+	_delete_destination_dir "${_LATEST_DIR}"
+
+	if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	_upload_files "${_DESTINATION_DIR}" "${_LATEST_DIR}"
 }
 
 function _upload_files {
