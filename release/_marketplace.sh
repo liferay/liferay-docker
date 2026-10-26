@@ -334,6 +334,24 @@ function _download_product_by_external_reference_code {
 	fi
 }
 
+function _get_cmp_activation_key {
+	local activation_key_year=${1}
+
+	if [[ "${activation_key_year}" -eq 2026 ]]
+	then
+		echo "${LIFERAY_CMP_ACTIVATION_KEY_2026}"
+	fi
+}
+
+function _get_dsr_activation_key {
+	local activation_key_year=${1}
+
+	if [[ "${activation_key_year}" -eq 2026 ]]
+	then
+		echo "${LIFERAY_DSR_ACTIVATION_KEY_2026}"
+	fi
+}
+
 function _get_latest_product_virtual_settings_file_entry_json_index {
 	local product_virtual_settings_file_entries=${1}
 
