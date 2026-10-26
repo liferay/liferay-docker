@@ -45,7 +45,7 @@ function main {
 
 	check_usage
 
-	lc_time_run _delete_destination_dir
+	lc_time_run _delete_destination_dir "${_DESTINATION_DIR}"
 
 	lc_time_run _upload_files
 }
@@ -64,16 +64,16 @@ function print_help {
 }
 
 function _delete_destination_dir {
-	if ! gcloud storage ls "${_DESTINATION_DIR}" &> /dev/null
+	if ! gcloud storage ls "${1}" &> /dev/null
 	then
-		lc_log INFO "${_DESTINATION_DIR} does not exist."
+		lc_log INFO "${1} does not exist."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if ! gcloud storage rm --recursive "${_DESTINATION_DIR}"
+	if ! gcloud storage rm --recursive "${1}"
 	then
-		lc_log ERROR "Unable to delete ${_DESTINATION_DIR}."
+		lc_log ERROR "Unable to delete ${1}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
