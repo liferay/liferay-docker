@@ -19,6 +19,7 @@ function main {
 		test_marketplace_get_cmp_activation_key
 		test_marketplace_get_dsr_activation_key
 		test_marketplace_get_latest_product_virtual_settings_file_entry_json_index
+		test_marketplace_get_liferay_marketplace_product_activation_key
 		test_marketplace_get_liferay_marketplace_product_activation_key_name
 		test_marketplace_get_liferay_marketplace_product_module_regex
 		test_marketplace_get_liferay_marketplace_product_names
@@ -139,6 +140,25 @@ function test_marketplace_get_latest_product_virtual_settings_file_entry_json_in
 	_test_marketplace_get_latest_product_virtual_settings_file_entry_json_index "empty_version" ""
 }
 
+function test_marketplace_get_liferay_marketplace_product_activation_key {
+	LIFERAY_CMP_ACTIVATION_KEY_2026="activation-key-cmp-2026.xml"
+	LIFERAY_DSR_ACTIVATION_KEY_2026="activation-key-dsr-2026.xml"
+	LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2026="activation-key-punchout2go-2026-04-01.xml"
+	LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2027="activation-key-punchout2go-2027-04-01.xml"
+
+	_test_marketplace_get_liferay_marketplace_product_activation_key "2026-10-26" "cmp" "activation-key-cmp-2026.xml"
+	_test_marketplace_get_liferay_marketplace_product_activation_key "2026-10-26" "drools" ""
+	_test_marketplace_get_liferay_marketplace_product_activation_key "2026-10-26" "dsr" "activation-key-dsr-2026.xml"
+	_test_marketplace_get_liferay_marketplace_product_activation_key "2027-01-01" "cmp" ""
+	_test_marketplace_get_liferay_marketplace_product_activation_key "2027-03-31" "punchout" "activation-key-punchout2go-2026-04-01.xml"
+	_test_marketplace_get_liferay_marketplace_product_activation_key "2027-04-01" "punchout" "activation-key-punchout2go-2027-04-01.xml"
+
+	unset LIFERAY_CMP_ACTIVATION_KEY_2026
+	unset LIFERAY_DSR_ACTIVATION_KEY_2026
+	unset LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2026
+	unset LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2027
+}
+
 function test_marketplace_get_liferay_marketplace_product_activation_key_name {
 	_test_marketplace_get_liferay_marketplace_product_activation_key_name "cmp" "Content Marketing Platform"
 	_test_marketplace_get_liferay_marketplace_product_activation_key_name "drools" ""
@@ -209,6 +229,14 @@ function _test_marketplace_get_latest_product_virtual_settings_file_entry_json_i
 	assert_equals \
 		"$(_get_latest_product_virtual_settings_file_entry_json_index "${product_virtual_settings_file_entries}")" \
 		"${2}"
+}
+
+function _test_marketplace_get_liferay_marketplace_product_activation_key {
+	LIFERAY_RELEASE_TEST_DATE=${1}
+
+	assert_equals "$(_get_liferay_marketplace_product_activation_key "${2}")" "${3}"
+
+	unset LIFERAY_RELEASE_TEST_DATE
 }
 
 function _test_marketplace_get_liferay_marketplace_product_activation_key_name {
