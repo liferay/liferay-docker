@@ -290,7 +290,7 @@ function test_health_status {
 
 		local health_status=$(docker inspect --format="{{json .State.Health.Status}}" "${CONTAINER_ID}")
 		local ignore_license=$(docker logs "${CONTAINER_ID}" 2> /dev/null | grep --count "Starting Liferay Portal")
-		local license_status=$(docker logs "${CONTAINER_ID}" 2> /dev/null | grep --count "License registered for DXP Development")
+		local license_status=$(docker logs "${CONTAINER_ID}" 2> /dev/null | grep --count --extended-regexp "License (registered|saved) for DXP Development")
 
 		if [ "${health_status}" == "\"healthy\"" ] && ([[ "${ignore_license}" -gt 0 ]] || [[ "${license_status}" -gt 0 ]])
 		then
