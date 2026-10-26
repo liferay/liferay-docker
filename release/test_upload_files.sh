@@ -6,6 +6,7 @@ source ./upload_files.sh
 function main {
 	test_upload_files_is_valid_upload_destination_dir_name
 	test_upload_files_is_valid_upload_source_dir
+	test_upload_files_update_latest_dir
 }
 
 function test_upload_files_is_valid_upload_destination_dir_name {
@@ -16,6 +17,7 @@ function test_upload_files_is_valid_upload_destination_dir_name {
 	_test_upload_files_is_valid_upload_destination_dir_name "4.0.1" "0"
 	_test_upload_files_is_valid_upload_destination_dir_name "\"4.0.1\"" "1"
 	_test_upload_files_is_valid_upload_destination_dir_name "gs://liferay-releases/tools/ide/4.0.1" "1"
+	_test_upload_files_is_valid_upload_destination_dir_name "latest" "1"
 	_test_upload_files_is_valid_upload_destination_dir_name "~" "1"
 }
 
@@ -29,6 +31,16 @@ function test_upload_files_is_valid_upload_source_dir {
 	_test_upload_files_is_valid_upload_source_dir "4.x/202608072258" "0"
 	_test_upload_files_is_valid_upload_source_dir "4.x/202608072258/" "1"
 	_test_upload_files_is_valid_upload_source_dir "~/.ssh" "1"
+}
+
+function test_upload_files_update_latest_dir {
+	LIFERAY_RELEASE_UPLOAD_LATEST="false"
+
+	_update_latest_dir &> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+
+	unset LIFERAY_RELEASE_UPLOAD_LATEST
 }
 
 function _test_upload_files_is_valid_upload_destination_dir_name {
