@@ -17,6 +17,7 @@ function main {
 		test_marketplace_check_punchout2go_activation_key
 		test_marketplace_deploy_punchout2go_activation_key
 		test_marketplace_get_latest_product_virtual_settings_file_entry_json_index
+		test_marketplace_get_liferay_marketplace_product_activation_key_name
 		test_marketplace_get_liferay_marketplace_product_module_regex
 		test_marketplace_get_liferay_marketplace_product_names
 		test_marketplace_not_check_liferay_marketplace_products_compatibility
@@ -118,6 +119,13 @@ function test_marketplace_get_latest_product_virtual_settings_file_entry_json_in
 	_test_marketplace_get_latest_product_virtual_settings_file_entry_json_index "empty_version" ""
 }
 
+function test_marketplace_get_liferay_marketplace_product_activation_key_name {
+	_test_marketplace_get_liferay_marketplace_product_activation_key_name "cmp" "Content Marketing Platform"
+	_test_marketplace_get_liferay_marketplace_product_activation_key_name "drools" ""
+	_test_marketplace_get_liferay_marketplace_product_activation_key_name "dsr" "Digital Sales Room"
+	_test_marketplace_get_liferay_marketplace_product_activation_key_name "punchout" "Liferay Commerce Connector to PunchOut2Go"
+}
+
 function test_marketplace_get_liferay_marketplace_product_module_regex {
 	_test_marketplace_get_liferay_marketplace_product_module_regex "cmp" "cmp|content.marketing.platform"
 	_test_marketplace_get_liferay_marketplace_product_module_regex "drools" "drools"
@@ -173,6 +181,10 @@ function _test_marketplace_get_latest_product_virtual_settings_file_entry_json_i
 	assert_equals \
 		"$(_get_latest_product_virtual_settings_file_entry_json_index "${product_virtual_settings_file_entries}")" \
 		"${2}"
+}
+
+function _test_marketplace_get_liferay_marketplace_product_activation_key_name {
+	assert_equals "$(_get_liferay_marketplace_product_activation_key_name "${1}")" "${2}"
 }
 
 function _test_marketplace_get_liferay_marketplace_product_module_regex {
