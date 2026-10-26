@@ -66,14 +66,11 @@ function check_liferay_marketplace_products_compatibility {
 			fi
 		fi
 
-		if [ "${liferay_marketplace_product_name}" == "punchout" ]
-		then
-			_deploy_punchout2go_activation_key
+		_deploy_liferay_marketplace_product_activation_key "${liferay_marketplace_product_name}"
 
-			if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
-			then
-				return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-			fi
+		if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
+		then
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 
 		lc_log INFO "Deploying Liferay Marketplace product zip file ${liferay_marketplace_product_name}.zip to ${_BUNDLES_DIR}/deploy.\n"
@@ -107,20 +104,41 @@ function check_liferay_marketplace_products_compatibility {
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 
-		if [ "${liferay_marketplace_product_name}" == "punchout" ]
+		_check_liferay_marketplace_product_activation_key "${liferay_marketplace_product_name}"
+
+		if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 		then
-			_check_punchout2go_activation_key
+			stop_tomcat &> /dev/null
 
-			if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
-			then
-				stop_tomcat &> /dev/null
-
-				return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-			fi
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
 	done
 
 	stop_tomcat &> /dev/null
+}
+
+function _check_liferay_marketplace_product_activation_key {
+	local product_name=${1}
+
+	local liferay_marketplace_product_activation_key_name=$(_get_liferay_marketplace_product_activation_key_name "${product_name}")
+
+	if [ -z "${liferay_marketplace_product_activation_key_name}" ]
+	then
+		lc_log INFO "The activation key should not be checked for product ${product_name}."
+
+		return
+	fi
+
+	if grep --quiet "${liferay_marketplace_product_activation_key_name} license validation passed" "${_LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
+	then
+		lc_log INFO "The ${liferay_marketplace_product_activation_key_name} activation key was processed successfully."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	fi
+
+	lc_log ERROR "Unable to process the ${liferay_marketplace_product_activation_key_name} activation key."
+
+	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
 function _check_liferay_marketplace_product_compatibility {
@@ -190,17 +208,30 @@ function _check_liferay_marketplace_product_compatibility {
 	fi
 }
 
-function _check_punchout2go_activation_key {
-	if grep --quiet "Liferay Commerce Connector to PunchOut2Go license validation passed" "${_LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
-	then
-		lc_log INFO "The Punchout2Go activation key was processed successfully."
+function _deploy_liferay_marketplace_product_activation_key {
+	local product_name=${1}
 
-		return "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	local liferay_marketplace_product_activation_key_name=$(_get_liferay_marketplace_product_activation_key_name "${product_name}")
+
+	if [ -z "${liferay_marketplace_product_activation_key_name}" ]
+	then
+		lc_log INFO "The activation key should not be deployed for product ${product_name}."
+
+		return
 	fi
 
-	lc_log ERROR "Unable to process the Punchout2Go activation key."
+	local liferay_marketplace_product_activation_key=$(_get_liferay_marketplace_product_activation_key "${product_name}")
 
-	return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	if [ ! -f "${liferay_marketplace_product_activation_key}" ]
+	then
+		lc_log ERROR "Unable to deploy the ${liferay_marketplace_product_activation_key_name} activation key because the activation key is not set or the file does not exist."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
+	lc_log INFO "Deploying the ${liferay_marketplace_product_activation_key_name} activation key to ${_BUNDLES_DIR}/deploy."
+
+	cp "${liferay_marketplace_product_activation_key}" "${_BUNDLES_DIR}/deploy"
 }
 
 function _deploy_liferay_marketplace_product_zip_file {
@@ -241,35 +272,6 @@ function _deploy_liferay_marketplace_product_zip_file {
 	if [[ "${?}" -ne 0 ]]
 	then
 		lc_log ERROR "Unable to deploy $(basename "${liferay_marketplace_product_zip_file_path}") to ${_BUNDLES_DIR}/deploy."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-}
-
-function _deploy_punchout2go_activation_key {
-	local activation_key_year=$(date +%Y)
-
-	if [[ "$(date +%-m)" -lt 4 ]]
-	then
-		activation_key_year=$((activation_key_year - 1))
-	fi
-
-	local activation_key_file_path=$(_get_punchout2go_activation_key "${activation_key_year}")
-
-	if [ ! -f "${activation_key_file_path}" ]
-	then
-		lc_log ERROR "Unable to deploy the Punchout2Go activation key for ${activation_key_year} because the activation key is not set or the file does not exist."
-
-		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	lc_log INFO "Deploying the Punchout2Go activation key for ${activation_key_year} to ${_BUNDLES_DIR}/deploy."
-
-	cp "${activation_key_file_path}" "${_BUNDLES_DIR}/deploy"
-
-	if [[ "${?}" -ne 0 ]]
-	then
-		lc_log ERROR "Unable to deploy the Punchout2Go activation key."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
