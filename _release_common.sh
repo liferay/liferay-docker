@@ -114,6 +114,10 @@ function get_product_group_version {
 	echo "$(_get_product_version "${1}")" | cut --delimiter='.' --fields=1,2
 }
 
+function get_product_version_without_cms_standalone_suffix {
+	echo "$(_get_product_version "${1}")" | sed --expression "s/-cms-standalone//"
+}
+
 function get_product_version_without_lts_suffix {
 	local product_version=$(_get_product_version "${1}")
 
