@@ -227,7 +227,6 @@ function test_release_common_get_tomcat_bundle_name {
 	unset LIFERAY_RELEASE_CMS_STANDALONE
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_TIMESTAMP
-	unset _PRODUCT_VERSION
 }
 
 function test_release_common_is_7_3_release {
