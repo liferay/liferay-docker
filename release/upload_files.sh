@@ -47,7 +47,7 @@ function main {
 
 	lc_time_run _delete_destination_dir "${_DESTINATION_DIR}"
 
-	lc_time_run _upload_files
+	lc_time_run _upload_files "${_SOURCE_DIR}" "${_DESTINATION_DIR}"
 }
 
 function print_help {
@@ -98,9 +98,9 @@ function _is_valid_upload_source_dir {
 }
 
 function _upload_files {
-	if ! gcloud storage cp --recursive "${_SOURCE_DIR}/*" "${_DESTINATION_DIR}/"
+	if ! gcloud storage cp --recursive "${1}/*" "${2}/"
 	then
-		lc_log ERROR "Unable to upload ${_SOURCE_DIR} to ${_DESTINATION_DIR}."
+		lc_log ERROR "Unable to upload ${1} to ${2}."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
