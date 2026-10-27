@@ -299,7 +299,7 @@ function prepare_slim_image {
 		release_dir_name="nightly"
 	elif is_cms_standalone_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 	then
-		release_dir_name="dxp/$(echo "${LIFERAY_DOCKER_RELEASE_VERSION}" | sed --expression "s/-cms-standalone//")"
+		release_dir_name="dxp/$(get_product_version_without_cms_standalone_suffix "${LIFERAY_DOCKER_RELEASE_VERSION}")"
 	fi
 
 	local module
