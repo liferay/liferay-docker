@@ -16,11 +16,15 @@ function add_fixed_issues_to_patcher_project_version {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
+	local fixed_issues_array
+
 	IFS=',' read -r -a fixed_issues_array < "release-notes.txt"
 
 	local fixed_issues_array_length=${#fixed_issues_array[@]}
 
 	local fixed_issues_array_part_length=$((fixed_issues_array_length / 4))
+
+	local counter
 
 	for counter in {0..3}
 	do
@@ -183,6 +187,8 @@ function remove_old_release_candidate_tags {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	local tag
+
 	for tag in ${tags}
 	do
 		curl \
@@ -251,6 +257,8 @@ function upload_boms {
 	else
 		local upload_dir="${_BUILD_DIR}/release"
 	fi
+
+	local file_path
 
 	find "${upload_dir}" -regextype egrep -regex '.*/*.(jar|pom)' -print0 | while IFS= read -r -d '' file_path
 	do
@@ -329,6 +337,8 @@ function upload_opensearch {
 		release_dir_name="nightly"
 	fi
 
+	local module
+
 	for module in api impl
 	do
 		gcloud storage mv \
@@ -385,6 +395,8 @@ function upload_release {
 
 		destination_bucket="gs://${release_candidates_dir_name}/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 	fi
+
+	local file
 
 	for file in $( \
 		ls \
