@@ -32,7 +32,7 @@ function main {
 	fi
 }
 
-function _get_test_file_names {
+function _get_test_files {
 	local changed_file
 
 	for changed_file in ${1}
@@ -58,11 +58,11 @@ function _run_crowdin_tests {
 				sort | \
 				xargs --max-args=1 /bin/bash
 		else
-			local test_file_name
+			local test_file
 
-			for test_file_name in $(_get_test_file_names "$(echo "${1}" | grep --extended-regexp "^crowdin/.*\.sh$")")
+			for test_file in $(_get_test_files "$(echo "${1}" | grep --extended-regexp "^crowdin/.*\.sh$")")
 			do
-				find . -name "${test_file_name}" -type f | xargs --max-args=1 /bin/bash
+				find . -name "${test_file}" -type f | xargs --max-args=1 /bin/bash
 			done
 		fi
 	)
@@ -78,12 +78,12 @@ function _run_docker_tests {
 			sort | \
 			xargs --max-args=1 /bin/bash
 	else
-		local test_file_name
+		local test_file
 
-		for test_file_name in $(_get_test_file_names "$(echo "${1}" | grep --extended-regexp "^[^/]+\.sh$")")
+		for test_file in $(_get_test_files "$(echo "${1}" | grep --extended-regexp "^[^/]+\.sh$")")
 		do
 			find . \
-				-name "${test_file_name}" ! -name "test_bundle_image.sh" \
+				-name "${test_file}" ! -name "test_bundle_image.sh" \
 				-type f | xargs --max-args=1 /bin/bash
 		done
 	fi
@@ -99,12 +99,12 @@ function _run_release_tests {
 				sort | \
 				xargs --max-args=1 /bin/bash
 		else
-			local test_file_name
+			local test_file
 
-			for test_file_name in $(_get_test_file_names "$(echo "${1}" | grep --extended-regexp "^release/.*\.sh$")")
+			for test_file in $(_get_test_files "$(echo "${1}" | grep --extended-regexp "^release/.*\.sh$")")
 			do
 				find . \
-					-name "${test_file_name}" ! -name "test_build_release.sh" \
+					-name "${test_file}" ! -name "test_build_release.sh" \
 					-type f | xargs --max-args=1 /bin/bash
 			done
 
