@@ -139,10 +139,10 @@ function get_release_dir_name {
 
 	if is_weekly_cms_standalone_release
 	then
-		echo "dxp/cms-standalone-weekly"
+		echo "cms-standalone-weekly"
 	elif is_cms_standalone_release "${product_version}"
 	then
-		echo "dxp/cms-standalone/${product_version}"
+		echo "cms-standalone/${product_version}"
 	else
 		echo "dxp/${product_version}"
 	fi
