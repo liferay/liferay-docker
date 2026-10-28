@@ -428,7 +428,7 @@ function _get_liferay_marketplace_product_module_regex {
 		echo "cmp|content.marketing.platform"
 	elif [ "${product_name}" == "dsr" ]
 	then
-		echo "digital.sales.room|dsr"
+		echo "dsr|digital.sales.room"
 	else
 		echo "${product_name}"
 	fi

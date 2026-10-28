@@ -175,7 +175,7 @@ function test_marketplace_get_liferay_marketplace_product_activation_key_name {
 function test_marketplace_get_liferay_marketplace_product_module_regex {
 	_test_marketplace_get_liferay_marketplace_product_module_regex "cmp" "cmp|content.marketing.platform"
 	_test_marketplace_get_liferay_marketplace_product_module_regex "drools" "drools"
-	_test_marketplace_get_liferay_marketplace_product_module_regex "dsr" "digital.sales.room|dsr"
+	_test_marketplace_get_liferay_marketplace_product_module_regex "dsr" "dsr|digital.sales.room"
 }
 
 function test_marketplace_get_liferay_marketplace_product_names {
