@@ -179,12 +179,6 @@ function test_marketplace_get_liferay_marketplace_product_module_regex {
 }
 
 function test_marketplace_get_liferay_marketplace_product_names {
-	declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
-		["cmp"]="d85abb01-6c60-addd-0f73-6621612aae72"
-		["drools"]="15099181"
-		["dsr"]="DSR"
-	)
-
 	_test_marketplace_get_liferay_marketplace_product_names "2026.q2.0" "drools"
 	_test_marketplace_get_liferay_marketplace_product_names "2026.q3.0" "cmp drools dsr"
 	_test_marketplace_get_liferay_marketplace_product_names "2026.q3.8" "cmp dsr"
@@ -277,7 +271,7 @@ function _test_marketplace_get_liferay_marketplace_product_module_regex {
 function _test_marketplace_get_liferay_marketplace_product_names {
 	_PRODUCT_VERSION=${1}
 
-	assert_equals "$(_get_liferay_marketplace_product_names | xargs)" "${2}"
+	assert_equals "$(_get_liferay_marketplace_product_names "cmp" "drools" "dsr" | xargs)" "${2}"
 }
 
 function _test_marketplace_not_check_liferay_marketplace_products_compatibility {

@@ -29,7 +29,7 @@ function check_liferay_marketplace_products_compatibility {
 		)
 	fi
 
-	local liferay_marketplace_product_names=$(_get_liferay_marketplace_product_names)
+	local liferay_marketplace_product_names=$(_get_liferay_marketplace_product_names "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}")
 
 	if [ -z "${liferay_marketplace_product_names}" ]
 	then
@@ -435,15 +435,17 @@ function _get_liferay_marketplace_product_module_regex {
 }
 
 function _get_liferay_marketplace_product_names {
+	local liferay_marketplace_product_names=("${@}")
+
 	if is_first_quarterly_release && ! is_cms_standalone_release
 	then
 		if is_early_product_version_than "2026.q3.0"
 		then
-			printf "%s\n" "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}" | \
+			printf "%s\n" "${liferay_marketplace_product_names[@]}" | \
 				grep --extended-regexp --invert-match "^(cmp|dsr)$" | \
 				sort --ignore-case
 		else
-			printf "%s\n" "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}" | sort --ignore-case
+			printf "%s\n" "${liferay_marketplace_product_names[@]}" | sort --ignore-case
 		fi
 	elif is_quarterly_release && is_equals_or_later_product_version_than "2026.q3.0"
 	then
