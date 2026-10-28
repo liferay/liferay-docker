@@ -186,8 +186,6 @@ function test_marketplace_get_liferay_marketplace_product_names {
 	_test_marketplace_get_liferay_marketplace_product_names "2027.q1.0-lts" "cmp drools dsr"
 	_test_marketplace_get_liferay_marketplace_product_names "2027.q1.1-lts" "cmp dsr"
 	_test_marketplace_get_liferay_marketplace_product_names "2027.q1.1-lts-cms-standalone" "cmp"
-
-	unset _PRODUCT_VERSION
 }
 
 function test_marketplace_not_check_liferay_marketplace_products_compatibility {
@@ -195,8 +193,6 @@ function test_marketplace_not_check_liferay_marketplace_products_compatibility {
 	_test_marketplace_not_check_liferay_marketplace_products_compatibility "2026.q2.5"
 	_test_marketplace_not_check_liferay_marketplace_products_compatibility "7.4.13-u154"
 	_test_marketplace_not_check_liferay_marketplace_products_compatibility "7.4.13-u154-cms-standalone"
-
-	unset _PRODUCT_VERSION
 }
 
 function test_marketplace_not_deploy_liferay_marketplace_product_activation_key {
