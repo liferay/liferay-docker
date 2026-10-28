@@ -225,7 +225,7 @@ function get_tomcat_bundle_name {
 
 	if is_cms_standalone_release "${product_version}"
 	then
-		echo "liferay-cms-tomcat-${product_version}-${_BUILD_TIMESTAMP}"
+		echo "liferay-cms-standalone-tomcat-$(get_product_version_without_cms_standalone_suffix "${product_version}")-${_BUILD_TIMESTAMP}"
 	else
 		echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${product_version}-${_BUILD_TIMESTAMP}"
 	fi
