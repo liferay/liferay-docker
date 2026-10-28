@@ -147,12 +147,12 @@ function test_release_common_get_release_candidates_dir_name {
 
 function test_release_common_get_release_dir_name {
 	_test_release_common_get_release_dir_name "2026.q4.0" "dxp/2026.q4.0"
-	_test_release_common_get_release_dir_name "2026.q4.0-cms-standalone" "dxp/cms-standalone/2026.q4.0-cms-standalone"
-	_test_release_common_get_release_dir_name "7.4.13-u154-cms-standalone" "dxp/cms-standalone/7.4.13-u154-cms-standalone"
+	_test_release_common_get_release_dir_name "2026.q4.0-cms-standalone" "cms-standalone/2026.q4.0-cms-standalone"
+	_test_release_common_get_release_dir_name "7.4.13-u154-cms-standalone" "cms-standalone/7.4.13-u154-cms-standalone"
 
 	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
 
-	_test_release_common_get_release_dir_name "7.4.13-u154-cms-standalone" "dxp/cms-standalone-weekly"
+	_test_release_common_get_release_dir_name "7.4.13-u154-cms-standalone" "cms-standalone-weekly"
 
 	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
 }
