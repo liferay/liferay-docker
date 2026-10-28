@@ -227,12 +227,13 @@ function test_release_common_get_tomcat_bundle_name {
 	_BUILD_TIMESTAMP="1234567890"
 
 	_test_release_common_get_tomcat_bundle_name "2026.q1.0-lts" "liferay-dxp-tomcat-2026.q1.0-lts-1234567890"
+	_test_release_common_get_tomcat_bundle_name "2026.q4.0-cms-standalone" "liferay-cms-standalone-tomcat-2026.q4.0-1234567890"
 	_test_release_common_get_tomcat_bundle_name "7.4.13-u154" "liferay-dxp-tomcat-7.4.13-u154-1234567890"
-	_test_release_common_get_tomcat_bundle_name "7.4.13-u154-cms-standalone" "liferay-cms-tomcat-7.4.13-u154-cms-standalone-1234567890"
+	_test_release_common_get_tomcat_bundle_name "7.4.13-u154-cms-standalone" "liferay-cms-standalone-tomcat-7.4.13-u154-1234567890"
 
 	LIFERAY_RELEASE_CMS_STANDALONE="true"
 
-	_test_release_common_get_tomcat_bundle_name "7.4.13-u154" "liferay-cms-tomcat-7.4.13-u154-1234567890"
+	_test_release_common_get_tomcat_bundle_name "7.4.13-u154" "liferay-cms-standalone-tomcat-7.4.13-u154-1234567890"
 
 	unset LIFERAY_RELEASE_CMS_STANDALONE
 	unset LIFERAY_RELEASE_PRODUCT_NAME

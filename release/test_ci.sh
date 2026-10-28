@@ -63,7 +63,7 @@ function test_ci_get_test_portal_release_parameters {
 
 	_test_ci_get_test_portal_release_parameters "$(cat <<- END
 		--data-urlencode TEST_PORTAL_RELEASE_STANDALONE=true
-		--data-urlencode TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}liferay-cms-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z
+		--data-urlencode TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}liferay-cms-standalone-tomcat-7.4.13-u154-${_BUILD_TIMESTAMP}.7z
 		END
 	)"
 
