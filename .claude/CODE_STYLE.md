@@ -324,10 +324,12 @@ sed --expression "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/"
 
 - Short forms are only acceptable where no long form exists (e.g. `git clean -dfx`), or where this guide deliberately standardizes on a short form, as it does for `awk`'s field separator `-F` (write `-F ":"`, never `--field-separator ":"`). When a flag has more than one long-form spelling, use the one this guide shows; for example, write `sed -n` as `--quiet`, not `--silent`. When it is unclear whether a long form exists, the short form is acceptable too.
 
-- Order a command's flags alphabetically, whether inline or broken across lines. The exceptions are flags whose order matters: a `find` expression (`-name`, `-type`, `-print0`, …) and repeated `sed --expression` scripts stay in their written order, `sed`'s `--regexp-extended` must come before `--expression`, and `zip`'s `-i`/`-x` include/exclude filters trail the input file list they act on (so they follow the positionals rather than sorting in with the other flags).
+- Order a command's flags alphabetically, whether inline or broken across lines. The exceptions are flags whose order matters: a `find` expression's tests and actions (`-name`, `-type`, `-print0`, …) and repeated `sed --expression` scripts stay in their written order, `sed`'s `--regexp-extended` must come before `--expression`, and `zip`'s `-i`/`-x` include/exclude filters trail the input file list they act on (so they follow the positionals rather than sorting in with the other flags).
 
 ```bash
 find "${dir}" -name "*.sh" -type f
+
+find "${dir}" -maxdepth 1 -mindepth 1
 
 sed --regexp-extended --expression "s/^open-jdk-//"
 
@@ -470,7 +472,7 @@ then
 fi
 ```
 
-- Break a pipeline or command inside `$( ... )` the same way, adding a space after `$(` for readability:
+- Break a pipeline or command inside `$( ... )` the same way, adding a space after `$(` for readability and aligning every stage of a pipeline with the first stage:
 
 ```bash
 local http_response=$( \
@@ -484,6 +486,17 @@ local http_response=$( \
 		--retry 3 \
 		--write-out "%{http_code}" \
 		"https://api.github.com/repos/liferay/${repository_name}/contents/${file_path}?ref=${ref}")
+```
+
+```bash
+local version=$( \
+	curl \
+		--header "Authorization: Bearer ${token}" \
+		--silent \
+		"https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | \
+	grep --only-matching "\"org.label-schema.zulu${2}_${3}_version\":\"[0-9.]*\"" | \
+	head --lines=1 | \
+	sed --expression "s/\"//g")
 ```
 
 ## Return Codes
