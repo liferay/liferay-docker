@@ -116,12 +116,13 @@ function _test_hotfix_prepare_release_dir {
 
 	echo "test" > "${release_file_dir}/${2}/tomcat/test.txt"
 
-	_RELEASES_DIR="${_BUILD_DIR}/releases"
 	_TEST_RELEASE_DIR="${_BUILD_DIR}/test_release"
 
 	mkdir --parents "${_TEST_RELEASE_DIR}"
 
 	7z a "${_TEST_RELEASE_DIR}/${3}.7z" "${release_file_dir}/${2}" &> /dev/null
+
+	_RELEASES_DIR="${_BUILD_DIR}/releases"
 
 	(prepare_release_dir) &> /dev/null
 
