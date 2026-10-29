@@ -122,6 +122,30 @@ function add_jira_issue_with_description {
 	_invoke_jira_api "https://liferay.atlassian.net/rest/api/2/issue/" "${data}"
 }
 
+function close_jira_issue {
+	local data=$(
+		cat <<- END
+		{
+			"fields": {
+				"resolution": {
+					"name": "Completed"
+				}
+			},
+			"transition": {
+				"id": "71"
+			}
+		}
+		END
+	)
+
+	if [ "$(_invoke_jira_api "https://liferay.atlassian.net/rest/api/3/issue/${1}/transitions" "${data}")" == "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]
+	then
+		lc_log ERROR "Unable to close the Jira issue ${1}."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+}
+
 function _invoke_jira_api {
 	local http_response
 
