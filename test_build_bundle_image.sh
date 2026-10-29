@@ -11,6 +11,7 @@ function main {
 	then
 		"${1}"
 	else
+		test_build_bundle_image_get_docker_image_name
 		test_build_bundle_image_get_latest_tomcat_version
 		test_build_bundle_image_set_parent_image
 	fi
@@ -33,6 +34,27 @@ function tear_down {
 
 	unset TEMP_DIR
 	unset _LATEST_TOMCAT_VERSION_TEST
+}
+
+function test_build_bundle_image_get_docker_image_name {
+	_test_build_bundle_image_get_docker_image_name "2025.q1.0-lts" "dxp"
+	_test_build_bundle_image_get_docker_image_name "2026.q4.0-cms-standalone" "cms-standalone"
+	_test_build_bundle_image_get_docker_image_name "7.4.13-u124" "dxp"
+	_test_build_bundle_image_get_docker_image_name "7.4.13-u155-cms-standalone" "cms-standalone"
+	_test_build_bundle_image_get_docker_image_name "7.4.13.nightly" "dxp"
+
+	LIFERAY_DOCKER_RELEASE_CANDIDATE="true"
+
+	_test_build_bundle_image_get_docker_image_name "2025.q1.0-lts-1739837301" "release-candidates"
+	_test_build_bundle_image_get_docker_image_name "2026.q4.0-cms-standalone-1792705742" "release-candidates"
+
+	unset LIFERAY_DOCKER_RELEASE_CANDIDATE
+
+	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
+
+	_test_build_bundle_image_get_docker_image_name "cms-standalone-weekly" "release-candidates"
+
+	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
 }
 
 function test_build_bundle_image_get_latest_tomcat_version {
@@ -67,6 +89,10 @@ function test_build_bundle_image_set_parent_image {
 function _set_dockerfile {
 	echo -e "FROM --platform=amd64 liferay/${1}:latest AS liferay-${1}\n" > "${3}"
 	echo -e "FROM liferay-${2}\n" >> "${3}"
+}
+
+function _test_build_bundle_image_get_docker_image_name {
+	assert_equals "$(get_docker_image_name "${1}")" "${2}"
 }
 
 function _test_build_bundle_image_get_latest_tomcat_version {
