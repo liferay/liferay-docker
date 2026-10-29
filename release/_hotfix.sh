@@ -623,24 +623,28 @@ function prepare_release_dir {
 
 	lc_cd "${_RELEASE_DIR}.tmp"
 
+	local package_dir_name=$(get_package_dir_name)
+
 	if [ -n "${release7z}" ]
 	then
 		7z x "${release7z}"
 	else
-		lc_download "https://releases-cdn.liferay.com/dxp/${_PRODUCT_VERSION}/$(lc_curl "https://releases-cdn.liferay.com/dxp/${_PRODUCT_VERSION}/.lfrrelease-tomcat-bundle")" liferay-dxp.7z
+		local release_url="https://releases-cdn.liferay.com/$(get_release_dir_name)"
 
-		7z x ./liferay-dxp.7z
+		lc_download "${release_url}/$(lc_curl "${release_url}/.lfrrelease-tomcat-bundle")" "${package_dir_name}.7z"
 
-		rm --force ./liferay-dxp.7z
+		7z x "./${package_dir_name}.7z"
+
+		rm --force "./${package_dir_name}.7z"
 	fi
 
 	shopt -s dotglob
 
-	mv liferay-dxp/* .
+	mv "${package_dir_name}"/* .
 
 	shopt -u dotglob
 
-	rm --force --recursive liferay-dxp
+	rm --force --recursive "${package_dir_name}"
 
 	mv "${_RELEASE_DIR}.tmp" "${_RELEASE_DIR}"
 }
