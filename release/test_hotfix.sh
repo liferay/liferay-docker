@@ -128,10 +128,10 @@ function _test_hotfix_prepare_release_dir {
 	local liferay_dir_count=$( \
 		find \
 			"${_RELEASES_DIR}/${3}" \
-			-mindepth 1 \
 			-maxdepth 1 \
+			-mindepth 1 \
 			-name "liferay-*" | \
-			wc --lines)
+		wc --lines)
 
 	assert_equals \
 		"$(cat "${_RELEASES_DIR}/${3}/tomcat/test.txt")" \
