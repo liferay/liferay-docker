@@ -22,7 +22,7 @@ function main {
 		test_marketplace_get_liferay_marketplace_product_activation_key
 		test_marketplace_get_liferay_marketplace_product_activation_key_name
 		test_marketplace_get_liferay_marketplace_product_module_regex
-		test_marketplace_get_liferay_marketplace_product_names
+		test_marketplace_get_liferay_marketplace_product_names_by_release
 		test_marketplace_not_check_liferay_marketplace_products_compatibility
 		test_marketplace_not_deploy_liferay_marketplace_product_activation_key
 	fi
@@ -178,14 +178,14 @@ function test_marketplace_get_liferay_marketplace_product_module_regex {
 	_test_marketplace_get_liferay_marketplace_product_module_regex "dsr" "dsr|digital.sales.room"
 }
 
-function test_marketplace_get_liferay_marketplace_product_names {
-	_test_marketplace_get_liferay_marketplace_product_names "2026.q2.0" "drools"
-	_test_marketplace_get_liferay_marketplace_product_names "2026.q3.0" "cmp drools dsr"
-	_test_marketplace_get_liferay_marketplace_product_names "2026.q3.8" "cmp dsr"
-	_test_marketplace_get_liferay_marketplace_product_names "2026.q4.0-cms-standalone" "cmp"
-	_test_marketplace_get_liferay_marketplace_product_names "2027.q1.0-lts" "cmp drools dsr"
-	_test_marketplace_get_liferay_marketplace_product_names "2027.q1.1-lts" "cmp dsr"
-	_test_marketplace_get_liferay_marketplace_product_names "2027.q1.1-lts-cms-standalone" "cmp"
+function test_marketplace_get_liferay_marketplace_product_names_by_release {
+	_test_marketplace_get_liferay_marketplace_product_names_by_release "2026.q2.0" "drools"
+	_test_marketplace_get_liferay_marketplace_product_names_by_release "2026.q3.0" "cmp drools dsr"
+	_test_marketplace_get_liferay_marketplace_product_names_by_release "2026.q3.8" "cmp dsr"
+	_test_marketplace_get_liferay_marketplace_product_names_by_release "2026.q4.0-cms-standalone" "cmp"
+	_test_marketplace_get_liferay_marketplace_product_names_by_release "2027.q1.0-lts" "cmp drools dsr"
+	_test_marketplace_get_liferay_marketplace_product_names_by_release "2027.q1.1-lts" "cmp dsr"
+	_test_marketplace_get_liferay_marketplace_product_names_by_release "2027.q1.1-lts-cms-standalone" "cmp"
 }
 
 function test_marketplace_not_check_liferay_marketplace_products_compatibility {
@@ -264,10 +264,10 @@ function _test_marketplace_get_liferay_marketplace_product_module_regex {
 	assert_equals "$(_get_liferay_marketplace_product_module_regex "${1}")" "${2}"
 }
 
-function _test_marketplace_get_liferay_marketplace_product_names {
+function _test_marketplace_get_liferay_marketplace_product_names_by_release {
 	_PRODUCT_VERSION=${1}
 
-	assert_equals "$(_get_liferay_marketplace_product_names "cmp" "drools" "dsr" | xargs)" "${2}"
+	assert_equals "$(_get_liferay_marketplace_product_names_by_release "cmp" "drools" "dsr" | xargs)" "${2}"
 }
 
 function _test_marketplace_not_check_liferay_marketplace_products_compatibility {

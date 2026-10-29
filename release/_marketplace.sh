@@ -29,7 +29,7 @@ function check_liferay_marketplace_products_compatibility {
 		)
 	fi
 
-	local liferay_marketplace_product_names=$(_get_liferay_marketplace_product_names "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}")
+	local liferay_marketplace_product_names=$(_get_liferay_marketplace_product_names_by_release "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}")
 
 	if [ -z "${liferay_marketplace_product_names}" ]
 	then
@@ -434,7 +434,7 @@ function _get_liferay_marketplace_product_module_regex {
 	fi
 }
 
-function _get_liferay_marketplace_product_names {
+function _get_liferay_marketplace_product_names_by_release {
 	local liferay_marketplace_product_names=("${@}")
 
 	if is_first_quarterly_release && ! is_cms_standalone_release
