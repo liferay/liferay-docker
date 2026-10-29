@@ -40,6 +40,7 @@ function close_pull_request {
 
 function create_pull_request {
 	local base_branch=${1}
+	local body=${5}
 	local branch_name=${2}
 	local repository=${3}
 	local title=${4}
@@ -48,7 +49,7 @@ function create_pull_request {
 
 	gh pr create \
 		--base "${base_branch}" \
-		--body "This pull request was automatically created by the Release team." \
+		--body "This pull request was automatically created by the Release team. ${body}" \
 		--head "liferay-release:${branch_name}" \
 		--repo "${repository}" \
 		--title "${title}"
