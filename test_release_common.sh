@@ -13,6 +13,7 @@ function main {
 	else
 		test_release_common_get_due_date
 		test_release_common_get_latest_product_version
+		test_release_common_get_package_dir_name
 		test_release_common_get_premium_support_lts_release_branches
 		test_release_common_get_product_group_version
 		test_release_common_get_product_version_without_cms_standalone_suffix
@@ -105,6 +106,13 @@ function test_release_common_get_latest_product_version {
 	_test_release_common_get_latest_product_version "quarterly-candidate" "2027.q1" ""
 
 	git restore release/test-dependencies/actual/dxp.html release/test-dependencies/actual/release-candidates.html
+}
+
+function test_release_common_get_package_dir_name {
+	_test_release_common_get_package_dir_name "2026.q4.0" "liferay-dxp"
+	_test_release_common_get_package_dir_name "2026.q4.0-cms-standalone" "liferay-cms"
+	_test_release_common_get_package_dir_name "7.4.13-u154" "liferay-dxp"
+	_test_release_common_get_package_dir_name "7.4.13-u154-cms-standalone" "liferay-cms"
 }
 
 function test_release_common_get_premium_support_lts_release_branches {
@@ -434,6 +442,12 @@ function _test_release_common_get_latest_product_version {
 	assert_equals \
 		"$(get_latest_product_version "${1}" "${2}")" \
 		"${3}"
+}
+
+function _test_release_common_get_package_dir_name {
+	_PRODUCT_VERSION=${1}
+
+	assert_equals "$(get_package_dir_name)" "${2}"
 }
 
 function _test_release_common_get_premium_support_lts_release_branches {
