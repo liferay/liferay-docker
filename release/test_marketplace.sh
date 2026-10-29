@@ -65,6 +65,10 @@ function tear_down {
 	rm --force --recursive "${_BUNDLES_DIR}"
 	rm --force "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp-tomcat-2025.q3.0-1756231955.zip"
 
+	unset LIFERAY_CMP_ACTIVATION_KEY_2026
+	unset LIFERAY_DSR_ACTIVATION_KEY_2026
+	unset LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2026
+	unset LIFERAY_RELEASE_TEST_DATE
 	unset _BUILD_DIR
 	unset _BUNDLES_DIR
 	unset _PRODUCT_VERSION
@@ -115,11 +119,6 @@ function test_marketplace_deploy_liferay_marketplace_product_activation_key {
 	_test_marketplace_deploy_liferay_marketplace_product_activation_key "punchout" "activation-key-punchout2go-2026-04-01.xml"
 
 	rm --force --recursive "${activation_key_directory}"
-
-	unset LIFERAY_CMP_ACTIVATION_KEY_2026
-	unset LIFERAY_DSR_ACTIVATION_KEY_2026
-	unset LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2026
-	unset LIFERAY_RELEASE_TEST_DATE
 }
 
 function test_marketplace_get_cmp_activation_key {
@@ -127,8 +126,6 @@ function test_marketplace_get_cmp_activation_key {
 
 	_test_marketplace_get_cmp_activation_key "2026" "activation-key-cmp-2026.xml"
 	_test_marketplace_get_cmp_activation_key "2027" ""
-
-	unset LIFERAY_CMP_ACTIVATION_KEY_2026
 }
 
 function test_marketplace_get_dsr_activation_key {
@@ -136,8 +133,6 @@ function test_marketplace_get_dsr_activation_key {
 
 	_test_marketplace_get_dsr_activation_key "2026" "activation-key-dsr-2026.xml"
 	_test_marketplace_get_dsr_activation_key "2027" ""
-
-	unset LIFERAY_DSR_ACTIVATION_KEY_2026
 }
 
 function test_marketplace_get_latest_product_virtual_settings_file_entry_json_index {
@@ -159,9 +154,6 @@ function test_marketplace_get_liferay_marketplace_product_activation_key {
 	_test_marketplace_get_liferay_marketplace_product_activation_key "2027-03-31" "punchout" "activation-key-punchout2go-2026-04-01.xml"
 	_test_marketplace_get_liferay_marketplace_product_activation_key "2027-04-01" "punchout" "activation-key-punchout2go-2027-04-01.xml"
 
-	unset LIFERAY_CMP_ACTIVATION_KEY_2026
-	unset LIFERAY_DSR_ACTIVATION_KEY_2026
-	unset LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2026
 	unset LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2027
 }
 
@@ -201,9 +193,6 @@ function test_marketplace_not_deploy_liferay_marketplace_product_activation_key 
 
 	_test_marketplace_not_deploy_liferay_marketplace_product_activation_key "cmp" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	_test_marketplace_not_deploy_liferay_marketplace_product_activation_key "drools" "${LIFERAY_COMMON_EXIT_CODE_OK}"
-
-	unset LIFERAY_CMP_ACTIVATION_KEY_2026
-	unset LIFERAY_RELEASE_TEST_DATE
 }
 
 function _test_marketplace_check_liferay_marketplace_product_activation_key {
@@ -252,8 +241,6 @@ function _test_marketplace_get_liferay_marketplace_product_activation_key {
 	LIFERAY_RELEASE_TEST_DATE=${1}
 
 	assert_equals "$(_get_liferay_marketplace_product_activation_key "${2}")" "${3}"
-
-	unset LIFERAY_RELEASE_TEST_DATE
 }
 
 function _test_marketplace_get_liferay_marketplace_product_activation_key_name {
