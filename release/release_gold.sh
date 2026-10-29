@@ -238,7 +238,8 @@ function prepare_next_release_pull_request {
 			"${base_branch}" \
 			"${_TEMP_BRANCH}" \
 			"brianchandotcom/liferay-portal-ee" \
-			"${issue_key} prep next | ${base_branch}"
+			"${issue_key} prep next | ${base_branch}" \
+			"cc @joshitagaki @nikki-pru"
 
 		exit_code=${?}
 	fi
@@ -250,10 +251,6 @@ function prepare_next_release_pull_request {
 		lc_log ERROR "Unable to send pull request to the release branch."
 	else
 		lc_log INFO "The next release branch was prepared successfully."
-
-		add_jira_issue_comment_with_mention \
-			"Related pull request: $(get_pull_request_url "${_TEMP_BRANCH}" brianchandotcom/liferay-portal-ee). cc " \
-			"${issue_key}"
 	fi
 
 	return "${exit_code}"
