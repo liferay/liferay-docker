@@ -150,17 +150,12 @@ function check_release {
 	   [[ "${RELEASE_FILE_NAME}" == *-dxp-* ]] ||
 	   [[ "${RELEASE_FILE_NAME}" == *-private* ]]
 	then
-		DOCKER_IMAGE_NAME="dxp"
+		DOCKER_IMAGE_NAME=$(get_docker_image_name "${LIFERAY_DOCKER_RELEASE_VERSION}")
 		DOCKER_LABEL_NAME="Liferay DXP"
 	else
 		echo "${RELEASE_FILE_NAME} is an unsupported release file name."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	fi
-
-	if is_release_candidate
-	then
-		DOCKER_IMAGE_NAME="release-candidates"
 	fi
 }
 
