@@ -185,6 +185,18 @@ function download_trial_dxp_license {
 	fi
 }
 
+function get_docker_image_name {
+	if (is_release_candidate || is_weekly_cms_standalone_release)
+	then
+		echo "release-candidates"
+	elif is_cms_standalone_release "${1}"
+	then
+		echo "cms-standalone"
+	else
+		echo "dxp"
+	fi
+}
+
 function get_latest_tomcat_version {
 	local tomcat_major_version=$(echo "${1}" | cut --delimiter='.' --fields=1)
 
