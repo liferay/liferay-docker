@@ -47,11 +47,11 @@ function set_up {
 
 function tear_down {
 	docker rmi $(docker images --filter "dangling=true" --no-trunc) &> /dev/null
-	docker rmi --force "liferay/dxp:cms-standalone-weekly" &> /dev/null
 	docker rmi --force "liferay/jdk11-jdk8:latest" &> /dev/null
 	docker rmi --force "liferay/jdk11:latest" &> /dev/null
 	docker rmi --force "liferay/jdk21-jdk11-jdk8:latest" &> /dev/null
 	docker rmi --force "liferay/jdk21:latest" &> /dev/null
+	docker rmi --force "liferay/release-candidates:cms-standalone-weekly" &> /dev/null
 	docker rmi --force $(docker images "liferay/dxp:${_LATEST_RELEASE}-slim") &> /dev/null
 
 	local file
@@ -80,8 +80,8 @@ function test_build_all_images_get_latest_available_zulu_version {
 
 function test_build_all_images_has_cms_standalone_tag {
 	assert_equals \
-		"$(docker images --format "{{.Repository}}:{{.Tag}}" "liferay/dxp:cms-standalone-weekly")" \
-		"liferay/dxp:cms-standalone-weekly"
+		"$(docker images --format "{{.Repository}}:{{.Tag}}" "liferay/release-candidates:cms-standalone-weekly")" \
+		"liferay/release-candidates:cms-standalone-weekly"
 }
 
 function test_build_all_images_has_slim_build_criteria {
