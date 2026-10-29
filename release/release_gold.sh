@@ -217,6 +217,13 @@ function prepare_next_release_pull_request {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
+	close_jira_issue "${issue_key}"
+
+	if [[ "${?}" -ne 0 ]]
+	then
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
+
 	commit_changes \
 		"${_PROJECTS_DIR}/liferay-portal-ee/release.properties" \
 		"${issue_key} prep next"
