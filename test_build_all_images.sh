@@ -56,9 +56,14 @@ function tear_down {
 
 	local file
 
-	for file in $(find $(find . -name "logs-*" -type d) -name "build*image_id.txt" -type f)
+	for file in $( \
+		find \
+			$(find . -name "logs-*" -type d) \
+			-name "build*image_id.txt" \
+			-type f)
 	do
-		docker rmi --force $(cat "${file}" | cut --delimiter=':' --fields=2) &> /dev/null
+		docker rmi --force $( \
+			cat "${file}" | cut --delimiter=':' --fields=2) &> /dev/null
 	done
 
 	unset _LATEST_RELEASE
@@ -101,8 +106,14 @@ function test_build_all_images_latest_is_not_slim {
 	assert_equals \
 		$(docker images --format "{{.Repository}}:{{.Tag}}" "liferay/dxp:${_LATEST_RELEASE}") \
 		"liferay/dxp:${_LATEST_RELEASE}" \
-		$(docker images --filter "reference=liferay/dxp:${_LATEST_RELEASE}" --format "{{.ID}}") \
-		$(docker images --filter "reference=liferay/dxp:latest" --format "{{.ID}}")
+		$( \
+			docker images \
+				--filter "reference=liferay/dxp:${_LATEST_RELEASE}" \
+				--format "{{.ID}}") \
+		$( \
+			docker images \
+				--filter "reference=liferay/dxp:latest" \
+				--format "{{.ID}}")
 }
 
 function test_build_all_images_trial_license_is_deleted {
