@@ -104,6 +104,15 @@ function get_latest_version_from_url {
 		tail --lines=1
 }
 
+function get_package_dir_name {
+	if is_cms_standalone_release
+	then
+		echo "liferay-cms"
+	else
+		echo "liferay-dxp"
+	fi
+}
+
 function get_premium_support_lts_release_branches {
 	local year=$(date --date "$(get_today)" +%Y)
 

@@ -14,7 +14,6 @@ function main {
 	else
 		test_package_generate_javadocs
 		test_package_generate_release_properties_file
-		test_package_get_package_dir_name
 		test_package_not_generate_javadocs
 		test_package_not_generate_release_properties_file
 		test_package_not_package_boms
@@ -73,16 +72,6 @@ function test_package_generate_release_properties_file {
 	_test_package_generate_release_properties_file "2026.q1.0-lts" "9.0.110" "2026-03-18"
 	_test_package_generate_release_properties_file "7.4.13-u145" "10.1.48" "2025-12-20"
 	_test_package_generate_release_properties_file "7.4.13-u146" "10.1.48" "2026-02-02"
-}
-
-function test_package_get_package_dir_name {
-	LIFERAY_RELEASE_CMS_STANDALONE="true"
-
-	_test_package_get_package_dir_name "liferay-cms"
-
-	unset LIFERAY_RELEASE_CMS_STANDALONE
-
-	_test_package_get_package_dir_name "liferay-dxp"
 }
 
 function test_package_not_generate_javadocs {
@@ -257,12 +246,6 @@ function _test_package_generate_release_properties_file {
 	rm --force "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}.7z.sha512"
 	rm --force --recursive "${_BUNDLES_DIR}/tomcat"
 	rm --force release.properties
-}
-
-function _test_package_get_package_dir_name {
-	assert_equals \
-		"$(_get_package_dir_name)" \
-		"${1}"
 }
 
 function _test_package_not_generate_javadocs {

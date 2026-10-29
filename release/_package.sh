@@ -152,7 +152,7 @@ function package_jakarta_transform_dependencies {
 function package_release {
 	rm --force --recursive "${_BUILD_DIR}/release"
 
-	local package_dir="${_BUILD_DIR}/release/$(_get_package_dir_name)"
+	local package_dir="${_BUILD_DIR}/release/$(get_package_dir_name)"
 
 	mkdir --parents "${package_dir}"
 
@@ -223,15 +223,6 @@ function _generate_javadocs {
 
 			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 		fi
-	fi
-}
-
-function _get_package_dir_name {
-	if is_cms_standalone_release
-	then
-		echo "liferay-cms"
-	else
-		echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}"
 	fi
 }
 
@@ -364,7 +355,7 @@ function _package_portal_dependencies {
 
 function _package_tomcat_bundles {
 	local bundle_name=$(get_tomcat_bundle_name "${1}")
-	local package_dir_name=$(_get_package_dir_name)
+	local package_dir_name=$(get_package_dir_name)
 
 	7z a "${_BUILD_DIR}/release/${bundle_name}.7z" "${package_dir_name}"
 
