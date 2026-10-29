@@ -163,9 +163,15 @@ function _check_liferay_marketplace_product_compatibility {
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
-	if echo "${modules_info}" | grep --extended-regexp --invert-match "Active|Resolved" &> /dev/null
+	if echo "${modules_info}" | \
+		grep \
+			--extended-regexp \
+			--invert-match \
+			"Active|Resolved" &> /dev/null
 	then
 		lc_log ERROR "One or more modules of Liferay Marketplace product ${product_name} are not compatible with release ${_PRODUCT_VERSION}:"
+
+		local module_info
 
 		while IFS= read -r module_info
 		do
