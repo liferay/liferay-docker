@@ -125,7 +125,7 @@ function test_marketplace_get_cmp_activation_key {
 	LIFERAY_CMP_ACTIVATION_KEY_2026="activation-key-cmp-2026.xml"
 
 	_test_marketplace_get_cmp_activation_key "2026" "activation-key-cmp-2026.xml"
-	_test_marketplace_get_cmp_activation_key "2027" ""
+	_test_marketplace_get_cmp_activation_key "2030" ""
 }
 
 function test_marketplace_get_dsr_activation_key {
