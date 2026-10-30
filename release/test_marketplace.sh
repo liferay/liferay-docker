@@ -132,7 +132,7 @@ function test_marketplace_get_dsr_activation_key {
 	LIFERAY_DSR_ACTIVATION_KEY_2026="activation-key-dsr-2026.xml"
 
 	_test_marketplace_get_dsr_activation_key "2026" "activation-key-dsr-2026.xml"
-	_test_marketplace_get_dsr_activation_key "2027" ""
+	_test_marketplace_get_dsr_activation_key "2030" ""
 }
 
 function test_marketplace_get_latest_product_virtual_settings_file_entry_json_index {
