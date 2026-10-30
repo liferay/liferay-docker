@@ -150,9 +150,9 @@ function test_marketplace_get_liferay_marketplace_product_activation_key {
 	_test_marketplace_get_liferay_marketplace_product_activation_key "2026-10-26" "cmp" "activation-key-cmp-2026.xml"
 	_test_marketplace_get_liferay_marketplace_product_activation_key "2026-10-26" "drools" ""
 	_test_marketplace_get_liferay_marketplace_product_activation_key "2026-10-26" "dsr" "activation-key-dsr-2026.xml"
-	_test_marketplace_get_liferay_marketplace_product_activation_key "2027-01-01" "cmp" ""
 	_test_marketplace_get_liferay_marketplace_product_activation_key "2027-03-31" "punchout" "activation-key-punchout2go-2026-04-01.xml"
 	_test_marketplace_get_liferay_marketplace_product_activation_key "2027-04-01" "punchout" "activation-key-punchout2go-2027-04-01.xml"
+	_test_marketplace_get_liferay_marketplace_product_activation_key "2030-10-26" "cmp" ""
 
 	unset LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2027
 }
