@@ -324,12 +324,12 @@ sed --expression "s/^\([A-Z][A-Z0-9]*-[0-9]*\).*/\\1/"
 
 - Short forms are only acceptable where no long form exists (e.g. `git clean -dfx`), or where this guide deliberately standardizes on a short form, as it does for `awk`'s field separator `-F` (write `-F ":"`, never `--field-separator ":"`). When a flag has more than one long-form spelling, use the one this guide shows; for example, write `sed -n` as `--quiet`, not `--silent`. When it is unclear whether a long form exists, the short form is acceptable too.
 
-- Order a command's flags alphabetically, whether inline or broken across lines. The exceptions are flags whose order matters: a `find` expression's tests and actions (`-name`, `-type`, `-print0`, …) and repeated `sed --expression` scripts stay in their written order, `sed`'s `--regexp-extended` must come before `--expression`, and `zip`'s `-i`/`-x` include/exclude filters trail the input file list they act on (so they follow the positionals rather than sorting in with the other flags).
+- Order a command's flags alphabetically, whether inline or broken across lines. The exceptions are flags whose order matters: a `find` expression's tests and actions (`-name`, `-type`, `-print0`, …) and repeated `sed --expression` scripts stay in their written order, `sed`'s `--regexp-extended` must come before `--expression`, and `zip`'s `-i`/`-x` include/exclude filters trail the input file list they act on (so they follow the positionals rather than sorting in with the other flags). A `find` option such as `-maxdepth` or `-mindepth` is not part of the expression, so it sorts like any other flag and comes before the tests.
 
 ```bash
 find "${dir}" -name "*.sh" -type f
 
-find "${dir}" -maxdepth 1 -mindepth 1
+find "${dir}" -maxdepth 1 -mindepth 1 -name "*.sh" -type f
 
 sed --regexp-extended --expression "s/^open-jdk-//"
 
@@ -494,9 +494,10 @@ local version=$( \
 		--header "Authorization: Bearer ${token}" \
 		--silent \
 		"https://registry-1.docker.io/v2/liferay/${1}/manifests/latest" | \
-	grep --only-matching "\"org.label-schema.zulu${2}_${3}_version\":\"[0-9.]*\"" | \
+	grep --only-matching "\\\\\"org.label-schema.zulu${2}_${3}_version\\\\\":\\\\\"[0-9]*\.[0-9]*\.[0-9]*\\\\\"" | \
 	head --lines=1 | \
-	sed --expression "s/\"//g")
+	sed --expression "s/\\\\\"//g" | \
+	sed --expression "s:.*\:::")
 ```
 
 ## Return Codes
