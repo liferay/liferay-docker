@@ -348,6 +348,15 @@ function _get_cmp_activation_key {
 	if [[ "${activation_key_year}" -eq 2026 ]]
 	then
 		echo "${LIFERAY_CMP_ACTIVATION_KEY_2026}"
+	elif [[ "${activation_key_year}" -eq 2027 ]]
+	then
+		echo "${LIFERAY_CMP_ACTIVATION_KEY_2027}"
+	elif [[ "${activation_key_year}" -eq 2028 ]]
+	then
+		echo "${LIFERAY_CMP_ACTIVATION_KEY_2028}"
+	elif [[ "${activation_key_year}" -eq 2029 ]]
+	then
+		echo "${LIFERAY_CMP_ACTIVATION_KEY_2029}"
 	fi
 }
 
@@ -357,6 +366,15 @@ function _get_dsr_activation_key {
 	if [[ "${activation_key_year}" -eq 2026 ]]
 	then
 		echo "${LIFERAY_DSR_ACTIVATION_KEY_2026}"
+	elif [[ "${activation_key_year}" -eq 2027 ]]
+	then
+		echo "${LIFERAY_DSR_ACTIVATION_KEY_2027}"
+	elif [[ "${activation_key_year}" -eq 2028 ]]
+	then
+		echo "${LIFERAY_DSR_ACTIVATION_KEY_2028}"
+	elif [[ "${activation_key_year}" -eq 2029 ]]
+	then
+		echo "${LIFERAY_DSR_ACTIVATION_KEY_2029}"
 	fi
 }
 
