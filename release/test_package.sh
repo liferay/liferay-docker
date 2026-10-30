@@ -145,7 +145,10 @@ function test_package_package_wars {
 		https://releases.liferay.com/dxp/2025.q3.0/liferay-dxp-tomcat-2025.q3.0-1756231955.zip \
 		liferay-dxp-tomcat-2025.q3.0-1756231955.zip 1> /dev/null
 
-	unzip -oq liferay-dxp-tomcat-2025.q3.0-1756231955.zip -d "${_BUILD_DIR}/release"
+	unzip \
+		-d "${_BUILD_DIR}/release" \
+		-oq \
+		liferay-dxp-tomcat-2025.q3.0-1756231955.zip
 
 	lc_cd "${_BUILD_DIR}/release/liferay-${LIFERAY_RELEASE_PRODUCT_NAME}/tomcat/webapps/ROOT"
 
@@ -181,7 +184,10 @@ function test_package_portal_dependencies {
 		https://releases.liferay.com/dxp/7.3.10-u36/liferay-dxp-tomcat-7.3.10-u36-1706652128.zip \
 		liferay-dxp-tomcat-7.3.10-u36-1706652128.zip 1> /dev/null
 
-	unzip -oq liferay-dxp-tomcat-7.3.10-u36-1706652128.zip -d "${_BUILD_DIR}/release"
+	unzip \
+		-d "${_BUILD_DIR}/release" \
+		-oq \
+		liferay-dxp-tomcat-7.3.10-u36-1706652128.zip
 
 	lc_cd "${_BUILD_DIR}/release"
 

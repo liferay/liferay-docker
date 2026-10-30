@@ -97,6 +97,8 @@ function calculate_checksums {
 
 	lc_cd "${_BUILD_DIR}/hotfix/binaries"
 
+	local file
+
 	find . -type f -print0 | while IFS= read -r -d '' file
 	do
 		sha256sum "${file}" >> ../checksums
@@ -220,13 +222,21 @@ function compare_jars {
 
 					unzip -p "${jar1}" "${line}" > "${_BUILD_DIR}/tmp/jar1/${class_file_name}"
 
-					javap -c -private -verbose "${_BUILD_DIR}/tmp/jar1/${class_file_name}" | tail --lines=+4 > \
-						"${_BUILD_DIR}/tmp/jar1/${class_file_name}.txt"
+					javap \
+						-c \
+						-private \
+						-verbose \
+						"${_BUILD_DIR}/tmp/jar1/${class_file_name}" | \
+						tail --lines=+4 > "${_BUILD_DIR}/tmp/jar1/${class_file_name}.txt"
 
 					unzip -p "${jar2}" "${line}" > "${_BUILD_DIR}/tmp/jar2/${class_file_name}" 2> /dev/null
 
-					javap -c -private -verbose "${_BUILD_DIR}/tmp/jar2/${class_file_name}" 2> /dev/null | tail --lines=+4 > \
-						"${_BUILD_DIR}/tmp/jar2/${class_file_name}.txt"
+					javap \
+						-c \
+						-private \
+						-verbose \
+						"${_BUILD_DIR}/tmp/jar2/${class_file_name}" 2> /dev/null | \
+						tail --lines=+4 > "${_BUILD_DIR}/tmp/jar2/${class_file_name}.txt"
 
 					local diff_result=$( \
 						diff \
@@ -361,6 +371,8 @@ function create_documentation {
 
 	if [ -n "${LIFERAY_RELEASE_HOTFIX_FIXED_ISSUES}" ]
 	then
+		local line
+
 		echo "${LIFERAY_RELEASE_HOTFIX_FIXED_ISSUES}" | \
 			tr ',' '\n' | \
 			while read -r line
@@ -394,6 +406,8 @@ function create_documentation {
 
 	if [ -e "${_BUILD_DIR}/hotfix/checksums" ]
 	then
+		local line
+
 		while read -r line
 		do
 			local checksum=${line%% *}
@@ -421,6 +435,8 @@ function create_documentation {
 	if [ -e "${_BUILD_DIR}/hotfix/removed_files" ]
 	then
 		first_line=true
+
+		local file
 
 		while read -r file
 		do
@@ -452,6 +468,8 @@ function create_hotfix {
 
 	diff --brief --recursive "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | \
 		grep --invert-match /work/Catalina
+
+	local change
 
 	diff --brief --recursive "${_BUNDLES_DIR}" "${_RELEASE_DIR}" | \
 		grep --invert-match /work/Catalina | \

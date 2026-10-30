@@ -38,6 +38,7 @@ function tear_down {
 
 	unset _BUILD_DIR
 	unset _BUNDLES_DIR
+	unset _PRODUCT_VERSION
 	unset _RELEASE_DIR
 }
 
@@ -146,6 +147,9 @@ function _test_hotfix_prepare_release_dir {
 		"${_RELEASES_DIR}" \
 		"${_TEST_RELEASE_DIR}" \
 		"${release_file_dir}"
+
+	unset _RELEASES_DIR
+	unset _TEST_RELEASE_DIR
 }
 
 function _test_hotfix_set_hotfix_name {
@@ -160,6 +164,8 @@ function _test_hotfix_set_hotfix_name {
 		"${2}" \
 		"${_HOTFIX_NAME}" \
 		"hotfix-12"
+
+	unset LIFERAY_RELEASE_HOTFIX_ID
 }
 
 main "${@}"
