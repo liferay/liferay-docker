@@ -120,7 +120,8 @@ function build_docker_image {
 
 	set_actual_product_version "${LIFERAY_DOCKER_RELEASE_VERSION}"
 
-	if is_early_product_version_than "2025.q2.9"
+	if is_early_product_version_than "2025.q2.9" ||
+	   is_early_product_version_than "7.4.13-u138"
 	then
 		LIFERAY_IMAGEMAGICK_PERIOD_ENABLED="true"
 		OPTIONAL_PACKAGES="gifsicle imagemagick"
