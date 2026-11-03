@@ -151,7 +151,7 @@ function check_release {
 	   [[ "${RELEASE_FILE_NAME}" == *-private* ]]
 	then
 		DOCKER_IMAGE_NAME=$(get_docker_image_name "${LIFERAY_DOCKER_RELEASE_VERSION}")
-		DOCKER_LABEL_NAME="Liferay DXP"
+		DOCKER_LABEL_NAME=$(get_docker_label_name "${LIFERAY_DOCKER_RELEASE_VERSION}")
 	else
 		echo "${RELEASE_FILE_NAME} is an unsupported release file name."
 
@@ -169,14 +169,11 @@ function check_usage {
 }
 
 function download_trial_dxp_license {
-	if [ "${DOCKER_LABEL_NAME}" == "Liferay DXP" ]
-	then
-		rm --force --recursive "${TEMP_DIR}/liferay/data/license"
+	rm --force --recursive "${TEMP_DIR}/liferay/data/license"
 
-		if ! ./download_trial_dxp_license.sh "${TEMP_DIR}/liferay" "$(date "${CURRENT_DATE}" "+%s000")"
-		then
-			exit 4
-		fi
+	if ! ./download_trial_dxp_license.sh "${TEMP_DIR}/liferay" "$(date "${CURRENT_DATE}" "+%s000")"
+	then
+		exit 4
 	fi
 }
 
@@ -448,8 +445,8 @@ function print_help {
 	echo "    LIFERAY_DOCKER_HUB_TOKEN (optional): Docker Hub token to log in automatically"
 	echo "    LIFERAY_DOCKER_HUB_USERNAME (optional): Docker Hub username to log in automatically"
 	echo "    LIFERAY_DOCKER_IMAGE_PLATFORMS (optional): Comma separated Docker image platforms to build when the \"push\" parameter is set"
-	echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required for DXP): API header used to generate the trial license"
-	echo "    LIFERAY_DOCKER_LICENSE_API_URL (required for DXP): API URL to generate the trial license"
+	echo "    LIFERAY_DOCKER_LICENSE_API_HEADER (required): API header used to generate the trial license"
+	echo "    LIFERAY_DOCKER_LICENSE_API_URL (required): API URL to generate the trial license"
 	echo "    LIFERAY_DOCKER_RELEASE_CANDIDATE (optional): If set to \"true\", a release candidate will be uploaded to Docker Hub"
 	echo "    LIFERAY_DOCKER_RELEASE_FILE_URL (required): URL to a Liferay bundle"
 	echo "    LIFERAY_DOCKER_REPOSITORY (optional): Docker repository"
