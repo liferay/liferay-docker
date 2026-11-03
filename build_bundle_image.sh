@@ -192,6 +192,15 @@ function get_docker_image_name {
 	fi
 }
 
+function get_docker_label_name {
+	if is_cms_standalone_release "${1}"
+	then
+		echo "Liferay CMS"
+	else
+		echo "Liferay DXP"
+	fi
+}
+
 function get_latest_tomcat_version {
 	local tomcat_major_version=$(echo "${1}" | cut --delimiter='.' --fields=1)
 
