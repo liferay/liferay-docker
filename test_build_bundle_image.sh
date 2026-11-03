@@ -12,6 +12,7 @@ function main {
 		"${1}"
 	else
 		test_build_bundle_image_get_docker_image_name
+		test_build_bundle_image_get_docker_label_name
 		test_build_bundle_image_get_latest_tomcat_version
 		test_build_bundle_image_set_parent_image
 	fi
@@ -57,6 +58,19 @@ function test_build_bundle_image_get_docker_image_name {
 	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
 }
 
+function test_build_bundle_image_get_docker_label_name {
+	_test_build_bundle_image_get_docker_label_name "2025.q1.0-lts" "Liferay DXP"
+	_test_build_bundle_image_get_docker_label_name "2026.q4.0-cms-standalone" "Liferay CMS"
+	_test_build_bundle_image_get_docker_label_name "7.4.13-u124" "Liferay DXP"
+	_test_build_bundle_image_get_docker_label_name "7.4.13-u155-cms-standalone" "Liferay CMS"
+
+	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
+
+	_test_build_bundle_image_get_docker_label_name "cms-standalone-weekly" "Liferay CMS"
+
+	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
+}
+
 function test_build_bundle_image_get_latest_tomcat_version {
 	_test_build_bundle_image_get_latest_tomcat_version "9.0.107" "10.1.40" "${_LATEST_TOMCAT_VERSION_TEST}"
 	_test_build_bundle_image_get_latest_tomcat_version "9.0.83" "" "${_LATEST_TOMCAT_VERSION_TEST}"
@@ -93,6 +107,10 @@ function _set_dockerfile {
 
 function _test_build_bundle_image_get_docker_image_name {
 	assert_equals "$(get_docker_image_name "${1}")" "${2}"
+}
+
+function _test_build_bundle_image_get_docker_label_name {
+	assert_equals "$(get_docker_label_name "${1}")" "${2}"
 }
 
 function _test_build_bundle_image_get_latest_tomcat_version {
