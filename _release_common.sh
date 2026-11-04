@@ -182,7 +182,10 @@ function get_release_output {
 }
 
 function get_release_patch_version {
-	echo "$(_get_product_version_without_suffix "${1}")" | cut --delimiter='.' --fields=3
+	echo "$(_get_product_version_without_suffix "${1}")" | \
+		cut \
+			--delimiter='.' \
+			--fields=3
 }
 
 function get_release_quarter {

@@ -511,7 +511,10 @@ function _update_bundles_yml {
 				grep "$(get_product_group_version)" | \
 				tail --lines=1)
 
-			sed --expression "/${previous_quarterly_release_key}/a\    ${_PRODUCT_VERSION}:" --in-place "${_BASE_DIR}/bundles.yml"
+			sed \
+				--expression "/${previous_quarterly_release_key}/a\    ${_PRODUCT_VERSION}:" \
+				--in-place \
+				"${_BASE_DIR}/bundles.yml"
 		fi
 	fi
 
@@ -529,14 +532,24 @@ function _update_bundles_yml {
 	then
 		local nightly_bundle_url=$(yq eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url" "${_BASE_DIR}/bundles.yml")
 
-		yq --indent 4 --inplace eval "del(.\"${product_version_key}\".\"${product_version_key}.nightly\")" "${_BASE_DIR}/bundles.yml"
+		yq \
+			--indent 4 \
+			--inplace \
+			eval \
+			"del(.\"${product_version_key}\".\"${product_version_key}.nightly\")" \
+			"${_BASE_DIR}/bundles.yml"
 		yq \
 			--indent 4 \
 			--inplace \
 			eval \
 			".\"${product_version_key}\".\"${_PRODUCT_VERSION}\" = {}" \
 			"${_BASE_DIR}/bundles.yml"
-		yq --indent 4 --inplace eval ".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url = \"${nightly_bundle_url}\"" "${_BASE_DIR}/bundles.yml"
+		yq \
+			--indent 4 \
+			--inplace \
+			eval \
+			".\"${product_version_key}\".\"${product_version_key}.nightly\".bundle_url = \"${nightly_bundle_url}\"" \
+			"${_BASE_DIR}/bundles.yml"
 	fi
 
 	sed --expression "/^$/d" --in-place "${_BASE_DIR}/bundles.yml"
