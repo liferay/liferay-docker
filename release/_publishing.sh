@@ -280,15 +280,16 @@ function upload_hotfix {
 	fi
 
 	local gcp_bucket="liferay-hotfixes"
+	local hotfix_dir_name=$(get_hotfix_dir_name)
 
-	if gcloud storage ls "gs://${gcp_bucket}/${_PRODUCT_VERSION}" | grep --quiet "${_HOTFIX_FILE_NAME}"
+	if gcloud storage ls "gs://${gcp_bucket}/${hotfix_dir_name}" | grep --quiet "${_HOTFIX_FILE_NAME}"
 	then
 		lc_log INFO "Skipping the upload of ${_HOTFIX_FILE_NAME} to GCP bucket ${gcp_bucket} because it already exists."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	gcloud storage cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://${gcp_bucket}/${_PRODUCT_VERSION}/"
+	gcloud storage cp "${_BUILD_DIR}/${_HOTFIX_FILE_NAME}" "gs://${gcp_bucket}/${hotfix_dir_name}/"
 
 	if [[ "${?}" -ne 0 ]]
 	then
