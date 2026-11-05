@@ -15,6 +15,7 @@ function main {
 	else
 		test_marketplace_check_liferay_marketplace_product_activation_key
 		test_marketplace_check_liferay_marketplace_products_compatibility
+		test_marketplace_check_usage
 		test_marketplace_deploy_liferay_marketplace_product_activation_key
 		test_marketplace_get_cmp_activation_key
 		test_marketplace_get_dsr_activation_key
@@ -100,6 +101,12 @@ function test_marketplace_check_liferay_marketplace_products_compatibility {
 	assert_equals \
 		"${?}" "0" \
 		"$(ls -1 "${_BUNDLES_DIR}/osgi/modules/liferaycommerceminium4globalcss.zip" | wc --lines)" "1"
+}
+
+function test_marketplace_check_usage {
+	(check_usage) &> /dev/null
+
+	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 }
 
 function test_marketplace_deploy_liferay_marketplace_product_activation_key {
