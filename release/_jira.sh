@@ -123,7 +123,9 @@ function add_jira_issue_with_description {
 }
 
 function _invoke_jira_api {
-	local http_response=$( \
+	local http_response
+
+	http_response=$( \
 		curl \
 			--data "${2}" \
 			--fail \
@@ -136,7 +138,7 @@ function _invoke_jira_api {
 			--user "${LIFERAY_RELEASE_JIRA_USER}:${LIFERAY_RELEASE_JIRA_TOKEN}" \
 			"${1}")
 
-	if [ "$(echo "${http_response}" | jq --exit-status '.id?')" != "null" ]
+	if [[ "${?}" -eq 0 ]] && [ "$(echo "${http_response}" | jq --exit-status '.id?')" != "null" ]
 	then
 		echo "${http_response}" | jq --raw-output '.key'
 
