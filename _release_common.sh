@@ -38,6 +38,17 @@ function get_due_date {
 	echo "${date}"
 }
 
+function get_hotfix_dir_name {
+	local product_version=$(_get_product_version "${1}")
+
+	if is_cms_standalone_release "${product_version}"
+	then
+		echo "cms-standalone/${product_version}"
+	else
+		echo "${product_version}"
+	fi
+}
+
 function get_latest_product_version {
 	local product_group_version=${2}
 	local product_name=""
