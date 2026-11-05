@@ -150,6 +150,15 @@ function set_liferay_marketplace_products_compatibility_properties {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
+	_set_liferay_marketplace_products
+
+	if [ -z "$(_get_liferay_marketplace_product_names_by_release "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}")" ]
+	then
+		lc_log INFO "The compatibility of Liferay Marketplace products should not be checked on the ${_PRODUCT_VERSION} release."
+
+		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	fi
+
 	lc_log INFO "Writing the Liferay Marketplace products compatibility check parameters to ${properties_file}."
 
 	echo "LIFERAY_RELEASE_CMS_STANDALONE=${LIFERAY_RELEASE_CMS_STANDALONE}" > "${properties_file}"
