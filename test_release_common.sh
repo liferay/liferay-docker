@@ -12,6 +12,7 @@ function main {
 		"${1}"
 	else
 		test_release_common_get_due_date
+		test_release_common_get_hotfix_dir_name
 		test_release_common_get_latest_product_version
 		test_release_common_get_package_dir_name
 		test_release_common_get_premium_support_lts_release_branches
@@ -78,6 +79,13 @@ function test_release_common_get_due_date {
 	_test_release_common_get_due_date "1" "2025-12-31" "2026-01-01"
 	_test_release_common_get_due_date "2" "2025-06-04" "2025-06-06"
 	_test_release_common_get_due_date "3" "2025-06-05" "2025-06-10"
+}
+
+function test_release_common_get_hotfix_dir_name {
+	_test_release_common_get_hotfix_dir_name "2026.q4.0" "2026.q4.0"
+	_test_release_common_get_hotfix_dir_name "2026.q4.0-cms-standalone" "cms-standalone/2026.q4.0-cms-standalone"
+	_test_release_common_get_hotfix_dir_name "2027.q1.0-lts" "2027.q1.0-lts"
+	_test_release_common_get_hotfix_dir_name "2027.q1.0-lts-cms-standalone" "cms-standalone/2027.q1.0-lts-cms-standalone"
 }
 
 function test_release_common_get_latest_product_version {
@@ -436,6 +444,12 @@ function _test_release_common_get_due_date {
 		"${3}"
 
 	unset LIFERAY_RELEASE_TEST_DATE
+}
+
+function _test_release_common_get_hotfix_dir_name {
+	_PRODUCT_VERSION=${1}
+
+	assert_equals "$(get_hotfix_dir_name)" "${2}"
 }
 
 function _test_release_common_get_latest_product_version {
