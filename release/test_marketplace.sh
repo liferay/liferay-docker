@@ -2,7 +2,7 @@
 
 source ../_liferay_common.sh
 source ../_test_common.sh
-source ./_marketplace.sh
+source ./check_liferay_marketplace_products_compatibility.sh
 
 function main {
 	trap tear_down EXIT

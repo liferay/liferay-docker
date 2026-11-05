@@ -8,12 +8,12 @@ source ./_ci.sh
 source ./_git.sh
 source ./_hotfix.sh
 source ./_jdk.sh
-source ./_marketplace.sh
 source ./_package.sh
 source ./_patcher.sh
 source ./_product.sh
 source ./_publishing.sh
 source ./_releases_json.sh
+source ./check_liferay_marketplace_products_compatibility.sh
 source ./scan_docker_image.sh
 
 function check_usage {
