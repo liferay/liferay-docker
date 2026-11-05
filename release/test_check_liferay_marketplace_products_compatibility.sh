@@ -262,7 +262,7 @@ function _test_marketplace_get_dsr_activation_key {
 }
 
 function _test_marketplace_get_latest_product_virtual_settings_file_entry_json_index {
-	local product_virtual_settings_file_entries=$(cat "${_RELEASE_ROOT_DIR}/test-dependencies/actual/test_marketplace_${1}.json")
+	local product_virtual_settings_file_entries=$(cat "${_RELEASE_ROOT_DIR}/test-dependencies/actual/test_check_liferay_marketplace_products_compatibility_${1}.json")
 
 	assert_equals \
 		"$(_get_latest_product_virtual_settings_file_entry_json_index "${product_virtual_settings_file_entries}")" \
