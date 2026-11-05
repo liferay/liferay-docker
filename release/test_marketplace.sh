@@ -26,6 +26,8 @@ function main {
 		test_marketplace_get_liferay_marketplace_product_names_by_release
 		test_marketplace_not_check_liferay_marketplace_products_compatibility
 		test_marketplace_not_deploy_liferay_marketplace_product_activation_key
+		test_marketplace_not_set_liferay_marketplace_products_compatibility_properties
+		test_marketplace_set_liferay_marketplace_products_compatibility_properties
 	fi
 }
 
@@ -62,15 +64,19 @@ function tear_down {
 		awk '{print $1}' | \
 		xargs --no-run-if-empty kill -9
 
+	rm --force "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp-tomcat-2025.q3.0-1756231955.zip"
+	rm --force "/tmp/liferay_marketplace_products_compatibility.properties"
 	rm --force --recursive "${_BUILD_DIR}"
 	rm --force --recursive "${_BUNDLES_DIR}"
-	rm --force "${_RELEASE_ROOT_DIR}/test-dependencies/liferay-dxp-tomcat-2025.q3.0-1756231955.zip"
 
 	unset LIFERAY_CMP_ACTIVATION_KEY_2026
 	unset LIFERAY_DSR_ACTIVATION_KEY_2026
 	unset LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2026
+	unset LIFERAY_RELEASE_CMS_STANDALONE
+	unset LIFERAY_RELEASE_OUTPUT
 	unset LIFERAY_RELEASE_TEST_DATE
 	unset _BUILD_DIR
+	unset _BUILD_TIMESTAMP
 	unset _BUNDLES_DIR
 	unset _PRODUCT_VERSION
 	unset _RELEASE_ROOT_DIR
@@ -202,6 +208,23 @@ function test_marketplace_not_deploy_liferay_marketplace_product_activation_key 
 	_test_marketplace_not_deploy_liferay_marketplace_product_activation_key "drools" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
+function test_marketplace_not_set_liferay_marketplace_products_compatibility_properties {
+	_test_marketplace_not_set_liferay_marketplace_products_compatibility_properties "nightly" "7.4.13-u155"
+}
+
+function test_marketplace_set_liferay_marketplace_products_compatibility_properties {
+	declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
+		["drools"]="15099181"
+	)
+
+	LIFERAY_RELEASE_OUTPUT="release-candidate"
+	_BUILD_TIMESTAMP="1695892964"
+
+	_test_marketplace_set_liferay_marketplace_products_compatibility_properties "" "2026.q4.0" "2026.q4.0"
+	_test_marketplace_set_liferay_marketplace_products_compatibility_properties "" "2026.q4.1" "2026.q4.1"
+	_test_marketplace_set_liferay_marketplace_products_compatibility_properties "true" "2026.q4.0-cms-standalone" "2026.q4.0"
+}
+
 function _test_marketplace_check_liferay_marketplace_product_activation_key {
 	local deployment_log_file=$(mktemp)
 
@@ -276,6 +299,30 @@ function _test_marketplace_not_deploy_liferay_marketplace_product_activation_key
 	_deploy_liferay_marketplace_product_activation_key "${1}" &> /dev/null
 
 	assert_equals "${?}" "${2}"
+}
+
+function _test_marketplace_not_set_liferay_marketplace_products_compatibility_properties {
+	LIFERAY_RELEASE_OUTPUT=${1}
+	_PRODUCT_VERSION=${2}
+
+	touch "/tmp/liferay_marketplace_products_compatibility.properties"
+
+	set_liferay_marketplace_products_compatibility_properties &> /dev/null
+
+	assert_equals \
+		"${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}" \
+		"$(ls "/tmp/liferay_marketplace_products_compatibility.properties" 2> /dev/null)" ""
+}
+
+function _test_marketplace_set_liferay_marketplace_products_compatibility_properties {
+	LIFERAY_RELEASE_CMS_STANDALONE=${1}
+	_PRODUCT_VERSION=${2}
+
+	set_liferay_marketplace_products_compatibility_properties &> /dev/null
+
+	assert_equals \
+		"${?}" "0" \
+		"$(cat "/tmp/liferay_marketplace_products_compatibility.properties")" "$(printf "%s\n" "LIFERAY_RELEASE_CMS_STANDALONE=${1}" "LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964" "LIFERAY_RELEASE_VERSION=${3}")"
 }
 
 main "${@}"
