@@ -13,22 +13,7 @@ function check_liferay_marketplace_products_compatibility {
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
 
-	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
-	then
-		declare -A LIFERAY_MARKETPLACE_PRODUCTS=(
-			["adyen"]="f05ab2d6-1d54-c72d-988a-91fcd5669ef3"
-			["cmp"]="d85abb01-6c60-addd-0f73-6621612aae72"
-			["drools"]="15099181"
-			["dsr"]="DSR"
-			["hubspot"]="53d5501f-abd7-b579-af7f-56b8b15966d0"
-			["liferaycommerceminium4globalcss"]="ebcf98b3-9844-b783-757a-579944b18b00"
-			["liferaypaypalbatch"]="a1946869-212f-0793-d703-b623d0f149a6"
-			["liferayupscommerceshippingengine"]="f1cb4b5e-fbdd-7f70-df5d-9f1a736784b2"
-			["opensearch"]="ea19fdc8-b908-690d-9f90-15edcdd23a87"
-			["punchout"]="175496027"
-			["stripe"]="6a02a832-083b-f08c-888a-0a59d7c09119"
-		)
-	fi
+	_set_liferay_marketplace_products
 
 	local liferay_marketplace_product_names=$(_get_liferay_marketplace_product_names_by_release "${!LIFERAY_MARKETPLACE_PRODUCTS[@]}")
 
@@ -683,6 +668,25 @@ function _set_liferay_marketplace_oauth2_token {
 	rm --force "${http_code_file}"
 
 	_LIFERAY_MARKETPLACE_OAUTH2_TOKEN=$(echo "${liferay_marketplace_oauth2_token_response}" | jq --raw-output ".access_token")
+}
+
+function _set_liferay_marketplace_products {
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
+	then
+		declare -A -g LIFERAY_MARKETPLACE_PRODUCTS=(
+			["adyen"]="f05ab2d6-1d54-c72d-988a-91fcd5669ef3"
+			["cmp"]="d85abb01-6c60-addd-0f73-6621612aae72"
+			["drools"]="15099181"
+			["dsr"]="DSR"
+			["hubspot"]="53d5501f-abd7-b579-af7f-56b8b15966d0"
+			["liferaycommerceminium4globalcss"]="ebcf98b3-9844-b783-757a-579944b18b00"
+			["liferaypaypalbatch"]="a1946869-212f-0793-d703-b623d0f149a6"
+			["liferayupscommerceshippingengine"]="f1cb4b5e-fbdd-7f70-df5d-9f1a736784b2"
+			["opensearch"]="ea19fdc8-b908-690d-9f90-15edcdd23a87"
+			["punchout"]="175496027"
+			["stripe"]="6a02a832-083b-f08c-888a-0a59d7c09119"
+		)
+	fi
 }
 
 function _update_product_supported_versions {
