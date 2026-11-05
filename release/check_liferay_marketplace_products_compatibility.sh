@@ -79,15 +79,17 @@ function check_liferay_marketplace_products_compatibility {
 
 	start_tomcat "print-startup-logs" >> "${_LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
 
+	local incompatible_liferay_marketplace_product_names=""
+
 	for liferay_marketplace_product_name in ${liferay_marketplace_product_names}
 	do
 		_check_liferay_marketplace_product_compatibility "${LIFERAY_MARKETPLACE_PRODUCTS[${liferay_marketplace_product_name}]}" "${liferay_marketplace_product_name}"
 
 		if [[ "${?}" -eq "${LIFERAY_COMMON_EXIT_CODE_BAD}" ]]
 		then
-			stop_tomcat &> /dev/null
+			incompatible_liferay_marketplace_product_names="${incompatible_liferay_marketplace_product_names} \`${liferay_marketplace_product_name}\`"
 
-			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+			continue
 		fi
 
 		_check_liferay_marketplace_product_activation_key "${liferay_marketplace_product_name}"
@@ -101,6 +103,17 @@ function check_liferay_marketplace_products_compatibility {
 	done
 
 	stop_tomcat &> /dev/null
+
+	if [ -n "${incompatible_liferay_marketplace_product_names}" ]
+	then
+		cat <<- END > "${_BUILD_DIR}/liferay_marketplace_products_compatibility_slack_message.txt"
+		*Affected release:* \`${_PRODUCT_VERSION}\`
+
+		*Incompatible products:*${incompatible_liferay_marketplace_product_names}
+		END
+
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+	fi
 }
 
 function check_usage {
@@ -252,7 +265,7 @@ function _check_liferay_marketplace_product_compatibility {
 
 		echo ""
 
-		return
+		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
 
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
