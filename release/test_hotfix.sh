@@ -51,14 +51,14 @@ function test_hotfix_compare_jars {
 
 function test_hotfix_prepare_release_dir {
 	_test_hotfix_prepare_release_dir "2026.q4.0" "liferay-dxp" "liferay-dxp-tomcat-2026.q4.0-1234567890"
-	_test_hotfix_prepare_release_dir "2026.q4.0-cms-standalone" "liferay-cms" "liferay-cms-standalone-tomcat-2026.q4.0-1234567890"
+	_test_hotfix_prepare_release_dir "2026.q4.0-cms" "liferay-cms" "liferay-cms-tomcat-2026.q4.0-1234567890"
 }
 
 function test_hotfix_set_hotfix_name {
 	_test_hotfix_set_hotfix_name "2026.q4.0" "liferay-dxp-2026.q4.0-hotfix-12.zip"
-	_test_hotfix_set_hotfix_name "2026.q4.0-cms-standalone" "liferay-cms-2026.q4.0-hotfix-12.zip"
+	_test_hotfix_set_hotfix_name "2026.q4.0-cms" "liferay-cms-2026.q4.0-hotfix-12.zip"
 	_test_hotfix_set_hotfix_name "2027.q1.0-lts" "liferay-dxp-2027.q1.0-lts-hotfix-12.zip"
-	_test_hotfix_set_hotfix_name "2027.q1.0-lts-cms-standalone" "liferay-cms-2027.q1.0-lts-hotfix-12.zip"
+	_test_hotfix_set_hotfix_name "2027.q1.0-lts-cms" "liferay-cms-2027.q1.0-lts-hotfix-12.zip"
 	_test_hotfix_set_hotfix_name "7.4.13-u154" "liferay-dxp-7.4.13-u154-hotfix-12.zip"
 }
 

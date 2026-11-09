@@ -51,7 +51,7 @@ function tear_down {
 	docker rmi --force "liferay/jdk11:latest" &> /dev/null
 	docker rmi --force "liferay/jdk21-jdk11-jdk8:latest" &> /dev/null
 	docker rmi --force "liferay/jdk21:latest" &> /dev/null
-	docker rmi --force "liferay/release-candidates:cms-standalone-weekly" &> /dev/null
+	docker rmi --force "liferay/release-candidates:cms-weekly" &> /dev/null
 	docker rmi --force $(docker images "liferay/dxp:${_LATEST_RELEASE}-slim") &> /dev/null
 
 	local file
@@ -85,21 +85,21 @@ function test_build_all_images_get_latest_available_zulu_version {
 
 function test_build_all_images_has_cms_standalone_tag {
 	assert_equals \
-		"$(docker images --format "{{.Repository}}:{{.Tag}}" "liferay/release-candidates:cms-standalone-weekly")" \
-		"liferay/release-candidates:cms-standalone-weekly"
+		"$(docker images --format "{{.Repository}}:{{.Tag}}" "liferay/release-candidates:cms-weekly")" \
+		"liferay/release-candidates:cms-weekly"
 }
 
 function test_build_all_images_has_slim_build_criteria {
 	_test_build_all_images_has_slim_build_criteria "2024.q2.0" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_build_all_images_has_slim_build_criteria "2025.q1.11-lts" "${LIFERAY_COMMON_EXIT_CODE_OK}"
-	_test_build_all_images_has_slim_build_criteria "2026.q4.0-cms-standalone" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_build_all_images_has_slim_build_criteria "2026.q4.0-cms" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	_test_build_all_images_has_slim_build_criteria "7.4.13-u124" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
-	_test_build_all_images_has_slim_build_criteria "7.4.13-u152-cms-standalone" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_build_all_images_has_slim_build_criteria "7.4.13-u152-cms" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	_test_build_all_images_has_slim_build_criteria "7.4.13.nightly" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
 function test_build_all_images_is_cms_standalone_container_healthy {
-	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true" _test_build_all_images_is_container_healthy "cms-standalone-weekly" "false"
+	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true" _test_build_all_images_is_container_healthy "cms-weekly" "false"
 }
 
 function test_build_all_images_latest_is_not_slim {

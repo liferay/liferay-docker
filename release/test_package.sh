@@ -85,7 +85,7 @@ function test_package_not_generate_release_properties_file {
 	_BUNDLES_DIR=""
 
 	_test_package_not_generate_release_properties_file "2025.q2.0" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	_test_package_not_generate_release_properties_file "2026.q4.0-cms-standalone" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
+	_test_package_not_generate_release_properties_file "2026.q4.0-cms" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 }
 
 function test_package_not_package_boms {

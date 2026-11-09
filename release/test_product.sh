@@ -166,7 +166,7 @@ function test_product_get_java_specification_version {
 
 function test_product_get_license_app_product_id_parameters {
 	_test_product_get_license_app_product_id_parameters "2026.q4.0" "-Dlicense.app.product.id.CMP=f37efde7-11b1-6ad7-5c60-07bec3334db1 -Dlicense.app.product.id.DSR=23bd2e2b-c4aa-45d7-86c9-ba0e2f890bf5"
-	_test_product_get_license_app_product_id_parameters "2026.q4.0-cms-standalone" "-Dlicense.app.product.id.CMP=f37efde7-11b1-6ad7-5c60-07bec3334db1"
+	_test_product_get_license_app_product_id_parameters "2026.q4.0-cms" "-Dlicense.app.product.id.CMP=f37efde7-11b1-6ad7-5c60-07bec3334db1"
 }
 
 function test_product_is_free_tier_ignored_version {
@@ -228,7 +228,7 @@ function test_product_set_product_version_cms_standalone {
 
 	assert_equals \
 		"${_PRODUCT_VERSION}" \
-		"7.4.13-u152-cms-standalone"
+		"7.4.13-u152-cms"
 
 	unset LIFERAY_RELEASE_CMS_STANDALONE
 }

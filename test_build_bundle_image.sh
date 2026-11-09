@@ -39,34 +39,34 @@ function tear_down {
 
 function test_build_bundle_image_get_docker_image_name {
 	_test_build_bundle_image_get_docker_image_name "2025.q1.0-lts" "dxp"
-	_test_build_bundle_image_get_docker_image_name "2026.q4.0-cms-standalone" "cms-standalone"
+	_test_build_bundle_image_get_docker_image_name "2026.q4.0-cms" "cms"
 	_test_build_bundle_image_get_docker_image_name "7.4.13-u124" "dxp"
-	_test_build_bundle_image_get_docker_image_name "7.4.13-u155-cms-standalone" "cms-standalone"
+	_test_build_bundle_image_get_docker_image_name "7.4.13-u155-cms" "cms"
 	_test_build_bundle_image_get_docker_image_name "7.4.13.nightly" "dxp"
 
 	LIFERAY_DOCKER_RELEASE_CANDIDATE="true"
 
 	_test_build_bundle_image_get_docker_image_name "2025.q1.0-lts-1739837301" "release-candidates"
-	_test_build_bundle_image_get_docker_image_name "2026.q4.0-cms-standalone-1792705742" "release-candidates"
+	_test_build_bundle_image_get_docker_image_name "2026.q4.0-cms-1792705742" "release-candidates"
 
 	unset LIFERAY_DOCKER_RELEASE_CANDIDATE
 
 	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
 
-	_test_build_bundle_image_get_docker_image_name "cms-standalone-weekly" "release-candidates"
+	_test_build_bundle_image_get_docker_image_name "cms-weekly" "release-candidates"
 
 	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
 }
 
 function test_build_bundle_image_get_docker_label_name {
 	_test_build_bundle_image_get_docker_label_name "2025.q1.0-lts" "Liferay DXP"
-	_test_build_bundle_image_get_docker_label_name "2026.q4.0-cms-standalone" "Liferay CMS"
+	_test_build_bundle_image_get_docker_label_name "2026.q4.0-cms" "Liferay CMS"
 	_test_build_bundle_image_get_docker_label_name "7.4.13-u124" "Liferay DXP"
-	_test_build_bundle_image_get_docker_label_name "7.4.13-u155-cms-standalone" "Liferay CMS"
+	_test_build_bundle_image_get_docker_label_name "7.4.13-u155-cms" "Liferay CMS"
 
 	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
 
-	_test_build_bundle_image_get_docker_label_name "cms-standalone-weekly" "Liferay CMS"
+	_test_build_bundle_image_get_docker_label_name "cms-weekly" "Liferay CMS"
 
 	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
 }
@@ -92,7 +92,7 @@ function test_build_bundle_image_set_parent_image {
 	_test_build_bundle_image_set_parent_image "2024.q2.0" "jdk11" "jdk11"
 	_test_build_bundle_image_set_parent_image "2024.q3.0" "jdk21" "jdk21"
 	_test_build_bundle_image_set_parent_image "2025.q1.0" "jdk21" "jdk21"
-	_test_build_bundle_image_set_parent_image "2026.q4.0-cms-standalone" "jdk21" "jdk21"
+	_test_build_bundle_image_set_parent_image "2026.q4.0-cms" "jdk21" "jdk21"
 	_test_build_bundle_image_set_parent_image "7.2.10.8" "jdk11-jdk8" "jdk11-jdk8"
 	_test_build_bundle_image_set_parent_image "7.3.10-u36" "jdk11-jdk8" "jdk11-jdk8"
 	_test_build_bundle_image_set_parent_image "7.4.13.nightly" "jdk21" "jdk21"

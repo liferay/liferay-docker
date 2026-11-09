@@ -77,10 +77,10 @@ function tear_down {
 function test_release_gold_check_supported_versions {
 	_test_release_gold_check_supported_versions "2024.q1.12" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	_test_release_gold_check_supported_versions "2025.q5.0" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	_test_release_gold_check_supported_versions "2026.q3.5-cms-standalone" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_release_gold_check_supported_versions "2026.q3.5-cms" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 	_test_release_gold_check_supported_versions "7.0.6-ga7" "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	_test_release_gold_check_supported_versions "7.3.10-u36" "${LIFERAY_COMMON_EXIT_CODE_OK}"
-	_test_release_gold_check_supported_versions "7.4.13-u154-cms-standalone" "${LIFERAY_COMMON_EXIT_CODE_OK}"
+	_test_release_gold_check_supported_versions "7.4.13-u154-cms" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
 function test_release_gold_check_usage {
@@ -90,7 +90,7 @@ function test_release_gold_check_usage {
 function test_release_gold_check_usage_with_cms_standalone_suffix {
 	LIFERAY_RELEASE_CMS_STANDALONE="true"
 	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="false"
-	LIFERAY_RELEASE_VERSION="2026.q3.5-cms-standalone"
+	LIFERAY_RELEASE_VERSION="2026.q3.5-cms"
 
 	(check_usage) &> /dev/null
 
