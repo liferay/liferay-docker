@@ -174,7 +174,7 @@ function set_liferay_marketplace_products_compatibility_properties {
 
 	lc_log INFO "Writing the Liferay Marketplace products compatibility check parameters to ${properties_file}."
 
-	echo "LIFERAY_RELEASE_CMS_STANDALONE=${LIFERAY_RELEASE_CMS_STANDALONE}" > "${properties_file}"
+	echo "LIFERAY_RELEASE_CMS=${LIFERAY_RELEASE_CMS}" > "${properties_file}"
 	echo "LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=${_BUILD_TIMESTAMP}" >> "${properties_file}"
 	echo "LIFERAY_RELEASE_VERSION=$(get_product_version_without_cms_suffix)" >> "${properties_file}"
 }
