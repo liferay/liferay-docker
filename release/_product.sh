@@ -506,7 +506,7 @@ function set_product_version {
 
 	if is_cms_standalone_release
 	then
-		_PRODUCT_VERSION="${_PRODUCT_VERSION}-cms-standalone"
+		_PRODUCT_VERSION="${_PRODUCT_VERSION}-cms"
 	fi
 
 	lc_log INFO "Product Version: ${_PRODUCT_VERSION}"

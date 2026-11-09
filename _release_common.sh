@@ -43,7 +43,7 @@ function get_hotfix_dir_name {
 
 	if is_cms_standalone_release "${product_version}"
 	then
-		echo "cms-standalone/${product_version}"
+		echo "cms/${product_version}"
 	else
 		echo "${product_version}"
 	fi
@@ -134,8 +134,8 @@ function get_product_group_version {
 	echo "$(_get_product_version "${1}")" | cut --delimiter='.' --fields=1,2
 }
 
-function get_product_version_without_cms_standalone_suffix {
-	echo "$(_get_product_version "${1}")" | sed --expression "s/-cms-standalone//"
+function get_product_version_without_cms_suffix {
+	echo "$(_get_product_version "${1}")" | sed --expression "s/-cms//"
 }
 
 function get_product_version_without_lts_suffix {
@@ -152,7 +152,7 @@ function get_product_version_without_lts_suffix {
 function get_release_candidates_dir_name {
 	if is_weekly_cms_standalone_release
 	then
-		echo "liferay-releases-candidates/cms-standalone-weekly"
+		echo "liferay-releases-candidates/cms-weekly"
 	else
 		echo "liferay-releases-candidates"
 	fi
@@ -163,10 +163,10 @@ function get_release_dir_name {
 
 	if is_weekly_cms_standalone_release
 	then
-		echo "cms-standalone-weekly"
+		echo "cms-weekly"
 	elif is_cms_standalone_release "${product_version}"
 	then
-		echo "cms-standalone/${product_version}"
+		echo "cms/${product_version}"
 	else
 		echo "dxp/${product_version}"
 	fi
@@ -248,7 +248,7 @@ function get_tomcat_bundle_name {
 
 	if is_cms_standalone_release "${product_version}"
 	then
-		echo "liferay-cms-standalone-tomcat-$(get_product_version_without_cms_standalone_suffix "${product_version}")-${_BUILD_TIMESTAMP}"
+		echo "liferay-cms-tomcat-$(get_product_version_without_cms_suffix "${product_version}")-${_BUILD_TIMESTAMP}"
 	else
 		echo "liferay-${LIFERAY_RELEASE_PRODUCT_NAME}-tomcat-${product_version}-${_BUILD_TIMESTAMP}"
 	fi
@@ -305,7 +305,8 @@ function is_ai_hub_release {
 function is_cms_standalone_release {
 	if is_weekly_cms_standalone_release ||
 	   [ "${LIFERAY_RELEASE_CMS_STANDALONE}" == "true" ] ||
-	   [[ "$(_get_product_version "${1}")" == *cms-standalone* ]]
+	   [[ "$(_get_product_version "${1}")" == *-cms ]] ||
+	   [[ "$(_get_product_version "${1}")" == *-cms-* ]]
 	then
 		return 0
 	fi

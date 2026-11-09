@@ -384,12 +384,12 @@ function upload_release {
 		then
 			gcloud storage rm --recursive "gs://${release_candidates_dir_name}/"
 
-			gcloud storage rm --recursive "gs://liferay-releases/cms-standalone-weekly/"
+			gcloud storage rm --recursive "gs://liferay-releases/$(get_release_dir_name)/"
 
 			gcloud storage cp \
 				"${_BUILD_DIR}/release/.lfrrelease-tomcat-bundle" \
 				"${_BUILD_DIR}/release/$(get_tomcat_bundle_name).7z" \
-				"gs://liferay-releases/cms-standalone-weekly/"
+				"gs://liferay-releases/$(get_release_dir_name)/"
 		else
 			gcloud storage rm --recursive "gs://${release_candidates_dir_name}/${_PRODUCT_VERSION}-[0-9]*"
 		fi

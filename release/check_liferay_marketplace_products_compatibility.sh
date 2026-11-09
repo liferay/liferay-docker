@@ -176,7 +176,7 @@ function set_liferay_marketplace_products_compatibility_properties {
 
 	echo "LIFERAY_RELEASE_CMS_STANDALONE=${LIFERAY_RELEASE_CMS_STANDALONE}" > "${properties_file}"
 	echo "LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=${_BUILD_TIMESTAMP}" >> "${properties_file}"
-	echo "LIFERAY_RELEASE_VERSION=$(get_product_version_without_cms_standalone_suffix)" >> "${properties_file}"
+	echo "LIFERAY_RELEASE_VERSION=$(get_product_version_without_cms_suffix)" >> "${properties_file}"
 }
 
 function _check_liferay_marketplace_product_activation_key {

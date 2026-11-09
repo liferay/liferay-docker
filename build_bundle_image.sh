@@ -90,7 +90,7 @@ function build_docker_image {
 	do
 		if is_weekly_cms_standalone_release
 		then
-			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:cms-standalone-weekly")
+			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:cms-weekly")
 		elif [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL%}" == */snapshot-* ]]
 		then
 			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${release_branch}-${release_version_single}-${release_hash}")
@@ -146,7 +146,7 @@ function build_docker_image {
 }
 
 function check_release {
-	if [[ "${RELEASE_FILE_NAME}" == *-cms-standalone-* ]] ||
+	if [[ "${RELEASE_FILE_NAME}" == *-cms-* ]] ||
 	   [[ "${RELEASE_FILE_NAME}" == *-dxp-* ]] ||
 	   [[ "${RELEASE_FILE_NAME}" == *-private* ]]
 	then
@@ -180,7 +180,7 @@ function download_trial_dxp_license {
 function get_docker_image_name {
 	if is_cms_standalone_release "${1}"
 	then
-		echo "cms-standalone"
+		echo "cms"
 	elif (is_release_candidate || is_weekly_cms_standalone_release)
 	then
 		echo "release-candidates"
@@ -319,7 +319,7 @@ function prepare_slim_image {
 		release_dir_name="nightly"
 	elif is_cms_standalone_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 	then
-		release_dir_name="dxp/$(get_product_version_without_cms_standalone_suffix "${LIFERAY_DOCKER_RELEASE_VERSION}")"
+		release_dir_name="dxp/$(get_product_version_without_cms_suffix "${LIFERAY_DOCKER_RELEASE_VERSION}")"
 	fi
 
 	local module

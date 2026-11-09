@@ -39,9 +39,9 @@ function check_usage {
 		print_help
 	fi
 
-	if [[ "${LIFERAY_RELEASE_VERSION}" == *cms-standalone* ]]
+	if [[ "${LIFERAY_RELEASE_VERSION}" == *-cms ]]
 	then
-		lc_log ERROR "Set LIFERAY_RELEASE_VERSION without the \"-cms-standalone\" suffix and LIFERAY_RELEASE_CMS_STANDALONE to \"true\"."
+		lc_log ERROR "Set LIFERAY_RELEASE_VERSION without the \"-cms\" suffix and LIFERAY_RELEASE_CMS_STANDALONE to \"true\"."
 
 		exit "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi

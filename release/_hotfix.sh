@@ -668,7 +668,7 @@ function prepare_release_dir {
 }
 
 function set_hotfix_name {
-	_HOTFIX_FILE_NAME="$(get_package_dir_name)-$(get_product_version_without_cms_standalone_suffix)-hotfix-${LIFERAY_RELEASE_HOTFIX_ID}.zip"
+	_HOTFIX_FILE_NAME="$(get_package_dir_name)-$(get_product_version_without_cms_suffix)-hotfix-${LIFERAY_RELEASE_HOTFIX_ID}.zip"
 	_HOTFIX_NAME="hotfix-${LIFERAY_RELEASE_HOTFIX_ID}"
 }
 
