@@ -26,7 +26,7 @@ function generate_checksum_files {
 function generate_release_properties_file {
 	if is_cms_release
 	then
-		lc_log INFO "The release.properties file should not be generated for CMS standalone releases."
+		lc_log INFO "The release.properties file should not be generated for CMS releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -109,7 +109,7 @@ function install_patching_tool {
 function package_boms {
 	if is_cms_release
 	then
-		lc_log INFO "BOMs should not be packaged for CMS standalone releases."
+		lc_log INFO "BOMs should not be packaged for CMS releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

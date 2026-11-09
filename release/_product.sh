@@ -346,7 +346,7 @@ function deploy_elasticsearch_sidecar {
 function deploy_opensearch {
 	if is_cms_release
 	then
-		lc_log INFO "The OpenSearch connector should not be deployed for CMS standalone releases."
+		lc_log INFO "The OpenSearch connector should not be deployed for CMS releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -646,7 +646,7 @@ function update_release_info_date {
 function update_release_info_name {
 	if ! is_cms_release
 	then
-		lc_log INFO "The property \"release.info.name\" should only be updated for CMS standalone releases."
+		lc_log INFO "The property \"release.info.name\" should only be updated for CMS releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

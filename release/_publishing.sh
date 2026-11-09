@@ -225,7 +225,7 @@ function upload_bom_file {
 function upload_boms {
 	if is_cms_release
 	then
-		lc_log INFO "BOMs should not be uploaded for CMS standalone releases."
+		lc_log INFO "BOMs should not be uploaded for CMS releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
@@ -304,7 +304,7 @@ function upload_hotfix {
 function upload_opensearch {
 	if is_cms_release
 	then
-		lc_log INFO "The OpenSearch connector should not be uploaded for CMS standalone releases."
+		lc_log INFO "The OpenSearch connector should not be uploaded for CMS releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi

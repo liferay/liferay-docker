@@ -99,7 +99,7 @@ function _scan_docker_image {
 
 	if is_cms_release "${LIFERAY_DOCKER_IMAGE_NAME}"
 	then
-		lc_log INFO "Skipping Docker image scan for CMS standalone releases."
+		lc_log INFO "Skipping Docker image scan for CMS releases."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 	fi
