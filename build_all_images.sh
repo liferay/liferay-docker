@@ -159,7 +159,7 @@ function build_bundle_images {
 		return
 	fi
 
-	if is_cms_standalone_release "${LIFERAY_DOCKER_IMAGE_FILTER}"
+	if is_cms_release "${LIFERAY_DOCKER_IMAGE_FILTER}"
 	then
 		echo "Building bundle images for CMS standalone release ${LIFERAY_DOCKER_IMAGE_FILTER}."
 

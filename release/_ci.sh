@@ -79,7 +79,7 @@ function _get_test_portal_branch_name {
 function _get_test_portal_release_parameters {
 	local release_url="https://storage.cloud.google.com/$(get_release_candidates_dir_name)/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
 
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		echo "--data-urlencode TEST_PORTAL_RELEASE_STANDALONE=true"
 		echo "--data-urlencode TEST_PORTAL_RELEASE_TOMCAT_URL=${release_url}$(get_tomcat_bundle_name).7z"

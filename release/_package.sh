@@ -24,7 +24,7 @@ function generate_checksum_files {
 }
 
 function generate_release_properties_file {
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		lc_log INFO "The release.properties file should not be generated for CMS standalone releases."
 
@@ -107,7 +107,7 @@ function install_patching_tool {
 }
 
 function package_boms {
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		lc_log INFO "BOMs should not be packaged for CMS standalone releases."
 
@@ -170,7 +170,7 @@ function package_release {
 	if [ "$(get_release_output)" == "nightly" ]
 	then
 		_package_tomcat_bundles "7.4.13.nightly"
-	elif is_cms_standalone_release
+	elif is_cms_release
 	then
 		_package_tomcat_bundles "${_PRODUCT_VERSION}"
 	else

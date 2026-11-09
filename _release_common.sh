@@ -41,7 +41,7 @@ function get_due_date {
 function get_hotfix_dir_name {
 	local product_version=$(_get_product_version "${1}")
 
-	if is_cms_standalone_release "${product_version}"
+	if is_cms_release "${product_version}"
 	then
 		echo "cms/${product_version}"
 	else
@@ -116,7 +116,7 @@ function get_latest_version_from_url {
 }
 
 function get_package_dir_name {
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		echo "liferay-cms"
 	else
@@ -150,7 +150,7 @@ function get_product_version_without_lts_suffix {
 }
 
 function get_release_candidates_dir_name {
-	if is_weekly_cms_standalone_release
+	if is_weekly_cms_release
 	then
 		echo "liferay-releases-candidates/cms-weekly"
 	else
@@ -161,10 +161,10 @@ function get_release_candidates_dir_name {
 function get_release_dir_name {
 	local product_version=$(_get_product_version "${1}")
 
-	if is_weekly_cms_standalone_release
+	if is_weekly_cms_release
 	then
 		echo "cms-weekly"
-	elif is_cms_standalone_release "${product_version}"
+	elif is_cms_release "${product_version}"
 	then
 		echo "cms/${product_version}"
 	else
@@ -246,7 +246,7 @@ function get_today {
 function get_tomcat_bundle_name {
 	local product_version=$(_get_product_version "${1}")
 
-	if is_cms_standalone_release "${product_version}"
+	if is_cms_release "${product_version}"
 	then
 		echo "liferay-cms-tomcat-$(get_product_version_without_cms_suffix "${product_version}")-${_BUILD_TIMESTAMP}"
 	else
@@ -302,8 +302,8 @@ function is_ai_hub_release {
 	return 1
 }
 
-function is_cms_standalone_release {
-	if is_weekly_cms_standalone_release ||
+function is_cms_release {
+	if is_weekly_cms_release ||
 	   [ "${LIFERAY_RELEASE_CMS_STANDALONE}" == "true" ] ||
 	   [[ "$(_get_product_version "${1}")" == *-cms ]] ||
 	   [[ "$(_get_product_version "${1}")" == *-cms-* ]]
@@ -413,7 +413,7 @@ function is_u_release_docker_image {
 	return 1
 }
 
-function is_weekly_cms_standalone_release {
+function is_weekly_cms_release {
 	if [ "${LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY}" == "true" ]
 	then
 		return 0

@@ -111,7 +111,7 @@ function main {
 
 	lc_time_run promote_packages
 
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		lc_time_run upload_to_docker_hub
 

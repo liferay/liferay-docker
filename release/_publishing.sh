@@ -223,7 +223,7 @@ function upload_bom_file {
 }
 
 function upload_boms {
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		lc_log INFO "BOMs should not be uploaded for CMS standalone releases."
 
@@ -302,7 +302,7 @@ function upload_hotfix {
 }
 
 function upload_opensearch {
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		lc_log INFO "The OpenSearch connector should not be uploaded for CMS standalone releases."
 
@@ -380,7 +380,7 @@ function upload_release {
 	else
 		local release_candidates_dir_name=$(get_release_candidates_dir_name)
 
-		if is_weekly_cms_standalone_release
+		if is_weekly_cms_release
 		then
 			gcloud storage rm --recursive "gs://${release_candidates_dir_name}/"
 
@@ -440,7 +440,7 @@ function upload_to_docker_hub {
 		else
 			LIFERAY_DOCKER_IMAGE_FILTER="7.4.13.nightly" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push
 		fi
-	elif is_cms_standalone_release
+	elif is_cms_release
 	then
 		LIFERAY_DOCKER_IMAGE_FILTER="${_PRODUCT_VERSION}" LIFERAY_DOCKER_RELEASE_CANDIDATE="false" ./build_all_images.sh --push
 	else

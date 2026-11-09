@@ -344,7 +344,7 @@ function deploy_elasticsearch_sidecar {
 }
 
 function deploy_opensearch {
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		lc_log INFO "The OpenSearch connector should not be deployed for CMS standalone releases."
 
@@ -398,7 +398,7 @@ function get_java_specification_version {
 }
 
 function is_free_tier_ignored_version {
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		echo "true"
 	else
@@ -407,7 +407,7 @@ function is_free_tier_ignored_version {
 }
 
 function is_free_tier_version {
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		echo "false"
 
@@ -504,7 +504,7 @@ function set_product_version {
 		_PRODUCT_VERSION="${_PRODUCT_VERSION}-ai-hub"
 	fi
 
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		_PRODUCT_VERSION="${_PRODUCT_VERSION}-cms"
 	fi
@@ -644,7 +644,7 @@ function update_release_info_date {
 }
 
 function update_release_info_name {
-	if ! is_cms_standalone_release
+	if ! is_cms_release
 	then
 		lc_log INFO "The property \"release.info.name\" should only be updated for CMS standalone releases."
 
@@ -712,7 +712,7 @@ function _add_lts_suffix_to_product_version {
 }
 
 function _get_build_profile_parameter {
-	if is_cms_standalone_release
+	if is_cms_release
 	then
 		echo "-Dbuild.profile=cms-standalone"
 	fi
@@ -721,7 +721,7 @@ function _get_build_profile_parameter {
 function _get_license_app_product_id_parameters {
 	local parameters="-Dlicense.app.product.id.CMP=f37efde7-11b1-6ad7-5c60-07bec3334db1"
 
-	if ! is_cms_standalone_release
+	if ! is_cms_release
 	then
 		parameters="${parameters} -Dlicense.app.product.id.DSR=23bd2e2b-c4aa-45d7-86c9-ba0e2f890bf5"
 	fi

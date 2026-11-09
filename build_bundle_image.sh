@@ -88,7 +88,7 @@ function build_docker_image {
 
 	for release_version_single in ${release_version}
 	do
-		if is_weekly_cms_standalone_release
+		if is_weekly_cms_release
 		then
 			DOCKER_IMAGE_TAGS+=("${LIFERAY_DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:cms-weekly")
 		elif [[ "${LIFERAY_DOCKER_RELEASE_FILE_URL%}" == */snapshot-* ]]
@@ -178,10 +178,10 @@ function download_trial_dxp_license {
 }
 
 function get_docker_image_name {
-	if is_cms_standalone_release "${1}"
+	if is_cms_release "${1}"
 	then
 		echo "cms"
-	elif (is_release_candidate || is_weekly_cms_standalone_release)
+	elif (is_release_candidate || is_weekly_cms_release)
 	then
 		echo "release-candidates"
 	else
@@ -190,7 +190,7 @@ function get_docker_image_name {
 }
 
 function get_docker_label_name {
-	if is_cms_standalone_release "${1}"
+	if is_cms_release "${1}"
 	then
 		echo "Liferay CMS"
 	else
@@ -317,7 +317,7 @@ function prepare_slim_image {
 	if is_nightly_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 	then
 		release_dir_name="nightly"
-	elif is_cms_standalone_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
+	elif is_cms_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 	then
 		release_dir_name="dxp/$(get_product_version_without_cms_suffix "${LIFERAY_DOCKER_RELEASE_VERSION}")"
 	fi
@@ -492,7 +492,7 @@ function push_docker_image {
 }
 
 function set_parent_image {
-	if is_cms_standalone_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
+	if is_cms_release "${LIFERAY_DOCKER_RELEASE_VERSION}"
 	then
 		return
 	fi
