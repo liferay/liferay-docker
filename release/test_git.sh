@@ -56,7 +56,7 @@ function set_up {
 
 function tear_down {
 	unset LIFERAY_PORTAL_REPOSITORY_NAME
-	unset LIFERAY_RELEASE_CMS_STANDALONE
+	unset LIFERAY_RELEASE_CMS
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
 	unset _PRODUCT_VERSION
@@ -78,13 +78,13 @@ function test_git_generate_release_notes {
 }
 
 function test_git_not_generate_release_notes {
-	LIFERAY_RELEASE_CMS_STANDALONE="true"
+	LIFERAY_RELEASE_CMS="true"
 
 	generate_release_notes &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE
+	unset LIFERAY_RELEASE_CMS
 }
 
 main "${@}"

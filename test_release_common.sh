@@ -61,8 +61,8 @@ function set_up {
 }
 
 function tear_down {
-	unset LIFERAY_RELEASE_CMS_STANDALONE
-	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_RELEASE_CMS
+	unset LIFERAY_RELEASE_CMS_WEEKLY
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset LIFERAY_RELEASE_TEST_MODE
 	unset _ACTUAL_PRODUCT_VERSION
@@ -164,11 +164,11 @@ function test_release_common_get_product_version_without_suffix {
 function test_release_common_get_release_candidates_dir_name {
 	_test_release_common_get_release_candidates_dir_name "liferay-releases-candidates"
 
-	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
+	LIFERAY_RELEASE_CMS_WEEKLY="true"
 
 	_test_release_common_get_release_candidates_dir_name "liferay-releases-candidates/cms-weekly"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_RELEASE_CMS_WEEKLY
 }
 
 function test_release_common_get_release_dir_name {
@@ -176,11 +176,11 @@ function test_release_common_get_release_dir_name {
 	_test_release_common_get_release_dir_name "2026.q4.0-cms" "cms/2026.q4.0-cms"
 	_test_release_common_get_release_dir_name "7.4.13-u154-cms" "cms/7.4.13-u154-cms"
 
-	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
+	LIFERAY_RELEASE_CMS_WEEKLY="true"
 
 	_test_release_common_get_release_dir_name "7.4.13-u154-cms" "cms-weekly"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_RELEASE_CMS_WEEKLY
 }
 
 function test_release_common_get_release_output {
@@ -247,11 +247,11 @@ function test_release_common_get_tomcat_bundle_name {
 	_test_release_common_get_tomcat_bundle_name "7.4.13-u154" "liferay-dxp-tomcat-7.4.13-u154-1234567890"
 	_test_release_common_get_tomcat_bundle_name "7.4.13-u154-cms" "liferay-cms-tomcat-7.4.13-u154-1234567890"
 
-	LIFERAY_RELEASE_CMS_STANDALONE="true"
+	LIFERAY_RELEASE_CMS="true"
 
 	_test_release_common_get_tomcat_bundle_name "7.4.13-u154" "liferay-cms-tomcat-7.4.13-u154-1234567890"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE
+	unset LIFERAY_RELEASE_CMS
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_TIMESTAMP
 }
@@ -292,17 +292,17 @@ function test_release_common_is_cms_release {
 	_test_release_common_is_cms_release "7.4.13-u152-cms" "0"
 	_test_release_common_is_cms_release "7.4.13-u152-cms-1790963992" "0"
 
-	LIFERAY_RELEASE_CMS_STANDALONE="true"
+	LIFERAY_RELEASE_CMS="true"
 
 	_test_release_common_is_cms_release "7.4.13-u152" "0"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE
+	unset LIFERAY_RELEASE_CMS
 
-	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
+	LIFERAY_RELEASE_CMS_WEEKLY="true"
 
 	_test_release_common_is_cms_release "7.4.13-u152" "0"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_RELEASE_CMS_WEEKLY
 }
 
 function test_release_common_is_early_product_version_than {
@@ -421,11 +421,11 @@ function test_release_common_is_u_release_docker_image {
 function test_release_common_is_weekly_cms_release {
 	_test_release_common_is_weekly_cms_release "1"
 
-	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
+	LIFERAY_RELEASE_CMS_WEEKLY="true"
 
 	_test_release_common_is_weekly_cms_release "0"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_RELEASE_CMS_WEEKLY
 }
 
 function test_release_common_set_latest_quarterly_product_versions {

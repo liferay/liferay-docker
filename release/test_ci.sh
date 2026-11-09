@@ -56,7 +56,7 @@ function test_ci_get_test_portal_release_parameters {
 		END
 	)"
 
-	LIFERAY_RELEASE_CMS_STANDALONE="true"
+	LIFERAY_RELEASE_CMS="true"
 	_PRODUCT_VERSION="7.4.13-u154-cms"
 
 	release_url="https://storage.cloud.google.com/liferay-releases-candidates/${_PRODUCT_VERSION}-${_BUILD_TIMESTAMP}/"
@@ -67,7 +67,7 @@ function test_ci_get_test_portal_release_parameters {
 		END
 	)"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE
+	unset LIFERAY_RELEASE_CMS
 	unset _BUILD_TIMESTAMP
 	unset _PRODUCT_VERSION
 }

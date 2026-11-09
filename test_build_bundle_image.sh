@@ -51,11 +51,11 @@ function test_build_bundle_image_get_docker_image_name {
 
 	unset LIFERAY_DOCKER_RELEASE_CANDIDATE
 
-	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
+	LIFERAY_RELEASE_CMS_WEEKLY="true"
 
 	_test_build_bundle_image_get_docker_image_name "cms-weekly" "release-candidates"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_RELEASE_CMS_WEEKLY
 }
 
 function test_build_bundle_image_get_docker_label_name {
@@ -64,11 +64,11 @@ function test_build_bundle_image_get_docker_label_name {
 	_test_build_bundle_image_get_docker_label_name "7.4.13-u124" "Liferay DXP"
 	_test_build_bundle_image_get_docker_label_name "7.4.13-u155-cms" "Liferay CMS"
 
-	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true"
+	LIFERAY_RELEASE_CMS_WEEKLY="true"
 
 	_test_build_bundle_image_get_docker_label_name "cms-weekly" "Liferay CMS"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY
+	unset LIFERAY_RELEASE_CMS_WEEKLY
 }
 
 function test_build_bundle_image_get_latest_tomcat_version {

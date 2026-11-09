@@ -72,7 +72,7 @@ function tear_down {
 	unset LIFERAY_CMP_ACTIVATION_KEY_2026
 	unset LIFERAY_DSR_ACTIVATION_KEY_2026
 	unset LIFERAY_PUNCHOUT2GO_ACTIVATION_KEY_2026
-	unset LIFERAY_RELEASE_CMS_STANDALONE
+	unset LIFERAY_RELEASE_CMS
 	unset LIFERAY_RELEASE_OUTPUT
 	unset LIFERAY_RELEASE_TEST_DATE
 	unset _BUILD_DIR
@@ -317,14 +317,14 @@ function _test_check_liferay_marketplace_products_compatibility_not_set_liferay_
 }
 
 function _test_check_liferay_marketplace_products_compatibility_set_liferay_marketplace_products_compatibility_properties {
-	LIFERAY_RELEASE_CMS_STANDALONE=${1}
+	LIFERAY_RELEASE_CMS=${1}
 	_PRODUCT_VERSION=${2}
 
 	set_liferay_marketplace_products_compatibility_properties &> /dev/null
 
 	assert_equals \
 		"${?}" "0" \
-		"$(cat "/tmp/liferay_marketplace_products_compatibility.properties")" "$(printf "%s\n" "LIFERAY_RELEASE_CMS_STANDALONE=${1}" "LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964" "LIFERAY_RELEASE_VERSION=${3}")"
+		"$(cat "/tmp/liferay_marketplace_products_compatibility.properties")" "$(printf "%s\n" "LIFERAY_RELEASE_CMS=${1}" "LIFERAY_RELEASE_RC_BUILD_TIMESTAMP=1695892964" "LIFERAY_RELEASE_VERSION=${3}")"
 }
 
 main "${@}"

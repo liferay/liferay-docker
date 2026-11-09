@@ -48,7 +48,7 @@ function tear_down {
 	rm --force --recursive "${_BUILD_DIR}/release"
 
 	unset LIFERAY_PORTAL_REPOSITORY_NAME
-	unset LIFERAY_RELEASE_CMS_STANDALONE
+	unset LIFERAY_RELEASE_CMS
 	unset LIFERAY_RELEASE_PRODUCT_NAME
 	unset _BUILD_DIR
 	unset _BUILD_TIMESTAMP
@@ -89,13 +89,13 @@ function test_package_not_generate_release_properties_file {
 }
 
 function test_package_not_package_boms {
-	LIFERAY_RELEASE_CMS_STANDALONE="true"
+	LIFERAY_RELEASE_CMS="true"
 
 	package_boms &> /dev/null
 
 	assert_equals "${?}" "${LIFERAY_COMMON_EXIT_CODE_SKIPPED}"
 
-	unset LIFERAY_RELEASE_CMS_STANDALONE
+	unset LIFERAY_RELEASE_CMS
 }
 
 function test_package_not_package_jakarta_transform_dependencies {
