@@ -31,7 +31,7 @@ function main {
 		test_product_not_add_ckeditor_license
 		test_product_not_clean_up_cmp_and_dsr_modules
 		test_product_not_get_build_profile_parameter
-		test_product_set_product_version_cms_standalone
+		test_product_set_product_version_cms
 		test_product_set_product_version_lts
 		test_product_set_product_version_with_parameters
 		test_product_update_release_info_name
@@ -221,7 +221,7 @@ function test_product_not_get_build_profile_parameter {
 		""
 }
 
-function test_product_set_product_version_cms_standalone {
+function test_product_set_product_version_cms {
 	LIFERAY_RELEASE_CMS_STANDALONE="true"
 
 	set_product_version "7.4.13-u152" "123456789" 1> /dev/null

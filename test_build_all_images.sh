@@ -10,12 +10,12 @@ function main {
 	if [[ "${#}" -eq 1 ]]
 	then
 		if [ "${1}" == "test_build_all_images_are_regular_containers_healthy" ] ||
-		   [ "${1}" == "test_build_all_images_is_cms_standalone_container_healthy" ]
+		   [ "${1}" == "test_build_all_images_is_cms_container_healthy" ]
 		then
 			"${1}"
-		elif [ "${1}" == "test_build_all_images_has_cms_standalone_tag" ]
+		elif [ "${1}" == "test_build_all_images_has_cms_tag" ]
 		then
-			test_build_all_images_is_cms_standalone_container_healthy
+			test_build_all_images_is_cms_container_healthy
 
 			"${1}"
 		else
@@ -31,9 +31,9 @@ function main {
 		test_build_all_images_latest_is_not_slim
 		test_build_all_images_trial_license_is_deleted
 
-		test_build_all_images_is_cms_standalone_container_healthy
+		test_build_all_images_is_cms_container_healthy
 
-		test_build_all_images_has_cms_standalone_tag
+		test_build_all_images_has_cms_tag
 	fi
 
 	tear_down
@@ -83,7 +83,7 @@ function test_build_all_images_get_latest_available_zulu_version {
 	_test_build_all_images_get_latest_available_zulu_version "arm64" "21"
 }
 
-function test_build_all_images_has_cms_standalone_tag {
+function test_build_all_images_has_cms_tag {
 	assert_equals \
 		"$(docker images --format "{{.Repository}}:{{.Tag}}" "liferay/release-candidates:cms-weekly")" \
 		"liferay/release-candidates:cms-weekly"
@@ -98,7 +98,7 @@ function test_build_all_images_has_slim_build_criteria {
 	_test_build_all_images_has_slim_build_criteria "7.4.13.nightly" "${LIFERAY_COMMON_EXIT_CODE_OK}"
 }
 
-function test_build_all_images_is_cms_standalone_container_healthy {
+function test_build_all_images_is_cms_container_healthy {
 	LIFERAY_RELEASE_CMS_STANDALONE_WEEKLY="true" _test_build_all_images_is_container_healthy "cms-weekly" "false"
 }
 

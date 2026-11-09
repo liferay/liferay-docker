@@ -13,7 +13,7 @@ function main {
 	else
 		test_release_gold_check_supported_versions
 		test_release_gold_check_usage
-		test_release_gold_check_usage_with_cms_standalone_suffix
+		test_release_gold_check_usage_with_cms_suffix
 		test_release_gold_is_latest_product_version_by_releases_json
 		test_release_gold_not_prepare_next_release_branch
 		test_release_gold_not_reference_new_releases
@@ -87,7 +87,7 @@ function test_release_gold_check_usage {
 	assert_equals "$(check_usage)" "$(cat test-dependencies/expected/test_release_gold_check_usage_output.txt)"
 }
 
-function test_release_gold_check_usage_with_cms_standalone_suffix {
+function test_release_gold_check_usage_with_cms_suffix {
 	LIFERAY_RELEASE_CMS_STANDALONE="true"
 	LIFERAY_RELEASE_PREPARE_NEXT_RELEASE_BRANCH="false"
 	LIFERAY_RELEASE_VERSION="2026.q3.5-cms"

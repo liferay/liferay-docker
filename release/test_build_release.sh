@@ -31,7 +31,7 @@ function main {
 
 		test_build_release_bundle_smaller_than_1_gb_300_mb
 		test_build_release_handle_automated_build
-		test_build_release_handle_automated_build_cms_standalone
+		test_build_release_handle_automated_build_cms
 		test_build_release_has_automated_build_failure_slack_message
 		test_build_release_has_packaged_bundles
 		test_build_release_has_slack_message
@@ -147,7 +147,7 @@ function test_build_release_handle_automated_build {
 	LIFERAY_RELEASE_GIT_REF=${_PRODUCT_VERSION}
 }
 
-function test_build_release_handle_automated_build_cms_standalone {
+function test_build_release_handle_automated_build_cms {
 	BUILD_CAUSE="TIMERTRIGGER"
 	CI_TEST_SUITE="portal-release-acceptance"
 	LIFERAY_RELEASE_GIT_REF="release-test"
