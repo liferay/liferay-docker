@@ -260,10 +260,15 @@ function upload_boms {
 
 	local file_path
 
-	find "${upload_dir}" -regextype egrep -regex '.*/*.(jar|pom)' -print0 | while IFS= read -r -d '' file_path
-	do
-		upload_bom_file "${nexus_repository_name}" "${file_path}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
-	done
+	find \
+		"${upload_dir}" \
+		-regextype egrep \
+		-regex '.*/*.(jar|pom)' \
+		-print0 | \
+		while IFS= read -r -d '' file_path
+		do
+			upload_bom_file "${nexus_repository_name}" "${file_path}" || return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		done
 }
 
 function upload_hotfix {

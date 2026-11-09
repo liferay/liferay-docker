@@ -23,6 +23,8 @@ function copy_tld {
 
 	local tlds=("${@:2}")
 
+	local tld
+
 	for tld in "${tlds[@]}"
 	do
 		if [ -n "${arguments}" ]
@@ -32,6 +34,8 @@ function copy_tld {
 
 		arguments+="-name \"${tld}\""
 	done
+
+	local file
 
 	for file in $( \
 		eval find "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}" "${arguments}" -type f | \
@@ -80,6 +84,8 @@ function generate_api_jars {
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
+
+	local artifact
 
 	for artifact in ${enforce_version_artifacts}
 	do
@@ -132,6 +138,8 @@ function generate_api_jars {
 
 	if is_7_3_release
 	then
+		local portal_jar
+
 		for portal_jar in portal-kernel support-tomcat
 		do
 			manage_bom_jar "${_BUNDLES_DIR}/tomcat/lib/ext/${portal_jar}.jar"
@@ -142,24 +150,40 @@ function generate_api_jars {
 			manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib/${portal_jar}.jar"
 		done
 
-		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/lib/ext" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib" -name "com.liferay.*.jar" -type f -print0 | while IFS= read -r -d '' module_jar
-		do
-			manage_bom_jar "${module_jar}"
-		done
+		local module_jar
+
+		find \
+			"${_BUNDLES_DIR}/osgi" \
+			"${_BUNDLES_DIR}/tomcat/lib/ext" \
+			"${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib" \
+			-name "com.liferay.*.jar" \
+			-type f \
+			-print0 | \
+			while IFS= read -r -d '' module_jar
+			do
+				manage_bom_jar "${module_jar}"
+			done
 
 		for artifact in "commons*.jar" "org.apache.commons.*.jar" "poi*.jar" "spring*.jar"
 		do
-			find "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib" -name "${artifact}" -type f -print0 | while IFS= read -r -d '' module_jar
-			do
-				local module_jar_basename=$(basename "${module_jar}")
+			find \
+				"${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/lib" \
+				-name "${artifact}" \
+				-type f \
+				-print0 | \
+				while IFS= read -r -d '' module_jar
+				do
+					local module_jar_basename=$(basename "${module_jar}")
 
-				if (grep "$(echo "${module_jar_basename%.jar}:")" "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/development/dependencies.properties" || grep "$(echo "${module_jar_basename%.jar}:")" "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/portal/dependencies.properties")
-				then
-					manage_bom_jar "${module_jar}"
-				fi
-			done
+					if (grep "$(echo "${module_jar_basename%.jar}:")" "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/development/dependencies.properties" || grep "$(echo "${module_jar_basename%.jar}:")" "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/lib/portal/dependencies.properties")
+					then
+						manage_bom_jar "${module_jar}"
+					fi
+				done
 		done
 	else
+		local portal_jar
+
 		for portal_jar in jaxb-api portal-impl portal-kernel support-tomcat util-bridges util-java util-slf4j util-taglib
 		do
 			manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/${portal_jar}.jar"
@@ -172,10 +196,18 @@ function generate_api_jars {
 			rm --force --recursive "${license_dir}"
 		fi
 
-		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" \( -name "com.liferay.*.jar" -o -name "jakarta*.jar" -o -name "javax*.jar" \) -type f -print0 | while IFS= read -r -d '' module_jar
-		do
-			manage_bom_jar "${module_jar}"
-		done
+		local module_jar
+
+		find \
+			"${_BUNDLES_DIR}/osgi" \
+			"${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib" \
+			\( -name "com.liferay.*.jar" -o -name "jakarta*.jar" -o -name "javax*.jar" \) \
+			-type f \
+			-print0 | \
+			while IFS= read -r -d '' module_jar
+			do
+				manage_bom_jar "${module_jar}"
+			done
 	fi
 
 	if (is_quarterly_release && [ "$(get_release_version)" == "2025.q3.0" ]) ||
@@ -188,6 +220,8 @@ function generate_api_jars {
 		manage_bom_jar "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib/com.liferay.jakarta.portlet-api.jar"
 		manage_bom_jar "jakarta.servlet-api.jar"
 	fi
+
+	local file
 
 	for file in $( \
 		ls api-jar/META-INF --almost-all | \
@@ -225,40 +259,54 @@ function generate_api_source_jar {
 
 	_copy_source_package ./portal-kernel/src/com/liferay
 
-	find . -name taglib -type d -print0 | while IFS= read -r -d '' taglib_dir
-	do
-		if ! echo "${taglib_dir}" | grep --quiet "/com/liferay/" ||
-		   echo "${taglib_dir}" | grep --quiet "/classes/"
-		then
-			continue
-		fi
+	local taglib_dir
 
-		lc_log DEBUG "Copying ${taglib_dir} because it is a taglib."
+	find \
+		. \
+		-name taglib \
+		-type d \
+		-print0 | \
+		while IFS= read -r -d '' taglib_dir
+		do
+			if ! echo "${taglib_dir}" | grep --quiet "/com/liferay/" ||
+			   echo "${taglib_dir}" | grep --quiet "/classes/"
+			then
+				continue
+			fi
 
-		_copy_source_package "${taglib_dir}"
-	done
+			lc_log DEBUG "Copying ${taglib_dir} because it is a taglib."
 
-	find . -name packageinfo -type f -print0 | while IFS= read -r -d '' packageinfo_file
-	do
-		if echo "${packageinfo_file}" | grep --quiet "/classes/" ||
-		   echo "${packageinfo_file}" | grep --quiet "/portal-kernel/"
-		then
-			continue
-		fi
+			_copy_source_package "${taglib_dir}"
+		done
 
-		packageinfo_file=$(echo "${packageinfo_file}" | sed --expression "s#/resources/#/java/#")
+	local packageinfo_file
 
-		local package_dir=$(dirname "${packageinfo_file}")
+	find \
+		. \
+		-name packageinfo \
+		-type f \
+		-print0 | \
+		while IFS= read -r -d '' packageinfo_file
+		do
+			if echo "${packageinfo_file}" | grep --quiet "/classes/" ||
+			   echo "${packageinfo_file}" | grep --quiet "/portal-kernel/"
+			then
+				continue
+			fi
 
-		if [ ! -d "${package_dir}" ]
-		then
-			continue
-		fi
+			packageinfo_file=$(echo "${packageinfo_file}" | sed --expression "s#/resources/#/java/#")
 
-		lc_log DEBUG "Copying ${package_dir} because it has a packageinfo."
+			local package_dir=$(dirname "${packageinfo_file}")
 
-		_copy_source_package "${package_dir}"
-	done
+			if [ ! -d "${package_dir}" ]
+			then
+				continue
+			fi
+
+			lc_log DEBUG "Copying ${package_dir} because it has a packageinfo."
+
+			_copy_source_package "${package_dir}"
+		done
 }
 
 function generate_distro_jar {
@@ -353,22 +401,29 @@ function generate_pom_release_bom {
 
 	echo "" >> "${pom_file_name}"
 
-	find "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng" -name '*.properties' -print0 | xargs --null awk -F "=" '/^artifact.url=/  { print $2 }' > /tmp/artifact_urls.txt
+	find \
+		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng" \
+		-name '*.properties' \
+		-print0 | \
+		xargs --null awk -F "=" '/^artifact.url=/  { print $2 }' > /tmp/artifact_urls.txt
 
-	for artifact_file in $(
+	local artifact_file
+
+	for artifact_file in $( \
 		find "${_BUNDLES_DIR}/osgi" "${_BUNDLES_DIR}/tomcat/lib/ext" "${_BUNDLES_DIR}/tomcat/webapps/ROOT/WEB-INF" -name '*.jar' | \
-			grep --extended-regexp --invert-match "(/osgi/state/)" | \
-			sed \
-				--expression 's/\.jar$//' \
-				--expression "s@.*/@@" \
-				--expression "s@-@.@g" | \
-			grep \
-				--extended-regexp \
-				--invert-match \
-				"(\.demo|\.sample\.|\.templates\.)" | \
-			sort
-	)
+		grep --extended-regexp --invert-match "(/osgi/state/)" | \
+		sed \
+			--expression "s/\.jar$//" \
+			--expression "s@.*/@@" \
+			--expression "s@-@.@g" | \
+		grep \
+			--extended-regexp \
+			--invert-match \
+			"(\.demo|\.sample\.|\.templates\.)" | \
+		sort)
 	do
+		local artifact_url
+
 		grep --extended-regexp "/(com\.liferay\.|)${artifact_file}/" /tmp/artifact_urls.txt | \
 			sort | \
 			while IFS= read -r artifact_url
@@ -382,6 +437,8 @@ function generate_pom_release_bom {
 					sed \
 						--expression "s@\.\(jar\|war\)\$@@" \
 						--expression "s@.*${artifact_file}-@@")
+
+				local group_id
 
 				if [[ "${artifact_url}" == */com/liferay/portal/* ]]
 				then
@@ -437,6 +494,8 @@ function generate_pom_release_bom_compile_only {
 		"${_RELEASE_TOOL_DIR}/templates/release.bom.compile.only.pom.tpl" > /dev/null
 
 	echo "" >> "${pom_file_name}"
+
+	local artifact_id group_id version
 
 	cut --delimiter='=' --fields=2 "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/releng-pom-compile-only-dependencies.properties" | while IFS=: read -r group_id artifact_id version
 	do
@@ -503,6 +562,8 @@ function generate_pom_release_bom_test {
 
 	local artifact_urls=""
 
+	local file
+
 	for file in \
 		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng/portal-test.properties" \
 		"${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}/modules/.releng/test/arquillian-extension-junit-bridge-connector/artifact.properties" \
@@ -514,6 +575,8 @@ function generate_pom_release_bom_test {
 		artifact_urls+=$(awk -F "=" '/^artifact.url=/ { print $2 }' "${file}")
 		artifact_urls+=$'\n'
 	done
+
+	local dependency
 
 	for dependency in "${sorted_dependencies[@]}"
 	do
@@ -528,7 +591,7 @@ function generate_pom_release_bom_test {
 
 			version=$( \
 				basename "${artifact_url}" | \
-				sed --expression 's/\.jar$//' | \
+				sed --expression "s/\.jar$//" | \
 				cut --delimiter='-' --fields=2-)
 		fi
 
@@ -583,12 +646,16 @@ function generate_pom_release_bom_third_party {
 
 	dependencies_properties+=("${portal_dependencies_properties[@]}")
 
+	local dependency_property
+
 	for dependency_property in "${dependencies_properties[@]}"
 	do
+		local dependency_property_parts
+
 		IFS=':' read -ra dependency_property_parts <<< "$( \
 			echo "${dependency_property}" | cut --delimiter='=' --fields=2)"
 
-		if [[ ${included_dependencies[@]} =~ "${dependency_property_parts[0]}${dependency_property_parts[1]}${dependency_property_parts[2]}" ]]
+		if [[ "${included_dependencies[@]}" =~ "${dependency_property_parts[0]}${dependency_property_parts[1]}${dependency_property_parts[2]}" ]]
 		then
 			continue
 		fi
@@ -668,52 +735,87 @@ function manage_bom_jar {
 	then
 		local current_file
 
-		find temp_dir_manage_bom_jar -name "*.jar" -type f -print0 | while IFS= read -r -d '' current_file
-		do
-			lc_log DEBUG "Removing ${current_file}."
+		find \
+			temp_dir_manage_bom_jar \
+			-name "*.jar" \
+			-type f \
+			-print0 | \
+			while IFS= read -r -d '' current_file
+			do
+				lc_log DEBUG "Removing ${current_file}."
 
-			rm --force "${current_file}"
-		done
+				rm --force "${current_file}"
+			done
 
-		find temp_dir_manage_bom_jar -name "java-docs-*.xml" -type f -print0 | while IFS= read -r -d '' current_file
-		do
-			lc_log DEBUG "Removing ${current_file}."
+		find \
+			temp_dir_manage_bom_jar \
+			-name "java-docs-*.xml" \
+			-type f \
+			-print0 | \
+			while IFS= read -r -d '' current_file
+			do
+				lc_log DEBUG "Removing ${current_file}."
 
-			rm --force "${current_file}"
-		done
+				rm --force "${current_file}"
+			done
 
-		find temp_dir_manage_bom_jar -name "node-modules" -type d -print0 | while IFS= read -r -d '' current_file
-		do
-			lc_log DEBUG "Removing ${current_file}."
+		find \
+			temp_dir_manage_bom_jar \
+			-name "node-modules" \
+			-type d \
+			-print0 | \
+			while IFS= read -r -d '' current_file
+			do
+				lc_log DEBUG "Removing ${current_file}."
 
-			rm --force "${current_file}"
-		done
+				rm --force "${current_file}"
+			done
 
-		find temp_dir_manage_bom_jar -maxdepth 1 -type f -print0 | while IFS= read -r -d '' current_file
-		do
-			copy_file "${current_file}" api-jar
-		done
-
-		find temp_dir_manage_bom_jar -name kernel -type d -print0 | while IFS= read -r -d '' current_file
-		do
-			if echo "${current_file}" | grep "com/liferay/portal/kernel"
-			then
+		find \
+			temp_dir_manage_bom_jar \
+			-maxdepth 1 \
+			-type f \
+			-print0 | \
+			while IFS= read -r -d '' current_file
+			do
 				copy_file "${current_file}" api-jar
-			fi
-		done
+			done
 
-		find temp_dir_manage_bom_jar -name taglib -type d -print0 | while IFS= read -r -d '' current_file
-		do
-			if echo "${current_file}" | grep "com/liferay"
-			then
-				copy_file "${current_file}" api-jar
-			fi
-		done
+		find \
+			temp_dir_manage_bom_jar \
+			-name kernel \
+			-type d \
+			-print0 | \
+			while IFS= read -r -d '' current_file
+			do
+				if echo "${current_file}" | grep "com/liferay/portal/kernel"
+				then
+					copy_file "${current_file}" api-jar
+				fi
+			done
 
-		find temp_dir_manage_bom_jar -name packageinfo -type f -print0 | while IFS= read -r -d '' current_file
-		do
-			copy_file "$(dirname "${current_file}")" api-jar
-		done
+		find \
+			temp_dir_manage_bom_jar \
+			-name taglib \
+			-type d \
+			-print0 | \
+			while IFS= read -r -d '' current_file
+			do
+				if echo "${current_file}" | grep "com/liferay"
+				then
+					copy_file "${current_file}" api-jar
+				fi
+			done
+
+		find \
+			temp_dir_manage_bom_jar \
+			-name packageinfo \
+			-type f \
+			-print0 | \
+			while IFS= read -r -d '' current_file
+			do
+				copy_file "$(dirname "${current_file}")" api-jar
+			done
 	else
 		rm --force --recursive temp_dir_manage_bom_jar/META-INF/custom-sql
 		rm --force --recursive temp_dir_manage_bom_jar/META-INF/images

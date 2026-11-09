@@ -157,12 +157,17 @@ function clean_up_cmp_and_dsr_modules {
 	do
 		local jar_file_path
 
-		find "${_BUNDLES_DIR}/osgi" -name "${jar_file_name}.jar" -type f -print0 | while IFS= read -r -d '' jar_file_path
-		do
-			lc_log INFO "Deleting ${jar_file_path}."
+		find \
+			"${_BUNDLES_DIR}/osgi" \
+			-name "${jar_file_name}.jar" \
+			-type f \
+			-print0 | \
+			while IFS= read -r -d '' jar_file_path
+			do
+				lc_log INFO "Deleting ${jar_file_path}."
 
-			rm --force "${jar_file_path}"
-		done
+				rm --force "${jar_file_path}"
+			done
 	done
 }
 
@@ -284,36 +289,41 @@ function decrement_module_versions {
 
 	local bnd_bnd_file
 
-	find . -name bnd.bnd -type f -print0 | while IFS= read -r -d '' bnd_bnd_file
-	do
-		if echo "${bnd_bnd_file}" | grep --quiet archetype-resources ||
-		   echo "${bnd_bnd_file}" | grep --quiet modules/third-party
-		then
-			continue
-		fi
+	find \
+		. \
+		-name bnd.bnd \
+		-type f \
+		-print0 | \
+		while IFS= read -r -d '' bnd_bnd_file
+		do
+			if echo "${bnd_bnd_file}" | grep --quiet archetype-resources ||
+			   echo "${bnd_bnd_file}" | grep --quiet modules/third-party
+			then
+				continue
+			fi
 
-		local bundle_version=$(lc_get_property "${bnd_bnd_file}" "Bundle-Version")
+			local bundle_version=$(lc_get_property "${bnd_bnd_file}" "Bundle-Version")
 
-		local major_minor_version=$(echo "${bundle_version}" | sed --expression "s/\.[^.]*$//")
+			local major_minor_version=$(echo "${bundle_version}" | sed --expression "s/\.[^.]*$//")
 
-		local micro_version=${bundle_version##*.}
+			local micro_version=${bundle_version##*.}
 
-		if ! [[ "${micro_version}" =~ ^[0-9]+$ ]]
-		then
-			echo "There is an incorrect version in ${bnd_bnd_file}."
+			if ! [[ "${micro_version}" =~ ^[0-9]+$ ]]
+			then
+				echo "There is an incorrect version in ${bnd_bnd_file}."
 
-			continue
-		fi
+				continue
+			fi
 
-		if [[ "${micro_version}" -eq "0" ]]
-		then
-			continue
-		fi
+			if [[ "${micro_version}" -eq "0" ]]
+			then
+				continue
+			fi
 
-		micro_version=$((micro_version - 1))
+			micro_version=$((micro_version - 1))
 
-		sed --expression "s/Bundle-Version: ${bundle_version}/Bundle-Version: ${major_minor_version}.${micro_version}/" --in-place "${bnd_bnd_file}"
-	done
+			sed --expression "s/Bundle-Version: ${bundle_version}/Bundle-Version: ${major_minor_version}.${micro_version}/" --in-place "${bnd_bnd_file}"
+		done
 }
 
 function deploy_elasticsearch_sidecar {

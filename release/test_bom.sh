@@ -155,6 +155,8 @@ function test_bom_copy_file {
 	mkdir --parents temp_dir_manage_bom_jar/com/example
 	mkdir --parents temp_dir_test_bom_copy_file
 
+	local file_path
+
 	for file_path in com/example/file1.txt file2.txt
 	do
 		touch "temp_dir_manage_bom_jar/${file_path}"

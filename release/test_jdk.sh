@@ -41,6 +41,8 @@ function set_up {
 	export _JDK_PARAMETERS_8=${JAVA_OPTS}
 	export _TEST_JDK_DIR="test-dependencies/test_jdk"
 
+	local jdk_version
+
 	for jdk_version in openjdk-17.0.2 openjdk-21.0.2 zulu-17.0.18+8 zulu8
 	do
 		mkdir --parents "${_TEST_JDK_DIR}/default_jdk/${jdk_version}"

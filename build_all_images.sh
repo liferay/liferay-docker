@@ -8,7 +8,7 @@ source ./_release_common.sh
 function build_base_image {
 	log_in_to_docker_hub
 
-	if [[ "$(get_latest_docker_hub_version "base")" == "$(./release_notes.sh get-version)" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "base")" == "$(./release_notes.sh get-version)" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image Base is up to date."
@@ -33,7 +33,7 @@ function build_base_image {
 }
 
 function build_batch_image {
-	if [[ "$(get_latest_docker_hub_version "batch")" == "$(./release_notes.sh get-version)" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "batch")" == "$(./release_notes.sh get-version)" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image Batch is up to date."
@@ -182,7 +182,7 @@ function build_bundle_images {
 
 	local search_output=$(yq .\""${specified_version}"\" < bundles.yml)
 
-	if [[ "${search_output}" != "null" ]]
+	if [ "${search_output}" != "null" ]
 	then
 		local latest_7413_version=$( \
 			yq '."7.4.13"' bundles.yml | \
@@ -204,7 +204,7 @@ function build_bundle_images {
 		do
 			local main_key=$(get_main_key "${main_keys}" "${version}")
 
-			if [[ "${specified_version}" == "*" ]] && [[ "${main_key}" == "7.4.13" ]] && [[ "7.4.13-u${latest_7413_version}" != "${version}" ]]
+			if [ "${specified_version}" == "*" ] && [ "${main_key}" == "7.4.13" ] && [ "7.4.13-u${latest_7413_version}" != "${version}" ]
 			then
 				continue
 			fi
@@ -216,7 +216,7 @@ function build_bundle_images {
 	else
 		local main_key=$(get_main_key "${main_keys}" "${specified_version}")
 
-		if [[ "${main_key}" == "null" ]]
+		if [ "${main_key}" == "null" ]
 		then
 			echo "No bundles were found."
 
@@ -249,7 +249,7 @@ function build_bundle_images_by_version {
 }
 
 function build_caddy_image {
-	if [[ "$(get_latest_docker_hub_version "caddy")" == "$(./release_notes.sh get-version)" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "caddy")" == "$(./release_notes.sh get-version)" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image Caddy is up to date."
@@ -274,7 +274,7 @@ function build_caddy_image {
 }
 
 function build_dynamic_rendering_image {
-	if [[ "$(get_latest_docker_hub_version "dynamic-rendering")" == "$(./release_notes.sh get-version)" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "dynamic-rendering")" == "$(./release_notes.sh get-version)" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image Dynamic Rendering is up to date."
@@ -299,7 +299,7 @@ function build_dynamic_rendering_image {
 }
 
 function build_jar_runner_image {
-	if [[ "$(get_latest_docker_hub_version "jar-runner")" == "$(./release_notes.sh get-version)" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "jar-runner")" == "$(./release_notes.sh get-version)" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image JAR Runner is up to date."
@@ -331,7 +331,7 @@ function build_jdk_image {
 	local latest_available_zulu_amd64_version=$(get_latest_available_zulu_version "amd64" "${jdk_version}")
 	local latest_available_zulu_arm64_version=$(get_latest_available_zulu_version "arm64" "${jdk_version}")
 
-	if [[ "$(get_latest_docker_hub_version "${jdk_image_name}")" == "$(./release_notes.sh get-version)" ]] && [[ "$(get_latest_docker_hub_zulu_version "${jdk_image_name}" "${jdk_version}" "amd64")" == "${latest_available_zulu_amd64_version}" ]] && [[ "$(get_latest_docker_hub_zulu_version "${jdk_image_name}" "${jdk_version}" "arm64")" == "${latest_available_zulu_arm64_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "${jdk_image_name}")" == "$(./release_notes.sh get-version)" ] && [ "$(get_latest_docker_hub_zulu_version "${jdk_image_name}" "${jdk_version}" "amd64")" == "${latest_available_zulu_amd64_version}" ] && [ "$(get_latest_docker_hub_zulu_version "${jdk_image_name}" "${jdk_version}" "arm64")" == "${latest_available_zulu_arm64_version}" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image ${jdk_friendly_name} is up to date."
@@ -356,7 +356,7 @@ function build_jdk_image {
 }
 
 function build_job_runner_image {
-	if [[ "$(get_latest_docker_hub_version "job-runner")" == "$(./release_notes.sh get-version)" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "job-runner")" == "$(./release_notes.sh get-version)" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image Job Runner is up to date."
@@ -381,7 +381,7 @@ function build_job_runner_image {
 }
 
 function build_nexus_publisher_image {
-	if [[ "$(get_latest_docker_hub_version "nexus-publisher")" == "$(./release_notes.sh get-version)" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "nexus-publisher")" == "$(./release_notes.sh get-version)" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image Nexus Publisher is up to date."
@@ -406,7 +406,7 @@ function build_nexus_publisher_image {
 }
 
 function build_node_runner_image {
-	if [[ "$(get_latest_docker_hub_version "node-runner")" == "$(./release_notes.sh get-version)" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "node-runner")" == "$(./release_notes.sh get-version)" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image Node Runner is up to date."
@@ -431,7 +431,7 @@ function build_node_runner_image {
 }
 
 function build_noop_image {
-	if [[ "$(get_latest_docker_hub_version "noop")" == "$(./release_notes.sh get-version)" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "noop")" == "$(./release_notes.sh get-version)" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image NOOP is up to date."
@@ -456,7 +456,7 @@ function build_noop_image {
 }
 
 function build_squid_image {
-	if [[ "$(get_latest_docker_hub_version "squid")" == "$(./release_notes.sh get-version)" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "$(get_latest_docker_hub_version "squid")" == "$(./release_notes.sh get-version)" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image Squid is up to date."
@@ -484,7 +484,7 @@ function build_zabbix_server_image {
 	local latest_liferay_zabbix_server_version=$(get_latest_docker_hub_zabbix_server_version "liferay/zabbix-server")
 	local latest_official_zabbix_server_version=$(get_latest_docker_hub_zabbix_server_version "zabbix/zabbix-server-mysql")
 
-	if [[ "${latest_liferay_zabbix_server_version}" == "${latest_official_zabbix_server_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "${latest_liferay_zabbix_server_version}" == "${latest_official_zabbix_server_version}" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image Zabbix Server is up to date."
@@ -512,7 +512,7 @@ function build_zabbix_web_image {
 	local latest_liferay_zabbix_server_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "liferay/zabbix-web")
 	local latest_official_zabbix_server_web_interface_version=$(get_latest_docker_hub_zabbix_server_version "zabbix/zabbix-web-nginx-mysql")
 
-	if [[ "${latest_liferay_zabbix_server_web_interface_version}" == "${latest_official_zabbix_server_web_interface_version}" ]] && [[ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]]
+	if [ "${latest_liferay_zabbix_server_web_interface_version}" == "${latest_official_zabbix_server_web_interface_version}" ] && [ "${LIFERAY_DOCKER_DEVELOPER_MODE}" != "true" ]
 	then
 		echo ""
 		echo "Docker image Zabbix Web is up to date."

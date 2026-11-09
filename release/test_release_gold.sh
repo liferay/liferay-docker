@@ -133,6 +133,8 @@ function test_release_gold_prepare_next_release_branch {
 }
 
 function test_release_gold_reference_new_releases {
+	local product_version
+
 	for product_version in "2024.q3.13" "2025.q1.1-lts" "2025.q2.1"
 	do
 		_test_release_gold_reference_new_releases "${product_version}"
