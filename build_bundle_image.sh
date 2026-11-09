@@ -178,12 +178,12 @@ function download_trial_dxp_license {
 }
 
 function get_docker_image_name {
-	if is_cms_release "${1}"
-	then
-		echo "cms"
-	elif (is_release_candidate || is_weekly_cms_release)
+	if (is_release_candidate || is_weekly_cms_release)
 	then
 		echo "release-candidates"
+	elif is_cms_release "${1}"
+	then
+		echo "cms"
 	else
 		echo "dxp"
 	fi
