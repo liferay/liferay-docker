@@ -728,6 +728,15 @@ function _get_build_profile_parameter {
 	fi
 }
 
+function _get_build_properties {
+	echo "baseline.jar.report.level=off"
+
+	if is_cms_release
+	then
+		echo "ee.override=true"
+	fi
+}
+
 function _get_license_app_product_id_parameters {
 	local parameters="-Dlicense.app.product.id.CMP=f37efde7-11b1-6ad7-5c60-07bec3334db1"
 
