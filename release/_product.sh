@@ -255,7 +255,7 @@ function compile_product {
 
 	lc_cd "${_PROJECTS_DIR}/${LIFERAY_PORTAL_REPOSITORY_NAME}"
 
-	echo "baseline.jar.report.level=off" > "build.${USER}.properties"
+	_get_build_properties > "build.${USER}.properties"
 
 	$(_set_cpu_limit) ant clean compile
 }
