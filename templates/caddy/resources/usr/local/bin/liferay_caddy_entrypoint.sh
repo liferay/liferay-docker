@@ -1,6 +1,8 @@
 #!/bin/bash
 
 function main {
+	rm -f /etc/caddy.d/liferay_caddy_file
+
 	if [ ! -n "${LIFERAY_ROUTES_DXP}" ]
 	then
 		LIFERAY_ROUTES_DXP="/etc/liferay/lxc/dxp-metadata"
