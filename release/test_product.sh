@@ -24,6 +24,7 @@ function main {
 		test_product_clean_up_ignored_dxp_plugins
 		test_product_deploy_opensearch
 		test_product_get_build_profile_parameter
+		test_product_get_build_properties
 		test_product_get_java_specification_version
 		test_product_get_license_app_product_id_parameters
 		test_product_is_free_tier_ignored_version
@@ -154,6 +155,11 @@ function test_product_get_build_profile_parameter {
 		"-Dbuild.profile=cms-standalone"
 
 	unset LIFERAY_RELEASE_CMS
+}
+
+function test_product_get_build_properties {
+	_test_product_get_build_properties "2026.q4.0" "baseline.jar.report.level=off"
+	_test_product_get_build_properties "2026.q4.0-cms" "baseline.jar.report.level=off\nee.override=true"
 }
 
 function test_product_get_java_specification_version {
@@ -313,6 +319,14 @@ function _test_product_clean_up_ignored_dxp_plugins {
 
 	assert_equals \
 		"$(ls -1 "${_BUNDLES_DIR}/osgi/portal-war" | wc --lines)" "${2}"
+}
+
+function _test_product_get_build_properties {
+	_PRODUCT_VERSION=${1}
+
+	assert_equals \
+		"$(_get_build_properties)" \
+		"$(echo -e "${2}")"
 }
 
 function _test_product_get_java_specification_version {
