@@ -20,17 +20,16 @@ function main {
 }
 
 function set_up {
-	export _TEST_APP_DIR=$(mktemp --directory)
-
 	export _TEST_CADDY_IMAGE="liferay/caddy:test"
 
 	docker build --tag "${_TEST_CADDY_IMAGE}" templates/caddy &> /dev/null
+
+	export _TEST_APP_DIR=$(mktemp --directory)
 
 	mkdir --parents "${_TEST_APP_DIR}/dxp-metadata" "${_TEST_APP_DIR}/static"
 
 	echo "able.example.com baker.example.com" > "${_TEST_APP_DIR}/dxp-metadata/com.liferay.lxc.dxp.domains"
 	echo "https" > "${_TEST_APP_DIR}/dxp-metadata/com.liferay.lxc.dxp.server.protocol"
-
 	echo "[LIFERAY_CADDY_TEST] static" > "${_TEST_APP_DIR}/static/test.txt"
 
 	cat <<- EOF > "${_TEST_APP_DIR}/Dockerfile"
@@ -56,31 +55,31 @@ function tear_down {
 }
 
 function test_build_caddy_image_allows_dxp_origins {
-	local container_id=$(_test_build_caddy_image_start_container)
+	local container_id=$(_start_caddy_image_container)
 
 	assert_equals \
-		"$(_test_build_caddy_image_response_header "${container_id}" "Access-Control-Allow-Origin" "https://baker.example.com")" \
+		"$(_get_caddy_image_container_response_header "${container_id}" "Access-Control-Allow-Origin" "/test.txt")" \
 		"Access-Control-Allow-Origin: https://baker.example.com"
 
 	docker rm --force "${container_id}" &> /dev/null
 }
 
 function test_build_caddy_image_redirects_not_found {
-	local container_id=$(_test_build_caddy_image_start_container --env LIFERAY_CADDY_404_URL=https://www.example.com/404)
+	local container_id=$(_start_caddy_image_container --env LIFERAY_CADDY_404_URL=https://www.example.com/404)
 
 	assert_equals \
-		"$(_test_build_caddy_image_response_header "${container_id}" "Location" "" "/missing.txt")" \
+		"$(_get_caddy_image_container_response_header "${container_id}" "Location" "/missing.txt")" \
 		"Location: https://www.example.com/404"
 
 	docker rm --force "${container_id}" &> /dev/null
 }
 
 function test_build_caddy_image_regenerates_caddy_file_on_restart {
-	local container_id=$(_test_build_caddy_image_start_container)
+	local container_id=$(_start_caddy_image_container)
 
 	docker restart "${container_id}" &> /dev/null
 
-	_test_build_caddy_image_wait_for_caddy "${container_id}"
+	_wait_for_caddy_image_container_start "${container_id}"
 
 	assert_equals \
 		"$(docker exec "${container_id}" cat /etc/caddy.d/liferay_caddy_file)" \
@@ -99,7 +98,7 @@ function test_build_caddy_image_regenerates_caddy_file_on_restart {
 }
 
 function test_build_caddy_image_serves_static_files {
-	local container_id=$(_test_build_caddy_image_start_container)
+	local container_id=$(_start_caddy_image_container)
 
 	assert_equals \
 		"$( \
@@ -114,28 +113,21 @@ function test_build_caddy_image_serves_static_files {
 	docker rm --force "${container_id}" &> /dev/null
 }
 
-function _test_build_caddy_image_response_header {
-	local origin_header=()
-
-	if [ -n "${3}" ]
-	then
-		origin_header=(--header "Origin: ${3}")
-	fi
-
+function _get_caddy_image_container_response_header {
 	docker exec \
 		"${1}" \
 		wget \
-			"${origin_header[@]}" \
+			--header "Origin: https://baker.example.com" \
 			--output-document /dev/null \
 			--quiet \
 			--server-response \
-			"http://localhost${4:-/test.txt}" 2>&1 | \
+			"http://localhost${3}" 2>&1 | \
 		grep --fixed-strings "${2}:" | \
 		head --lines=1 | \
 		sed --expression "s/^ *//" --expression "s/\r$//"
 }
 
-function _test_build_caddy_image_start_container {
+function _start_caddy_image_container {
 	local container_id=$( \
 		docker run \
 			--detach \
@@ -143,12 +135,12 @@ function _test_build_caddy_image_start_container {
 			"${@}" \
 			"${_TEST_DERIVED_IMAGE}")
 
-	_test_build_caddy_image_wait_for_caddy "${container_id}"
+	_wait_for_caddy_image_container_start "${container_id}"
 
 	echo "${container_id}"
 }
 
-function _test_build_caddy_image_wait_for_caddy {
+function _wait_for_caddy_image_container_start {
 	local counter
 
 	for counter in {1..30}
