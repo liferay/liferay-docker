@@ -47,7 +47,9 @@ function main {
 	if [ "${LIFERAY_CONTAINER_DISABLE_TRIAL_LICENSE}" == "true" ]
 	then
 		rm --force /opt/liferay/data/license/trial-commerce-enterprise-license-*.li
+		rm --force /opt/liferay/deploy/trial-cms-license-*.xml
 		rm --force /opt/liferay/deploy/trial-dxp-license-*.xml
+		rm --force /opt/liferay/osgi/modules/trial-cms-license-*.xml
 		rm --force /opt/liferay/osgi/modules/trial-dxp-license-*.xml
 	fi
 
