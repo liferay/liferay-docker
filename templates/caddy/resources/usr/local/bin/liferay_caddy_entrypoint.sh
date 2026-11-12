@@ -1,14 +1,14 @@
 #!/bin/bash
 
 function main {
-	rm -f /etc/caddy.d/liferay_caddy_file
-
 	if [ ! -n "${LIFERAY_ROUTES_DXP}" ]
 	then
 		LIFERAY_ROUTES_DXP="/etc/liferay/lxc/dxp-metadata"
 	fi
 
 	local protocol=$(cat "${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.server.protocol" 2> /dev/null)
+
+	rm -f /etc/caddy.d/liferay_caddy_file
 
 	for i in $(cat "${LIFERAY_ROUTES_DXP}/com.liferay.lxc.dxp.domains" 2> /dev/null)
 	do
