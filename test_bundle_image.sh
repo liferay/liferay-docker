@@ -295,7 +295,7 @@ function test_health_status {
 			grep \
 				--count \
 				--extended-regexp \
-				"License (registered|saved) for DXP Development")
+				"License (registered|saved) for (CMS|DXP) (Developer|Development)")
 
 		if [ "${health_status}" == "\"healthy\"" ] && ([[ "${ignore_license}" -gt 0 ]] || [[ "${license_status}" -gt 0 ]])
 		then
