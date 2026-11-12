@@ -929,6 +929,7 @@ quarterly:
     2026.q3.8:
     2026.q3.9:
     2026.q3.10:
+    2026.q4.0:
         latest: true
 snapshot:
     snapshot-master:
