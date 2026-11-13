@@ -80,6 +80,18 @@ function check_liferay_marketplace_products_compatibility {
 
 	start_tomcat "print-startup-logs" >> "${_LIFERAY_MARKETPLACE_PRODUCTS_DEPLOYMENT_LOG_FILE}"
 
+	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
+	then
+		_set_liferay_marketplace_oauth2_token
+
+		if [[ "${?}" -ne 0 ]]
+		then
+			stop_tomcat &> /dev/null
+
+			return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
+		fi
+	fi
+
 	local incompatible_liferay_marketplace_product_names=""
 
 	for liferay_marketplace_product_name in ${liferay_marketplace_product_names}
