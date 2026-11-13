@@ -691,17 +691,17 @@ function _set_liferay_marketplace_products {
 	if [ -z "${LIFERAY_RELEASE_TEST_MODE}" ]
 	then
 		declare -A -g LIFERAY_MARKETPLACE_PRODUCTS=(
-			["adyen"]="f05ab2d6-1d54-c72d-988a-91fcd5669ef3"
-			["cmp"]="d85abb01-6c60-addd-0f73-6621612aae72"
-			["drools"]="15099181"
-			["dsr"]="DSR"
-			["hubspot"]="53d5501f-abd7-b579-af7f-56b8b15966d0"
-			["liferaycommerceminium4globalcss"]="ebcf98b3-9844-b783-757a-579944b18b00"
-			["liferaypaypalbatch"]="a1946869-212f-0793-d703-b623d0f149a6"
-			["liferayupscommerceshippingengine"]="f1cb4b5e-fbdd-7f70-df5d-9f1a736784b2"
-			["opensearch"]="ea19fdc8-b908-690d-9f90-15edcdd23a87"
-			["punchout"]="175496027"
-			["stripe"]="6a02a832-083b-f08c-888a-0a59d7c09119"
+			["adyen"]="marketplace-product-26028526"
+			["cmp"]="marketplace-product-32653971"
+			["drools"]="marketplace-product-18375358"
+			["dsr"]="marketplace-product-33597098"
+			["hubspot"]="marketplace-product-31948882"
+			["liferaycommerceminium4globalcss"]="marketplace-product-27830822"
+			["liferaypaypalbatch"]="marketplace-product-26268023"
+			["liferayupscommerceshippingengine"]="marketplace-product-25993642"
+			["opensearch"]="marketplace-product-33736628"
+			["punchout"]="marketplace-product-18657298"
+			["stripe"]="marketplace-product-21724895"
 		)
 	fi
 }
