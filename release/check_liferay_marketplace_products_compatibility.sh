@@ -359,7 +359,7 @@ function _download_product {
 			--retry-delay 10 \
 			--silent \
 			--write-out "%{http_code}" \
-			"https://marketplace.liferay.com/${product_download_url}")
+			"https://one.liferay.com/${product_download_url}")
 
 	if [[ "${http_code}" -ge 400 ]]
 	then
@@ -557,7 +557,7 @@ function _get_product_by_external_reference_code {
 			--retry-delay 10 \
 			--silent \
 			--write-out "%output{${http_code_file}}%{http_code}" \
-			"https://marketplace.liferay.com/o/headless-commerce-admin-catalog/v1.0/products/by-externalReferenceCode/${product_external_reference_code}?nestedFields=productVirtualSettings%2Cattachments")
+			"https://one.liferay.com/o/headless-commerce-admin-catalog/v1.0/products/by-externalReferenceCode/${product_external_reference_code}?nestedFields=productVirtualSettings%2Cattachments")
 
 	local http_code=$(cat "${http_code_file}")
 
@@ -597,7 +597,7 @@ function _get_product_virtual_settings_file_entries_by_external_reference_code {
 			--retry-delay 10 \
 			--silent \
 			--write-out "%output{${http_code_file}}%{http_code}" \
-			"https://marketplace.liferay.com/o/headless-commerce-admin-catalog/v1.0/product-virtual-settings/${product_virtual_settings_id}/product-virtual-settings-file-entries?pageSize=20")
+			"https://one.liferay.com/o/headless-commerce-admin-catalog/v1.0/product-virtual-settings/${product_virtual_settings_id}/product-virtual-settings-file-entries?pageSize=20")
 
 	local http_code=$(cat "${http_code_file}")
 
@@ -674,7 +674,7 @@ function _set_liferay_marketplace_oauth2_token {
 			--retry-delay 10 \
 			--silent \
 			--write-out "%output{${http_code_file}}%{http_code}" \
-			"https://marketplace.liferay.com/o/oauth2/token")
+			"https://one.liferay.com/o/oauth2/token")
 
 	local http_code=$(cat "${http_code_file}")
 
@@ -747,7 +747,7 @@ function _update_product_supported_versions {
 				--retry-delay 10 \
 				--silent \
 				--write-out "%{http_code}" \
-				"https://marketplace.liferay.com/o/headless-commerce-admin-catalog/v1.0/product-virtual-settings-file-entries/${latest_product_virtual_file_entry_id}")
+				"https://one.liferay.com/o/headless-commerce-admin-catalog/v1.0/product-virtual-settings-file-entries/${latest_product_virtual_file_entry_id}")
 
 		if [[ "${http_code}" -ge 400 ]]
 		then
@@ -780,7 +780,7 @@ function _update_product_supported_versions {
 				--retry-delay 10 \
 				--silent \
 				--write-out "%{http_code}" \
-				"https://marketplace.liferay.com/o/headless-commerce-admin-catalog/v1.0/products/by-externalReferenceCode/${product_external_reference_code}/product-specifications")
+				"https://one.liferay.com/o/headless-commerce-admin-catalog/v1.0/products/by-externalReferenceCode/${product_external_reference_code}/product-specifications")
 
 		if [[ "${http_code}" -ge 400 ]]
 		then
