@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ../_liferay_common.sh
+source ../_one_liferay.sh
 source ../_release_common.sh
 source ./_jdk.sh
 source ./_product.sh
@@ -664,32 +665,14 @@ function _prepare_bundles_dir {
 }
 
 function _set_liferay_marketplace_oauth2_token {
-	local http_code_file=$(mktemp)
+	_LIFERAY_MARKETPLACE_OAUTH2_TOKEN=$(get_license_api_oauth2_access_token)
 
-	local liferay_marketplace_oauth2_token_response=$( \
-		curl \
-			--data "client_id=${LIFERAY_MARKETPLACE_OAUTH2_CLIENT_ID}&client_secret=${LIFERAY_MARKETPLACE_OAUTH2_CLIENT_SECRET}&grant_type=client_credentials" \
-			--request POST \
-			--retry 3 \
-			--retry-delay 10 \
-			--silent \
-			--write-out "%output{${http_code_file}}%{http_code}" \
-			"https://one.liferay.com/o/oauth2/token")
-
-	local http_code=$(cat "${http_code_file}")
-
-	if [[ "${http_code}" -ge 400 ]]
+	if [ -z "${_LIFERAY_MARKETPLACE_OAUTH2_TOKEN}" ]
 	then
-		lc_log ERROR "Unable to get Liferay Marketplace OAuth2 token. HTTP response code was ${http_code}."
-
-		rm --force "${http_code_file}"
+		lc_log ERROR "Unable to get Liferay Marketplace OAuth2 token."
 
 		return "${LIFERAY_COMMON_EXIT_CODE_BAD}"
 	fi
-
-	rm --force "${http_code_file}"
-
-	_LIFERAY_MARKETPLACE_OAUTH2_TOKEN=$(echo "${liferay_marketplace_oauth2_token_response}" | jq --raw-output ".access_token")
 }
 
 function _set_liferay_marketplace_products {
