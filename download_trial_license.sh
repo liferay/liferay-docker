@@ -3,10 +3,6 @@
 source ./_one_liferay.sh
 
 function main {
-	local license_dir=${1}
-	local license_start_date=${2}
-	local product_name=${3}
-
 	local license_api_oauth2_access_token=$(get_license_api_oauth2_access_token)
 
 	if [ -z "${license_api_oauth2_access_token}" ]
@@ -15,6 +11,10 @@ function main {
 
 		exit 1
 	fi
+
+	local license_dir=${1}
+	local license_start_date=${2}
+	local product_name=${3}
 
 	mkdir --parents "${license_dir}/deploy"
 
